@@ -1,0 +1,13 @@
+.DS_STORE
+_site/
+Gemfile
+Gemfile.lock
+*.swo
+*.swp
+.gradle
+.DS_Store
+.idea
+build/
+local.properties
+obj/
+*.iml

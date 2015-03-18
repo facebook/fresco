@@ -1,0 +1,23 @@
+---
+permalink: /blog/:categories/:year/:month/:day/:title.html
+url: http://facebook.github.io/fresco
+name: Fresco
+relative_permalinks: false
+markdown: redcarpet
+redcarpet:
+  extensions: ["tables"]
+description: An image management library.
+timezone: America/Los_Angeles
+
+safe: true
+lsi: false
+highlighter: pygments
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+      is_post: true

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset='utf-8'>
+    <title>Fresco | {{ page.title }}</title>
+    <link rel='stylesheet' href='/static/site.css' type='text/css'/>
+    <link rel="stylesheet" href='/static/pygments.css' type='text/css'/>
+    <link rel='shortcut icon' href='/static/favicon.png'>
+    <meta name='viewport' content='width=480'>
+    <meta property="og:title" content="{{ page.title }}" />
+    <meta property="og:site_name" content="fresco">
+    <meta property='og:description' content='Fresco is an image management library.'>
+    <meta property='og:image' content='http://facebook.github.io/fresco/static/fresco-og-image.png'>
+    <meta property='og:url' content="http://facebook.github.io/fresco{{ page.url }}">
+    {% if (page.is_post) %}
+    <meta property='og:type' content='article'>
+    <meta property='article:author' content="{{ author.facebook }}">
+    {% else %}
+    <meta property='og:type' content='website'>
+    {% endif %}
+    <script type="text/javascript" src="//use.typekit.net/vqa1hcx.js"></script>
+    <script type="text/javascript">{'try{Typekit.load();}catch(e){}'}</script>
+    <!-- Google Analytics -->
+</head>
+<body>
+
+<header class='topbar'><nav class='width'>
+<a href='/'>
+  <img src="/static/fresco-logo.png" class="logo">
+</a>
+    <ul>
+      <li><a href="/docs/index.html#_"
+          {% if (page.id != 'about-fresco') and (page.sectionid == 'docs') %}
+          class="active" {% endif %}>
+          Docs
+      </a></li>
+      <li><a href="/"
+          {% if (page.id == 'home') %} class="active" {% endif %}>
+          About
+      </a></li>
+      <li><a href="/support.html"
+          {% if (page.id == 'support') %} class="active" {% endif %}>
+          Support
+      </a></li>
+      <li><a href="/javadoc">
+          API
+      </a></li>
+      <li><a href="http://github.com/facebook/fresco">GitHub</a>
+    </ul>
+</nav></header>
