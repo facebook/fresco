@@ -1,0 +1,69 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+apply plugin: 'robolectric'
+
+dependencies {
+    compile "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compile "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+
+    androidTestCompile "com.google.guava:guava:${GUAVA_VERSION}"
+    androidTestCompile "junit:junit:${JUNIT_VERSION}"
+    androidTestCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    androidTestCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    androidTestCompile "org.powermock:powermock-mockito-release-full:${POWERMOCK_MOCKITO_RELEASE_FULL_VERSION}"
+    androidTestCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_MODULE_JUNIT4_RULE_VERSION}"
+    androidTestCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+}
+apply from: rootProject.file('release.gradle')
+
+def generatedTestSources = "$buildDir/generated-src/test"
+
+
+// Gradle and Buck need different versions of the test runner.
+// For gradle, WithTestDefaultsRunner just is a direct sub-class of RobolectricTestRunner.
+task generateTestSources {
+    doLast {
+        File file = new File(generatedTestSources)
+        file.mkdirs();
+        def generated = new File(generatedTestSources, "WithTestDefaultsRunner.java")
+        generated.text =
+                "package com.facebook.testing.robolectric.v2;\n" +
+                "import org.robolectric.RobolectricTestRunner;\n" +
+                "import org.junit.runners.model.InitializationError;\n" +
+                "public class WithTestDefaultsRunner extends RobolectricTestRunner {\n" +
+                "  public WithTestDefaultsRunner(final Class<?> testClass) " +
+                        "throws InitializationError {" +
+                "    super(testClass);" +
+                "  }" +
+                "}"
+    }
+}
+
+test.dependsOn(generateTestSources)
+
+android {
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
+
+    packagingOptions {
+      exclude 'LICENSE'
+      exclude 'LICENSE.txt'
+      exclude 'META-INF/LICENSE'
+      exclude 'META-INF/LICENSE.txt'
+      exclude 'META-INF/NOTICE'
+      exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)

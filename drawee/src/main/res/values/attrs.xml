@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="GenericDraweeView">
+
+    <!-- Fade duration in milliseconds. -->
+    <attr name="fadeDuration" format="integer"/>
+
+    <!-- Images -
+    Scale types must match values in ScaleType.fromString (ScalingUtils.java).
+    For drawables that should not be scaled, such as those with the android:tileMode
+    attribute set, use the value 'none'. -->
+
+    <!-- A drawable or color to be be used as a placeholder. -->
+    <attr name="placeholderImage" format="reference"/>
+    <!-- Scale type of the placeholder image. Ignored if placeholderImage is not specified. -->
+    <attr name="placeholderImageScaleType" format="string"/>
+
+    <!-- A drawable to be be used as a retry image. -->
+    <attr name="retryImage" format="reference"/>
+    <!-- Scale type of the retry image. Ignored if retryImage is not specified. -->
+    <attr name="retryImageScaleType" format="string"/>
+
+    <!-- A drawable to be be used as a failure image. -->
+    <attr name="failureImage" format="reference"/>
+    <!-- Scale type of the failure image. Ignored if failureImage is not specified. -->
+    <attr name="failureImageScaleType" format="string"/>
+
+    <!-- A drawable to be be used as a progress bar. -->
+    <attr name="progressBarImage" format="reference"/>
+    <!-- Scale type of the progress bar. Ignored if progressBarImage is not specified. -->
+    <attr name="progressBarImageScaleType" format="string"/>
+    <!-- Progress bar Auto Rotate interval in milliseconds -->
+    <attr name="progressBarAutoRotateInterval" format="integer"/>
+
+    <!-- Scale type of the actual image. -->
+    <attr name="actualImageScaleType" format="string"/>
+
+    <!-- A drawable or color to be used as a background. -->
+    <attr name="backgroundImage" format="reference"/>
+
+    <!-- A drawable or color to be used as an overlay. -->
+    <attr name="overlayImage" format="reference"/>
+
+    <!-- A drawable or color to be used as a pressed-state-overlay -->
+    <attr name="pressedStateOverlayImage" format="reference"/>
+
+    <!-- Rounding params -
+    Declares attributes for rounding shape, mode and border. -->
+
+    <!-- Round as circle. -->
+    <attr name="roundAsCircle" format="boolean"/>
+    <!-- Rounded corner radius. Ignored if roundAsCircle is used. -->
+    <attr name="roundedCornerRadius" format="dimension"/>
+    <!-- Round the top-left corner. Ignored if roundAsCircle is used. -->
+    <attr name="roundTopLeft" format="boolean"/>
+    <!-- Round the top-right corner. Ignored if roundAsCircle is used. -->
+    <attr name="roundTopRight" format="boolean"/>
+    <!-- Round the bottom-right corner. Ignored if roundAsCircle is used. -->
+    <attr name="roundBottomRight" format="boolean"/>
+    <!-- Round the bottom-left corner. Ignored if roundAsCircle is used. -->
+    <attr name="roundBottomLeft" format="boolean"/>
+    <!-- Round by overlying color. -->
+    <attr name="roundWithOverlayColor" format="color"/>
+    <!-- Rounding border width-->
+    <attr name="roundingBorderWidth" format="dimension"/>
+    <!-- Rounding border color -->
+    <attr name="roundingBorderColor" format="color"/>
+
+  </declare-styleable>
+</resources>

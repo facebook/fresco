@@ -1,0 +1,7 @@
+include ':drawee'
+include ':drawee-backends:drawee-pipeline'
+include ':drawee-backends:drawee-volley'
+include ':fbcore'
+include ':imagepipeline'
+include ':sample'
+include ':imagepipeline-backends:imagepipeline-okhttp'

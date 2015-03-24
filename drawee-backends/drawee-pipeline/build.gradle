@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    compile project(':drawee')
+    compile project(':fbcore')
+    compile project(':imagepipeline')
+}
+apply from: rootProject.file('release.gradle')
+
+android {
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
+
+    packagingOptions {
+        exclude 'LICENSE'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)

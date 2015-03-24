@@ -1,0 +1,28 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_PLUGIN_VERSION}"
+        classpath "com.palominolabs.gradle.task:gradle-git-clone-task:${GRADLE_GIT_CLONE_TASK_VERSION}"
+        classpath "de.undercouch:gradle-download-task:${GRADLE_DOWNLOAD_TASK_VERSION}"
+        classpath "org.robolectric:robolectric-gradle-plugin:${ROBOLECTRIC_GRADLE_PLUGIN_VERSION}"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+subprojects {
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+    }
+}
+
+repositories {
+}

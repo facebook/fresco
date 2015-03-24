@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/allow_animations"
+        android:checkable="true"
+        android:title="Allow animations"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/use_drawee"
+        android:checkable="true"
+        android:title="Use Drawee"
+        app:showAsAction="never"
+        />
+</menu>
