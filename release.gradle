@@ -2,7 +2,7 @@
 // In order to upload jars to maven repository run:
 // $ ./gradlew [-P askForPasswords=true] uploadArchives
 // "-P askForPasswords" is optional. Including it in the command will force
-// gradle to ask you for passwrods rather than read them from gradle.properties.
+// gradle to ask you for passwords rather than read them from gradle.properties.
 //
 // In order to upload jars to local maven repository run:
 //$ ./gradlew -P repositoryUrl=file://localhost/ uploadArchives
