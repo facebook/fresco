@@ -13,7 +13,7 @@ Fresco also supports:
 * extensive customization of image loading and display
 * and many more!
 
-Find out more at our [website](http://frescolib.org/index.html).
+Find out more at our [website](http://facebook.github.io/fresco/index.html).
 
 ## Requirements
 
@@ -29,7 +29,7 @@ If you are building with Gradle, simply add the following line to the `dependenc
 compile 'com.facebook.fresco:fresco:0.1.0+'
 ```
 
-See our [download](http://frescolib.org/docs/download-fresco.html) page for other options.
+See our [download](http://facebook.github.io/fresco/docs/download-fresco.html) page for other options.
 
 ## Building Fresco from source
 
