@@ -72,7 +72,7 @@ public boolean onTouchEvent(MotionEvent event) {
 You must call 
 
 ```java
-Drawable drawable = mDraweeHolder.getHierarchy().getDrawable();
+Drawable drawable = mDraweeHolder.getHierarchy().getTopLevelDrawable();
 drawable.setBounds(...);
 ```
 or the Drawee won't appear at all.
@@ -87,7 +87,7 @@ or the Drawee won't appear at all.
 ```java
 @Override
 protected boolean verifyDrawable(Drawable who) {
-  if (who == mDraweeHolder.getHierarchy().getDrawable()) {
+  if (who == mDraweeHolder.getHierarchy().getTopLevelDrawable()) {
     return true;
   }
   // other logic for other Drawables in your view, if any
@@ -119,16 +119,16 @@ If possible, always create Drawees when your view gets created. Creating a hiera
 
 ```java
 class CustomView extends View {
-  DraweeHolder mDraweeHolder;
+  DraweeHolder<GenericDraweeHierarchy> mDraweeHolder;
 
   // constructors following above pattern
 
   private void init() {
-    DraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources());
+    GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources());
       .set...
       .set...
       .build();
-    mDraweeHolder = DraweeHolder.create(hierarchy, this);
+    mDraweeHolder = DraweeHolder.create(hierarchy, context);
   }
 }
 ```
@@ -138,9 +138,9 @@ class CustomView extends View {
 Use a [controller builder](using-controllerbuilder.html), but call `setController` on the holder instead of a View:
 
 ```java
-PipelineDraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newControllerBuilder()
     .setUri(uri)
-    .setOldController(mDraweeHolder.getOldController())
+    .setOldController(mDraweeHolder.getController())
     .build();
 mDraweeHolder.setController(controller);
 ```
@@ -153,11 +153,11 @@ Instead of using a `DraweeHolder`, use a `MultiDraweeHolder`. There are `add`, `
 MultiDraweeHolder<GenericDraweeHierarchy> mMultiDraweeHolder;
 
 private void init() {
-  DraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources());
+  GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(getResources());
     .set...
     .build();
   mMultiDraweeHolder = new MultiDraweeHolder<GenericDraweeHierarchy>();
-  mMultiDraweeHolder.add(hierarchy);
+  mMultiDraweeHolder.add(new DraweeHolder<GenericDraweeHierarchy>(hierarchy, context));
   // repeat for more hierarchies
 }
 ```
