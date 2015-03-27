@@ -21,7 +21,7 @@ In your XML, add a custom namespace to the top-level element:
 <!-- Any valid element will do here -->
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http:/schemas.android.com/apk/res-auto">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
 ```
 
 Then add the view itself:
