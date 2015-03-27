@@ -16,7 +16,7 @@ These are the URI schemes accepted:
 
 | Type | Scheme | Fetch method used
 | ---------------- | ------- | ------------- |
-| File on network | `http://,` `https://` | `HttpURLConnection` or [network layer](using-other-network-libraries.html) |
+| File on network | `http://,` `https://` | `HttpURLConnection` or [network layer](using-other-network-layers.html) |
 | File on device | `file://` | `FileInputStream` | 
 | Content provider | `content://` | `ContentResolver` |
 | Asset in app | `asset://` | `AssetManager` |
