@@ -9,7 +9,7 @@ next: progressive-jpegs.html
 
 `SimpleDraweeView` has two methods for specifying an image. The easy way is to just call `setImageURI.` 
 
-If you want more control over how the Drawee displays your image, you need to use a [DraweeController](concepts.html). This page explains how to build and use one.
+If you want more control over how the Drawee displays your image, you can use a [DraweeController](concepts.html). This page explains how to build and use one.
 
 ### Building a DraweeController
 
