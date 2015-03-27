@@ -1,6 +1,6 @@
 ---
 id: drawee-components
-title: Drawee Components
+title: Drawee Images
 layout: docs
 permalink: /docs/drawee-components.html
 prev: using-drawees-code.html
@@ -21,7 +21,7 @@ next: scaling.html
 
 ## Definitions
 
-This page outlines the different drawables that can be displayed in a Drawee, and how they are set.
+This page outlines the different image branches that can be displayed in a Drawee, and how they are set.
 
 Except for the actual image, all of them can be set by an XML attribute. The value in XML must be either an Android drawable or color resource.
 
