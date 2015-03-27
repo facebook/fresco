@@ -1,6 +1,6 @@
 ---
 id: drawee-components
-title: Drawee Images
+title: Drawee Image Branches
 layout: docs
 permalink: /docs/drawee-components.html
 prev: using-drawees-code.html
