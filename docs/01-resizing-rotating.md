@@ -27,7 +27,7 @@ However, scaling may be inadvisable when the image is much larger than the area 
 
 ### What resizing does
 
-Resizing creates an entirely new image file which is a resize of the old file. The new file is stored locally in cache. The original file is not modified.
+Resizing does not modify the original file. Resizing just resizes an encoded image in memory, prior to being decoded.
 
 This can carry out a much greater range of resizing than is possible with Android's facilities. Images taken with the device's camera, in particular, are often much too large to scale and need to be resized before display on the device.
 
@@ -42,7 +42,7 @@ ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setResizeOptions(new ResizeOptions(width, height))
     .build();
 PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
-    .setOldController(mDraweeView.getOldController())
+    .setOldController(mDraweeView.getController())
     .setImageRequest(request)
     .build();
 mSimpleDraweeView.setController(controller);
