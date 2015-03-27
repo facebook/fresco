@@ -34,10 +34,10 @@ GenericDraweeHierarchy hierarchy = builder
     .setBackgrounds(backgroundList)
     .setOverlays(overlaysList)
     .build();
-mSimpleDraweeView.setDraweeHierarchy(hierarchy);
+mSimpleDraweeView.setHierarchy(hierarchy);
 ```
 
-Do **not** call `setDraweeHierarchy` more than once on the same view, even if the view is recycled. The hierarchy is expensive to create and is intended to be used more than once. Use `setController` or `setImageURI` to change the image shown in it.
+Do **not** call `setHierarchy` more than once on the same view, even if the view is recycled. The hierarchy is expensive to create and is intended to be used more than once. Use `setController` or `setImageURI` to change the image shown in it.
 
 ### Modifying the hierarchy in-place
 
@@ -88,11 +88,10 @@ hierarchy.setActualImageColorFilter(filter);
 
 #### Rounding
 
-All of the [rounding related params](rounded-corners-and-circles.html) can be modified. You get a `RoundingParams` object from the hierarchy, modify it, and set it back again:
+All of the [rounding related params](rounded-corners-and-circles.html), except the rounding method, can be modified. You get a `RoundingParams` object from the hierarchy, modify it, and set it back again:
 
 ```java
 RoundingParams roundingParams = hierarchy.getRoundingParams();
-roundingParams.setRoundingMethod(RoundingMethod.OVERLAY_COLOR);
-roundingParams.setOverlayColor(Color.RED);
+roundingParams.setCornersRadius(10);
 hierarchy.setRoundingParams(roundingParams);
 ```
