@@ -20,7 +20,7 @@ Loading images is, of course, asynchronous. So you need some way of listening to
 To use it, you merely define an instance of the `ControllerListener` interface. We recommend subclassing `BaseControllerListener:`
 
 ```java
-ControllerListener controllerListener = new BaseControllerListener() {
+ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
     @Override
     public void onFinalImageSet(
         String id,
@@ -52,7 +52,7 @@ ControllerListener controllerListener = new BaseControllerListener() {
 };
 
 Uri uri;
-PipelineDraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newControllerBuilder()
     .setControllerListener(controllerListener)
     .setUri(uri);
     // other setters
