@@ -19,7 +19,7 @@ The sole exception is [custom views](writing-custom-views.html). Even there, the
 
 #### Don't re-use DraweeHierarchies
 
-Never call ```DraweeView.setDraweeHierarchy``` with the same argument on two different views. Hierarchies are made up of Drawables, and Drawables on Android cannot be shared among multiple views.
+Never call ```DraweeView.setHierarchy``` with the same argument on two different views. Hierarchies are made up of Drawables, and Drawables on Android cannot be shared among multiple views.
 
 #### Don't use Drawables in more than one DraweeHierarchy
 
