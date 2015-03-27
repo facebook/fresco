@@ -18,10 +18,10 @@ Then pass the image request to a [PipelineDraweeControllerBuilder](../javadoc/re
 ```java
 ControllerListener listener = new BaseControllerListener() {...}
 
-PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setUri(uri)
     .setTapToRetryEnabled(true)
-    .setOldController(mSimpleDraweeView.getOldController())
+    .setOldController(mSimpleDraweeView.getController())
     .setControllerListener(listener)
     .build();
 
@@ -45,9 +45,9 @@ ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setPostprocessor(myPostprocessor)
     .build();
     
-PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setImageRequest(request)
-    .setOldController(mSimpleDraweeView.getOldController())
+    .setOldController(mSimpleDraweeView.getController())
     // other setters as you need
     .build();
 ```
