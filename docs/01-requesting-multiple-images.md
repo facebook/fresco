@@ -20,7 +20,7 @@ Uri lowResUri, highResUri;
 PipelineDraweeController controller = Fresco.newControllerBuilder()
     .setLowResImageRequest(ImageRequest.fromUri(lowResUri))
     .setImageRequest(ImageRequest.fromUri(highResUri))
-    .setOldController(mSimpleDraweeView.getOldController())
+    .setOldController(mSimpleDraweeView.getController())
     .build();
 mSimpleDraweeView.setController(controller);
 ```
@@ -33,9 +33,13 @@ If your JPEG has a thumbnail stored in its EXIF metadata, the image pipeline can
 
 ```java
 Uri uri;
+ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+    .setLocalThumbnailPreviewsEnabled(true)
+    .build();
+
 PipelineDraweeController controller = Fresco.newControllerBuilder()
-    .setImageRequest(ImageRequest.fromUri(uri))
-    .setOldController(mSimpleDraweeView.getOldController())
+    .setImageRequest(request)
+    .setOldController(mSimpleDraweeView.getController())
     .build();
 mSimpleDraweeView.setController(controller);
 ```
@@ -43,9 +47,9 @@ mSimpleDraweeView.setController(controller);
 
 ### Loading the first available image
 
-Most of the time, an image has more than one URI. Load it, and you're done.
+Most of the time, an image has no more than one URI. Load it, and you're done.
 
-But suppose you have multiple URIs for the same image. For instance, you might have images stored on multiple remote hosts. In a case like that, it would be a shame to download the image from one URI when it may already exist in cache, but keyed off a different URI. 
+But suppose you have multiple URIs for the same image. For instance, you might have uploaded an image taken from the camera. Original image would be too big to upload, so the image is downscaled first. In such case, it would be beneficial to first try to get the local-downscaled-uri, then if that fails, try to get the local-original-uri, and if even that fails, try to get the network-uploaded-uri. It would be a shame to download the image that we may have already locally. 
 
 The image pipeline normally searches for images in the memory cache first, then the disk cache, and only then goes out to the network or other source. Rather than doing this one by one for each image, we can have the pipeline check for *all* the images in the memory cache. Only if none were found would disk cache be searched in. Only if none were found there either would an external request be made.
 
@@ -59,7 +63,7 @@ ImageRequest[] requests = { request1, request2 };
 
 PipelineDraweeController controller = Fresco.newControllerBuilder()
     .setFirstAvailableImageRequests(requests)
-    .setOldController(mSimpleDraweeView.getOldController())
+    .setOldController(mSimpleDraweeView.getController())
     .build();
 mSimpleDraweeView.setController(controller);
 ```
