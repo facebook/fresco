@@ -42,21 +42,23 @@ Lookups to the bitmap cache, unlike the others, are done in the UI thread. If a 
 
 ```java
 DataSource<CloseableReference<CloseableImage>> dataSource =
-    mImagePipeline.fetchImageFromBitmapCache(imageRequest);
-CloseableReference<CloseableImage> imageReference;
+    imagePipeline.fetchImageFromBitmapCache(imageRequest);
 try {
-  imageReference = dataSource.getResult();
+  CloseableReference<CloseableImage> imageReference = dataSource.getResult();
   if (imageReference != null) {
-    CloseableImage image = imageReference.get();
-    // do something with the image
+    try {
+      CloseableImage image = imageReference.get();
+      // do something with the image
+    } finally {
+      CloseableReference.closeSafely(imageReference);
+    }
   }
 } finally {
   dataSource.close();
-  CloseableReference.closeSafely(imageReference);
 }
 ```
 
-Do **not** skip this `finally` block!
+Do **not** skip this `finally` blocks!
 
 #### Prefetching 
 
