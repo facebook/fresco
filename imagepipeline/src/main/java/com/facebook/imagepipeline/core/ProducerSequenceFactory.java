@@ -245,7 +245,7 @@ public class ProducerSequenceFactory {
       getCommonNetworkFetchToEncodedMemorySequence() {
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
       mCommonNetworkFetchToEncodedMemorySequence =
-          newEncodedCacheMultiplexToTranscodeSequence(mNetworkFetchProducer, /* isLocal */false);
+          newEncodedCacheMultiplexToTranscodeSequence(mNetworkFetchProducer);
       if (mResizeAndRotateEnabledForNetwork) {
         mCommonNetworkFetchToEncodedMemorySequence =
             newResizeAndRotateImagesSequence(mCommonNetworkFetchToEncodedMemorySequence);
@@ -354,7 +354,7 @@ public class ProducerSequenceFactory {
       Producer<CloseableReference<PooledByteBuffer>> nextProducer,
       boolean isLocal) {
     Producer<CloseableReference<PooledByteBuffer>> nextProducerAfterDecode =
-        newEncodedCacheMultiplexToTranscodeSequence(nextProducer, isLocal);
+        newEncodedCacheMultiplexToTranscodeSequence(nextProducer);
     if (isLocal) {
       nextProducerAfterDecode = newLocalTransformationsSequence(nextProducerAfterDecode);
     }
@@ -375,19 +375,15 @@ public class ProducerSequenceFactory {
   /**
    * encoded cache multiplex -> encoded cache -> (disk cache) -> (webp transcode)
    * @param nextProducer next producer in the sequence
-   * @param isLocal whether the image source is local or not
    * @return encoded cache multiplex to webp transcode sequence
    */
   private Producer<CloseableReference<PooledByteBuffer>>
       newEncodedCacheMultiplexToTranscodeSequence(
-          Producer<CloseableReference<PooledByteBuffer>> nextProducer,
-          boolean isLocal) {
+          Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
       nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
     }
-    if (!isLocal) {
-      nextProducer = mProducerFactory.newDiskCacheProducer(nextProducer);
-    }
+    nextProducer = mProducerFactory.newDiskCacheProducer(nextProducer);
     EncodedMemoryCacheProducer encodedMemoryCacheProducer =
         mProducerFactory.newEncodedMemoryCacheProducer(nextProducer);
     return mProducerFactory.newEncodedCacheKeyMultiplexProducer(encodedMemoryCacheProducer);

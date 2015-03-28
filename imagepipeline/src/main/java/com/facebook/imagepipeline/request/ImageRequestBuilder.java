@@ -166,6 +166,11 @@ public class ImageRequestBuilder {
     return mLocalThumbnailPreviewsEnabled;
   }
 
+  /** Returns whether the use of the disk cache is enabled */
+  public boolean isDiskCacheEnabled() {
+    return UriUtil.isNetworkUri(mSourceUri);
+  }
+
   /**
    * Sets the postprocessor.
    * @param postprocessor postprocessor to postprocess the output bitmap with.

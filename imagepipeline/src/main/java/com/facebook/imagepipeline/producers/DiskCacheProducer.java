@@ -58,11 +58,16 @@ public class DiskCacheProducer implements Producer<CloseableReference<PooledByte
   public void produceResults(
       final Consumer<CloseableReference<PooledByteBuffer>> consumer,
       final ProducerContext producerContext) {
+    ImageRequest imageRequest = producerContext.getImageRequest();
+    if (!imageRequest.isDiskCacheEnabled()) {
+      mNextProducer.produceResults(consumer, producerContext);
+      return;
+    }
+
     final ProducerListener listener = producerContext.getListener();
     final String requestId = producerContext.getId();
     listener.onProducerStart(requestId, PRODUCER_NAME);
 
-    ImageRequest imageRequest = producerContext.getImageRequest();
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
     final BufferedDiskCache cache =
         imageRequest.getImageType() == ImageRequest.ImageType.SMALL

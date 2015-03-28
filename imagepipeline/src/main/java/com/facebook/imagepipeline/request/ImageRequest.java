@@ -52,6 +52,9 @@ public class ImageRequest {
   /** Lowest level that is permitted to fetch an image from */
   private final RequestLevel mLowestPermittedRequestLevel;
 
+  /** Whether the disk cache should be used for this request */
+  private final boolean mIsDiskCacheEnabled;
+
   /** Postprocessor to run on the output bitmap. */
   private final Postprocessor mPostprocessor;
 
@@ -76,6 +79,7 @@ public class ImageRequest {
     mAutoRotateEnabled = builder.isAutoRotateEnabled();
 
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
+    mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
 
     mPostprocessor = builder.getPostprocessor();
   }
@@ -118,6 +122,10 @@ public class ImageRequest {
 
   public RequestLevel getLowestPermittedRequestLevel() {
     return mLowestPermittedRequestLevel;
+  }
+
+  public boolean isDiskCacheEnabled() {
+    return mIsDiskCacheEnabled;
   }
 
   public synchronized File getSourceFile() {
