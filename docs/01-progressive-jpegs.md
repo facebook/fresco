@@ -13,15 +13,11 @@ Fresco supports the streaming of progressive JPEG images over the network.
 
 Scans of the image will be shown in the view as you download them. Users will see the quality of the image start out low and gradually become clearer.
 
-This is only supported for URIs found over the network.
-
-The placeholder is shown until enough scans have arrived to meet the *good enough* threshold. This is configurable.
+This is only supported for the network images. Local images are decoded at once.
 
 #### Initialization
 
-When you [configure](configure-image-pipeline.html) the image pipeline, you must pass in an instance of [ProgressiveJpegConfig](../javadoc/reference/com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html).
-
-This does two things. You should define one method that, given a scan number, returns the number of the next one to decode. 
+When you [configure](configure-image-pipeline.html) the image pipeline, you must pass in an instance of [ProgressiveJpegConfig](../javadoc/reference/com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html). We plan to remove this requirement.
 
 This example will decode no more than every other scan of the image, using less CPU than decoding every scan.
 
