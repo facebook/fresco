@@ -17,13 +17,9 @@ If you want your animated image to start playing automatically when it comes on-
 
 ```java
 Uri uri;
-ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-    .setAutoPlayAnimation(true)
-    . // other setters
-    .build();
-    
 DraweeController controller = Fresco.newDraweeControllerBuilder()
-    .setImageRequest(request)
+    .setUri(uri)
+    .setAutoPlayAnimations(true)
     . // other setters
     .build();
 mSimpleDraweeView.setController(controller);
@@ -34,7 +30,7 @@ mSimpleDraweeView.setController(controller);
 You may prefer to directly control the animation in your own code. In that case you'll need to listen for when the image has loaded, so it's even possible to do that. 
 
 ```java
-ControllerListener controllerListener = new BaseControllerListener() {
+ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
     @Override
     public void onFinalImageSet(
         String id,
@@ -42,13 +38,14 @@ ControllerListener controllerListener = new BaseControllerListener() {
         @Nullable Animatable anim) {
     if (anim != null) {
       // app-specific logic to enable animation starting
+      anim.start();
     }
 };
 
 Uri uri;
-PipelineDraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
+    .setUri(uri)
     .setControllerListener(controllerListener)
-    .setUri(uri);
     // other setters
     .build();
 mSimpleDraweeView.setController(controller);
@@ -57,11 +54,11 @@ mSimpleDraweeView.setController(controller);
 The controller exposes an instance of the [Animatable](http://developer.android.com/reference/android/graphics/drawable/Animatable.html) interface. If non-null, you can drive your animation with it:
 
 ```java
-Animatable animation = mSimpleDraweeView.getController().getAnimatable();
-if (animation != null) {
-  animation.start();
+Animatable animatable = mSimpleDraweeView.getController().getAnimatable();
+if (animatable != null) {
+  animatable.start();
   // later
-  animation.stop();
+  animatable.stop();
 }
 ```
 
