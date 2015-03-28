@@ -21,10 +21,9 @@ The placeholder is shown until enough scans have arrived to meet the *good enoug
 
 When you [configure](configure-image-pipeline.html) the image pipeline, you must pass in an instance of [ProgressiveJpegConfig](../javadoc/reference/com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html).
 
-This does two things. You should define one method that, given a scan number, returns the number of the next one to decode. The other decides what scan number is 'good enough' to display on screen.
+This does two things. You should define one method that, given a scan number, returns the number of the next one to decode. 
 
 This example will decode no more than every other scan of the image, using less CPU than decoding every scan.
-Note: scan with the bigger number than nextScanNumberToDecode might be decoded. In this eample, if the `getNextScanNumberToDecode` method gets called after the following scans were fetched: `1`, `4`, `5`, `10`, only scans `4` and `10` are going to be decoded. Since no scans were decoded at the beginning, the first scan that is allowed to be decoded is `0 + 2 = 2`. Scan number `1` doesn't meet the criteria and only when the next scan greater than or equal to `2` arrives (in this case `4`), the first decode will happen. Similarly, the scan number 5 gets ignored, and the first scan greater than or equal to `4 + 2 = 6` is going to be decoded next (in this case `10`).
 
 ```java
 ProgressiveJpegConfig pjpegConfig = new ProgressiveJpegConfig() {
@@ -48,19 +47,17 @@ Instead of implementing this interface yourself, you can also instantiate the [S
 
 #### At Request Time
 
-Currently, you must explicitly request progressive rendering for each image:
+Currently, you must explicitly request progressive rendering while building the image request:
 
 ```java
 Uri uri;
-ImageRequest request = ImageRequestBuilder
-    .newBuilderWithSource(uri)
+ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setProgressiveRenderingEnabled(true)
     .build();
-PipelineDraweeController controller = Fresco.newControllerBuilder()
-    .setImageRequest(requests)
+DraweeController controller = Fresco.newDraweeControllerBuilder()
+    .setImageRequest(request)
     .setOldController(mSimpleDraweeView.getController())
     .build();
-
 mSimpleDraweeView.setController(controller);
 ```
 
