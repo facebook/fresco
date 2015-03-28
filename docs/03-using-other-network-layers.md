@@ -18,7 +18,7 @@ In order to use it, the `dependencies` section of your `build.gradle` file needs
 ```groovy
 dependencies {
   // your project's other dependencies
-  compile: "com.facebook.fresco:drawee:0.1.0+"
+  compile: "com.facebook.fresco:fresco:0.1.0+"
   compile: "com.facebook.fresco:imagepipeline-okhttp:0.1.0+"
 }
 ```
@@ -37,7 +37,7 @@ Fresco.initialize(context, config);
 ```    
 
 
-### Using your own layer
+### Using your own network fetcher (optional)
 
 For complete control on how the networking layer should behave, you can provide one for your app. You must subclass [NetworkFetchProducer](../javadoc/reference/com/facebook/imagepipeline/producers/NetworkFetchProducer.html), which controls communications to the network. You can also optionally subclass [NfpRequestState](../javadoc/reference/com/facebook/imagepipeline/producers/NfpRequestState.html), which is a data structure for request-specific information.
 
