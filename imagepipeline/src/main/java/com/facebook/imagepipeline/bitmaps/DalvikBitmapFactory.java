@@ -43,7 +43,7 @@ public class DalvikBitmapFactory {
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
 
-  @GuardedBy("this")
+  @GuardedBy("mSingleByteArrayPool")
   private final SingleByteArrayPool mSingleByteArrayPool;
 
   public DalvikBitmapFactory(
@@ -90,21 +90,23 @@ public class DalvikBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  synchronized CloseableReference<Bitmap> decodeFromPooledByteBuffer(
+  CloseableReference<Bitmap> decodeFromPooledByteBuffer(
       final CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
     final int length = pooledByteBuffer.size();
 
-    final byte[] encodedBytesArray = mSingleByteArrayPool.get(length);
-    try {
-      ByteStreams.readFully(pooledByteBuffer.getStream(), encodedBytesArray, 0, length);
-      return doDecodeBitmap(encodedBytesArray, length);
-    } catch (IOException ioe) {
-      // does not happen, inputStream returned from pooledByteBuffer.getStream does not throw
-      // IOExceptions
-      throw Throwables.propagate(ioe);
-    } finally {
-      mSingleByteArrayPool.release(encodedBytesArray);
+    synchronized (mSingleByteArrayPool) {
+      final byte[] encodedBytesArray = mSingleByteArrayPool.get(length);
+      try {
+        ByteStreams.readFully(pooledByteBuffer.getStream(), encodedBytesArray, 0, length);
+        return doDecodeBitmap(encodedBytesArray, length);
+      } catch (IOException ioe) {
+        // does not happen, inputStream returned from pooledByteBuffer.getStream does not throw
+        // IOExceptions
+        throw Throwables.propagate(ioe);
+      } finally {
+        mSingleByteArrayPool.release(encodedBytesArray);
+      }
     }
   }
 
@@ -117,27 +119,29 @@ public class DalvikBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  synchronized CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
+  CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
       final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
       int length) {
     final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
     Preconditions.checkArgument(length <= pooledByteBuffer.size());
     // allocate bigger array in case EOI needs to be added
-    final byte[] encodedBytesArray = mSingleByteArrayPool.get(length + 2);
-    try {
-      ByteStreams.readFully(pooledByteBuffer.getStream(), encodedBytesArray, 0, length);
-      if (!endsWithEOI(encodedBytesArray, length)) {
-        putEOI(encodedBytesArray, length);
-        length += 2;
+    synchronized (mSingleByteArrayPool) {
+      final byte[] encodedBytesArray = mSingleByteArrayPool.get(length + 2);
+      try {
+        ByteStreams.readFully(pooledByteBuffer.getStream(), encodedBytesArray, 0, length);
+        if (!endsWithEOI(encodedBytesArray, length)) {
+          putEOI(encodedBytesArray, length);
+          length += 2;
+        }
+        return doDecodeBitmap(
+            encodedBytesArray,
+            length);
+      } catch (IOException ioe) {
+        // does not happen, streams returned by pooledByteBuffer do not throw IOExceptions
+        throw Throwables.propagate(ioe);
+      } finally {
+        mSingleByteArrayPool.release(encodedBytesArray);
       }
-      return doDecodeBitmap(
-          encodedBytesArray,
-          length);
-    } catch (IOException ioe) {
-      // does not happen, streams returned by pooledByteBuffer do not throw IOExceptions
-      throw Throwables.propagate(ioe);
-    } finally {
-      mSingleByteArrayPool.release(encodedBytesArray);
     }
   }
 
@@ -172,7 +176,7 @@ public class DalvikBitmapFactory {
    * @return a purgeable bitmap
    */
   @SuppressLint("NewApi")
-  private static synchronized Bitmap decodeAsPurgeableBitmap(byte[] encodedBytes, int size) {
+  private static Bitmap decodeAsPurgeableBitmap(byte[] encodedBytes, int size) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
@@ -203,15 +207,16 @@ public class DalvikBitmapFactory {
   }
 
   /**
-   * Associates bitmaps with the current bitmap pool. If this method throws
-   * BitmapPoolSizeExceededException, the code will have called {@link Bitmap#recycle} on the
-   * bitmaps.
+   * Associates bitmaps with the current bitmap pool.
+   *
+   * <p> If this method throws TooManyBitmapsException, the code will have called
+   * {@link Bitmap#recycle} on the bitmaps.
    *
    * @param bitmaps the bitmaps to associate
    * @return the references to the bitmaps that are now tied to the bitmap pool
    * @throws TooManyBitmapsException if the pool is full
    */
-  synchronized List<CloseableReference<Bitmap>> associateBitmapsWithBitmapCounter(
+  List<CloseableReference<Bitmap>> associateBitmapsWithBitmapCounter(
       final List<Bitmap> bitmaps) {
     int countedBitmaps = 0;
     try {
