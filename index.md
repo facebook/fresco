@@ -39,7 +39,7 @@ Animated GIFs and WebPs can be challenging for apps. Each frame is a large Bitma
 
 Fresco uses `Drawees` for display. These offer a number of useful features:
     
-* Scale the image to a custom focus point, instead of the centre
+* Scale the image to a custom focus point, instead of the center
 * Show the image with rounded corners, or a circle
 * Let users tap the placeholder to retry load of the image, if the network load failed
 * Show custom backgrounds, overlays, or progress bars on the image
