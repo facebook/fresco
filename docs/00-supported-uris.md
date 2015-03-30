@@ -21,3 +21,5 @@ These are the URI schemes accepted:
 | Content provider | `content://` | `ContentResolver` |
 | Asset in app | `asset://` | `AssetManager` |
 | Resource in app | `res://` | `Resources.openRawResource` |
+
+Note: Only image resources can be used with the image pipeline (e.g. a PNG image). Other resource types such as Strings or XML Drawables make no sense in the context of the image pipeline and so cannot be supported by definition. One potentially confusing case is drawable declared in XML (e.g. ShapeDrawable). Important thing to note is that this is **not** an image. If you want to display an XML drawable as the main image, then set it as a [placeholder](using-drawees-code.html#change_placeholder) and use the `null` uri.
