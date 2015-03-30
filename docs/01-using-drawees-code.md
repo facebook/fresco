@@ -19,7 +19,7 @@ For more advanced requirements, use a [controller builder](using-controllerbuild
 
 ### Customizing the hierarchy
 
-For most apps, specify the parameters of their hierarchy in [XML](using-drawees-xml) provides all the customization they need. In some cases, though, you may need to go further.
+For most apps, specify the parameters of their hierarchy in [XML](using-drawees-xml.html) provides all the customization they need. In some cases, though, you may need to go further.
 
 We create an instance of the builder and then set it to the view:
 
