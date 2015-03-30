@@ -17,7 +17,7 @@ You can set two URIs, one for the low-res image, one for the high one:
 
 ```java
 Uri lowResUri, highResUri;
-PipelineDraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setLowResImageRequest(ImageRequest.fromUri(lowResUri))
     .setImageRequest(ImageRequest.fromUri(highResUri))
     .setOldController(mSimpleDraweeView.getController())
@@ -37,7 +37,7 @@ ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setLocalThumbnailPreviewsEnabled(true)
     .build();
 
-PipelineDraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setImageRequest(request)
     .setOldController(mSimpleDraweeView.getController())
     .build();
@@ -61,7 +61,7 @@ ImageRequest request = ImageRequest.fromUri(uri1);
 ImageRequest request2 = ImageRequest.fromUri(uri2);
 ImageRequest[] requests = { request1, request2 };
 
-PipelineDraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setFirstAvailableImageRequests(requests)
     .setOldController(mSimpleDraweeView.getController())
     .build();
