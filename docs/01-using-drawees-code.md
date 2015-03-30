@@ -49,7 +49,7 @@ You would first need to get it from the View:
 GenericDraweeHierarchy hierarchy = mSimpleDraweeView.getHierarchy();
 ```
 
-#### <a name="#change_placeholder">Change the placeholder</a>
+#### <a name="change_placeholder">Change the placeholder</a>
 Then you could modify the placeholder, either with a resource id:
 
 ```java
