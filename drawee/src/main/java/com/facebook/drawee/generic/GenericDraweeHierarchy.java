@@ -252,8 +252,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
     if (numOverlays > 0) {
       int index = 0;
-      for (Drawable overlay : builder.getOverlays()) {
-        layers[overlaysIndex + index++] = overlay;
+      if (builder.getOverlays() != null) {
+        for (Drawable overlay : builder.getOverlays()) {
+          layers[overlaysIndex + index++] = overlay;
+        }
       }
       if (builder.getPressedStateOverlay() != null) {
         layers[overlaysIndex + index++] = builder.getPressedStateOverlay();
