@@ -33,6 +33,6 @@ Currently ```DraweeView``` is a subclass of Android's ImageView. This has variou
 
 If you set an image directly, you will completely lose your ```DraweeHierarchy```, and will not get any results from the image pipeline.
 
-#### Don't use ImageView attributes with DraweeView
+#### Don't use ImageView attributes or methods with DraweeView
 
-Any XML attribute of ImageView not found in [View](http://developer.android.com/reference/android/view/View.html) will not work on a DraweeView. We plan to remove them entirely in a future release.
+Any XML attribute or method of ImageView not found in [View](http://developer.android.com/reference/android/view/View.html) will not work on a DraweeView. Typical cases are `scaleType`, `src`, etc. Don't use those. DraweeView has its own counterparts as explained in the other sections of this documentation. Any ImageView attrribute or method will be removed in the upcoming release, so please don't use those.
