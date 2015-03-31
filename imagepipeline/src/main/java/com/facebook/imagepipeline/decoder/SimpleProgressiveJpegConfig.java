@@ -9,18 +9,24 @@
 
 package com.facebook.imagepipeline.decoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 
 /**
  * Simple {@link ProgressiveJpegConfig} with predefined scans to decode and good-enough scan number.
+ *
+ * <p/> If no specific scans to decode are provided, every scan is allowed to be decoded.
  */
 public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
   private final List<Integer> mScansToDecode;
   private final int mGoodEnoughScanNumber;
+
+  public SimpleProgressiveJpegConfig() {
+    this(new ArrayList<Integer>(), 0);
+  }
 
   public SimpleProgressiveJpegConfig(
       List<Integer> scansToDecode,
@@ -31,6 +37,9 @@ public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
 
   @Override
   public int getNextScanNumberToDecode(int scanNumber) {
+    if (mScansToDecode == null || mScansToDecode.isEmpty()) {
+      return scanNumber + 1;
+    }
     for (int i = 0; i < mScansToDecode.size(); i++) {
       if (mScansToDecode.get(i) > scanNumber) {
         return mScansToDecode.get(i);

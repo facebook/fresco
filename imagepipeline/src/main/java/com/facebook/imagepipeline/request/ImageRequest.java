@@ -17,6 +17,7 @@ import java.io.File;
 import android.net.Uri;
 
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 
 /**
@@ -49,6 +50,9 @@ public class ImageRequest {
   /** Is auto-rotate enabled? */
   private final boolean mAutoRotateEnabled;
 
+  /** Priority levels of this request. */
+  private final Priority mRequestPriority;
+
   /** Lowest level that is permitted to fetch an image from */
   private final RequestLevel mLowestPermittedRequestLevel;
 
@@ -78,6 +82,7 @@ public class ImageRequest {
     mResizeOptions = builder.getResizeOptions();
     mAutoRotateEnabled = builder.isAutoRotateEnabled();
 
+    mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
 
@@ -118,6 +123,10 @@ public class ImageRequest {
 
   public boolean getLocalThumbnailPreviewsEnabled() {
     return mLocalThumbnailPreviewsEnabled;
+  }
+
+  public Priority getPriority() {
+    return mRequestPriority;
   }
 
   public RequestLevel getLowestPermittedRequestLevel() {

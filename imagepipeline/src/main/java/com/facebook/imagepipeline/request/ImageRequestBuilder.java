@@ -16,6 +16,7 @@ import android.net.Uri;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 
 import static com.facebook.imagepipeline.request.ImageRequest.ImageType;
@@ -34,6 +35,7 @@ public class ImageRequestBuilder {
   private ImageType mImageType = ImageType.DEFAULT;
   private boolean mProgressiveRenderingEnabled = false;
   private boolean mLocalThumbnailPreviewsEnabled = false;
+  private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
 
   /**
@@ -169,6 +171,21 @@ public class ImageRequestBuilder {
   /** Returns whether the use of the disk cache is enabled */
   public boolean isDiskCacheEnabled() {
     return UriUtil.isNetworkUri(mSourceUri);
+  }
+
+  /**
+   * Set priority for the request.
+   * @param requestPriority
+   * @return the modified builder instance
+   */
+  public ImageRequestBuilder setRequestPriority(Priority requestPriority) {
+    mRequestPriority = requestPriority;
+    return this;
+  }
+
+  /** Returns the request priority */
+  public Priority getRequestPriority() {
+    return mRequestPriority;
   }
 
   /**

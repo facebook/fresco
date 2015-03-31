@@ -14,9 +14,11 @@ import javax.annotation.concurrent.GuardedBy;
 
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
+import com.facebook.common.executors.UiThreadExecutorService;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -41,8 +43,7 @@ import com.facebook.imageformat.ImageFormat;
  */
 public class DecodeProducer implements Producer<CloseableReference<CloseableImage>> {
 
-  @VisibleForTesting
-  static final String PRODUCER_NAME = "DecodeProducer";
+  public static final String PRODUCER_NAME = "DecodeProducer";
 
   // keys for extra map
   private static final String QUEUE_TIME_KEY = "queueTime";
@@ -96,9 +97,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     private final ProducerListener mProducerListener;
     private final ImageDecodeOptions mImageDecodeOptions;
 
+    private final Runnable mSubmitDecodeRunnable;
+
     @GuardedBy("this")
     private boolean mIsFinished;
-
 
     // This class is responsible for closing old, non-null reference, and for storing the reference
     // to the latest data. One thing to note is that the reference is overtaken in doDecode().
@@ -106,10 +108,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     // released (so that we don't issue another decode of the same image). The cloned reference gets
     // released after decode finishes. As a slight optimization, instead of cloning and releasing,
     // reference is just moved.
-    @GuardedBy("ProgressiveDecoder.this")
+    @GuardedBy("this")
     @VisibleForTesting CloseableReference<PooledByteBuffer> mImageBytesRef;
-    @GuardedBy("ProgressiveDecoder.this")
-    @VisibleForTesting boolean mIsLast;
+    @GuardedBy("this")
+    private boolean mIsLast;
+    @GuardedBy("this")
+    private boolean mIsDecodeSubmitted;
+    @GuardedBy("this")
+    private long mLastDecodeTime;
 
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
@@ -124,10 +130,16 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             @Override
             public void onIsIntermediateResultExpectedChanged() {
               if (mProducerContext.isIntermediateResultExpected()) {
-                scheduleDecodeJob();
+                scheduleDecodeJob(mImageDecodeOptions.minDecodeIntervalMs);
               }
             }
           });
+      mSubmitDecodeRunnable = new Runnable() {
+        @Override
+        public void run() {
+          submitDecode();
+        }
+      };
     }
 
     @Override
@@ -136,7 +148,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         return;
       }
       if (isLast || mProducerContext.isIntermediateResultExpected()) {
-        scheduleDecodeJob();
+        scheduleDecodeJob(isLast ? 0 : mImageDecodeOptions.minDecodeIntervalMs);
       }
     }
 
@@ -150,32 +162,49 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       handleCancellation();
     }
 
+    /** Updates the decode job. */
     protected synchronized boolean updateDecodeJob(
         CloseableReference<PooledByteBuffer> imageBytesRef,
         boolean isLast) {
+      // ignore invalid intermediate results (should not happen ever, but being defensive)
+      if (!isLast && !CloseableReference.isValid(imageBytesRef)) {
+        return false;
+      }
       CloseableReference.closeSafely(mImageBytesRef);
       mImageBytesRef = CloseableReference.cloneOrNull(imageBytesRef);
       mIsLast = isLast;
       return true;
     }
 
-    private synchronized void scheduleDecodeJob() {
-      // TODO(T5416926): use more elaborate algorithm for throttling decoded scans
-      submitDecode();
+    /** Schedules the decode, but no sooner than minDecodeIntervalMs since the last decode. */
+    private synchronized void scheduleDecodeJob(int minDecodeIntervalMs) {
+      if (!mIsDecodeSubmitted) {
+        mIsDecodeSubmitted = true;
+        long now = SystemClock.uptimeMillis();
+        long when = Math.max(mLastDecodeTime + minDecodeIntervalMs, now);
+        if (when > now) {
+          UiThreadExecutorService.getInstance()
+              .schedule(mSubmitDecodeRunnable, when - now, TimeUnit.MILLISECONDS);
+        } else {
+          mSubmitDecodeRunnable.run();
+        }
+      }
     }
 
+    /** Submits the decode to the executor. */
     protected void submitDecode() {
-      final long submitTime = SystemClock.elapsedRealtime();
+      final long submitTime = SystemClock.uptimeMillis();
       mExecutor.execute(
           new Runnable() {
             @Override
             public void run() {
-              final long queueTime = SystemClock.elapsedRealtime() - submitTime;
+              final long queueTime = SystemClock.uptimeMillis() - submitTime;
               doDecode(queueTime);
             }
           });
     }
 
+    /** Performs the decode synchronously. */
     private void doDecode(long queueTime) {
       CloseableReference<PooledByteBuffer> bytesRef;
       boolean isLast;
@@ -183,6 +212,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         bytesRef = mImageBytesRef;
         mImageBytesRef = null;
         isLast = mIsLast;
+        mIsDecodeSubmitted = false;
+        mLastDecodeTime = SystemClock.uptimeMillis();
       }
 
       try {
@@ -297,7 +328,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
   class LocalImagesProgressiveDecoder extends ProgressiveDecoder {
 
-    @VisibleForTesting LocalImagesProgressiveDecoder(
+    public LocalImagesProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext) {
       super(consumer, producerContext);
@@ -324,9 +355,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   class NetworkImagesProgressiveDecoder extends ProgressiveDecoder {
     private final ProgressiveJpegParser mProgressiveJpegParser;
     private final ProgressiveJpegConfig mProgressiveJpegConfig;
-    private int mLastDecodedScanNumber;
+    private int mLastScheduledScanNumber;
 
-    NetworkImagesProgressiveDecoder(
+    public NetworkImagesProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext,
         final ProgressiveJpegParser progressiveJpegParser,
@@ -334,7 +365,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       super(consumer, producerContext);
       mProgressiveJpegParser = Preconditions.checkNotNull(progressiveJpegParser);
       mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
-      mLastDecodedScanNumber = 0;
+      mLastScheduledScanNumber = 0;
     }
 
     @Override
@@ -346,11 +377,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         if (!mProgressiveJpegParser.parseMoreData(imageBytesRef)) {
           return false;
         }
-        if (mProgressiveJpegParser.getBestScanNumber() <
-            mProgressiveJpegConfig.getNextScanNumberToDecode(mLastDecodedScanNumber)) {
+        int scanNum = mProgressiveJpegParser.getBestScanNumber();
+        if (scanNum <= mLastScheduledScanNumber ||
+            scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(mLastScheduledScanNumber)) {
           return false;
         }
-        mLastDecodedScanNumber = mProgressiveJpegParser.getBestScanNumber();
+        mLastScheduledScanNumber = scanNum;
       }
       return ret;
     }

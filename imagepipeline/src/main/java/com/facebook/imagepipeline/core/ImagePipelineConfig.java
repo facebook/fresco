@@ -9,7 +9,6 @@
 
 package com.facebook.imagepipeline.core;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +16,6 @@ import java.util.Set;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
@@ -137,7 +135,7 @@ public class ImagePipelineConfig {
             builder.mPoolFactory;
     mProgressiveJpegConfig =
         builder.mProgressiveJpegConfig == null ?
-            getDefaultProgressiveJpegConfig() :
+            new SimpleProgressiveJpegConfig() :
             builder.mProgressiveJpegConfig;
     mRequestListeners =
         builder.mRequestListeners == null ?
@@ -193,12 +191,6 @@ public class ImagePipelineConfig {
         .setMaxCacheSizeOnLowDiskSpace(10 * ByteConstants.MB)
         .setMaxCacheSizeOnVeryLowDiskSpace(2 * ByteConstants.MB)
         .build();
-  }
-
-  private static ProgressiveJpegConfig getDefaultProgressiveJpegConfig() {
-    // By default, don't return images progressively at all.
-    return new SimpleProgressiveJpegConfig(
-        Collections.unmodifiableList(new ArrayList<Integer>()), 0);
   }
 
   public Supplier<MemoryCacheParams> getBitmapMemoryCacheParamsSupplier() {

@@ -230,7 +230,7 @@ public class ImagePipeline {
         /* isPrefetch */ false,
         imageRequest.getProgressiveRenderingEnabled() ||
             !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
-        Priority.HIGH);
+        imageRequest.getPriority());
     return CloseableProducerToDataSourceAdapter.create(
         producerSequence,
         settableProducerContext,
