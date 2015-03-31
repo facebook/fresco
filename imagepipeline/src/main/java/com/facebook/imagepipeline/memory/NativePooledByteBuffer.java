@@ -59,7 +59,7 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
   @Override
   public synchronized InputStream getStream() {
     ensureValid();
-    return new NativeMemoryChunkInputStream(mBufRef.get(), 0, mSize);
+    return new PooledByteBufferInputStream(this);
   }
 
   @Override

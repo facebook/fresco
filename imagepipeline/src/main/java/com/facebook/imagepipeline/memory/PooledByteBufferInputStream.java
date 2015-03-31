@@ -18,47 +18,28 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 
 /**
- * An InputStream implementation over a {@link NativeMemoryChunk} instance
+ * An InputStream implementation over a {@link PooledByteBuffer} instance
  */
 @NotThreadSafe
-public class NativeMemoryChunkInputStream extends InputStream {
+public class PooledByteBufferInputStream extends InputStream {
 
   @VisibleForTesting
-  final NativeMemoryChunk mMemoryChunk; // the underlying memory chunk we're using
-
-  @VisibleForTesting
-  final int mEndOffset; // end offset in chunk
-
-  @VisibleForTesting
-  final int mStartOffset; // initial offset into the chunk
+  final PooledByteBuffer mPooledByteBuffer;
 
   @VisibleForTesting
   int mOffset; // current offset in the chunk
   @VisibleForTesting
   int mMark; // position of 'mark' if any
 
-  // to avoid new allocation on every read()
-  byte[] mSingleByteBuffer = new byte[1];
-
   /**
-   * Creates a new inputstream instance over the specific memory chunk.
-   * @param nativeMemoryChunk the native memory chunk
-   * @param startOffset start offset within the memory chunk
-   * @param length length of subchunk
+   * Creates a new inputstream instance over the specific buffer.
+   * @param pooledByteBuffer the buffer to read from
    */
-  public NativeMemoryChunkInputStream(
-      NativeMemoryChunk nativeMemoryChunk,
-      int startOffset,
-      int length) {
+  public PooledByteBufferInputStream(PooledByteBuffer pooledByteBuffer) {
     super();
-    Preconditions.checkState(startOffset >= 0);
-    Preconditions.checkState(length >= 0);
-    mMemoryChunk = Preconditions.checkNotNull(nativeMemoryChunk);
-    mStartOffset = startOffset;
-    mEndOffset = startOffset + length > nativeMemoryChunk.getSize()
-        ? nativeMemoryChunk.getSize() : startOffset + length;
-    mOffset = startOffset;
-    mMark = startOffset;
+    mPooledByteBuffer = Preconditions.checkNotNull(pooledByteBuffer);
+    mOffset = 0;
+    mMark = 0;
   }
 
   /**
@@ -66,7 +47,7 @@ public class NativeMemoryChunkInputStream extends InputStream {
    */
   @Override
   public int available() {
-    return Math.max(0, mEndOffset - mOffset);
+    return mPooledByteBuffer.size() - mOffset;
   }
 
   /**
@@ -90,10 +71,16 @@ public class NativeMemoryChunkInputStream extends InputStream {
   }
 
   @Override
-  public int read() throws IOException {
-    int len = this.read(mSingleByteBuffer, 0, 1);
-    int b = (int) mSingleByteBuffer[0] & 0xFF;
-    return (len == 1) ? b : -1;
+  public int read() {
+    if (available() <= 0) {
+      return -1;
+    }
+    return ((int) mPooledByteBuffer.read(mOffset++))  & 0xFF;
+  }
+
+  @Override
+  public int read(byte[] buffer) {
+    return read(buffer, 0, buffer.length);
   }
 
   /**
@@ -113,18 +100,19 @@ public class NativeMemoryChunkInputStream extends InputStream {
           "; regionLength=" + length);
     }
 
-    if (mOffset >= mEndOffset) {
+    final int available = available();
+    if (available <= 0) {
       return -1;
     }
 
-    if (length == 0) {
+    if (length <= 0) {
       return 0;
     }
 
-    int numToRead = Math.min(available(), length);
-    int numRead = mMemoryChunk.read(mOffset, buffer, offset, numToRead);
-    mOffset += numRead;
-    return numRead;
+    int numToRead = Math.min(available, length);
+    mPooledByteBuffer.read(mOffset, buffer, offset, numToRead);
+    mOffset += numToRead;
+    return numToRead;
   }
 
   /**
@@ -141,18 +129,12 @@ public class NativeMemoryChunkInputStream extends InputStream {
    * Skips byteCount (or however many bytes are available) bytes in the stream
    * @param byteCount number of bytes to skip
    * @return number of bytes actually skipped
-   * @throws IOException
    */
   @Override
   public long skip(long byteCount) {
-    // skip-count is zero or less; or we're already past the end of stream? Just return 0
-    if (byteCount <= 0 ||
-        (mOffset >= mEndOffset)) {
-      return 0;
-    }
-
-    int temp = mOffset;
-    mOffset = (mEndOffset - mOffset) < byteCount ? mEndOffset : (int)(mOffset + byteCount);
-    return Math.max(0, mOffset - temp);
+    Preconditions.checkArgument(byteCount >= 0);
+    int skipped = Math.min((int) byteCount, available());
+    mOffset += skipped;
+    return skipped;
   }
 }
