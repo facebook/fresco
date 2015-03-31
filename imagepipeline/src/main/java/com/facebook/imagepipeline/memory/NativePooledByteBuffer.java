@@ -50,18 +50,6 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
     return mSize;
   }
 
-  /**
-   * Get an input stream for this bytebuffer.
-   * The bytebuffer must be valid (aka not closed); otherwise, a closedException is raised
-   * @return a ByteArrayInputStream for this buf
-   * @throws {@link ClosedException}
-   */
-  @Override
-  public synchronized InputStream getStream() {
-    ensureValid();
-    return new PooledByteBufferInputStream(this);
-  }
-
   @Override
   public synchronized byte read(int offset) {
     ensureValid();

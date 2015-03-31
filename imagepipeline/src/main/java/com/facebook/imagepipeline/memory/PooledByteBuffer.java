@@ -25,12 +25,6 @@ public interface PooledByteBuffer extends Closeable {
   int size();
 
   /**
-   * Get an input stream.
-   * @return an input stream over the byte buffer
-   */
-  InputStream getStream();
-
-  /**
    * Read byte at given offset
    * @param offset
    * @return byte at given offset

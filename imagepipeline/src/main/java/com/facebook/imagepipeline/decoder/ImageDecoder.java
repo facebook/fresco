@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 
 /**
  * Decodes images.
@@ -71,7 +72,7 @@ public class ImageDecoder {
       final ImageDecodeOptions options) {
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
       imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-          pooledByteBufferRef.get().getStream());
+          new PooledByteBufferInputStream(pooledByteBufferRef.get()));
     }
 
     switch (imageFormat) {

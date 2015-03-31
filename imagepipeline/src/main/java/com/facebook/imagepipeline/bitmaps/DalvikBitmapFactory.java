@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.bitmaps;
 
 import javax.annotation.concurrent.GuardedBy;
 
-import java.io.IOException;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -20,7 +19,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
-import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
@@ -94,16 +92,11 @@ public class DalvikBitmapFactory {
       final CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
     final int length = pooledByteBuffer.size();
-
     synchronized (mSingleByteArrayPool) {
       final byte[] encodedBytesArray = mSingleByteArrayPool.get(length);
       try {
-        ByteStreams.readFully(pooledByteBuffer.getStream(), encodedBytesArray, 0, length);
+        pooledByteBuffer.read(0, encodedBytesArray, 0, length);
         return doDecodeBitmap(encodedBytesArray, length);
-      } catch (IOException ioe) {
-        // does not happen, inputStream returned from pooledByteBuffer.getStream does not throw
-        // IOExceptions
-        throw Throwables.propagate(ioe);
       } finally {
         mSingleByteArrayPool.release(encodedBytesArray);
       }
@@ -128,7 +121,7 @@ public class DalvikBitmapFactory {
     synchronized (mSingleByteArrayPool) {
       final byte[] encodedBytesArray = mSingleByteArrayPool.get(length + 2);
       try {
-        ByteStreams.readFully(pooledByteBuffer.getStream(), encodedBytesArray, 0, length);
+        pooledByteBuffer.read(0, encodedBytesArray, 0, length);
         if (!endsWithEOI(encodedBytesArray, length)) {
           putEOI(encodedBytesArray, length);
           length += 2;
@@ -136,9 +129,6 @@ public class DalvikBitmapFactory {
         return doDecodeBitmap(
             encodedBytesArray,
             length);
-      } catch (IOException ioe) {
-        // does not happen, streams returned by pooledByteBuffer do not throw IOExceptions
-        throw Throwables.propagate(ioe);
       } finally {
         mSingleByteArrayPool.release(encodedBytesArray);
       }

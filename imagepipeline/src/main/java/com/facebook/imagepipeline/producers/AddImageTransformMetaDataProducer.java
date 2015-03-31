@@ -17,6 +17,7 @@ import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 
 /**
  * Add image transform meta data producer
@@ -55,13 +56,13 @@ public class AddImageTransformMetaDataProducer
     @Override
     protected void onNewResultImpl(
         CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
-      final ImageFormat imageFormat =
-          ImageFormatChecker.getImageFormat_WrapIOException(newResult.get().getStream());
+      final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+          new PooledByteBufferInputStream(newResult.get()));
       mMetaDataBuilder.reset();
       mMetaDataBuilder.setImageFormat(imageFormat);
       if (imageFormat == ImageFormat.JPEG && isLast) {
         mMetaDataBuilder.setRotationAngle(getRotationAngle(newResult));
-        Rect dimensions = JfifUtil.getDimensions(newResult.get().getStream());
+        Rect dimensions = JfifUtil.getDimensions(new PooledByteBufferInputStream(newResult.get()));
         if (dimensions != null) {
           mMetaDataBuilder.setWidth(dimensions.width());
           mMetaDataBuilder.setHeight(dimensions.height());
@@ -83,7 +84,7 @@ public class AddImageTransformMetaDataProducer
     // Gets the correction angle based on the image's orientation
     private int getRotationAngle(final CloseableReference<PooledByteBuffer> inputRef) {
       return JfifUtil.getAutoRotateAngleFromOrientation(
-          JfifUtil.getOrientation(inputRef.get().getStream()));
+          JfifUtil.getOrientation(new PooledByteBufferInputStream(inputRef.get())));
     }
   }
 }

@@ -21,6 +21,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteStreams;
 import com.facebook.binaryresource.BinaryResource;
@@ -224,7 +225,7 @@ public class BufferedDiskCache {
           key, new WriterCallback() {
             @Override
             public void write(OutputStream os) throws IOException {
-              mPooledByteStreams.copy(buffer.getStream(), os);
+              mPooledByteStreams.copy(new PooledByteBufferInputStream(buffer), os);
             }
           }
       );

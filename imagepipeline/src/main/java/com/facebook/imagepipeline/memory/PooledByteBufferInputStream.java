@@ -37,6 +37,7 @@ public class PooledByteBufferInputStream extends InputStream {
    */
   public PooledByteBufferInputStream(PooledByteBuffer pooledByteBuffer) {
     super();
+    Preconditions.checkArgument(!pooledByteBuffer.isClosed());
     mPooledByteBuffer = Preconditions.checkNotNull(pooledByteBuffer);
     mOffset = 0;
     mMark = 0;

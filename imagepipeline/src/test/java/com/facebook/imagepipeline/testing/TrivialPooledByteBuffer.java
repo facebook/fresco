@@ -2,7 +2,6 @@
 
 package com.facebook.imagepipeline.testing;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -26,11 +25,6 @@ public class TrivialPooledByteBuffer implements PooledByteBuffer {
   @Override
   public int size() {
     return isClosed() ? -1 : mBuf.length;
-  }
-
-  @Override
-  public InputStream getStream() {
-    return new ByteArrayInputStream(mBuf);
   }
 
   @Override

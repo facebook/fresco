@@ -20,6 +20,7 @@ import com.facebook.common.util.StreamUtil;
 import com.facebook.imagepipeline.memory.ByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteArrayBufferedInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imageutils.JfifUtil;
 
 /**
@@ -131,7 +132,7 @@ public class ProgressiveJpegParser {
     }
 
     final InputStream bufferedDataStream = new PooledByteArrayBufferedInputStream(
-        dataBuffer.getStream(),
+        new PooledByteBufferInputStream(dataBuffer),
         mByteArrayPool.get(BUFFER_SIZE),
         mByteArrayPool);
     try {

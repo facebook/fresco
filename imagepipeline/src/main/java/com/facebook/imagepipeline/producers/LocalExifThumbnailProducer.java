@@ -21,6 +21,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageformat.ImageFormat;
@@ -109,12 +110,12 @@ public class LocalExifThumbnailProducer implements
   }
 
   private ImageTransformMetaData getImageTransformMetaData(
-      PooledByteBuffer imageRef,
+      PooledByteBuffer imageBytes,
       ExifInterface exifInterface) {
     ImageTransformMetaData.Builder builder = ImageTransformMetaData.newBuilder()
         .setImageFormat(ImageFormat.JPEG);
     builder.setRotationAngle(getRotationAngle(exifInterface));
-    Rect dimensions = JfifUtil.getDimensions(imageRef.getStream());
+    Rect dimensions = JfifUtil.getDimensions(new PooledByteBufferInputStream(imageBytes));
     if (dimensions != null) {
       builder.setWidth(dimensions.width());
       builder.setHeight(dimensions.height());

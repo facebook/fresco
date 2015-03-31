@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
+import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
@@ -76,22 +77,14 @@ public class ArtBitmapFactoryTest {
 
   @Before
   public void setUp() throws Exception {
-    mBitmapPool = mock(BitmapPool.class);
-    mPooledByteBuffer = mock(PooledByteBuffer.class);
-
     final Random random = new Random();
     random.setSeed(RANDOM_SEED);
     mEncodedBytes = new byte[ENCODED_BYTES_LENGTH];
     random.nextBytes(mEncodedBytes);
 
+    mPooledByteBuffer = new TrivialPooledByteBuffer(mEncodedBytes);
+    mBitmapPool = mock(BitmapPool.class);
     mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool);
-
-    doReturn(new ByteArrayInputStream(mEncodedBytes))
-        .when(mPooledByteBuffer)
-        .getStream();
-    doReturn(ENCODED_BYTES_LENGTH)
-        .when(mPooledByteBuffer)
-        .size();
 
     mEncodedImageRef = CloseableReference.of(mPooledByteBuffer);
     mBitmap = MockBitmapFactory.create();

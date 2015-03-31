@@ -17,6 +17,7 @@ import com.facebook.common.util.TriState;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
@@ -46,7 +47,7 @@ public class WebpTranscodeProducer
       final CloseableReference<PooledByteBuffer> imageRef,
       final ImageRequest imageRequest,
       boolean isLast) {
-    InputStream imageInputStream = imageRef.get().getStream();
+    InputStream imageInputStream = new PooledByteBufferInputStream(imageRef.get());
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
 
     switch (imageFormat) {
@@ -68,7 +69,7 @@ public class WebpTranscodeProducer
       final PooledByteBufferOutputStream outputStream,
       ImageRequest imageRequest,
       Void unused) throws Exception {
-    InputStream imageInputStream = imageRef.get().getStream();
+    InputStream imageInputStream = new PooledByteBufferInputStream(imageRef.get());
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
     switch (imageFormat) {
       case WEBP_SIMPLE:

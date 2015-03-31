@@ -142,6 +142,13 @@ public class PooledByteBufferInputStreamTest {
     assertEquals(-1, is.read());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testCreatingStreamAfterClose() {
+    PooledByteBuffer buffer = new TrivialPooledByteBuffer(new byte[] {});
+    buffer.close();
+    new PooledByteBufferInputStream(buffer);
+  }
+
   // assert that the first 'length' bytes of expected are the same as those in 'actual'
   private static void assertArrayEquals(byte[] expected, byte[] actual, int length) {
     assertTrue(expected.length >= length);

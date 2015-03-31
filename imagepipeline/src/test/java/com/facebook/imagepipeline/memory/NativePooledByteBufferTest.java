@@ -87,7 +87,7 @@ public class NativePooledByteBufferTest {
 
   @Test
   public void testReadFromStream() throws Exception {
-    InputStream is = mPooledByteBuffer.getStream();
+    InputStream is = new PooledByteBufferInputStream(mPooledByteBuffer);
     byte[] tmp = new byte[BUFFER_LENGTH + 1];
     int bytesRead = is.read(tmp, 0, tmp.length);
     assertEquals(BUFFER_LENGTH, bytesRead);
@@ -109,11 +109,5 @@ public class NativePooledByteBufferTest {
   public void testGettingSizeAfterClose() {
     mPooledByteBuffer.close();
     mPooledByteBuffer.size();
-  }
-
-  @Test(expected = PooledByteBuffer.ClosedException.class)
-  public void testGettingStreamAfterClose() {
-    mPooledByteBuffer.close();
-    mPooledByteBuffer.getStream();
   }
 }

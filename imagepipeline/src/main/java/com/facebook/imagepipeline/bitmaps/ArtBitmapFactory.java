@@ -24,6 +24,7 @@ import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
@@ -80,7 +81,7 @@ public class ArtBitmapFactory {
    */
   CloseableReference<Bitmap> decodeFromPooledByteBuffer(
       CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
-    return doDecodeStaticImage(pooledByteBufferRef.get().getStream());
+    return doDecodeStaticImage(new PooledByteBufferInputStream(pooledByteBufferRef.get()));
   }
 
   /**
@@ -95,7 +96,7 @@ public class ArtBitmapFactory {
       CloseableReference<PooledByteBuffer> pooledByteBufferRef,
       int length) {
     final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
-    final InputStream jpegBufferInputStream = pooledByteBuffer.getStream();
+    final InputStream jpegBufferInputStream = new PooledByteBufferInputStream(pooledByteBuffer);
     jpegBufferInputStream.mark(Integer.MAX_VALUE);
 
     boolean isJpegComplete;

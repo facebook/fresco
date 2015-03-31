@@ -19,6 +19,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.JpegTranscoder;
@@ -70,7 +71,7 @@ public class ResizeAndRotateProducer extends ImageTransformProducer<
       final ImageTransformMetaData metaData)
       throws Exception {
     JpegTranscoder.transcodeJpeg(
-        imageRef.get().getStream(),
+        new PooledByteBufferInputStream(imageRef.get()),
         outputStream,
         getRotationAngle(imageRequest, metaData),
         getScaleNumerator(imageRequest, metaData),
