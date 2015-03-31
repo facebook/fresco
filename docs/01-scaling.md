@@ -27,6 +27,14 @@ These are mostly the same as those supported by the Android [ImageView](http://d
 
 The one unsupported type is `matrix.` In its place, Fresco offers `focusCrop,` which will usually work better.
 
+### How to set
+
+Actual, placeholder, retry, and failure images can all be [set in XML](using-drawees-xml.html), using attributes like `fresco:actualImageScaleType`. You can also set them [in code](using-drawees-code.html) using the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class.
+
+Even after your hierarchy is built, the actual image scale type can be modified on the fly using  [GenericDraweeHierarchy](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchy.html).
+
+However, do **not** use the `android:scaleType` attribute, nor the `.setScaleType` method. These have no effect on Drawees.
+
 ### focusCrop
 
 Android, and Fresco, offer a `centerCrop` scale type, which will fill the entire viewing area while preserving the aspect ratio of the image, cropping as necessary.
