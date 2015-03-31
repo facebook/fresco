@@ -11,8 +11,12 @@ package com.facebook.common.references;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import java.util.Map;
+
+import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.logging.FLog;
 
 /**
  * A shared-reference class somewhat similar to c++ shared_ptr. The underlying value is reference
@@ -92,7 +96,12 @@ import com.facebook.common.internal.Preconditions;
  */
 @VisibleForTesting
 public class SharedReference<T> {
-  private static final Class<?> TAG = SharedReference.class;
+
+  // Keeps references to all live objects so finalization of those Objects always happens after
+  // SharedReference first disposes of it. Note, this does not prevent CloseableReference's from
+  // being finalized when the reference is no longer reachable.
+  @GuardedBy("itself")
+  private static final Map<Object, Integer> sLiveObjects = Maps.newIdentityHashMap();
 
   @GuardedBy("this")
   private T mValue;
@@ -112,6 +121,47 @@ public class SharedReference<T> {
     mValue = Preconditions.checkNotNull(value);
     mResourceReleaser = Preconditions.checkNotNull(resourceReleaser);
     mRefCount = 1;
+    addLiveReference(value);
+  }
+
+  /**
+   * Increases the reference count of a live object in the static map. Adds it if it's not
+   * being held.
+   *
+   * @param value the value to add.
+   */
+  private static void addLiveReference(Object value) {
+    synchronized (sLiveObjects) {
+      Integer count = sLiveObjects.get(value);
+      if (count == null) {
+        sLiveObjects.put(value, 1);
+      } else {
+        sLiveObjects.put(value, count + 1);
+      }
+    }
+  }
+
+  /**
+   * Decreases the reference count of live object from the static map. Removes it if it's reference
+   * count has become 0.
+   *
+   * @param value the value to remove.
+   */
+  private static void removeLiveReference(Object value) {
+    synchronized (sLiveObjects) {
+      Integer count = sLiveObjects.get(value);
+      if (count == null) {
+        // Uh oh.
+        FLog.wtf(
+            "SharedReference",
+            "No entry in sLiveObjects for value of type %s",
+            value.getClass());
+      } else if (count == 1) {
+        sLiveObjects.remove(value);
+      } else {
+        sLiveObjects.put(value, count - 1);
+      }
+    }
   }
 
   /**
@@ -153,10 +203,13 @@ public class SharedReference<T> {
    */
   public void deleteReference() {
     if (decreaseRefCount() == 0) {
-      mResourceReleaser.release(mValue);
+      T deleted;
       synchronized (this) {
+        deleted = mValue;
         mValue = null;
       }
+      mResourceReleaser.release(deleted);
+      removeLiveReference(deleted);
     }
   }
 

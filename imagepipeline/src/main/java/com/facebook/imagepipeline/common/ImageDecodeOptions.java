@@ -20,6 +20,11 @@ public class ImageDecodeOptions {
   private static final ImageDecodeOptions DEFAULTS = ImageDecodeOptions.newBuilder().build();
 
   /**
+   * Decoding of intermediate results for an image won't happen more often that minDecodeIntervalMs.
+   */
+  public final int minDecodeIntervalMs;
+
+  /**
    * Background color used when converting to image formats that don't support transparency.
    */
   public final int backgroundColor;
@@ -40,6 +45,7 @@ public class ImageDecodeOptions {
   public final boolean useLastFrameForPreview;
 
   ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
+    this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.backgroundColor = b.getBackgroundColor();
     this.forceOldAnimationCode = b.getForceOldAnimationCode();
     this.decodePreviewFrame = b.getDecodePreviewFrame();

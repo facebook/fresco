@@ -14,6 +14,7 @@ package com.facebook.imagepipeline.common;
  */
 public class ImageDecodeOptionsBuilder {
 
+  private int mMinDecodeIntervalMs = 100;
   private int mBackgroundColor = 0xFFFFFF;
   private boolean mForceOldAnimationCode;
   private boolean mDecodePreviewFrame;
@@ -34,6 +35,29 @@ public class ImageDecodeOptionsBuilder {
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     return this;
+  }
+
+  /**
+   * Sets the minimum decode interval.
+   *
+   * <p/> Decoding of intermediate results won't happen more often that intervalMs. If another
+   * intermediate result comes too soon, it will be decoded only after intervalMs since the last
+   * decode. If there were more intermediate results in between, only the last one gets decoded.
+   * @param intervalMs the minimum decode interval in milliseconds
+   * @return this builder
+   */
+  public ImageDecodeOptionsBuilder setMinDecodeIntervalMs(int intervalMs) {
+    mMinDecodeIntervalMs = intervalMs;
+    return this;
+  }
+
+  /**
+   * Gets the minimum decode interval.
+   *
+   * @return the minimum decode interval in milliseconds
+   */
+  public int getMinDecodeIntervalMs() {
+    return mMinDecodeIntervalMs;
   }
 
   /**
