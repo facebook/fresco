@@ -47,6 +47,11 @@ public class FakeNativeMemoryChunk extends NativeMemoryChunk {
   }
 
   @Override
+  public byte read(int nativeMemoryOffset) {
+    return mBuf[nativeMemoryOffset];
+  }
+
+  @Override
   public int read(int nativeMemoryOffset, byte[] byteArray, int byteArrayOffset, int count) {
     int numToRead = Math.min(count, mBuf.length - nativeMemoryOffset);
     System.arraycopy(mBuf, nativeMemoryOffset, byteArray, byteArrayOffset, numToRead);

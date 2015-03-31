@@ -237,6 +237,11 @@ public class DalvikBitmapFactoryTest {
     }
 
     @Override
+    public void read(int offset, byte[] buffer, int bufferOffset, int length) {
+      System.arraycopy(mBuf, offset, buffer, bufferOffset, length);
+    }
+
+    @Override
     public long getNativePtr() {
       return mNativePtr;
     }

@@ -38,6 +38,17 @@ public interface PooledByteBuffer extends Closeable {
   byte read(int offset);
 
   /**
+   * Read consecutive bytes.
+   *
+   * @param offset the position in the PooledByteBuffer of the first byte to read
+   * @param buffer the byte array where read bytes will be copied to
+   * @param bufferOffset the position within the buffer of the first copied byte
+   * @param length number of bytes to copy
+   * @return number of bytes copied
+   */
+  void read(int offset, byte[] buffer, int bufferOffset, int length);
+
+  /**
    * @return pointer to native memory backing this buffer
    */
   long getNativePtr();

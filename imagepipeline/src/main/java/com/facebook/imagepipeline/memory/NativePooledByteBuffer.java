@@ -71,6 +71,15 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
   }
 
   @Override
+  public synchronized void read(int offset, byte[] buffer, int bufferOffset, int length) {
+    ensureValid();
+    // We need to make sure that PooledByteBuffer's length is preserved.
+    // Al the other bounds checks will be performed by NativeMemoryChunk.read method.
+    Preconditions.checkArgument(offset + length <= mSize);
+    mBufRef.get().read(offset, buffer, bufferOffset, length);
+  }
+
+  @Override
   public synchronized long getNativePtr() {
     ensureValid();
     return mBufRef.get().getNativePtr();

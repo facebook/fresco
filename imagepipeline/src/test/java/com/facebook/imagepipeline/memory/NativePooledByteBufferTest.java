@@ -16,59 +16,104 @@ import com.facebook.imagepipeline.testing.FakeNativeMemoryChunk;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
 import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Basic tests for {@link NativePooledByteBuffer}
  */
 @RunWith(WithTestDefaultsRunner.class)
 public class NativePooledByteBufferTest {
-  private FakeNativeMemoryChunkPool mPool;
-  private PoolStats mStats;
+  private static final byte[] BYTES = new byte[] {1, 4, 5, 0, 100, 34, 0, 1, -1, -1};
+  private static final int BUFFER_LENGTH = BYTES.length - 2;
+
+  @Mock public NativeMemoryChunkPool mPool;
+  private NativeMemoryChunk mChunk;
+  private NativePooledByteBuffer mPooledByteBuffer;
 
   @Before
-  public void setup() {
-    mPool = new FakeNativeMemoryChunkPool();
-    mStats = new PoolStats(mPool);
+  public void setUp() {
+    mChunk = new FakeNativeMemoryChunk(BYTES.length);
+    mChunk.write(0, BYTES, 0, BYTES.length);
+    mPool = mock(NativeMemoryChunkPool.class);
+    CloseableReference<NativeMemoryChunk> poolRef = CloseableReference.of(mChunk, mPool);
+    mPooledByteBuffer = new NativePooledByteBuffer(
+        poolRef,
+        BUFFER_LENGTH);
+    poolRef.close();
   }
 
   @Test
   public void testBasic() throws Exception {
-    byte[] b = new byte[] {1, 4, 5, 0, 100, 34, 0, 0};
-    NativeMemoryChunk chunk = new FakeNativeMemoryChunk(b.length);
-    chunk.write(0, b, 0, b.length);
-    NativePooledByteBuffer sb = new NativePooledByteBuffer(CloseableReference.of(chunk, mPool), 3);
-    Assert.assertFalse(sb.isClosed());
-    Assert.assertSame(chunk, sb.mBufRef.get());
-    Assert.assertEquals(3, sb.size());
-    InputStream is = sb.getStream();
-    byte[] tmp = new byte[100];
-    int bytesRead = is.read(tmp, 0, tmp.length);
-    Assert.assertEquals(3, bytesRead);
-    for (int i = 0; i < bytesRead; i++) {
-      Assert.assertEquals(b[i], tmp[i]);
-    }
+    assertFalse(mPooledByteBuffer.isClosed());
+    assertSame(mChunk, mPooledByteBuffer.mBufRef.get());
+    assertEquals(BUFFER_LENGTH, mPooledByteBuffer.size());
+  }
 
-    // try a reset
-    sb.close();
-    Assert.assertTrue(sb.isClosed());
-    Assert.assertNull(sb.mBufRef);
-    // getting the size should fail
-    try {
-      sb.size();
-      Assert.fail();
-    } catch (PooledByteBuffer.ClosedException e) {
-      // ignore
+  @Test
+  public void testSimpleRead() {
+    for (int i = 0; i < 100; ++i) {
+      final int offset = i % BUFFER_LENGTH;
+      assertEquals(BYTES[offset], mPooledByteBuffer.read(offset));
     }
-    // getting the stream should fail
-    try {
-      sb.getStream();
-      Assert.fail();
-    } catch (PooledByteBuffer.ClosedException e) {
-      // ignore
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testSimpleReadOutOfBounds() {
+    mPooledByteBuffer.read(BUFFER_LENGTH);
+  }
+
+  @Test
+  public void testRangeRead() {
+    byte[] readBuf = new byte[BUFFER_LENGTH];
+    mPooledByteBuffer.read(1, readBuf, 1, BUFFER_LENGTH - 2);
+    assertEquals(0, readBuf[0]);
+    assertEquals(0, readBuf[BUFFER_LENGTH - 1]);
+    for (int i = 1; i < BUFFER_LENGTH - 1; ++i) {
+      assertEquals(BYTES[i], readBuf[i]);
     }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testRangeReadOutOfBounds() {
+    byte[] readBuf = new byte[BUFFER_LENGTH];
+    mPooledByteBuffer.read(1, readBuf, 0, BUFFER_LENGTH);
+  }
+
+  @Test
+  public void testReadFromStream() throws Exception {
+    InputStream is = mPooledByteBuffer.getStream();
+    byte[] tmp = new byte[BUFFER_LENGTH + 1];
+    int bytesRead = is.read(tmp, 0, tmp.length);
+    assertEquals(BUFFER_LENGTH, bytesRead);
+    for (int i = 0; i < BUFFER_LENGTH; i++) {
+      assertEquals(BYTES[i], tmp[i]);
+    }
+    assertEquals(-1, is.read());
+  }
+
+  @Test
+  public void testClose() {
+    mPooledByteBuffer.close();
+    assertTrue(mPooledByteBuffer.isClosed());
+    assertNull(mPooledByteBuffer.mBufRef);
+    verify(mPool).release(mChunk);
+  }
+
+  @Test(expected = PooledByteBuffer.ClosedException.class)
+  public void testGettingSizeAfterClose() {
+    mPooledByteBuffer.close();
+    mPooledByteBuffer.size();
+  }
+
+  @Test(expected = PooledByteBuffer.ClosedException.class)
+  public void testGettingStreamAfterClose() {
+    mPooledByteBuffer.close();
+    mPooledByteBuffer.getStream();
   }
 }
