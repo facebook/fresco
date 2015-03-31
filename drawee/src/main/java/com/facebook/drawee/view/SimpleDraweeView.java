@@ -65,6 +65,9 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   private void init() {
+    if (isInEditMode()) {
+      return;
+    }
     Preconditions.checkNotNull(
         sDraweeControllerBuilderSupplier,
         "SimpleDraweeView was not initialized!");
