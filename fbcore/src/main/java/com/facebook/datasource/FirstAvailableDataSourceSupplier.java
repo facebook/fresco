@@ -224,6 +224,12 @@ public class FirstAvailableDataSourceSupplier<T> implements Supplier<DataSource<
           FirstAvailableDataSource.this.onDataSourceFailed(dataSource);
         }
       }
+
+      @Override
+      public void onProgressUpdate(DataSource<T> dataSource) {
+        float oldProgress = FirstAvailableDataSource.this.getProgress();
+        FirstAvailableDataSource.this.setProgress(Math.max(oldProgress, dataSource.getProgress()));
+      }
     }
   }
 }

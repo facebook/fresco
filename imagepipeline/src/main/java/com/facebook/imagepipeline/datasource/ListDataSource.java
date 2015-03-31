@@ -102,6 +102,14 @@ public class ListDataSource<T> extends AbstractDataSource<ArrayList<CloseableRef
     setFailure(new CancellationException());
   }
 
+  private void onDataSourceProgress() {
+    float progress = 0;
+    for (DataSource<?> dataSource : mDataSources) {
+      progress += dataSource.getProgress();
+    }
+    setProgress(progress / mDataSources.length);
+  }
+
   private class InternalDataSubscriber implements DataSubscriber<CloseableReference<T>> {
     @GuardedBy("InternalDataSubscriber.this")
     boolean mFinished = false;
@@ -129,6 +137,11 @@ public class ListDataSource<T> extends AbstractDataSource<ArrayList<CloseableRef
       if (dataSource.isFinished() && tryFinish()) {
         ListDataSource.this.onDataSourceFinished();
       }
+    }
+
+    @Override
+    public void onProgressUpdate(DataSource<CloseableReference<T>> dataSource) {
+      ListDataSource.this.onDataSourceProgress();
     }
   }
 }

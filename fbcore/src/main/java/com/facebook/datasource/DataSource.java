@@ -68,6 +68,11 @@ public interface DataSource<T> {
   @Nullable Throwable getFailureCause();
 
   /**
+   * @return progress in range [0, 1]
+   */
+  float getProgress();
+
+  /**
    * Cancels the ongoing request and releases all associated resources.
    *
    * <p>Subsequent calls to {@link #getResult} will return null.

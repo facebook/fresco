@@ -43,6 +43,11 @@ public class AbstractDataSourceTest {
     }
 
     @Override
+    public boolean setProgress(float progress) {
+      return super.setProgress(progress);
+    }
+
+    @Override
     public void closeResult(Value result) {
       result.close();
     }

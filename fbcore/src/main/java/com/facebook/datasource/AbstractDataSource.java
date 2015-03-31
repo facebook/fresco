@@ -52,6 +52,8 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   private @Nullable T mResult = null;
   @GuardedBy("this")
   private Throwable mFailureThrowable = null;
+  @GuardedBy("this")
+  private float mProgress = 0;
   private final ConcurrentLinkedQueue<Pair<DataSubscriber<T>, Executor>> mSubscribers;
 
   protected AbstractDataSource() {
@@ -90,6 +92,11 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   @Nullable
   public synchronized Throwable getFailureCause() {
     return mFailureThrowable;
+  }
+
+  @Override
+  public synchronized float getProgress() {
+    return mProgress;
   }
 
   @Override
@@ -212,7 +219,6 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
 
   /**
    * Subclasses should invoke this method to set the failure.
-
    *
    * <p> This method will return {@code true} if the failure was successfully set, or
    * {@code false} if the data source has already been set, failed or closed.
@@ -236,6 +242,28 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     return result;
   }
 
+  /**
+   * Subclasses should invoke this method to set the progress.
+   *
+   * <p> This method will return {@code true} if the progress was successfully set, or
+   * {@code false} if the data source has already been set, failed or closed.
+   *
+   * <p> This will also notify the subscribers if the progress was successfully set.
+   *
+   * <p> Do NOT call this method from a synchronized block as it invokes external code of the
+   * subscribers.
+   *
+   * @param progress the progress in range [0, 1] to be set.
+   * @return true if the progress was successfully set.
+   */
+  protected boolean setProgress(float progress) {
+    boolean result = setProgressInternal(progress);
+    if (result) {
+      notifyProgressUpdate();
+    }
+    return result;
+  }
+
   private boolean setResultInternal(@Nullable T value, boolean isLast) {
     T resultToClose = null;
     try {
@@ -246,6 +274,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
         } else {
           if (isLast) {
             mDataSourceStatus = DataSourceStatus.SUCCESS;
+            mProgress = 1;
           }
           if (mResult != value) {
             resultToClose = mResult;
@@ -268,6 +297,31 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
       mDataSourceStatus = DataSourceStatus.FAILURE;
       mFailureThrowable = throwable;
       return true;
+    }
+  }
+
+  private synchronized boolean setProgressInternal(float progress) {
+    if (mIsClosed || mDataSourceStatus != DataSourceStatus.IN_PROGRESS) {
+      return false;
+    } else if (progress < mProgress) {
+      return false;
+    } else {
+      mProgress = progress;
+      return true;
+    }
+  }
+
+  protected void notifyProgressUpdate() {
+    for (Pair<DataSubscriber<T>, Executor> pair : mSubscribers) {
+      final DataSubscriber<T> subscriber = pair.first;
+      Executor executor = pair.second;
+      executor.execute(
+          new Runnable() {
+            @Override
+            public void run() {
+              subscriber.onProgressUpdate(AbstractDataSource.this);
+            }
+          });
     }
   }
 }

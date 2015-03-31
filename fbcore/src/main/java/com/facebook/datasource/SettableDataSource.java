@@ -72,4 +72,15 @@ public class SettableDataSource<T> extends AbstractDataSource<T> {
   public boolean setFailure(Throwable throwable) {
     return super.setFailure(Preconditions.checkNotNull(throwable));
   }
+
+  /**
+   * Sets the progress.
+   *
+   * @param progress the progress in range [0, 1] to be set.
+   * @return true if the progress was successfully set.
+   */
+  @Override
+  public boolean setProgress(float progress) {
+    return super.setProgress(progress);
+  }
 }

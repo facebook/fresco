@@ -67,6 +67,17 @@ public final class SettableDataSource<T> extends AbstractDataSource<CloseableRef
   }
 
   /**
+   * Sets the progress.
+   *
+   * @param progress the progress in range [0, 1] to be set.
+   * @return true if the progress was successfully set.
+   */
+  @Override
+  public boolean setProgress(float progress) {
+    return super.setProgress(progress);
+  }
+
+  /**
    * Gets the result if any, null otherwise.
    *
    * <p> Value will be cloned and it's the caller's responsibility to close the returned value.

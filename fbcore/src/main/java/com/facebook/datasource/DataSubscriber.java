@@ -47,4 +47,11 @@ public interface DataSubscriber<T> {
    * @param dataSource
    */
   void onCancellation(DataSource<T> dataSource);
+
+  /**
+   * Called when the progress updates.
+   *
+   * @param dataSource
+   */
+  void onProgressUpdate(DataSource<T> dataSource);
 }

@@ -61,6 +61,10 @@ public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
   public void onCancellation(DataSource<T> dataSource) {
   }
 
+  @Override
+  public void onProgressUpdate(DataSource<T> dataSource) {
+  }
+
   protected abstract void onNewResultImpl(DataSource<T> dataSource);
 
   protected abstract void onFailureImpl(DataSource<T> dataSource);

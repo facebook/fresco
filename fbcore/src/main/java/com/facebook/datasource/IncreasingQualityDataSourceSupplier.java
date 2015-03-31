@@ -243,6 +243,13 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       @Override
       public void onCancellation(DataSource<T> dataSource) {
       }
+
+      @Override
+      public void onProgressUpdate(DataSource<T> dataSource) {
+        if (mIndex == 0) {
+          IncreasingQualityDataSource.this.setProgress(dataSource.getProgress());
+        }
+      }
     }
   }
 }
