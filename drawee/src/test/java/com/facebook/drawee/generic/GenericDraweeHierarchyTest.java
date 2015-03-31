@@ -576,7 +576,7 @@ public class GenericDraweeHierarchyTest {
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set final image (non-immediate)
-    dh.setImage(mActualImage1, false, 100);
+    dh.setImage(mActualImage1, 1f, false);
     assertEquals(mActualImage1, actualImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -591,7 +591,7 @@ public class GenericDraweeHierarchyTest {
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set final image (immediate)
-    dh.setImage(mActualImage2, true, 100);
+    dh.setImage(mActualImage2, 1f, true);
     assertEquals(mActualImage2, actualImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -669,7 +669,7 @@ public class GenericDraweeHierarchyTest {
     // initial state -> final image (immediate)
     // initial state, show progress bar
     assertEquals(false, fadeDrawable.isLayerOn(progressBarImageIndex));
-    dh.setProgress(0, true);
+    dh.setProgress(0f, true);
     assertEquals(ColorDrawable.class, finalImageSettableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
@@ -680,7 +680,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set final image (immediate)
-    dh.setImage(mActualImage2, true, 100);
+    dh.setImage(mActualImage2, 1f, true);
     assertEquals(mActualImage2, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -695,7 +695,7 @@ public class GenericDraweeHierarchyTest {
     // reset hierarchy to initial state, show progress bar
     dh.reset();
     assertEquals(false, fadeDrawable.isLayerOn(progressBarImageIndex));
-    dh.setProgress(0, true);
+    dh.setProgress(0f, true);
     assertEquals(ColorDrawable.class, finalImageSettableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
@@ -706,7 +706,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set final image (non-immediate)
-    dh.setImage(mActualImage2, false, 100);
+    dh.setImage(mActualImage2, 1f, false);
     assertEquals(mActualImage2, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -722,7 +722,7 @@ public class GenericDraweeHierarchyTest {
     // reset hierarchy to initial state, show progress bar
     dh.reset();
     assertEquals(false, fadeDrawable.isLayerOn(progressBarImageIndex));
-    dh.setProgress(0, true);
+    dh.setProgress(0f, true);
     assertEquals(ColorDrawable.class, finalImageSettableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
@@ -733,7 +733,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set temporary image (immediate)
-    dh.setImage(mActualImage1, true, 50);
+    dh.setImage(mActualImage1, 0.5f, true);
     assertEquals(mActualImage1, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -744,7 +744,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set final image (non-immediate)
-    dh.setImage(mActualImage2, false, 100);
+    dh.setImage(mActualImage2, 1f, false);
     assertEquals(mActualImage2, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -760,7 +760,7 @@ public class GenericDraweeHierarchyTest {
     // reset hierarchy to initial state, show progress bar
     dh.reset();
     assertEquals(false, fadeDrawable.isLayerOn(progressBarImageIndex));
-    dh.setProgress(0, true);
+    dh.setProgress(0f, true);
     assertEquals(ColorDrawable.class, finalImageSettableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
@@ -771,7 +771,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set temporary image (non-immediate)
-    dh.setImage(mActualImage1, false, 50);
+    dh.setImage(mActualImage1, 0.5f, false);
     assertEquals(mActualImage1, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -783,7 +783,7 @@ public class GenericDraweeHierarchyTest {
     assertEquals(FadeDrawable.TRANSITION_STARTING, fadeDrawable.getTransitionState());
     assertEquals(250, fadeDrawable.getTransitionDuration());
     // set final image (non-immediate)
-    dh.setImage(mActualImage2, false, 100);
+    dh.setImage(mActualImage2, 1f, false);
     assertEquals(mActualImage2, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -799,7 +799,7 @@ public class GenericDraweeHierarchyTest {
     // reset hierarchy to initial state, show progress bar
     dh.reset();
     assertEquals(false, fadeDrawable.isLayerOn(progressBarImageIndex));
-    dh.setProgress(0, true);
+    dh.setProgress(0f, true);
     assertEquals(ColorDrawable.class, finalImageSettableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
@@ -810,7 +810,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set temporary image (immediate)
-    dh.setImage(mActualImage1, true, 50);
+    dh.setImage(mActualImage1, 0.5f, true);
     assertEquals(mActualImage1, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -837,7 +837,7 @@ public class GenericDraweeHierarchyTest {
     // reset hierarchy to initial state, show progress bar
     dh.reset();
     assertEquals(false, fadeDrawable.isLayerOn(progressBarImageIndex));
-    dh.setProgress(0, true);
+    dh.setProgress(0f, true);
     assertEquals(ColorDrawable.class, finalImageSettableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(false, fadeDrawable.isLayerOn(actualImageIndex));
@@ -848,7 +848,7 @@ public class GenericDraweeHierarchyTest {
     assertLayersOn(fadeDrawable, overlaysIndex, numOverlays);
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
     // set temporary image (immediate)
-    dh.setImage(mActualImage1, true, 50);
+    dh.setImage(mActualImage1, 0.5f, true);
     assertEquals(mActualImage1, finalImageSettableDrawable.getCurrent());
     assertEquals(false, fadeDrawable.isLayerOn(placeholderImageIndex));
     assertEquals(true, fadeDrawable.isLayerOn(actualImageIndex));
@@ -888,14 +888,14 @@ public class GenericDraweeHierarchyTest {
     SettableDrawable settableDrawable = (SettableDrawable) fadeDrawable.getDrawable(imageIndex);
 
     // set temporary image
-    dh.setImage(mActualImage1, true, 50);
+    dh.setImage(mActualImage1, 0.5f, true);
     assertNotSame(mActualImage1, settableDrawable.getCurrent());
     assertEquals(RoundedBitmapDrawable.class, settableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(imageIndex));
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
 
     // set final image
-    dh.setImage(mActualImage2, false, 100);
+    dh.setImage(mActualImage2, 1f, false);
     assertNotSame(mActualImage2, settableDrawable.getCurrent());
     assertEquals(RoundedBitmapDrawable.class, settableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(imageIndex));

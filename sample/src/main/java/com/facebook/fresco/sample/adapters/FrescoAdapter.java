@@ -16,6 +16,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
@@ -50,6 +51,7 @@ public class FrescoAdapter extends ImageListAdapter<InstrumentedDraweeView> {
         .setPlaceholderImage(Drawables.sPlaceholderDrawable)
         .setFailureImage(Drawables.sErrorDrawable)
         .setRoundingParams(RoundingParams.asCircle())
+        .setProgressBarImage(new ProgressBarDrawable())
         .build();
     return new InstrumentedDraweeView(getContext(), gdh);
   }

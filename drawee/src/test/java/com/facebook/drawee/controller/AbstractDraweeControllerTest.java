@@ -431,7 +431,7 @@ public class AbstractDraweeControllerTest {
   public void testLoadingS_LS() {
     testStreamedLoading(
         new int[]{INTERMEDIATE_LOW, SUCCESS},
-        new int[]{SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[]{SET_IMAGE_P20, SET_IMAGE_P100});
   }
 
   @Test
@@ -452,7 +452,7 @@ public class AbstractDraweeControllerTest {
   public void testLoadingS_LF() {
     testStreamedLoading(
         new int[]{INTERMEDIATE_LOW, FAILURE},
-        new int[]{SET_IMAGE_P50, SET_FAILURE});
+        new int[]{SET_IMAGE_P20, SET_FAILURE});
   }
 
   @Test
@@ -473,7 +473,7 @@ public class AbstractDraweeControllerTest {
   public void testLoadingS_LLS() {
     testStreamedLoading(
         new int[]{INTERMEDIATE_LOW, INTERMEDIATE_LOW, SUCCESS},
-        new int[]{SET_IMAGE_P50, SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[]{SET_IMAGE_P20, SET_IMAGE_P20, SET_IMAGE_P100});
   }
 
   @Test
@@ -487,7 +487,7 @@ public class AbstractDraweeControllerTest {
   public void testLoadingS_LGS() {
     testStreamedLoading(
         new int[]{INTERMEDIATE_LOW, INTERMEDIATE_GOOD, SUCCESS},
-        new int[]{SET_IMAGE_P50, SET_IMAGE_P50, SET_IMAGE_P100});
+        new int[]{SET_IMAGE_P20, SET_IMAGE_P50, SET_IMAGE_P100});
   }
 
   @Test
@@ -657,10 +657,12 @@ public class AbstractDraweeControllerTest {
         break;
       case INTERMEDIATE_LOW:
         image.open();
+        dataSource.setProgress(0.2f);
         dataSource.setResult(image, false);
         break;
       case INTERMEDIATE_GOOD:
         image.open();
+        dataSource.setProgress(0.5f);
         dataSource.setResult(image, false);
         break;
       default:
@@ -671,16 +673,16 @@ public class AbstractDraweeControllerTest {
   private void verifyDhInteraction(int dhInteraction, Drawable drawable, boolean wasImmediate) {
     switch (dhInteraction) {
       case IGNORE:
-        verify(mDraweeHierarchy, never()).setImage(eq(drawable), anyBoolean(), anyInt());
+        verify(mDraweeHierarchy, never()).setImage(eq(drawable), anyFloat(), anyBoolean());
         break;
       case SET_IMAGE_P20:
-        verify(mDraweeHierarchy).setImage(eq(drawable), eq(wasImmediate), eq(50));
+        verify(mDraweeHierarchy).setImage(eq(drawable), eq(0.2f), eq(wasImmediate));
         break;
       case SET_IMAGE_P50:
-        verify(mDraweeHierarchy).setImage(eq(drawable), eq(wasImmediate), eq(50));
+        verify(mDraweeHierarchy).setImage(eq(drawable), eq(0.5f), eq(wasImmediate));
         break;
       case SET_IMAGE_P100:
-        verify(mDraweeHierarchy).setImage(eq(drawable), eq(wasImmediate), eq(100));
+        verify(mDraweeHierarchy).setImage(eq(drawable), eq(1.0f), eq(wasImmediate));
         break;
       case SET_FAILURE:
         verify(mDraweeHierarchy).setFailure(any(Throwable.class));

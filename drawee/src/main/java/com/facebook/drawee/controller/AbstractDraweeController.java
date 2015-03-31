@@ -407,9 +407,10 @@ public abstract class AbstractDraweeController<T, INFO> implements
             // isFinished must be obtained before image, otherwise we might set intermediate result
             // as final image.
             boolean isFinished = dataSource.isFinished();
+            float progress = dataSource.getProgress();
             T image = dataSource.getResult();
             if (image != null) {
-              onNewResultInternal(id, dataSource, image, isFinished, wasImmediate);
+              onNewResultInternal(id, dataSource, image, progress, isFinished, wasImmediate);
             } else if (isFinished) {
               onFailureInternal(id, dataSource, new NullPointerException(), /* isFinished */ true);
             }
@@ -417,6 +418,12 @@ public abstract class AbstractDraweeController<T, INFO> implements
           @Override
           public void onFailureImpl(DataSource<T> dataSource) {
             onFailureInternal(id, dataSource, dataSource.getFailureCause(), /* isFinished */ true);
+          }
+          @Override
+          public void onProgressUpdate(DataSource<T> dataSource) {
+            boolean isFinished = dataSource.isFinished();
+            float progress = dataSource.getProgress();
+            onProgressUpdateInternal(id, dataSource, progress, isFinished);
           }
         };
     mDataSource.subscribe(dataSubscriber, mUiThreadImmediateExecutor);
@@ -426,6 +433,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
       String id,
       DataSource<T> dataSource,
       @Nullable T image,
+      float progress,
       boolean isFinished,
       boolean wasImmediate) {
     // ignore late callbacks (data source that returned the new result is not the one we expected)
@@ -456,13 +464,12 @@ public abstract class AbstractDraweeController<T, INFO> implements
       if (isFinished) {
         logMessageAndImage("set_final_result @ onNewResult", image);
         mDataSource = null;
-        mSettableDraweeHierarchy.setImage(drawable, wasImmediate, 100);
+        mSettableDraweeHierarchy.setImage(drawable, 1f, wasImmediate);
         getControllerListener().onFinalImageSet(id, getImageInfo(image), getAnimatable());
         // IMPORTANT: do not execute any instance-specific code after this point
       } else {
         logMessageAndImage("set_intermediate_result @ onNewResult", image);
-        int progress = getProgress(dataSource, image);
-        mSettableDraweeHierarchy.setImage(drawable, wasImmediate, progress);
+        mSettableDraweeHierarchy.setImage(drawable, progress, wasImmediate);
         getControllerListener().onIntermediateImageSet(id, getImageInfo(image));
         // IMPORTANT: do not execute any instance-specific code after this point
       }
@@ -509,6 +516,22 @@ public abstract class AbstractDraweeController<T, INFO> implements
     }
   }
 
+  private void onProgressUpdateInternal(
+      String id,
+      DataSource<T> dataSource,
+      float progress,
+      boolean isFinished) {
+    // ignore late callbacks (data source that failed is not the one we expected)
+    if (!isExpectedDataSource(id, dataSource)) {
+      logMessageAndFailure("ignore_old_datasource @ onProgress", null);
+      dataSource.close();
+      return;
+    }
+    if (!isFinished) {
+      mSettableDraweeHierarchy.setProgress(progress, false);
+    }
+  }
+
   private boolean isExpectedDataSource(String id, DataSource<T> dataSource) {
     // There are several situations in which an old data source might return a result that we are no
     // longer interested in. To verify that the result is indeed expected, we check several things:
@@ -538,13 +561,6 @@ public abstract class AbstractDraweeController<T, INFO> implements
           messageAndMethod,
           throwable);
     }
-  }
-
-  protected int getProgress(DataSource<T> dataSource, T image) {
-    // IMPORTANT: At the moment, GenericDraweeHierarchy hides progressbar only when progress
-    // reaches 100. Once we implement more accurate estimate, we will have to explicitly specify
-    // whether or not should the progressbar be visible.
-    return dataSource.isFinished() ? 100 : 50;
   }
 
   @Override

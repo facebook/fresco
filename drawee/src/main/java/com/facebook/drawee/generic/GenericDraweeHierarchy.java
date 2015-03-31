@@ -402,13 +402,18 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
   }
 
-  private void setProgress(int progress) {
+  private void setProgress(float progress) {
+    if (mProgressBarImageIndex < 0) {
+      return;
+    }
     // display indefinite progressbar when not fully loaded, hide otherwise
-    if (progress == 100) {
+    if (progress >= 0.999f) {
       fadeOutLayer(mProgressBarImageIndex);
     } else {
       fadeInLayer(mProgressBarImageIndex);
     }
+    // set drawable level, scaled to [0, 10000] per drawable specification
+    mFadeDrawable.getDrawable(mProgressBarImageIndex).setLevel(Math.round(progress * 10000));
   }
 
   // SettableDraweeHierarchy interface
@@ -425,7 +430,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   @Override
-  public void setImage(Drawable drawable, boolean immediate, int progress) {
+  public void setImage(Drawable drawable, float progress, boolean immediate) {
     drawable = maybeApplyRounding(mRoundingParams, mResources, drawable);
     drawable.mutate();
     mActualImageSettableDrawable.setDrawable(drawable);
@@ -440,7 +445,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   @Override
-  public void setProgress(int progress, boolean immediate) {
+  public void setProgress(float progress, boolean immediate) {
     mFadeDrawable.beginBatchMode();
     setProgress(progress);
     if (immediate) {
