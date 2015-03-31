@@ -11,13 +11,21 @@ package com.facebook.imagepipeline.request;
 
 import javax.annotation.Nullable;
 
+import android.content.res.Resources;
 import android.net.Uri;
+import android.support.annotation.DrawableRes;
+import android.util.TypedValue;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.facebook.imagepipeline.request.ImageRequest.ImageType;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
@@ -26,6 +34,12 @@ import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
  * Builder class for {@link ImageRequest}s.
  */
 public class ImageRequestBuilder {
+
+  /**
+   * Local resource supported extensions
+   */
+  private static final Set<String> LOCAL_RESOURCE_EXT
+          = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(".png", ".jpg", ".gif")));
 
   private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
@@ -45,6 +59,38 @@ public class ImageRequestBuilder {
    */
   public static ImageRequestBuilder newBuilderWithSource(Uri uri) {
     return new ImageRequestBuilder().setSource(uri);
+  }
+
+  /**
+   * Creates a new request builder instance for a local resource image.
+   * <p/>
+   * Only image resources can be used with the image pipeline (PNG, JPG, GIF). Other resource
+   * types such as Strings or XML Drawables make no sense in the context of the image pipeline and
+   * so cannot be supported by definition. One potentially confusing case is drawable declared in
+   * XML (e.g. ShapeDrawable). Important thing to note is that this is not an image. If you want
+   * to display an XML drawable as the main image, then set it as a placeholder and use the null uri.
+   * <p/>
+   *
+   * @param resources application resources.
+   * @param resId     local image resource id.
+   * @return a new request builder instance.
+   */
+  public static ImageRequestBuilder newBuilderWithResourceId(Resources resources,
+                                                             @DrawableRes int resId) {
+    TypedValue value = new TypedValue();
+    resources.getValue(resId, value, true);
+    String resourceName = value.string.toString();
+    String resourceExt = resourceName.substring(resourceName.lastIndexOf('.')).toLowerCase();
+
+    if (!LOCAL_RESOURCE_EXT.contains(resourceExt)) {
+      throw new IllegalArgumentException("Only image resources can be used with"
+          + " the image pipeline. " + resourceExt + " files are not supported.");
+    }
+
+    Uri uri = new Uri.Builder().scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+        .path(String.valueOf(resId)).build();
+
+    return newBuilderWithSource(uri);
   }
 
   private ImageRequestBuilder() {
