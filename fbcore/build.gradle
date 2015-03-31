@@ -7,8 +7,8 @@ version = VERSION_NAME
 apply plugin: 'robolectric'
 
 dependencies {
-    compile "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     androidTestCompile "com.google.guava:guava:${GUAVA_VERSION}"
     androidTestCompile "junit:junit:${JUNIT_VERSION}"
