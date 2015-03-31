@@ -62,8 +62,8 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
         AbstractProducerToDataSourceAdapter.this.onCancellationImpl();
       }
 
-      //@Override TODO(6549690): integrate progress to producers
-      protected void onProgressUpdate(float progress) {
+      @Override
+      protected void onProgressUpdateImpl(float progress) {
         AbstractProducerToDataSourceAdapter.this.setProgress(progress);
       }
     };

@@ -58,4 +58,11 @@ public interface Consumer<T> {
    * Called by a producer whenever it is cancelled and won't produce any more results
    */
   void onCancellation();
+
+  /**
+   * Called when the progress updates.
+   *
+   * @param progress in range [0, 1]
+   */
+  void onProgressUpdate(float progress);
 }

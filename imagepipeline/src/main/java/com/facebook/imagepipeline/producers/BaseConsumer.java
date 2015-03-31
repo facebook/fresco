@@ -79,6 +79,23 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   /**
+   * Called when the progress updates.
+   *
+   * @param progress in range [0, 1]
+   */
+  @Override
+  public synchronized void onProgressUpdate(float progress) {
+    if (mIsFinished) {
+      return;
+    }
+    try {
+      onProgressUpdateImpl(progress);
+    } catch (Exception e) {
+      onUnhandledException(e);
+    }
+  }
+
+  /**
    * Called by onNewResult, override this method instead.
    */
   protected abstract void onNewResultImpl(T newResult, boolean isLast);
@@ -92,6 +109,12 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
    * Called by onCancellation, override this method instead
    */
   protected abstract void onCancellationImpl();
+
+  /**
+   * Called when the progress updates
+   */
+  protected void onProgressUpdateImpl(float progress) {
+  }
 
   /**
    * Called whenever onNewResultImpl or onFailureImpl throw an exception

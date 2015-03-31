@@ -127,12 +127,33 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
           if (propagateIntermediateResults) {
             maybeHandleIntermediateResult(pooledOutputStream, requestState);
           }
+          float progress = calculateProgress(pooledOutputStream.size(), responseContentLength);
+          requestState.getConsumer().onProgressUpdate(progress);
         }
       }
       handleFinalResult(pooledOutputStream, requestState);
     } finally {
       mByteArrayPool.release(ioArray);
       pooledOutputStream.close();
+    }
+  }
+
+  private float calculateProgress(int downloaded, int total) {
+    if (total > 0) {
+      return (float) downloaded / total;
+    } else {
+      // If we don't know the total number of bytes, we approximate the progress by an exponential
+      // that approaches 1. Here are some values of the progress, given the number of bytes:
+      // 0.5 kB ~  1%
+      // 2.5 kB ~  5%
+      //   5 kB ~ 10%
+      //  14 kB ~ 25%
+      //  34 kB ~ 50%
+      //  68 kB ~ 75%
+      // 113 kB ~ 90%
+      // 147 kB ~ 95%
+      // 225 kB ~ 99%
+      return 1 - (float) Math.exp(-downloaded / 5e4);
     }
   }
 
