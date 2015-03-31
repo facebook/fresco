@@ -114,7 +114,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   public void onAttach() {
     mEventTracker.recordEvent(Event.ON_HOLDER_ATTACH);
     mIsHolderAttached = true;
-    attachOrDetatchController();
+    attachOrDetachController();
   }
 
   /**
@@ -126,7 +126,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   public void onDetach() {
     mEventTracker.recordEvent(Event.ON_HOLDER_DETACH);
     mIsHolderAttached = false;
-    attachOrDetatchController();
+    attachOrDetachController();
   }
 
   /**
@@ -151,7 +151,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     }
     mEventTracker.recordEvent(isVisible ? Event.ON_DRAWABLE_SHOW : Event.ON_DRAWABLE_HIDE);
     mIsVisible = isVisible;
-    attachOrDetatchController();
+    attachOrDetachController();
   }
 
   /**
@@ -174,7 +174,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     mIsHolderAttached = true;
     mIsVisible = true;
     mIsActivityStarted = true;
-    attachOrDetatchController();
+    attachOrDetachController();
   }
 
   /**
@@ -193,7 +193,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   private void setActivityStarted(boolean isStarted) {
     mEventTracker.recordEvent(isStarted ? Event.ON_ACTIVITY_START : Event.ON_ACTIVITY_STOP);
     mIsActivityStarted = isStarted;
-    attachOrDetatchController();
+    attachOrDetachController();
   }
 
   /**
@@ -202,7 +202,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   public void setController(@Nullable DraweeController draweeController) {
     boolean wasAttached = mIsControllerAttached;
     if (wasAttached) {
-      detatchController();
+      detachController();
     }
 
     // Clear the old controller
@@ -277,7 +277,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     }
   }
 
-  private void detatchController() {
+  private void detachController() {
     if (!mIsControllerAttached) {
       return;
     }
@@ -288,11 +288,11 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     }
   }
 
-  private void attachOrDetatchController() {
+  private void attachOrDetachController() {
     if (mIsHolderAttached && mIsVisible && mIsActivityStarted) {
       attachController();
     } else {
-      detatchController();
+      detachController();
     }
   }
 
