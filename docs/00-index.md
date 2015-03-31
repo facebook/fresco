@@ -46,8 +46,9 @@ Then add the ```SimpleDraweeView``` to the layout:
 To show an image, you need only do this:
 
 ```java
+Uri uri = Uri.parse("http://frescolib.org/static/fresco-logo.png");
 SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.my_image_view);
-draweeView.setImageURI("http://frescolib.org/static/fresco-logo.png");
+draweeView.setImageURI(uri);
 ```
 and Fresco does the rest. 
 
