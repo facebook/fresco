@@ -88,9 +88,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   }
 
   @VisibleForTesting
-  abstract class ProgressiveDecoder extends BaseConsumer<CloseableReference<PooledByteBuffer>> {
+  abstract class ProgressiveDecoder extends DelegatingConsumer<
+      CloseableReference<PooledByteBuffer>,
+      CloseableReference<CloseableImage>> {
 
-    private final Consumer<CloseableReference<CloseableImage>> mConsumer;
     protected final ProducerContext mProducerContext;
     private final ProducerListener mProducerListener;
     private final ImageDecodeOptions mImageDecodeOptions;
@@ -110,7 +111,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext) {
-      mConsumer = consumer;
+      super(consumer);
       mProducerContext = producerContext;
       mProducerListener = producerContext.getListener();
       mImageDecodeOptions = producerContext.getImageRequest().getImageDecodeOptions();
@@ -305,7 +306,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       CloseableReference<CloseableImage> decodedImageRef = CloseableReference.of(decodedImage);
       try {
         maybeFinish(isFinal);
-        mConsumer.onNewResult(decodedImageRef, isFinal);
+        getConsumer().onNewResult(decodedImageRef, isFinal);
       } finally {
         CloseableReference.closeSafely(decodedImageRef);
       }
@@ -316,7 +317,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
      */
     private void handleError(Throwable t) {
       maybeFinish(true);
-      mConsumer.onFailure(t);
+      getConsumer().onFailure(t);
     }
 
     /**
@@ -324,7 +325,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
      */
     private void handleCancellation() {
       maybeFinish(true);
-      mConsumer.onCancellation();
+      getConsumer().onCancellation();
     }
 
     /**

@@ -49,31 +49,23 @@ public abstract class ImageTransformProducer<T, E>
   }
 
   @Override
-  public void produceResults(
-      final Consumer<T> consumer,
-      final ProducerContext context) {
+  public void produceResults(final Consumer<T> consumer, final ProducerContext context) {
     mNextProducer.produceResults(new TransformingConsumer(consumer, context), context);
   }
 
-  private class TransformingConsumer
-      extends BaseConsumer<T> {
+  private class TransformingConsumer extends DelegatingConsumer<T, T> {
 
-    private final Consumer<T> mConsumer;
     private final ProducerContext mContext;
     private TriState mShouldTransformWhenFinished;
 
-    public TransformingConsumer(
-        final Consumer<T> consumer,
-        final ProducerContext context) {
-      mConsumer = consumer;
+    public TransformingConsumer(final Consumer<T> consumer, final ProducerContext context) {
+      super(consumer);
       mContext = context;
       mShouldTransformWhenFinished = TriState.UNSET;
     }
 
     @Override
-    protected void onNewResultImpl(
-        @Nullable T newResult,
-        boolean isLast) {
+    protected void onNewResultImpl(@Nullable T newResult, boolean isLast) {
       // try to determine if the last result should be transformed
       if (mShouldTransformWhenFinished == TriState.UNSET && newResult != null) {
         mShouldTransformWhenFinished =
@@ -82,27 +74,17 @@ public abstract class ImageTransformProducer<T, E>
 
       // just propagate result if it shouldn't be transformed
       if (mShouldTransformWhenFinished == TriState.NO) {
-        mConsumer.onNewResult(newResult, isLast);
+        getConsumer().onNewResult(newResult, isLast);
         return;
       }
 
       if (isLast) {
         if (mShouldTransformWhenFinished == TriState.YES) {
-          transformLastResult(newResult, mConsumer, mContext);
+          transformLastResult(newResult, getConsumer(), mContext);
         } else {
-          mConsumer.onNewResult(newResult, isLast);
+          getConsumer().onNewResult(newResult, isLast);
         }
       }
-    }
-
-    @Override
-    protected void onFailureImpl(Throwable t) {
-      mConsumer.onFailure(t);
-    }
-
-    @Override
-    protected void onCancellationImpl() {
-      mConsumer.onCancellation();
     }
   }
 

@@ -74,9 +74,9 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     mNextProducer.produceResults(postprocessorConsumer, context);
   }
 
-  private abstract class AbstractPostprocessorConsumer
-      extends BaseConsumer<CloseableReference<CloseableImage>> {
-    protected final Consumer<CloseableReference<CloseableImage>> mConsumer;
+  private abstract class AbstractPostprocessorConsumer extends DelegatingConsumer<
+      CloseableReference<CloseableImage>,
+      CloseableReference<CloseableImage>> {
     private final ProducerListener mListener;
     private final String mRequestId;
     private final Postprocessor mPostprocessor;
@@ -86,20 +86,10 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         ProducerListener listener,
         String requestId,
         Postprocessor postprocessor) {
-      mConsumer = consumer;
+      super(consumer);
       mListener = listener;
       mRequestId = requestId;
       mPostprocessor = postprocessor;
-    }
-
-    @Override
-    protected void onFailureImpl(Throwable t) {
-      mConsumer.onFailure(t);
-    }
-
-    @Override
-    protected void onCancellationImpl() {
-      mConsumer.onCancellation();
     }
 
     protected void copyAndPostprocessBitmap(
@@ -115,12 +105,12 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         } catch (Throwable t) {
           mListener.onProducerFinishWithFailure(
               mRequestId, NAME, t, getExtraMap(mListener, mRequestId, mPostprocessor));
-          mConsumer.onFailure(t);
+          getConsumer().onFailure(t);
           return;
         }
         mListener.onProducerFinishWithSuccess(
             mRequestId, NAME, getExtraMap(mListener, mRequestId, mPostprocessor));
-        mConsumer.onNewResult(destRef, isLast);
+        getConsumer().onNewResult(destRef, isLast);
       } finally {
         CloseableReference.closeSafely(destRef);
       }
@@ -161,7 +151,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         return;
       }
       if (!mCloseableImageCopier.isCloseableImageCopyable(newResult)) {
-        mConsumer.onNewResult(newResult, true);
+        getConsumer().onNewResult(newResult, true);
         return;
       }
 
@@ -202,7 +192,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
             @Override
             public void onCancellationRequested() {
               closeOriginalImage();
-              mConsumer.onCancellation();
+              getConsumer().onCancellation();
             }
           });
       mIsDirty = false;
@@ -216,7 +206,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         return;
       }
       if (!mCloseableImageCopier.isCloseableImageCopyable(newResult)) {
-        mConsumer.onNewResult(newResult, true);
+        getConsumer().onNewResult(newResult, true);
         return;
       }
 

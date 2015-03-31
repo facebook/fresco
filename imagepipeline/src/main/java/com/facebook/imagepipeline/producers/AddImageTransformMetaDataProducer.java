@@ -41,15 +41,14 @@ public class AddImageTransformMetaDataProducer
     mNextProducer.produceResults(new AddImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private class AddImageTransformMetaDataConsumer
-      extends BaseConsumer<CloseableReference<PooledByteBuffer>> {
+  private class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
+      CloseableReference<PooledByteBuffer>,
+      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
     private final ImageTransformMetaData.Builder mMetaDataBuilder;
-    private final Consumer<
-        Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> mConsumer;
 
     private AddImageTransformMetaDataConsumer(
         Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer) {
-      mConsumer = consumer;
+      super(consumer);
       mMetaDataBuilder = new ImageTransformMetaData.Builder();
     }
 
@@ -68,17 +67,7 @@ public class AddImageTransformMetaDataProducer
           mMetaDataBuilder.setHeight(dimensions.height());
         }
       }
-      mConsumer.onNewResult(Pair.create(newResult, mMetaDataBuilder.build()), isLast);
-    }
-
-    @Override
-    protected void onFailureImpl(Throwable t) {
-      mConsumer.onFailure(t);
-    }
-
-    @Override
-    protected void onCancellationImpl() {
-      mConsumer.onCancellation();
+      getConsumer().onNewResult(Pair.create(newResult, mMetaDataBuilder.build()), isLast);
     }
 
     // Gets the correction angle based on the image's orientation

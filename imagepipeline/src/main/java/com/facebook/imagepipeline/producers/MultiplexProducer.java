@@ -142,6 +142,8 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
     @GuardedBy("Multiplexer.this")
     @Nullable
     private CloseableReference<T> mLastIntermediateResult;
+    @GuardedBy("Multiplexer.this")
+    private float mLastProgress;
 
     /**
      * Producer context used for cancelling producers below MultiplexProducers, and for setting
@@ -187,6 +189,7 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
       final Pair<Consumer<CloseableReference<T>>, ProducerContext> consumerContextPair =
           Pair.create(consumer, producerContext);
       CloseableReference<T> lastIntermediateResult;
+      float lastProgress;
 
       // Check if Multiplexer is still in mMultiplexers map, and if so add new consumer.
       // Also store current intermediate result - we will notify consumer after acquiring
@@ -210,6 +213,7 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
                   consumerContextPair.second.getPriority()));
         }
         lastIntermediateResult = mLastIntermediateResult;
+        lastProgress = mLastProgress;
       }
 
       synchronized (consumerContextPair) {
@@ -223,6 +227,9 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
         }
 
         if (lastIntermediateResult != null) {
+          if (lastProgress > 0) {
+            consumer.onProgressUpdate(lastProgress);
+          }
           consumer.onNewResult(lastIntermediateResult, false);
           lastIntermediateResult.close();
         }
@@ -453,6 +460,26 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
       startNextProducerIfHasAttachedConsumers();
     }
 
+    public void onProgressUpdate(ForwardingConsumer forwardingConsumer, float progress) {
+      Iterator<Pair<Consumer<CloseableReference<T>>, ProducerContext>> iterator;
+      synchronized (Multiplexer.this) {
+        // check for late callbacks
+        if (mForwardingConsumer != forwardingConsumer) {
+          return;
+        }
+
+        mLastProgress = progress;
+        iterator = mConsumerContextPairs.iterator();
+      }
+
+      while (iterator.hasNext()) {
+        Pair<Consumer<CloseableReference<T>>, ProducerContext> pair = iterator.next();
+        synchronized (pair) {
+          pair.first.onProgressUpdate(progress);
+        }
+      }
+    }
+
     /**
      * Forwards {@link Consumer} methods to Multiplexer.
      */
@@ -470,6 +497,11 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
       @Override
       protected void onCancellationImpl() {
         Multiplexer.this.onCancelled(this);
+      }
+
+      @Override
+      protected void onProgressUpdateImpl(float progress) {
+        Multiplexer.this.onProgressUpdate(this, progress);
       }
     }
   }

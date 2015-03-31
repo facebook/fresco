@@ -37,30 +37,20 @@ public class RemoveImageTransformMetaDataProducer
     mNextProducer.produceResults(new RemoveImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private class RemoveImageTransformMetaDataConsumer
-      extends BaseConsumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
-    private final Consumer<CloseableReference<PooledByteBuffer>> mConsumer;
+  private class RemoveImageTransformMetaDataConsumer extends DelegatingConsumer<
+      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>,
+      CloseableReference<PooledByteBuffer>> {
 
     private RemoveImageTransformMetaDataConsumer(
         Consumer<CloseableReference<PooledByteBuffer>> consumer) {
-      mConsumer = consumer;
+      super(consumer);
     }
 
     @Override
     protected void onNewResultImpl(
         Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> newResult,
         boolean isLast) {
-      mConsumer.onNewResult(newResult == null ? null : newResult.first, isLast);
-    }
-
-    @Override
-    protected void onFailureImpl(Throwable t) {
-      mConsumer.onFailure(t);
-    }
-
-    @Override
-    protected void onCancellationImpl() {
-      mConsumer.onCancellation();
+      getConsumer().onNewResult(newResult == null ? null : newResult.first, isLast);
     }
   }
 }

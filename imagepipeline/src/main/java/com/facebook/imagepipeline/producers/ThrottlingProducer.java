@@ -68,16 +68,15 @@ public class ThrottlingProducer<T> implements Producer<T> {
     mNextProducer.produceResults(new ThrottlerConsumer(consumer), producerContext);
   }
 
-  private class ThrottlerConsumer extends BaseConsumer<T> {
-    private final Consumer<T> mConsumer;
+  private class ThrottlerConsumer extends DelegatingConsumer<T, T> {
 
     private ThrottlerConsumer(Consumer<T> consumer) {
-      mConsumer = consumer;
+      super(consumer);
     }
 
     @Override
     protected void onNewResultImpl(T newResult, boolean isLast) {
-      mConsumer.onNewResult(newResult, isLast);
+      getConsumer().onNewResult(newResult, isLast);
       if (isLast) {
         onRequestFinished();
       }
@@ -85,13 +84,13 @@ public class ThrottlingProducer<T> implements Producer<T> {
 
     @Override
     protected void onFailureImpl(Throwable t) {
-      mConsumer.onFailure(t);
+      getConsumer().onFailure(t);
       onRequestFinished();
     }
 
     @Override
     protected void onCancellationImpl() {
-      mConsumer.onCancellation();
+      getConsumer().onCancellation();
       onRequestFinished();
     }
 

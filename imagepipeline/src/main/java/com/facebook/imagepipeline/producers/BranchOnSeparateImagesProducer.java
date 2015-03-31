@@ -44,16 +44,16 @@ public class BranchOnSeparateImagesProducer
     mNextProducer1.produceResults(onFirstImageConsumer, context);
   }
 
-  private class OnFirstImageConsumer
-      extends BaseConsumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
+  private class OnFirstImageConsumer extends DelegatingConsumer<
+      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>,
+      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
 
-    private Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> mConsumer;
     private ProducerContext mProducerContext;
 
     private OnFirstImageConsumer(
         Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer,
         ProducerContext producerContext) {
-      mConsumer = consumer;
+      super(consumer);
       mProducerContext = producerContext;
     }
 
@@ -61,24 +61,19 @@ public class BranchOnSeparateImagesProducer
     protected void onNewResultImpl(
         Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> newResult,
         boolean isLast) {
-      boolean isGoodEnough = isResultGoodEnough(newResult, mProducerContext.getImageRequest());
-      if (newResult != null &&
-          (isGoodEnough || mProducerContext.getImageRequest().getLocalThumbnailPreviewsEnabled())) {
-        mConsumer.onNewResult(newResult, isLast && isGoodEnough);
+      ImageRequest request = mProducerContext.getImageRequest();
+      boolean isGoodEnough = isResultGoodEnough(newResult, request);
+      if (newResult != null && (isGoodEnough || request.getLocalThumbnailPreviewsEnabled())) {
+        getConsumer().onNewResult(newResult, isLast && isGoodEnough);
       }
       if (isLast && !isGoodEnough) {
-        mNextProducer2.produceResults(mConsumer, mProducerContext);
+        mNextProducer2.produceResults(getConsumer(), mProducerContext);
       }
     }
 
     @Override
     protected void onFailureImpl(Throwable t) {
-      mNextProducer2.produceResults(mConsumer, mProducerContext);
-    }
-
-    @Override
-    protected void onCancellationImpl() {
-      mConsumer.onCancellation();
+      mNextProducer2.produceResults(getConsumer(), mProducerContext);
     }
 
     private boolean isResultGoodEnough(

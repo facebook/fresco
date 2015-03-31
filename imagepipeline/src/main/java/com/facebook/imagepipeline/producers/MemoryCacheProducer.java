@@ -53,7 +53,8 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
     CloseableReference<T> cachedReference = mMemoryCache.get(cacheKey, null);
     if (cachedReference != null) {
       boolean shouldStartNextProducer = shouldStartNextProducer(cachedReference);
-      if (!shouldStartNextProducer) {
+      boolean isLast = !shouldStartNextProducer;
+      if (isLast) {
         listener.onProducerFinishWithSuccess(
             requestId,
             getProducerName(),
@@ -61,7 +62,10 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
                 ImmutableMap.of(CACHED_VALUE_FOUND, "true") :
                 null);
       }
-      consumer.onNewResult(cachedReference, !shouldStartNextProducer);
+      if (isLast) {
+        consumer.onProgressUpdate(1f);
+      }
+      consumer.onNewResult(cachedReference, isLast);
       cachedReference.close();
       if (!shouldStartNextProducer) {
         return;
@@ -72,33 +76,26 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
     if (!shouldCacheReturnedValues()) {
       consumerOfNextProducer = consumer;
     } else {
-      consumerOfNextProducer = new BaseConsumer<CloseableReference<T>>() {
-        @Override
-        public void onNewResultImpl(
-            CloseableReference<T> newResult, boolean isLast) {
-          CloseableReference<T> cachedResult = null;
-          if (newResult != null && shouldCacheResult(newResult, cacheKey, isLast)) {
-            cachedResult = mMemoryCache.cache(cacheKey, newResult);
-          }
-
-          if (cachedResult != null) {
-            consumer.onNewResult(cachedResult, isLast);
-            cachedResult.close();
-          } else {
-            consumer.onNewResult(newResult, isLast);
-          }
-        }
-
-        @Override
-        public void onFailureImpl(Throwable t) {
-          consumer.onFailure(t);
-        }
-
-        @Override
-        protected void onCancellationImpl() {
-          consumer.onCancellation();
-        }
-      };
+      consumerOfNextProducer =
+          new DelegatingConsumer<CloseableReference<T>, CloseableReference<T>>(consumer) {
+            @Override
+            public void onNewResultImpl(CloseableReference<T> newResult, boolean isLast) {
+              CloseableReference<T> cachedResult = null;
+              if (newResult != null && shouldCacheResult(newResult, cacheKey, isLast)) {
+                cachedResult = mMemoryCache.cache(cacheKey, newResult);
+              }
+              try {
+                CloseableReference<T> result = (cachedResult != null) ? cachedResult : newResult;
+                if (CloseableReference.isValid(result) && isLast) {
+                  getConsumer().onProgressUpdate(1f);
+                }
+                getConsumer().onNewResult(result, isLast);
+              } finally {
+                // we only own cachedResult, newResult is owned by the caller
+                CloseableReference.closeSafely(cachedResult);
+              }
+            }
+          };
     }
 
     listener.onProducerFinishWithSuccess(

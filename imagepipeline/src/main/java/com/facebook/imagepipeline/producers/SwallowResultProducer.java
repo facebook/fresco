@@ -22,25 +22,13 @@ public class SwallowResultProducer<T> implements Producer<Void> {
   }
 
   @Override
-  public void produceResults(
-      final Consumer<Void> consumer,
-      final ProducerContext producerContext) {
-    BaseConsumer<T> swallowResultConsumer = new BaseConsumer<T>() {
+  public void produceResults(Consumer<Void> consumer, ProducerContext producerContext) {
+    DelegatingConsumer<T, Void> swallowResultConsumer = new DelegatingConsumer<T, Void>(consumer) {
       @Override
       protected void onNewResultImpl(T newResult, boolean isLast) {
         if (isLast) {
-          consumer.onNewResult(null, isLast);
+          getConsumer().onNewResult(null, isLast);
         }
-      }
-
-      @Override
-      protected void onFailureImpl(Throwable t) {
-        consumer.onFailure(t);
-      }
-
-      @Override
-      protected void onCancellationImpl() {
-        consumer.onCancellation();
       }
     };
     mNextProducer.produceResults(swallowResultConsumer, producerContext);
