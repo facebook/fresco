@@ -1,4 +1,4 @@
---- 
+---
 id: sample-license
 title: Sample code license
 layout: default
