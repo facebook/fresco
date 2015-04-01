@@ -31,6 +31,10 @@ compile 'com.facebook.fresco:fresco:0.1.0+'
 
 See our [download](http://frescolib.org/docs/download-fresco.html) page for other options.
 
+<div style="text-align: center; box-sizing: border-box; line-height: 22px; color: #444; font-family:proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+<a style="background: #cc2e39; font-weight: bold; color: #ffffff; text-transform: uppercase; padding: 10px 20px; display: inline-block; margin: 1em; box-shadow: 0px 1px 2px rgba(0,0,0,0.3); text-decoration:none" href="http://frescolib.org/docs/index.html">Get Started</a>
+</div>
+
 ## Building Fresco from source
 
 Install the Android [SDK](https://developer.android.com/sdk/index.html#Other) if you haven't already. Then run the Android SDK Manager and install the Android Support Library and Android Support Repository.
