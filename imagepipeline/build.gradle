@@ -10,11 +10,11 @@ import de.undercouch.gradle.tasks.download.Download
 import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
 dependencies {
-    compile "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
     compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
-    compile "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
 
     androidTestCompile "com.google.guava:guava:${GUAVA_VERSION}"
