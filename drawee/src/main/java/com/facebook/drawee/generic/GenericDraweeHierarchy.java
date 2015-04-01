@@ -219,10 +219,11 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
 
     // overlays
-    int numOverlays = (builder.getOverlays() != null) ? builder.getOverlays().size() : 0;
     int overlaysIndex = numLayers;
+    int numOverlays =
+        ((builder.getOverlays() != null) ? builder.getOverlays().size() : 0) +
+            ((builder.getPressedStateOverlay() != null) ? 1 : 0);
     numLayers += numOverlays;
-    numLayers += (builder.getPressedStateOverlay() != null) ? 1 : 0;
 
     // controller overlay
     mControllerOverlayIndex = numLayers++;
