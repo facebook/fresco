@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.core;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -183,9 +184,15 @@ public class ImagePipelineConfig {
             builder.mNetworkFetchProducer;
   }
 
-  private static DiskCacheConfig getDefaultMainDiskCacheConfig(Context context) {
+  private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
     return DiskCacheConfig.newBuilder()
-        .setBaseDirectoryPath(context.getApplicationContext().getCacheDir())
+        .setBaseDirectoryPathSupplier(
+            new Supplier<File>() {
+              @Override
+              public File get() {
+                return context.getApplicationContext().getCacheDir();
+              }
+            })
         .setBaseDirectoryName("image_cache")
         .setMaxCacheSize(40 * ByteConstants.MB)
         .setMaxCacheSizeOnLowDiskSpace(10 * ByteConstants.MB)

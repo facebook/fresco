@@ -13,15 +13,16 @@ import java.io.File;
 
 import android.content.Context;
 
-import com.facebook.common.file.FileTree;
 import com.facebook.cache.common.CacheErrorLogger;
+import com.facebook.common.file.FileTree;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
-import org.robolectric.Robolectric;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
 import static org.mockito.Mockito.mock;
 
@@ -47,7 +48,9 @@ public class DefaultDiskStorageSupplierTest {
   private DefaultDiskStorageSupplier createSupplier(boolean useFilesDirInsteadOfCacheDir) {
     return new DefaultDiskStorageSupplier(
         mVersion,
-        useFilesDirInsteadOfCacheDir ? mContext.getFilesDir() : mContext.getCacheDir(),
+        useFilesDirInsteadOfCacheDir ?
+            Suppliers.of(mContext.getFilesDir()) :
+            Suppliers.of(mContext.getCacheDir()),
         mBaseDirectoryName,
         mCacheErrorLogger);
   }

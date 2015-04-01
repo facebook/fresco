@@ -18,6 +18,7 @@ import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.file.FileUtils;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 
@@ -28,7 +29,8 @@ public class DefaultDiskStorageSupplier implements DiskStorageSupplier {
   private static final Class<?> TAG = DefaultDiskStorageSupplier.class;
 
   private final int mVersion;
-  private final File mRootDirectory;
+  private final Supplier<File> mBaseDirectoryPathSupplier;
+  private final String mBaseDirectoryName;
   private final CacheErrorLogger mCacheErrorLogger;
 
   @VisibleForTesting
@@ -49,12 +51,13 @@ public class DefaultDiskStorageSupplier implements DiskStorageSupplier {
 
   public DefaultDiskStorageSupplier(
       int version,
-      File baseDirectoryPath,
+      Supplier<File> baseDirectoryPathSupplier,
       String baseDirectoryName,
       CacheErrorLogger cacheErrorLogger) {
     mVersion = version;
     mCacheErrorLogger = cacheErrorLogger;
-    mRootDirectory = new File(baseDirectoryPath, baseDirectoryName);
+    mBaseDirectoryPathSupplier = baseDirectoryPathSupplier;
+    mBaseDirectoryName = baseDirectoryName;
     mCurrentState = new State(null, null);
   }
 
@@ -91,9 +94,10 @@ public class DefaultDiskStorageSupplier implements DiskStorageSupplier {
   }
 
   private void createStorage() throws IOException {
-    createRootDirectoryIfNecessary(mRootDirectory);
-    DiskStorage storage = new DefaultDiskStorage(mRootDirectory, mVersion, mCacheErrorLogger);
-    mCurrentState = new State(mRootDirectory, storage);
+    File rootDirectory = new File(mBaseDirectoryPathSupplier.get(), mBaseDirectoryName);
+    createRootDirectoryIfNecessary(rootDirectory);
+    DiskStorage storage = new DefaultDiskStorage(rootDirectory, mVersion, mCacheErrorLogger);
+    mCurrentState = new State(rootDirectory, storage);
   }
 
   @VisibleForTesting

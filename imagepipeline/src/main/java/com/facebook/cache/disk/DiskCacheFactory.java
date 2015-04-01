@@ -34,7 +34,7 @@ public class DiskCacheFactory {
   private static DiskStorageSupplier newDiskStorageSupplier(DiskCacheConfig diskCacheConfig) {
     return new DefaultDiskStorageSupplier(
         diskCacheConfig.getVersion(),
-        diskCacheConfig.getBaseDirectoryPath(),
+        diskCacheConfig.getBaseDirectoryPathSupplier(),
         diskCacheConfig.getBaseDirectoryName(),
         diskCacheConfig.getCacheErrorLogger());
   }

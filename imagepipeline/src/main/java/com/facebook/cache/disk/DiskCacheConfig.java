@@ -19,6 +19,8 @@ import com.facebook.common.disk.DiskTrimmable;
 import com.facebook.common.disk.DiskTrimmableRegistry;
 import com.facebook.common.disk.NoOpDiskTrimmableRegistry;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 
 /**
  * Configuration class for a {@link DiskStorageCache}.
@@ -27,7 +29,7 @@ public class DiskCacheConfig {
 
   private final int mVersion;
   private final String mBaseDirectoryName;
-  private final File mBaseDirectoryPath;
+  private final Supplier<File> mBaseDirectoryPathSupplier;
   private final long mDefaultSizeLimit;
   private final long mLowDiskSpaceSizeLimit;
   private final long mMinimumSizeLimit;
@@ -38,7 +40,7 @@ public class DiskCacheConfig {
   private DiskCacheConfig(Builder builder) {
     mVersion = builder.mVersion;
     mBaseDirectoryName = Preconditions.checkNotNull(builder.mBaseDirectoryName);
-    mBaseDirectoryPath = Preconditions.checkNotNull(builder.mBaseDirectoryPath);
+    mBaseDirectoryPathSupplier = Preconditions.checkNotNull(builder.mBaseDirectoryPathSupplier);
     mDefaultSizeLimit = builder.mMaxCacheSize;
     mLowDiskSpaceSizeLimit = builder.mMaxCacheSizeOnLowDiskSpace;
     mMinimumSizeLimit = builder.mMaxCacheSizeOnVeryLowDiskSpace;
@@ -64,8 +66,8 @@ public class DiskCacheConfig {
     return mBaseDirectoryName;
   }
 
-  public File getBaseDirectoryPath() {
-    return mBaseDirectoryPath;
+  public Supplier<File> getBaseDirectoryPathSupplier() {
+    return mBaseDirectoryPathSupplier;
   }
 
   public long getDefaultSizeLimit() {
@@ -100,7 +102,7 @@ public class DiskCacheConfig {
 
     public int mVersion = 1;
     public String mBaseDirectoryName;
-    public File mBaseDirectoryPath;
+    public Supplier<File> mBaseDirectoryPathSupplier;
     public long mMaxCacheSize;
     public long mMaxCacheSizeOnLowDiskSpace;
     public long mMaxCacheSizeOnVeryLowDiskSpace;
@@ -135,8 +137,13 @@ public class DiskCacheConfig {
      * <p>A directory with the given base directory name (see {@code setBaseDirectoryName}) will be
      * appended to this path.
      */
-    public Builder setBaseDirectoryPath(File baseDirectoryPath) {
-      mBaseDirectoryPath = baseDirectoryPath;
+    public Builder setBaseDirectoryPath(final File baseDirectoryPath) {
+      mBaseDirectoryPathSupplier = Suppliers.of(baseDirectoryPath);
+      return this;
+    }
+
+    public Builder setBaseDirectoryPathSupplier(Supplier<File> baseDirectoryPathSupplier) {
+      mBaseDirectoryPathSupplier = baseDirectoryPathSupplier;
       return this;
     }
 

@@ -26,6 +26,7 @@ import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.common.WriterCallbacks;
 import com.facebook.common.disk.DiskTrimmableRegistry;
 import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.SystemClock;
 import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
@@ -100,7 +101,7 @@ public class DiskStorageCacheTest {
   private DiskStorageSupplier createDiskStorageSupplier(int version) {
     return new DefaultDiskStorageSupplier(
         version,
-        Robolectric.application.getApplicationContext().getCacheDir(),
+        Suppliers.of(Robolectric.application.getApplicationContext().getCacheDir()),
         CACHE_TYPE,
         mock(CacheErrorLogger.class));
   }
