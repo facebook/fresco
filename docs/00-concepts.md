@@ -21,7 +21,7 @@ You can [customize its appearance in XML](using-drawees-xml.html).
 
 ### DraweeHierarchy
 
-This is the hierarchy of Android [Drawable](http://developer.android.com/reference/android/widget/Drawable.html) objects that will actually render your content. Think of it as the Model in an MVC.
+This is the hierarchy of Android [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html) objects that will actually render your content. Think of it as the Model in an MVC.
 
 If you need to [customize your image's appearance in Java](using-drawees-code.html), this is the class you will deal with.
 
