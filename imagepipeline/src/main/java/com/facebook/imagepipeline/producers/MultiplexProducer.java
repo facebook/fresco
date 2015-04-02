@@ -351,6 +351,7 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
             producerContext.getId(),
             producerContext.getListener(),
             producerContext.getCallerContext(),
+            producerContext.getLowestPermittedRequestLevel(),
             isPrefetch(),
             isIntermediateResultExpected(),
             getPriority());

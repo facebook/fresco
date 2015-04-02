@@ -53,7 +53,6 @@ public class ProducerSequenceFactory {
   private final boolean mResizeAndRotateEnabledForNetwork;
 
   // Saved sequences
-  @VisibleForTesting Producer<CloseableReference<CloseableImage>> mBitmapCacheGetOnlySequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
   @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>>
       mBackgroundNetworkFetchToEncodedMemorySequence;
@@ -118,21 +117,6 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * Returns a sequence that can be used for a request that just requires a bitmap cache lookup.
-   *
-   * <p> Sequence is: bitmap cache get -> null producer
-   * @return the sequence that should be used to process the request.
-   */
-  public synchronized Producer<CloseableReference<CloseableImage>> getBitmapCacheGetOnlySequence() {
-    if (mBitmapCacheGetOnlySequence == null) {
-      mBitmapCacheGetOnlySequence =
-          mProducerFactory.newBitmapMemoryCacheGetProducer(
-              mProducerFactory.<CloseableReference<CloseableImage>>newNullProducer());
-    }
-    return mBitmapCacheGetOnlySequence;
-  }
-
-  /**
    * Returns a sequence that can be used for a request for a decoded image.
    *
    * @param imageRequest the request that will be submitted
@@ -163,18 +147,6 @@ public class ProducerSequenceFactory {
   private Producer<CloseableReference<CloseableImage>> getBasicDecodedImageSequence(
       ImageRequest imageRequest) {
     Preconditions.checkNotNull(imageRequest);
-    ImageRequest.RequestLevel lowestPermittedRequestLevel =
-        imageRequest.getLowestPermittedRequestLevel();
-    Preconditions.checkState(
-        lowestPermittedRequestLevel.equals(ImageRequest.RequestLevel.FULL_FETCH) ||
-            lowestPermittedRequestLevel.equals(
-                ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE),
-        "Only support bitmap memory cache or full fetch at present, request level is %s ",
-        lowestPermittedRequestLevel);
-
-    if (lowestPermittedRequestLevel.equals(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE)) {
-      return getBitmapCacheGetOnlySequence();
-    }
 
     Uri uri = imageRequest.getSourceUri();
     if (UriUtil.isNetworkUri(uri)) {

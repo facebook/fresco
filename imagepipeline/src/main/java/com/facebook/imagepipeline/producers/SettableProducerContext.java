@@ -30,6 +30,7 @@ public class SettableProducerContext implements ProducerContext {
   private final String mId;
   private final ProducerListener mProducerListener;
   private final Object mCallerContext;
+  private final ImageRequest.RequestLevel mLowestPermittedRequestLevel;
   @GuardedBy("this")
   private final List<ProducerContextCallbacks> mCallbacks;
   @GuardedBy("this")
@@ -46,6 +47,7 @@ public class SettableProducerContext implements ProducerContext {
       String id,
       ProducerListener producerListener,
       Object callerContext,
+      ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority) {
@@ -53,6 +55,7 @@ public class SettableProducerContext implements ProducerContext {
     mId = Preconditions.checkNotNull(id);
     mProducerListener = Preconditions.checkNotNull(producerListener);
     mCallerContext = callerContext;
+    mLowestPermittedRequestLevel = Preconditions.checkNotNull(lowestPermittedRequestLevel);
     mIsPrefetch = isPrefetch;
     mIsIntermediateResultExpected = isIntermediateResultExpected;
     mPriority = priority;
@@ -78,6 +81,11 @@ public class SettableProducerContext implements ProducerContext {
   @Override
   public Object getCallerContext() {
     return mCallerContext;
+  }
+
+  @Override
+  public ImageRequest.RequestLevel getLowestPermittedRequestLevel() {
+    return mLowestPermittedRequestLevel;
   }
 
   @Override

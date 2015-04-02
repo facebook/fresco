@@ -38,8 +38,14 @@ public class BitmapMemoryCacheGetProducer
   }
 
   @Override
-  protected boolean shouldStartNextProducer(CloseableReference<CloseableImage> cachedResultFound) {
-    return !cachedResultFound.get().getQualityInfo().isOfFullQuality();
+  protected boolean isResultFinal(
+      CloseableReference<CloseableImage> cachedResultFound) {
+    return cachedResultFound.get().getQualityInfo().isOfFullQuality();
+  }
+
+  @Override
+  protected ImageRequest.RequestLevel getProducerRequestLevel() {
+    return ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE;
   }
 
   @Override

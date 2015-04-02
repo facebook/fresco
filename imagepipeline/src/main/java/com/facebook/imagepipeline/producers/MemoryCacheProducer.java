@@ -52,8 +52,7 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
     final K cacheKey = getCacheKey(producerContext.getImageRequest());
     CloseableReference<T> cachedReference = mMemoryCache.get(cacheKey, null);
     if (cachedReference != null) {
-      boolean shouldStartNextProducer = shouldStartNextProducer(cachedReference);
-      boolean isLast = !shouldStartNextProducer;
+      boolean isLast = isResultFinal(cachedReference);
       if (isLast) {
         listener.onProducerFinishWithSuccess(
             requestId,
@@ -61,15 +60,25 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
             listener.requiresExtraMap(requestId) ?
                 ImmutableMap.of(CACHED_VALUE_FOUND, "true") :
                 null);
-      }
-      if (isLast) {
         consumer.onProgressUpdate(1f);
       }
       consumer.onNewResult(cachedReference, isLast);
       cachedReference.close();
-      if (!shouldStartNextProducer) {
+      if (isLast) {
         return;
       }
+    }
+
+    if (producerContext.getLowestPermittedRequestLevel().getValue() >=
+        getProducerRequestLevel().getValue()) {
+      listener.onProducerFinishWithSuccess(
+          requestId,
+          getProducerName(),
+          listener.requiresExtraMap(requestId) ?
+              ImmutableMap.of(CACHED_VALUE_FOUND, "false") :
+              null);
+      consumer.onNewResult(null, true);
+      return;
     }
 
     Consumer<CloseableReference<T>> consumerOfNextProducer;
@@ -107,7 +116,9 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
 
   protected abstract K getCacheKey(ImageRequest imageRequest);
 
-  protected abstract boolean shouldStartNextProducer(CloseableReference<T> cachedResultFound);
+  protected abstract boolean isResultFinal(CloseableReference<T> cachedResultFound);
+
+  protected abstract ImageRequest.RequestLevel getProducerRequestLevel();
 
   protected abstract boolean shouldCacheReturnedValues();
 

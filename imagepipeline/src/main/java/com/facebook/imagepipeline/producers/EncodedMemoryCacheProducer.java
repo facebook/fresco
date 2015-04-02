@@ -37,9 +37,14 @@ public class EncodedMemoryCacheProducer extends MemoryCacheProducer<CacheKey, Po
   }
 
   @Override
-  protected boolean shouldStartNextProducer(
+  protected boolean isResultFinal(
       CloseableReference<PooledByteBuffer> cachedResultFound) {
-    return false;
+    return true;
+  }
+
+  @Override
+  protected ImageRequest.RequestLevel getProducerRequestLevel() {
+    return ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE;
   }
 
   @Override

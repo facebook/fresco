@@ -185,5 +185,9 @@ public class ImageRequest {
     public int getValue() {
       return mValue;
     }
+
+    public static RequestLevel getMax(RequestLevel requestLevel1, RequestLevel requestLevel2) {
+      return requestLevel1.getValue() > requestLevel2.getValue() ? requestLevel1 : requestLevel2;
+    }
   }
 }

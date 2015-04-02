@@ -46,6 +46,11 @@ public interface ProducerContext {
   public Object getCallerContext();
 
   /**
+   * @return the lowest permitted {@link ImageRequest.RequestLevel}
+   */
+  public ImageRequest.RequestLevel getLowestPermittedRequestLevel();
+
+  /**
    * @return true if the request is a prefetch, false otherwise.
    */
   public boolean isPrefetch();

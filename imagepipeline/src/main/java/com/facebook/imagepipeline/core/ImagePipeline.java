@@ -119,8 +119,12 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       Object callerContext) {
     Producer<CloseableReference<CloseableImage>> producerSequence =
-        mProducerSequenceFactory.getBitmapCacheGetOnlySequence();
-    return submitFetchRequest(producerSequence, imageRequest, callerContext);
+        mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
+    return submitFetchRequest(
+        producerSequence,
+        imageRequest,
+        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE,
+        callerContext);
   }
 
   /**
@@ -135,9 +139,12 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       Object callerContext) {
     Producer<CloseableReference<CloseableImage>> producerSequence =
-        mProducerSequenceFactory.getDecodedImageProducerSequence(
-            imageRequest);
-    return submitFetchRequest(producerSequence, imageRequest, callerContext);
+        mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
+    return submitFetchRequest(
+        producerSequence,
+        imageRequest,
+        ImageRequest.RequestLevel.FULL_FETCH,
+        callerContext);
   }
 
   /**
@@ -152,9 +159,12 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       Object callerContext) {
     Producer<CloseableReference<PooledByteBuffer>> producerSequence =
-        mProducerSequenceFactory.getEncodedImageProducerSequence(
-            imageRequest);
-      return submitFetchRequest(producerSequence, imageRequest, callerContext);
+        mProducerSequenceFactory.getEncodedImageProducerSequence(imageRequest);
+      return submitFetchRequest(
+          producerSequence,
+          imageRequest,
+          ImageRequest.RequestLevel.FULL_FETCH,
+          callerContext);
   }
 
   /**
@@ -170,9 +180,12 @@ public class ImagePipeline {
     }
 
     Producer<Void> producerSequence =
-        mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(
-            imageRequest);
-    return submitPrefetchRequest(producerSequence, imageRequest, callerContext);
+        mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
+    return submitPrefetchRequest(
+        producerSequence,
+        imageRequest,
+        ImageRequest.RequestLevel.FULL_FETCH,
+        callerContext);
   }
 
   /**
@@ -188,9 +201,12 @@ public class ImagePipeline {
     }
 
     Producer<Void> producerSequence =
-        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(
-            imageRequest);
-    return submitPrefetchRequest(producerSequence, imageRequest, callerContext);
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest);
+    return submitPrefetchRequest(
+        producerSequence,
+        imageRequest,
+        ImageRequest.RequestLevel.FULL_FETCH,
+        callerContext);
   }
 
   /**
@@ -221,12 +237,18 @@ public class ImagePipeline {
   private <T> DataSource<CloseableReference<T>> submitFetchRequest(
       Producer<CloseableReference<T>> producerSequence,
       ImageRequest imageRequest,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext) {
+    ImageRequest.RequestLevel lowestPermittedRequestLevel =
+        ImageRequest.RequestLevel.getMax(
+            imageRequest.getLowestPermittedRequestLevel(),
+            lowestPermittedRequestLevelOnSubmit);
     SettableProducerContext settableProducerContext = new SettableProducerContext(
         imageRequest,
         generateUniqueFutureId(),
         mRequestListener,
         callerContext,
+        lowestPermittedRequestLevel,
         /* isPrefetch */ false,
         imageRequest.getProgressiveRenderingEnabled() ||
             !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
@@ -240,12 +262,18 @@ public class ImagePipeline {
   private DataSource<Void> submitPrefetchRequest(
       Producer<Void> producerSequence,
       ImageRequest imageRequest,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext) {
+    ImageRequest.RequestLevel lowestPermittedRequestLevel =
+        ImageRequest.RequestLevel.getMax(
+            imageRequest.getLowestPermittedRequestLevel(),
+            lowestPermittedRequestLevelOnSubmit);
     SettableProducerContext settableProducerContext = new SettableProducerContext(
         imageRequest,
         generateUniqueFutureId(),
         mRequestListener,
         callerContext,
+        lowestPermittedRequestLevel,
         /* isPrefetch */ true,
         /* isIntermediateResultExpected */ false,
         Priority.LOW);
