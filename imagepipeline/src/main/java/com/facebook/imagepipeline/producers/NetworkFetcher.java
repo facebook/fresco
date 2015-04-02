@@ -28,9 +28,9 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
  * calling {@link Callback} methods. If these are not called, the pipeline will not know that the
  * image fetch has failed and the application may not behave properly.
  *
- * @param <FETCH_STATE> The type to store fetch state. NfpRequestState can be used or extended.
+ * @param <FETCH_STATE> The type to store fetch state. {@link FetchState} can be used or extended.
  */
-public interface NetworkFetcher<FETCH_STATE extends NfpRequestState> {
+public interface NetworkFetcher<FETCH_STATE extends FetchState> {
 
   /**
    * Callback used to inform the network fetch producer.
@@ -59,13 +59,13 @@ public interface NetworkFetcher<FETCH_STATE extends NfpRequestState> {
   }
 
   /**
-   * Creates a new instance of the {@link NfpRequestState}-derived object used to store state.
+   * Creates a new instance of the {@link FetchState}-derived object used to store state.
    *
    * @param consumer the consumer
    * @param producerContext the producer's context
    * @return a new fetch state instance
    */
-  public FETCH_STATE createRequestState(
+  public FETCH_STATE createFetchState(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext producerContext);
 
@@ -73,10 +73,10 @@ public interface NetworkFetcher<FETCH_STATE extends NfpRequestState> {
    * Initiates the network fetch and informs the producer when a response is received via the
    * provided callback.
    *
-   * @param requestState the request-specific state
+   * @param fetchState the fetch-specific state
    * @param callback the callback used to inform the network fetch producer
    */
-  public void fetch(FETCH_STATE requestState, Callback callback);
+  public void fetch(FETCH_STATE fetchState, Callback callback);
 
   /**
    * Gets whether the intermediate results should be propagated.
@@ -86,20 +86,20 @@ public interface NetworkFetcher<FETCH_STATE extends NfpRequestState> {
    *
    * <p>Not applicable if progressive rendering is disabled or not supported for this image.
    *
-   * @param requestState the request-specific state
+   * @param fetchState the fetch-specific state
    * @return whether the intermediate results should be propagated
    */
-  public boolean shouldPropagate(FETCH_STATE requestState);
+  public boolean shouldPropagate(FETCH_STATE fetchState);
 
   /**
    * Called after the fetch completes.
    *
    * <p> Implementing this method is optional and is useful for instrumentation purposes.
    *
-   * @param requestState the request-specific state
+   * @param fetchState the fetch-specific state
    * @param byteSize size of the data in bytes
    */
-  public void onFetchCompletion(FETCH_STATE requestState, int byteSize);
+  public void onFetchCompletion(FETCH_STATE fetchState, int byteSize);
 
   /**
    * Gets a map containing extra parameters to pass to the listeners.
@@ -108,10 +108,10 @@ public interface NetworkFetcher<FETCH_STATE extends NfpRequestState> {
    *
    * <p> This map won't be modified by the caller.
    *
-   * @param requestState the request-specific state
+   * @param fetchState the fetch-specific state
    * @param byteSize size of the data in bytes
    * @return a map with extra parameters
    */
   @Nullable
-  public Map<String, String> getExtraMap(FETCH_STATE requestState, int byteSize);
+  public Map<String, String> getExtraMap(FETCH_STATE fetchState, int byteSize);
 }

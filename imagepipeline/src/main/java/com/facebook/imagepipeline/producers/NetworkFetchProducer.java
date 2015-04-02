@@ -65,28 +65,28 @@ public class NetworkFetchProducer implements Producer<CloseableReference<PooledB
       ProducerContext context) {
     context.getListener()
         .onProducerStart(context.getId(), PRODUCER_NAME);
-    final NfpRequestState requestState = mNetworkFetcher.createRequestState(consumer, context);
+    final FetchState fetchState = mNetworkFetcher.createFetchState(consumer, context);
     mNetworkFetcher.fetch(
-        requestState, new NetworkFetcher.Callback() {
+        fetchState, new NetworkFetcher.Callback() {
           @Override
           public void onResponse(InputStream response, int responseLength) throws IOException {
-            NetworkFetchProducer.this.onResponse(requestState, response, responseLength);
+            NetworkFetchProducer.this.onResponse(fetchState, response, responseLength);
           }
 
           @Override
           public void onFailure(Throwable throwable) {
-            NetworkFetchProducer.this.onFailure(requestState, throwable);
+            NetworkFetchProducer.this.onFailure(fetchState, throwable);
           }
 
           @Override
           public void onCancellation() {
-            NetworkFetchProducer.this.onCancellation(requestState);
+            NetworkFetchProducer.this.onCancellation(fetchState);
           }
         });
   }
 
   private void onResponse(
-      NfpRequestState requestState,
+      FetchState fetchState,
       InputStream responseData,
       int responseContentLength)
       throws IOException {
@@ -102,13 +102,13 @@ public class NetworkFetchProducer implements Producer<CloseableReference<PooledB
       while ((length = responseData.read(ioArray)) >= 0) {
         if (length > 0) {
           pooledOutputStream.write(ioArray, 0, length);
-          maybeHandleIntermediateResult(pooledOutputStream, requestState);
+          maybeHandleIntermediateResult(pooledOutputStream, fetchState);
           float progress = calculateProgress(pooledOutputStream.size(), responseContentLength);
-          requestState.getConsumer().onProgressUpdate(progress);
+          fetchState.getConsumer().onProgressUpdate(progress);
         }
       }
-      mNetworkFetcher.onFetchCompletion(requestState, pooledOutputStream.size());
-      handleFinalResult(pooledOutputStream, requestState);
+      mNetworkFetcher.onFetchCompletion(fetchState, pooledOutputStream.size());
+      handleFinalResult(pooledOutputStream, fetchState);
     } finally {
       mByteArrayPool.release(ioArray);
       pooledOutputStream.close();
@@ -136,24 +136,24 @@ public class NetworkFetchProducer implements Producer<CloseableReference<PooledB
 
   private void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream,
-      NfpRequestState requestState) {
+      FetchState fetchState) {
     final long nowMs = SystemClock.elapsedRealtime();
-    if (shouldPropagateIntermediateResults(requestState) &&
-        nowMs - requestState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
-      requestState.setLastIntermediateResultTimeMs(nowMs);
-      requestState.getListener()
-          .onProducerEvent(requestState.getId(), PRODUCER_NAME, INTERMEDIATE_RESULT_PRODUCER_EVENT);
-      notifyConsumer(pooledOutputStream, false, requestState.getConsumer());
+    if (shouldPropagateIntermediateResults(fetchState) &&
+        nowMs - fetchState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
+      fetchState.setLastIntermediateResultTimeMs(nowMs);
+      fetchState.getListener()
+          .onProducerEvent(fetchState.getId(), PRODUCER_NAME, INTERMEDIATE_RESULT_PRODUCER_EVENT);
+      notifyConsumer(pooledOutputStream, false, fetchState.getConsumer());
     }
   }
 
   private void handleFinalResult(
       PooledByteBufferOutputStream pooledOutputStream,
-      NfpRequestState requestState) {
-    Map<String, String> extraMap = getExtraMap(requestState, pooledOutputStream.size());
-    requestState.getListener()
-        .onProducerFinishWithSuccess(requestState.getId(), PRODUCER_NAME, extraMap);
-    notifyConsumer(pooledOutputStream, true, requestState.getConsumer());
+      FetchState fetchState) {
+    Map<String, String> extraMap = getExtraMap(fetchState, pooledOutputStream.size());
+    fetchState.getListener()
+        .onProducerFinishWithSuccess(fetchState.getId(), PRODUCER_NAME, extraMap);
+    notifyConsumer(pooledOutputStream, true, fetchState.getConsumer());
   }
 
   private void notifyConsumer(
@@ -166,30 +166,30 @@ public class NetworkFetchProducer implements Producer<CloseableReference<PooledB
     CloseableReference.closeSafely(result);
   }
 
-  private void onFailure(NfpRequestState requestState, Throwable e) {
-    requestState.getListener()
-        .onProducerFinishWithFailure(requestState.getId(), PRODUCER_NAME, e, null);
-    requestState.getConsumer().onFailure(e);
+  private void onFailure(FetchState fetchState, Throwable e) {
+    fetchState.getListener()
+        .onProducerFinishWithFailure(fetchState.getId(), PRODUCER_NAME, e, null);
+    fetchState.getConsumer().onFailure(e);
   }
 
-  private void onCancellation(NfpRequestState requestState) {
-    requestState.getListener()
-        .onProducerFinishWithCancellation(requestState.getId(), PRODUCER_NAME, null);
-    requestState.getConsumer().onCancellation();
+  private void onCancellation(FetchState fetchState) {
+    fetchState.getListener()
+        .onProducerFinishWithCancellation(fetchState.getId(), PRODUCER_NAME, null);
+    fetchState.getConsumer().onCancellation();
   }
 
-  private boolean shouldPropagateIntermediateResults(NfpRequestState requestState) {
-    if (!requestState.getContext().getImageRequest().getProgressiveRenderingEnabled()) {
+  private boolean shouldPropagateIntermediateResults(FetchState fetchState) {
+    if (!fetchState.getContext().getImageRequest().getProgressiveRenderingEnabled()) {
       return false;
     }
-    return mNetworkFetcher.shouldPropagate(requestState);
+    return mNetworkFetcher.shouldPropagate(fetchState);
   }
 
   @Nullable
-  private Map<String, String> getExtraMap(NfpRequestState requestState, int byteSize) {
-    if (!requestState.getListener().requiresExtraMap(requestState.getId())) {
+  private Map<String, String> getExtraMap(FetchState fetchState, int byteSize) {
+    if (!fetchState.getListener().requiresExtraMap(fetchState.getId())) {
       return null;
     }
-    return mNetworkFetcher.getExtraMap(requestState, byteSize);
+    return mNetworkFetcher.getExtraMap(fetchState, byteSize);
   }
 }

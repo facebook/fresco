@@ -26,7 +26,7 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
  * <p> Apps requiring more sophisticated networking should implement their own
  * {@link NetworkFetcher}.
  */
-public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<NfpRequestState> {
+public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchState> {
 
   private static final int NUM_NETWORK_THREADS = 3;
 
@@ -37,21 +37,21 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<NfpReque
   }
 
   @Override
-  public NfpRequestState createRequestState(
+  public FetchState createFetchState(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext context) {
-    return new NfpRequestState(consumer, context);
+    return new FetchState(consumer, context);
   }
 
   @Override
-  public void fetch(final NfpRequestState requestState, final Callback callback) {
+  public void fetch(final FetchState fetchState, final Callback callback) {
     mExecutor.execute(
         new Runnable() {
           @Override
           public void run() {
             HttpURLConnection connection = null;
             try {
-              Uri uri = requestState.getUri();
+              Uri uri = fetchState.getUri();
               URL url = new URL(uri.toString());
               connection = (HttpURLConnection) url.openConnection();
               InputStream is = connection.getInputStream();

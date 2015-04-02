@@ -17,7 +17,7 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.BaseNetworkFetcher;
 import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
 import com.facebook.imagepipeline.producers.Consumer;
-import com.facebook.imagepipeline.producers.NfpRequestState;
+import com.facebook.imagepipeline.producers.FetchState;
 import com.facebook.imagepipeline.producers.ProducerContext;
 import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.Call;
@@ -31,7 +31,7 @@ import java.io.IOException;
 /**
  * Network fetcher that uses OkHttp as a backend.
  */
-public class OkHttpNetworkFetcher extends BaseNetworkFetcher<NfpRequestState> {
+public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
 
   private static final String TAG = "OkHttpNetworkFetchProducer";
 
@@ -45,14 +45,14 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<NfpRequestState> {
   }
 
   @Override
-  public NfpRequestState createRequestState(
+  public FetchState createFetchState(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext context) {
-    return new NfpRequestState(consumer, context);
+    return new FetchState(consumer, context);
   }
 
   @Override
-  public void fetch(final NfpRequestState requestState, final Callback callback) {
+  public void fetch(final FetchState requestState, final Callback callback) {
     final Uri uri = requestState.getUri();
     final Request request = new Request.Builder()
         .cacheControl(new CacheControl.Builder().noStore().build())
