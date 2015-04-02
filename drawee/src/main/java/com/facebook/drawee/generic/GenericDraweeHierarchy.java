@@ -18,6 +18,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -407,14 +408,21 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     if (mProgressBarImageIndex < 0) {
       return;
     }
-    // display indefinite progressbar when not fully loaded, hide otherwise
+    Drawable progressBarDrawable = getLayerChildDrawable(mProgressBarImageIndex);
+    // display progressbar when not fully loaded, hide otherwise
     if (progress >= 0.999f) {
+      if (progressBarDrawable instanceof Animatable) {
+        ((Animatable) progressBarDrawable).stop();
+      }
       fadeOutLayer(mProgressBarImageIndex);
     } else {
+      if (progressBarDrawable instanceof Animatable) {
+        ((Animatable) progressBarDrawable).start();
+      }
       fadeInLayer(mProgressBarImageIndex);
     }
     // set drawable level, scaled to [0, 10000] per drawable specification
-    mFadeDrawable.getDrawable(mProgressBarImageIndex).setLevel(Math.round(progress * 10000));
+    progressBarDrawable.setLevel(Math.round(progress * 10000));
   }
 
   // SettableDraweeHierarchy interface
@@ -490,12 +498,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   // Helper methods for accessing layers
 
   /**
-   * Returns the parent drawable at the specified index.
-   * <p>
-   * If MatrixDrawable or ScaleTypeDrawable is found at that index, it will be returned as a parent.
-   * Otherwise, the FadeDrawable will be returned.
+   * Gets the drawable at the specified index while skipping MatrixDrawable and ScaleTypeDrawable.
+   *
+   * <p> If <code>returnParent</code> is set, parent drawable will be returned instead. If
+   * MatrixDrawable or ScaleTypeDrawable is found at that index, it will be returned as a parent.
+   * Otherwise, the FadeDrawable will be returned as a parent.
    */
-  private Drawable findLayerParent(int index) {
+  private Drawable getLayerDrawable(int index, boolean returnParent) {
     Drawable parent = mFadeDrawable;
     Drawable child = mFadeDrawable.getDrawable(index);
     if (child instanceof MatrixDrawable) {
@@ -506,7 +515,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       parent = child;
       child = parent.getCurrent();
     }
-    return parent;
+    return returnParent ? parent : child;
   }
 
   /**
@@ -527,16 +536,23 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /**
    * Sets a child drawable at the specified index.
    *
-   * <p> Note: This uses {@code findLayerParent} to find the parent drawable. Given drawable is
+   * <p> Note: This uses {@link #getLayerDrawable} to find the parent drawable. Given drawable is
    * then set as its child.
    */
   private void setLayerChildDrawable(int index, Drawable drawable) {
-    Drawable parent = findLayerParent(index);
+    Drawable parent = getLayerDrawable(index, true /* returnParent */);
     if (parent == mFadeDrawable) {
       mFadeDrawable.setDrawable(index, drawable);
     } else {
       ((ForwardingDrawable) parent).setCurrent(drawable);
     }
+  }
+
+  /**
+   * Gets the child drawable at the specified index.
+   */
+  private Drawable getLayerChildDrawable(int index) {
+    return getLayerDrawable(index, false /* returnParent */);
   }
 
   private Drawable getEmptyPlaceholderDrawable() {
