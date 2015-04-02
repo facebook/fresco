@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
-import com.facebook.imagepipeline.producers.NetworkFetchProducer;
+import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
@@ -49,7 +49,7 @@ public class ProducerSequenceFactory {
   private static final int MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
 
   private final ProducerFactory mProducerFactory;
-  private final NetworkFetchProducer mNetworkFetchProducer;
+  private final NetworkFetcher mNetworkFetcher;
   private final boolean mResizeAndRotateEnabledForNetwork;
 
   // Saved sequences
@@ -73,10 +73,10 @@ public class ProducerSequenceFactory {
 
   public ProducerSequenceFactory(
       ProducerFactory producerFactory,
-      NetworkFetchProducer networkFetchProducer,
+      NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork) {
     mProducerFactory = producerFactory;
-    mNetworkFetchProducer = networkFetchProducer;
+    mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mPostprocessorSequences = Maps.newHashMap();
     mCloseableImagePrefetchSequences = Maps.newHashMap();
@@ -216,8 +216,8 @@ public class ProducerSequenceFactory {
   private synchronized Producer<CloseableReference<PooledByteBuffer>>
       getCommonNetworkFetchToEncodedMemorySequence() {
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
-      mCommonNetworkFetchToEncodedMemorySequence =
-          newEncodedCacheMultiplexToTranscodeSequence(mNetworkFetchProducer);
+      mCommonNetworkFetchToEncodedMemorySequence = newEncodedCacheMultiplexToTranscodeSequence(
+          mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
       if (mResizeAndRotateEnabledForNetwork) {
         mCommonNetworkFetchToEncodedMemorySequence =
             newResizeAndRotateImagesSequence(mCommonNetworkFetchToEncodedMemorySequence);

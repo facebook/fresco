@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 import android.os.SystemClock;
 
@@ -28,28 +27,13 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 /**
  * A producer to actually fetch images from the network.
  *
- * <p> Downloaded bytes are passed to the consumer as they are downloaded, but not more often than
- * {@link #TIME_BETWEEN_PARTIAL_RESULTS_MS}.
+ * <p> Downloaded bytes may be passed to the consumer as they are downloaded, but not more often
+ * than {@link #TIME_BETWEEN_PARTIAL_RESULTS_MS}.
 
- * <p>Implementations should subclass this to make use of the network stack they are using.
- * Use {@link HttpURLConnectionNetworkFetchProducer} as a model.
- *
- * <p>Most implementations will only need to override
- * {@link #newRequestState(Consumer, ProducerContext)} and {@link #fetchImage(NfpRequestState)}.
- *
- * <p>It is strongly recommended that implementations use an {@link Executor} in their fetchImage
- * method to execute the network request on a different thread.
- *
- * <p>When the fetch from the network fails or is cancelled, the subclass is responsible for
- * calling {@link #onCancellation(NfpRequestState, Map)} or
- * {@link #onFailure(NfpRequestState, Throwable, Map)}. If these are not called, the
- * rest of the pipeline will not know that the image has failed to load and the application
- * may not behave properly.
- *
- * @param <RS> The type to store all request-scoped data. NfpRequestState can be used or extended.
+ * <p>Clients should provide an instance of {@link NetworkFetcher} to make use of their networking
+ * stack. Use {@link HttpUrlConnectionNetworkFetcher} as a model.
  */
-public abstract class NetworkFetchProducer<RS extends NfpRequestState>
-    implements Producer<CloseableReference<PooledByteBuffer>> {
+public class NetworkFetchProducer implements Producer<CloseableReference<PooledByteBuffer>> {
 
   @VisibleForTesting static final String PRODUCER_NAME = "NetworkFetchProducer";
   public static final String INTERMEDIATE_RESULT_PRODUCER_EVENT = "intermediate_result";
@@ -64,58 +48,45 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
 
   private final PooledByteBufferFactory mPooledByteBufferFactory;
   private final ByteArrayPool mByteArrayPool;
+  private final NetworkFetcher mNetworkFetcher;
 
   public NetworkFetchProducer(
       PooledByteBufferFactory pooledByteBufferFactory,
-      ByteArrayPool byteArrayPool) {
+      ByteArrayPool byteArrayPool,
+      NetworkFetcher networkFetcher) {
     mPooledByteBufferFactory = pooledByteBufferFactory;
     mByteArrayPool = byteArrayPool;
-  }
-
-  /**
-   *  Returns the name of the producer.
-   *
-   *  <p>This name is passed to the {@link ProducerListener}s.
-   */
-  protected String getProducerName() {
-    return PRODUCER_NAME;
+    mNetworkFetcher = networkFetcher;
   }
 
   @Override
   public void produceResults(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext context) {
-    context.getListener().onProducerStart(
-        context.getId(),
-        getProducerName());
-    RS requestState = newRequestState(consumer, context);
-    fetchImage(requestState);
+    context.getListener()
+        .onProducerStart(context.getId(), PRODUCER_NAME);
+    final NfpRequestState requestState = mNetworkFetcher.createRequestState(consumer, context);
+    mNetworkFetcher.fetch(
+        requestState, new NetworkFetcher.Callback() {
+          @Override
+          public void onResponse(InputStream response, int responseLength) throws IOException {
+            NetworkFetchProducer.this.onResponse(requestState, response, responseLength);
+          }
+
+          @Override
+          public void onFailure(Throwable throwable) {
+            NetworkFetchProducer.this.onFailure(requestState, throwable);
+          }
+
+          @Override
+          public void onCancellation() {
+            NetworkFetchProducer.this.onCancellation(requestState);
+          }
+        });
   }
 
-  /**
-   * Returns an instance of the {@link NfpRequestState}-derived object used to store state.
-   */
-  protected abstract RS newRequestState(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
-      ProducerContext context);
-
-  /**
-   * Subclasses should override this method to actually call their network stack.
-   *
-   * <p>It is strongly recommended that this method be asynchronous.
-   */
-  protected abstract void fetchImage(final RS requestState);
-
-  /**
-   * Subclasses should call this method once they receive the InputStream from their network stack.
-   *
-   * @param requestState Request-specific data.
-   * @param responseData The InputStream for the data
-   * @param responseContentLength the length of the data if known, -1 otherwise
-   * @throws IOException
-   */
-  protected void processResult(
-      RS requestState,
+  private void onResponse(
+      NfpRequestState requestState,
       InputStream responseData,
       int responseContentLength)
       throws IOException {
@@ -131,13 +102,12 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
       while ((length = responseData.read(ioArray)) >= 0) {
         if (length > 0) {
           pooledOutputStream.write(ioArray, 0, length);
-          if (shouldPropagateIntermediateResults(requestState)) {
-            maybeHandleIntermediateResult(pooledOutputStream, requestState);
-          }
+          maybeHandleIntermediateResult(pooledOutputStream, requestState);
           float progress = calculateProgress(pooledOutputStream.size(), responseContentLength);
           requestState.getConsumer().onProgressUpdate(progress);
         }
       }
+      mNetworkFetcher.onFetchCompletion(requestState, pooledOutputStream.size());
       handleFinalResult(pooledOutputStream, requestState);
     } finally {
       mByteArrayPool.release(ioArray);
@@ -145,7 +115,7 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
     }
   }
 
-  private float calculateProgress(int downloaded, int total) {
+  private static float calculateProgress(int downloaded, int total) {
     if (total > 0) {
       return (float) downloaded / total;
     } else {
@@ -168,95 +138,58 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
       PooledByteBufferOutputStream pooledOutputStream,
       NfpRequestState requestState) {
     final long nowMs = SystemClock.elapsedRealtime();
-    if (nowMs - requestState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
+    if (shouldPropagateIntermediateResults(requestState) &&
+        nowMs - requestState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       requestState.setLastIntermediateResultTimeMs(nowMs);
-      requestState.getListener().onProducerEvent(
-          requestState.getId(), getProducerName(), INTERMEDIATE_RESULT_PRODUCER_EVENT);
-      passResultToConsumer(pooledOutputStream, false, requestState.getConsumer());
+      requestState.getListener()
+          .onProducerEvent(requestState.getId(), PRODUCER_NAME, INTERMEDIATE_RESULT_PRODUCER_EVENT);
+      notifyConsumer(pooledOutputStream, false, requestState.getConsumer());
     }
   }
 
-  protected void handleFinalResult(
+  private void handleFinalResult(
       PooledByteBufferOutputStream pooledOutputStream,
-      RS requestState) {
-    requestState.getListener().onProducerFinishWithSuccess(
-        requestState.getId(),
-        getProducerName(),
-        getExtraMap(pooledOutputStream.size(), requestState));
-    passResultToConsumer(pooledOutputStream, true, requestState.getConsumer());
+      NfpRequestState requestState) {
+    Map<String, String> extraMap = getExtraMap(requestState, pooledOutputStream.size());
+    requestState.getListener()
+        .onProducerFinishWithSuccess(requestState.getId(), PRODUCER_NAME, extraMap);
+    notifyConsumer(pooledOutputStream, true, requestState.getConsumer());
   }
 
-  @VisibleForTesting
-  void passResultToConsumer(
+  private void notifyConsumer(
       PooledByteBufferOutputStream pooledOutputStream,
       boolean isFinal,
       Consumer<CloseableReference<PooledByteBuffer>> consumer) {
     CloseableReference<PooledByteBuffer> result =
         CloseableReference.of(pooledOutputStream.toByteBuffer());
     consumer.onNewResult(result, isFinal);
-    result.close();
+    CloseableReference.closeSafely(result);
   }
 
-  private @Nullable Map<String, String> getExtraMap(
-      int byteSize,
-      RS requestState) {
-    if (!requestState.getListener().requiresExtraMap(requestState.getId())) {
-      return null;
-    }
-    return buildExtraMapForFinalResult(byteSize, requestState);
-  }
-
-  /**
-   * Override this to provide a map containing extra parameters to pass to the listeners.
-   *
-   * @return An immutable map of the parameters. Attempts to modify this map afterwards
-   * will result in an exception being thrown.
-   */
-  protected @Nullable Map<String, String> buildExtraMapForFinalResult(
-      int byteSize,
-      RS requestState) {
-    return null;
-  }
-
-  /**
-   * Called upon a failure in the network stack.
-   *
-   * @param requestState Request-specific data.
-   * @param e The exception thrown.
-   * @param extraMap An immutable map of the parameters. Attempts to modify this map afterwards
-   * will result in an exception being thrown.
-   */
-  protected void onFailure(RS requestState, Throwable e, Map<String, String> extraMap) {
-    requestState.getListener().onProducerFinishWithFailure(
-        requestState.getId(),
-        getProducerName(),
-        e,
-        extraMap);
+  private void onFailure(NfpRequestState requestState, Throwable e) {
+    requestState.getListener()
+        .onProducerFinishWithFailure(requestState.getId(), PRODUCER_NAME, e, null);
     requestState.getConsumer().onFailure(e);
   }
 
-  /**
-   * Called upon a cancellation of the request.
-   *
-   * @param requestState Request-specific data.
-   * @param extraMap An immutable map of the parameters. Attempts to modify this map afterwards
-   * will result in an exception being thrown.
-   */
-  protected void onCancellation(RS requestState, Map<String, String> extraMap) {
-    requestState.getListener().onProducerFinishWithCancellation(
-        requestState.getId(),
-        getProducerName(),
-        extraMap);
+  private void onCancellation(NfpRequestState requestState) {
+    requestState.getListener()
+        .onProducerFinishWithCancellation(requestState.getId(), PRODUCER_NAME, null);
     requestState.getConsumer().onCancellation();
   }
 
-  /**
-   * Gets whether the intermediate results should be propagated.
-   *
-   * @param requestState Request-specific data.
-   * @return whether the intermediate results should be propagated
-   */
-  protected boolean shouldPropagateIntermediateResults(RS requestState) {
-    return requestState.getContext().getImageRequest().getProgressiveRenderingEnabled();
+  private boolean shouldPropagateIntermediateResults(NfpRequestState requestState) {
+    if (!requestState.getContext().getImageRequest().getProgressiveRenderingEnabled()) {
+      return false;
+    }
+    return mNetworkFetcher.shouldPropagate(requestState);
+  }
+
+  @Nullable
+  private Map<String, String> getExtraMap(NfpRequestState requestState, int byteSize) {
+    if (!requestState.getListener().requiresExtraMap(requestState.getId())) {
+      return null;
+    }
+    return mNetworkFetcher.getExtraMap(requestState, byteSize);
   }
 }

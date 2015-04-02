@@ -18,37 +18,33 @@ import java.util.concurrent.Executors;
 import android.net.Uri;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.ByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 
 /**
- * Network producer using the simplest Android stack.
+ * Network fetcher that uses the simplest Android stack.
  *
- * <p>Apps requiring more sophisticated networking should implement their own
- * subclass of {@link NetworkFetchProducer}             .
+ * <p> Apps requiring more sophisticated networking should implement their own
+ * {@link NetworkFetcher}.
  */
-public class HttpURLConnectionNetworkFetchProducer extends NetworkFetchProducer<NfpRequestState> {
+public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<NfpRequestState> {
+
   private static final int NUM_NETWORK_THREADS = 3;
 
   private final Executor mExecutor;
 
-  public HttpURLConnectionNetworkFetchProducer(
-      PooledByteBufferFactory pooledByteBufferFactory,
-      ByteArrayPool byteArrayPool) {
-    super(pooledByteBufferFactory, byteArrayPool);
+  public HttpUrlConnectionNetworkFetcher() {
     mExecutor = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
   }
 
   @Override
-  protected NfpRequestState newRequestState(
+  public NfpRequestState createRequestState(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext context) {
     return new NfpRequestState(consumer, context);
   }
 
   @Override
-  protected void fetchImage(final NfpRequestState requestState) {
+  public void fetch(final NfpRequestState requestState, final Callback callback) {
     mExecutor.execute(
         new Runnable() {
           @Override
@@ -59,9 +55,9 @@ public class HttpURLConnectionNetworkFetchProducer extends NetworkFetchProducer<
               URL url = new URL(uri.toString());
               connection = (HttpURLConnection) url.openConnection();
               InputStream is = connection.getInputStream();
-              processResult(requestState, is, -1);
+              callback.onResponse(is, -1);
             } catch (Exception e) {
-              onFailure(requestState, e, null);
+              callback.onFailure(e);
             } finally {
               if (connection != null) {
                 connection.disconnect();
