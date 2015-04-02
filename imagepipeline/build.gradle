@@ -9,6 +9,8 @@ apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
 import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
@@ -125,7 +127,15 @@ task copyLibWebp(dependsOn: cloneWebp, type: Copy) {
     into "${nativemerge}/libwebp-0.4.2"
 }
 
-def getNdkBuildCommand() {
+def getNdkBuildName() {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        return "ndk-build.cmd"
+    } else {
+        return "ndk-build"
+    }
+}
+
+def getNdkBuildFullPath() {
     // we allow to provide full path to ndk-build tool
     if (hasProperty('ndk.command')) {
         return property('ndk.command')
@@ -136,17 +146,18 @@ def getNdkBuildCommand() {
         if (!path.endsWith(File.separator)) {
             path += File.separator
         }
-        return path + 'ndk-build'
+        return path + getNdkBuildName()
     }
     // if none of above is provided, we assume ndk-build is already in $PATH
-    return 'ndk-build'
+    return getNdkBuildName()
 }
 
 def makeNdkTasks(String name) {
     task "ndk_build_$name"(type: Exec) {
         inputs.file("src/main/jni/$name")
         outputs.dir("$buildDir/$name")
-        commandLine getNdkBuildCommand(),
+        commandLine getNdkBuildFullPath(),
+            'NDK_PROJECT_PATH=null',
             'NDK_APPLICATION_MK=../Application.mk',
             'NDK_OUT=' + temporaryDir,
             "NDK_LIBS_OUT=$buildDir/$name",
@@ -155,7 +166,8 @@ def makeNdkTasks(String name) {
     }
 
     task "ndk_clean_$name"(type: Exec) {
-        commandLine getNdkBuildCommand(),
+        commandLine getNdkBuildFullPath(),
+            'NDK_PROJECT_PATH=null',
             'NDK_APPLICATION_MK=../Application.mk',
             'NDK_OUT=' + temporaryDir,
             "NDK_LIBS_OUT=$buildDir/$name",
