@@ -60,7 +60,7 @@ public class DiskCacheProducer implements Producer<CloseableReference<PooledByte
       final ProducerContext producerContext) {
     ImageRequest imageRequest = producerContext.getImageRequest();
     if (!imageRequest.isDiskCacheEnabled()) {
-      mNextProducer.produceResults(consumer, producerContext);
+      maybeStartNextProducer(consumer, consumer, producerContext);
       return;
     }
 
@@ -84,7 +84,8 @@ public class DiskCacheProducer implements Producer<CloseableReference<PooledByte
               consumer.onCancellation();
             } else if (task.isFaulted()) {
               listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
-              mNextProducer.produceResults(
+              maybeStartNextProducer(
+                  consumer,
                   new DiskCacheConsumer(consumer, cache, cacheKey),
                   producerContext);
             } else {
@@ -102,7 +103,8 @@ public class DiskCacheProducer implements Producer<CloseableReference<PooledByte
                     requestId,
                     PRODUCER_NAME,
                     getExtraMap(listener, requestId, false));
-                mNextProducer.produceResults(
+                maybeStartNextProducer(
+                    consumer,
                     new DiskCacheConsumer(consumer, cache, cacheKey),
                     producerContext);
               }
@@ -116,6 +118,19 @@ public class DiskCacheProducer implements Producer<CloseableReference<PooledByte
         cache.get(cacheKey, isCancelled);
     diskCacheLookupTask.continueWith(continuation);
     subscribeTaskForRequestCancellation(isCancelled, producerContext);
+  }
+
+  private void maybeStartNextProducer(
+      Consumer<CloseableReference<PooledByteBuffer>> consumerOfDiskCacheProducer,
+      Consumer<CloseableReference<PooledByteBuffer>> consumerOfNextProducer,
+      ProducerContext producerContext) {
+    if (producerContext.getLowestPermittedRequestLevel().getValue() >=
+        ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
+      consumerOfDiskCacheProducer.onNewResult(null, true);
+      return;
+    }
+
+    mNextProducer.produceResults(consumerOfNextProducer, producerContext);
   }
 
   @VisibleForTesting

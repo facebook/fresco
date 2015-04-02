@@ -112,8 +112,8 @@ public class ProducerSequenceFactory {
     Preconditions.checkNotNull(imageRequest);
     Preconditions.checkArgument(UriUtil.isNetworkUri(imageRequest.getSourceUri()));
     Preconditions.checkArgument(
-        imageRequest.getLowestPermittedRequestLevel() ==
-            ImageRequest.RequestLevel.FULL_FETCH);
+        imageRequest.getLowestPermittedRequestLevel().getValue() <=
+            ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.getValue());
   }
 
   /**
