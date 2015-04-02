@@ -59,7 +59,7 @@ public class HttpURLConnectionNetworkFetchProducer extends NetworkFetchProducer<
               URL url = new URL(uri.toString());
               connection = (HttpURLConnection) url.openConnection();
               InputStream is = connection.getInputStream();
-              processResult(requestState, is, 0, false);
+              processResult(requestState, is, -1);
             } catch (Exception e) {
               onFailure(requestState, e, null);
             } finally {

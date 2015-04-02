@@ -98,7 +98,7 @@ public class OkHttpNetworkFetchProducer extends NetworkFetchProducer<NfpRequestS
               if (contentLength < 0) {
                 contentLength = 0;
               }
-              processResult(requestState, body.byteStream(), (int) contentLength, false);
+              processResult(requestState, body.byteStream(), (int) contentLength);
             } catch (IOException ioe) {
               handleException(call, requestState, ioe);
             } finally {

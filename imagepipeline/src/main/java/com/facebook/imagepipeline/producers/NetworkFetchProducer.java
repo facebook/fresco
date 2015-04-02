@@ -106,11 +106,18 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
    */
   protected abstract void fetchImage(final RS requestState);
 
+  /**
+   * Subclasses should call this method once they receive the InputStream from their network stack.
+   *
+   * @param requestState Request-specific data.
+   * @param responseData The InputStream for the data
+   * @param responseContentLength the length of the data if known, -1 otherwise
+   * @throws IOException
+   */
   protected void processResult(
       RS requestState,
       InputStream responseData,
-      int responseContentLength,
-      boolean propagateIntermediateResults)
+      int responseContentLength)
       throws IOException {
     final PooledByteBufferOutputStream pooledOutputStream;
     if (responseContentLength > 0) {
@@ -124,7 +131,7 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
       while ((length = responseData.read(ioArray)) >= 0) {
         if (length > 0) {
           pooledOutputStream.write(ioArray, 0, length);
-          if (propagateIntermediateResults) {
+          if (shouldPropagateIntermediateResults(requestState)) {
             maybeHandleIntermediateResult(pooledOutputStream, requestState);
           }
           float progress = calculateProgress(pooledOutputStream.size(), responseContentLength);
@@ -241,5 +248,15 @@ public abstract class NetworkFetchProducer<RS extends NfpRequestState>
         getProducerName(),
         extraMap);
     requestState.getConsumer().onCancellation();
+  }
+
+  /**
+   * Gets whether the intermediate results should be propagated.
+   *
+   * @param requestState Request-specific data.
+   * @return whether the intermediate results should be propagated
+   */
+  protected boolean shouldPropagateIntermediateResults(RS requestState) {
+    return requestState.getContext().getImageRequest().getProgressiveRenderingEnabled();
   }
 }
