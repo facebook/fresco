@@ -156,10 +156,6 @@ public class ImagePipelineConfig {
         return new AnimatedDrawableBackendImpl(mAnimatedDrawableUtil, imageResult, bounds);
       }
     };
-    mAnimatedImageFactory = builder.mAnimatedImageFactory == null ?
-        new AnimatedImageFactory(animatedDrawableBackendProvider) :
-        builder.mAnimatedImageFactory;
-
     GingerbreadBitmapFactory factoryGingerbread = new GingerbreadBitmapFactory();
     DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
         new EmptyJpegGenerator(mPoolFactory.getPooledByteBufferFactory()),
@@ -171,6 +167,10 @@ public class ImagePipelineConfig {
             factoryGingerbread,
             factoryICS,
             factoryLollipop);
+
+    mAnimatedImageFactory = builder.mAnimatedImageFactory == null ?
+        new AnimatedImageFactory(animatedDrawableBackendProvider, mPlatformBitmapFactory) :
+        builder.mAnimatedImageFactory;
 
     mImageDecoder =
         builder.mImageDecoder == null ?

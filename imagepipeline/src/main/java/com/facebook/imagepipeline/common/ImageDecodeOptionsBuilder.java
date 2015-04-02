@@ -19,6 +19,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mForceOldAnimationCode;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
+  private boolean mDecodeAllFrames;
 
   ImageDecodeOptionsBuilder() {
   }
@@ -34,6 +35,7 @@ public class ImageDecodeOptionsBuilder {
     mForceOldAnimationCode = options.forceOldAnimationCode;
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
+    mDecodeAllFrames = options.decodeAllFrames;
     return this;
   }
 
@@ -141,6 +143,30 @@ public class ImageDecodeOptionsBuilder {
    */
   public ImageDecodeOptionsBuilder setUseLastFrameForPreview(boolean useLastFrameForPreview) {
     mUseLastFrameForPreview = useLastFrameForPreview;
+    return this;
+  }
+
+  /**
+   * Gets whether to decode all the frames and store them in memory. This should only ever be used
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
+   * in memory for general GIFs or WebP's will not fit in memory.
+   *
+   * @return whether to decode all the frames and store them in memory
+   */
+  public boolean getDecodeAllFrames() {
+    return mDecodeAllFrames;
+  }
+
+  /**
+   * Sets whether to decode all the frames and store them in memory. This should only ever be used
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
+   * in memory for general GIFs or WebP's will not fit in memory.
+   *
+   * @param decodeAllFrames whether to decode all the frames and store them in memory
+   * @return this builder
+   */
+  public ImageDecodeOptionsBuilder setDecodeAllFrames(boolean decodeAllFrames) {
+    mDecodeAllFrames = decodeAllFrames;
     return this;
   }
 

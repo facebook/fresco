@@ -111,9 +111,7 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
 
           @Override
           public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
-            synchronized (AnimatedDrawableCachingBackendImpl.this) {
-              return CloseableReference.cloneOrNull(mCachedBitmaps.get(frameNumber));
-            }
+            return getCachedOrPredecodedFrame(frameNumber);
           }
         });
     mResourceReleaserForBitmaps = new ResourceReleaser<Bitmap>() {
@@ -249,8 +247,7 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     try {
       synchronized (this) {
         mBitmapsToKeepCached.set(frameNumber, true);
-        CloseableReference<Bitmap> bitmapReference =
-            CloseableReference.cloneOrNull(mCachedBitmaps.get(frameNumber));
+        CloseableReference<Bitmap> bitmapReference = getCachedOrPredecodedFrame(frameNumber);
         if (bitmapReference != null) {
           return bitmapReference;
         }
@@ -403,9 +400,9 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
   private synchronized void doPrefetch(int startFrame, int count) {
     for (int i = 0; i < count; i++) {
       final int frameNumber = (startFrame + i) % mAnimatedDrawableBackend.getFrameCount();
-      CloseableReference<Bitmap> bitmapReference = mCachedBitmaps.get(frameNumber);
+      boolean hasCached = hasCachedOrPredecodedFrame(frameNumber);
       Task<Object> future = mDecodesInFlight.get(frameNumber);
-      if (bitmapReference == null && future == null) {
+      if (!hasCached && future == null) {
         final Task<Object> newFuture = Task.call(
             new Callable<Object>() {
               @Override
@@ -438,19 +435,29 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
         // Looks like we're no longer supposed to keep this cached.
         return;
       }
-      if (mCachedBitmaps.get(frameNumber) != null) {
+      if (hasCachedOrPredecodedFrame(frameNumber)) {
         // Looks like it's already cached.
         return;
       }
     }
 
-    CloseableReference<Bitmap> bitmapReference = obtainBitmapInternal();
+    CloseableReference<Bitmap> preDecodedFrame =
+        mAnimatedDrawableBackend.getPreDecodedFrame(frameNumber);
     try {
-      mAnimatedImageCompositor.renderFrame(frameNumber, bitmapReference.get());
-      maybeCacheRenderedBitmap(frameNumber, bitmapReference);
-      FLog.v(TAG, "Prefetch rendered frame %d", frameNumber);
+      if (preDecodedFrame != null) {
+        maybeCacheRenderedBitmap(frameNumber, preDecodedFrame);
+      } else {
+        CloseableReference<Bitmap> bitmapReference = obtainBitmapInternal();
+        try {
+          mAnimatedImageCompositor.renderFrame(frameNumber, bitmapReference.get());
+          maybeCacheRenderedBitmap(frameNumber, bitmapReference);
+          FLog.v(TAG, "Prefetch rendered frame %d", frameNumber);
+        } finally {
+          bitmapReference.close();
+        }
+      }
     } finally {
-      bitmapReference.close();
+      CloseableReference.closeSafely(preDecodedFrame);
     }
   }
 
@@ -511,6 +518,20 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
       mCachedBitmaps.removeAt(existingIndex);
     }
     mCachedBitmaps.put(frameNumber, bitmapReference.clone());
+  }
+
+  private synchronized CloseableReference<Bitmap> getCachedOrPredecodedFrame(int frameNumber) {
+    CloseableReference<Bitmap> ret =
+        CloseableReference.cloneOrNull(mCachedBitmaps.get(frameNumber));
+    if (ret == null) {
+      ret = mAnimatedDrawableBackend.getPreDecodedFrame(frameNumber);
+    }
+    return ret;
+  }
+
+  private synchronized boolean hasCachedOrPredecodedFrame(int frameNumber) {
+    return mCachedBitmaps.get(frameNumber) != null ||
+        mAnimatedDrawableBackend.hasPreDecodedFrame(frameNumber);
   }
 
   @VisibleForTesting

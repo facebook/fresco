@@ -9,7 +9,10 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
+import com.facebook.common.references.CloseableReference;
 
 /**
  * A convenience base class that implements {@link AnimatedDrawableBackend} and delegates
@@ -100,6 +103,16 @@ public abstract class DelegatingAnimatedDrawableBackend implements AnimatedDrawa
   @Override
   public int getMemoryUsage() {
     return mAnimatedDrawableBackend.getMemoryUsage();
+  }
+
+  @Override
+  public CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
+    return mAnimatedDrawableBackend.getPreDecodedFrame(frameNumber);
+  }
+
+  @Override
+  public boolean hasPreDecodedFrame(int frameNumber) {
+    return mAnimatedDrawableBackend.hasPreDecodedFrame(frameNumber);
   }
 
   @Override

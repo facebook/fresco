@@ -233,6 +233,11 @@ public class AnimatedDrawableTest {
     }
 
     @Override
+    public CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
+      return null;
+    }
+
+    @Override
     public void appendDebugOptionString(StringBuilder sb) {
     }
 
