@@ -33,7 +33,7 @@ DraweeHolder mDraweeHolder;
 
 @Override
 public void onDetachedFromWindow() {
-  super.onDetachedToWindow();
+  super.onDetachedFromWindow();
   mDraweeHolder.onDetach();
 }
 
