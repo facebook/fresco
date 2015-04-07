@@ -164,8 +164,12 @@ public class ProducerSequenceFactory {
     } else if (UriUtil.isLocalResourceUri(uri)) {
       return getLocalResourceFetchSequence();
     } else {
+      String uriString = uri.toString();
+      if (!TextUtils.isEmpty(uriString)) {
+        uriString.substring(0, Math.min(30, uriString.length));
+      }
       throw new RuntimeException(
-          "Unsupported image type! Uri is: " + uri.toString().substring(0, 30));
+          "Unsupported image type! Uri is: " + uriString);
     }
   }
 
