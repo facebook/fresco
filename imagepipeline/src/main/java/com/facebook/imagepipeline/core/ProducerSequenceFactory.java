@@ -149,6 +149,7 @@ public class ProducerSequenceFactory {
     Preconditions.checkNotNull(imageRequest);
 
     Uri uri = imageRequest.getSourceUri();
+    Preconditions.checkNotNull(uri, "Uri is null.");
     if (UriUtil.isNetworkUri(uri)) {
       return getNetworkFetchSequence();
     } else if (UriUtil.isLocalFileUri(uri)) {
@@ -164,8 +165,11 @@ public class ProducerSequenceFactory {
     } else if (UriUtil.isLocalResourceUri(uri)) {
       return getLocalResourceFetchSequence();
     } else {
-      throw new RuntimeException(
-          "Unsupported image type! Uri is: " + uri.toString().substring(0, 30));
+      String uriString = uri.toString();
+      if (uriString.length() > 30) {
+        uriString = uriString.substring(0, 30) + "...";
+      }
+      throw new RuntimeException("Unsupported uri scheme! Uri is: " + uriString);
     }
   }
 
