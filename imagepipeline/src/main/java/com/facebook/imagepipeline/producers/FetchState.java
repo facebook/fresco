@@ -15,7 +15,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
- * Used by {@link NetworkFetchProducer} to encapsulate the state of one network fetch.
+ * Used by {@link NetworkFetcher} to encapsulate the state of one network fetch.
  *
  * <p>Implementations can subclass this to store additional fetch-scoped fields.
  */
