@@ -16,12 +16,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "com.facebook.fresco.sample"
         minSdkVersion 9
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
 
