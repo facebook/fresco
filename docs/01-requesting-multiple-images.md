@@ -1,6 +1,6 @@
 ---
 id: requesting-multiple-images
-title: Requesting Multiple Images
+title: Requesting Multiple Images (Multi-URI)
 layout: docs
 permalink: /docs/requesting-multiple-images.html
 prev: animations.html
