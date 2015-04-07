@@ -51,6 +51,8 @@ The image is copied before it enters your postprocessor. The copy of the image i
 
 If you show the same image repeatedly, you must specify the postprocessor each time it is requested. You are free to use different postprocessors on different requests for the same image.
 
+Postprocessors are **not** currently supported for [animated](animations.html) images.
+
 #### Repeated Postprocessors
 
 What if you want to post-process the same image more than once? No problem at all. Just subclass [BaseRepeatedPostprocessor](../javadoc/reference/com/facebook/imagepipeline/request/BaseRepatedPostprocessor.html). This class has a method `update` which can be invoked at any time to run the postprocessor again.

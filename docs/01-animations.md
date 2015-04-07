@@ -62,3 +62,6 @@ if (animatable != null) {
 }
 ```
 
+### Limitations
+
+Animations do not currently support [postprocessors](modifying-image.html).
