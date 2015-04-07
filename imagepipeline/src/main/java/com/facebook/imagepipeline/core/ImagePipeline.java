@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.core;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import java.lang.Exception;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -118,13 +119,17 @@ public class ImagePipeline {
   public DataSource<CloseableReference<CloseableImage>> fetchImageFromBitmapCache(
       ImageRequest imageRequest,
       Object callerContext) {
-    Producer<CloseableReference<CloseableImage>> producerSequence =
-        mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
-    return submitFetchRequest(
-        producerSequence,
-        imageRequest,
-        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE,
-        callerContext);
+    try {
+      Producer<CloseableReference<CloseableImage>> producerSequence =
+          mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
+      return submitFetchRequest(
+          producerSequence,
+          imageRequest,
+          ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE,
+          callerContext);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 
   /**
@@ -138,13 +143,17 @@ public class ImagePipeline {
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
       ImageRequest imageRequest,
       Object callerContext) {
-    Producer<CloseableReference<CloseableImage>> producerSequence =
-        mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
-    return submitFetchRequest(
-        producerSequence,
-        imageRequest,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        callerContext);
+    try {
+      Producer<CloseableReference<CloseableImage>> producerSequence =
+          mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
+      return submitFetchRequest(
+          producerSequence,
+          imageRequest,
+          ImageRequest.RequestLevel.FULL_FETCH,
+          callerContext);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 
   /**
@@ -158,13 +167,17 @@ public class ImagePipeline {
   public DataSource<CloseableReference<PooledByteBuffer>> fetchEncodedImage(
       ImageRequest imageRequest,
       Object callerContext) {
-    Producer<CloseableReference<PooledByteBuffer>> producerSequence =
-        mProducerSequenceFactory.getEncodedImageProducerSequence(imageRequest);
+    try {
+      Producer<CloseableReference<PooledByteBuffer>> producerSequence =
+          mProducerSequenceFactory.getEncodedImageProducerSequence(imageRequest);
       return submitFetchRequest(
           producerSequence,
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 
   /**
@@ -178,14 +191,17 @@ public class ImagePipeline {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
-
-    Producer<Void> producerSequence =
-        mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
-    return submitPrefetchRequest(
-        producerSequence,
-        imageRequest,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        callerContext);
+    try {
+      Producer<Void> producerSequence =
+          mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
+      return submitPrefetchRequest(
+          producerSequence,
+          imageRequest,
+          ImageRequest.RequestLevel.FULL_FETCH,
+          callerContext);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 
   /**
@@ -199,14 +215,17 @@ public class ImagePipeline {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
-
-    Producer<Void> producerSequence =
-        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest);
-    return submitPrefetchRequest(
-        producerSequence,
-        imageRequest,
-        ImageRequest.RequestLevel.FULL_FETCH,
-        callerContext);
+    try {
+      Producer<Void> producerSequence =
+          mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest);
+      return submitPrefetchRequest(
+          producerSequence,
+          imageRequest,
+          ImageRequest.RequestLevel.FULL_FETCH,
+          callerContext);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 
   /**
@@ -239,24 +258,28 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext) {
-    ImageRequest.RequestLevel lowestPermittedRequestLevel =
-        ImageRequest.RequestLevel.getMax(
-            imageRequest.getLowestPermittedRequestLevel(),
-            lowestPermittedRequestLevelOnSubmit);
-    SettableProducerContext settableProducerContext = new SettableProducerContext(
-        imageRequest,
-        generateUniqueFutureId(),
-        mRequestListener,
-        callerContext,
-        lowestPermittedRequestLevel,
+    try {
+      ImageRequest.RequestLevel lowestPermittedRequestLevel =
+          ImageRequest.RequestLevel.getMax(
+              imageRequest.getLowestPermittedRequestLevel(),
+              lowestPermittedRequestLevelOnSubmit);
+      SettableProducerContext settableProducerContext = new SettableProducerContext(
+          imageRequest,
+          generateUniqueFutureId(),
+          mRequestListener,
+          callerContext,
+          lowestPermittedRequestLevel,
         /* isPrefetch */ false,
-        imageRequest.getProgressiveRenderingEnabled() ||
-            !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
-        imageRequest.getPriority());
-    return CloseableProducerToDataSourceAdapter.create(
-        producerSequence,
-        settableProducerContext,
-        mRequestListener);
+          imageRequest.getProgressiveRenderingEnabled() ||
+              !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
+          imageRequest.getPriority());
+      return CloseableProducerToDataSourceAdapter.create(
+          producerSequence,
+          settableProducerContext,
+          mRequestListener);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 
   private DataSource<Void> submitPrefetchRequest(
@@ -264,22 +287,26 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext) {
-    ImageRequest.RequestLevel lowestPermittedRequestLevel =
-        ImageRequest.RequestLevel.getMax(
-            imageRequest.getLowestPermittedRequestLevel(),
-            lowestPermittedRequestLevelOnSubmit);
-    SettableProducerContext settableProducerContext = new SettableProducerContext(
-        imageRequest,
-        generateUniqueFutureId(),
-        mRequestListener,
-        callerContext,
-        lowestPermittedRequestLevel,
+    try {
+      ImageRequest.RequestLevel lowestPermittedRequestLevel =
+          ImageRequest.RequestLevel.getMax(
+              imageRequest.getLowestPermittedRequestLevel(),
+              lowestPermittedRequestLevelOnSubmit);
+      SettableProducerContext settableProducerContext = new SettableProducerContext(
+          imageRequest,
+          generateUniqueFutureId(),
+          mRequestListener,
+          callerContext,
+          lowestPermittedRequestLevel,
         /* isPrefetch */ true,
         /* isIntermediateResultExpected */ false,
-        Priority.LOW);
-    return ProducerToDataSourceAdapter.create(
-        producerSequence,
-        settableProducerContext,
-        mRequestListener);
+          Priority.LOW);
+      return ProducerToDataSourceAdapter.create(
+          producerSequence,
+          settableProducerContext,
+          mRequestListener);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    }
   }
 }
