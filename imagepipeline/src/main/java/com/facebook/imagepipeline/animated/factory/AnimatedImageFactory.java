@@ -9,9 +9,7 @@
 
 package com.facebook.imagepipeline.animated.factory;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
@@ -30,6 +28,9 @@ import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.webp.WebPImage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Decoder for animated images.
@@ -158,6 +159,7 @@ public class AnimatedImageFactory {
     return bitmaps;
   }
 
+  @SuppressLint("NewApi")
   private CloseableReference<Bitmap> createBitmap(int width, int height) {
     CloseableReference<Bitmap> bitmap = mBitmapFactory.createBitmap(width, height);
     bitmap.get().eraseColor(Color.TRANSPARENT);
