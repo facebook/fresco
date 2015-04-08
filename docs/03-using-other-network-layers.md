@@ -18,8 +18,8 @@ In order to use it, the `dependencies` section of your `build.gradle` file needs
 ```groovy
 dependencies {
   // your project's other dependencies
-  compile "com.facebook.fresco:fresco:0.1.0+"
-  compile "com.facebook.fresco:imagepipeline-okhttp:0.1.0+"
+  compile "com.facebook.fresco:fresco:0.2.0+"
+  compile "com.facebook.fresco:imagepipeline-okhttp:0.2.0+"
 }
 ```
 
