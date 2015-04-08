@@ -206,8 +206,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerListener.html">ProducerListener</a></li>
@@ -216,10 +216,9 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContextCallbacks.html">BaseProducerContextCallbacks</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a>&lt;RS&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a>&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></li>
       </ul>
     </li>
               
@@ -337,7 +336,7 @@
 
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">See Also</h5>
-      <ul class="nolist"><li><code><a href="../../../../com/facebook/imagepipeline/producers/Producer.html#produceResults(com.facebook.imagepipeline.producers.Consumer<T>, com.facebook.imagepipeline.producers.ProducerContext)">produceResults(Consumer<T>, ProducerContext)</a></code></li>
+      <ul class="nolist"><li>Producer#produceResults</li>
       </ul>
   </div>
 
@@ -486,6 +485,22 @@
             
             
             
+            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html#getLowestPermittedRequestLevel()">getLowestPermittedRequestLevel</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             Priority
         </td>
         <td class="jd-linkcol" width="100%">
@@ -495,7 +510,7 @@
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -511,7 +526,7 @@
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -753,6 +768,42 @@
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>ProducerListener for producer's events
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getLowestPermittedRequestLevel()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a>
+      </span>
+      <span class="sympad">getLowestPermittedRequestLevel</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the lowest permitted <code><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a></code>
 </li></ul>
   </div>
 

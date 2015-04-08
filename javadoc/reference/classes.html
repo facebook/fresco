@@ -332,29 +332,28 @@
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</td>
-            <td class="jd-descrcol" width="100%">Base implementation of Consumer that implements error handling conforming to the
- Consumer's contract.&nbsp;</td>
-        </tr>
-    
-    
-        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/controller/BaseControllerListener.html">BaseControllerListener</a>&lt;INFO&gt;</td>
             <td class="jd-descrcol" width="100%">Convenience class that has empty implementation of <code><a href="./com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a></code>.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/datasource/BaseDataSubscriber.html">BaseDataSubscriber</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">Base implementation of <code><a href="./com/facebook/datasource/DataSubscriber.html">DataSubscriber</a></code> that ensures that the data source is closed when
  the subscriber has finished with it.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/datasource/BaseListBitmapDataSubscriber.html">BaseListBitmapDataSubscriber</a></td>
             <td class="jd-descrcol" width="100%">Implementation of <code><a href="./com/facebook/datasource/DataSubscriber.html">DataSubscriber</a></code> for cases where the client wants to access
  a list of bitmaps.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="./com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</td>
+            <td class="jd-descrcol" width="100%">Base class for <code><a href="./com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a></code>.&nbsp;</td>
         </tr>
     
     
@@ -471,30 +470,24 @@
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</td>
-            <td class="jd-descrcol" width="100%">Consumes data produced by <code><a href="./com/facebook/imagepipeline/producers/Producer.html">Producer</a></code>.&nbsp;</td>
-        </tr>
-    
-    
-        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&lt;INFO&gt;</td>
             <td class="jd-descrcol" width="100%">Interface for <code><a href="./com/facebook/drawee/controller/AbstractDraweeController.html">AbstractDraweeController</a></code> listener.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V,&nbsp;S&gt;</td>
             <td class="jd-descrcol" width="100%">Layer of memory cache stack responsible for managing ownership of cached objects.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></td>
             <td class="jd-descrcol" width="100%">Interface used to specify cache trim behavior.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/CountingMemoryCache.ValueInfoCallback.html">CountingMemoryCache.ValueInfoCallback</a>&lt;V&gt;</td>
             <td class="jd-descrcol" width="100%">Interface used by the cache to query information about cached values.&nbsp;</td>
         </tr>
@@ -601,24 +594,30 @@
     
     
         <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></td>
+            <td class="jd-descrcol" width="100%">Used by <code><a href="./com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a></code> to encapsulate the state of one network fetch.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/logging/FLog.html">FLog</a></td>
             <td class="jd-descrcol" width="100%">Logging wrapper with format style support.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/controller/ForwardingControllerListener.html">ForwardingControllerListener</a>&lt;INFO&gt;</td>
             <td class="jd-descrcol" width="100%">Listener that forwards controller events to multiple listeners.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/listener/ForwardingRequestListener.html">ForwardingRequestListener</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/backends/pipeline/Fresco.html">Fresco</a></td>
             <td class="jd-descrcol" width="100%">Fresco entry point.&nbsp;</td>
         </tr>
@@ -800,15 +799,14 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a>&lt;RS&nbsp;extends&nbsp;<a href="./com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a>&gt;</td>
-            <td class="jd-descrcol" width="100%">A producer to actually fetch images from the network.&nbsp;</td>
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="./com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</td>
+            <td class="jd-descrcol" width="100%">Interface that specifies network fetcher used by the image pipeline.&nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a></td>
-            <td class="jd-descrcol" width="100%">Used by <code><a href="./com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></code> to encapsulate the state of one network request
- and its response.&nbsp;</td>
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></td>
+            <td class="jd-descrcol" width="100%">Callback used to inform the network fetch producer.&nbsp;</td>
         </tr>
     
     
@@ -822,7 +820,7 @@
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/backends/okhttp/OkHttpImagePipelineConfigFactory.html">OkHttpImagePipelineConfigFactory</a></td>
             <td class="jd-descrcol" width="100%">Factory for getting an <code><a href="./com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></code> that uses
- com.facebook.imagepipeline.backends.okhttp.OkHttpNetworkFetchProducer.&nbsp;</td>
+ com.facebook.imagepipeline.backends.okhttp.OkHttpNetworkFetcher.&nbsp;</td>
         </tr>
     
     
@@ -925,30 +923,24 @@
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</td>
-            <td class="jd-descrcol" width="100%">Building block for image processing in the image pipeline.&nbsp;</td>
-        </tr>
-    
-    
-        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></td>
             <td class="jd-descrcol" width="100%">Used to pass context information to producers.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></td>
             <td class="jd-descrcol" width="100%">Callbacks that are called when something changes in a request sequence.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/ProducerListener.html">ProducerListener</a></td>
             <td class="jd-descrcol" width="100%">Instrumentation for Producers.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html">ProgressiveJpegConfig</a></td>
             <td class="jd-descrcol" width="100%">Progressive JPEG config.&nbsp;</td>
         </tr>

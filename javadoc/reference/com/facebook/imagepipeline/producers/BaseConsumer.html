@@ -207,6 +207,8 @@
     <li><h2>Interfaces</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></li>
@@ -217,9 +219,9 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContextCallbacks.html">BaseProducerContextCallbacks</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a>&lt;RS&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a>&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></li>
       </ul>
     </li>
               
@@ -528,6 +530,24 @@ Summary:
   </td></tr>
 
 
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            synchronized
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#onProgressUpdate(float)">onProgressUpdate</a></span>(float progress)
+        
+        <div class="jd-descrdiv">Called when the progress updates.</div>
+  
+  </td></tr>
+
+
 
 </table>
 
@@ -597,6 +617,25 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#onProgressUpdateImpl(float)">onProgressUpdateImpl</a></span>(float progress)
+        
+        <div class="jd-descrdiv">Called when the progress updates
+</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -903,6 +942,24 @@ From interface
   </td></tr>
 
 
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#onProgressUpdate(float)">onProgressUpdate</a></span>(float progress)
+        
+        <div class="jd-descrdiv">Called when the progress updates.</div>
+  
+  </td></tr>
+
+
 </table>
   </div>
 </div>
@@ -1098,6 +1155,47 @@ From interface
 </div>
 
 
+<a id="onProgressUpdate(float)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+        synchronized 
+        void
+      </span>
+      <span class="sympad">onProgressUpdate</span>
+      <span class="normal">(float progress)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when the progress updates.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>progress</th>
+          <td>in range [0, 1]
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 
 
 
@@ -1197,6 +1295,38 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Called by onNewResult, override this method instead.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="onProgressUpdateImpl(float)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onProgressUpdateImpl</span>
+      <span class="normal">(float progress)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when the progress updates
 </p></div>
 
     </div>

@@ -461,6 +461,24 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
+            synchronized
+            
+            
+            
+            <a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html#getDecodedFrame(int)">getDecodedFrame</a></span>(int index)
+        
+        <div class="jd-descrdiv">Gets a decoded frame.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
             
             
             
@@ -476,7 +494,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -494,7 +512,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -507,6 +525,24 @@ Summary:
         <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html#getPreviewBitmap()">getPreviewBitmap</a></span>()
         
         <div class="jd-descrdiv">Gets the bitmap for the preview frame.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            synchronized
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html#hasDecodedFrame(int)">hasDecodedFrame</a></span>(int index)
+        
+        <div class="jd-descrdiv">Gets whether it has the decoded frame.</div>
   
   </td></tr>
 
@@ -864,6 +900,53 @@ From class
 </div>
 
 
+<a id="getDecodedFrame(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+        synchronized 
+        <a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+      </span>
+      <span class="sympad">getDecodedFrame</span>
+      <span class="normal">(int index)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets a decoded frame. This will only return non-null if the <code>ImageDecodeOptions</code>
+ were configured to decode all frames at decode time.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>index</th>
+          <td>the index of the frame to get</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a reference to the preview bitmap which must be released by the caller when done or
+     null if there is no preview bitmap set
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getFrameForPreview()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -968,6 +1051,52 @@ From class
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>a reference to the preview bitmap which must be released by the caller when done or
      null if there is no preview bitmap set
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="hasDecodedFrame(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+        synchronized 
+        boolean
+      </span>
+      <span class="sympad">hasDecodedFrame</span>
+      <span class="normal">(int index)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets whether it has the decoded frame. This will only return true if the
+ <code>ImageDecodeOptions</code> were configured to decode all frames at decode time.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>index</th>
+          <td>the index of the frame to get</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the result has the decoded frame
 </li></ul>
   </div>
 

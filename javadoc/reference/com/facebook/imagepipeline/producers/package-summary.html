@@ -206,8 +206,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</li>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerListener.html">ProducerListener</a></li>
@@ -216,10 +216,9 @@
               
     <li><h2>Classes</h2>
       <ul>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContextCallbacks.html">BaseProducerContextCallbacks</a></li>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a>&lt;RS&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a>&gt;</li>
-        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></li>
       </ul>
     </li>
               
@@ -290,12 +289,12 @@
     
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</td>
-              <td class="jd-descrcol" width="100%">Consumes data produced by <code><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a></code>.&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</td>
+              <td class="jd-descrcol" width="100%">Interface that specifies network fetcher used by the image pipeline.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</td>
-              <td class="jd-descrcol" width="100%">Building block for image processing in the image pipeline.&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></td>
+              <td class="jd-descrcol" width="100%">Callback used to inform the network fetch producer.&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></td>
@@ -320,22 +319,16 @@
     
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</td>
-              <td class="jd-descrcol" width="100%">Base implementation of Consumer that implements error handling conforming to the
- Consumer's contract.&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</td>
+              <td class="jd-descrcol" width="100%">Base class for <code><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a></code>.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContextCallbacks.html">BaseProducerContextCallbacks</a></td>
               <td class="jd-descrcol" width="100%">Empty implementation of <code><a href="../../../../com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></code>.&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a>&lt;RS&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a>&gt;</td>
-              <td class="jd-descrcol" width="100%">A producer to actually fetch images from the network.&nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/NfpRequestState.html">NfpRequestState</a></td>
-              <td class="jd-descrcol" width="100%">Used by <code><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></code> to encapsulate the state of one network request
- and its response.&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></td>
+              <td class="jd-descrcol" width="100%">Used by <code><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a></code> to encapsulate the state of one network fetch.&nbsp;</td>
           </tr>
   </table>
     </div>

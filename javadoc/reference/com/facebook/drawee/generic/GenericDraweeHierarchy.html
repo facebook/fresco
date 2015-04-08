@@ -655,7 +655,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setImage(android.graphics.drawable.Drawable, boolean, int)">setImage</a></span>(Drawable drawable, boolean immediate, int progress)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setImage(android.graphics.drawable.Drawable, float, boolean)">setImage</a></span>(Drawable drawable, float progress, boolean immediate)
         
         <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes successfully.</div>
   
@@ -709,7 +709,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setProgress(int, boolean)">setProgress</a></span>(int progress, boolean immediate)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setProgress(float, boolean)">setProgress</a></span>(float progress, boolean immediate)
         
         <div class="jd-descrdiv">Called by controller to update the progress.</div>
   
@@ -1098,7 +1098,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/SettableDraweeHierarchy.html#setImage(android.graphics.drawable.Drawable, boolean, int)">setImage</a></span>(Drawable drawable, boolean immediate, int progress)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/SettableDraweeHierarchy.html#setImage(android.graphics.drawable.Drawable, float, boolean)">setImage</a></span>(Drawable drawable, float progress, boolean immediate)
         
         <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes successfully.</div>
   
@@ -1116,7 +1116,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/SettableDraweeHierarchy.html#setProgress(int, boolean)">setProgress</a></span>(int progress, boolean immediate)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/SettableDraweeHierarchy.html#setProgress(float, boolean)">setProgress</a></span>(float progress, boolean immediate)
         
         <div class="jd-descrdiv">Called by controller to update the progress.</div>
   
@@ -1515,7 +1515,7 @@ From interface
 </div>
 
 
-<a id="setImage(android.graphics.drawable.Drawable, boolean, int)"></a>
+<a id="setImage(android.graphics.drawable.Drawable, float, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1528,7 +1528,7 @@ From interface
         void
       </span>
       <span class="sympad">setImage</span>
-      <span class="normal">(Drawable drawable, boolean immediate, int progress)</span>
+      <span class="normal">(Drawable drawable, float progress, boolean immediate)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1550,12 +1550,12 @@ From interface
           <td>drawable to be set as the temporary image</td>
         </tr>
         <tr>
-          <th>immediate</th>
-          <td>if true, image will be shown immediately (without fade effect)</td>
+          <th>progress</th>
+          <td>number in range [0, 1] that indicates progress</td>
         </tr>
         <tr>
-          <th>progress</th>
-          <td>number in range [0, 100] that indicates progress
+          <th>immediate</th>
+          <td>if true, image will be shown immediately (without fade effect)
 </td>
         </tr>
       </table>
@@ -1642,7 +1642,7 @@ From interface
 </div>
 
 
-<a id="setProgress(int, boolean)"></a>
+<a id="setProgress(float, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1655,7 +1655,7 @@ From interface
         void
       </span>
       <span class="sympad">setProgress</span>
-      <span class="normal">(int progress, boolean immediate)</span>
+      <span class="normal">(float progress, boolean immediate)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1668,13 +1668,13 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Called by controller to update the progress.
- Hierarchy can choose to hide the progressbar when progress is set to its final value of 100.</p></div>
+ Hierarchy can choose to hide the progressbar when progress is set to its final value of 1.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>progress</th>
-          <td>number in range [0, 100] that indicates progress</td>
+          <td>number in range [0, 1] that indicates progress</td>
         </tr>
         <tr>
           <th>immediate</th>

@@ -497,12 +497,12 @@ Summary:
             
             
             
-            InputStream
+            boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#getStream()">getStream</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#isClosed()">isClosed</a></span>()
         
-        <div class="jd-descrdiv">Get an input stream.</div>
+        <div class="jd-descrdiv">Check if this instance has already been closed</div>
   
   </td></tr>
 
@@ -515,12 +515,12 @@ Summary:
             
             
             
-            boolean
+            byte
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#isClosed()">isClosed</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int)">read</a></span>(int offset)
         
-        <div class="jd-descrdiv">Check if this instance has already been closed</div>
+        <div class="jd-descrdiv">Read byte at given offset</div>
   
   </td></tr>
 
@@ -533,12 +533,12 @@ Summary:
             
             
             
-            byte
+            void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int)">read</a></span>(int offset)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int, byte[], int, int)">read</a></span>(int offset, byte[] buffer, int bufferOffset, int length)
         
-        <div class="jd-descrdiv">Read byte at given offset</div>
+        <div class="jd-descrdiv">Read consecutive bytes.</div>
   
   </td></tr>
 
@@ -769,42 +769,6 @@ From interface
 </div>
 
 
-<a id="getStream()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        InputStream
-      </span>
-      <span class="sympad">getStream</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Get an input stream.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>an input stream over the byte buffer
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="isClosed()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -870,6 +834,63 @@ From interface
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>byte at given offset
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="read(int, byte[], int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        void
+      </span>
+      <span class="sympad">read</span>
+      <span class="normal">(int offset, byte[] buffer, int bufferOffset, int length)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Read consecutive bytes.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>offset</th>
+          <td>the position in the PooledByteBuffer of the first byte to read</td>
+        </tr>
+        <tr>
+          <th>buffer</th>
+          <td>the byte array where read bytes will be copied to</td>
+        </tr>
+        <tr>
+          <th>bufferOffset</th>
+          <td>the position within the buffer of the first copied byte</td>
+        </tr>
+        <tr>
+          <th>length</th>
+          <td>number of bytes to copy</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>number of bytes copied
 </li></ul>
   </div>
 
