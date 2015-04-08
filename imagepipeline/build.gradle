@@ -166,6 +166,7 @@ def makeNdkTasks(String name) {
     }
 
     task "ndk_clean_$name"(type: Exec) {
+        ignoreExitValue true
         commandLine getNdkBuildFullPath(),
             'NDK_PROJECT_PATH=null',
             'NDK_APPLICATION_MK=../Application.mk',
