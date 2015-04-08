@@ -6,6 +6,8 @@ version = VERSION_NAME
 
 apply plugin: 'robolectric'
 apply plugin: 'de.undercouch.download'
+
+import com.android.build.gradle.LibraryPlugin
 import de.undercouch.gradle.tasks.download.Download
 import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
@@ -140,13 +142,22 @@ def getNdkBuildFullPath() {
     if (hasProperty('ndk.command')) {
         return property('ndk.command')
     }
-    // or just a path to the containing directiry
+    // or just a path to the containing directory
     if (hasProperty('ndk.path')) {
         def path = property('ndk.path')
         if (!path.endsWith(File.separator)) {
             path += File.separator
         }
         return path + getNdkBuildName()
+    }
+    // or full path to ndk-build tool based on android library plugin
+    def ndkFolder = ((LibraryPlugin) project.plugins
+            .findPlugin('com.android.library')).getNdkFolder().absolutePath
+    if (ndkFolder != null) {
+        if (!ndkFolder.endsWith(File.separator)) {
+            ndkFolder += File.separator
+        }
+        return ndkFolder + getNdkBuildName()
     }
     // if none of above is provided, we assume ndk-build is already in $PATH
     return getNdkBuildName()
