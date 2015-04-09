@@ -227,7 +227,7 @@ jobject WebPImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>&
   jobject ret = pEnv->NewObject(
       sClazzWebPImage,
       sWebPImageConstructor,
-      (long) spNativeContext.get());
+      (jlong) spNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spNativeContext->refCount = 1;
@@ -475,7 +475,7 @@ jobject WebPImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   jobject ret = pEnv->NewObject(
       sClazzWebPFrame,
       sWebPFrameConstructor,
-      (long) spFrameNativeContext.get());
+      (jlong) spFrameNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spFrameNativeContext->refCount = 1;

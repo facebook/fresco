@@ -542,7 +542,7 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
   jobject ret = pEnv->NewObject(
       sClazzGifImage,
       sGifImageConstructor,
-      (long) spNativeContext.get());
+      (jlong) spNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spNativeContext->refCount = 1;
@@ -781,7 +781,7 @@ jobject GifImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   jobject ret = pEnv->NewObject(
       sClazzGifFrame,
       sGifFrameConstructor,
-      (long) spFrameNativeContext.get());
+      (jlong) spFrameNativeContext.get());
   if (ret != nullptr) {
     // pEnv->NewObject will have already instructed the environment to throw an exception.
     spFrameNativeContext->refCount = 1;
