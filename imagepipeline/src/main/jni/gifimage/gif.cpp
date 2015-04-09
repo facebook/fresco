@@ -542,7 +542,7 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
   jobject ret = pEnv->NewObject(
       sClazzGifImage,
       sGifImageConstructor,
-      (jint) spNativeContext.get());
+      (long) spNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spNativeContext->refCount = 1;
@@ -591,7 +591,7 @@ std::unique_ptr<GifImageNativeContext, GifImageNativeContextReleaser>
   std::unique_ptr<GifImageNativeContext, GifImageNativeContextReleaser> ret(nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   GifImageNativeContext* pNativeContext =
-      (GifImageNativeContext*) pEnv->GetIntField(thiz, sGifImageFieldNativeContext);
+      (GifImageNativeContext*) pEnv->GetLongField(thiz, sGifImageFieldNativeContext);
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -781,7 +781,7 @@ jobject GifImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   jobject ret = pEnv->NewObject(
       sClazzGifFrame,
       sGifFrameConstructor,
-      (jint) spFrameNativeContext.get());
+      (long) spFrameNativeContext.get());
   if (ret != nullptr) {
     // pEnv->NewObject will have already instructed the environment to throw an exception.
     spFrameNativeContext->refCount = 1;
@@ -830,7 +830,7 @@ std::unique_ptr<GifFrameNativeContext, GifFrameNativeContextReleaser>
   std::unique_ptr<GifFrameNativeContext, GifFrameNativeContextReleaser> ret(nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   GifFrameNativeContext* pNativeContext =
-      (GifFrameNativeContext*) pEnv->GetIntField(thiz, sGifFrameFieldNativeContext);
+      (GifFrameNativeContext*) pEnv->GetLongField(thiz, sGifFrameFieldNativeContext);
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -865,7 +865,7 @@ jint GifImage_nativeGetSizeInBytes(JNIEnv* pEnv, jobject thiz) {
 void GifImage_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   GifImageNativeContext* pNativeContext =
-      (GifImageNativeContext*) pEnv->GetIntField(thiz, sGifImageFieldNativeContext);
+      (GifImageNativeContext*) pEnv->GetLongField(thiz, sGifImageFieldNativeContext);
   if (pNativeContext != nullptr) {
     pEnv->SetIntField(thiz, sGifImageFieldNativeContext, 0);
     GifImageNativeContext_releaseRef(pEnv, thiz, pNativeContext);
@@ -1157,7 +1157,7 @@ jint GifFrame_nativeGetDisposalMode(JNIEnv* pEnv, jobject thiz) {
 void GifFrame_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   GifFrameNativeContext* pNativeContext =
-      (GifFrameNativeContext*) pEnv->GetIntField(thiz, sGifFrameFieldNativeContext);
+      (GifFrameNativeContext*) pEnv->GetLongField(thiz, sGifFrameFieldNativeContext);
   if (pNativeContext) {
     pEnv->SetIntField(thiz, sGifFrameFieldNativeContext, 0);
     GifFrameNativeContext_releaseRef(pEnv, thiz, pNativeContext);
