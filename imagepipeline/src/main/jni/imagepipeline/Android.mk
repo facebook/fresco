@@ -5,7 +5,6 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := imagepipeline
 LOCAL_SRC_FILES := \
-	bitmap_utils.cpp \
 	decoded_image.cpp \
 	exceptions.cpp \
 	init.cpp \
@@ -18,7 +17,6 @@ LOCAL_SRC_FILES := \
 	streams.cpp \
 	transformations.cpp \
 	webp/webp_codec.cpp \
-	Bitmaps.cpp \
 	JpegTranscoder.cpp \
 	WebpTranscoder.cpp
 
@@ -28,7 +26,7 @@ LOCAL_CFLAGS += $(CXX11_FLAGS)
 LOCAL_CFLAGS += -DLOG_TAG=\"libimagepipeline\"
 LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-LOCAL_LDLIBS := -llog -ljnigraphics
+LOCAL_LDLIBS := -llog
 LOCAL_SHARED_LIBRARIES += fb_jpegturbo
 LOCAL_SHARED_LIBRARIES += webp
 

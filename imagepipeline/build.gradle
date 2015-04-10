@@ -184,7 +184,12 @@ def makeNdkTasks(String name) {
 
 
 android {
-    def ndkLibs = ['gifimage', 'imagepipeline', 'memchunk', 'webpimage']
+    def ndkLibs = [
+        'bitmaps',
+        'gifimage',
+        'imagepipeline',
+        'memchunk',
+        'webpimage']
 
     buildToolsVersion "21.1.2"
     compileSdkVersion 21

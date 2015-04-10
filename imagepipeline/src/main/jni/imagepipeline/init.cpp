@@ -12,7 +12,6 @@
 #include "exceptions.h"
 #include "java_globals.h"
 #include "logging.h"
-#include "Bitmaps.h"
 #include "JpegTranscoder.h"
 #include "WebpTranscoder.h"
 
@@ -80,10 +79,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
       -1);
 
   // register native methods
-  THROW_AND_RETURNVAL_IF(
-      !registerBitmapsMethods(env),
-      "Could not register Bitmaps methods",
-      -1);
   THROW_AND_RETURNVAL_IF(
       !registerJpegTranscoderMethods(env),
       "Could not register JpegTranscoder methods",
