@@ -21,6 +21,7 @@ These features require you to [construct an image request](using-controllerbuild
 In short, resizing is rarely necessary, whereas the scaling is almost always preferred (even with resizing).
 
 First of all, you should know that there are several limitations with resizing:
+
   - Resize is restricted so that it never returns a bigger image. It can only make the image smaller.
   - At the moment, only JPEG images can be resized.
   - There is only a rough control over the resulting image dimensions. Image cannot be resized to the exact size, but will be reduced by one of the supported resize factors. That means that even resized images need to be scaled before displaying.
