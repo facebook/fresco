@@ -12,6 +12,7 @@ import com.palominolabs.gradle.task.git.clone.GitCloneTask
 import org.apache.tools.ant.taskdefs.condition.Os
 
 dependencies {
+    provided "com.android.support:support-annotations:${ANDROID_ANNOTATIONS_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
     compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
