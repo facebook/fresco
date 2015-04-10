@@ -26,7 +26,7 @@ Fresco supports Android 2.3 (Gingerbread) and later.
 If you are building with Gradle, simply add the following line to the `dependencies` section of your `build.gradle` file:
 
 ```groovy
-compile 'com.facebook.fresco:fresco:0.1.0+'
+compile 'com.facebook.fresco:fresco:0.2.0+'
 ```
 
 See our [download](http://frescolib.org/docs/download-fresco.html) page for other options.
