@@ -1,8 +1,8 @@
 - title: Quick Start
   items:
-  - id: download-fresco
-    title: Download Fresco
   - id: index
+    title: Adding Fresco to your Project
+  - id: getting-started
     title: Getting started with Fresco
   - id: concepts
     title: Concepts
@@ -60,3 +60,7 @@
     title: Using Other Network Layers
   - id: using-other-image-loaders
     title: Using Other Image Loaders
+- title: Contributing to Fresco
+  items:
+  - id: building-from-source
+    title: Building from Source

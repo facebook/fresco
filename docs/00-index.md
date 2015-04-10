@@ -1,55 +1,40 @@
 ---
-id: getting-started
-title: Getting started with Fresco
+id: index
+title: Adding Fresco to your Project
 layout: docs
 permalink: /docs/index.html
-prev: download-fresco.html
-next: concepts.html
+next: getting-started.html
 ---
 
-If you just want to download an image and display it, showing a placeholder until it comes, use a [SimpleDraweeView](../javadoc/reference/com/facebook/drawee/view/SimpleDraweeView.html). 
+Here's how to add Fresco to your Android project.
 
-For images from the network, you will need to to request Internet permission from your users. Add this line to your ```AndroidManifest.xml``` file:
+### Android Studio or Gradle
+
+Edit your `build.gradle` file. You must add the following line to the `dependencies` section:
+
+
+```groovy
+dependencies {
+  // your app's other dependencies
+  compile 'com.facebook.fresco:fresco:0.2.0+'
+}
+```
+
+### Maven
+
+Add the following to the `<dependencies>` section of your `pom.xml` file:
+
 
 ```xml
-  <uses-permission android:name="android.permission.INTERNET"/>
+<dependency>
+  <groupId>com.facebook.fresco</groupId>
+  <artifactId>fresco</artifactId>
+  <version>LATEST</version>
+</dependency>
 ```
 
-Near your application startup, before your app calls ```setContentView()```, initialize the Fresco class:
+### Eclipse ADT / Ant
 
-```java
-Fresco.initialize(context);
-```
-    
-In your XML, add a custom namespace to the top-level element:
+Unfortunately Eclipse does not yet support the AAR file format Fresco uses. We are still looking for a workaround.
 
-```xml
-<!-- Any valid element will do here -->
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
-```
 
-Then add the ```SimpleDraweeView``` to the layout:
-
-```xml
-<com.facebook.drawee.view.SimpleDraweeView
-    android:id="@+id/my_image_view"
-    android:layout_width="130dp"
-    android:layout_height="130dp"
-    fresco:placeholderImage="@drawable/my_drawable"
-  />
-```
-
-To show an image, you need only do this:
-
-```java
-Uri uri = Uri.parse("http://frescolib.org/static/fresco-logo.png");
-SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.my_image_view);
-draweeView.setImageURI(uri);
-```
-and Fresco does the rest. 
-
-The placeholder is shown until the image is ready. The image will be downloaded, cached, displayed, and cleared from memory when your view goes off-screen.
