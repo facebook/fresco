@@ -1,0 +1,150 @@
+# Path under which libjpeg-turbo should be installed
+%define _prefix %{__prefix}
+
+# Path under which executables should be installed
+%define _bindir %{__bindir}
+
+# Path under which Java classes and man pages should be installed
+%define _datadir %{__datadir}
+
+# Path under which docs should be installed
+%define _docdir /usr/share/doc/%{name}-%{version}
+
+# Path under which headers should be installed
+%define _includedir %{__includedir}
+
+# _libdir is set to %{_prefix}/%{_lib} by default
+%ifarch x86_64
+%define _lib lib64
+%else
+%if "%{_prefix}" == "/opt/libjpeg-turbo"
+%define _lib lib32
+%endif
+%endif
+
+# Path under which man pages should be installed
+%define _mandir %{__mandir}
+
+Summary: A SIMD-accelerated JPEG codec that provides both the libjpeg and TurboJPEG APIs
+Name: @PKGNAME@
+Version: @VERSION@
+Vendor: The libjpeg-turbo Project
+URL: http://www.libjpeg-turbo.org
+Group: System Environment/Libraries
+#-->Source0: http://prdownloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-%{version}.tar.gz
+Release: @BUILD@
+License: BSD-style
+BuildRoot: %{_blddir}/%{name}-buildroot-%{version}-%{release}
+Prereq: /sbin/ldconfig
+%ifarch x86_64
+Provides: %{name} = %{version}-%{release}, @PACKAGE_NAME@ = %{version}-%{release}, libturbojpeg.so()(64bit)
+%else
+Provides: %{name} = %{version}-%{release}, @PACKAGE_NAME@ = %{version}-%{release}, libturbojpeg.so
+%endif
+
+%description
+libjpeg-turbo is a JPEG image codec that uses SIMD instructions (MMX, SSE2,
+NEON) to accelerate baseline JPEG compression and decompression on x86, x86-64,
+and ARM systems.  On such systems, libjpeg-turbo is generally 2-4x as fast as
+libjpeg, all else being equal.  On other types of systems, libjpeg-turbo can
+still outperform libjpeg by a significant amount, by virtue of its
+highly-optimized Huffman coding routines.  In many cases, the performance of
+libjpeg-turbo rivals that of proprietary high-speed JPEG codecs.
+
+libjpeg-turbo implements both the traditional libjpeg API as well as the less
+powerful but more straightforward TurboJPEG API.  libjpeg-turbo also features
+colorspace extensions that allow it to compress from/decompress to 32-bit and
+big-endian pixel buffers (RGBX, XBGR, etc.), as well as a full-featured Java
+interface.
+
+libjpeg-turbo was originally based on libjpeg/SIMD, an MMX-accelerated
+derivative of libjpeg v6b developed by Miyasaka Masaru.  The TigerVNC and
+VirtualGL projects made numerous enhancements to the codec in 2009, and in
+early 2010, libjpeg-turbo spun off into an independent project, with the goal
+of making high-speed JPEG compression/decompression technology available to a
+broader range of users and developers.
+
+#-->%prep
+#-->%setup -q -n libjpeg-turbo-%{version}
+
+#-->%build
+#-->./configure prefix=%{_prefix} bindir=%{_bindir} datadir=%{_datadir} \
+#-->	docdir=%{_docdir} includedir=%{_includedir} libdir=%{_libdir} \
+#-->	mandir=%{_mandir} JPEG_LIB_VERSION=@JPEG_LIB_VERSION@ \
+#-->	SO_MAJOR_VERSION=@SO_MAJOR_VERSION@ SO_MINOR_VERSION=@SO_MINOR_VERSION@ \
+#-->	--with-pic @RPM_CONFIG_ARGS@
+#-->make DESTDIR=$RPM_BUILD_ROOT
+
+%install
+
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT docdir=%{_docdir} exampledir=%{_docdir}
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+/sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
+
+#-->%if 0
+
+LJT_LIBDIR=%{__libdir}
+if [ ! "$LJT_LIBDIR" = "%{_libdir}" ]; then
+	echo ERROR: libjpeg-turbo must be configured with libdir=%{_prefix}/%{_lib} when generating an in-tree RPM for this architecture.
+	exit 1
+fi
+
+#-->%endif
+
+LJT_DOCDIR=%{__docdir}
+if [ "%{_prefix}" = "/opt/libjpeg-turbo" -a "$LJT_DOCDIR" = "/opt/libjpeg-turbo/doc" ]; then
+	ln -fs %{_docdir} $RPM_BUILD_ROOT/$LJT_DOCDIR
+fi
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%dir %{_docdir}
+%doc %{_docdir}/*
+%dir %{_prefix}
+%if "%{_prefix}" == "/opt/libjpeg-turbo" && "%{_docdir}" != "%{_prefix}/doc"
+ %{_prefix}/doc
+%endif
+%dir %{_bindir}
+%{_bindir}/cjpeg
+%{_bindir}/djpeg
+%{_bindir}/jpegtran
+%{_bindir}/tjbench
+%{_bindir}/rdjpgcom
+%{_bindir}/wrjpgcom
+%dir %{_libdir}
+%{_libdir}/libjpeg.so.@SO_MAJOR_VERSION@.@SO_AGE@.@SO_MINOR_VERSION@
+%{_libdir}/libjpeg.so.@SO_MAJOR_VERSION@
+%{_libdir}/libjpeg.so
+%{_libdir}/libjpeg.a
+%{_libdir}/libturbojpeg.so.0.0.0
+%{_libdir}/libturbojpeg.so.0
+%{_libdir}/libturbojpeg.so
+%{_libdir}/libturbojpeg.a
+%dir %{_includedir}
+%{_includedir}/jconfig.h
+%{_includedir}/jerror.h
+%{_includedir}/jmorecfg.h
+%{_includedir}/jpeglib.h
+%{_includedir}/turbojpeg.h
+%dir %{_mandir}
+%dir %{_mandir}/man1
+%{_mandir}/man1/cjpeg.1*
+%{_mandir}/man1/djpeg.1*
+%{_mandir}/man1/jpegtran.1*
+%{_mandir}/man1/rdjpgcom.1*
+%{_mandir}/man1/wrjpgcom.1*
+%if "%{_prefix}" != "%{_datadir}"
+ %dir %{_datadir}
+%endif
+@JAVA_RPM_CONTENTS_1@
+@JAVA_RPM_CONTENTS_2@
+
+%changelog

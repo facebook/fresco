@@ -1,0 +1,101 @@
+'\" t
+.\"     Title: gifclrmp
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 2 May 2012
+.\"    Manual: GIFLIB Documentation
+.\"    Source: GIFLIB
+.\"  Language: English
+.\"
+.TH "GIFCLRMP" "1" "2 May 2012" "GIFLIB" "GIFLIB Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+gifclrmp \- extract colormaps from GIF images
+.SH "SYNOPSIS"
+.HP \w'\fBgifclrmp\fR\ 'u
+\fBgifclrmp\fR [\-v] [\-s] [\-l\ \fImapfile\fR] [\-t\ \fItrans\fR] [\-g\ \fIgamma\fR] [\-i\ \fIimage\fR] [\-h] [\fIgif\-file\fR]
+.SH "DESCRIPTION"
+.PP
+A program to modify GIF image colormaps\&. Any local colormap in a GIF file can be modified at a time, or the global screen one\&.
+.SH "OPTIONS"
+.PP
+\-v
+.RS 4
+Verbose mode (show progress)\&. Enables printout of running scan lines\&.
+.RE
+.PP
+\-s
+.RS 4
+Select the global screen color map\&.
+.RE
+.PP
+\-l mapfile
+.RS 4
+Load color map from this file instead of selected color map\&.
+.RE
+.PP
+\-t trans
+.RS 4
+Change color index values\&. The change is made to both the selected color table and the raster bits of the selected image\&. A translation file is a list of pairs of `before\*(Aq and `after\*(Aq index values\&. At present, the `before\*(Aq index values must be in ascending order starting from 0\&.
+.RE
+.PP
+\-g gamma
+.RS 4
+Apply gamma correction to selected color map\&.
+.RE
+.PP
+\-i image
+.RS 4
+Select the color map of the numbered image\&.
+.RE
+.PP
+\-h
+.RS 4
+Print one command line help, similar to Usage above\&.
+.RE
+.PP
+If no GIF file is given, gifclip will try to read a GIF file from stdin\&.
+.SH "NOTES"
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The default operation is to dump out the selected color map in text format\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The file to load/dump is simply one color map entry per line\&. Each such entry line has four integers: "ColorIndex Red Green Blue", where color index is in ascending order starting from 1\&.
+.RE
+.SH "AUTHOR"
+.PP
+Gershon Elber\&.

@@ -1,0 +1,70 @@
+'\" t
+.\"     Title: gifcolor
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 2 May 2012
+.\"    Manual: GIFLIB Documentation
+.\"    Source: GIFLIB
+.\"  Language: English
+.\"
+.TH "GIFCOLOR" "1" "2 May 2012" "GIFLIB" "GIFLIB Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+gifcolor \- generate color test\-pattern GIFs
+.SH "SYNOPSIS"
+.HP \w'\fBgifcolor\fR\ 'u
+\fBgifcolor\fR [\-v] [\-b\ \fIbackground\fR] [\-h] [\fIcolormap\-file\fR]
+.SH "DESCRIPTION"
+.PP
+A program to generate color test patterns\&. Feed it a color map file (as generated, say, by the \-s option of gifclrmp) and it will generate a GIF containing lines of the form\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Color %\-3d: [%\-3d, %\-3d, %\-3d]:
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+where the first number is the zero\-based color index, and the triple is the index\*(Aqs [Red, Green, Blue] value\&. There will be one such line for each color\&. Each line will be set in a simple 8x8 font in the color it describes; thus, any lines corresponding to the GIF\*(Aqs background color will be blank\&.
+.SH "OPTIONS"
+.PP
+\-v
+.RS 4
+Verbose mode (show progress)\&. Enables printout of running scan lines\&.
+.RE
+.PP
+\-b
+.RS 4
+Set the image\*(Aqs backround color to a given numeric index\&.
+.RE
+.PP
+\-h
+.RS 4
+Print one line of command line help, similar to Usage above\&.
+.RE
+.PP
+If no colormap file is specified, the color map will be read from stdin\&.
+.SH "AUTHOR"
+.PP
+Gershon Elber\&.

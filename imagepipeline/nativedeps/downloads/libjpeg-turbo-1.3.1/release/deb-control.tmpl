@@ -1,0 +1,30 @@
+Package: {__PKGNAME}
+Version: {__VERSION}-{__BUILD}
+Section: misc
+Priority: optional
+Architecture: {__ARCH}
+Essential: no
+Maintainer: The libjpeg-turbo Project <information@libjpeg-turbo.org>
+Homepage: http://www.libjpeg-turbo.org
+Description: A SIMD-accelerated JPEG codec that provides both the libjpeg and TurboJPEG APIs
+ libjpeg-turbo is a JPEG image codec that uses SIMD instructions (MMX, SSE2,
+ NEON) to accelerate baseline JPEG compression and decompression on x86,
+ x86-64, and ARM systems.  On such systems, libjpeg-turbo is generally 2-4x as
+ fast as libjpeg, all else being equal.  On other types of systems,
+ libjpeg-turbo can still outperform libjpeg by a significant amount, by virtue
+ of its highly-optimized Huffman coding routines.  In many cases, the
+ performance of libjpeg-turbo rivals that of proprietary high-speed JPEG
+ codecs.
+ .
+ libjpeg-turbo implements both the traditional libjpeg API as well as the less
+ powerful but more straightforward TurboJPEG API.  libjpeg-turbo also features
+ colorspace extensions that allow it to compress from/decompress to 32-bit and
+ big-endian pixel buffers (RGBX, XBGR, etc.), as well as a full-featured Java
+ interface.
+ .
+ libjpeg-turbo was originally based on libjpeg/SIMD, an MMX-accelerated
+ derivative of libjpeg v6b developed by Miyasaka Masaru.  The TigerVNC and
+ VirtualGL projects made numerous enhancements to the codec in 2009, and in
+ early 2010, libjpeg-turbo spun off into an independent project, with the goal
+ of making high-speed JPEG compression/decompression technology available to a
+ broader range of users and developers.

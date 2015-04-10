@@ -1,0 +1,77 @@
+'\" t
+.\"     Title: gifhisto
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 2 May 2012
+.\"    Manual: GIFLIB Documentation
+.\"    Source: GIFLIB
+.\"  Language: English
+.\"
+.TH "GIFHISTO" "1" "2 May 2012" "GIFLIB" "GIFLIB Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+gifhisto \- make a color histogram from GIF colr frequencies
+.SH "SYNOPSIS"
+.HP \w'\fBgifhisto\fR\ 'u
+\fBgifhisto\fR [\-v] [\-t] [\-s\ \fIwidth\fR\ \fIheight\fR] [\-n\ \fIimage\-number\fR] [\-b] [\-h] [\fIgif\-file\fR]
+.SH "DESCRIPTION"
+.PP
+A program to create histogram of number of pixels using each color\&. The output can be formatted into a GIF histogram file, or as text file \- both go to stdout\&.
+.PP
+If no GIF file is given, gifhisto will try to read a GIF file from stdin\&.
+.SH "OPTIONS"
+.PP
+\-v
+.RS 4
+Verbose mode (show progress)\&. Enables printout of running scan lines\&.
+.RE
+.PP
+\-t
+.RS 4
+Force output to be text file of the following form: (colormap size) lines each containing two integers: number of times color appeared, and color index\&. Lines are in increasing color index order\&. This output can be fed directly to a sort program if ordering by color frequency is desired\&.
+.sp
+The colormap picked is the one to be used for the image to generate histogram for, as defined in GIF format\&.
+.RE
+.PP
+\-s width height
+.RS 4
+Size of GIF histogram file\&. The height of the histogram should be power of 2 dividable by number of colors in colormap\&.
+.sp
+Width sets the resolution (accuracy if you like) of the histogram as the maximum histogram bar is scaled to fit it\&.
+.RE
+.PP
+\-n image\-number
+.RS 4
+Image number to test\&. Default is one\&.
+.RE
+.PP
+\-b
+.RS 4
+Zeros the background color count\&. As only linear scale bars are supported and usually the background appears much more often then other colors, deleting the background count will improve the scaling of other colors\&.
+.RE
+.PP
+\-h
+.RS 4
+Print one line of command line help, similar to Usage above\&.
+.RE
+.SH "AUTHOR"
+.PP
+Gershon Elber

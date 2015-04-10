@@ -1,0 +1,788 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+TJCompressor
+</TITLE>
+
+
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+
+<SCRIPT type="text/javascript">
+function windowTitle()
+{
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="TJCompressor";
+    }
+}
+</SCRIPT>
+<NOSCRIPT>
+</NOSCRIPT>
+
+</HEAD>
+
+<BODY BGCOLOR="white" onload="windowTitle();">
+<HR>
+
+
+<!-- ========= START OF TOP NAVBAR ======= -->
+<A NAME="navbar_top"><!-- --></A>
+<A HREF="#skip-navbar_top" title="Skip navigation links"></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3" SUMMARY="">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../org/libjpegturbo/turbojpeg/package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJCustomFilter.html" title="interface in org.libjpegturbo.turbojpeg"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html?org/libjpegturbo/turbojpeg/TJCompressor.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="TJCompressor.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;<SCRIPT type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+  <A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>
+</NOSCRIPT>
+
+
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="skip-navbar_top"></A>
+<!-- ========= END OF TOP NAVBAR ========= -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+org.libjpegturbo.turbojpeg</FONT>
+<BR>
+Class TJCompressor</H2>
+<PRE>
+java.lang.Object
+  <IMG SRC="../../../resources/inherit.gif" ALT="extended by "><B>org.libjpegturbo.turbojpeg.TJCompressor</B>
+</PRE>
+<HR>
+<DL>
+<DT><PRE>public class <B>TJCompressor</B><DT>extends java.lang.Object</DL>
+</PRE>
+
+<P>
+TurboJPEG compressor
+<P>
+
+<P>
+<HR>
+
+<P>
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TH>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#TJCompressor()">TJCompressor</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a TurboJPEG compressor instance.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#TJCompressor(byte[], int, int, int, int)">TJCompressor</A></B>(byte[]&nbsp;srcImage,
+             int&nbsp;width,
+             int&nbsp;pitch,
+             int&nbsp;height,
+             int&nbsp;pixelFormat)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Deprecated.</B>&nbsp;<I>Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#TJCompressor(byte[], int, int, int, int, int, int)"><CODE>TJCompressor(byte[], int, int, int, int, int, int)</CODE></A> instead.</I></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#TJCompressor(byte[], int, int, int, int, int, int)">TJCompressor</A></B>(byte[]&nbsp;srcImage,
+             int&nbsp;x,
+             int&nbsp;y,
+             int&nbsp;width,
+             int&nbsp;pitch,
+             int&nbsp;height,
+             int&nbsp;pixelFormat)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a TurboJPEG compressor instance and associate the uncompressed
+ source image stored in <code>srcImage</code> with the newly created
+ instance.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TH>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#close()">close</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Free the native structures associated with this compressor instance.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#compress(java.awt.image.BufferedImage, byte[], int)">compress</A></B>(java.awt.image.BufferedImage&nbsp;srcImage,
+         byte[]&nbsp;dstBuf,
+         int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compress the uncompressed source image stored in <code>srcImage</code>
+ and output a JPEG image to the given destination buffer.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#compress(java.awt.image.BufferedImage, int)">compress</A></B>(java.awt.image.BufferedImage&nbsp;srcImage,
+         int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compress the uncompressed source image stored in <code>srcImage</code>
+ and return a buffer containing a JPEG image.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#compress(byte[], int)">compress</A></B>(byte[]&nbsp;dstBuf,
+         int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compress the uncompressed source image associated with this compressor
+ instance and output a JPEG image to the given destination buffer.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#compress(int)">compress</A></B>(int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compress the uncompressed source image associated with this compressor
+ instance and return a buffer containing a JPEG image.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(java.awt.image.BufferedImage, byte[], int)">encodeYUV</A></B>(java.awt.image.BufferedImage&nbsp;srcImage,
+          byte[]&nbsp;dstBuf,
+          int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Encode the uncompressed source image stored in <code>srcImage</code>
+ and output a YUV planar image to the given destination buffer.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(java.awt.image.BufferedImage, int)">encodeYUV</A></B>(java.awt.image.BufferedImage&nbsp;srcImage,
+          int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Encode the uncompressed source image stored in <code>srcImage</code>
+ and return a buffer containing a YUV planar image.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(byte[], int)">encodeYUV</A></B>(byte[]&nbsp;dstBuf,
+          int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Encode the uncompressed source image associated with this compressor
+ instance and output a YUV planar image to the given destination buffer.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;byte[]</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(int)">encodeYUV</A></B>(int&nbsp;flags)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Encode the uncompressed source image associated with this compressor
+ instance and return a buffer containing a YUV planar image.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>protected &nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#finalize()">finalize</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#getCompressedSize()">getCompressedSize</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the size of the image (in bytes) generated by the most recent
+ compress/encode operation.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setJPEGQuality(int)">setJPEGQuality</A></B>(int&nbsp;quality)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set the JPEG image quality level for subsequent compress operations.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int)">setSourceImage</A></B>(byte[]&nbsp;srcImage,
+               int&nbsp;width,
+               int&nbsp;pitch,
+               int&nbsp;height,
+               int&nbsp;pixelFormat)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Deprecated.</B>&nbsp;<I>Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> instead.</I></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)">setSourceImage</A></B>(byte[]&nbsp;srcImage,
+               int&nbsp;x,
+               int&nbsp;y,
+               int&nbsp;width,
+               int&nbsp;pitch,
+               int&nbsp;height,
+               int&nbsp;pixelFormat)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Associate an uncompressed source image with this compressor instance.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSubsamp(int)">setSubsamp</A></B>(int&nbsp;newSubsamp)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set the level of chrominance subsampling for subsequent compress/encode
+ operations.</TD>
+</TR>
+</TABLE>
+&nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#EEEEFF" CLASS="TableSubHeadingColor">
+<TH ALIGN="left"><B>Methods inherited from class java.lang.Object</B></TH>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE>clone, equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</CODE></TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
+<B>Constructor Detail</B></FONT></TH>
+</TR>
+</TABLE>
+
+<A NAME="TJCompressor()"><!-- --></A><H3>
+TJCompressor</H3>
+<PRE>
+public <B>TJCompressor</B>()
+             throws java.lang.Exception</PRE>
+<DL>
+<DD>Create a TurboJPEG compressor instance.
+<P>
+<DL>
+
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DL>
+<HR>
+
+<A NAME="TJCompressor(byte[], int, int, int, int, int, int)"><!-- --></A><H3>
+TJCompressor</H3>
+<PRE>
+public <B>TJCompressor</B>(byte[]&nbsp;srcImage,
+                    int&nbsp;x,
+                    int&nbsp;y,
+                    int&nbsp;width,
+                    int&nbsp;pitch,
+                    int&nbsp;height,
+                    int&nbsp;pixelFormat)
+             throws java.lang.Exception</PRE>
+<DL>
+<DD>Create a TurboJPEG compressor instance and associate the uncompressed
+ source image stored in <code>srcImage</code> with the newly created
+ instance.
+<P>
+<DL>
+<DT><B>Parameters:</B><DD><CODE>srcImage</CODE> - see <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> for description<DD><CODE>x</CODE> - see <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> for description<DD><CODE>y</CODE> - see <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> for description<DD><CODE>width</CODE> - see <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> for description<DD><CODE>pitch</CODE> - see <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> for description<DD><CODE>height</CODE> - see <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> for description<DD><CODE>pixelFormat</CODE> - pixel format of the source image (one of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#PF_RGB"><CODE>TJ.PF_*</CODE></A>)
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DL>
+<HR>
+
+<A NAME="TJCompressor(byte[], int, int, int, int)"><!-- --></A><H3>
+TJCompressor</H3>
+<PRE>
+<FONT SIZE="-1">@Deprecated
+</FONT>public <B>TJCompressor</B>(byte[]&nbsp;srcImage,
+                               int&nbsp;width,
+                               int&nbsp;pitch,
+                               int&nbsp;height,
+                               int&nbsp;pixelFormat)
+             throws java.lang.Exception</PRE>
+<DL>
+<DD><B>Deprecated.</B>&nbsp;<I>Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#TJCompressor(byte[], int, int, int, int, int, int)"><CODE>TJCompressor(byte[], int, int, int, int, int, int)</CODE></A> instead.</I>
+<P>
+<DL>
+
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DL>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TH>
+</TR>
+</TABLE>
+
+<A NAME="setSourceImage(byte[], int, int, int, int, int, int)"><!-- --></A><H3>
+setSourceImage</H3>
+<PRE>
+public void <B>setSourceImage</B>(byte[]&nbsp;srcImage,
+                           int&nbsp;x,
+                           int&nbsp;y,
+                           int&nbsp;width,
+                           int&nbsp;pitch,
+                           int&nbsp;height,
+                           int&nbsp;pixelFormat)
+                    throws java.lang.Exception</PRE>
+<DL>
+<DD>Associate an uncompressed source image with this compressor instance.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>srcImage</CODE> - image buffer containing RGB or grayscale pixels to be
+ compressed or encoded<DD><CODE>x</CODE> - x offset (in pixels) of the region in the source image from which
+ the JPEG or YUV image should be compressed/encoded<DD><CODE>y</CODE> - y offset (in pixels) of the region in the source image from which
+ the JPEG or YUV image should be compressed/encoded<DD><CODE>width</CODE> - width (in pixels) of the region in the source image from
+ which the JPEG or YUV image should be compressed/encoded<DD><CODE>pitch</CODE> - bytes per line of the source image.  Normally, this should be
+ <code>width * TJ.pixelSize(pixelFormat)</code> if the source image is
+ unpadded, but you can use this parameter to, for instance, specify that
+ the scanlines in the source image are padded to a 4-byte boundary or to
+ compress/encode a JPEG or YUV image from a region of a larger source
+ image.  You can also be clever and use this parameter to skip lines, etc.
+ Setting this parameter to 0 is the equivalent of setting it to
+ <code>width * TJ.pixelSize(pixelFormat)</code>.<DD><CODE>height</CODE> - height (in pixels) of the region in the source image from
+ which the JPEG or YUV image should be compressed/encoded<DD><CODE>pixelFormat</CODE> - pixel format of the source image (one of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#PF_RGB"><CODE>TJ.PF_*</CODE></A>)
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setSourceImage(byte[], int, int, int, int)"><!-- --></A><H3>
+setSourceImage</H3>
+<PRE>
+<FONT SIZE="-1">@Deprecated
+</FONT>public void <B>setSourceImage</B>(byte[]&nbsp;srcImage,
+                                      int&nbsp;width,
+                                      int&nbsp;pitch,
+                                      int&nbsp;height,
+                                      int&nbsp;pixelFormat)
+                    throws java.lang.Exception</PRE>
+<DL>
+<DD><B>Deprecated.</B>&nbsp;<I>Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#setSourceImage(byte[], int, int, int, int, int, int)"><CODE>setSourceImage(byte[], int, int, int, int, int, int)</CODE></A> instead.</I>
+<P>
+<DD><DL>
+
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setSubsamp(int)"><!-- --></A><H3>
+setSubsamp</H3>
+<PRE>
+public void <B>setSubsamp</B>(int&nbsp;newSubsamp)
+                throws java.lang.Exception</PRE>
+<DL>
+<DD>Set the level of chrominance subsampling for subsequent compress/encode
+ operations.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>newSubsamp</CODE> - the level of chrominance subsampling to use in
+ subsequent compress/encode operations (one of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#SAMP_444"><CODE>TJ.SAMP_*</CODE></A>)
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setJPEGQuality(int)"><!-- --></A><H3>
+setJPEGQuality</H3>
+<PRE>
+public void <B>setJPEGQuality</B>(int&nbsp;quality)
+                    throws java.lang.Exception</PRE>
+<DL>
+<DD>Set the JPEG image quality level for subsequent compress operations.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>quality</CODE> - the new JPEG image quality level (1 to 100, 1 = worst,
+ 100 = best)
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="compress(byte[], int)"><!-- --></A><H3>
+compress</H3>
+<PRE>
+public void <B>compress</B>(byte[]&nbsp;dstBuf,
+                     int&nbsp;flags)
+              throws java.lang.Exception</PRE>
+<DL>
+<DD>Compress the uncompressed source image associated with this compressor
+ instance and output a JPEG image to the given destination buffer.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>dstBuf</CODE> - buffer that will receive the JPEG image.  Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#bufSize(int, int, int)"><CODE>TJ.bufSize(int, int, int)</CODE></A> to determine the maximum size for this buffer based on
+ the source image's width and height and the desired level of chrominance
+ subsampling.<DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="compress(int)"><!-- --></A><H3>
+compress</H3>
+<PRE>
+public byte[] <B>compress</B>(int&nbsp;flags)
+                throws java.lang.Exception</PRE>
+<DL>
+<DD>Compress the uncompressed source image associated with this compressor
+ instance and return a buffer containing a JPEG image.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Returns:</B><DD>a buffer containing a JPEG image.  The length of this buffer will
+ not be equal to the size of the JPEG image.  Use <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#getCompressedSize()"><CODE>getCompressedSize()</CODE></A> to obtain the size of the JPEG image.
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="compress(java.awt.image.BufferedImage, byte[], int)"><!-- --></A><H3>
+compress</H3>
+<PRE>
+public void <B>compress</B>(java.awt.image.BufferedImage&nbsp;srcImage,
+                     byte[]&nbsp;dstBuf,
+                     int&nbsp;flags)
+              throws java.lang.Exception</PRE>
+<DL>
+<DD>Compress the uncompressed source image stored in <code>srcImage</code>
+ and output a JPEG image to the given destination buffer.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>srcImage</CODE> - a <code>BufferedImage</code> instance containing RGB or
+ grayscale pixels to be compressed<DD><CODE>dstBuf</CODE> - buffer that will receive the JPEG image.  Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#bufSize(int, int, int)"><CODE>TJ.bufSize(int, int, int)</CODE></A> to determine the maximum size for this buffer based on
+ the image width, height, and level of chrominance subsampling.<DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="compress(java.awt.image.BufferedImage, int)"><!-- --></A><H3>
+compress</H3>
+<PRE>
+public byte[] <B>compress</B>(java.awt.image.BufferedImage&nbsp;srcImage,
+                       int&nbsp;flags)
+                throws java.lang.Exception</PRE>
+<DL>
+<DD>Compress the uncompressed source image stored in <code>srcImage</code>
+ and return a buffer containing a JPEG image.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>srcImage</CODE> - a <code>BufferedImage</code> instance containing RGB or
+ grayscale pixels to be compressed<DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Returns:</B><DD>a buffer containing a JPEG image.  The length of this buffer will
+ not be equal to the size of the JPEG image.  Use <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#getCompressedSize()"><CODE>getCompressedSize()</CODE></A> to obtain the size of the JPEG image.
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="encodeYUV(byte[], int)"><!-- --></A><H3>
+encodeYUV</H3>
+<PRE>
+public void <B>encodeYUV</B>(byte[]&nbsp;dstBuf,
+                      int&nbsp;flags)
+               throws java.lang.Exception</PRE>
+<DL>
+<DD>Encode the uncompressed source image associated with this compressor
+ instance and output a YUV planar image to the given destination buffer.
+ This method uses the accelerated color conversion routines in
+ TurboJPEG's underlying codec to produce a planar YUV image that is
+ suitable for direct video display.  Specifically, if the chrominance
+ components are subsampled along the horizontal dimension, then the width
+ of the luminance plane is padded to the nearest multiple of 2 in the
+ output image (same goes for the height of the luminance plane, if the
+ chrominance components are subsampled along the vertical dimension.)
+ Also, each line of each plane in the output image is padded to 4 bytes.
+ Although this will work with any subsampling option, it is really only
+ useful in combination with <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#SAMP_420"><CODE>TJ.SAMP_420</CODE></A>, which produces an image
+ compatible with the I420 (AKA "YUV420P") format.
+ <p>
+ NOTE: Technically, the JPEG format uses the YCbCr colorspace, but per the
+ convention of the digital video community, the TurboJPEG API uses "YUV" to
+ refer to an image format consisting of Y, Cb, and Cr image planes.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>dstBuf</CODE> - buffer that will receive the YUV planar image.  Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#bufSizeYUV(int, int, int)"><CODE>TJ.bufSizeYUV(int, int, int)</CODE></A> to determine the appropriate size for this buffer
+ based on the image width, height, and level of chrominance subsampling.<DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="encodeYUV(int)"><!-- --></A><H3>
+encodeYUV</H3>
+<PRE>
+public byte[] <B>encodeYUV</B>(int&nbsp;flags)
+                 throws java.lang.Exception</PRE>
+<DL>
+<DD>Encode the uncompressed source image associated with this compressor
+ instance and return a buffer containing a YUV planar image.  See
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(byte[], int)"><CODE>encodeYUV(byte[], int)</CODE></A> for more detail.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Returns:</B><DD>a buffer containing a YUV planar image
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="encodeYUV(java.awt.image.BufferedImage, byte[], int)"><!-- --></A><H3>
+encodeYUV</H3>
+<PRE>
+public void <B>encodeYUV</B>(java.awt.image.BufferedImage&nbsp;srcImage,
+                      byte[]&nbsp;dstBuf,
+                      int&nbsp;flags)
+               throws java.lang.Exception</PRE>
+<DL>
+<DD>Encode the uncompressed source image stored in <code>srcImage</code>
+ and output a YUV planar image to the given destination buffer.  See
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(byte[], int)"><CODE>encodeYUV(byte[], int)</CODE></A> for more detail.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>srcImage</CODE> - a <code>BufferedImage</code> instance containing RGB or
+ grayscale pixels to be encoded<DD><CODE>dstBuf</CODE> - buffer that will receive the YUV planar image.  Use
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#bufSizeYUV(int, int, int)"><CODE>TJ.bufSizeYUV(int, int, int)</CODE></A> to determine the appropriate size for this buffer
+ based on the image width, height, and level of chrominance subsampling.<DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="encodeYUV(java.awt.image.BufferedImage, int)"><!-- --></A><H3>
+encodeYUV</H3>
+<PRE>
+public byte[] <B>encodeYUV</B>(java.awt.image.BufferedImage&nbsp;srcImage,
+                        int&nbsp;flags)
+                 throws java.lang.Exception</PRE>
+<DL>
+<DD>Encode the uncompressed source image stored in <code>srcImage</code>
+ and return a buffer containing a YUV planar image.  See
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html#encodeYUV(byte[], int)"><CODE>encodeYUV(byte[], int)</CODE></A> for more detail.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>srcImage</CODE> - a <code>BufferedImage</code> instance containing RGB or
+ grayscale pixels to be encoded<DD><CODE>flags</CODE> - the bitwise OR of one or more of
+ <A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html#FLAG_BOTTOMUP"><CODE>TJ.FLAG_*</CODE></A>
+<DT><B>Returns:</B><DD>a buffer containing a YUV planar image
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getCompressedSize()"><!-- --></A><H3>
+getCompressedSize</H3>
+<PRE>
+public int <B>getCompressedSize</B>()</PRE>
+<DL>
+<DD>Returns the size of the image (in bytes) generated by the most recent
+ compress/encode operation.
+<P>
+<DD><DL>
+
+<DT><B>Returns:</B><DD>the size of the image (in bytes) generated by the most recent
+ compress/encode operation</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="close()"><!-- --></A><H3>
+close</H3>
+<PRE>
+public void <B>close</B>()
+           throws java.lang.Exception</PRE>
+<DL>
+<DD>Free the native structures associated with this compressor instance.
+<P>
+<DD><DL>
+
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="finalize()"><!-- --></A><H3>
+finalize</H3>
+<PRE>
+protected void <B>finalize</B>()
+                 throws java.lang.Throwable</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD><CODE>finalize</CODE> in class <CODE>java.lang.Object</CODE></DL>
+</DD>
+<DD><DL>
+
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Throwable</CODE></DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<A HREF="#skip-navbar_bottom" title="Skip navigation links"></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3" SUMMARY="">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../org/libjpegturbo/turbojpeg/package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJ.html" title="class in org.libjpegturbo.turbojpeg"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJCustomFilter.html" title="interface in org.libjpegturbo.turbojpeg"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html?org/libjpegturbo/turbojpeg/TJCompressor.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="TJCompressor.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;<SCRIPT type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+  <A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>
+</NOSCRIPT>
+
+
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;FIELD&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="skip-navbar_bottom"></A>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+
+<HR>
+
+</BODY>
+</HTML>

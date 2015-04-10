@@ -1,0 +1,109 @@
+# Copyright (C)2009-2011, 2013 D. R. Commander.  All Rights Reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# - Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# - Neither the name of the libjpeg-turbo Project nor the names of its
+#   contributors may be used to endorse or promote products derived from this
+#   software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS",
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+#!/bin/sh
+
+if [ ! "`id -u`" = "0" ]; then
+	echo "ERROR: This script must be executed as root"
+	exit -1
+fi
+
+PACKAGE=@PKGNAME@
+MACPACKAGE=com.$PACKAGE.$PACKAGE
+RECEIPT=/Library/Receipts/$PACKAGE.pkg
+
+LSBOM=
+if [ -d $RECEIPT ]; then
+	LSBOM='lsbom -s -f -l '$RECEIPT'/Contents/Archive.bom'
+else
+	LSBOM='pkgutil --files '$MACPACKAGE
+fi
+
+mylsbom()
+{
+	$LSBOM || (echo "ERROR: Could not list package contents"; exit -1)
+}
+
+echo Removing package files ...
+EXITSTATUS=0
+pushd /
+mylsbom | while read file; do
+	if [ ! -d "$file" ]; then rm "$file" 2>&1 || EXITSTATUS=-1; fi
+done
+popd
+
+echo Removing package directories ...
+PREFIX=%{__prefix}
+BINDIR=%{__bindir}
+DATADIR=%{__datadir}
+INCLUDEDIR=%{__includedir}
+LIBDIR=%{__libdir}
+MANDIR=%{__mandir}
+
+if [ -d $BINDIR ]; then
+	rmdir $BINDIR 2>&1 || EXITSTATUS=-1
+fi
+if [ -d $LIBDIR ]; then
+	rmdir $LIBDIR 2>&1 || EXITSTATUS=-1
+fi
+if [ -d $INCLUDEDIR ]; then
+	rmdir $INCLUDEDIR 2>&1 || EXITSTATUS=-1
+fi
+if [ "$PREFIX" = "/opt/libjpeg-turbo" -a "$LIBDIR" = "/opt/libjpeg-turbo/lib" ]; then
+	if [ -h $LIBDIR\32 ]; then
+		rm $LIBDIR\32 2>&1 || EXITSTATUS=-1
+	fi
+	if [ -h $LIBDIR\64 ]; then
+		rm $LIBDIR\64 2>&1 || EXITSTATUS=-1
+	fi
+fi
+if [ -d $MANDIR/man1 ]; then
+	rmdir $MANDIR/man1 2>&1 || EXITSTATUS=-1
+fi
+if [ -d $MANDIR ]; then
+	rmdir $MANDIR 2>&1 || EXITSTATUS=-1
+fi
+if [ -d $DATADIR/classes ]; then
+	rmdir $DATADIR/classes 2>&1 || EXITSTATUS=-1
+fi
+if [ -d $DATADIR -a "$DATADIR" != "$PREFIX" ]; then
+	rmdir $DATADIR 2>&1 || EXITSTATUS=-1
+fi
+if [ "$PREFIX" = "/opt/libjpeg-turbo" -a -h "$PREFIX/doc" ]; then
+	rm $PREFIX/doc 2>&1 || EXITSTATUS=-1
+fi
+rmdir $PREFIX 2>&1 || EXITSTATUS=-1
+rmdir /Library/Documentation/$PACKAGE 2>&1 || EXITSTATUS=-1
+
+if [ -d $RECEIPT ]; then
+	echo Removing package receipt ...
+	rm -r $RECEIPT 2>&1 || EXITSTATUS=-1
+else
+	echo Forgetting package $MACPACKAGE ...
+	pkgutil --forget $MACPACKAGE
+fi
+
+exit $EXITSTATUS

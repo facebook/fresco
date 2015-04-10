@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['tjalloc',['tjAlloc',['../group___turbo_j_p_e_g.html#ga5c9234bda6d993cdaffdd89bf81a00ff',1,'turbojpeg.h']]],
+  ['tjbufsize',['tjBufSize',['../group___turbo_j_p_e_g.html#gaccc5bca7f12fcdcc302e6e1c6d4b311b',1,'turbojpeg.h']]],
+  ['tjbufsizeyuv',['tjBufSizeYUV',['../group___turbo_j_p_e_g.html#ga9d0cb06fd5052d21b6f2b382db8b219c',1,'turbojpeg.h']]],
+  ['tjcompress2',['tjCompress2',['../group___turbo_j_p_e_g.html#gaba62b7a98f960839b588579898495cf2',1,'turbojpeg.h']]],
+  ['tjdecompress2',['tjDecompress2',['../group___turbo_j_p_e_g.html#gada69cc6443d1bb493b40f1626259e5e9',1,'turbojpeg.h']]],
+  ['tjdecompressheader2',['tjDecompressHeader2',['../group___turbo_j_p_e_g.html#gac5675fceb7997b385516cdffdb34e6aa',1,'turbojpeg.h']]],
+  ['tjdecompresstoyuv',['tjDecompressToYUV',['../group___turbo_j_p_e_g.html#gad7810af095624a4016e72957a50f77d8',1,'turbojpeg.h']]],
+  ['tjdestroy',['tjDestroy',['../group___turbo_j_p_e_g.html#ga674adee917b95ad4a896f1ba39e12540',1,'turbojpeg.h']]],
+  ['tjencodeyuv2',['tjEncodeYUV2',['../group___turbo_j_p_e_g.html#ga0fa4e7b1943687c6a0c0304529c55d35',1,'turbojpeg.h']]],
+  ['tjfree',['tjFree',['../group___turbo_j_p_e_g.html#ga8c4a1231dc06a450514c835f6471f137',1,'turbojpeg.h']]],
+  ['tjgeterrorstr',['tjGetErrorStr',['../group___turbo_j_p_e_g.html#ga9af79c908ec131b1ae8d52fe40375abf',1,'turbojpeg.h']]],
+  ['tjgetscalingfactors',['tjGetScalingFactors',['../group___turbo_j_p_e_g.html#ga6449044b9af402999ccf52f401333be8',1,'turbojpeg.h']]],
+  ['tjinitcompress',['tjInitCompress',['../group___turbo_j_p_e_g.html#ga3d10c47fbe4a2489a2b30c931551d01a',1,'turbojpeg.h']]],
+  ['tjinitdecompress',['tjInitDecompress',['../group___turbo_j_p_e_g.html#gae5408179d041e2a2f7199c8283cf649e',1,'turbojpeg.h']]],
+  ['tjinittransform',['tjInitTransform',['../group___turbo_j_p_e_g.html#ga3155b775bfbac9dbba869b95a0367902',1,'turbojpeg.h']]],
+  ['tjtransform',['tjTransform',['../group___turbo_j_p_e_g.html#gae403193ceb4aafb7e0f56ab587b48616',1,'turbojpeg.h']]]
+];

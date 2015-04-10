@@ -1,0 +1,267 @@
+#!/bin/sh
+
+set -u
+set -e
+trap onexit INT
+trap onexit TERM
+trap onexit EXIT
+
+TMPDIR=
+
+onexit()
+{
+	if [ ! "$TMPDIR" = "" ]; then
+		sudo rm -rf $TMPDIR
+	fi
+}
+
+usage()
+{
+	echo "$0 [-build32 [32-bit build dir]] [-buildarmv6 [ARM v6 build dir]] [-buildarmv7 [ARM v7 build dir]] [-buildarmv7s [ARM v7s build dir]]"
+	exit 1
+}
+
+PACKAGE_NAME=@PKGNAME@
+VERSION=@VERSION@
+BUILD=@BUILD@
+SRCDIR=@abs_top_srcdir@
+BUILDDIR32=@abs_top_srcdir@/osxx86
+BUILD32=0
+BUILDDIRARMV6=@abs_top_srcdir@/iosarmv6
+BUILDARMV6=0
+BUILDDIRARMV7=@abs_top_srcdir@/iosarmv7
+BUILDARMV7=0
+BUILDDIRARMV7S=@abs_top_srcdir@/iosarmv7s
+BUILDARMV7S=0
+WITH_JAVA=@WITH_JAVA@
+
+PREFIX=%{__prefix}
+BINDIR=%{__bindir}
+DOCDIR=%{__docdir}
+LIBDIR=%{__libdir}
+
+while [ $# -gt 0 ]; do
+	case $1 in
+	-h*)             usage 0                   ;;
+	-build32)
+		BUILD32=1
+		if [ $# -gt 1 ]; then
+			if [[ ! "$2" =~ -.* ]]; then
+				BUILDDIR32=$2;  shift
+			fi
+		fi
+		;;
+	-buildarmv6)
+		BUILDARMV6=1
+		if [ $# -gt 1 ]; then
+			if [[ ! "$2" =~ -.* ]]; then
+				BUILDDIRARMV6=$2;  shift
+			fi
+		fi
+		;;
+	-buildarmv7)
+		BUILDARMV7=1
+		if [ $# -gt 1 ]; then
+			if [[ ! "$2" =~ -.* ]]; then
+				BUILDDIRARMV7=$2;  shift
+			fi
+		fi
+		;;
+	-buildarmv7s)
+		BUILDARMV7S=1
+		if [ $# -gt 1 ]; then
+			if [[ ! "$2" =~ -.* ]]; then
+				BUILDDIRARMV7S=$2;  shift
+			fi
+		fi
+		;;
+	esac
+	shift
+done
+PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
+
+if [ -f $PACKAGE_NAME-$VERSION.dmg ]; then
+	rm -f $PACKAGE_NAME-$VERSION.dmg
+fi
+
+umask 022
+TMPDIR=`mktemp -d /tmp/$PACKAGE_NAME-build.XXXXXX`
+PKGROOT=$TMPDIR/pkg/Package_Root
+mkdir -p $PKGROOT
+make install DESTDIR=$PKGROOT docdir=/Library/Documentation/$PACKAGE_NAME \
+	exampledir=/Library/Documentation/$PACKAGE_NAME
+rm -f $PKGROOT$LIBDIR/*.la
+
+if [ "$PREFIX" = "/opt/libjpeg-turbo" -a "$DOCDIR" = "/opt/libjpeg-turbo/doc" ]; then
+	ln -fs /Library/Documentation/$PACKAGE_NAME $PKGROOT$DOCDIR
+fi
+
+if [ $BUILD32 = 1 ]; then
+	if [ ! -d $BUILDDIR32 ]; then
+		echo ERROR: 32-bit build directory $BUILDDIR32 does not exist
+		exit 1
+	fi
+	if [ ! -f $BUILDDIR32/Makefile ]; then
+		echo ERROR: 32-bit build directory $BUILDDIR32 is not configured
+		exit 1
+	fi
+	mkdir -p $TMPDIR/dist.x86
+	pushd $BUILDDIR32
+	make install DESTDIR=$TMPDIR/dist.x86
+	popd
+	if [ ! -h $TMPDIR/dist.x86/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib -a \
+		! -h $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib ]; then
+		lipo -create \
+			-arch i386 $TMPDIR/dist.x86/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib \
+			-arch x86_64 $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib \
+			-output $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib
+	elif [ ! -h $TMPDIR/dist.x86/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.0.@SO_MINOR_VERSION@.dylib -a \
+		! -h $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.0.@SO_MINOR_VERSION@.dylib ]; then
+		lipo -create \
+			-arch i386 $TMPDIR/dist.x86/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.0.@SO_MINOR_VERSION@.dylib \
+			-arch x86_64 $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.0.@SO_MINOR_VERSION@.dylib \
+			-output $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.0.@SO_MINOR_VERSION@.dylib
+	fi
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$LIBDIR/libjpeg.a \
+		-arch x86_64 $PKGROOT/$LIBDIR/libjpeg.a \
+		-output $PKGROOT/$LIBDIR/libjpeg.a
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$LIBDIR/libturbojpeg.0.dylib \
+		-arch x86_64 $PKGROOT/$LIBDIR/libturbojpeg.0.dylib \
+		-output $PKGROOT/$LIBDIR/libturbojpeg.0.dylib
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$LIBDIR/libturbojpeg.a \
+		-arch x86_64 $PKGROOT/$LIBDIR/libturbojpeg.a \
+		-output $PKGROOT/$LIBDIR/libturbojpeg.a
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$BINDIR/cjpeg \
+		-arch x86_64 $PKGROOT/$BINDIR/cjpeg \
+		-output $PKGROOT/$BINDIR/cjpeg
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$BINDIR/djpeg \
+		-arch x86_64 $PKGROOT/$BINDIR/djpeg \
+		-output $PKGROOT/$BINDIR/djpeg
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$BINDIR/jpegtran \
+		-arch x86_64 $PKGROOT/$BINDIR/jpegtran \
+		-output $PKGROOT/$BINDIR/jpegtran
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$BINDIR/tjbench \
+		-arch x86_64 $PKGROOT/$BINDIR/tjbench \
+		-output $PKGROOT/$BINDIR/tjbench
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$BINDIR/rdjpgcom \
+		-arch x86_64 $PKGROOT/$BINDIR/rdjpgcom \
+		-output $PKGROOT/$BINDIR/rdjpgcom
+	lipo -create \
+		-arch i386 $TMPDIR/dist.x86/$BINDIR/wrjpgcom \
+		-arch x86_64 $PKGROOT/$BINDIR/wrjpgcom \
+		-output $PKGROOT/$BINDIR/wrjpgcom
+
+fi
+
+if [ $BUILDARMV6 = 1 ]; then
+	if [ ! -d $BUILDDIRARMV6 ]; then
+		echo ERROR: ARM v6 build directory $BUILDDIRARMV6 does not exist
+		exit 1
+	fi
+	if [ ! -f $BUILDDIRARMV6/Makefile ]; then
+		echo ERROR: ARM v6 build directory $BUILDDIRARMV6 is not configured
+		exit 1
+	fi
+	mkdir -p $TMPDIR/dist.armv6
+	pushd $BUILDDIRARMV6
+	make install DESTDIR=$TMPDIR/dist.armv6
+	popd
+	lipo -create \
+		$PKGROOT/$LIBDIR/libjpeg.a \
+		-arch arm $TMPDIR/dist.armv6/$LIBDIR/libjpeg.a \
+		-output $PKGROOT/$LIBDIR/libjpeg.a
+	lipo -create \
+		$PKGROOT/$LIBDIR/libturbojpeg.a \
+		-arch arm $TMPDIR/dist.armv6/$LIBDIR/libturbojpeg.a \
+		-output $PKGROOT/$LIBDIR/libturbojpeg.a
+fi
+
+if [ $BUILDARMV7 = 1 ]; then
+	if [ ! -d $BUILDDIRARMV7 ]; then
+		echo ERROR: ARM v7 build directory $BUILDDIRARMV7 does not exist
+		exit 1
+	fi
+	if [ ! -f $BUILDDIRARMV7/Makefile ]; then
+		echo ERROR: ARM v7 build directory $BUILDDIRARMV7 is not configured
+		exit 1
+	fi
+	mkdir -p $TMPDIR/dist.armv7
+	pushd $BUILDDIRARMV7
+	make install DESTDIR=$TMPDIR/dist.armv7
+	popd
+	lipo -create \
+		$PKGROOT/$LIBDIR/libjpeg.a \
+		-arch arm $TMPDIR/dist.armv7/$LIBDIR/libjpeg.a \
+		-output $PKGROOT/$LIBDIR/libjpeg.a
+	lipo -create \
+		$PKGROOT/$LIBDIR/libturbojpeg.a \
+		-arch arm $TMPDIR/dist.armv7/$LIBDIR/libturbojpeg.a \
+		-output $PKGROOT/$LIBDIR/libturbojpeg.a
+fi
+
+if [ $BUILDARMV7S = 1 ]; then
+	if [ ! -d $BUILDDIRARMV7S ]; then
+		echo ERROR: ARM v7s build directory $BUILDDIRARMV7S does not exist
+		exit 1
+	fi
+	if [ ! -f $BUILDDIRARMV7S/Makefile ]; then
+		echo ERROR: ARM v7s build directory $BUILDDIRARMV7S is not configured
+		exit 1
+	fi
+	mkdir -p $TMPDIR/dist.armv7s
+	pushd $BUILDDIRARMV7S
+	make install DESTDIR=$TMPDIR/dist.armv7s
+	popd
+	lipo -create \
+		$PKGROOT/$LIBDIR/libjpeg.a \
+		-arch arm $TMPDIR/dist.armv7s/$LIBDIR/libjpeg.a \
+		-output $PKGROOT/$LIBDIR/libjpeg.a
+	lipo -create \
+		$PKGROOT/$LIBDIR/libturbojpeg.a \
+		-arch arm $TMPDIR/dist.armv7s/$LIBDIR/libturbojpeg.a \
+		-output $PKGROOT/$LIBDIR/libturbojpeg.a
+fi
+
+install_name_tool -id $LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib $PKGROOT/$LIBDIR/libjpeg.@SO_MAJOR_VERSION@.dylib
+install_name_tool -id $LIBDIR/libturbojpeg.0.dylib $PKGROOT/$LIBDIR/libturbojpeg.0.dylib
+
+if [ $WITH_JAVA = 1 ]; then
+	ln -fs libturbojpeg.0.dylib $PKGROOT/$LIBDIR/libturbojpeg.jnilib
+fi
+if [ "$PREFIX" = "/opt/libjpeg-turbo" -a "$LIBDIR" = "/opt/libjpeg-turbo/lib" ]; then
+	if [ ! -h $PKGROOT/$PREFIX/lib32 ]; then
+		ln -fs lib $PKGROOT/$PREFIX/lib32
+	fi
+	if [ ! -h $PKGROOT/$PREFIX/lib64 ]; then
+		ln -fs lib $PKGROOT/$PREFIX/lib64
+	fi
+fi
+
+chmod 1775 $PKGROOT/Library
+chmod 775 $PKGROOT/Library/Documentation 
+mkdir -p $TMPDIR/pkg/Resources 
+
+cp pkgscripts/Description.plist $TMPDIR/pkg/
+cp pkgscripts/Info.plist $TMPDIR/pkg/
+install -m 755 pkgscripts/uninstall $PKGROOT/$BINDIR/
+
+sudo chown -R root:admin $PKGROOT
+cp $SRCDIR/release/License.rtf $SRCDIR/release/Welcome.rtf $SRCDIR/release/ReadMe.rtf $TMPDIR/pkg/Resources/ 
+
+mkdir $TMPDIR/dmg
+$PACKAGEMAKER -build -v -p $TMPDIR/dmg/$PACKAGE_NAME.pkg \
+	-f $PKGROOT -r $TMPDIR/pkg/Resources \
+	-i $TMPDIR/pkg/Info.plist -d $TMPDIR/pkg/Description.plist 
+hdiutil create -fs HFS+ -volname $PACKAGE_NAME-$VERSION \
+	-srcfolder "$TMPDIR/dmg" $TMPDIR/$PACKAGE_NAME-$VERSION.dmg 
+cp $TMPDIR/$PACKAGE_NAME-$VERSION.dmg . 
+
+exit

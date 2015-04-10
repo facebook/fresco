@@ -1,0 +1,129 @@
+'\" t
+.\"     Title: gifbg
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 2 May 2012
+.\"    Manual: GIFLIB Documentation
+.\"    Source: GIFLIB
+.\"  Language: English
+.\"
+.TH "GIFBG" "1" "2 May 2012" "GIFLIB" "GIFLIB Documentation"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+gifbg \- generate a test\-pattern GIF
+.SH "SYNOPSIS"
+.HP \w'\fBgifbg\fR\ 'u
+\fBgifbg\fR [\-v] [\-d\ \fIdir\fR] [\-l\ \fIlvls\fR] [\-c\ \fIR\fR\ \fIG\fR\ \fIB\fR] [\-m\ \fImin\fR] [\-o\ \fImax\fR] [\-s\ \fIw\fR\ \fIh\fR] [\-h]
+.SH "DESCRIPTION"
+.PP
+A program to generate a single\-color test pattern GIF with gradually changing intensity in any of the basic 8 directions\&.
+.PP
+The gifbg program reads no input, and will dump the created GIF file to stdout\&.
+.SH "OPTIONS"
+.PP
+\-v
+.RS 4
+Verbose mode (show progress)\&. Enables printout of running scan lines\&.
+.RE
+.PP
+\-d dir
+.RS 4
+Select direction the intensity of the background should increase\&. Direction can be one of the 8 principal directions:
+.PP
+"T"
+.RS 4
+for Top
+.RE
+.PP
+"TR"
+.RS 4
+for Top Right
+.RE
+.PP
+"R"
+.RS 4
+for Right
+.RE
+.PP
+"BR"
+.RS 4
+for Bottom Right
+.RE
+.PP
+"B"
+.RS 4
+for Bottom
+.RE
+.PP
+"BL"
+.RS 4
+for Bottom Left
+.RE
+.PP
+"L"
+.RS 4
+for left
+.RE
+.PP
+"TL"
+.RS 4
+for Top Left
+.RE
+.sp
+The compass directions may be use as synonyms for the above directions, so for example "NE" is equal to "TR"\&.
+.sp
+Direction is case insensitive\&. The default direction is Top (North)\&.
+.RE
+.PP
+\-l lvls
+.RS 4
+Numeric, nmber of levels the color will be scaled to\&. Default is 16\&.
+.RE
+.PP
+\-c R G B
+.RS 4
+What to use as the primary background color to scale\&. This color is scaled between the minimum intensity (min) and maximum intensity (max) from one end of the screen to the other as defined by dir\&. See below (\-m & \-M) for min & max\&. Default is Blue (0, 0, 255)\&.
+.RE
+.PP
+\-m min
+.RS 4
+Minimum intensity (in percent) to scale color\&. Default 10%
+.RE
+.PP
+[\-M max
+.RS 4
+Maximum intensity (in percent) to scale color\&. Default 100%
+.RE
+.PP
+\-s W H
+.RS 4
+Size of image to create\&. Default 640 by 350\&.
+.RE
+.PP
+\-h
+.RS 4
+Print one line of command line help, similar to Usage above\&.
+.RE
+.PP
+If min == max = 100 (%) and lvls == 2 then boolean mask image of specified size will be created \- all foreground\&.
+.SH "AUTHOR"
+.PP
+Gershon Elber\&.

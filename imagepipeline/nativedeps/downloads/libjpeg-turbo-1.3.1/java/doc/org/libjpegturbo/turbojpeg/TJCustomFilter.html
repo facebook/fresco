@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+TJCustomFilter
+</TITLE>
+
+
+<LINK REL ="stylesheet" TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+
+<SCRIPT type="text/javascript">
+function windowTitle()
+{
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="TJCustomFilter";
+    }
+}
+</SCRIPT>
+<NOSCRIPT>
+</NOSCRIPT>
+
+</HEAD>
+
+<BODY BGCOLOR="white" onload="windowTitle();">
+<HR>
+
+
+<!-- ========= START OF TOP NAVBAR ======= -->
+<A NAME="navbar_top"><!-- --></A>
+<A HREF="#skip-navbar_top" title="Skip navigation links"></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_top_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3" SUMMARY="">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../org/libjpegturbo/turbojpeg/package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html?org/libjpegturbo/turbojpeg/TJCustomFilter.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="TJCustomFilter.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;<SCRIPT type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+  <A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>
+</NOSCRIPT>
+
+
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="skip-navbar_top"></A>
+<!-- ========= END OF TOP NAVBAR ========= -->
+
+<HR>
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>
+<FONT SIZE="-1">
+org.libjpegturbo.turbojpeg</FONT>
+<BR>
+Interface TJCustomFilter</H2>
+<HR>
+<DL>
+<DT><PRE>public interface <B>TJCustomFilter</B></DL>
+</PRE>
+
+<P>
+Custom filter callback interface
+<P>
+
+<P>
+<HR>
+
+<P>
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TH>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../org/libjpegturbo/turbojpeg/TJCustomFilter.html#customFilter(java.nio.ShortBuffer, java.awt.Rectangle, java.awt.Rectangle, int, int, org.libjpegturbo.turbojpeg.TJTransform)">customFilter</A></B>(java.nio.ShortBuffer&nbsp;coeffBuffer,
+             java.awt.Rectangle&nbsp;bufferRegion,
+             java.awt.Rectangle&nbsp;planeRegion,
+             int&nbsp;componentID,
+             int&nbsp;transformID,
+             <A HREF="../../../org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</A>&nbsp;transform)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A callback function that can be used to modify the DCT coefficients after
+ they are losslessly transformed but before they are transcoded to a new
+ JPEG image.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<P>
+
+<!-- ============ METHOD DETAIL ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2">
+<B>Method Detail</B></FONT></TH>
+</TR>
+</TABLE>
+
+<A NAME="customFilter(java.nio.ShortBuffer, java.awt.Rectangle, java.awt.Rectangle, int, int, org.libjpegturbo.turbojpeg.TJTransform)"><!-- --></A><H3>
+customFilter</H3>
+<PRE>
+void <B>customFilter</B>(java.nio.ShortBuffer&nbsp;coeffBuffer,
+                  java.awt.Rectangle&nbsp;bufferRegion,
+                  java.awt.Rectangle&nbsp;planeRegion,
+                  int&nbsp;componentID,
+                  int&nbsp;transformID,
+                  <A HREF="../../../org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg">TJTransform</A>&nbsp;transform)
+                  throws java.lang.Exception</PRE>
+<DL>
+<DD>A callback function that can be used to modify the DCT coefficients after
+ they are losslessly transformed but before they are transcoded to a new
+ JPEG image.  This allows for custom filters or other transformations to be
+ applied in the frequency domain.
+<P>
+<DD><DL>
+<DT><B>Parameters:</B><DD><CODE>coeffBuffer</CODE> - a buffer containing transformed DCT coefficients.
+ (NOTE: this buffer is not guaranteed to be valid once the callback
+ returns, so applications wishing to hand off the DCT coefficients to
+ another function or library should make a copy of them within the body of
+ the callback.)<DD><CODE>bufferRegion</CODE> - rectangle containing the width and height of
+ <code>coeffBuffer</code> as well as its offset relative to the component
+ plane.  TurboJPEG implementations may choose to split each component plane
+ into multiple DCT coefficient buffers and call the callback function once
+ for each buffer.<DD><CODE>planeRegion</CODE> - rectangle containing the width and height of the
+ component plane to which <code>coeffBuffer</code> belongs<DD><CODE>componentID</CODE> - ID number of the component plane to which
+ <code>coeffBuffer</code> belongs (Y, Cb, and Cr have, respectively, ID's
+ of 0, 1, and 2 in typical JPEG images.)<DD><CODE>transformID</CODE> - ID number of the transformed image to which
+ <code>coeffBuffer</code> belongs.  This is the same as the index of the
+ transform in the <code>transforms</code> array that was passed to <A HREF="../../../org/libjpegturbo/turbojpeg/TJTransformer.html#transform(byte[][], org.libjpegturbo.turbojpeg.TJTransform[], int)"><CODE>TJTransformer.transform()</CODE></A>.<DD><CODE>transform</CODE> - a <A HREF="../../../org/libjpegturbo/turbojpeg/TJTransform.html" title="class in org.libjpegturbo.turbojpeg"><CODE>TJTransform</CODE></A> instance that specifies the
+ parameters and/or cropping region for this transform
+<DT><B>Throws:</B>
+<DD><CODE>java.lang.Exception</CODE></DL>
+</DD>
+</DL>
+<!-- ========= END OF CLASS DATA ========= -->
+<HR>
+
+
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<A HREF="#skip-navbar_bottom" title="Skip navigation links"></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
+<TR>
+<TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3" SUMMARY="">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../org/libjpegturbo/turbojpeg/package-summary.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="package-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="../../../help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+</EM>
+</TD>
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJCompressor.html" title="class in org.libjpegturbo.turbojpeg"><B>PREV CLASS</B></A>&nbsp;
+&nbsp;<A HREF="../../../org/libjpegturbo/turbojpeg/TJDecompressor.html" title="class in org.libjpegturbo.turbojpeg"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="../../../index.html?org/libjpegturbo/turbojpeg/TJCustomFilter.html" target="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="TJCustomFilter.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;<SCRIPT type="text/javascript">
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+  <A HREF="../../../allclasses-noframe.html"><B>All Classes</B></A>
+</NOSCRIPT>
+
+
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;NESTED&nbsp;|&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;FIELD&nbsp;|&nbsp;CONSTR&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="skip-navbar_bottom"></A>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+
+<HR>
+
+</BODY>
+</HTML>

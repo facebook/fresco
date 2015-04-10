@@ -1,0 +1,68 @@
+#!/bin/sh
+
+set -u
+set -e
+trap onexit INT
+trap onexit TERM
+trap onexit EXIT
+
+TMPDIR=
+
+onexit()
+{
+	if [ ! "$TMPDIR" = "" ]; then
+		sudo rm -rf $TMPDIR
+	fi
+}
+
+makedeb()
+{
+	SUPPLEMENT=$1
+	DIRNAME=$PACKAGE_NAME
+
+	if [ $SUPPLEMENT = 1 ]; then
+		PACKAGE_NAME=$PACKAGE_NAME\32
+		DEBARCH=amd64
+	fi
+
+	umask 022
+	rm -f $PACKAGE_NAME\_$VERSION\_$DEBARCH.deb
+	TMPDIR=`mktemp -d /tmp/$PACKAGE_NAME-build.XXXXXX`
+	mkdir $TMPDIR/DEBIAN
+	(cat $SRCDIR/release/deb-control.tmpl | sed s/{__PKGNAME}/$PACKAGE_NAME/g \
+		| sed s/{__VERSION}/$VERSION/g | sed s/{__BUILD}/$BUILD/g \
+		| sed s/{__ARCH}/$DEBARCH/g > $TMPDIR/DEBIAN/control)
+
+	if [ $SUPPLEMENT = 1 ]; then
+		make install DESTDIR=$TMPDIR bindir=/dummy/bin datadir=/dummy/data \
+			docdir=/dummy/doc includedir=/dummy/include mandir=/dummy/man
+		rm -f $TMPDIR$LIBDIR/*.la
+		rm -rf $TMPDIR/dummy
+	else
+		make install DESTDIR=$TMPDIR docdir=/usr/share/doc/$DIRNAME-$VERSION \
+			exampledir=/usr/share/doc/$DIRNAME-$VERSION
+		rm -f $TMPDIR$LIBDIR/*.la
+		if [ "$PREFIX" = "/opt/libjpeg-turbo" -a "$DOCDIR" = "/opt/libjpeg-turbo/doc" ]; then
+			ln -fs /usr/share/doc/$DIRNAME-$VERSION $TMPDIR$DOCDIR
+		fi
+	fi
+
+	/sbin/ldconfig -n $TMPDIR$LIBDIR
+
+	sudo chown -Rh root:root $TMPDIR/*
+	dpkg -b $TMPDIR $PACKAGE_NAME\_$VERSION\_$DEBARCH.deb
+}
+
+PACKAGE_NAME=@PKGNAME@
+VERSION=@VERSION@
+BUILD=@BUILD@
+DEBARCH=@DEBARCH@
+SRCDIR=@abs_top_srcdir@
+PREFIX=%{__prefix}
+DOCDIR=%{__docdir}
+LIBDIR=%{__libdir}
+
+makedeb 0
+if [ "$DEBARCH" = "i386" ]; then makedeb 1; fi
+
+exit
