@@ -18,7 +18,7 @@ These features require you to [construct an image request](using-controllerbuild
 
 ### Should you resize or scale?
 
-In short, resizing is rarely necessary, whereas the scaling is almost always preferred (even with resizing).
+In short, resizing is rarely necessary, whereas scaling is almost always preferred (even with resizing).
 
 First of all, you should know that there are several limitations with resizing:
 
@@ -34,9 +34,9 @@ It seems that resizing sucks whereas scaling is awesome. So, why should you ever
 
 When it comes to network images, before thinking about resizing, try requesting the image of the proper size first. Don't request 8MP high-resolution photo from a server if the server can return a smaller variant of the same image. Your users pay for their data plans and you should be considerate to that. Apart from data, fetching a smaller image saves internal storage and CPU time in your app.
 
-Only if the server doesn't provide an alternate URI with the smaller image, or if you are using local photos, should you resort to resizing. In all other cases, including upscaling the image, scaling should be used. Simply specify the `layout_width` and `layout_height` of your `SimpleDraweeView`, as you would for any Android view. Then specify a [scale type](scaling.html).
+Only if the server doesn't provide an alternate URI with the smaller image, or if you are using local photos, should you resort to resizing. In all other cases, including upscaling the image, scaling should be used. To scale, simply specify the `layout_width` and `layout_height` of your `SimpleDraweeView`, as you would for any Android view. Then specify a [scale type](scaling.html).
 
-### What resize does
+### Resizing
 
 Resizing does not modify the original file. Resizing just resizes an encoded image in memory, prior to being decoded.
 
