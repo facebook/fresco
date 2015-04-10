@@ -55,77 +55,97 @@ task generateTestSources {
 
 test.dependsOn(generateTestSources)
 
-// We download various C++ open-source dependencies from SourceForge into build/downloads.
-// We then copy both downloaded code and our custom makefiles and headers into build/nativemerge.
+// We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
+// We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
 
-def downloads = new File("${buildDir}/downloads")
-def nativemerge = new File("${buildDir}/nativemerge")
+def nativeDepsDir = new File("${projectDir}/nativedeps")
+def downloadsDir = new File("${nativeDepsDir}/downloads")
+def mergeDir = new File("${nativeDepsDir}/merge")
 
-task directories {
-    downloads.mkdirs()
-    nativemerge.mkdirs()
+task createNativeDepsDirectories {
+    nativeDepsDir.mkdirs()
+    downloadsDir.mkdirs()
+    mergeDir.mkdirs()
 }
 
-task downloadFiles(dependsOn: directories, type: Download) {
-    src ([
-        'http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz',
-        'http://downloads.sourceforge.net/project/libjpeg-turbo/1.3.1/libjpeg-turbo-1.3.1.tar.gz',
-        'http://downloads.sourceforge.net/project/libpng/libpng16/older-releases/1.6.10/libpng-1.6.10.tar.gz',
-    ])
+task downloadGiflib(dependsOn: createNativeDepsDirectories, type: Download) {
+    src 'http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz'
     onlyIfNewer true
     overwrite false
-    dest downloads
+    dest downloadsDir
 }
 
-task cloneWebp(type: GitCloneTask) {
-    dir = file("${downloads}/libwebp-0.4.2")
+task downloadLibjpeg(dependsOn: createNativeDepsDirectories, type: Download) {
+    src 'http://downloads.sourceforge.net/project/libjpeg-turbo/1.3.1/libjpeg-turbo-1.3.1.tar.gz'
+    onlyIfNewer true
+    overwrite false
+    dest downloadsDir
+}
+
+task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
+    src 'http://downloads.sourceforge.net/project/libpng/libpng16/older-releases/1.6.10/libpng-1.6.10.tar.gz'
+    onlyIfNewer true
+    overwrite false
+    dest downloadsDir
+}
+
+task cloneLibwebp(dependsOn: createNativeDepsDirectories, type: GitCloneTask) {
+    dir = file("${downloadsDir}/libwebp-0.4.2")
     uri = 'https://github.com/webmproject/libwebp/'
     treeish = 'v0.4.2'
     outputs.dir dir
 }
 
-task unpackGiflib(dependsOn: downloadFiles, type: Copy) {
-    from tarTree(resources.gzip("${downloadFiles.dest}/giflib-5.1.1.tar.gz"))
-    into "${downloads}"
+task unpackGiflib(dependsOn: downloadGiflib, type: Copy) {
+    from tarTree(resources.gzip("${downloadGiflib.dest}/giflib-5.1.1.tar.gz"))
+    into "${downloadsDir}"
 }
 
-task unpackLibjpeg(dependsOn: downloadFiles, type: Copy) {
-    from tarTree(resources.gzip("${downloadFiles.dest}/libjpeg-turbo-1.3.1.tar.gz"))
-    into "${downloads}"
+task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
+    from tarTree(resources.gzip("${downloadLibjpeg.dest}/libjpeg-turbo-1.3.1.tar.gz"))
+    into "${downloadsDir}"
 }
 
-task unpackLibpng(dependsOn: downloadFiles, type: Copy) {
-    from tarTree(resources.gzip("${downloadFiles.dest}/libpng-1.6.10.tar.gz"))
-    into "${downloads}"
+task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
+    from tarTree(resources.gzip("${downloadLibpng.dest}/libpng-1.6.10.tar.gz"))
+    into "${downloadsDir}"
 }
 
 task copyGiflib(dependsOn: unpackGiflib, type: Copy) {
     from "${unpackGiflib.destinationDir}/giflib-5.1.1/lib"
     from 'src/main/jni/third-party/giflib'
     include('*.c', '*.h', '*.mk')
-    into "${nativemerge}/giflib"
+    into "${mergeDir}/giflib"
 }
 
-task copyLibJpeg(dependsOn: unpackLibjpeg, type: Copy) {
+task copyLibjpeg(dependsOn: unpackLibjpeg, type: Copy) {
     from "${unpackLibjpeg.destinationDir}/libjpeg-turbo-1.3.1"
     from 'src/main/jni/third-party/libjpeg-turbo-1.3.x'
     include('**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk')
-    into "${nativemerge}/libjpeg-turbo-1.3.x"
+    into "${mergeDir}/libjpeg-turbo-1.3.x"
 }
 
 task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
     from "${unpackLibpng.destinationDir}/libpng-1.6.10"
     from 'src/main/jni/third-party/libpng-1.6.10'
     include('**/*.c', '**/*.h', '**/*.S', '*.mk')
-    into "${nativemerge}/libpng-1.6.10"
+    into "${mergeDir}/libpng-1.6.10"
 }
 
-task copyLibWebp(dependsOn: cloneWebp, type: Copy) {
-    from cloneWebp.dir
+task copyLibwebp(dependsOn: cloneLibwebp, type: Copy) {
+    from cloneLibwebp.dir
     from 'src/main/jni/third-party/libwebp-0.4.2'
     include('src/**/*.c', 'src/**/*.h', '*.mk')
-    into "${nativemerge}/libwebp-0.4.2"
+    into "${mergeDir}/libwebp-0.4.2"
 }
+
+task fetchNativeDeps(dependsOn: [copyGiflib, copyLibjpeg, copyLibpng, copyLibwebp]) {
+}
+
+task removeNativeDeps(type: Delete) {
+    delete nativeDepsDir
+}
+allclean.dependsOn removeNativeDeps
 
 def getNdkBuildName() {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -152,8 +172,8 @@ def getNdkBuildFullPath() {
     return getNdkBuildName()
 }
 
-def makeNdkTasks(String name) {
-    task "ndk_build_$name"(type: Exec) {
+def makeNdkTasks(String name, Object[] deps) {
+    task "ndk_build_$name"(dependsOn: deps, type: Exec) {
         inputs.file("src/main/jni/$name")
         outputs.dir("$buildDir/$name")
         commandLine getNdkBuildFullPath(),
@@ -185,24 +205,21 @@ def makeNdkTasks(String name) {
 
 android {
     def ndkLibs = [
-        'bitmaps',
-        'gifimage',
-        'imagepipeline',
-        'memchunk',
-        'webpimage']
+        ['bitmaps', []],
+        ['gifimage', [copyGiflib]],
+        ['imagepipeline', [copyLibjpeg, copyLibpng, copyLibwebp]],
+        ['memchunk', []],
+        ['webpimage', [copyLibwebp]]]
 
     buildToolsVersion "21.1.2"
     compileSdkVersion 21
     sourceSets {
         main {
             jni.srcDirs = []
-            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/$it" }
+            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
         }
     }
-    ndkLibs.each { makeNdkTasks it }
-    ndk_build_gifimage.dependsOn(copyGiflib)
-    ndk_build_imagepipeline.dependsOn([copyLibJpeg, copyLibpng, copyLibWebp])
-    ndk_build_webpimage.dependsOn(copyLibWebp)
+    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
 }
 
 task sourcesJar(type: Jar) {
