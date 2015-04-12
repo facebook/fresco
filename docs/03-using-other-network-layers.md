@@ -13,7 +13,7 @@ By default, the image pipeline uses the [HttpURLConnection](https://developer.an
 
 [OkHttp](http://square.github.io/okhttp) is a popular open-source networking library. The image pipeline has a backend that uses OkHttp instead of the Android default.
 
-In order to use it, the `dependencies` section of your `build.gradle` file needs to be changed. Do **not** use the Gradle dependencies given on the [download](download-fresco.html) page. Use these instead:
+In order to use it, the `dependencies` section of your `build.gradle` file needs to be changed. Do **not** use the Gradle dependencies given on the [download](index.html) page. Use these instead:
 
 ```groovy
 dependencies {
@@ -31,7 +31,7 @@ OkHttpClient okHttpClient; // build on your own
 ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
     .newBuilder(context, okHttpClient)
     . // other setters
-    . // setNetworkFetchProducer is already called for you
+    . // setNetworkFetcher is already called for you
     .build();
 Fresco.initialize(context, config);
 ```    
@@ -39,15 +39,15 @@ Fresco.initialize(context, config);
 
 ### Using your own network fetcher (optional)
 
-For complete control on how the networking layer should behave, you can provide one for your app. You must subclass [NetworkFetchProducer](../javadoc/reference/com/facebook/imagepipeline/producers/NetworkFetchProducer.html), which controls communications to the network. You can also optionally subclass [NfpRequestState](../javadoc/reference/com/facebook/imagepipeline/producers/NfpRequestState.html), which is a data structure for request-specific information.
+For complete control on how the networking layer should behave, you can provide one for your app. You must subclass [NetworkFetcher](../javadoc/reference/com/facebook/imagepipeline/producers/NetworkFetcher.html), which controls communications to the network. You can also optionally subclass [FetchState](../javadoc/reference/com/facebook/imagepipeline/producers/FetchState.html), which is a data structure for request-specific information.
 
-Our default implementation for `HttpURLConnection` can be used as an example. See [its source code](https://github.com/facebook/fresco/blob/master/imagepipeline/src/main/java/com/facebook/imagepipeline/producers/HttpURLConnectionNetworkFetchProducer.java).
+Our default implementation for `HttpURLConnection` can be used as an example. See [its source code](https://github.com/facebook/fresco/blob/master/imagepipeline-backends/imagepipeline-okhttp/src/main/java/com/facebook/imagepipeline/backends/okhttp/OkHttpNetworkFetcher.java).
 
 You must pass your network producer to the image pipeline when [configuring it](configuring-image-pipeline.html):
 
 ```java
 ImagePipelineConfig config = ImagePipelineConfig.newBuilder()
-  .setNetworkFetchProducer(myNetworkFetchProducer);
+  .setNetworkFetcher(myNetworkFetcher);
   . // other setters
   .build();
 Fresco.initialize(context, config);
