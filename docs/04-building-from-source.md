@@ -23,7 +23,7 @@ Fresco does not support source builds with Eclipse, Ant, or Maven. We do not pla
 
 ### Configuring Gradle
 
-Both command-line and Androir Studio users need to edit the `gradle.properties` file. This is normally located in your home directory, in a subdirectory called `.gradle`. If it is not already there, create it.
+Both command-line and Android Studio users need to edit the `gradle.properties` file. This is normally located in your home directory, in a subdirectory called `.gradle`. If it is not already there, create it.
 
 On Unix-like systems, including Mac OS X, add a line like this:
 
