@@ -35,7 +35,7 @@ ProgressiveJpegConfig pjpegConfig = new ProgressiveJpegConfig() {
 }
 
 ImagePipelineConfig config = ImagePipelineConfig.newBuilder()
-    .setProgressiveJpegConfig(pjpeg)
+    .setProgressiveJpegConfig(pjpegConfig)
     .build();
 ```
 
