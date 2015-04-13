@@ -55,7 +55,7 @@ Postprocessors are **not** currently supported for [animated](animations.html) i
 
 #### Repeated Postprocessors
 
-What if you want to post-process the same image more than once? No problem at all. Just subclass [BaseRepeatedPostprocessor](../javadoc/reference/com/facebook/imagepipeline/request/BaseRepatedPostprocessor.html). This class has a method `update` which can be invoked at any time to run the postprocessor again.
+What if you want to post-process the same image more than once? No problem at all. Just subclass [BaseRepeatedPostprocessor](../javadoc/reference/com/facebook/imagepipeline/request/BaseRepeatedPostprocessor.html). This class has a method `update` which can be invoked at any time to run the postprocessor again.
 
 The example below allows you to change the color of the mesh at any time.
 
