@@ -59,7 +59,8 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
         
 # More information
 
-* Our [blog post](https://code.facebook.com/posts/366199913563917) announcing Fresco
-* [Download](docs/download-fresco.html) Fresco
-* Our [documentation](docs/index.html)
+* Our [blog post](https://code.facebook.com/posts/366199913563917) announcing Fresco and explaining the technical design
+* Our [talk](https://developers.facebooklive.com/videos/542/move-fast-ensuring-mobile-performance-without-breaking-things) at the F8 conference (begins at 25:00, or -14:35 remaining)
+* [Download](docs/index.html) Fresco
+* Our [documentation](docs/getting-started.html)
 * Our source code on [GitHub](https://github.com/facebook/fresco)
