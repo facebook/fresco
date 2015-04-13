@@ -27,7 +27,7 @@ public class PoolConfig {
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
   private final PoolParams mNativeMemoryChunkPoolParams;
   private final PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-  private final PoolParams mSingleByteArrayPoolParams;
+  private final PoolParams mSharedByteArrayParams;
   private final SingleByteArrayPoolStatsTracker mSingleByteArrayPoolStatsTracker;
 
   private PoolConfig(Builder builder) {
@@ -59,10 +59,10 @@ public class PoolConfig {
         builder.mNativeMemoryChunkPoolStatsTracker == null ?
             NoOpPoolStatsTracker.getInstance() :
             builder.mNativeMemoryChunkPoolStatsTracker;
-    mSingleByteArrayPoolParams =
-        builder.mSingleByteArrayPoolParams == null ?
-            DefaultSingleByteArrayPoolParams.get() :
-            builder.mSingleByteArrayPoolParams;
+    mSharedByteArrayParams =
+        builder.mSharedByteArrayParams == null ?
+            DefaultSharedByteArrayParams.get() :
+            builder.mSharedByteArrayParams;
     mSingleByteArrayPoolStatsTracker =
         builder.mSingleByteArrayPoolStatsTracker == null ?
             NoOpSingleByteArrayPoolStatsTracker.getInstance() :
@@ -97,8 +97,8 @@ public class PoolConfig {
     return mNativeMemoryChunkPoolStatsTracker;
   }
 
-  public PoolParams getSingleByteArrayPoolParams() {
-    return mSingleByteArrayPoolParams;
+  public PoolParams getSharedByteArrayParams() {
+    return mSharedByteArrayParams;
   }
 
   public SingleByteArrayPoolStatsTracker getSingleByteArrayPoolStatsTracker() {
@@ -118,7 +118,7 @@ public class PoolConfig {
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
     private PoolParams mNativeMemoryChunkPoolParams;
     private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-    private PoolParams mSingleByteArrayPoolParams;
+    private PoolParams mSharedByteArrayParams;
     private SingleByteArrayPoolStatsTracker mSingleByteArrayPoolStatsTracker;
 
     private Builder() {
@@ -164,8 +164,8 @@ public class PoolConfig {
       return this;
     }
 
-    public Builder setSingleByteArrayPoolParams(PoolParams singleByteArrayPoolParams) {
-      mSingleByteArrayPoolParams = singleByteArrayPoolParams;
+    public Builder setSharedByteArrayParams(PoolParams sharedByteArrayParams) {
+      mSharedByteArrayParams = sharedByteArrayParams;
       return this;
     }
 
