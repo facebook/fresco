@@ -29,31 +29,18 @@ If you are building with Gradle, simply add the following line to the `dependenc
 compile 'com.facebook.fresco:fresco:0.2.0+'
 ```
 
-See our [download](http://frescolib.org/docs/download-fresco.html) page for other options.
+For full details, visit the documentation on our web site, available in English and Chinese:
 
-<div style="text-align: center; box-sizing: border-box; line-height: 22px; color: #444; font-family:proxima-nova, 'Helvetica Neue', Helvetica, Arial, sans-serif">
-<a style="background: #cc2e39; font-weight: bold; color: #ffffff; text-transform: uppercase; padding: 10px 20px; display: inline-block; margin: 1em; box-shadow: 0px 1px 2px rgba(0,0,0,0.3); text-decoration:none" href="http://frescolib.org/docs/index.html">Get Started</a>
-</div>
+<a href="http://frescolib.org/docs/index.html"><img src="http://frescolib.org/static/GetStarted-en.png" width="150" height="42"/></a>
 
-## Building Fresco from source
-
-Install the Android [SDK](https://developer.android.com/sdk/index.html#Other) if you haven't already. Then run the Android SDK Manager and install the Android Support Library and Android Support Repository.
-
-Download the Android [NDK](https://developer.android.com/tools/sdk/ndk/index.html). Then add the directory containing it to your PATH environment variable.
-
-Then just do
-
-```sh
-git clone https://github.com/facebook/fresco.git
-cd fresco
-./gradlew build
-```
+<a href="http://fresco-cn.org/docs/index.html"><img src="http://frescolib.org/static/GetStarted-zh.png" width="104" height="42"/></a>
 
 ## Join the Fresco community
 
 Please use our [issues page](https://github.com/facebook/fresco/issues) to let us know of any problems.
 
-For pull requests, please see the [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) file for information on how to help out.
+For pull requests, please see the [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) file for information on how to help out. See our [documentation](http://frescolib.org/docs/building-from-source.html) for information how to build from source.
+
 
 ## License
 Fresco is [BSD-licensed](https://github.com/facebook/fresco/blob/master/LICENSE). We also provide an additional [patent grant](https://github.com/facebook/fresco/blob/master/PATENTS).
