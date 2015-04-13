@@ -35,6 +35,14 @@ Add the following to the `<dependencies>` section of your `pom.xml` file:
 
 ### Eclipse ADT / Ant
 
-Unfortunately Eclipse does not yet support the AAR file format Fresco uses. We are still looking for a workaround.
+We have placed a zip file containing Fresco and its transitive dependencies in our GitHub releases page. 
+
+To install it into your Eclipse or Ant project:
+
+1. [Download](https://github.com/facebook/fresco/releases/v0.2.0/fresco-libs.zip) the file.
+2. Copy the file into the `libs` directory of your project.
+3. Unzip it.
+
+
 
 
