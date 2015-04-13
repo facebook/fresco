@@ -28,7 +28,6 @@ public class PoolConfig {
   private final PoolParams mNativeMemoryChunkPoolParams;
   private final PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
   private final PoolParams mSharedByteArrayParams;
-  private final SingleByteArrayPoolStatsTracker mSingleByteArrayPoolStatsTracker;
 
   private PoolConfig(Builder builder) {
     mBitmapPoolParams =
@@ -63,10 +62,6 @@ public class PoolConfig {
         builder.mSharedByteArrayParams == null ?
             DefaultSharedByteArrayParams.get() :
             builder.mSharedByteArrayParams;
-    mSingleByteArrayPoolStatsTracker =
-        builder.mSingleByteArrayPoolStatsTracker == null ?
-            NoOpSingleByteArrayPoolStatsTracker.getInstance() :
-            builder.mSingleByteArrayPoolStatsTracker;
   }
 
   public PoolParams getBitmapPoolParams() {
@@ -101,9 +96,6 @@ public class PoolConfig {
     return mSharedByteArrayParams;
   }
 
-  public SingleByteArrayPoolStatsTracker getSingleByteArrayPoolStatsTracker() {
-    return mSingleByteArrayPoolStatsTracker;
-  }
 
   public static Builder newBuilder() {
     return new Builder();
@@ -119,7 +111,6 @@ public class PoolConfig {
     private PoolParams mNativeMemoryChunkPoolParams;
     private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
     private PoolParams mSharedByteArrayParams;
-    private SingleByteArrayPoolStatsTracker mSingleByteArrayPoolStatsTracker;
 
     private Builder() {
     }
@@ -166,13 +157,6 @@ public class PoolConfig {
 
     public Builder setSharedByteArrayParams(PoolParams sharedByteArrayParams) {
       mSharedByteArrayParams = sharedByteArrayParams;
-      return this;
-    }
-
-    public Builder setSingleByteArrayPoolStatsTracker(
-        SingleByteArrayPoolStatsTracker nativeMemoryChunkPoolStatsTracker) {
-      mSingleByteArrayPoolStatsTracker =
-          Preconditions.checkNotNull(nativeMemoryChunkPoolStatsTracker);
       return this;
     }
 
