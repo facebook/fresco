@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.android.support:appcompat-v7:${APPCOMPAT_V7_VERSION}"
     compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     compile "com.mcxiaoke.volley:library:${VOLLEY_VERSION}"
