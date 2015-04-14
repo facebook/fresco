@@ -17,11 +17,11 @@ import android.util.Pair;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
-import com.facebook.imagepipeline.decoder.CloseableImageCopier;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -79,7 +79,7 @@ public class ProducerFactory {
   private final CacheKeyFactory mCacheKeyFactory;
 
   // Postproc dependencies
-  private final CloseableImageCopier mCloseableImageCopier;
+  private final PlatformBitmapFactory mPlatformBitmapFactory;
 
   public ProducerFactory(
       Context context,
@@ -93,7 +93,7 @@ public class ProducerFactory {
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
-      CloseableImageCopier closeableImageCopier) {
+      PlatformBitmapFactory platformBitmapFactory) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -111,7 +111,7 @@ public class ProducerFactory {
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
 
-    mCloseableImageCopier = closeableImageCopier;
+    mPlatformBitmapFactory = platformBitmapFactory;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -217,7 +217,7 @@ public class ProducerFactory {
   public PostprocessorProducer newPostprocessorProducer(
       Producer<CloseableReference<CloseableImage>> nextProducer) {
     return new PostprocessorProducer(
-        nextProducer, mCloseableImageCopier, mExecutorSupplier.forBackground());
+        nextProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackground());
   }
 
   public static RemoveImageTransformMetaDataProducer newRemoveImageTransformMetaDataProducer(

@@ -9,7 +9,8 @@
 
 package com.facebook.imagepipeline.request;
 
-public abstract class BaseRepeatedPostProcessor implements RepeatedPostprocessor {
+public abstract class BaseRepeatedPostProcessor extends BasePostprocessor
+    implements RepeatedPostprocessor {
   private RepeatedPostprocessorRunner mCallback;
 
   @Override

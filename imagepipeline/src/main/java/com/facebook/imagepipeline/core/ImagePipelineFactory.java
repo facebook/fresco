@@ -34,6 +34,7 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
@@ -42,7 +43,6 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
-import com.facebook.imagepipeline.decoder.CloseableImageCopier;
 import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -94,7 +94,6 @@ public class ImagePipelineFactory {
   private EmptyJpegGenerator mEmptyJpegGenerator;
   private CountingMemoryCache<CacheKey, PooledByteBuffer, Void> mEncodedCountingMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer, Void> mEncodedMemoryCache;
-  private CloseableImageCopier mCloseableImageCopier;
   private BufferedDiskCache mMainBufferedDiskCache;
   private DiskStorageCache mMainDiskStorageCache;
   private ImagePipeline mImagePipeline;
@@ -160,14 +159,6 @@ public class ImagePipelineFactory {
     return mEncodedMemoryCache;
   }
 
-  public CloseableImageCopier getCloseableImageCopier() {
-    if (mCloseableImageCopier == null) {
-      mCloseableImageCopier =
-          new CloseableImageCopier(mConfig.getPlatformBitmapFactory());
-    }
-    return mCloseableImageCopier;
-  }
-
   private BufferedDiskCache getMainBufferedDiskCache() {
     if (mMainBufferedDiskCache == null) {
       mMainBufferedDiskCache =
@@ -204,6 +195,10 @@ public class ImagePipelineFactory {
     return mImagePipeline;
   }
 
+  public PlatformBitmapFactory getPlatformBitmapFactory() {
+    return mConfig.getPlatformBitmapFactory();
+  }
+
   private ProducerFactory getProducerFactory() {
     if (mProducerFactory == null) {
       mProducerFactory =
@@ -219,7 +214,7 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
-              getCloseableImageCopier());
+              mConfig.getPlatformBitmapFactory());
     }
     return mProducerFactory;
   }

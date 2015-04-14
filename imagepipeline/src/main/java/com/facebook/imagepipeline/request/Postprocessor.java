@@ -11,23 +11,25 @@ package com.facebook.imagepipeline.request;
 
 import android.graphics.Bitmap;
 
+import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+
 /**
  * Use an instance of this class to perform post-process operations on a bitmap.
- *
- * <p>Postprocessors are not supported on Gingerbread and below.
  */
 public interface Postprocessor {
 
   /**
    * Called by the pipeline after completing other steps.
    *
-   * @param bitmap A bitmap that will be exclusively owned by the caller of the image pipeline.
-   * This bitmap will not be the same object stored in memory cache. The implementation is free
-   * to modify this Bitmap in-place. This Bitmap, as modified, will be returned
-   * as the output of the pipeline. A new object, unmodified, will be created for every request
-   * made to the pipeline.
+   * @param sourceBitmap The source bitmap.
+   * @param bitmapFactory The factory to create a destination bitmap.
+   *
+   * <p> The Postprocessor must not modify the source bitmap as it may be shared by the other
+   * clients. The implementation must create a new bitmap that is safe to be modified and return a
+   * reference to it. To create a bitmap, use the provided <code>bitmapFactory</code>.
    */
-  void process(Bitmap bitmap);
+  CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory);
 
   /**
    * Returns the name of this postprocessor.
