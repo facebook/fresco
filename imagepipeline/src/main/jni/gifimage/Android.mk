@@ -20,7 +20,8 @@ ifeq ($(BUCK_BUILD), 1)
   LOCAL_LDFLAGS += $(BUCK_DEP_LDFLAGS)
   include $(BUILD_SHARED_LIBRARY)
 else
-  LOCAL_SHARED_LIBRARIES += gif
+  LOCAL_LDLIBS += -llog -ldl -landroid
+  LOCAL_STATIC_LIBRARIES += gif
   include $(BUILD_SHARED_LIBRARY)
   $(call import-module, giflib)
 endif
