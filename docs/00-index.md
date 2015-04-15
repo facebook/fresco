@@ -16,7 +16,7 @@ Edit your `build.gradle` file. You must add the following line to the `dependenc
 ```groovy
 dependencies {
   // your app's other dependencies
-  compile 'com.facebook.fresco:fresco:0.2.0+'
+  compile 'com.facebook.fresco:fresco:{{site.current_version}}+'
 }
 ```
 
