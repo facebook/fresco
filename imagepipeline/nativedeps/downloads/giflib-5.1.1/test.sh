@@ -1,2 +1,0 @@
-cd tests
-make
