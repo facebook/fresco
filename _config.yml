@@ -12,7 +12,7 @@ timezone: America/Los_Angeles
 safe: true
 lsi: false
 highlighter: pygments
-current_version: 0.2.0
+current_version: 0.3.0
 
 defaults:
   -
