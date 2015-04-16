@@ -7,7 +7,6 @@ version = VERSION_NAME
 apply plugin: 'robolectric'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
-import com.palominolabs.gradle.task.git.clone.GitCloneTask
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -89,11 +88,11 @@ task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
     dest downloadsDir
 }
 
-task cloneLibwebp(dependsOn: createNativeDepsDirectories, type: GitCloneTask) {
-    dir = file("${downloadsDir}/libwebp-0.4.2")
-    uri = 'https://github.com/webmproject/libwebp/'
-    treeish = 'v0.4.2'
-    outputs.dir dir
+task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
+    src 'https://github.com/webmproject/libwebp/archive/v0.4.2.tar.gz'
+    onlyIfNewer true
+    overwrite false
+    dest downloadsDir
 }
 
 task unpackGiflib(dependsOn: downloadGiflib, type: Copy) {
@@ -108,6 +107,11 @@ task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
 
 task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
     from tarTree(resources.gzip("${downloadLibpng.dest}/libpng-1.6.10.tar.gz"))
+    into "${downloadsDir}"
+}
+
+task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
+    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.2.tar.gz"))
     into "${downloadsDir}"
 }
 
@@ -132,8 +136,8 @@ task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
     into "${mergeDir}/libpng-1.6.10"
 }
 
-task copyLibwebp(dependsOn: cloneLibwebp, type: Copy) {
-    from cloneLibwebp.dir
+task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
+    from "${unpackLibwebp.destinationDir}/libwebp-0.4.2"
     from 'src/main/jni/third-party/libwebp-0.4.2'
     include('src/**/*.c', 'src/**/*.h', '*.mk')
     into "${mergeDir}/libwebp-0.4.2"
