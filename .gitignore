@@ -12,3 +12,4 @@ build/
 local.properties
 obj/
 *.iml
+nativedeps/
