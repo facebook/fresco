@@ -234,7 +234,8 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     if (numBackgrounds > 0) {
       int index = 0;
       for (Drawable background : builder.getBackgrounds()) {
-        layers[backgroundsIndex + index++] = background;
+        layers[backgroundsIndex + index++] =
+            maybeApplyRounding(mRoundingParams, mResources, background);
       }
     }
     if (mPlaceholderImageIndex >= 0) {
