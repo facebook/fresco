@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  BaseRepeatedPostProcessor - Fresco API
+  PlatformBitmapFactory - Fresco API
 
 
 | Fresco
@@ -178,7 +178,7 @@
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
-    <li class="api apilevel-">
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
@@ -198,7 +198,7 @@
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
               </ul><br/>
             </div> <!-- end packages -->
@@ -206,36 +206,15 @@
           <div id="classes-nav">
             <ul>
               
-    <li><h2>Interfaces</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html">Postprocessor</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">RepeatedPostprocessor</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a></li>
-      </ul>
-    </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a></li>
       </ul>
     </li>
               
               
-    <li><h2>Enums</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.ImageType.html">ImageRequest.ImageType</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a></li>
-      </ul>
-    </li>
               
-    <li><h2>Exceptions</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.BuilderException.html">ImageRequestBuilder.BuilderException</a></li>
-      </ul>
-    </li>
               
             </ul><br/>
           </div><!-- end classes -->
@@ -273,27 +252,6 @@
 <div id="api-info-block">
 
 
-
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
 
   
    
@@ -348,28 +306,19 @@ Summary:
     public
      
      
-    abstract
+    
     class
-<h1>BaseRepeatedPostProcessor</h1>
+<h1>PlatformBitmapFactory</h1>
 
 
 
   
-  
-  
-
-  
-    extends <a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a><br/>
+    extends Object<br/>
   
   
   
 
   
-  
-      implements 
-      
-        <a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">RepeatedPostprocessor</a> 
-      
   
   
 
@@ -384,7 +333,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -392,17 +341,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">com.facebook.imagepipeline.request.BasePostprocessor</a></td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.request.BaseRepeatedPostProcessor</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory</td>
     </tr>
     
 
@@ -416,6 +355,10 @@ Summary:
 
 <div class="jd-descr">
 
+
+<h2>Class Overview</h2>
+<p>Bitmap factory optimized for the platform.
+</p>
 
 
 
@@ -481,7 +424,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html#BaseRepeatedPostProcessor()">BaseRepeatedPostProcessor</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#PlatformBitmapFactory(com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory, com.facebook.imagepipeline.bitmaps.DalvikBitmapFactory, com.facebook.imagepipeline.bitmaps.ArtBitmapFactory)">PlatformBitmapFactory</a></span>(GingerbreadBitmapFactory gingerbreadBitmapFactory, DalvikBitmapFactory dalvikBitmapFactory, ArtBitmapFactory artBitmapFactory)
         
   </td></tr>
 
@@ -507,13 +450,12 @@ Summary:
             
             
             
-            void
+            List&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html#setCallback(com.facebook.imagepipeline.request.RepeatedPostprocessorRunner)">setCallback</a></span>(<a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a> runner)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#associateBitmapsWithBitmapCounter(java.util.List<android.graphics.Bitmap>)">associateBitmapsWithBitmapCounter</a></span>(List&lt;Bitmap&gt; bitmaps)
         
-        <div class="jd-descrdiv">Callback used to pass the postprocessor a reference to the object that will run the
- postprocessor's <code>PostProcessor#process</code> method when the client requires.</div>
+        <div class="jd-descrdiv">Associates bitmaps with the bitmap counter.</div>
   
   </td></tr>
 
@@ -526,11 +468,49 @@ Summary:
             
             
             
-            void
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html#update()">update</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#createBitmap(int, int)">createBitmap</a></span>(int width, int height)
         
+        <div class="jd-descrdiv">Creates a bitmap of the specified width and height.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>)">decodeFromPooledByteBuffer</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef)
+        
+        <div class="jd-descrdiv">Creates a bitmap from encoded bytes.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, int)">decodeJPEGFromPooledByteBuffer</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, int length)
+        
+        <div class="jd-descrdiv">Creates a bitmap from encoded JPEG bytes.</div>
+  
   </td></tr>
 
 
@@ -547,105 +527,6 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  <a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">com.facebook.imagepipeline.request.BasePostprocessor</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor">
-  <div id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#getName()">getName</a></span>()
-        
-        <div class="jd-descrdiv">Returns the name of this postprocessor.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process</a></span>(Bitmap bitmap)
-        
-        <div class="jd-descrdiv">Clients should override this method if the post-processing can be done in place.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
-        
-        <div class="jd-descrdiv">Clients should override this method only if the post-processed bitmap has to be of a different
- size than the source bitmap.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, android.graphics.Bitmap)">process</a></span>(Bitmap destBitmap, Bitmap sourceBitmap)
-        
-        <div class="jd-descrdiv">Clients should override this method if the post-processing cannot be done in place.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
 
 
 <tr class="api apilevel-" >
@@ -849,113 +730,6 @@ From class
 </td></tr>
 
 
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.request.Postprocessor" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.request.Postprocessor-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html">com.facebook.imagepipeline.request.Postprocessor</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.request.Postprocessor">
-  <div id="inherited-methods-com.facebook.imagepipeline.request.Postprocessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.request.Postprocessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html#getName()">getName</a></span>()
-        
-        <div class="jd-descrdiv">Returns the name of this postprocessor.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
-        
-        <div class="jd-descrdiv">Called by the pipeline after completing other steps.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">com.facebook.imagepipeline.request.RepeatedPostprocessor</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor">
-  <div id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html#setCallback(com.facebook.imagepipeline.request.RepeatedPostprocessorRunner)">setCallback</a></span>(<a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a> runner)
-        
-        <div class="jd-descrdiv">Callback used to pass the postprocessor a reference to the object that will run the
- postprocessor's <code>PostProcessor#process</code> method when the client requires.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
 </table>
 
 
@@ -990,7 +764,7 @@ From interface
 
 
 
-<a id="BaseRepeatedPostProcessor()"></a>
+<a id="PlatformBitmapFactory(com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory, com.facebook.imagepipeline.bitmaps.DalvikBitmapFactory, com.facebook.imagepipeline.bitmaps.ArtBitmapFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1002,8 +776,8 @@ From interface
          
         
       </span>
-      <span class="sympad">BaseRepeatedPostProcessor</span>
-      <span class="normal">()</span>
+      <span class="sympad">PlatformBitmapFactory</span>
+      <span class="normal">(GingerbreadBitmapFactory gingerbreadBitmapFactory, DalvikBitmapFactory dalvikBitmapFactory, ArtBitmapFactory artBitmapFactory)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1036,7 +810,7 @@ From interface
 
 
 
-<a id="setCallback(com.facebook.imagepipeline.request.RepeatedPostprocessorRunner)"></a>
+<a id="associateBitmapsWithBitmapCounter(java.util.List<android.graphics.Bitmap>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1046,10 +820,10 @@ From interface
          
          
         synchronized 
-        void
+        List&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;&gt;
       </span>
-      <span class="sympad">setCallback</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a> runner)</span>
+      <span class="sympad">associateBitmapsWithBitmapCounter</span>
+      <span class="normal">(List&lt;Bitmap&gt; bitmaps)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1061,14 +835,39 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Callback used to pass the postprocessor a reference to the object that will run the
- postprocessor's <code>PostProcessor#process</code> method when the client requires.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Associates bitmaps with the bitmap counter.
+
+ <p>If this method throws TooManyBitmapsException, the code will have called
+ <code><a href="null#recycle()">recycle()</a></code> on the bitmaps.</p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>bitmaps</th>
+          <td>the bitmaps to associate</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the references to the bitmaps that are now tied to the bitmap pool</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th></td>
+            <td>if the pool is full
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
 
 
-<a id="update()"></a>
+<a id="createBitmap(int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1078,10 +877,10 @@ From interface
          
          
          
-        void
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
-      <span class="sympad">update</span>
-      <span class="normal">()</span>
+      <span class="sympad">createBitmap</span>
+      <span class="normal">(int width, int height)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1093,7 +892,159 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap of the specified width and height.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>width</th>
+          <td>the width of the bitmap</td>
+        </tr>
+        <tr>
+          <th>height</th>
+          <td>the height of the bitmap</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a reference to the bitmap</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th></td>
+            <td>if the pool is full</td>
+        </tr>  
+        <tr>
+            <th>OutOfMemoryError</td>
+            <td>if the Bitmap cannot be allocated
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="decodeFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+      </span>
+      <span class="sympad">decodeFromPooledByteBuffer</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap from encoded bytes. Supports JPEG but callers should use
+ <code><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, int)">decodeJPEGFromPooledByteBuffer(CloseableReference<PooledByteBuffer>, int)</a></code> for partial JPEGs.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>pooledByteBufferRef</th>
+          <td>the reference to the encoded bytes</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the bitmap</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th></td>
+            <td>if the pool is full</td>
+        </tr>  
+        <tr>
+            <th>OutOfMemoryError</td>
+            <td>if the Bitmap cannot be allocated
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="decodeJPEGFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+      </span>
+      <span class="sympad">decodeJPEGFromPooledByteBuffer</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, int length)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>pooledByteBufferRef</th>
+          <td>the reference to the encoded bytes</td>
+        </tr>
+        <tr>
+          <th>length</th>
+          <td>the number of encoded bytes in the buffer</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the bitmap</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th></td>
+            <td>if the pool is full</td>
+        </tr>  
+        <tr>
+            <th>OutOfMemoryError</td>
+            <td>if the Bitmap cannot be allocated
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>

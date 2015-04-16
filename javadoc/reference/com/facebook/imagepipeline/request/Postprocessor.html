@@ -179,6 +179,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
@@ -214,6 +216,7 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a></li>
@@ -358,6 +361,8 @@ Summary:
               >
           
             
+              <a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a>,
+            
               <a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a>,
             
               <a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">RepeatedPostprocessor</a>
@@ -369,10 +374,14 @@ Summary:
               >
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a></td>
+              <td class="jd-descrcol" width="100%">Base implementation of <code><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html">Postprocessor</a></code> interface.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">RepeatedPostprocessor</a></td>
               <td class="jd-descrcol" width="100%">Use an instance of this interface to perform post-process operations that must be performed
  more than once.&nbsp;</td>
@@ -388,8 +397,6 @@ Summary:
 
 <h2>Class Overview</h2>
 <p>Use an instance of this class to perform post-process operations on a bitmap.
-
- <p>Postprocessors are not supported on Gingerbread and below.
 </p>
 
 
@@ -475,10 +482,10 @@ Summary:
             
             
             
-            void
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html#process(android.graphics.Bitmap)">process</a></span>(Bitmap bitmap)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
         
         <div class="jd-descrdiv">Called by the pipeline after completing other steps.</div>
   
@@ -567,7 +574,7 @@ Summary:
 </div>
 
 
-<a id="process(android.graphics.Bitmap)"></a>
+<a id="process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -577,10 +584,10 @@ Summary:
          
         abstract 
          
-        void
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
       <span class="sympad">process</span>
-      <span class="normal">(Bitmap bitmap)</span>
+      <span class="normal">(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -597,12 +604,16 @@ Summary:
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>bitmap</th>
-          <td>A bitmap that will be exclusively owned by the caller of the image pipeline.
- This bitmap will not be the same object stored in memory cache. The implementation is free
- to modify this Bitmap in-place. This Bitmap, as modified, will be returned
- as the output of the pipeline. A new object, unmodified, will be created for every request
- made to the pipeline.
+          <th>sourceBitmap</th>
+          <td>The source bitmap.</td>
+        </tr>
+        <tr>
+          <th>bitmapFactory</th>
+          <td>The factory to create a destination bitmap.
+
+ <p> The Postprocessor must not modify the source bitmap as it may be shared by the other
+ clients. The implementation must create a new bitmap that is safe to be modified and return a
+ reference to it. To create a bitmap, use the provided <code>bitmapFactory</code>.
 </td>
         </tr>
       </table>

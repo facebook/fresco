@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  BaseRepeatedPostProcessor - Fresco API
+  BasePostprocessor - Fresco API
 
 
 | Fresco
@@ -216,8 +216,8 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a></li>
       </ul>
@@ -288,20 +288,6 @@
   
   
 
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
 
 <div class="sum-details-links">
 
@@ -350,16 +336,12 @@ Summary:
      
     abstract
     class
-<h1>BaseRepeatedPostProcessor</h1>
+<h1>BasePostprocessor</h1>
 
 
 
   
-  
-  
-
-  
-    extends <a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a><br/>
+    extends Object<br/>
   
   
   
@@ -368,7 +350,7 @@ Summary:
   
       implements 
       
-        <a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">RepeatedPostprocessor</a> 
+        <a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html">Postprocessor</a> 
       
   
   
@@ -384,7 +366,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -392,17 +374,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">com.facebook.imagepipeline.request.BasePostprocessor</a></td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.request.BaseRepeatedPostProcessor</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.request.BasePostprocessor</td>
     </tr>
     
 
@@ -411,11 +383,48 @@ Summary:
 
 
 
+<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-direct" class="jd-expando-trigger closed"
+          ><img id="subclasses-direct-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>Known Direct Subclasses
+
+  <div id="subclasses-direct">
+      <div id="subclasses-direct-list"
+              class="jd-inheritedlinks"
+              
+              >
+          
+            
+              <a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a>
+            
+          
+      </div>
+      <div id="subclasses-direct-summary"
+              style="display: none;"
+              >
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+  </table>
+      </div>
+  </div>
+</td></tr></table>
+
 
 
 
 <div class="jd-descr">
 
+
+<h2>Class Overview</h2>
+<p>Base implementation of <code><a href="../../../../com/facebook/imagepipeline/request/Postprocessor.html">Postprocessor</a></code> interface.
+
+ <p> Clients should override exactly one of the three provided <code><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process(Bitmap)</a></code> methods.
+</p>
 
 
 
@@ -481,7 +490,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html#BaseRepeatedPostProcessor()">BaseRepeatedPostProcessor</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#BasePostprocessor()">BasePostprocessor</a></span>()
         
   </td></tr>
 
@@ -497,75 +506,6 @@ Summary:
 <!-- ========== METHOD SUMMARY =========== -->
 <table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
 
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html#setCallback(com.facebook.imagepipeline.request.RepeatedPostprocessorRunner)">setCallback</a></span>(<a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a> runner)
-        
-        <div class="jd-descrdiv">Callback used to pass the postprocessor a reference to the object that will run the
- postprocessor's <code>PostProcessor#process</code> method when the client requires.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html#update()">update</a></span>()
-        
-  </td></tr>
-
-
-
-</table>
-
-
-
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="inhmethods" class="jd-sumtable"><tr><th>
-  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
-  <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  <a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">com.facebook.imagepipeline.request.BasePostprocessor</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor">
-  <div id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.request.BasePostprocessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
 
 
 	 
@@ -641,11 +581,19 @@ From class
   </td></tr>
 
 
-</table>
-  </div>
-</div>
-</td></tr>
 
+</table>
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
 
 
 <tr class="api apilevel-" >
@@ -911,51 +859,6 @@ From interface
 </td></tr>
 
 
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html">com.facebook.imagepipeline.request.RepeatedPostprocessor</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor">
-  <div id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.request.RepeatedPostprocessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessor.html#setCallback(com.facebook.imagepipeline.request.RepeatedPostprocessorRunner)">setCallback</a></span>(<a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a> runner)
-        
-        <div class="jd-descrdiv">Callback used to pass the postprocessor a reference to the object that will run the
- postprocessor's <code>PostProcessor#process</code> method when the client requires.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
 </table>
 
 
@@ -990,7 +893,7 @@ From interface
 
 
 
-<a id="BaseRepeatedPostProcessor()"></a>
+<a id="BasePostprocessor()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1002,7 +905,7 @@ From interface
          
         
       </span>
-      <span class="sympad">BaseRepeatedPostProcessor</span>
+      <span class="sympad">BasePostprocessor</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1036,39 +939,7 @@ From interface
 
 
 
-<a id="setCallback(com.facebook.imagepipeline.request.RepeatedPostprocessorRunner)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-        synchronized 
-        void
-      </span>
-      <span class="sympad">setCallback</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/RepeatedPostprocessorRunner.html">RepeatedPostprocessorRunner</a> runner)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Callback used to pass the postprocessor a reference to the object that will run the
- postprocessor's <code>PostProcessor#process</code> method when the client requires.</p></div>
-
-    </div>
-</div>
-
-
-<a id="update()"></a>
+<a id="getName()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1078,9 +949,9 @@ From interface
          
          
          
-        void
+        String
       </span>
-      <span class="sympad">update</span>
+      <span class="sympad">getName</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1093,7 +964,163 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the name of this postprocessor.
+
+ <p>Used for logging and analytics.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="process(android.graphics.Bitmap)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">process</span>
+      <span class="normal">(Bitmap bitmap)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Clients should override this method if the post-processing can be done in place.
+
+ <p> The provided bitmap is a copy of the source bitmap and the implementation is free to
+ modify it.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>bitmap</th>
+          <td>the bitmap to be used both as input and as output
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+      </span>
+      <span class="sympad">process</span>
+      <span class="normal">(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Clients should override this method only if the post-processed bitmap has to be of a different
+ size than the source bitmap. If the post-processed bitmap is of the same size, clients should
+ override one of the other two methods.
+
+ <p> The source bitmap must not be modified as it may be shared by the other clients. The
+ implementation must create a new bitmap that is safe to be modified and return a reference
+ to it. Clients should use <code>bitmapFactory</code> to create a new bitmap.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>sourceBitmap</th>
+          <td>The source bitmap.</td>
+        </tr>
+        <tr>
+          <th>bitmapFactory</th>
+          <td>The factory to create a destination bitmap.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a reference to the newly created bitmap
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="process(android.graphics.Bitmap, android.graphics.Bitmap)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">process</span>
+      <span class="normal">(Bitmap destBitmap, Bitmap sourceBitmap)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Clients should override this method if the post-processing cannot be done in place. If the
+ post-processing can be done in place, clients should override the <code><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process(Bitmap)</a></code>
+ method.
+
+ <p> The provided destination bitmap is of the same size as the source bitmap. There are no
+ guarantees on the initial content of the destination bitmap, so the implementation has to make
+ sure that it properly populates it.
+
+ <p> The source bitmap must not be modified as it may be shared by the other clients.
+ The implementation must use the provided destination bitmap as its output.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>destBitmap</th>
+          <td>the destination bitmap to be used as output</td>
+        </tr>
+        <tr>
+          <th>sourceBitmap</th>
+          <td>the source bitmap to be used as input
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>

@@ -179,6 +179,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
@@ -214,6 +216,7 @@
               
     <li><h2>Classes</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html">BasePostprocessor</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/BaseRepeatedPostProcessor.html">BaseRepeatedPostProcessor</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a></li>
@@ -684,6 +687,24 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#newBuilderWithResourceId(int)">newBuilderWithResourceId</a></span>(int resId)
+        
+        <div class="jd-descrdiv">Creates a new request builder instance for a local resource image.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#newBuilderWithSource(android.net.Uri)">newBuilderWithSource</a></span>(Uri uri)
         
         <div class="jd-descrdiv">Creates a new request builder instance.</div>
@@ -692,7 +713,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -710,7 +731,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -726,7 +747,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -744,7 +765,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -762,7 +783,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -780,7 +801,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -798,7 +819,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -816,7 +837,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -834,7 +855,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -852,7 +873,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1526,6 +1547,61 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Returns whether progressive loading is enabled. </p></div>
+
+    </div>
+</div>
+
+
+<a id="newBuilderWithResourceId(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
+      </span>
+      <span class="sympad">newBuilderWithResourceId</span>
+      <span class="normal">(int resId)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new request builder instance for a local resource image.
+
+ <p>Only image resources can be used with the image pipeline (PNG, JPG, GIF). Other resource
+ types such as Strings or XML Drawables make no sense in the context of the image pipeline and
+ so cannot be supported. Attempts to do so will throw an
+ java.lang.IllegalArgumentException when the pipeline tries to decode the resource.
+
+ <p>One potentially confusing case is drawable declared in XML (e.g. ShapeDrawable). This is not
+ an image. If you want to display an XML drawable as the main image, then set it as a
+ placeholder and do not set a URI.
+ <p/></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>resId</th>
+          <td>local image resource id.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a new request builder instance.
+</li></ul>
+  </div>
 
     </div>
 </div>

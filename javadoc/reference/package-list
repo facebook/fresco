@@ -15,6 +15,7 @@ com.facebook.drawee.interfaces
 com.facebook.drawee.view
 com.facebook.imagepipeline.animated.base
 com.facebook.imagepipeline.backends.okhttp
+com.facebook.imagepipeline.bitmaps
 com.facebook.imagepipeline.cache
 com.facebook.imagepipeline.common
 com.facebook.imagepipeline.core
