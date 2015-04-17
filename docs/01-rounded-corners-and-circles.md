@@ -63,3 +63,20 @@ mSimpleDraweeView.getHierarchy().setRoundingParams(roundingParams);
 ```
 
 The one exception to this is that the `RoundingMethod` cannot be changed when changing dynamically. Attempting to do so will throw an `IllegalStateException.`
+
+
+### Caveats
+
+There are some limitations when `BITMAP_ONLY` (the default) mode is used:
+
+- Not all image branches are rounded. Only the placeholder and the actual image are rounded. We are in the process of adding support for rounding backgrounds.
+- Animations are not rounded.
+- Due to a limitation of Android's `BitmapShader`, if the image doesn't fully cover the view, isntead of drawing nothing, edges are repeated. One workaround is to use a different scale type (e.g. centerCrop) that ensures that the whole view is covered.
+
+The `OVERLAY_COLOR` mode doesn't have the aforementioned limitations, but since it simulates rounded corners by overlying a solid color over the image, this only looks good if the background under the view is static and of the same color.
+
+Drawee internally has an implementation for `CLIPPING` mode, but this mode has been disabled and not exposed as some `Canvas` implementation do not support path clipping. Furthermore, canvas clipping doesn't support antialiasing which makes the rounded edges very pixelated.
+
+Finally, all of those issues could be avoided by using a temporary bitmap, but this imposes a significant memory overhead and has not been supported because of that.
+
+As explained above, there is no really good solution for rounding corners on Android and one has to choose between the aforementioned trade-offs.
