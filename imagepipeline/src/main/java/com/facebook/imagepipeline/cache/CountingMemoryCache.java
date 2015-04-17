@@ -403,51 +403,39 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
     return matchingEntries;
   }
 
-  /**
-   * Removes all exclusively owned values from the cache. Corresponding closeable references are
-   * closed.
-   */
-  public void clearEvictionQueue() {
-    Collection<CloseableReference<V>> evictedEntries = trimEvictionQueueTo(0, 0);
-    for (CloseableReference<V> reference : evictedEntries) {
-      reference.close();
-    }
-  }
-
-  public void trimCacheTo(int maxCount, int maxSize) {
-    Collection<CloseableReference<V>> evictedEntries;
-    synchronized (this) {
-      // Only max(maxCount - entries in use, 0) may stay in eviction queue
-      final int maxLruCount =
-          Math.max(maxCount - (mCachedEntries.size() - mEvictionQueue.size()), 0);
-      // Entries in eviction queue can occupy only max(maxSize - size of entries in use, 0) bytes
-      final int maxLruSize =
-          Math.max(maxSize - (mCachedValuesSize - mEvictionQueueSize), 0);
-      evictedEntries = trimEvictionQueueTo(maxLruCount, maxLruSize);
-    }
-    for (CloseableReference<V> reference : evictedEntries) {
-      reference.close();
-    }
-  }
-
   @Override
   public void trim(MemoryTrimType trimType) {
     FLog.v(TAG, "Trimming cache, trim type %s", String.valueOf(trimType));
-    mCacheTrimStrategy.trimCache(this, trimType);
+    final double trimRatio = mCacheTrimStrategy.getTrimRatio(trimType);
+    Collection<CloseableReference<V>> evictedEntries;
+    synchronized (this) {
+      int targetCacheSize = (int) (mCachedValuesSize * (1 - trimRatio));
+      int targetEvictionQueueSize = Math.max(0, targetCacheSize - getInUseSizeInBytes());
+      evictedEntries = trimEvictionQueueTo(Integer.MAX_VALUE, targetEvictionQueueSize);
+    }
+    for (CloseableReference<V> reference : evictedEntries) {
+      reference.close();
+    }
   }
 
-  /**
-   * @return number of cached entries
-   */
+  /** Gets the total number of currently cached entries. */
   public synchronized int getCount() {
     return mCachedEntries.size();
   }
 
-  /**
-   * @return total size in bytes of cached entries
-   */
+  /** Gets the total size in bytes of all currently cached entries. */
   public synchronized int getSizeInBytes() {
     return mCachedValuesSize;
+  }
+
+  /** Gets the number of cached entries that are used by at least one client. */
+  public synchronized int getInUseCount() {
+    return mCachedEntries.size() - mEvictionQueue.size();
+  }
+
+  /** Gets the total size in bytes of cached entries that are used by at least one client. */
+  public synchronized int getInUseSizeInBytes() {
+    return mCachedValuesSize - mEvictionQueueSize;
   }
 
   /**
@@ -468,15 +456,10 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
    * Check cache params to determine if the cache is capable of storing another value.
    */
   private synchronized boolean canCacheNewValue(final CloseableReference<V> value) {
-    Preconditions.checkState(mCachedValuesSize >= mEvictionQueueSize);
-    Preconditions.checkState(mCachedEntries.size() >= mEvictionQueue.size());
-
-    final long newValueSize = mValueInfoCallback.getSizeInBytes(value.get());
-    final long sharedEntries = mCachedEntries.size() - mEvictionQueue.size();
-    final long sharedEntriesByteSize = mCachedValuesSize - mEvictionQueueSize;
+    long newValueSize = mValueInfoCallback.getSizeInBytes(value.get());
     return (newValueSize <= mMemoryCacheParams.maxCacheEntrySize) &&
-        (sharedEntries < mMemoryCacheParams.maxCacheEntries) &&
-        (sharedEntriesByteSize + newValueSize <= mMemoryCacheParams.maxCacheSize);
+        (getInUseCount() + 1 <= mMemoryCacheParams.maxCacheEntries) &&
+        (getInUseSizeInBytes() + newValueSize <= mMemoryCacheParams.maxCacheSize);
   }
 
   /**
@@ -514,26 +497,17 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
   @VisibleForTesting
   void maybeEvictEntries() {
     Collection<CloseableReference<V>> evictedValues;
-
     synchronized (this) {
-
-      final int allowedEvictionQueueCount = newEvictionQueueLimit(
-          mCachedEntries.size(),
-          mMemoryCacheParams.maxCacheEntries,
-          mEvictionQueue.size(),
-          mMemoryCacheParams.maxEvictionQueueEntries);
-
-      final long allowedEvictionQueueBytes = newEvictionQueueLimit(
-          mCachedValuesSize,
-          mMemoryCacheParams.maxCacheSize,
-          mEvictionQueueSize,
-          mMemoryCacheParams.maxEvictionQueueSize);
-
-      evictedValues = trimEvictionQueueTo(
-          allowedEvictionQueueCount,
-          allowedEvictionQueueBytes);
+      int maxCount = Math.min(
+          mMemoryCacheParams.maxEvictionQueueEntries,
+          mMemoryCacheParams.maxCacheEntries - getInUseCount());
+      maxCount = Math.max(maxCount, 0);
+      int maxSize = Math.min(
+          mMemoryCacheParams.maxEvictionQueueSize,
+          mMemoryCacheParams.maxCacheSize - getInUseSizeInBytes());
+      maxSize = Math.max(maxSize, 0);
+      evictedValues = trimEvictionQueueTo(maxCount, maxSize);
     }
-
     for (CloseableReference<V> evictedValue : evictedValues) {
       evictedValue.close();
     }
@@ -543,9 +517,7 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
    * Removes exclusively owned values from the cache until there is at most count of them
    * and they occupy no more than size bytes.
    */
-  private synchronized Collection<CloseableReference<V>> trimEvictionQueueTo(
-      int count,
-      long size) {
+  private synchronized Collection<CloseableReference<V>> trimEvictionQueueTo(int count, long size) {
     Preconditions.checkArgument(count >= 0);
     Preconditions.checkArgument(size >= 0);
 
@@ -675,19 +647,6 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
   }
 
   /**
-   * Helper method for computing eviction queue limit.
-   */
-  private static int newEvictionQueueLimit(
-      int currentTotal,
-      int maxTotal,
-      int currentEvictionQueue,
-      int maxEvictionQueue) {
-    final int trimNeeded = Math.max(0, currentTotal - maxTotal);
-    final int afterTrim = Math.max(0, currentEvictionQueue - trimNeeded);
-    return Math.min(maxEvictionQueue, afterTrim);
-  }
-
-  /**
    * Interface used by the cache to query information about cached values.
    */
   public static interface ValueInfoCallback<V> {
@@ -698,6 +657,6 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
    * Interface used to specify cache trim behavior.
    */
   public static interface CacheTrimStrategy {
-    void trimCache(CountingMemoryCache<?, ?, ?> cache, MemoryTrimType trimType);
+    double getTrimRatio(MemoryTrimType trimType);
   }
 }

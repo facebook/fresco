@@ -17,7 +17,7 @@ import com.facebook.common.memory.MemoryTrimType;
 /**
  * CountingMemoryCache eviction strategy appropriate for bitmap caches.
  *
- * <p>If run on KK or below, then this TrimStrategy behaves exactly as
+ * <p>If run on KitKat or below, then this TrimStrategy behaves exactly as
  * NativeMemoryCacheTrimStrategy. If run on Lollipop, then BitmapMemoryCacheTrimStrategy will trim
  * cache in one additional case: when OnCloseToDalvikHeapLimit trim type is received, cache's
  * eviction queue will be trimmed according to OnCloseToDalvikHeapLimit's suggested trim ratio.
@@ -26,24 +26,23 @@ public class BitmapMemoryCacheTrimStrategy implements CountingMemoryCache.CacheT
   private static final String TAG = "BitmapMemoryCacheTrimStrategy";
 
   @Override
-  public void trimCache(CountingMemoryCache<?, ?, ?> cache, MemoryTrimType trimType) {
+  public double getTrimRatio(MemoryTrimType trimType) {
     switch (trimType) {
       case OnCloseToDalvikHeapLimit:
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          final double cacheTrimTarget =
-              1 - MemoryTrimType.OnCloseToDalvikHeapLimit.getSuggestedTrimRatio();
-          final int cacheSizeTarget = (int) (cacheTrimTarget * cache.getSizeInBytes());
-          cache.trimCacheTo(Integer.MAX_VALUE, cacheSizeTarget);
+          return MemoryTrimType.OnCloseToDalvikHeapLimit.getSuggestedTrimRatio();
+        } else {
+          // On pre-lollipop versions we keep bitmaps on the native heap, so no need to trim here
+          // as it wouldn't help Dalvik heap anyway.
+          return 0;
         }
-        break;
       case OnAppBackgrounded:
       case OnSystemLowMemoryWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInBackground:
-        cache.clearEvictionQueue();
-        break;
+        return 1;
       default:
         FLog.wtf(TAG, "unknown trim type: %s", trimType);
-        break;
+        return 0;
     }
   }
 }
