@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  ImageCacheStatsTracker - Fresco API
+  DefaultCacheKeyFactory - Fresco API
 
 
 | Fresco
@@ -211,7 +211,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.ValueInfoCallback.html">CountingMemoryCache.ValueInfoCallback</a>&lt;V&gt;</li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></li>
       </ul>
     </li>
@@ -220,7 +220,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V,&nbsp;S&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
       </ul>
     </li>
@@ -265,9 +265,47 @@
 
 
 
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
+
+Summary:
+
+
+
+
+
+
+
+
+
+
+  <a href="#proctors">Protected Ctors</a>
+  
+
+
+  &#124; <a href="#pubmethods">Methods</a>
+  
+
+
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
+
+&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
 </div><!-- end sum-details-links -->
 <div class="api-level">
@@ -288,12 +326,23 @@
      
      
     
-    interface
-<h1>ImageCacheStatsTracker</h1>
+    class
+<h1>DefaultCacheKeyFactory</h1>
 
 
 
   
+    extends Object<br/>
+  
+  
+  
+
+  
+  
+      implements 
+      
+        <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> 
+      
   
   
 
@@ -308,7 +357,15 @@
 
     <tr>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.ImageCacheStatsTracker</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.DefaultCacheKeyFactory</td>
     </tr>
     
 
@@ -324,11 +381,7 @@
 
 
 <h2>Class Overview</h2>
-<p>Interface for stats tracking for the image cache.
-
- <p>An implementation of this interface, passed to
- <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></code>, will be notified for each
- of the following cache events. Use this to keep cache stats for your app.
+<p>Default implementation of <code><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></code>.
 </p>
 
 
@@ -381,6 +434,31 @@
 
 
 
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<table id="proctors" class="jd-sumtable"><tr><th colspan="12">Protected Constructors</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#DefaultCacheKeyFactory()">DefaultCacheKeyFactory</a></span>()
+        
+  </td></tr>
+
+
+
+</table>
+
+
 
 
 <!-- ========== METHOD SUMMARY =========== -->
@@ -391,234 +469,64 @@
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
             
             
             
             
-            void
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCacheHit()">onBitmapCacheHit</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
         
-        <div class="jd-descrdiv">Called on a bitmap cache hit.</div>
-  
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            abstract
             
             
             
             
-            void
+            
+            Uri
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCacheMiss()">onBitmapCacheMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getCacheKeySourceUri(android.net.Uri)">getCacheKeySourceUri</a></span>(Uri sourceUri)
         
-        <div class="jd-descrdiv">Called on a bitmap cache miss.</div>
-  
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
             
             
             
             
-            void
+            
+            <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCachePut()">onBitmapCachePut</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getEncodedCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
         
-        <div class="jd-descrdiv">Called whenever decoded images are put into the bitmap cache.</div>
-  
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            abstract
             
+            synchronized
             
+            static
             
-            
-            void
+            <a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheGetFail()">onDiskCacheGetFail</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getInstance()">getInstance</a></span>()
         
-        <div class="jd-descrdiv">Called if an exception is thrown on a disk cache read.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheHit()">onDiskCacheHit</a></span>()
-        
-        <div class="jd-descrdiv">Called on a disk cache hit.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onDiskCacheMiss()">onDiskCacheMiss</a></span>()
-        
-        <div class="jd-descrdiv">Called on a disk cache miss.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheHit()">onMemoryCacheHit</a></span>()
-        
-        <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheMiss()">onMemoryCacheMiss</a></span>()
-        
-        <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCachePut()">onMemoryCachePut</a></span>()
-        
-        <div class="jd-descrdiv">Called whenever encoded images are put into the encoded memory cache.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onStagingAreaHit()">onStagingAreaHit</a></span>()
-        
-        <div class="jd-descrdiv">Called on an staging area hit.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onStagingAreaMiss()">onStagingAreaMiss</a></span>()
-        
-        <div class="jd-descrdiv">Called on a staging area miss hit.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#registerBitmapMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?, ?>)">registerBitmapMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?,&nbsp;?&gt; bitmapMemoryCache)
-        
-        <div class="jd-descrdiv">Registers a bitmap cache with this tracker.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#registerEncodedMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?, ?>)">registerEncodedMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?,&nbsp;?&gt; encodedMemoryCache)
-        
-        <div class="jd-descrdiv">Registers an encoded memory cache with this tracker.</div>
-  
   </td></tr>
 
 
@@ -629,6 +537,290 @@
 
 
 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Object-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  java.lang.Object
+
+<div id="inherited-methods-java.lang.Object">
+  <div id="inherited-methods-java.lang.Object-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Object
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">clone</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">equals</span>(Object arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">finalize</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            Class&lt;?&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getClass</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">hashCode</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notify</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notifyAll</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">toString</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0, int arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.cache.CacheKeyFactory" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.imagepipeline.cache.CacheKeyFactory-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">com.facebook.imagepipeline.cache.CacheKeyFactory</a>
+
+<div id="inherited-methods-com.facebook.imagepipeline.cache.CacheKeyFactory">
+  <div id="inherited-methods-com.facebook.imagepipeline.cache.CacheKeyFactory-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.imagepipeline.cache.CacheKeyFactory-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            Uri
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getCacheKeySourceUri(android.net.Uri)">getCacheKeySourceUri</a></span>(Uri sourceUri)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getEncodedCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
 
 
 </div><!-- jd-descr (summary) -->
@@ -661,6 +853,42 @@
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <!-- Protected ctors -->
 
+<h2>Protected Constructors</h2>
+
+
+
+<a id="DefaultCacheKeyFactory()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">DefaultCacheKeyFactory</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+
 
 
 <!-- ========= METHOD DETAIL ======== -->
@@ -670,7 +898,7 @@
 
 
 
-<a id="onBitmapCacheHit()"></a>
+<a id="getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -678,11 +906,104 @@
         public 
          
          
-        abstract 
          
-        void
+         
+        <a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a>
       </span>
-      <span class="sympad">onBitmapCacheHit</span>
+      <span class="sympad">getBitmapCacheKey</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getCacheKeySourceUri(android.net.Uri)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Uri
+      </span>
+      <span class="sympad">getCacheKeySourceUri</span>
+      <span class="normal">(Uri sourceUri)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
+      </span>
+      <span class="sympad">getEncodedCacheKey</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getInstance()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+        synchronized 
+        <a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a>
+      </span>
+      <span class="sympad">getInstance</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -695,389 +1016,7 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Called on a bitmap cache hit. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onBitmapCacheMiss()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onBitmapCacheMiss</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on a bitmap cache miss. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onBitmapCachePut()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onBitmapCachePut</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called whenever decoded images are put into the bitmap cache. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onDiskCacheGetFail()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onDiskCacheGetFail</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called if an exception is thrown on a disk cache read. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onDiskCacheHit()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onDiskCacheHit</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on a disk cache hit. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onDiskCacheMiss()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onDiskCacheMiss</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on a disk cache miss. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onMemoryCacheHit()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onMemoryCacheHit</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on an encoded memory cache hit. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onMemoryCacheMiss()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onMemoryCacheMiss</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on an encoded memory cache hit. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onMemoryCachePut()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onMemoryCachePut</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called whenever encoded images are put into the encoded memory cache. </p></div>
-
-    </div>
-</div>
-
-
-<a id="onStagingAreaHit()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onStagingAreaHit</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on an staging area hit.
-
- <p>The staging area stores encoded images. It gets the images before they are written
- to disk cache.
-</p></div>
-
-    </div>
-</div>
-
-
-<a id="onStagingAreaMiss()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onStagingAreaMiss</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Called on a staging area miss hit. </p></div>
-
-    </div>
-</div>
-
-
-<a id="registerBitmapMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?, ?>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">registerBitmapMemoryCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?,&nbsp;?&gt; bitmapMemoryCache)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Registers a bitmap cache with this tracker.
-
- <p>Use this method if you need access to the cache itself to compile your stats.
-</p></div>
-
-    </div>
-</div>
-
-
-<a id="registerEncodedMemoryCache(com.facebook.imagepipeline.cache.CountingMemoryCache<?, ?, ?>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">registerEncodedMemoryCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;?,&nbsp;?,&nbsp;?&gt; encodedMemoryCache)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Registers an encoded memory cache with this tracker.
-
- <p>Use this method if you need access to the cache itself to compile your stats.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

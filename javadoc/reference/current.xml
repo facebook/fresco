@@ -7995,6 +7995,75 @@
 </parameter>
 </method>
 </interface>
+<class name="DefaultCacheKeyFactory"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.imagepipeline.cache.CacheKeyFactory">
+</implements>
+<constructor name="DefaultCacheKeyFactory"
+ type="com.facebook.imagepipeline.cache.DefaultCacheKeyFactory"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</constructor>
+<method name="getBitmapCacheKey"
+ return="com.facebook.imagepipeline.cache.BitmapMemoryCacheKey"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="request" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+</method>
+<method name="getCacheKeySourceUri"
+ return="android.net.Uri"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="sourceUri" type="android.net.Uri">
+</parameter>
+</method>
+<method name="getEncodedCacheKey"
+ return="com.facebook.cache.common.CacheKey"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="request" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+</method>
+<method name="getInstance"
+ return="com.facebook.imagepipeline.cache.DefaultCacheKeyFactory"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
 <interface name="ImageCacheStatsTracker"
  abstract="true"
  static="false"
