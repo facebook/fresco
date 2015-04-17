@@ -26,7 +26,7 @@ public class BitmapMemoryCacheProducer
   @VisibleForTesting static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
 
   public BitmapMemoryCacheProducer(
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> memoryCache,
+      MemoryCache<BitmapMemoryCacheKey, CloseableImage> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<CloseableReference<CloseableImage>> nextProducer) {
     super(memoryCache, cacheKeyFactory, nextProducer);
@@ -67,7 +67,7 @@ public class BitmapMemoryCacheProducer
   private boolean shouldCacheIntermediateResult(
       CloseableReference<CloseableImage> newResult,
       BitmapMemoryCacheKey cacheKey) {
-    CloseableReference<CloseableImage> currentCachedResult = mMemoryCache.get(cacheKey, null);
+    CloseableReference<CloseableImage> currentCachedResult = mMemoryCache.get(cacheKey);
     if (currentCachedResult == null) {
       return true;
     }

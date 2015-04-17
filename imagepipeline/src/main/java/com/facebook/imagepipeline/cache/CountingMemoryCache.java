@@ -46,10 +46,9 @@ import com.android.internal.util.Predicate;
  *
  * @param <K> Cache key type
  * @param <V> Value type
- * @param <S> Type of extra object used by lookup algorithm
  */
 @ThreadSafe
-public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
+public class CountingMemoryCache<K, V> implements MemoryTrimmable {
 
   private static final Class<?> TAG = CountingMemoryCache.class;
 
@@ -126,7 +125,7 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
   static final long PARAMS_INTERCHECK_INTERVAL_MS = TimeUnit.MINUTES.toMillis(5);
 
   @GuardedBy("this")
-  private final MemoryCacheIndex<K, V, S> mMemoryCacheIndex;
+  private final MemoryCacheIndex<K, V> mMemoryCacheIndex;
 
   @GuardedBy("this")
   @VisibleForTesting
@@ -168,7 +167,7 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
   private final Supplier<MemoryCacheParams> mMemoryCacheParamsSupplier;
 
   public CountingMemoryCache(
-      MemoryCacheIndex<K, V, S> memoryCacheIndex,
+      MemoryCacheIndex<K, V> memoryCacheIndex,
       ValueInfoCallback<V> valueInfoCallback,
       CacheTrimStrategy cacheTrimStrategy,
       Supplier<MemoryCacheParams> memoryCacheParamsSupplier) {
@@ -257,10 +256,10 @@ public class CountingMemoryCache<K, V, S> implements MemoryTrimmable {
    * <p> After this method returns non-null value, caller is responsible for calling release
    * method. This allows cache to maintain value's in-use count.
    */
-  public CloseableReference<V> get(final K key, @Nullable S strategy) {
+  public CloseableReference<V> get(final K key) {
     CloseableReference<V> cachedValue;
     synchronized (this) {
-      cachedValue = mMemoryCacheIndex.lookupValue(key, strategy);
+      cachedValue = mMemoryCacheIndex.lookupValue(key);
       if (cachedValue != null) {
         final CacheEntry<K, V> cacheEntry = CacheEntry.of(key, cachedValue);
         final EntryState entryState = getEntryState(cacheEntry);

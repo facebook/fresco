@@ -74,8 +74,8 @@ public class ProducerFactory {
   // Cache dependencies
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
-  private final MemoryCache<CacheKey, PooledByteBuffer, Void> mEncodedMemoryCache;
-  private final MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> mBitmapMemoryCache;
+  private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  private final MemoryCache<BitmapMemoryCacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
 
   // Postproc dependencies
@@ -88,8 +88,8 @@ public class ProducerFactory {
       ProgressiveJpegConfig progressiveJpegConfig,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> bitmapMemoryCache,
-      MemoryCache<CacheKey, PooledByteBuffer, Void> encodedMemoryCache,
+      MemoryCache<BitmapMemoryCacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,

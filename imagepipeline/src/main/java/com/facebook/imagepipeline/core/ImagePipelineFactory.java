@@ -88,12 +88,12 @@ public class ImagePipelineFactory {
   private final ImagePipelineConfig mConfig;
 
   private AnimatedDrawableFactory mAnimatedDrawableFactory;
-  private CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>
+  private CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
-  private MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> mBitmapMemoryCache;
+  private MemoryCache<BitmapMemoryCacheKey, CloseableImage> mBitmapMemoryCache;
   private EmptyJpegGenerator mEmptyJpegGenerator;
-  private CountingMemoryCache<CacheKey, PooledByteBuffer, Void> mEncodedCountingMemoryCache;
-  private MemoryCache<CacheKey, PooledByteBuffer, Void> mEncodedMemoryCache;
+  private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
+  private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainBufferedDiskCache;
   private DiskStorageCache mMainDiskStorageCache;
   private ImagePipeline mImagePipeline;
@@ -109,7 +109,7 @@ public class ImagePipelineFactory {
   // TODO(5959048): these methods should be taken private
   // We need them public for now so internal code can use them.
 
-  public CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>
+  public CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage>
       getBitmapCountingMemoryCache() {
     if (mBitmapCountingMemoryCache == null) {
       mBitmapCountingMemoryCache =
@@ -120,7 +120,7 @@ public class ImagePipelineFactory {
     return mBitmapCountingMemoryCache;
   }
 
-  public MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> getBitmapMemoryCache() {
+  public MemoryCache<BitmapMemoryCacheKey, CloseableImage> getBitmapMemoryCache() {
     if (mBitmapMemoryCache == null) {
       mBitmapMemoryCache =
           BitmapMemoryCacheFactory.get(
@@ -139,7 +139,7 @@ public class ImagePipelineFactory {
     return mEmptyJpegGenerator;
   }
 
-  public CountingMemoryCache<CacheKey, PooledByteBuffer, Void> getEncodedCountingMemoryCache() {
+  public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
@@ -149,7 +149,7 @@ public class ImagePipelineFactory {
     return mEncodedCountingMemoryCache;
   }
 
-  public MemoryCache<CacheKey, PooledByteBuffer, Void> getEncodedMemoryCache() {
+  public MemoryCache<CacheKey, PooledByteBuffer> getEncodedMemoryCache() {
     if (mEncodedMemoryCache == null) {
       mEncodedMemoryCache =
           EncodedMemoryCacheFactory.get(

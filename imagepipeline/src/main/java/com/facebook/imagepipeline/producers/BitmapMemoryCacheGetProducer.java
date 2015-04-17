@@ -26,7 +26,7 @@ public class BitmapMemoryCacheGetProducer
   @VisibleForTesting static final String PRODUCER_NAME = "BitmapMemoryCacheGetProducer";
 
   public BitmapMemoryCacheGetProducer(
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> memoryCache,
+      MemoryCache<BitmapMemoryCacheKey, CloseableImage> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<CloseableReference<CloseableImage>> nextProducer) {
     super(memoryCache, cacheKeyFactory, nextProducer);

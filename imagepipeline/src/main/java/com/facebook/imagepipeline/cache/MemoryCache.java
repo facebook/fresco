@@ -13,7 +13,7 @@ import com.facebook.common.references.CloseableReference;
 
 import com.android.internal.util.Predicate;
 
-public interface MemoryCache<K, V, S> {
+public interface MemoryCache<K, V> {
 
   /**
    * Caches value with given key. Cache returns new copy of provided reference which should be used
@@ -27,13 +27,11 @@ public interface MemoryCache<K, V, S> {
   CloseableReference<V> cache(K key, CloseableReference<V> value);
 
   /**
-   * Looks up cache for given key. Lookup strategy is used by cache to select exactly one of the
-   * values associated with the key.
+   * Looks up cache for given key.
    * @param key
-   * @param lookupStrategy
    * @return value to cached resource or null if no resource is cached
    */
-  CloseableReference<V> get(K key, S lookupStrategy);
+  CloseableReference<V> get(K key);
 
   /**
    * Removes from the cache any keys that pass the specified predicate.

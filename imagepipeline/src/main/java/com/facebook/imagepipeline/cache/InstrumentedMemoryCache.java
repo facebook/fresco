@@ -15,20 +15,20 @@ import com.facebook.common.references.CloseableReference;
 
 import com.android.internal.util.Predicate;
 
-public class InstrumentedMemoryCache<K, V, S> implements MemoryCache<K, V, S> {
-  private final MemoryCache<K, V, S> mDelegate;
+public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
+  private final MemoryCache<K, V> mDelegate;
   private final MemoryCacheTracker mTracker;
 
   public InstrumentedMemoryCache(
-      MemoryCache<K, V, S> delegate,
+      MemoryCache<K, V> delegate,
       MemoryCacheTracker tracker) {
     mDelegate = delegate;
     mTracker = tracker;
   }
 
   @Override
-  public CloseableReference<V> get(K key, @Nullable S lookupStrategy) {
-    CloseableReference<V> result = mDelegate.get(key, lookupStrategy);
+  public CloseableReference<V> get(K key) {
+    CloseableReference<V> result = mDelegate.get(key);
     if (result == null) {
       mTracker.onCacheMiss();
     } else {

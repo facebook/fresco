@@ -22,17 +22,17 @@ import com.android.internal.util.Predicate;
  * wrapped in new instances of CloseableReferences with custom releaser that calls
  * release method of CountingMemoryCache
  */
-public class ReferenceWrappingMemoryCache<K, V, S> implements MemoryCache<K, V, S> {
+public class ReferenceWrappingMemoryCache<K, V> implements MemoryCache<K, V> {
 
-  private final CountingMemoryCache<K, V, S> mCountingMemoryCache;
+  private final CountingMemoryCache<K, V> mCountingMemoryCache;
 
-  public ReferenceWrappingMemoryCache(final CountingMemoryCache<K, V, S> countingMemoryCache) {
+  public ReferenceWrappingMemoryCache(final CountingMemoryCache<K, V> countingMemoryCache) {
     mCountingMemoryCache = Preconditions.checkNotNull(countingMemoryCache);
   }
 
   @Override
-  public CloseableReference<V> get(K key, @Nullable S lookupStrategy) {
-    return wrapCacheReferenceIfNotNull(key, mCountingMemoryCache.get(key, lookupStrategy));
+  public CloseableReference<V> get(K key) {
+    return wrapCacheReferenceIfNotNull(key, mCountingMemoryCache.get(key));
   }
 
   @Override

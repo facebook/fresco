@@ -22,7 +22,7 @@ import com.facebook.common.references.CloseableReference;
  * @param <K>
  * @param <V>
  */
-public class SimpleMemoryCacheIndex<K, V> implements MemoryCacheIndex<K, V, Void> {
+public class SimpleMemoryCacheIndex<K, V> implements MemoryCacheIndex<K, V> {
 
   private final Map<K, CloseableReference<V>> mMapIndex;
 
@@ -41,7 +41,7 @@ public class SimpleMemoryCacheIndex<K, V> implements MemoryCacheIndex<K, V, Void
   }
 
   @Override
-  public synchronized CloseableReference<V> lookupValue(final K key, final @Nullable Void unused) {
+  public synchronized CloseableReference<V> lookupValue(final K key) {
     Preconditions.checkNotNull(key);
     return mMapIndex.get(key);
   }

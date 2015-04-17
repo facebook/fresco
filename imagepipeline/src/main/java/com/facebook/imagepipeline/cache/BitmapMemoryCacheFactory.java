@@ -13,13 +13,12 @@ import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapMemoryCacheFactory {
 
-  public static MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> get(
-    CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> bitmapCountingMemoryCache,
+  public static MemoryCache<BitmapMemoryCacheKey, CloseableImage> get(
+    CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> bitmapCountingMemoryCache,
     final ImageCacheStatsTracker imageCacheStatsTracker) {
 
-    ReferenceWrappingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> wrappingCache =
-        new ReferenceWrappingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>(
-            bitmapCountingMemoryCache);
+    ReferenceWrappingMemoryCache<BitmapMemoryCacheKey, CloseableImage> wrappingCache =
+        new ReferenceWrappingMemoryCache<>(bitmapCountingMemoryCache);
 
     imageCacheStatsTracker.registerBitmapMemoryCache(bitmapCountingMemoryCache);
     MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker() {
@@ -39,8 +38,6 @@ public class BitmapMemoryCacheFactory {
       }
     };
 
-    return new InstrumentedMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>(
-        wrappingCache,
-        memoryCacheTracker);
+    return new InstrumentedMemoryCache<>(wrappingCache, memoryCacheTracker);
   }
 }

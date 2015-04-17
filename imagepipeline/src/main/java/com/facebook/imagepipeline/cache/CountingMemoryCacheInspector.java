@@ -79,10 +79,10 @@ public class CountingMemoryCacheInspector<K, V> {
     }
   }
 
-  private final CountingMemoryCache<K, V, ?> mCountingBitmapCache;
+  private final CountingMemoryCache<K, V> mCountingBitmapCache;
 
   public CountingMemoryCacheInspector(
-      CountingMemoryCache<K, V, ?> countingBitmapCache) {
+      CountingMemoryCache<K, V> countingBitmapCache) {
     mCountingBitmapCache = countingBitmapCache;
   }
 

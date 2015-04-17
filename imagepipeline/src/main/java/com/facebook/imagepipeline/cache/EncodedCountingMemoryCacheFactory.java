@@ -16,10 +16,10 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 public class EncodedCountingMemoryCacheFactory {
 
-  public static CountingMemoryCache<CacheKey, PooledByteBuffer, Void> get(
+  public static CountingMemoryCache<CacheKey, PooledByteBuffer> get(
       Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry) {
-    MemoryCacheIndex<CacheKey, PooledByteBuffer, Void> memoryCacheIndex =
+    MemoryCacheIndex<CacheKey, PooledByteBuffer> memoryCacheIndex =
         new SimpleMemoryCacheIndex<CacheKey, PooledByteBuffer>();
 
     CountingMemoryCache.ValueInfoCallback<PooledByteBuffer> valueTypeDescriptor =
@@ -32,8 +32,8 @@ public class EncodedCountingMemoryCacheFactory {
 
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
 
-    CountingMemoryCache<CacheKey, PooledByteBuffer, Void> countingCache =
-        new CountingMemoryCache<CacheKey, PooledByteBuffer, Void>(
+    CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
+        new CountingMemoryCache<CacheKey, PooledByteBuffer>(
             memoryCacheIndex,
             valueTypeDescriptor,
             trimStrategy,

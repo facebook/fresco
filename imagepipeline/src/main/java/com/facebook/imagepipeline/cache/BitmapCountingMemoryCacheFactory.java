@@ -14,11 +14,11 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapCountingMemoryCacheFactory {
-  public static CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> get(
+  public static CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> get(
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry) {
-    MemoryCacheIndex<BitmapMemoryCacheKey, CloseableImage, Void> memoryCacheIndex =
-        new SimpleMemoryCacheIndex<BitmapMemoryCacheKey, CloseableImage>();
+    MemoryCacheIndex<BitmapMemoryCacheKey, CloseableImage> memoryCacheIndex =
+        new SimpleMemoryCacheIndex<>();
 
     CountingMemoryCache.ValueInfoCallback<CloseableImage> valueTypeDescriptor =
         new CountingMemoryCache.ValueInfoCallback<CloseableImage>() {
@@ -30,8 +30,8 @@ public class BitmapCountingMemoryCacheFactory {
 
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new BitmapMemoryCacheTrimStrategy();
 
-    CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> countingCache =
-        new CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>(
+    CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> countingCache =
+        new CountingMemoryCache<>(
             memoryCacheIndex,
             valueTypeDescriptor,
             trimStrategy,
