@@ -70,6 +70,7 @@ The one exception to this is that the `RoundingMethod` cannot be changed when ch
 There are some limitations when `BITMAP_ONLY` (the default) mode is used:
 
 - Not all image branches are rounded. Only the placeholder and the actual image are rounded. We are in the process of adding support for rounding backgrounds.
+- Only images that resolve to `BitmapDrawable` or `ColorDrawable` can be rounded. Rounding `NinePatchDrawable`, `ShapeDrawable` and other such drawables is not supported (regardless whether they are specified in XML or programmatically).
 - Animations are not rounded.
 - Due to a limitation of Android's `BitmapShader`, if the image doesn't fully cover the view, isntead of drawing nothing, edges are repeated. One workaround is to use a different scale type (e.g. centerCrop) that ensures that the whole view is covered.
 
