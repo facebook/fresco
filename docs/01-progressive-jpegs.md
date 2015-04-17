@@ -9,9 +9,9 @@ next: animations.html
 
 Fresco supports the streaming of progressive JPEG images over the network.
 
-Scans of the image will be shown in the view as you download them. Users will see the quality of the image start out low and gradually become clearer. Note, not all JPEG images are encoded in progressive format.
+Scans of the image will be shown in the view as you download them. Users will see the quality of the image start out low and gradually become clearer.
 
-This is only supported for the network images. Local images are decoded at once, so no need for progressiveness.
+This is only supported for the network images. Local images are decoded at once, so no need for progressiveness. Also, keep in mind that not all JPEG images are encoded in progressive format, and for those that are not, it is not possible to display them progressively.
 
 #### Building the image request
 
