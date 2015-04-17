@@ -7,41 +7,13 @@ prev: using-controllerbuilder.html
 next: animations.html
 ---
 
-*Note: the API in this page is still preliminary and subject to change.*
-
 Fresco supports the streaming of progressive JPEG images over the network.
 
-Scans of the image will be shown in the view as you download them. Users will see the quality of the image start out low and gradually become clearer.
+Scans of the image will be shown in the view as you download them. Users will see the quality of the image start out low and gradually become clearer. Note, not all JPEG images are encoded in progressive format.
 
-This is only supported for the network images. Local images are decoded at once.
+This is only supported for the network images. Local images are decoded at once, so no need for progressiveness.
 
-#### Initialization
-
-When you [configure](configure-image-pipeline.html) the image pipeline, you must pass in an instance of [ProgressiveJpegConfig](../javadoc/reference/com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html). We plan to remove this requirement.
-
-This example will decode no more than every other scan of the image, using less CPU than decoding every scan.
-
-```java
-ProgressiveJpegConfig pjpegConfig = new ProgressiveJpegConfig() {
-  @Override
-  public int getNextScanNumberToDecode(int scanNumber) {
-    return scanNumber + 2;
-  }    
-
-  public QualityInfo getQualityInfo(int scanNumber) {
-    boolean isGoodEnough = (scanNumber >= 5);
-    return ImmutableQualityInfo.of(scanNumber, isGoodEnough, false);
-  }
-}
-
-ImagePipelineConfig config = ImagePipelineConfig.newBuilder()
-    .setProgressiveJpegConfig(pjpegConfig)
-    .build();
-```
-
-Instead of implementing this interface yourself, you can also instantiate the [SimpleProgressiveJpegConfig](../javadoc/reference/com/facebook/imagepipeline/decoder/SimpleProgressiveJpegConfig.html) class.
-
-#### At Request Time
+#### Building the image request
 
 Currently, you must explicitly request progressive rendering while building the image request:
 
