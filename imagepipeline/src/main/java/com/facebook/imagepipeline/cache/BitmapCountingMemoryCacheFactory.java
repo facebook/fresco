@@ -17,13 +17,11 @@ public class BitmapCountingMemoryCacheFactory {
   public static CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> get(
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry) {
-    MemoryCacheIndex<BitmapMemoryCacheKey, CloseableImage> memoryCacheIndex =
-        new SimpleMemoryCacheIndex<>();
 
-    CountingMemoryCache.ValueInfoCallback<CloseableImage> valueTypeDescriptor =
-        new CountingMemoryCache.ValueInfoCallback<CloseableImage>() {
+    ValueDescriptor<CloseableImage> valueDescriptor =
+        new ValueDescriptor<CloseableImage>() {
           @Override
-          public long getSizeInBytes(CloseableImage value) {
+          public int getSizeInBytes(CloseableImage value) {
             return value.getSizeInBytes();
           }
         };
@@ -31,11 +29,7 @@ public class BitmapCountingMemoryCacheFactory {
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new BitmapMemoryCacheTrimStrategy();
 
     CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> countingCache =
-        new CountingMemoryCache<>(
-            memoryCacheIndex,
-            valueTypeDescriptor,
-            trimStrategy,
-            bitmapMemoryCacheParamsSupplier);
+        new CountingMemoryCache<>(valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier);
 
      memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

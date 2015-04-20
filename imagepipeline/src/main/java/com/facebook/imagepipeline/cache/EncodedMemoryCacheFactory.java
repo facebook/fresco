@@ -15,14 +15,11 @@ import com.facebook.cache.common.CacheKey;
 public class EncodedMemoryCacheFactory {
 
   public static MemoryCache<CacheKey, PooledByteBuffer> get(
-      CountingMemoryCache<CacheKey, PooledByteBuffer> encodedCountingMemoryCache,
+      final CountingMemoryCache<CacheKey, PooledByteBuffer> encodedCountingMemoryCache,
       final ImageCacheStatsTracker imageCacheStatsTracker) {
 
-    ReferenceWrappingMemoryCache<CacheKey, PooledByteBuffer> wrappingCache =
-        new ReferenceWrappingMemoryCache<>(
-            encodedCountingMemoryCache);
-
     imageCacheStatsTracker.registerEncodedMemoryCache(encodedCountingMemoryCache);
+
     MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker() {
       @Override
       public void onCacheHit() {
@@ -40,8 +37,6 @@ public class EncodedMemoryCacheFactory {
       }
     };
 
-    return new InstrumentedMemoryCache<>(
-        wrappingCache,
-        memoryCacheTracker);
+    return new InstrumentedMemoryCache<>(encodedCountingMemoryCache, memoryCacheTracker);
   }
 }

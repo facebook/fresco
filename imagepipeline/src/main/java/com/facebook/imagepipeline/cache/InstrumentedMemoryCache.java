@@ -9,19 +9,16 @@
 
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-
 import com.facebook.common.references.CloseableReference;
 
 import com.android.internal.util.Predicate;
 
 public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
+
   private final MemoryCache<K, V> mDelegate;
   private final MemoryCacheTracker mTracker;
 
-  public InstrumentedMemoryCache(
-      MemoryCache<K, V> delegate,
-      MemoryCacheTracker tracker) {
+  public InstrumentedMemoryCache(MemoryCache<K, V> delegate, MemoryCacheTracker tracker) {
     mDelegate = delegate;
     mTracker = tracker;
   }
@@ -38,14 +35,13 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   }
 
   @Override
-  public CloseableReference<V> cache(
-      K key, CloseableReference<V> value) {
+  public CloseableReference<V> cache(K key, CloseableReference<V> value) {
     mTracker.onCachePut();
     return mDelegate.cache(key, value);
   }
 
   @Override
-  public long removeAll(Predicate<K> match) {
-    return mDelegate.removeAll(match);
+  public int removeAll(Predicate<K> predicate) {
+    return mDelegate.removeAll(predicate);
   }
 }
