@@ -30,6 +30,7 @@ import com.facebook.drawee.generic.RoundingParams;
  * Fading animation parameters:
  * @attr ref com.facebook.R.styleable#GenericDraweeView_fadeDuration
  * Images & scale types parameters:
+ * @attr ref com.facebook.R.styleable#GenericDraweeView_viewAspectRatio
  * @attr ref com.facebook.R.styleable#GenericDraweeView_placeholderImage
  * @attr ref com.facebook.R.styleable#GenericDraweeView_placeholderImageScaleType
  * @attr ref com.facebook.R.styleable#GenericDraweeView_retryImage
@@ -124,6 +125,11 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
         fadeDuration = gdhAttrs.getInt(
             R.styleable.GenericDraweeView_fadeDuration,
             fadeDuration);
+
+        // aspect ratio
+        mAspectRatio = gdhAttrs.getFloat(
+            R.styleable.GenericDraweeView_viewAspectRatio,
+            mAspectRatio);
 
         // placeholder image
         placeholderId = gdhAttrs.getResourceId(

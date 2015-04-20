@@ -10,6 +10,9 @@
     For drawables that should not be scaled, such as those with the android:tileMode
     attribute set, use the value 'none'. -->
 
+    <!-- Aspect ratio (width / height) of the view, not necessarily of the images. -->
+    <attr name="viewAspectRatio" format="float"/>
+
     <!-- A drawable or color to be be used as a placeholder. -->
     <attr name="placeholderImage" format="reference"/>
     <!-- Scale type of the placeholder image. Ignored if placeholderImage is not specified. -->
