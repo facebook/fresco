@@ -13,6 +13,7 @@ LOCAL_SRC_FILES := \
 	Bitmaps.c
 
 LOCAL_CFLAGS += -Wall -Wextra -Werror -std=c11
+LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_LDLIBS := -ljnigraphics
 
 include $(BUILD_SHARED_LIBRARY)

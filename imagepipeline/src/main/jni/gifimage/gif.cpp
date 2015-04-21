@@ -11,7 +11,6 @@
 
 #include <jni.h>
 #include <algorithm>
-#include <array>
 #include <memory>
 #include <mutex>
 #include <utility>

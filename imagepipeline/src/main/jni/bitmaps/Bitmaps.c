@@ -132,6 +132,7 @@ static JNINativeMethod bitmaps_native_methods[] = {
     (void*) Bitmaps_copyBitmap },
 };
 
+__attribute__((visibility("default")))
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   UNUSED(reserved);
   JNIEnv* env;

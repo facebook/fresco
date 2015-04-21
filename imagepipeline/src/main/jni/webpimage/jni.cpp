@@ -18,6 +18,7 @@
 int initWebPImage(JNIEnv *env);
 
 // Registers jni methods.
+__attribute__((visibility("default")))
 jint JNI_OnLoad(JavaVM* vm, void* reserved) {
   // get the current env
   JNIEnv* env;

@@ -31,6 +31,7 @@ jclass jRuntimeException_class;
  *
  * <p> In case of method registration failure a RuntimeException is thrown.
  */
+__attribute__((visibility("default")))
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   JNIEnv* env;
 

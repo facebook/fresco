@@ -17,7 +17,7 @@
  */
 #define UNUSED(p) ((void) (p))
 
-jclass jRuntimeException_class;
+static jclass jRuntimeException_class;
 
 static jlong NativeMemoryChunk_nativeAllocate(
     JNIEnv* env,
@@ -112,6 +112,7 @@ static JNINativeMethod gNativeMemoryChunkMethods[] = {
  * - looks up and stores global references to Java classes used by native code
  * - registers native methods of NativeMemoryChunk
  */
+__attribute__((visibility("default")))
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   UNUSED(reserved);
 

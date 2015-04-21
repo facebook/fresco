@@ -36,7 +36,6 @@ public class ImagePipelineNativeLoader {
   public static final List<String> DEPENDENCIES;
   static {
     List<String> dependencies = new ArrayList<String>();
-    dependencies.add("gnustl_shared");
     dependencies.add("webp");
     DEPENDENCIES = Collections.unmodifiableList(dependencies);
   }
