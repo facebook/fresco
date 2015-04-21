@@ -32,7 +32,7 @@ public class GifImage implements AnimatedImage {
   // Accessed by native methods
   @SuppressWarnings("unused")
   @DoNotStrip
-  private int mNativeContext;
+  private long mNativeContext;
 
   private static synchronized void ensure() {
     if (!sInitialized) {
@@ -72,7 +72,7 @@ public class GifImage implements AnimatedImage {
    * @param nativeContext the native pointer
    */
   @DoNotStrip
-  GifImage(int nativeContext) {
+  GifImage(long nativeContext) {
     mNativeContext = nativeContext;
   }
 
