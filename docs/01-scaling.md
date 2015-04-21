@@ -3,7 +3,7 @@ id: scaling
 title: Scaling
 layout: docs
 permalink: /docs/scaling.html
-prev: drawee-components.html
+prev: progress-bars.html
 next: rounded-corners-and-circles.html
 ---
 

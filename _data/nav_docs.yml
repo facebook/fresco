@@ -16,6 +16,8 @@
     title: Using Drawees in Code
   - id: drawee-components
     title: Drawee Components
+  - id: progress-bars
+    title: Progress Bars
   - id: scaling
     title: Scaling
   - id: rounded-corners-and-circles

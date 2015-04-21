@@ -1,10 +1,10 @@
 ---
 id: drawee-components
-title: Drawee Image Branches
+title: Drawee Components
 layout: docs
 permalink: /docs/drawee-components.html
 prev: using-drawees-code.html
-next: scaling.html
+next: progress-bars.html
 ---
 
 ## Contents
@@ -21,7 +21,7 @@ next: scaling.html
 
 ## Definitions
 
-This page outlines the different image branches that can be displayed in a Drawee, and how they are set.
+This page outlines the different components ("image branches" in the source) that can be displayed in a Drawee, and how they are set.
 
 Except for the actual image, all of them can be set by an XML attribute. The value in XML must be either an Android drawable or color resource.
 
@@ -88,7 +88,7 @@ Default scale type: `centerInside`
 
 If specified, the _progress bar_ image is shown as an overlay over the Drawee until the final image is set.
 
-Currently the progress bar remains the same throughout the image load; actually changing in response to progress is not yet supported.
+For more details, see the [progress bar](progress-bars.html) page.
 
 XML attribute: `progressBarImage`  
 Hierarchy builder method: `setProgressBarImage`  
