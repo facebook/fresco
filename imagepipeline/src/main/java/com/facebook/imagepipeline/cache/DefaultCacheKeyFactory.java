@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.cache;
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
@@ -31,7 +32,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public BitmapMemoryCacheKey getBitmapCacheKey(ImageRequest request) {
+  public CacheKey getBitmapCacheKey(ImageRequest request) {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
@@ -41,7 +42,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
 
   @Override
   public CacheKey getEncodedCacheKey(ImageRequest request) {
-    return new CacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
+    return new SimpleCacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
   }
 
   @Override

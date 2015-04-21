@@ -52,7 +52,7 @@ public class ImagePipeline {
   private final ProducerSequenceFactory mProducerSequenceFactory;
   private final RequestListener mRequestListener;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
-  private final MemoryCache<BitmapMemoryCacheKey, CloseableImage> mBitmapMemoryCache;
+  private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
 
@@ -62,7 +62,7 @@ public class ImagePipeline {
       ProducerSequenceFactory producerSequenceFactory,
       Set<RequestListener> requestListeners,
       Supplier<Boolean> isPrefetchEnabledSupplier,
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       CacheKeyFactory cacheKeyFactory) {
     mIdCounter = new AtomicLong();
@@ -234,11 +234,14 @@ public class ImagePipeline {
    */
   public void evictFromMemoryCache(final Uri uri) {
     final String cacheKeySourceString = mCacheKeyFactory.getCacheKeySourceUri(uri).toString();
-    Predicate<BitmapMemoryCacheKey> bitmapCachePredicate =
-        new Predicate<BitmapMemoryCacheKey>() {
+    Predicate<CacheKey> bitmapCachePredicate =
+        new Predicate<CacheKey>() {
           @Override
-          public boolean apply(BitmapMemoryCacheKey key) {
-            return key.getSourceUriString().equals(cacheKeySourceString);
+          public boolean apply(CacheKey key) {
+            if (key instanceof BitmapMemoryCacheKey) {
+              return ((BitmapMemoryCacheKey) key).getSourceUriString().equals(cacheKeySourceString);
+            }
+            return false;
           }
         };
     mBitmapMemoryCache.removeAll(bitmapCachePredicate);

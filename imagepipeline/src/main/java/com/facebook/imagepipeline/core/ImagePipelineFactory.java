@@ -37,7 +37,6 @@ import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
@@ -79,7 +78,7 @@ public class ImagePipelineFactory {
   /** Shuts {@link ImagePipelineFactory} down. */
   public static void shutDown() {
     if (sInstance != null) {
-      sInstance.getBitmapMemoryCache().removeAll(AndroidPredicates.<BitmapMemoryCacheKey>True());
+      sInstance.getBitmapMemoryCache().removeAll(AndroidPredicates.<CacheKey>True());
       sInstance.getEncodedMemoryCache().removeAll(AndroidPredicates.<CacheKey>True());
       sInstance = null;
     }
@@ -88,9 +87,9 @@ public class ImagePipelineFactory {
   private final ImagePipelineConfig mConfig;
 
   private AnimatedDrawableFactory mAnimatedDrawableFactory;
-  private CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage>
+  private CountingMemoryCache<CacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
-  private MemoryCache<BitmapMemoryCacheKey, CloseableImage> mBitmapMemoryCache;
+  private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private EmptyJpegGenerator mEmptyJpegGenerator;
   private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
@@ -109,7 +108,7 @@ public class ImagePipelineFactory {
   // TODO(5959048): these methods should be taken private
   // We need them public for now so internal code can use them.
 
-  public CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage>
+  public CountingMemoryCache<CacheKey, CloseableImage>
       getBitmapCountingMemoryCache() {
     if (mBitmapCountingMemoryCache == null) {
       mBitmapCountingMemoryCache =
@@ -120,7 +119,7 @@ public class ImagePipelineFactory {
     return mBitmapCountingMemoryCache;
   }
 
-  public MemoryCache<BitmapMemoryCacheKey, CloseableImage> getBitmapMemoryCache() {
+  public MemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
     if (mBitmapMemoryCache == null) {
       mBitmapMemoryCache =
           BitmapMemoryCacheFactory.get(

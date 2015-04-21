@@ -9,12 +9,13 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapCountingMemoryCacheFactory {
-  public static CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> get(
+  public static CountingMemoryCache<CacheKey, CloseableImage> get(
       Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry) {
 
@@ -28,7 +29,7 @@ public class BitmapCountingMemoryCacheFactory {
 
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new BitmapMemoryCacheTrimStrategy();
 
-    CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage> countingCache =
+    CountingMemoryCache<CacheKey, CloseableImage> countingCache =
         new CountingMemoryCache<>(valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier);
 
      memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);

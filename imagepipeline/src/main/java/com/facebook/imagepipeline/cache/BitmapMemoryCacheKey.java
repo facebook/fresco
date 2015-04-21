@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import android.net.Uri;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.HashCodeUtil;
@@ -24,7 +25,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 /**
  * Cache key for BitmapMemoryCache
  */
-public class BitmapMemoryCacheKey {
+public class BitmapMemoryCacheKey implements CacheKey {
   private final String mSourceString;
   private final @Nullable ResizeOptions mResizeOptions;
   private final boolean mAutoRotated;
@@ -64,10 +65,6 @@ public class BitmapMemoryCacheKey {
   @Override
   public int hashCode() {
     return mHash;
-  }
-
-  public Uri sourceUri() {
-    return Uri.parse(mSourceString);
   }
 
   public String getSourceUriString() {

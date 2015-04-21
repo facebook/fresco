@@ -18,7 +18,6 @@ import android.util.Pair;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
@@ -75,7 +74,7 @@ public class ProducerFactory {
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  private final MemoryCache<BitmapMemoryCacheKey, CloseableImage> mBitmapMemoryCache;
+  private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
 
   // Postproc dependencies
@@ -88,7 +87,7 @@ public class ProducerFactory {
       ProgressiveJpegConfig progressiveJpegConfig,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
