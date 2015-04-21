@@ -4988,6 +4988,182 @@
 </package>
 <package name="com.facebook.drawee.drawable"
 >
+<class name="ProgressBarDrawable"
+ extends="android.graphics.drawable.Drawable"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ProgressBarDrawable"
+ type="com.facebook.drawee.drawable.ProgressBarDrawable"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="draw"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="canvas" type="android.graphics.Canvas">
+</parameter>
+</method>
+<method name="getBackgroundColor"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getBarWidth"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getColor"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getHideWhenZero"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getOpacity"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setAlpha"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="alpha" type="int">
+</parameter>
+</method>
+<method name="setBackgroundColor"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="backgroundColor" type="int">
+</parameter>
+</method>
+<method name="setBarWidth"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="barWidth" type="int">
+</parameter>
+</method>
+<method name="setColor"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="color" type="int">
+</parameter>
+</method>
+<method name="setColorFilter"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cf" type="android.graphics.ColorFilter">
+</parameter>
+</method>
+<method name="setHideWhenZero"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="hideWhenZero" type="boolean">
+</parameter>
+</method>
+<method name="setPadding"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="padding" type="int">
+</parameter>
+</method>
+</class>
 <class name="ScalingUtils"
  extends="java.lang.Object"
  abstract="false"
@@ -7770,6 +7946,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<implements name="com.facebook.imagepipeline.cache.MemoryCache">
+</implements>
 <implements name="com.facebook.common.memory.MemoryTrimmable">
 </implements>
 <constructor name="CountingMemoryCache"
@@ -7779,9 +7957,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="memoryCacheIndex" type="com.facebook.imagepipeline.cache.MemoryCacheIndex&lt;K, V, S&gt;">
-</parameter>
-<parameter name="valueInfoCallback" type="com.facebook.imagepipeline.cache.CountingMemoryCache.ValueInfoCallback&lt;V&gt;">
+<parameter name="valueDescriptor" type="&lt;any&gt;">
 </parameter>
 <parameter name="cacheTrimStrategy" type="com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy">
 </parameter>
@@ -7800,21 +7976,10 @@
 >
 <parameter name="key" type="K">
 </parameter>
-<parameter name="value" type="com.facebook.common.references.CloseableReference&lt;V&gt;">
+<parameter name="valueRef" type="com.facebook.common.references.CloseableReference&lt;V&gt;">
 </parameter>
 </method>
 <method name="clear"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="clearEvictionQueue"
  return="void"
  abstract="false"
  native="false"
@@ -7836,8 +8001,6 @@
  visibility="public"
 >
 <parameter name="key" type="K">
-</parameter>
-<parameter name="strategy" type="S">
 </parameter>
 </method>
 <method name="getCount"
@@ -7873,6 +8036,28 @@
  visibility="public"
 >
 </method>
+<method name="getInUseCount"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getInUseSizeInBytes"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getSizeInBytes"
  return="int"
  abstract="false"
@@ -7884,23 +8069,8 @@
  visibility="public"
 >
 </method>
-<method name="release"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="key" type="K">
-</parameter>
-<parameter name="value" type="com.facebook.common.references.CloseableReference&lt;V&gt;">
-</parameter>
-</method>
 <method name="removeAll"
- return="long"
+ return="int"
  abstract="false"
  native="false"
  synchronized="false"
@@ -7909,7 +8079,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="match" type="com.android.internal.util.Predicate&lt;K&gt;">
+<parameter name="predicate" type="com.android.internal.util.Predicate&lt;K&gt;">
 </parameter>
 </method>
 <method name="trim"
@@ -7923,21 +8093,6 @@
  visibility="public"
 >
 <parameter name="trimType" type="com.facebook.common.memory.MemoryTrimType">
-</parameter>
-</method>
-<method name="trimCacheTo"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="maxCount" type="int">
-</parameter>
-<parameter name="maxSize" type="int">
 </parameter>
 </method>
 <field name="mMemoryCacheParams"
@@ -7958,8 +8113,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<method name="trimCache"
- return="void"
+<method name="getTrimRatio"
+ return="double"
  abstract="true"
  native="false"
  synchronized="false"
@@ -7968,30 +8123,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="cache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;?, ?, ?&gt;">
-</parameter>
 <parameter name="trimType" type="com.facebook.common.memory.MemoryTrimType">
-</parameter>
-</method>
-</interface>
-<interface name="CountingMemoryCache.ValueInfoCallback"
- abstract="true"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="getSizeInBytes"
- return="long"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="value" type="V">
 </parameter>
 </method>
 </interface>
@@ -8202,7 +8334,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="bitmapMemoryCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;?, ?, ?&gt;">
+<parameter name="bitmapMemoryCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;?, ?&gt;">
 </parameter>
 </method>
 <method name="registerEncodedMemoryCache"
@@ -8215,7 +8347,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;?, ?, ?&gt;">
+<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;?, ?&gt;">
 </parameter>
 </method>
 </interface>
@@ -8468,9 +8600,9 @@
 </parameter>
 <parameter name="isPrefetchEnabledSupplier" type="com.facebook.common.internal.Supplier&lt;java.lang.Boolean&gt;">
 </parameter>
-<parameter name="bitmapMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.imagepipeline.cache.BitmapMemoryCacheKey, com.facebook.imagepipeline.image.CloseableImage, java.lang.Void&gt;">
+<parameter name="bitmapMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.imagepipeline.cache.BitmapMemoryCacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
-<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer, java.lang.Void&gt;">
+<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
@@ -9048,7 +9180,7 @@
 >
 </method>
 <method name="getBitmapCountingMemoryCache"
- return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.imagepipeline.cache.BitmapMemoryCacheKey, com.facebook.imagepipeline.image.CloseableImage, java.lang.Void&gt;"
+ return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.imagepipeline.cache.BitmapMemoryCacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -9059,7 +9191,7 @@
 >
 </method>
 <method name="getBitmapMemoryCache"
- return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.imagepipeline.cache.BitmapMemoryCacheKey, com.facebook.imagepipeline.image.CloseableImage, java.lang.Void&gt;"
+ return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.imagepipeline.cache.BitmapMemoryCacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -9070,7 +9202,7 @@
 >
 </method>
 <method name="getEncodedCountingMemoryCache"
- return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer, java.lang.Void&gt;"
+ return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -9081,7 +9213,7 @@
 >
 </method>
 <method name="getEncodedMemoryCache"
- return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer, java.lang.Void&gt;"
+ return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
