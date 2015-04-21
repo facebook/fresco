@@ -75,7 +75,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%s_%s_%s_%d_%d",
+        "%s_%s_%s_%s_%d",
         mSourceString,
         mResizeOptions,
         Boolean.toString(mAutoRotated),
