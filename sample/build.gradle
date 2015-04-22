@@ -31,12 +31,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../proguard-fresco.pro'
         }
     }
-    productFlavors {
-    }
+
     lintOptions {
         warning 'InvalidPackage'
     }
