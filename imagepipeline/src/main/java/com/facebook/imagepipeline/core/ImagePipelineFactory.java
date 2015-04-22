@@ -105,8 +105,7 @@ public class ImagePipelineFactory {
     mConfig = Preconditions.checkNotNull(config);
   }
 
-  // TODO(5959048): these methods should be taken private
-  // We need them public for now so internal code can use them.
+  // We need some of these methods public for now so internal code can use them.
 
   public CountingMemoryCache<CacheKey, CloseableImage>
       getBitmapCountingMemoryCache() {
@@ -127,15 +126,6 @@ public class ImagePipelineFactory {
               mConfig.getImageCacheStatsTracker());
     }
     return mBitmapMemoryCache;
-  }
-
-  private EmptyJpegGenerator getEmptyJpegGenerator() {
-    if (mEmptyJpegGenerator == null) {
-      mEmptyJpegGenerator =
-          new EmptyJpegGenerator(
-              mConfig.getPoolFactory().getPooledByteBufferFactory());
-    }
-    return mEmptyJpegGenerator;
   }
 
   public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
@@ -192,10 +182,6 @@ public class ImagePipelineFactory {
               mConfig.getCacheKeyFactory());
     }
     return mImagePipeline;
-  }
-
-  public PlatformBitmapFactory getPlatformBitmapFactory() {
-    return mConfig.getPlatformBitmapFactory();
   }
 
   private ProducerFactory getProducerFactory() {
