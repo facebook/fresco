@@ -33,7 +33,7 @@ from collections import namedtuple
 from subprocess import check_call, PIPE, Popen
 
 """ List of tested libraries """
-TESTS = [
+TESTS = (
     'fresco',
     'fresco-okhttp',
     'glide',
@@ -41,7 +41,13 @@ TESTS = [
     'uil',
     'volley',
     'drawee-volley'
-]
+)
+
+CPUS = (
+    'Arm',
+    'ArmV7',
+    'X86'
+)
 
 """ Appends test class name to method name """
 TEST_PATTERN = 'test{}'
@@ -60,6 +66,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='Runs comparison test and processes results')
     parser.add_argument('-s', '--scenarios', choices=TESTS, nargs='+')
+    parser.add_argument('-c', '--cpu', choices=CPUS, default='ArmV7')
     return parser.parse_args()
 
 
@@ -86,10 +93,10 @@ def adb(command):
     run_command('adb {}'.format(command))
 
 
-def install_apks():
+def install_apks(cpu):
     """ Installs sample app and comparison apks """
     print("Installing sample app...")
-    gradle(':sample:installDebug', ':sample:installDebugTest')
+    gradle(':sample:install%sDebug' % cpu, ':sample:install%sDebugTest' % cpu)
 
 
 class ComparisonTest:
@@ -197,7 +204,7 @@ def main():
     else:
         scenarios = TESTS
 
-    install_apks()
+    install_apks(args.cpu)
 
     for scenario_name in scenarios:
         print()
