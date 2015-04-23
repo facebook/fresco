@@ -33,20 +33,19 @@ Add the following to the `<dependencies>` section of your `pom.xml` file:
 </dependency>
 ```
 
-### Eclipse ADT / Ant
+### Eclipse ADT
 
 Download the [zip file](https://github.com/facebook/fresco/releases/download/v0.3.0/fresco-v{{site.current_version}}.zip).
 
-When you expand it, it will create a directory called 'frescolib', with the following directory structure:
+When you expand it, it will create a directory called 'frescolib'. Note the location of this directory.
 
-    frescolib/
-      drawee/
-      fbcore/
-      fresco/
-      imagepipeline/
+1. From the File menu, choose Import.
+2. Expand Android, select "Existing Android Code into Workspace", and click Next.
+3. Click Browse, navigate to the frescolib directory, and click OK.
+4. Four projects should be added: drawee, fbcore, fresco, and imagepipeline. Make sure all four are checked. Click Finish.
+5. Right-click (Ctrl-click on Mac) on your project and choose Properties, then click Android.
+6. Click the Add button in the bottom right, select Fresco, and click OK, then click OK again.
 
-In your Eclipse workspace, import all four of these subdirectories as Eclipse projects. Use File, Import, Android, "Existing Android Code into Workspace".
+You should now be able to build your app with Fresco.
 
-Then in your app's own project, add a dependency on 'fresco'. Right-click on your project, choose Properties, then Android. Click Add and select fresco.
-
-
+If you get a "Jar Mismatch" warning about android-support-v4.jar, delete the one in frescolib/imagepipeline/libs.
