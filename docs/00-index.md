@@ -35,7 +35,7 @@ Add the following to the `<dependencies>` section of your `pom.xml` file:
 
 ### Eclipse ADT
 
-Download the [zip file](https://github.com/facebook/fresco/releases/download/v{{site.current_version}}/fresco-v{{site.current_version}}.zip).
+Download the [zip file](https://github.com/facebook/fresco/releases/download/v{{site.current_version}}/frescolib-v{{site.current_version}}.zip).
 
 When you expand it, it will create a directory called 'frescolib'. Note the location of this directory.
 
