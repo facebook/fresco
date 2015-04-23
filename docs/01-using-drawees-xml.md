@@ -66,10 +66,11 @@ You can force a DraweeView to be laid out in a particular aspect ratio. If you w
     android:id="@+id/my_image_view"
     android:layout_width="20dp"
     android:layout_height="wrap_content"
+    fresco:viewAspectRatio="1.33f"
     <!-- other attributes -->
 ```
 
-Then specify your aspect ratio in Java:
+You can also specify your aspect ratio in Java:
 
 ```java
 mSimpleDraweeView.setAspectRatio(1.33f);
