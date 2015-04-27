@@ -34,6 +34,8 @@ A snap to use, right? There is a caveat.
 
 You can **not** assign the bitmap to any variable not in the scope of the `onNewResultImpl` method. The reason is that, after the subscriber has finished executing, the image pipeline will recycle the bitmap and free its memory. If you try to draw the bitmap after that, your app will crash with an `IllegalStateException.`
 
+You can still safely pass the Bitmap to an Android [notification](https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#setLargeIcon\(android.graphics.Bitmap\)) or [remote view](http://developer.android.com/reference/android/widget/RemoteViews.html#setImageViewBitmap\(int, android.graphics.Bitmap\)). If Android needs your Bitmap in order to pass it to a system process, it makes a copy of the Bitmap data in ashmem - the same heap used by Fresco. So Fresco's automatic cleanup will work without issue.
+
 ### General-purpose solution
 
 If you want to keep the bitmap around, you can't use raw Bitmaps at all. You must make use of [closeable references](closeable-references.html) and the [BaseDataSubscriber](../javadoc/reference/com/facebook/datasource/BaseDataSubscriber.html):
