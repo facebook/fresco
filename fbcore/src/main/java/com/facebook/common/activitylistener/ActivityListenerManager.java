@@ -32,13 +32,12 @@ public class ActivityListenerManager {
   public static void register(
       ActivityListener activityListener,
       Context context) {
-    if (!(context instanceof ListenableActivity) && context instanceof ContextWrapper) {
-      context = ((ContextWrapper) context).getBaseContext();
-    }
     if (context instanceof ListenableActivity) {
       ListenableActivity listenableActivity = (ListenableActivity) context;
       Listener listener = new Listener(activityListener);
       listenableActivity.addActivityListener(listener);
+    } else if (context instanceof ContextWrapper) {
+      context = ((ContextWrapper) context).getBaseContext();
     }
   }
 
