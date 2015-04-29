@@ -53,6 +53,7 @@ android {
     compileSdkVersion 21
 
     packagingOptions {
+        exclude 'NOTICE'
         exclude 'LICENSE'
         exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE'
