@@ -13,6 +13,8 @@ By default, the image pipeline uses the [HttpURLConnection](https://developer.an
 
 [OkHttp](http://square.github.io/okhttp) is a popular open-source networking library. The image pipeline has a backend that uses OkHttp instead of the Android default.
 
+#####  OkHttp in Gradle
+
 In order to use it, the `dependencies` section of your `build.gradle` file needs to be changed. Do **not** use the Gradle dependencies given on the [download](index.html) page. Use these instead:
 
 ```groovy
@@ -22,6 +24,12 @@ dependencies {
   compile "com.facebook.fresco:imagepipeline-okhttp:{{site.current_version}}+"
 }
 ```
+
+##### OkHttp in Eclipse
+
+Eclipse users should depend on **both** the `fresco` and `imagepipeline-okhttp` directories in the `frescolib` tree as described in the [Eclipse instructions](index.html#eclipse-adt).
+
+##### Configuring the image pipeline with OkHttp
 
 You must also configure the image pipeline a little differently. Instead of using `ImagePipelineConfig.newBuilder`, use `OkHttpImagePipelineConfigFactory` instead:
 
