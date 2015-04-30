@@ -302,7 +302,7 @@ int readSingleFrame(
   }
 
   size_t imageSize = pSavedImage->ImageDesc.Width * pSavedImage->ImageDesc.Height;
-  if (imageSize > pGifFile->SWidth * pGifFile->SHeight) {
+  if (imageSize > (unsigned)(pGifFile->SWidth * pGifFile->SHeight)) {
     return GIF_ERROR;
   }
 
@@ -1000,7 +1000,12 @@ void GifFrame_nativeRenderFrame(
     return;
   }
 
-  if (bitmapInfo.width < width || bitmapInfo.height < height) {
+  if (width < 0 || height < 0) {
+    throwIllegalArgumentException(pEnv, "Width or height is negative");
+    return;
+  }
+  
+  if (bitmapInfo.width < (unsigned) width || bitmapInfo.height < (unsigned) height) {
     throwIllegalStateException(pEnv, "Width or height is too small");
     return;
   }
