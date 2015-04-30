@@ -19,13 +19,6 @@ LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_LDLIBS += -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
-ifeq ($(BUCK_BUILD), 1)
-  LOCAL_CFLAGS += $(BUCK_DEP_CFLAGS)
-  LOCAL_LDFLAGS += $(BUCK_DEP_LDFLAGS)
-  include $(BUILD_SHARED_LIBRARY)
-else
-  LOCAL_SHARED_LIBRARIES += webp
-  include $(BUILD_SHARED_LIBRARY)
-  $(call import-module, libwebp-0.4.2)
-endif
-
+LOCAL_SHARED_LIBRARIES += webp
+include $(BUILD_SHARED_LIBRARY)
+$(call import-module, libwebp-0.4.2)

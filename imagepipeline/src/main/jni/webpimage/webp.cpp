@@ -204,7 +204,6 @@ jobject WebPImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>&
   jint durationMs = 0;
   std::vector<jint> frameDurationsMs;
   WebPIterator iter;
-  int i = 0;
   if (WebPDemuxGetFrame(spDemuxer.get(), 1, &iter)) {
     do {
       durationMs += iter.duration;
@@ -604,7 +603,12 @@ void WebPFrame_nativeRenderFrame(
     return;
   }
 
-  if (bitmapInfo.width < width || bitmapInfo.height < height) {
+  if (width < 0 || height < 0) {
+    throwIllegalArgumentException(pEnv, "Width or height is negative !");
+    return;
+  }
+  
+  if (bitmapInfo.width < (unsigned) width || bitmapInfo.height < (unsigned) height) {
     throwIllegalStateException(pEnv, "Width or height is too small");
     return;
   }
