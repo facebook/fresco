@@ -174,7 +174,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * swallow result if prefetch -> bitmap cache get -> wait if scrolling ->
+   * swallow result if prefetch -> bitmap cache get ->
    * background thread hand-off -> multiplex -> bitmap cache -> decode -> multiplex ->
    * encoded cache -> disk cache -> (webp transcode) -> network fetch.
    */
@@ -231,7 +231,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * bitmap cache get -> wait if scrolling ->
+   * bitmap cache get ->
    * background thread hand-off -> multiplex -> bitmap cache -> decode ->
    * branch on separate images
    *   -> exif resize and rotate -> exif thumbnail creation
@@ -250,7 +250,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * Bitmap cache get -> wait if scrolling -> thread hand off -> multiplex -> bitmap cache ->
+   * Bitmap cache get -> thread hand off -> multiplex -> bitmap cache ->
    * local video thumbnail
    */
   private synchronized Producer<CloseableReference<CloseableImage>>
@@ -265,7 +265,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * bitmap cache get -> wait if scrolling ->
+   * bitmap cache get ->
    * background thread hand-off -> multiplex -> bitmap cache -> decode ->
    * branch on separate images
    *   -> exif resize and rotate -> exif thumbnail creation
@@ -284,7 +284,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * bitmap cache get -> wait if scrolling ->
+   * bitmap cache get ->
    * background thread hand-off -> multiplex -> bitmap cache -> decode ->
    * branch on separate images
    *   -> exif resize and rotate -> exif thumbnail creation
@@ -303,7 +303,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * bitmap cache get -> wait if scrolling ->
+   * bitmap cache get ->
    * background thread hand-off -> multiplex -> bitmap cache -> decode ->
    * branch on separate images
    *   -> exif resize and rotate -> exif thumbnail creation
@@ -366,7 +366,7 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * Bitmap cache get -> wait if scrolling -> thread hand off -> multiplex -> bitmap cache
+   * Bitmap cache get -> thread hand off -> multiplex -> bitmap cache
    * @param nextProducer next producer in the sequence after bitmap cache
    * @return bitmap cache get to bitmap cache sequence
    */
