@@ -49,8 +49,8 @@ task generateTestSources {
 test.dependsOn(generateTestSources)
 
 android {
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+    compileSdkVersion 22
 
     packagingOptions {
       exclude 'LICENSE'
