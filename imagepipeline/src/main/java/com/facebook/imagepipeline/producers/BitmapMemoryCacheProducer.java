@@ -9,9 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -22,18 +22,18 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Memory cache producer for the bitmap memory cache.
  */
 public class BitmapMemoryCacheProducer
-    extends MemoryCacheProducer<BitmapMemoryCacheKey, CloseableImage> {
+    extends MemoryCacheProducer<CacheKey, CloseableImage> {
   @VisibleForTesting static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
 
   public BitmapMemoryCacheProducer(
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> memoryCache,
+      MemoryCache<CacheKey, CloseableImage> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<CloseableReference<CloseableImage>> nextProducer) {
     super(memoryCache, cacheKeyFactory, nextProducer);
   }
 
   @Override
-  protected BitmapMemoryCacheKey getCacheKey(ImageRequest imageRequest) {
+  protected CacheKey getCacheKey(ImageRequest imageRequest) {
     return mCacheKeyFactory.getBitmapCacheKey(imageRequest);
   }
 
@@ -56,7 +56,7 @@ public class BitmapMemoryCacheProducer
   @Override
   protected boolean shouldCacheResult(
       CloseableReference<CloseableImage> result,
-      BitmapMemoryCacheKey cacheKey,
+      CacheKey cacheKey,
       boolean isLast) {
     if (result.get().isStateful()) {
       return false;
@@ -66,8 +66,8 @@ public class BitmapMemoryCacheProducer
 
   private boolean shouldCacheIntermediateResult(
       CloseableReference<CloseableImage> newResult,
-      BitmapMemoryCacheKey cacheKey) {
-    CloseableReference<CloseableImage> currentCachedResult = mMemoryCache.get(cacheKey, null);
+      CacheKey cacheKey) {
+    CloseableReference<CloseableImage> currentCachedResult = mMemoryCache.get(cacheKey);
     if (currentCachedResult == null) {
       return true;
     }

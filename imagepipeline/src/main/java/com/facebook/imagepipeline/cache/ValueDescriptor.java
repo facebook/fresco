@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
+package com.facebook.imagepipeline.cache;
 
-#ifndef _BITMAPS_H_
-#define _BITMAPS_H_
+/**
+ * Interface used to get the information about the values.
+ */
+public interface ValueDescriptor<V> {
 
-#include <jni.h>
-
-bool registerBitmapsMethods(JNIEnv* env);
-
-#endif /* _BITMAPS_H_ */
+  /** Returns the size in bytes of the given value. */
+  int getSizeInBytes(V value);
+}

@@ -12,15 +12,15 @@ package com.facebook.imagepipeline.memory;
 import com.facebook.common.util.ByteConstants;
 
 /**
- * Provides pool parameters ({@link PoolParams}) for {@link SingleByteArrayPool}
+ * Provides pool parameters ({@link PoolParams}) for {@link SharedByteArray}
  */
-public class DefaultSingleByteArrayPoolParams {
+public class DefaultSharedByteArrayParams {
   // the default max buffer size we'll use
   private static final int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
   // the min buffer size we'll use
   private static final int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
 
-  private DefaultSingleByteArrayPoolParams() {
+  private DefaultSharedByteArrayParams() {
   }
 
   public static PoolParams get() {

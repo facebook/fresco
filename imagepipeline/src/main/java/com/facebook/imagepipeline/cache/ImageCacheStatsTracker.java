@@ -61,12 +61,12 @@ public interface ImageCacheStatsTracker {
    *
    * <p>Use this method if you need access to the cache itself to compile your stats.
    */
-  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?, ?> bitmapMemoryCache);
+  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache);
 
   /**
    * Registers an encoded memory cache with this tracker.
    *
    * <p>Use this method if you need access to the cache itself to compile your stats.
    */
-  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?, ?> encodedMemoryCache);
+  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?> encodedMemoryCache);
 }

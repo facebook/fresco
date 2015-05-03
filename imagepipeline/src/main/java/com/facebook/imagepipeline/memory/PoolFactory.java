@@ -26,7 +26,7 @@ public class PoolFactory {
   private NativeMemoryChunkPool mNativeMemoryChunkPool;
   private PooledByteBufferFactory mPooledByteBufferFactory;
   private PooledByteStreams mPooledByteStreams;
-  private SingleByteArrayPool mSingleByteArrayPool;
+  private SharedByteArray mSharedByteArray;
 
   public PoolFactory(PoolConfig config) {
     mConfig = Preconditions.checkNotNull(config);
@@ -78,13 +78,12 @@ public class PoolFactory {
     return mPooledByteStreams;
   }
 
-  public SingleByteArrayPool getSingleByteArrayPool() {
-    if (mSingleByteArrayPool == null) {
-      mSingleByteArrayPool = new SingleByteArrayPool(
+  public SharedByteArray getSharedByteArray() {
+    if (mSharedByteArray == null) {
+      mSharedByteArray = new SharedByteArray(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getSingleByteArrayPoolParams(),
-          mConfig.getSingleByteArrayPoolStatsTracker());
+          mConfig.getSharedByteArrayParams());
     }
-    return mSingleByteArrayPool;
+    return mSharedByteArray;
   }
 }

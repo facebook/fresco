@@ -17,11 +17,10 @@ import android.util.Pair;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
-import com.facebook.imagepipeline.decoder.CloseableImageCopier;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -74,12 +73,12 @@ public class ProducerFactory {
   // Cache dependencies
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
-  private final MemoryCache<CacheKey, PooledByteBuffer, Void> mEncodedMemoryCache;
-  private final MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> mBitmapMemoryCache;
+  private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
 
   // Postproc dependencies
-  private final CloseableImageCopier mCloseableImageCopier;
+  private final PlatformBitmapFactory mPlatformBitmapFactory;
 
   public ProducerFactory(
       Context context,
@@ -88,12 +87,12 @@ public class ProducerFactory {
       ProgressiveJpegConfig progressiveJpegConfig,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
-      MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> bitmapMemoryCache,
-      MemoryCache<CacheKey, PooledByteBuffer, Void> encodedMemoryCache,
+      MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
+      MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
-      CloseableImageCopier closeableImageCopier) {
+      PlatformBitmapFactory platformBitmapFactory) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -111,7 +110,7 @@ public class ProducerFactory {
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
 
-    mCloseableImageCopier = closeableImageCopier;
+    mPlatformBitmapFactory = platformBitmapFactory;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -217,7 +216,7 @@ public class ProducerFactory {
   public PostprocessorProducer newPostprocessorProducer(
       Producer<CloseableReference<CloseableImage>> nextProducer) {
     return new PostprocessorProducer(
-        nextProducer, mCloseableImageCopier, mExecutorSupplier.forBackground());
+        nextProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackground());
   }
 
   public static RemoveImageTransformMetaDataProducer newRemoveImageTransformMetaDataProducer(

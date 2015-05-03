@@ -4,6 +4,7 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.mcxiaoke.volley:library:${VOLLEY_VERSION}"
 
     compile project(':drawee')

@@ -37,8 +37,6 @@ public class GifImage implements AnimatedImage {
   private static synchronized void ensure() {
     if (!sInitialized) {
       sInitialized = true;
-      SoLoaderShim.loadLibrary("gnustl_shared");
-      SoLoaderShim.loadLibrary("gif");
       SoLoaderShim.loadLibrary("gifimage");
     }
   }

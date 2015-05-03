@@ -22,6 +22,7 @@ import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.common.WriterCallbacks;
 import com.facebook.common.disk.DiskTrimmableRegistry;
@@ -124,7 +125,7 @@ public class DiskStorageCacheTest {
   @Test
   public void testCacheEventListener() throws Exception {
     // 1. Add first cache file
-    CacheKey key1 = new CacheKey("foo");
+    CacheKey key1 = new SimpleCacheKey("foo");
     byte[] value1 = new byte[101];
     value1[80] = 'c'; // just so it's not all zeros for the equality test below.
     BinaryResource resource1 = mCache.insert(key1, WriterCallbacks.from(value1));
@@ -137,7 +138,7 @@ public class DiskStorageCacheTest {
     assertEquals(resource1, resource1Again2);
     verify(mCacheEventListener, times(2)).onHit();
 
-    BinaryResource res2 = mCache.getResource(new CacheKey("nonexistent_key"));
+    BinaryResource res2 = mCache.getResource(new SimpleCacheKey("nonexistent_key"));
     assertNull(res2);
     verify(mCacheEventListener).onMiss();
 
@@ -180,7 +181,7 @@ public class DiskStorageCacheTest {
     assertTrue(unexpected1.setLastModified(mClock.now()));
 
     // 1. Add first cache file
-    CacheKey key1 = new CacheKey("foo");
+    CacheKey key1 = new SimpleCacheKey("foo");
     byte[] value1 = new byte[101];
     value1[80] = 'c'; // just so it's not all zeros for the equality test below.
     mCache.insert(key1, WriterCallbacks.from(value1));
@@ -213,7 +214,7 @@ public class DiskStorageCacheTest {
     assertTrue(unexpected2.setLastModified(mClock.now()));
 
     // 2. Add second cache file
-    CacheKey key2 = new CacheKey("bar");
+    CacheKey key2 = new SimpleCacheKey("bar");
     byte[] value2 = new byte[102];
     value2[80] = 'd'; // just so it's not all zeros for the equality test below.
     mCache.insert(key2, WriterCallbacks.from(value2));
@@ -231,7 +232,7 @@ public class DiskStorageCacheTest {
     // before the next value is inserted).
 
     // 3. Add third cache file
-    CacheKey key3 = new CacheKey("foobar");
+    CacheKey key3 = new SimpleCacheKey("foobar");
     byte[] value3 = new byte[103];
     value3[80] = 'e'; // just so it's not all zeros for the equality test below.
     mCache.insert(key3, WriterCallbacks.from(value3));
@@ -271,7 +272,7 @@ public class DiskStorageCacheTest {
 
   @Test
   public void testCacheFileWithIOException() throws IOException {
-    CacheKey key1 = new CacheKey("aaa");
+    CacheKey key1 = new SimpleCacheKey("aaa");
 
     // Before inserting, make sure files not exist.
     final BinaryResource resource1 = getResource(key1);
@@ -301,7 +302,7 @@ public class DiskStorageCacheTest {
     }
 
     // Should not create a new file if reading hits an IOException.
-    CacheKey key2 = new CacheKey("bbb");
+    CacheKey key2 = new SimpleCacheKey("bbb");
     try {
       mCache.insert(
           key2, new WriterCallback() {
@@ -321,12 +322,12 @@ public class DiskStorageCacheTest {
     long cacheExpirationMs = TimeUnit.DAYS.toMillis(5);
     int value1size = 41;
     int value2size = 42;
-    CacheKey key1 = new CacheKey("aaa");
+    CacheKey key1 = new SimpleCacheKey("aaa");
     byte[] value1 = new byte[value1size];
     value1[25] = 'a';
     mCache.insert(key1, WriterCallbacks.from(value1));
 
-    CacheKey key2 = new CacheKey("bbb");
+    CacheKey key2 = new SimpleCacheKey("bbb");
     byte[] value2 = new byte[value2size];
     value2[25] = 'b';
     mCache.insert(key2, WriterCallbacks.from(value2));
@@ -335,7 +336,7 @@ public class DiskStorageCacheTest {
     when(mClock.now())
         .thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1));
 
-    CacheKey key3 = new CacheKey("ccc");
+    CacheKey key3 = new SimpleCacheKey("ccc");
     byte[] value3 = new byte[43];
     value3[25] = 'c';
     mCache.insert(key3, WriterCallbacks.from(value3));
@@ -357,11 +358,11 @@ public class DiskStorageCacheTest {
   @Test
   public void testCleanOldCacheNoEntriesRemaining() throws IOException {
     long cacheExpirationMs = TimeUnit.DAYS.toMillis(5);
-    CacheKey key1 = new CacheKey("aaa");
+    CacheKey key1 = new SimpleCacheKey("aaa");
     byte[] value1 = new byte[41];
     mCache.insert(key1, WriterCallbacks.from(value1));
 
-    CacheKey key2 = new CacheKey("bbb");
+    CacheKey key2 = new SimpleCacheKey("bbb");
     byte[] value2 = new byte[42];
     mCache.insert(key2, WriterCallbacks.from(value2));
 
@@ -383,7 +384,7 @@ public class DiskStorageCacheTest {
   public void testVersioning() throws IOException {
 
     // Define data that will be written to cache
-    CacheKey key = new CacheKey("version_test");
+    CacheKey key = new SimpleCacheKey("version_test");
     byte[] value = new byte[32];
     value[0] = 'v';
 
@@ -433,8 +434,8 @@ public class DiskStorageCacheTest {
         }
       }
     };
-    CacheKey key1 = new CacheKey("concurrent1");
-    CacheKey key2 = new CacheKey("concurrent2");
+    CacheKey key1 = new SimpleCacheKey("concurrent1");
+    CacheKey key2 = new SimpleCacheKey("concurrent2");
     Thread t1 = runInsertionInSeparateThread(key1, writerCallback);
     Thread t2 = runInsertionInSeparateThread(key2, writerCallback);
     barrier.await(10, TimeUnit.SECONDS);

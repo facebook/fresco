@@ -10,6 +10,7 @@
 package com.facebook.imagepipeline.backends.okhttp;
 
 import android.net.Uri;
+import android.os.Looper;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
@@ -27,6 +28,7 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
 
 /**
  * Network fetcher that uses OkHttp as a backend.
@@ -37,11 +39,14 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
 
   private final OkHttpClient mOkHttpClient;
 
+  private Executor mCancellationExecutor;
+
   /**
    * @param okHttpClient client to use
    */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
     mOkHttpClient = okHttpClient;
+    mCancellationExecutor = okHttpClient.getDispatcher().getExecutorService();
   }
 
   @Override
@@ -65,7 +70,15 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
         new BaseProducerContextCallbacks() {
           @Override
           public void onCancellationRequested() {
-            call.cancel();
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+              call.cancel();
+            } else {
+              mCancellationExecutor.execute(new Runnable() {
+                @Override public void run() {
+                  call.cancel();
+                }
+              });
+            }
           }
         });
 

@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_PLUGIN_VERSION}"
-        classpath "com.palominolabs.gradle.task:gradle-git-clone-task:${GRADLE_GIT_CLONE_TASK_VERSION}"
         classpath "de.undercouch:gradle-download-task:${GRADLE_DOWNLOAD_TASK_VERSION}"
         classpath "org.robolectric:robolectric-gradle-plugin:${ROBOLECTRIC_GRADLE_PLUGIN_VERSION}"
 
@@ -21,6 +20,13 @@ subprojects {
         mavenLocal()
         jcenter()
         mavenCentral()
+    }
+
+    task allclean {
+    }
+
+    afterEvaluate { project ->
+      allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
     }
 }
 

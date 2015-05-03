@@ -13,7 +13,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 
 /**
- * CountingMemoryCache eviction strategy appropriate for caches that store resources off the dalvik
+ * CountingMemoryCache eviction strategy appropriate for caches that store resources off the Dalvik
  * heap.
  *
  * <p>In case of OnCloseToDalvikHeapLimit nothing will be done. In case of other trim types
@@ -25,21 +25,18 @@ public class NativeMemoryCacheTrimStrategy implements CountingMemoryCache.CacheT
   public NativeMemoryCacheTrimStrategy() {}
 
   @Override
-  public void trimCache(CountingMemoryCache<?, ?, ?> cache, MemoryTrimType trimType) {
+  public double getTrimRatio(MemoryTrimType trimType) {
     switch (trimType) {
       case OnCloseToDalvikHeapLimit:
-        // Cached resources do not consume dalvik heap. We should not clear the
-        // cache in case of OnCloseToDalvikHeapLimit.
-        break;
+        // Resources cached on native heap do not consume Dalvik heap, so no trimming here.
+        return 0;
       case OnAppBackgrounded:
       case OnSystemLowMemoryWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInBackground:
-        cache.clearEvictionQueue();
-        break;
+        return 1;
       default:
         FLog.wtf(TAG, "unknown trim type: %s", trimType);
-        break;
+        return 0;
     }
-
   }
 }

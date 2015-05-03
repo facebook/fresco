@@ -38,7 +38,6 @@ public class WebPImage implements AnimatedImage {
   private static synchronized void ensure() {
     if (!sInitialized) {
       sInitialized = true;
-      SoLoaderShim.loadLibrary("gnustl_shared");
       SoLoaderShim.loadLibrary("webp");
       SoLoaderShim.loadLibrary("webpimage");
     }

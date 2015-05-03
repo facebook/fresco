@@ -9,19 +9,17 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapMemoryCacheFactory {
 
-  public static MemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> get(
-    CountingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> bitmapCountingMemoryCache,
+  public static MemoryCache<CacheKey, CloseableImage> get(
+    final CountingMemoryCache<CacheKey, CloseableImage> bitmapCountingMemoryCache,
     final ImageCacheStatsTracker imageCacheStatsTracker) {
 
-    ReferenceWrappingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void> wrappingCache =
-        new ReferenceWrappingMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>(
-            bitmapCountingMemoryCache);
-
     imageCacheStatsTracker.registerBitmapMemoryCache(bitmapCountingMemoryCache);
+
     MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker() {
       @Override
       public void onCacheHit() {
@@ -39,8 +37,6 @@ public class BitmapMemoryCacheFactory {
       }
     };
 
-    return new InstrumentedMemoryCache<BitmapMemoryCacheKey, CloseableImage, Void>(
-        wrappingCache,
-        memoryCacheTracker);
+    return new InstrumentedMemoryCache<>(bitmapCountingMemoryCache, memoryCacheTracker);
   }
 }

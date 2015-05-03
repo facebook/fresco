@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.cache;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -33,13 +34,13 @@ public class CountingMemoryCacheInspector<K, V> {
 
     public DumpInfoEntry(
         final K key,
-        final CloseableReference<V> value) {
+        final CloseableReference<V> valueRef) {
       this.key = Preconditions.checkNotNull(key);
-      this.value = value.clone();
+      this.value = CloseableReference.cloneOrNull(valueRef);
     }
 
     public void release() {
-      value.close();
+      CloseableReference.closeSafely(value);
     }
   }
 
@@ -79,10 +80,9 @@ public class CountingMemoryCacheInspector<K, V> {
     }
   }
 
-  private final CountingMemoryCache<K, V, ?> mCountingBitmapCache;
+  private final CountingMemoryCache<K, V> mCountingBitmapCache;
 
-  public CountingMemoryCacheInspector(
-      CountingMemoryCache<K, V, ?> countingBitmapCache) {
+  public CountingMemoryCacheInspector(CountingMemoryCache<K, V> countingBitmapCache) {
     mCountingBitmapCache = countingBitmapCache;
   }
 
@@ -94,19 +94,20 @@ public class CountingMemoryCacheInspector<K, V> {
    */
   public DumpInfo dumpCacheContent() {
     synchronized (mCountingBitmapCache) {
-      DumpInfo dumpInfo = new DumpInfo(
+      DumpInfo<K, V> dumpInfo = new DumpInfo<>(
           mCountingBitmapCache.getSizeInBytes(),
           mCountingBitmapCache.getEvictionQueueSizeInBytes(),
           mCountingBitmapCache.mMemoryCacheParams);
 
-      final Set<CountingMemoryCache.CacheEntry<K, V>> entries =
-          mCountingBitmapCache.mCachedEntries.keySet();
-      for (CountingMemoryCache.CacheEntry<K, V> entry : entries) {
-        DumpInfoEntry dumpEntry = new DumpInfoEntry(entry.key, entry.value);
-        if (mCountingBitmapCache.mEvictionQueue.contains(entry)) {
-          dumpInfo.lruEntries.add(dumpEntry);
-        } else {
+      final List<LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>>> cachedEntries =
+          mCountingBitmapCache.mCachedEntries.getMatchingEntries(null);
+      for (LinkedHashMap.Entry<K, CountingMemoryCache.Entry<K, V>> cachedEntry : cachedEntries) {
+        CountingMemoryCache.Entry<K, V> entry = cachedEntry.getValue();
+        DumpInfoEntry<K, V> dumpEntry = new DumpInfoEntry<>(entry.key, entry.valueRef);
+        if (entry.clientCount > 0) {
           dumpInfo.sharedEntries.add(dumpEntry);
+        } else {
+          dumpInfo.lruEntries.add(dumpEntry);
         }
       }
 

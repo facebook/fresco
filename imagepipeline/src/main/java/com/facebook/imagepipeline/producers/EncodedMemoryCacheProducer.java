@@ -25,7 +25,7 @@ public class EncodedMemoryCacheProducer extends MemoryCacheProducer<CacheKey, Po
   @VisibleForTesting static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
 
   public EncodedMemoryCacheProducer(
-      MemoryCache<CacheKey, PooledByteBuffer, Void> memoryCache,
+      MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
     super(memoryCache, cacheKeyFactory, nextProducer);

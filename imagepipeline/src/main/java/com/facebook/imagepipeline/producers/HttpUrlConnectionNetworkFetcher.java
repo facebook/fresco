@@ -9,16 +9,17 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import android.net.Uri;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Network fetcher that uses the simplest Android stack.
@@ -30,10 +31,10 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
 
   private static final int NUM_NETWORK_THREADS = 3;
 
-  private final Executor mExecutor;
+  private final ExecutorService mExecutorService;
 
   public HttpUrlConnectionNetworkFetcher() {
-    mExecutor = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
+    mExecutorService = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
   }
 
   @Override
@@ -45,7 +46,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
 
   @Override
   public void fetch(final FetchState fetchState, final Callback callback) {
-    mExecutor.execute(
+    final Future<?> future = mExecutorService.submit(
         new Runnable() {
           @Override
           public void run() {
@@ -62,6 +63,15 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
               if (connection != null) {
                 connection.disconnect();
               }
+            }
+          }
+        });
+    fetchState.getContext().addCallbacks(
+        new BaseProducerContextCallbacks() {
+          @Override
+          public void onCancellationRequested() {
+            if (future.cancel(false)) {
+              callback.onCancellation();
             }
           }
         });

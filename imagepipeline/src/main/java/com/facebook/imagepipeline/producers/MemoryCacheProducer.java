@@ -27,12 +27,12 @@ import com.facebook.imagepipeline.request.ImageRequest;
 public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableReference<T>> {
   @VisibleForTesting static final String CACHED_VALUE_FOUND = "cached_value_found";
 
-  protected final MemoryCache<K, T, Void> mMemoryCache;
+  protected final MemoryCache<K, T> mMemoryCache;
   protected final CacheKeyFactory mCacheKeyFactory;
   private final Producer<CloseableReference<T>> mNextProducer;
 
   protected MemoryCacheProducer(
-      MemoryCache<K, T, Void> memoryCache,
+      MemoryCache<K, T> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<CloseableReference<T>> nextProducer) {
     mMemoryCache = memoryCache;
@@ -50,7 +50,7 @@ public abstract class MemoryCacheProducer<K, T> implements Producer<CloseableRef
     listener.onProducerStart(requestId, getProducerName());
 
     final K cacheKey = getCacheKey(producerContext.getImageRequest());
-    CloseableReference<T> cachedReference = mMemoryCache.get(cacheKey, null);
+    CloseableReference<T> cachedReference = mMemoryCache.get(cacheKey);
     if (cachedReference != null) {
       boolean isLast = isResultFinal(cachedReference);
       if (isLast) {

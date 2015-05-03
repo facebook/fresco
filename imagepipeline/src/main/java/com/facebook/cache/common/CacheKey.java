@@ -9,41 +9,19 @@
 
 package com.facebook.cache.common;
 
-import com.facebook.common.internal.Preconditions;
-
 /**
- * Strongly typed cache key that is a simple wrapper around a {@link String} object.
+ * Strongly typed cache key to be used instead of {@link Object}.
  *
- * <p>Users of CacheKey should construct it by providing a unique string that unambiguously
- * identifies the cached resource.
+ * <p> {@link #toString}, {@link #equals} and {@link #hashCode} methods must be implemented.
  */
-public class CacheKey {
-  final String mKey;
+public interface CacheKey {
 
-  public CacheKey(final String key) {
-    mKey = Preconditions.checkNotNull(key);
-  }
+  /** This is useful for instrumentation and debugging purposes. */
+  public String toString();
 
-  @Override
-  public String toString() {
-    return mKey;
-  }
+  /** This method must be implemented, otherwise the cache keys will be be compared by reference. */
+  public boolean equals(Object o);
 
-  @Override
-  public boolean equals(Object o) {
-    if (o == this) {
-      return true;
-    }
-
-    if (o instanceof CacheKey) {
-      final CacheKey otherKey = (CacheKey) o;
-      return mKey.equals(otherKey.mKey);
-    }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return mKey.hashCode();
-  }
+  /** This method must be implemented with accordance to the {@link #equals} method. */
+  public int hashCode();
 }

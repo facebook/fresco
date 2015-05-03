@@ -9,36 +9,49 @@
 
 package com.facebook.imagepipeline.cache;
 
+import javax.annotation.Nullable;
+
 import com.facebook.common.references.CloseableReference;
 
 import com.android.internal.util.Predicate;
 
-public interface MemoryCache<K, V, S> {
+/**
+ * Interface for the image pipeline memory cache.
+ *
+ * @param <K> the key type
+ * @param <V> the value type
+ */
+public interface MemoryCache<K, V> {
 
   /**
-   * Caches value with given key. Cache returns new copy of provided reference which should be used
-   * instead of original one. Client should close returned reference when it is not required
-   * anymore - just as it would close any other reference. If cache failed to cache given value
-   * then null is returned.
+   * Caches the the given key-value pair.
+   *
+   * <p> The cache returns a new copy of the provided reference which should be used instead of the
+   * original one. The client should close the returned reference when it is not required anymore.
+   *
+   * <p> If the cache failed to cache the given value, then the null reference is returned.
+   *
    * @param key
    * @param value
-   * @return cached copy of value
+   * @return a new reference to be used, or null if the caching failed
    */
-  CloseableReference<V> cache(K key, CloseableReference<V> value);
+  @Nullable
+  public CloseableReference<V> cache(K key, CloseableReference<V> value);
 
   /**
-   * Looks up cache for given key. Lookup strategy is used by cache to select exactly one of the
-   * values associated with the key.
+   * Gets the item with the given key, or null if there is no such item.
+   *
    * @param key
-   * @param lookupStrategy
-   * @return value to cached resource or null if no resource is cached
+   * @return a reference to the cached value, or null if the item was not found
    */
-  CloseableReference<V> get(K key, S lookupStrategy);
+  @Nullable
+  public CloseableReference<V> get(K key);
 
   /**
-   * Removes from the cache any keys that pass the specified predicate.
-   * @param match determines which keys to remove
-   * @return the number of entries that were removed
+   * Removes all the items from the cache whose keys match the specified predicate.
+   *
+   * @param predicate returns true if an item with the given key should be removed
+   * @return number of the items removed from the cache
    */
-  long removeAll(Predicate<K> match);
+  public int removeAll(Predicate<K> predicate);
 }

@@ -27,8 +27,7 @@ public class PoolConfig {
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
   private final PoolParams mNativeMemoryChunkPoolParams;
   private final PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-  private final PoolParams mSingleByteArrayPoolParams;
-  private final SingleByteArrayPoolStatsTracker mSingleByteArrayPoolStatsTracker;
+  private final PoolParams mSharedByteArrayParams;
 
   private PoolConfig(Builder builder) {
     mBitmapPoolParams =
@@ -59,14 +58,10 @@ public class PoolConfig {
         builder.mNativeMemoryChunkPoolStatsTracker == null ?
             NoOpPoolStatsTracker.getInstance() :
             builder.mNativeMemoryChunkPoolStatsTracker;
-    mSingleByteArrayPoolParams =
-        builder.mSingleByteArrayPoolParams == null ?
-            DefaultSingleByteArrayPoolParams.get() :
-            builder.mSingleByteArrayPoolParams;
-    mSingleByteArrayPoolStatsTracker =
-        builder.mSingleByteArrayPoolStatsTracker == null ?
-            NoOpSingleByteArrayPoolStatsTracker.getInstance() :
-            builder.mSingleByteArrayPoolStatsTracker;
+    mSharedByteArrayParams =
+        builder.mSharedByteArrayParams == null ?
+            DefaultSharedByteArrayParams.get() :
+            builder.mSharedByteArrayParams;
   }
 
   public PoolParams getBitmapPoolParams() {
@@ -97,13 +92,10 @@ public class PoolConfig {
     return mNativeMemoryChunkPoolStatsTracker;
   }
 
-  public PoolParams getSingleByteArrayPoolParams() {
-    return mSingleByteArrayPoolParams;
+  public PoolParams getSharedByteArrayParams() {
+    return mSharedByteArrayParams;
   }
 
-  public SingleByteArrayPoolStatsTracker getSingleByteArrayPoolStatsTracker() {
-    return mSingleByteArrayPoolStatsTracker;
-  }
 
   public static Builder newBuilder() {
     return new Builder();
@@ -118,8 +110,7 @@ public class PoolConfig {
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
     private PoolParams mNativeMemoryChunkPoolParams;
     private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-    private PoolParams mSingleByteArrayPoolParams;
-    private SingleByteArrayPoolStatsTracker mSingleByteArrayPoolStatsTracker;
+    private PoolParams mSharedByteArrayParams;
 
     private Builder() {
     }
@@ -164,15 +155,8 @@ public class PoolConfig {
       return this;
     }
 
-    public Builder setSingleByteArrayPoolParams(PoolParams singleByteArrayPoolParams) {
-      mSingleByteArrayPoolParams = singleByteArrayPoolParams;
-      return this;
-    }
-
-    public Builder setSingleByteArrayPoolStatsTracker(
-        SingleByteArrayPoolStatsTracker nativeMemoryChunkPoolStatsTracker) {
-      mSingleByteArrayPoolStatsTracker =
-          Preconditions.checkNotNull(nativeMemoryChunkPoolStatsTracker);
+    public Builder setSharedByteArrayParams(PoolParams sharedByteArrayParams) {
+      mSharedByteArrayParams = sharedByteArrayParams;
       return this;
     }
 

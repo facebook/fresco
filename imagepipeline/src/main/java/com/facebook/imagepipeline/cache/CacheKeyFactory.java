@@ -12,7 +12,6 @@ package com.facebook.imagepipeline.cache;
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
@@ -21,9 +20,9 @@ import com.facebook.imagepipeline.request.ImageRequest;
 public interface CacheKeyFactory {
 
   /**
-   * @return {@link BitmapMemoryCacheKey} for doing bitmap cache lookups in the pipeline.
+   * @return {@link CacheKey} for doing bitmap cache lookups in the pipeline.
    */
-  public BitmapMemoryCacheKey getBitmapCacheKey(ImageRequest request);
+  public CacheKey getBitmapCacheKey(ImageRequest request);
 
   /**
    * @return {@link CacheKey} for doing encoded image lookups in the pipeline.

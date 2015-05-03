@@ -36,10 +36,7 @@ public class ImagePipelineNativeLoader {
   public static final List<String> DEPENDENCIES;
   static {
     List<String> dependencies = new ArrayList<String>();
-    dependencies.add("gnustl_shared");
-    dependencies.add("fb_png");
     dependencies.add("webp");
-    dependencies.add("fb_jpegturbo");
     DEPENDENCIES = Collections.unmodifiableList(dependencies);
   }
 

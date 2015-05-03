@@ -14,7 +14,7 @@ import android.graphics.Bitmap;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imagepipeline.nativecode.ImagePipelineNativeLoader;
+import com.facebook.common.soloader.SoLoaderShim;
 
 /**
  * Utility methods for handling Bitmaps.
@@ -34,7 +34,7 @@ public class Bitmaps {
   public static final int BYTES_PER_PIXEL = 4;
 
   static {
-    ImagePipelineNativeLoader.load();
+    SoLoaderShim.loadLibrary("bitmaps");
   }
 
   /**

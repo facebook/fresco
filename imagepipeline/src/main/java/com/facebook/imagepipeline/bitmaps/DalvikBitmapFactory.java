@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import javax.annotation.concurrent.GuardedBy;
-
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -27,7 +25,7 @@ import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.SingleByteArrayPool;
+import com.facebook.imagepipeline.memory.SharedByteArray;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
@@ -40,15 +38,13 @@ public class DalvikBitmapFactory {
   private final EmptyJpegGenerator mJpegGenerator;
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
-
-  @GuardedBy("mSingleByteArrayPool")
-  private final SingleByteArrayPool mSingleByteArrayPool;
+  private final SharedByteArray mSharedByteArray;
 
   public DalvikBitmapFactory(
       EmptyJpegGenerator jpegGenerator,
-      SingleByteArrayPool singleByteArrayPool) {
+      SharedByteArray sharedByteArray) {
     mJpegGenerator = jpegGenerator;
-    mSingleByteArrayPool = singleByteArrayPool;
+    mSharedByteArray = sharedByteArray;
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
     mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
       @Override
@@ -92,14 +88,13 @@ public class DalvikBitmapFactory {
       final CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
     final int length = pooledByteBuffer.size();
-    synchronized (mSingleByteArrayPool) {
-      final byte[] encodedBytesArray = mSingleByteArrayPool.get(length);
-      try {
-        pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-        return doDecodeBitmap(encodedBytesArray, length);
-      } finally {
-        mSingleByteArrayPool.release(encodedBytesArray);
-      }
+    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length);
+    try {
+      final byte[] encodedBytesArray = encodedBytesArrayRef.get();
+      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+      return doDecodeBitmap(encodedBytesArray, length);
+    } finally {
+      encodedBytesArrayRef.close();
     }
   }
 
@@ -118,20 +113,17 @@ public class DalvikBitmapFactory {
     final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
     Preconditions.checkArgument(length <= pooledByteBuffer.size());
     // allocate bigger array in case EOI needs to be added
-    synchronized (mSingleByteArrayPool) {
-      final byte[] encodedBytesArray = mSingleByteArrayPool.get(length + 2);
-      try {
-        pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-        if (!endsWithEOI(encodedBytesArray, length)) {
-          putEOI(encodedBytesArray, length);
-          length += 2;
-        }
-        return doDecodeBitmap(
-            encodedBytesArray,
-            length);
-      } finally {
-        mSingleByteArrayPool.release(encodedBytesArray);
+    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length + 2);
+    try {
+      byte[] encodedBytesArray = encodedBytesArrayRef.get();
+      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+      if (!endsWithEOI(encodedBytesArray, length)) {
+        putEOI(encodedBytesArray, length);
+        length += 2;
       }
+      return doDecodeBitmap(encodedBytesArray, length);
+    } finally {
+      encodedBytesArrayRef.close();
     }
   }
 

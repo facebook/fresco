@@ -5,7 +5,6 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := imagepipeline
 LOCAL_SRC_FILES := \
-	bitmap_utils.cpp \
 	decoded_image.cpp \
 	exceptions.cpp \
 	init.cpp \
@@ -18,7 +17,6 @@ LOCAL_SRC_FILES := \
 	streams.cpp \
 	transformations.cpp \
 	webp/webp_codec.cpp \
-	Bitmaps.cpp \
 	JpegTranscoder.cpp \
 	WebpTranscoder.cpp
 
@@ -26,19 +24,27 @@ LOCAL_SRC_FILES := \
 CXX11_FLAGS := -std=c++11
 LOCAL_CFLAGS += $(CXX11_FLAGS)
 LOCAL_CFLAGS += -DLOG_TAG=\"libimagepipeline\"
+LOCAL_CFLAGS += -fvisibility=hidden
+LOCAL_CFLAGS += $(FRESCO_CPP_CFLAGS)
 LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-LOCAL_LDLIBS := -llog -ljnigraphics
-LOCAL_SHARED_LIBRARIES += fb_jpegturbo
+LOCAL_LDLIBS := -llog
+LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 LOCAL_SHARED_LIBRARIES += webp
 
-
 ifeq ($(BUCK_BUILD), 1)
+  LOCAL_SHARED_LIBRARIES += fb_jpegturbo
   LOCAL_CFLAGS += $(BUCK_DEP_CFLAGS)
   LOCAL_LDFLAGS += $(BUCK_DEP_LDFLAGS)
   include $(BUILD_SHARED_LIBRARY)
 else
-  LOCAL_SHARED_LIBRARIES += fb_png
+  LOCAL_STATIC_LIBRARIES += fb_jpegturbo
+  LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
+
+  LOCAL_LDLIBS += -lz
+  LOCAL_STATIC_LIBRARIES += fb_png
+  LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
+
   include $(BUILD_SHARED_LIBRARY)
   $(call import-module,libpng-1.6.10)
 endif

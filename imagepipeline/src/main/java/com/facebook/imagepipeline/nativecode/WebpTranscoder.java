@@ -20,7 +20,6 @@ import android.util.Base64;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imageformat.ImageFormat;
-import com.facebook.imagepipeline.nativecode.ImagePipelineNativeLoader;
 
 /**
  * Helper methods for modifying webp static images.
