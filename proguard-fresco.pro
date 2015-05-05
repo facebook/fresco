@@ -7,5 +7,11 @@
 -keepclassmembers class * {
     @com.facebook.common.internal.DoNotStrip *;
 }
+
+# Keep native methods
+-keepclassmembers class * {
+    native <methods>;
+}
+
 -dontwarn okio.**
 -dontwarn javax.annotation.**
