@@ -50,8 +50,7 @@ class Bucket<V> {
   public final int mMaxLength; // 'max' length for this bucket
   public final ConcurrentLinkedQueue<V> mFreeList; // the free list for this bucket
 
-  @VisibleForTesting
-  int mInUseLength; // current number of entries 'in use' (i.e.) not in the free list
+  private int mInUseLength; // current number of entries 'in use' (i.e.) not in the free list
 
   /**
    * Constructs a new Bucket instance. The constructed bucket will have an empty freelist
@@ -87,7 +86,7 @@ class Bucket<V> {
   public V get() {
     V value = pop();
     if (value != null) {
-      mInUseLength ++;
+      mInUseLength++;
     }
     return value;
   }
@@ -108,7 +107,7 @@ class Bucket<V> {
    * was available)
    */
   public void incrementInUseCount() {
-    mInUseLength ++;
+    mInUseLength++;
   }
 
   /**
@@ -117,11 +116,8 @@ class Bucket<V> {
    */
   public void release(V value) {
     Preconditions.checkNotNull(value);
-    if (mInUseLength > 0) {
-      mInUseLength --;
-    } else {
-      FLog.wtf(TAG, "Bucket inUseLength currently at %d", mInUseLength);
-    }
+    Preconditions.checkState(mInUseLength > 0);
+    mInUseLength--;
     mFreeList.add(value);
   }
 
@@ -131,6 +127,11 @@ class Bucket<V> {
    * to the bucket's free list
    */
   public void decrementInUseCount() {
-    mInUseLength --;
+    Preconditions.checkState(mInUseLength > 0);
+    mInUseLength--;
+  }
+
+  public int getInUseCount() {
+    return mInUseLength;
   }
 }

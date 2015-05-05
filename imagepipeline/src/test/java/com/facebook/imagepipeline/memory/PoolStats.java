@@ -55,7 +55,7 @@ public class PoolStats<V> {
     for (int i = 0; i < mPool.mBuckets.size(); ++i) {
       final int bucketedSize = mPool.mBuckets.keyAt(i);
       final Bucket<V> bucket = mPool.mBuckets.valueAt(i);
-      mBucketStats.put(bucketedSize, new IntPair(bucket.mInUseLength, bucket.mFreeList.size()));
+      mBucketStats.put(bucketedSize, new IntPair(bucket.getInUseCount(), bucket.mFreeList.size()));
     }
   }
 }

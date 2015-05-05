@@ -156,14 +156,6 @@ public abstract class BasePool<V> implements Pool<V> {
   @GuardedBy("this")
   final Counter mFree;
 
-  /**
-   * tracks memory "reserved" for allocation. It is expected that this is done
-   * after a call to canAllocate() and will be decremented immediately after a
-   * call to alloc either on a success or failure.
-   */
-  @GuardedBy("this")
-  private int mReservedBytes;
-
   private final PoolStatsTracker mPoolStatsTracker;
 
   /**
@@ -213,10 +205,11 @@ public abstract class BasePool<V> implements Pool<V> {
     ensurePoolSizeInvariant();
 
     int bucketedSize = getBucketedSize(size);
-    Bucket<V> bucket = getBucket(bucketedSize);
     int sizeInBytes = -1;
 
     synchronized (this) {
+      Bucket<V> bucket = getBucket(bucketedSize);
+
       if (bucket != null) {
         // find an existing value that we can reuse
         V value = bucket.get();
@@ -251,9 +244,12 @@ public abstract class BasePool<V> implements Pool<V> {
             mFree.mNumBytes,
             sizeInBytes);
       }
-      // the allocation can succeed. So reserve the bytes to prevent another
-      // call to get() to not succeed by mistake.
-      mReservedBytes += sizeInBytes;
+
+      // Optimistically assume that allocation succeeds - if it fails, we need to undo those changes
+      mUsed.increment(sizeInBytes);
+      if (bucket != null) {
+        bucket.incrementInUseCount();
+      }
     }
 
     V value = null;
@@ -262,13 +258,15 @@ public abstract class BasePool<V> implements Pool<V> {
       // we could have done the allocation inside the synchronized block,
       // but that would have blocked out other operations on the pool
       value = alloc(bucketedSize);
-
     } catch (Throwable e) {
-      // Remove this from reserved byte count if this alloc failed,
-      // without altering the code flow
+      // Assumption we made previously is not valid - allocation failed. We need to fix internal
+      // counters.
       synchronized (this) {
-        Preconditions.checkArgument(mReservedBytes >= sizeInBytes);
-        mReservedBytes -= sizeInBytes;
+        mUsed.decrement(sizeInBytes);
+        Bucket<V> bucket = getBucket(bucketedSize);
+        if (bucket != null) {
+          bucket.decrementInUseCount();
+        }
       }
       Throwables.propagateIfPossible(e);
     }
@@ -280,13 +278,6 @@ public abstract class BasePool<V> implements Pool<V> {
     // be able to trim back memory usage.
     synchronized(this) {
       Preconditions.checkState(mInUseValues.add(value));
-      Preconditions.checkArgument(mReservedBytes >= sizeInBytes);
-      mUsed.increment(sizeInBytes);
-      mReservedBytes -= sizeInBytes;
-
-      if (bucket != null) {
-        bucket.incrementInUseCount();
-      }
       // If we're over the pool's max size, try to trim the pool appropriately
       trimToSoftCap();
       mPoolStatsTracker.onAlloc(sizeInBytes);
@@ -319,8 +310,8 @@ public abstract class BasePool<V> implements Pool<V> {
 
     final int bucketedSize = getBucketedSizeForValue(value);
     final int sizeInBytes = getSizeInBytes(bucketedSize);
-    final Bucket<V> bucket = getBucket(bucketedSize);
     synchronized (this) {
+      final Bucket<V> bucket = getBucket(bucketedSize);
       if (!mInUseValues.remove(value)) {
         // This value was not 'known' to the pool (i.e.) allocated via the pool.
         // Something is going wrong, so let's free the value and report soft error.
@@ -375,60 +366,6 @@ public abstract class BasePool<V> implements Pool<V> {
       }
       logStats();
     }
-  }
-
-  /**
-   * 'Take over' the specified value, and keep track of it in the in-use-values.
-   *  Callers can use the {@link #takeOver(Object)} method to transfer ownership of a value to
-   *  the pool - once the value has been taken over, it is now known to the pool, it is reflected
-   *  in the pool's usage stats, and {@link #release(Object)} can then reuse/free it.
-   *  {@link #takeOver(Object)} is intended to be called by the producer of the value, and gives us
-   *  explicit signal about the ownership - while the {@link #release(Object)} may be called by
-   *  any consumer of the value.
-   *  If the value cannot be successfully taken over by the pool, this function returns false.
-   *  Currently the only case is when taking over the value will cause the pool to exceed its
-   *  max cap.
-   * @param value the value to take over
-   * @return true, if the value was successfully taken over
-   */
-  public boolean takeOver(V value) {
-    Preconditions.checkNotNull(value);
-    ensurePoolSizeInvariant();
-
-    final int bucketedSize = getBucketedSizeForValue(value);
-    final int sizeInBytes = getSizeInBytes(bucketedSize);
-    final Bucket<V> bucket = getBucket(bucketedSize);
-
-    synchronized (this) {
-      // if adding this value to the pool would cause the hard cap to be exceeded, then
-      // return false right away
-      if (!canAllocate(sizeInBytes)) {
-        return false;
-      }
-
-      if (mInUseValues.add(value)) {
-        mUsed.increment(sizeInBytes);
-        if (bucket != null) {
-          bucket.incrementInUseCount();
-        }
-        trimToSoftCap();
-        if (FLog.isLoggable(FLog.VERBOSE)) {
-          FLog.v(
-              TAG,
-              "takeover (object, size) = (%x, %s)",
-              System.identityHashCode(value),
-              bucketedSize);
-        }
-      } else {
-        FLog.w(
-            TAG,
-            "takeover (ignore) (object, size) = (%x, %s)",
-            System.identityHashCode(value),
-            bucketedSize);
-      }
-      logStats();
-    }
-    return true;
   }
 
   /**
@@ -556,7 +493,7 @@ public abstract class BasePool<V> implements Pool<V> {
         if (!bucket.mFreeList.isEmpty()) {
           freeListList.add(bucket.mFreeList);
         }
-        inUseCounts.put(mBuckets.keyAt(i), bucket.mInUseLength);
+        inUseCounts.put(mBuckets.keyAt(i), bucket.getInUseCount());
       }
 
       // reinitialize the buckets
@@ -702,7 +639,6 @@ public abstract class BasePool<V> implements Pool<V> {
    * to its soft cap, and then check again.
    * If the current used bytes + this new value will take us above the hard cap, then we return
    * false immediately - there is no point freeing up anything.
-   * This will also take into account mReservedBytes
    * @param sizeInBytes the size (in bytes) of the value to allocate
    * @return true, if we can allocate this; false otherwise
    */
@@ -712,19 +648,19 @@ public abstract class BasePool<V> implements Pool<V> {
 
     // even with our best effort we cannot ensure hard cap limit.
     // Return immediately - no point in trimming any space
-    if ((mUsed.mNumBytes + mReservedBytes + sizeInBytes) > hardCap) {
+    if ((mUsed.mNumBytes + sizeInBytes) > hardCap) {
       mPoolStatsTracker.onHardCapReached();
       return false;
     }
 
     // trim if we need to
     int softCap = mPoolParams.maxSizeSoftCap;
-    if ((mUsed.mNumBytes + mFree.mNumBytes + mReservedBytes + sizeInBytes) > softCap) {
+    if ((mUsed.mNumBytes + mFree.mNumBytes + sizeInBytes) > softCap) {
       trimToSize(softCap - sizeInBytes);
     }
 
     // check again to see if we're below the hard cap
-    if (mUsed.mNumBytes + mFree.mNumBytes + mReservedBytes + sizeInBytes > hardCap) {
+    if (mUsed.mNumBytes + mFree.mNumBytes + sizeInBytes > hardCap) {
       mPoolStatsTracker.onHardCapReached();
       return false;
     }
@@ -759,7 +695,7 @@ public abstract class BasePool<V> implements Pool<V> {
       final Bucket<V> bucket = mBuckets.valueAt(i);
       final String BUCKET_USED_KEY =
           PoolStatsTracker.BUCKETS_USED_PREFIX + getSizeInBytes(bucketedSize);
-      stats.put(BUCKET_USED_KEY, bucket.mInUseLength);
+      stats.put(BUCKET_USED_KEY, bucket.getInUseCount());
     }
 
     stats.put(PoolStatsTracker.SOFT_CAP, mPoolParams.maxSizeSoftCap);
