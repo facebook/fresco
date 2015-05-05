@@ -163,7 +163,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     if (placeholderImageBranch == null) {
       placeholderImageBranch = getEmptyPlaceholderDrawable();
     }
-    placeholderImageBranch = maybeApplyRounding(
+    placeholderImageBranch = maybeApplyRoundingBitmapOnly(
         mRoundingParams,
         mResources,
         placeholderImageBranch);
@@ -235,7 +235,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       int index = 0;
       for (Drawable background : builder.getBackgrounds()) {
         layers[backgroundsIndex + index++] =
-            maybeApplyRounding(mRoundingParams, mResources, background);
+            maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, background);
       }
     }
     if (mPlaceholderImageIndex >= 0) {
@@ -276,7 +276,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     root = mFadeDrawable;
 
     // rounded corners drawable (optional)
-    root = maybeWrapWithRoundedCorners(mRoundingParams, root);
+    root = maybeWrapWithRoundedOverlayColor(mRoundingParams, root);
 
     // top-level drawable
     mTopLevelDrawable = root;
@@ -316,7 +316,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return new MatrixDrawable(drawable, matrix);
   }
 
-  private static Drawable maybeWrapWithRoundedCorners(
+  private static Drawable maybeWrapWithRoundedOverlayColor(
       @Nullable RoundingParams roundingParams,
       Drawable drawable) {
     if (roundingParams != null &&
@@ -334,7 +334,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
   }
 
-  private static Drawable maybeApplyRounding(
+  private static Drawable maybeApplyRoundingBitmapOnly(
       @Nullable RoundingParams roundingParams,
       Resources resources,
       Drawable drawable) {
@@ -441,7 +441,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   @Override
   public void setImage(Drawable drawable, float progress, boolean immediate) {
-    drawable = maybeApplyRounding(mRoundingParams, mResources, drawable);
+    drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
     drawable.mutate();
     mActualImageSettableDrawable.setDrawable(drawable);
     mFadeDrawable.beginBatchMode();
@@ -609,7 +609,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     if (drawable == null) {
       drawable = getEmptyPlaceholderDrawable();
     }
-    drawable = maybeApplyRounding(mRoundingParams, mResources, drawable);
+    drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
     setLayerChildDrawable(mPlaceholderImageIndex, drawable);
   }
 
