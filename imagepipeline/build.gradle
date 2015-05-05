@@ -233,7 +233,7 @@ task sourcesJar(type: Jar) {
 artifacts.add('archives', sourcesJar)
 
 def jarList = new ArrayList()
-task setJarList() << {
+task setJarList(dependsOn: assembleRelease) << {
     configurations.compile.each {
         jarList.add(it)
     }
