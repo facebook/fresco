@@ -613,6 +613,15 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setLayerChildDrawable(mPlaceholderImageIndex, drawable);
   }
 
+  public void setPlaceholderImageFocusPoint(PointF focusPoint) {
+    Preconditions.checkNotNull(focusPoint);
+    ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(mPlaceholderImageIndex);
+    if (scaleTypeDrawable == null) {
+      throw new UnsupportedOperationException("ScaleTypeDrawable not found!");
+    }
+    scaleTypeDrawable.setFocusPoint(focusPoint);
+  }
+
   /**
    * Sets a new placeholder drawable using the supplied resource ID.
    *
