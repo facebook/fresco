@@ -11,7 +11,7 @@ package com.facebook.common.media;
 
 import android.webkit.MimeTypeMap;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import org.robolectric.shadows.ShadowMimeTypeMap;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MediaUtilsTest {
 
   @Test

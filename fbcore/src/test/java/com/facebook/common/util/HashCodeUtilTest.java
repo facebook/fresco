@@ -12,14 +12,14 @@ package com.facebook.common.util;
 import java.util.Random;
 
 import com.facebook.common.internal.Objects;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class HashCodeUtilTest {
 
   @Test

@@ -11,7 +11,7 @@ package com.facebook.drawee.generic;
 
 import android.graphics.Color;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class RoundingParamsTest {
 
   private RoundingParams mRoundingParams;

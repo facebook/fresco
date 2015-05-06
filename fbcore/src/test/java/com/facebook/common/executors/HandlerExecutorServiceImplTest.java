@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import android.os.Handler;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowLooper;
 import org.robolectric.util.Scheduler;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class HandlerExecutorServiceImplTest {
 
   private AtomicInteger mCounter = new AtomicInteger();

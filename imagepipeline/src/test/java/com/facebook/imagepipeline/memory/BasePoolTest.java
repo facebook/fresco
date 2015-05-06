@@ -13,7 +13,7 @@ import android.util.SparseIntArray;
 
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.memory.BasePool.PoolSizeViolationException;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Tests for BasePool
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class BasePoolTest {
   private TestPool mPool;
   private PoolStats<byte[]> mStats;

@@ -16,7 +16,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class RoundedBitmapDrawableTest {
   private Resources mResources;
   private Bitmap mBitmap;

@@ -17,7 +17,7 @@ import android.graphics.Bitmap;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.testing.FakeClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
 import com.facebook.imagepipeline.animated.testing.MyShadowBitmap;
 import com.facebook.imagepipeline.animated.testing.MyShadowCanvas;
@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for {@link AnimatedDrawableCachingBackendImpl}.
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(shadows = {MyShadowCanvas.class, MyShadowBitmap.class})
 public class AnimatedDrawableCachingBackendImplTest {
 

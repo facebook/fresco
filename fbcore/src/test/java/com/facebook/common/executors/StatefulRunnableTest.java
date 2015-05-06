@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import org.mockito.InOrder;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class StatefulRunnableTest {
 
   private StatefulRunnable mStatefulRunnable;

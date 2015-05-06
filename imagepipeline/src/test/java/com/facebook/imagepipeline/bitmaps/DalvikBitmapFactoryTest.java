@@ -26,7 +26,11 @@ import com.facebook.imagepipeline.memory.SharedByteArray;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+
+import org.junit.Rule;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,12 +49,16 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
  * Tests for {@link DalvikBitmapFactory}.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
     BitmapCounterProvider.class,
     BitmapFactory.class,
     Bitmaps.class})
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 public class DalvikBitmapFactoryTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   static {
     SoLoaderShim.setInTestMode();

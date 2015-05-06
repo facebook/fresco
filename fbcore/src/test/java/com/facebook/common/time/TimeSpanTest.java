@@ -11,14 +11,14 @@ package com.facebook.common.time;
 
 import java.util.concurrent.TimeUnit;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TimeSpanTest {
   @Test
   public void testFromNanos() throws Exception {

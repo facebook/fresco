@@ -25,7 +25,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.datasource.SettableDataSource;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /** * Tests for AbstractDraweeController */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AbstractDraweeControllerTest {
 
   public static class FakeImageInfo {

@@ -29,7 +29,7 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.SettableDrawable;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyTest {
 
   private final BitmapDrawable mPlaceholderImage = mock(BitmapDrawable.class);

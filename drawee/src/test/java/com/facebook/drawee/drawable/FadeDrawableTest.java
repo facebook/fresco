@@ -13,7 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
 import com.facebook.common.testing.FakeClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +23,7 @@ import org.mockito.InOrder;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class FadeDrawableTest {
   private Drawable[] mLayers = new Drawable[] {
       DrawableTestUtils.mockDrawable(),

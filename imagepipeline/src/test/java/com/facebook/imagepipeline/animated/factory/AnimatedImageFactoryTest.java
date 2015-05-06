@@ -1,4 +1,12 @@
-// Copyright 2004-present Facebook. All Rights Reserved.
+/*
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
 
 package com.facebook.imagepipeline.animated.factory;
 
@@ -19,7 +27,11 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imagepipeline.webp.WebPImage;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+
+import org.junit.Rule;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +45,16 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link AnimatedImageFactory}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
     WebPImage.class,
     AnimatedImageFactory.class,
     AnimatedImageCompositor.class})
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 public class AnimatedImageFactoryTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   static {
     SoLoaderShim.setInTestMode();

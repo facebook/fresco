@@ -12,7 +12,7 @@ package com.facebook.imagepipeline.memory;
 import android.util.SparseIntArray;
 
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Basic tests for GenericByteArrayPool
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GenericByteArrayPoolTest {
   private GenericByteArrayPool mPool;
 

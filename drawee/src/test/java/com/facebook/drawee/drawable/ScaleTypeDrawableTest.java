@@ -15,7 +15,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +26,7 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ScaleTypeDrawableTest {
   private Drawable mUnderlyingDrawable = mock(Drawable.class);
   private PointF mFocusPoint = new PointF(0.1f, 0.4f);

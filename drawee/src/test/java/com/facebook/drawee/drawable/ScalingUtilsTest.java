@@ -12,7 +12,7 @@ package com.facebook.drawee.drawable;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 /**
  * Tests for scale type calculations.
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ScalingUtilsTest {
   private final Matrix mExpectedMatrix = new Matrix();
   private final Matrix mActualMatrix = new Matrix();

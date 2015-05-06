@@ -9,7 +9,7 @@
 
 package com.facebook.datasource;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for IncreasingQualityDataSourceSupplier
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class IncreasingQualityDataSourceSupplierTest extends AbstractDataSourceSupplier {
 
   @Before

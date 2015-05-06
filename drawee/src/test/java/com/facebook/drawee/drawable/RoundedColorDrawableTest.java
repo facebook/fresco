@@ -16,7 +16,7 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Matchers.any;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class RoundedColorDrawableTest {
 
   private Canvas mCanvas;

@@ -12,7 +12,7 @@ package com.facebook.common.objectpool;
 import java.util.Vector;
 
 import com.facebook.common.testing.FakeClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 /**
  * Test for {@link ObjectPool}, {@link ObjectPoolManager}.
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ObjectPoolTest {
 
   private FakeClock fakeClock;

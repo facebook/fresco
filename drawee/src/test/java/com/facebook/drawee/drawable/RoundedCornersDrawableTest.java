@@ -12,7 +12,7 @@ package com.facebook.drawee.drawable;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class RoundedCornersDrawableTest {
 
   private Drawable mUnderlyingDrawable;
