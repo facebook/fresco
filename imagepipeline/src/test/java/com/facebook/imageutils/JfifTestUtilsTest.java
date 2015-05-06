@@ -9,10 +9,9 @@
 
 package com.facebook.imageutils;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static com.facebook.imageutils.JfifTestUtils.*;
@@ -21,8 +20,8 @@ import static org.junit.Assert.*;
 /**
  * Tests {@link JfifTestUtils}
  */
-@Config(manifest=Config.NONE)
-@RunWith(WithTestDefaultsRunner.class)
+@Config(manifest=Config.NONE, emulateSdk=18)
+@RunWith(RobolectricTestRunner.class)
 public class JfifTestUtilsTest {
 
   private String mTestStr = "0123456789";

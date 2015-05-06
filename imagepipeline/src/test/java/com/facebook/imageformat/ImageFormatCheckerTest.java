@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.facebook.common.internal.Lists;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,8 +27,8 @@ import static org.junit.Assert.assertSame;
 /**
  * Tests {@link ImageFormatChecker}
  */
-@Config(manifest=Config.NONE)
-@RunWith(WithTestDefaultsRunner.class)
+@Config(manifest=Config.NONE, emulateSdk=18)
+@RunWith(RobolectricTestRunner.class)
 public class ImageFormatCheckerTest {
 
   @Test
