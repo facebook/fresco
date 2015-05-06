@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests {@link JfifUtil}
  */
-@Config(manifest=Config.NONE, emulateSdk=18)
 @RunWith(RobolectricTestRunner.class)
 public class JfifUtilTest {
 

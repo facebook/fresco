@@ -30,7 +30,6 @@ import static org.mockito.Mockito.mock;
 /**
  * Test out methods in DefaultDiskStorageSupplier
  */
-@Config(manifest=Config.NONE, emulateSdk=18)
 @RunWith(RobolectricTestRunner.class)
 public class DefaultDiskStorageSupplierTest {
 

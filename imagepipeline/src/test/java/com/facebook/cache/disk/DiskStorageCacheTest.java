@@ -58,7 +58,6 @@ import static org.mockito.Mockito.when;
 /**
  * Test for {@link DiskStorageCache}
  */
-@Config(manifest=Config.NONE, emulateSdk=18)
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareOnlyThisForTest({SystemClock.class})

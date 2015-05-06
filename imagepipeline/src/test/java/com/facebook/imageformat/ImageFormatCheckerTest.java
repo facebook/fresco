@@ -27,7 +27,6 @@ import static org.junit.Assert.assertSame;
 /**
  * Tests {@link ImageFormatChecker}
  */
-@Config(manifest=Config.NONE, emulateSdk=18)
 @RunWith(RobolectricTestRunner.class)
 public class ImageFormatCheckerTest {
 

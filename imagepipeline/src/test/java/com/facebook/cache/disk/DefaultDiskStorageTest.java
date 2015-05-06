@@ -53,7 +53,6 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for 'default' disk storage
  */
-@Config(manifest=Config.NONE, emulateSdk=18)
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareOnlyThisForTest({SystemClock.class})
