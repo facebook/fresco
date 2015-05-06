@@ -16,20 +16,22 @@ import android.content.Context;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.internal.Suppliers;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.mockito.Mockito.mock;
 
 /**
  * Test out methods in DefaultDiskStorageSupplier
  */
-@RunWith(WithTestDefaultsRunner.class)
+@Config(manifest=Config.NONE, emulateSdk=18)
+@RunWith(RobolectricTestRunner.class)
 public class DefaultDiskStorageSupplierTest {
 
   private int mVersion;

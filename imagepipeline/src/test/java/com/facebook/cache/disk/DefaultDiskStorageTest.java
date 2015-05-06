@@ -30,15 +30,19 @@ import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.SystemClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,9 +53,14 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for 'default' disk storage
  */
-@RunWith(WithTestDefaultsRunner.class)
+@Config(manifest=Config.NONE, emulateSdk=18)
+@RunWith(RobolectricTestRunner.class)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareOnlyThisForTest({SystemClock.class})
 public class DefaultDiskStorageTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   private File mDirectory;
   private SystemClock mClock;
