@@ -326,13 +326,23 @@ public class ProducerSequenceFactory {
 
   /**
    * bitmap cache get ->
-   * background thread hand-off -> multiplex -> bitmap cache -> decode ->
+   * background thread hand-off -> bitmap cache -> decode -> resize and rotate -> (webp transcode)
+   * -> data fetch.
    */
   private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
     if (mDataFetchSequence == null) {
-      DataFetchProducer dataFetchProducer =
+      Producer<CloseableReference<PooledByteBuffer>> nextProducer =
           mProducerFactory.newDataFetchProducer();
-      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(dataFetchProducer);
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
+      }
+      AddImageTransformMetaDataProducer addImageTransformMetaDataProducer =
+          mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
+      ResizeAndRotateProducer resizeAndRotateProducer =
+          mProducerFactory.newResizeAndRotateProducer(addImageTransformMetaDataProducer);
+      nextProducer =
+          mProducerFactory.newRemoveImageTransformMetaDataProducer(resizeAndRotateProducer);
+      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(nextProducer);
     }
     return mDataFetchSequence;
   }
