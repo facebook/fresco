@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
+import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.DiskCacheProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
@@ -137,6 +138,10 @@ public class ProducerFactory {
       Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer1,
       Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer2) {
     return new BranchOnSeparateImagesProducer(nextProducer1, nextProducer2);
+  }
+
+  public DataFetchProducer newDataFetchProducer() {
+    return new DataFetchProducer(mExecutorSupplier.forBackground(), mPooledByteBufferFactory);
   }
 
   public DecodeProducer newDecodeProducer(

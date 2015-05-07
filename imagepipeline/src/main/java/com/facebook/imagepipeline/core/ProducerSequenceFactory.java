@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
+import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.ImageTransformMetaData;
@@ -64,6 +65,7 @@ public class ProducerSequenceFactory {
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalContentUriFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalResourceFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalAssetFetchSequence;
+  @VisibleForTesting Producer<CloseableReference<CloseableImage>> mDataFetchSequence;
   @VisibleForTesting Map<
       Producer<CloseableReference<CloseableImage>>,
       Producer<CloseableReference<CloseableImage>>>
@@ -164,6 +166,8 @@ public class ProducerSequenceFactory {
       return getLocalAssetFetchSequence();
     } else if (UriUtil.isLocalResourceUri(uri)) {
       return getLocalResourceFetchSequence();
+    } else if (UriUtil.isDataUri(uri)) {
+      return getDataFetchSequence();
     } else {
       String uriString = uri.toString();
       if (uriString.length() > 30) {
@@ -318,6 +322,19 @@ public class ProducerSequenceFactory {
           newBitmapCacheGetToLocalTransformSequence(localAssetFetchProducer);
     }
     return mLocalAssetFetchSequence;
+  }
+
+  /**
+   * bitmap cache get ->
+   * background thread hand-off -> multiplex -> bitmap cache -> decode ->
+   */
+  private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
+    if (mDataFetchSequence == null) {
+      DataFetchProducer dataFetchProducer =
+          mProducerFactory.newDataFetchProducer();
+      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(dataFetchProducer);
+    }
+    return mDataFetchSequence;
   }
 
   /**
