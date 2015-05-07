@@ -244,7 +244,7 @@ public class ProducerSequenceFactory {
       LocalFileFetchProducer localFileFetchProducer =
           mProducerFactory.newLocalFileFetchProducer();
       mLocalImageFileFetchSequence =
-          newBitmapCacheGetToTranscodeSequence(localFileFetchProducer, /* isLocal */true);
+          newBitmapCacheGetToLocalTransformSequence(localFileFetchProducer);
     }
     return mLocalImageFileFetchSequence;
   }
@@ -278,7 +278,7 @@ public class ProducerSequenceFactory {
       LocalContentUriFetchProducer localContentUriFetchProducer =
           mProducerFactory.newContentUriFetchProducer();
       mLocalContentUriFetchSequence =
-          newBitmapCacheGetToTranscodeSequence(localContentUriFetchProducer, /* isLocal */true);
+          newBitmapCacheGetToLocalTransformSequence(localContentUriFetchProducer);
     }
     return mLocalContentUriFetchSequence;
   }
@@ -297,7 +297,7 @@ public class ProducerSequenceFactory {
       LocalResourceFetchProducer localResourceFetchProducer =
           mProducerFactory.newLocalResourceFetchProducer();
       mLocalResourceFetchSequence =
-          newBitmapCacheGetToTranscodeSequence(localResourceFetchProducer, /* isLocal */true);
+          newBitmapCacheGetToLocalTransformSequence(localResourceFetchProducer);
     }
     return mLocalResourceFetchSequence;
   }
@@ -315,7 +315,7 @@ public class ProducerSequenceFactory {
       LocalAssetFetchProducer localAssetFetchProducer =
           mProducerFactory.newLocalAssetFetchProducer();
       mLocalAssetFetchSequence =
-          newBitmapCacheGetToTranscodeSequence(localAssetFetchProducer, /* isLocal */true);
+          newBitmapCacheGetToLocalTransformSequence(localAssetFetchProducer);
     }
     return mLocalAssetFetchSequence;
   }
@@ -323,17 +323,13 @@ public class ProducerSequenceFactory {
   /**
    * Creates a new fetch sequence that just needs the source producer.
    * @param nextProducer the source producer
-   * @param isLocal whether the image source is local or not
    * @return the new sequence
    */
-  private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToTranscodeSequence(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer,
-      boolean isLocal) {
+  private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToLocalTransformSequence(
+      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
     Producer<CloseableReference<PooledByteBuffer>> nextProducerAfterDecode =
         newEncodedCacheMultiplexToTranscodeSequence(nextProducer);
-    if (isLocal) {
-      nextProducerAfterDecode = newLocalTransformationsSequence(nextProducerAfterDecode);
-    }
+    nextProducerAfterDecode = newLocalTransformationsSequence(nextProducerAfterDecode);
     return newBitmapCacheGetToDecodeSequence(nextProducerAfterDecode);
   }
 
