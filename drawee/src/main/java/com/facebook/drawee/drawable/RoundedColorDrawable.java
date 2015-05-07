@@ -24,7 +24,7 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 
-public class RoundedColorDrawable extends Drawable {
+public class RoundedColorDrawable extends Drawable implements Rounded {
   @VisibleForTesting final float[] mRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @VisibleForTesting boolean mIsCircle = false;
@@ -100,6 +100,7 @@ public class RoundedColorDrawable extends Drawable {
    *
    * @param isCircle whether or not to round as circle
    */
+  @Override
   public void setCircle(boolean isCircle) {
     mIsCircle = isCircle;
     updatePath();
@@ -112,6 +113,7 @@ public class RoundedColorDrawable extends Drawable {
    * @param radii Each corner receive two radius values [X, Y]. The corners are ordered
    * top-left, top-right, bottom-right, bottom-left
    */
+  @Override
   public void setRadii(float[] radii) {
     if (radii == null) {
       Arrays.fill(mRadii, 0);
@@ -128,6 +130,7 @@ public class RoundedColorDrawable extends Drawable {
    *
    * @param radius
    */
+  @Override
   public void setRadius(float radius) {
     Preconditions.checkArgument(radius >= 0, "radius should be non negative");
     Arrays.fill(mRadii, radius);
@@ -159,6 +162,7 @@ public class RoundedColorDrawable extends Drawable {
    * @param color of the border
    * @param width of the border
    */
+  @Override
   public void setBorder(int color, float width) {
     if (mBorderColor != color) {
       mBorderColor = color;

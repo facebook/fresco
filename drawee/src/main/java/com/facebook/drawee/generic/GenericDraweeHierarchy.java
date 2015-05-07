@@ -28,6 +28,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
+import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
@@ -316,18 +317,23 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return new MatrixDrawable(drawable, matrix);
   }
 
+
+  private static void applyRoundingParams(Rounded rounded, RoundingParams roundingParams) {
+    rounded.setCircle(roundingParams.getRoundAsCircle());
+    rounded.setRadii(roundingParams.getCornersRadii());
+    rounded.setBorder(
+        roundingParams.getBorderColor(),
+        roundingParams.getBorderWidth());
+  }
+
   private static Drawable maybeWrapWithRoundedOverlayColor(
       @Nullable RoundingParams roundingParams,
       Drawable drawable) {
     if (roundingParams != null &&
         roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
       RoundedCornersDrawable roundedCornersDrawable = new RoundedCornersDrawable(drawable);
-      roundedCornersDrawable.setCircle(roundingParams.getRoundAsCircle());
-      roundedCornersDrawable.setRadii(roundingParams.getCornersRadii());
+      applyRoundingParams(roundedCornersDrawable, roundingParams);
       roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
-      roundedCornersDrawable.setBorder(
-          roundingParams.getBorderColor(),
-          roundingParams.getBorderWidth());
       return roundedCornersDrawable;
     } else {
       return drawable;
@@ -343,22 +349,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       if (drawable instanceof BitmapDrawable) {
         RoundedBitmapDrawable roundedBitmapDrawable =
             RoundedBitmapDrawable.fromBitmapDrawable(resources, (BitmapDrawable) drawable);
-        roundedBitmapDrawable.setCircle(roundingParams.getRoundAsCircle());
-        roundedBitmapDrawable.setCornerRadii(roundingParams.getCornersRadii());
-        roundedBitmapDrawable.setBorder(
-            roundingParams.getBorderColor(),
-            roundingParams.getBorderWidth());
+        applyRoundingParams(roundedBitmapDrawable, roundingParams);
         return roundedBitmapDrawable;
       }
       if (drawable instanceof ColorDrawable &&
           Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
         RoundedColorDrawable roundedColorDrawable =
             RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
-        roundedColorDrawable.setCircle(roundingParams.getRoundAsCircle());
-        roundedColorDrawable.setRadii(roundingParams.getCornersRadii());
-        roundedColorDrawable.setBorder(
-            roundingParams.getBorderColor(),
-            roundingParams.getBorderWidth());
+        applyRoundingParams(roundedColorDrawable, roundingParams);
         return roundedColorDrawable;
       }
     }
@@ -643,12 +641,8 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mRoundingParams = roundingParams;
     if (roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
       RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) mTopLevelDrawable;
-      roundedCornersDrawable.setCircle(roundingParams.getRoundAsCircle());
-      roundedCornersDrawable.setRadii(roundingParams.getCornersRadii());
+      applyRoundingParams(roundedCornersDrawable, roundingParams);
       roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
-      roundedCornersDrawable.setBorder(
-          roundingParams.getBorderColor(),
-          roundingParams.getBorderWidth());
     }
   }
 

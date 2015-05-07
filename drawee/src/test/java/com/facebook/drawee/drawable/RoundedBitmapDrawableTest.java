@@ -12,7 +12,6 @@ package com.facebook.drawee.drawable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
@@ -59,14 +58,14 @@ public class RoundedBitmapDrawableTest {
 
   @Test
   public void testSetRadii() {
-    mRoundedBitmapDrawable.setCornerRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+    mRoundedBitmapDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
     assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, mRoundedBitmapDrawable.mCornerRadii, 0);
   }
 
   @Test
   public void testSetRadius() {
-    mRoundedBitmapDrawable.setCornerRadius(9);
+    mRoundedBitmapDrawable.setRadius(9);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
     assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundedBitmapDrawable.mCornerRadii, 0);
   }

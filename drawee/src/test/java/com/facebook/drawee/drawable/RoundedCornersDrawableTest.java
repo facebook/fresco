@@ -61,7 +61,7 @@ public class RoundedCornersDrawableTest {
 
   @Test
   public void testSetRadii() {
-    mRoundedCornersDrawable.setRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
+    mRoundedCornersDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
     assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundedCornersDrawable.mRadii, 0);
   }

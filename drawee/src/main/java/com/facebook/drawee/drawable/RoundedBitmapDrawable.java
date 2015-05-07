@@ -34,7 +34,7 @@ import com.facebook.common.internal.VisibleForTesting;
 * A drawable that can have rounded corners.
 */
 public class RoundedBitmapDrawable extends BitmapDrawable
-    implements TransformAwareDrawable {
+    implements TransformAwareDrawable, Rounded {
   @VisibleForTesting boolean mIsCircle = false;
   @VisibleForTesting float[] mCornerRadii = new float[8];
   @VisibleForTesting RectF mRootBounds = new RectF();
@@ -76,6 +76,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
    *
    * @param isCircle whether or not to round as circle
    */
+  @Override
   public void setCircle(boolean isCircle) {
     mIsCircle = isCircle;
     mIsPathDirty = true;
@@ -87,7 +88,8 @@ public class RoundedBitmapDrawable extends BitmapDrawable
    * drawable is drawn in a round-rectangle, rather than a rectangle.
    * @param radius the radius for the corners of the rectangle
    */
-  public void setCornerRadius(float radius) {
+  @Override
+  public void setRadius(float radius) {
     Preconditions.checkState(radius >= 0);
     Arrays.fill(mCornerRadii, radius);
     mIsPathDirty = true;
@@ -100,7 +102,8 @@ public class RoundedBitmapDrawable extends BitmapDrawable
    * top-left, top-right, bottom-right, bottom-left
    * @param radii the x and y radii of the corners
    */
-  public void setCornerRadii(float[] radii) {
+  @Override
+  public void setRadii(float[] radii) {
     if (radii == null) {
       Arrays.fill(mCornerRadii, 0);
     } else {
@@ -116,6 +119,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
    * @param color of the border
    * @param width of the border
    */
+  @Override
   public void setBorder(int color, float width) {
     if (mBorderColor != color || mBorderWidth != width) {
       mBorderColor = color;

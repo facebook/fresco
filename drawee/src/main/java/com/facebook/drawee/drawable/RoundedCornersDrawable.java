@@ -25,7 +25,7 @@ import com.facebook.common.internal.VisibleForTesting;
 /**
  * Drawable that draws underlying drawable with rounded corners.
  */
-public class RoundedCornersDrawable extends ForwardingDrawable {
+public class RoundedCornersDrawable extends ForwardingDrawable implements Rounded {
 
   public enum Type {
     /**
@@ -76,6 +76,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param isCircle whether or not to round as circle
    */
+  @Override
   public void setCircle(boolean isCircle) {
     mIsCircle = isCircle;
     updatePath();
@@ -87,6 +88,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param radius corner radius in pixels
    */
+  @Override
   public void setRadius(float radius) {
     Arrays.fill(mRadii, radius);
     updatePath();
@@ -100,6 +102,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param radii Array of 8 values, 4 pairs of [X,Y] radii
    */
+  @Override
   public void setRadii(float[] radii) {
     if (radii == null) {
       Arrays.fill(mRadii, 0);
@@ -126,6 +129,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    * @param color of the border
    * @param width of the border
    */
+  @Override
   public void setBorder(int color, float width) {
     mBorderColor = color;
     mBorderWidth = width;
