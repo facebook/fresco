@@ -14,6 +14,7 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -154,7 +155,7 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
      */
     @GuardedBy("Multiplexer.this")
     @Nullable
-    private SettableProducerContext mMultiplexProducerContext;
+    private BaseProducerContext mMultiplexProducerContext;
 
     /**
      * Currently used consumer of next producer.
@@ -189,7 +190,10 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
       final Pair<Consumer<CloseableReference<T>>, ProducerContext> consumerContextPair =
           Pair.create(consumer, producerContext);
       CloseableReference<T> lastIntermediateResult;
-      float lastProgress;
+      final List<ProducerContextCallbacks> prefetchCallbacks;
+      final List<ProducerContextCallbacks> priorityCallbacks;
+      final List<ProducerContextCallbacks> intermediateResultsCallbacks;
+      final float lastProgress;
 
       // Check if Multiplexer is still in mMultiplexers map, and if so add new consumer.
       // Also store current intermediate result - we will notify consumer after acquiring
@@ -199,22 +203,16 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
           return false;
         }
         mConsumerContextPairs.add(consumerContextPair);
-        if (mMultiplexProducerContext != null) {
-          if (mMultiplexProducerContext.isPrefetch()) {
-            mMultiplexProducerContext.setIsPrefetch(consumerContextPair.second.isPrefetch());
-          }
-          if (!mMultiplexProducerContext.isIntermediateResultExpected()) {
-            mMultiplexProducerContext.setIsIntermediateResultExpected(
-                consumerContextPair.second.isIntermediateResultExpected());
-          }
-          mMultiplexProducerContext.setPriority(
-              Priority.getHigherPriority(
-                  mMultiplexProducerContext.getPriority(),
-                  consumerContextPair.second.getPriority()));
-        }
+        prefetchCallbacks = updateIsPrefetch();
+        priorityCallbacks = updatePriority();
+        intermediateResultsCallbacks = updateIsIntermediateResultExpected();
         lastIntermediateResult = mLastIntermediateResult;
         lastProgress = mLastProgress;
       }
+
+      BaseProducerContext.callOnIsPrefetchChanged(prefetchCallbacks);
+      BaseProducerContext.callOnPriorityChanged(priorityCallbacks);
+      BaseProducerContext.callOnIsIntermediateResultExpectedChanged(intermediateResultsCallbacks);
 
       synchronized (consumerContextPair) {
         // check if last result changed in the mean time. In such case we should not propagate it
@@ -250,29 +248,30 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
           new BaseProducerContextCallbacks() {
             @Override
             public void onCancellationRequested() {
-              SettableProducerContext contextToCancel = null;
-              boolean pairWasRemoved = false;
+              BaseProducerContext contextToCancel = null;
+              List<ProducerContextCallbacks> isPrefetchCallbacks = null;
+              List<ProducerContextCallbacks> priorityCallbacks = null;
+              List<ProducerContextCallbacks> isIntermediateResultExpectedCallbacks = null;
+              final boolean pairWasRemoved;
+
               synchronized (Multiplexer.this) {
                 pairWasRemoved = mConsumerContextPairs.remove(consumerContextPair);
                 if (pairWasRemoved) {
                   if (mConsumerContextPairs.isEmpty()) {
                     contextToCancel = mMultiplexProducerContext;
-                  } else if (mMultiplexProducerContext != null) {
-                    if (!mMultiplexProducerContext.isPrefetch() &&
-                        !consumerContextPair.second.isPrefetch()) {
-                      mMultiplexProducerContext.setIsPrefetch(isPrefetch());
-                    }
-                    if (consumerContextPair.second.isIntermediateResultExpected()) {
-                      mMultiplexProducerContext.setIsIntermediateResultExpected(
-                          isIntermediateResultExpected());
-                    }
-                    if (mMultiplexProducerContext.getPriority().equals(
-                        consumerContextPair.second.getPriority())) {
-                      mMultiplexProducerContext.setPriority(getPriority());
-                    }
+                  } else {
+                    isPrefetchCallbacks = updateIsPrefetch();
+                    priorityCallbacks = updatePriority();
+                    isIntermediateResultExpectedCallbacks = updateIsIntermediateResultExpected();
                   }
                 }
               }
+
+              BaseProducerContext.callOnIsPrefetchChanged(isPrefetchCallbacks);
+              BaseProducerContext.callOnPriorityChanged(priorityCallbacks);
+              BaseProducerContext.callOnIsIntermediateResultExpectedChanged(
+                  isIntermediateResultExpectedCallbacks);
+
               if (contextToCancel != null) {
                 contextToCancel.cancel();
               }
@@ -283,46 +282,18 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
 
             @Override
             public void onIsPrefetchChanged() {
-              synchronized (Multiplexer.this) {
-                if (mMultiplexProducerContext != null) {
-                  if (mMultiplexProducerContext.isPrefetch()) {
-                    mMultiplexProducerContext.setIsPrefetch(
-                        consumerContextPair.second.isPrefetch());
-                  } else if (consumerContextPair.second.isPrefetch()) {
-                    mMultiplexProducerContext.setIsPrefetch(isPrefetch());
-                  }
-                }
-              }
+              BaseProducerContext.callOnIsPrefetchChanged(updateIsPrefetch());
             }
 
             @Override
             public void onIsIntermediateResultExpectedChanged() {
-              synchronized (Multiplexer.this) {
-                if (mMultiplexProducerContext != null) {
-                  if (consumerContextPair.second.isIntermediateResultExpected()) {
-                    mMultiplexProducerContext.setIsIntermediateResultExpected(true);
-                  } else if (mMultiplexProducerContext.isIntermediateResultExpected()) {
-                    mMultiplexProducerContext.setIsIntermediateResultExpected(
-                        isIntermediateResultExpected());
-                  }
-                }
-              }
+              BaseProducerContext.callOnIsIntermediateResultExpectedChanged(
+                  updateIsIntermediateResultExpected());
             }
 
             @Override
             public void onPriorityChanged() {
-              synchronized (Multiplexer.this) {
-                if (mMultiplexProducerContext != null) {
-                  Priority newPriority = consumerContextPair.second.getPriority();
-                  if (Priority.getHigherPriority(
-                          mMultiplexProducerContext.getPriority(),
-                          newPriority).equals(newPriority)) {
-                    mMultiplexProducerContext.setPriority(newPriority);
-                  } else {
-                    mMultiplexProducerContext.setPriority(getPriority());
-                  }
-                }
-              }
+              BaseProducerContext.callOnPriorityChanged(updatePriority());
             }
           });
     }
@@ -333,7 +304,7 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
      * map to clean up.
      */
     private void startNextProducerIfHasAttachedConsumers() {
-      SettableProducerContext multiplexProducerContext;
+      BaseProducerContext multiplexProducerContext;
       ForwardingConsumer forwardingConsumer;
       synchronized (Multiplexer.this) {
         Preconditions.checkArgument(mMultiplexProducerContext == null);
@@ -346,15 +317,16 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
         }
 
         ProducerContext producerContext = mConsumerContextPairs.iterator().next().second;
-        mMultiplexProducerContext = new SettableProducerContext(
+        mMultiplexProducerContext = new BaseProducerContext(
             producerContext.getImageRequest(),
             producerContext.getId(),
             producerContext.getListener(),
             producerContext.getCallerContext(),
             producerContext.getLowestPermittedRequestLevel(),
-            isPrefetch(),
-            isIntermediateResultExpected(),
-            getPriority());
+            computeIsPrefetch(),
+            computeIsIntermediateResultExpected(),
+            computePriority());
+
         mForwardingConsumer = new ForwardingConsumer();
         multiplexProducerContext = mMultiplexProducerContext;
         forwardingConsumer = mForwardingConsumer;
@@ -364,7 +336,15 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
           multiplexProducerContext);
     }
 
-    private synchronized boolean isPrefetch() {
+    @Nullable
+    private synchronized List<ProducerContextCallbacks> updateIsPrefetch() {
+      if (mMultiplexProducerContext == null) {
+        return null;
+      }
+      return mMultiplexProducerContext.setIsPrefetchNoCallbacks(computeIsPrefetch());
+    }
+
+    private synchronized boolean computeIsPrefetch() {
       for (Pair<Consumer<CloseableReference<T>>, ProducerContext> pair : mConsumerContextPairs) {
         if (!pair.second.isPrefetch()) {
           return false;
@@ -373,7 +353,16 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
       return true;
     }
 
-    private synchronized boolean isIntermediateResultExpected() {
+    @Nullable
+    private synchronized List<ProducerContextCallbacks> updateIsIntermediateResultExpected() {
+      if (mMultiplexProducerContext == null) {
+        return null;
+      }
+      return mMultiplexProducerContext.setIsIntermediateResultExpectedNoCallbacks(
+          computeIsIntermediateResultExpected());
+    }
+
+    private synchronized boolean computeIsIntermediateResultExpected() {
       for (Pair<Consumer<CloseableReference<T>>, ProducerContext> pair : mConsumerContextPairs) {
         if (pair.second.isIntermediateResultExpected()) {
           return true;
@@ -382,7 +371,15 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
       return false;
     }
 
-    private synchronized Priority getPriority() {
+    @Nullable
+    private synchronized List<ProducerContextCallbacks> updatePriority() {
+      if (mMultiplexProducerContext == null) {
+        return null;
+      }
+      return mMultiplexProducerContext.setPriorityNoCallbacks(computePriority());
+    }
+
+    private synchronized Priority computePriority() {
       Priority priority = Priority.LOW;
       for (Pair<Consumer<CloseableReference<T>>, ProducerContext> pair : mConsumerContextPairs) {
         priority = Priority.getHigherPriority(priority, pair.second.getPriority());
