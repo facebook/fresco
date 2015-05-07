@@ -74,7 +74,7 @@ public abstract class ForwardingDrawable extends Drawable
     DrawableUtils.setCallbacks(previousDelegate, null, null);
     DrawableUtils.setCallbacks(newDelegate, null, null);
     DrawableUtils.setDrawableProperties(newDelegate, mDrawableProperties);
-    DrawableUtils.copyProperties(newDelegate, previousDelegate);
+    DrawableUtils.copyProperties(newDelegate, this);
     DrawableUtils.setCallbacks(newDelegate, this, this);
     mCurrentDelegate = newDelegate;
     return previousDelegate;

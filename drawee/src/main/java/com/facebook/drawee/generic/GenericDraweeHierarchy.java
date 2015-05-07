@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.drawee.drawable.BlankDrawable;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
@@ -129,10 +130,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
   }
 
-  private Drawable mEmptyPlaceholderDrawable;
-  private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
-  private final Drawable mEmptyControllerOverlayDrawable = new ColorDrawable(Color.TRANSPARENT);
-
   private final Resources mResources;
 
   private final Drawable mTopLevelDrawable;
@@ -162,7 +159,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     // placeholder image branch
     Drawable placeholderImageBranch = builder.getPlaceholderImage();
     if (placeholderImageBranch == null) {
-      placeholderImageBranch = getEmptyPlaceholderDrawable();
+      placeholderImageBranch = BlankDrawable.INSTANCE;
     }
     placeholderImageBranch = maybeApplyRoundingBitmapOnly(
         mRoundingParams,
@@ -175,7 +172,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
     // actual image branch
     Drawable actualImageBranch = null;
-    mActualImageSettableDrawable = new SettableDrawable(mEmptyActualImageDrawable);
+    mActualImageSettableDrawable = new SettableDrawable(BlankDrawable.INSTANCE);
     actualImageBranch = mActualImageSettableDrawable;
     actualImageBranch = maybeWrapWithScaleType(
         actualImageBranch,
@@ -266,7 +263,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       }
     }
     if (mControllerOverlayIndex >= 0) {
-      layers[mControllerOverlayIndex] = mEmptyControllerOverlayDrawable;
+      layers[mControllerOverlayIndex] = BlankDrawable.INSTANCE;
     }
 
     Drawable root;
@@ -365,7 +362,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private void resetActualImages() {
     if (mActualImageSettableDrawable != null) {
-      mActualImageSettableDrawable.setDrawable(mEmptyActualImageDrawable);
+      mActualImageSettableDrawable.setDrawable(BlankDrawable.INSTANCE);
     }
   }
 
@@ -489,7 +486,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   @Override
   public void setControllerOverlay(@Nullable Drawable drawable) {
     if (drawable == null) {
-      drawable = mEmptyControllerOverlayDrawable;
+      drawable = BlankDrawable.INSTANCE;
     }
     mFadeDrawable.setDrawable(mControllerOverlayIndex, drawable);
   }
@@ -554,13 +551,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return getLayerDrawable(index, false /* returnParent */);
   }
 
-  private Drawable getEmptyPlaceholderDrawable() {
-    if (mEmptyPlaceholderDrawable == null) {
-      mEmptyPlaceholderDrawable = new ColorDrawable(Color.TRANSPARENT);
-    }
-    return mEmptyPlaceholderDrawable;
-  }
-
   // Mutability
 
   /** Sets the actual image focus point. */
@@ -605,7 +595,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    */
   public void setPlaceholderImage(Drawable drawable) {
     if (drawable == null) {
-      drawable = getEmptyPlaceholderDrawable();
+      drawable = BlankDrawable.INSTANCE;
     }
     drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
     setLayerChildDrawable(mPlaceholderImageIndex, drawable);
