@@ -9,12 +9,11 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 
 import com.facebook.common.internal.Lists;
@@ -28,6 +27,8 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.SharedByteArray;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
+
+import java.util.List;
 
 /**
  * Bitmap factory for Dalvik VM (Honeycomb to KitKat).
@@ -70,7 +71,15 @@ public class DalvikBitmapFactory {
   CloseableReference<Bitmap> createBitmap(short width, short height) {
     CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(width, height);
     try {
-      return decodeJPEGFromPooledByteBuffer(jpgRef, jpgRef.get().size());
+      CloseableReference<Bitmap> bitmapRef =
+          decodeJPEGFromPooledByteBuffer(jpgRef, jpgRef.get().size());
+      Bitmap underlying = bitmapRef.get();
+      for (int x = 0; x < underlying.getWidth(); x++) {
+        for (int y = 0; y < underlying.getHeight(); y++) {
+          underlying.setPixel(x, y, Color.TRANSPARENT);
+        }
+      }
+      return bitmapRef;
     } finally {
       jpgRef.close();
     }
