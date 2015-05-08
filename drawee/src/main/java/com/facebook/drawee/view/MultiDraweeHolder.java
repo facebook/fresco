@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
@@ -37,7 +36,7 @@ import com.facebook.drawee.interfaces.DraweeHierarchy;
 public class MultiDraweeHolder<DH extends DraweeHierarchy> {
 
   @VisibleForTesting boolean mIsAttached = false;
-  @VisibleForTesting ArrayList<DraweeHolder<DH>> mHolders = Lists.newArrayList();
+  @VisibleForTesting ArrayList<DraweeHolder<DH>> mHolders = new ArrayList<>();
 
   /**
    * Gets the controller ready to display the images.

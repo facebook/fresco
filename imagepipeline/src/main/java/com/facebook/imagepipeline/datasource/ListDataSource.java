@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.concurrent.CancellationException;
 
 import com.facebook.common.executors.CallerThreadExecutor;
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.AbstractDataSource;
@@ -61,7 +60,7 @@ public class ListDataSource<T> extends AbstractDataSource<ArrayList<CloseableRef
     if (!hasResult()) {
       return null;
     }
-    ArrayList<CloseableReference<T>> results = Lists.newArrayListWithCapacity(mDataSources.length);
+    ArrayList<CloseableReference<T>> results = new ArrayList<>(mDataSources.length);
     for (DataSource<CloseableReference<T>> dataSource : mDataSources) {
       results.add(dataSource.getResult());
     }

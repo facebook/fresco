@@ -14,7 +14,6 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -144,7 +143,7 @@ public class BaseProducerContext implements ProducerContext {
       return null;
     }
     mIsPrefetch = isPrefetch;
-    return Lists.newArrayList(mCallbacks);
+    return new ArrayList<>(mCallbacks);
   }
 
   /**
@@ -162,7 +161,7 @@ public class BaseProducerContext implements ProducerContext {
       return null;
     }
     mPriority = priority;
-    return Lists.newArrayList(mCallbacks);
+    return new ArrayList<>(mCallbacks);
   }
 
   /**
@@ -181,7 +180,7 @@ public class BaseProducerContext implements ProducerContext {
       return null;
     }
     mIsIntermediateResultExpected = isIntermediateResultExpected;
-    return Lists.newArrayList(mCallbacks);
+    return new ArrayList<>(mCallbacks);
   }
 
   /**
@@ -199,7 +198,7 @@ public class BaseProducerContext implements ProducerContext {
       return null;
     }
     mIsCancelled = true;
-    return Lists.newArrayList(mCallbacks);
+    return new ArrayList<>(mCallbacks);
   }
 
   /**

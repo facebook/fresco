@@ -16,7 +16,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
@@ -28,6 +27,7 @@ import com.facebook.imagepipeline.memory.SharedByteArray;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -219,7 +219,7 @@ public class DalvikBitmapFactory {
           throw new TooManyBitmapsException();
         }
       }
-      List<CloseableReference<Bitmap>> ret = Lists.newArrayList();
+      List<CloseableReference<Bitmap>> ret = new ArrayList<>();
       for (Bitmap bitmap : bitmaps) {
         ret.add(CloseableReference.of(bitmap, mUnpooledBitmapsReleaser));
       }

@@ -9,11 +9,10 @@
 
 package com.facebook.imagepipeline.cache;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 
@@ -66,8 +65,8 @@ public class CountingMemoryCacheInspector<K, V> {
       this.size = size;
       this.lruSize = lruSize;
 
-      lruEntries = Lists.newArrayList();
-      sharedEntries = Lists.newArrayList();
+      lruEntries = new ArrayList<>();
+      sharedEntries = new ArrayList<>();
     }
 
     public void release() {

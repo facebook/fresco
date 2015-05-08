@@ -10,14 +10,14 @@
 package com.facebook.cache.disk;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.facebook.common.internal.Lists;
-import com.facebook.common.internal.Maps;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.WriterCallback;
+import com.facebook.common.internal.Maps;
 
 /**
  * Storage for files in the cache.
@@ -42,7 +42,7 @@ public interface DiskStorage {
     public List<DiskDumpInfoEntry> entries;
     public Map<String, Integer> typeCounts;
     public DiskDumpInfo() {
-      entries = Lists.newArrayList();
+      entries = new ArrayList<>();
       typeCounts = Maps.newHashMap();
     }
   }

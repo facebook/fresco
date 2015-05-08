@@ -11,15 +11,14 @@ package com.facebook.imageformat;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.facebook.common.internal.Lists;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -88,7 +87,7 @@ public class ImageFormatCheckerTest {
   }
 
   private List<String> getSimpleWebpNames() {
-    List<String> result = Lists.newArrayList();
+    List<String> result = new ArrayList<>();
     for (int i = 1; i <= 2; ++i) {
       result.add(String.format("webps/%d_webp_plain.webp", i));
     }
@@ -96,7 +95,7 @@ public class ImageFormatCheckerTest {
   }
 
   private List<String> getLosslessWebpNames() {
-    List<String> result = Lists.newArrayList();
+    List<String> result = new ArrayList<>();
     for (int i = 1; i <= 5; ++i) {
       result.add(String.format("webps/%d_webp_ll.webp", i));
     }
@@ -108,7 +107,7 @@ public class ImageFormatCheckerTest {
   }
 
   private List<String> getExtendedWebpWithAlphaNames() {
-    List<String> result = Lists.newArrayList();
+    List<String> result = new ArrayList<>();
     for (int i = 1; i <= 5; ++i) {
       result.add(String.format("webps/%d_webp_ea.webp", i));
     }
@@ -120,7 +119,7 @@ public class ImageFormatCheckerTest {
   }
 
   private List<String> getJpegNames() {
-    List<String> result = Lists.newArrayList();
+    List<String> result = new ArrayList<>();
     for (int i = 1; i <= 5; ++i) {
       result.add(String.format("jpegs/%d.jpeg", i));
     }
@@ -128,7 +127,7 @@ public class ImageFormatCheckerTest {
   }
 
   private List<String> getPngNames() {
-    List<String> result = Lists.newArrayList();
+    List<String> result = new ArrayList<>();
     for (int i = 1; i <= 5; ++i) {
       result.add(String.format("pngs/%d.png", i));
     }
@@ -136,7 +135,7 @@ public class ImageFormatCheckerTest {
   }
 
   private List<String> getGifsNames() {
-    List<String> result = Lists.newArrayList();
+    List<String> result = new ArrayList<>();
     for (int i = 1; i <= 5; ++i) {
       result.add(String.format("gifs/%d.gif", i));
     }
