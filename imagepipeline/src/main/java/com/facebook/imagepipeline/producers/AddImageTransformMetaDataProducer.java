@@ -55,9 +55,14 @@ public class AddImageTransformMetaDataProducer
     @Override
     protected void onNewResultImpl(
         CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
+      mMetaDataBuilder.reset();
+      if (newResult == null) {
+        getConsumer().onNewResult(Pair.create(newResult, mMetaDataBuilder.build()), isLast);
+        return;
+      }
+
       final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
           new PooledByteBufferInputStream(newResult.get()));
-      mMetaDataBuilder.reset();
       mMetaDataBuilder.setImageFormat(imageFormat);
       if (imageFormat == ImageFormat.JPEG && isLast) {
         mMetaDataBuilder.setRotationAngle(getRotationAngle(newResult));
