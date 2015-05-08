@@ -61,7 +61,7 @@ import com.facebook.imagepipeline.producers.NetworkFetcher;
  *       .setYYY(yyy)
  *       .build();
  *   ImagePipelineFactory factory = new ImagePipelineFactory(config);
- *   ImagePipeline pipeline = factory.newPipeline();
+ *   ImagePipeline pipeline = factory.getImagePipeline();
  * </code>
  *
  * <p>This should only be done once per process.
@@ -69,15 +69,14 @@ import com.facebook.imagepipeline.producers.NetworkFetcher;
 public class ImagePipelineConfig {
 
   // There are a lot of parameters in this class. Please follow strict alphabetical order.
-
+  private final AnimatedDrawableUtil mAnimatedDrawableUtil;
+  private final AnimatedImageFactory mAnimatedImageFactory;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
-  private final AnimatedDrawableUtil mAnimatedDrawableUtil;
-  private final AnimatedImageFactory mAnimatedImageFactory;
   private final ImageDecoder mImageDecoder;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final DiskCacheConfig mMainDiskCacheConfig;
@@ -272,6 +271,7 @@ public class ImagePipelineConfig {
 
   public static class Builder {
 
+    private AnimatedImageFactory mAnimatedImageFactory;
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
@@ -288,11 +288,16 @@ public class ImagePipelineConfig {
     private Set<RequestListener> mRequestListeners;
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
-    private AnimatedImageFactory mAnimatedImageFactory;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
       mContext = Preconditions.checkNotNull(context);
+    }
+
+
+    public Builder setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory) {
+      mAnimatedImageFactory = animatedImageFactory;
+      return this;
     }
 
     public Builder setBitmapMemoryCacheParamsSupplier(
@@ -321,11 +326,6 @@ public class ImagePipelineConfig {
 
     public Builder setImageCacheStatsTracker(ImageCacheStatsTracker imageCacheStatsTracker) {
       mImageCacheStatsTracker = imageCacheStatsTracker;
-      return this;
-    }
-
-    public Builder setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory) {
-      mAnimatedImageFactory = animatedImageFactory;
       return this;
     }
 
