@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.drawable;
 
-import java.util.Arrays;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,6 +19,8 @@ import android.graphics.drawable.Drawable;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+
+import java.util.Arrays;
 
 /**
  * Drawable that draws underlying drawable with rounded corners.
