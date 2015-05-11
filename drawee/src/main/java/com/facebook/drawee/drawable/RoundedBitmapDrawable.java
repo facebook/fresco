@@ -47,6 +47,8 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   private final Path mPath = new Path();
   private boolean mIsPathDirty = true;
+  /** True if this rounded bitmap drawable will actually do anything. */
+  private boolean mIsNonzero = true;
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean mIsShaderTransformDirty = true;
@@ -153,6 +155,11 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   @Override
   public void draw(Canvas canvas) {
+    updateNonzero();
+    if (!mIsNonzero) {
+      super.draw(canvas);
+      return;
+    }
     updateTransform();
     updatePath();
     updatePaint();
@@ -165,6 +172,24 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       canvas.drawPath(mPath, mBorderPaint);
     }
     canvas.restoreToCount(saveCount);
+  }
+
+  /**
+   * If both the radii and border width are zero, there is nothing to round.
+   * If so, we set internal state to delegate drawing to the superclass.
+   */
+  private void updateNonzero() {
+    if (mIsPathDirty) {
+      mIsNonzero = false;
+      if (mBorderWidth > 0) {
+        mIsNonzero = true;
+      }
+      for (int i = 0; i < mCornerRadii.length; i++) {
+        if (mCornerRadii[i] > 0) {
+          mIsNonzero = true;
+        }
+      }
+    }
   }
 
   private void updateTransform() {
