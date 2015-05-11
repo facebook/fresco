@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowLooper;
-import org.robolectric.util.Scheduler;
 
 @RunWith(RobolectricTestRunner.class)
 public class HandlerExecutorServiceImplTest {
