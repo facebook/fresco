@@ -23,7 +23,8 @@ import android.util.Log;
  */
 @ThreadSafe
 public class ForwardingControllerListener<INFO> implements ControllerListener<INFO> {
-  private static final String TAG = "ForwardingControllerListener";
+  // lint only allows 23 characters in a tag
+  private static final String TAG = "FdingControllerListener";
 
   private final List<ControllerListener<? super INFO>> mListeners = new ArrayList<>(2);
 
