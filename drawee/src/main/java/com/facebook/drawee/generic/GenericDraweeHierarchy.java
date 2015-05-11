@@ -629,10 +629,23 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
             roundingParams.getRoundingMethod() == mRoundingParams.getRoundingMethod(),
         "Rounding method cannot be changed and it has to be set during construction time.");
     mRoundingParams = roundingParams;
-    if (roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
-      RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) mTopLevelDrawable;
-      applyRoundingParams(roundedCornersDrawable, roundingParams);
-      roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
+    switch (roundingParams.getRoundingMethod()) {
+      case OVERLAY_COLOR:
+        RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) mTopLevelDrawable;
+        applyRoundingParams(roundedCornersDrawable, roundingParams);
+        roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
+        break;
+      case BITMAP_ONLY:
+        for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
+          Drawable layer = mFadeDrawable.getDrawable(i);
+          if (layer instanceof Rounded) {
+            Rounded rounded = (Rounded) layer;
+            applyRoundingParams(rounded, roundingParams);
+          }
+        }
+        break;
+      default:
+        break;
     }
   }
 
