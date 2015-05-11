@@ -37,9 +37,9 @@ ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setPostprocessor(redMeshPostprocessor)
     .build();
     
-PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
+PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
     .setImageRequest(request)
-    .setOldController(mSimpleDraweeView.getOldController())
+    .setOldController(mSimpleDraweeView.getController())
     // other setters as you need
     .build();
 mSimpleDraweeView.setController(controller);
@@ -91,7 +91,7 @@ public CloseableReference<Bitmap> process(
     Bitmap destBitmap = bitmapRef.get();
 	 for (int x = 0; x < destBitmap.getWidth(); x+=2) {
 	   for (int y = 0; y < destBitmap.getHeight(); y+=2) {
-	     destBitmap.setPixel(sourceBitmap.getPixel(x, y));
+	     destBitmap.setPixel(x, y, sourceBitmap.getPixel(x, y));
 	   }
 	 }
 	 return CloseableReference.cloneOrNull(bitmapRef);
