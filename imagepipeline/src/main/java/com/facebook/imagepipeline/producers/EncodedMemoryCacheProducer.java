@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
@@ -21,47 +22,82 @@ import com.facebook.common.internal.VisibleForTesting;
 /**
  * Memory cache producer for the encoded memory cache.
  */
-public class EncodedMemoryCacheProducer extends MemoryCacheProducer<CacheKey, PooledByteBuffer> {
+public class EncodedMemoryCacheProducer implements Producer<CloseableReference<PooledByteBuffer>> {
   @VisibleForTesting static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
+  @VisibleForTesting static final String VALUE_FOUND = "cached_value_found";
+
+  private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
+  private final CacheKeyFactory mCacheKeyFactory;
+  private final Producer<CloseableReference<PooledByteBuffer>> mNextProducer;
 
   public EncodedMemoryCacheProducer(
       MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
-    super(memoryCache, cacheKeyFactory, nextProducer);
+    mMemoryCache = memoryCache;
+    mCacheKeyFactory = cacheKeyFactory;
+    mNextProducer = nextProducer;
   }
 
   @Override
-  protected CacheKey getCacheKey(ImageRequest imageRequest) {
-    return mCacheKeyFactory.getEncodedCacheKey(imageRequest);
-  }
+  public void produceResults(
+      final Consumer<CloseableReference<PooledByteBuffer>> consumer,
+      final ProducerContext producerContext) {
 
-  @Override
-  protected boolean isResultFinal(
-      CloseableReference<PooledByteBuffer> cachedResultFound) {
-    return true;
-  }
+    final String requestId = producerContext.getId();
+    final ProducerListener listener = producerContext.getListener();
+    listener.onProducerStart(requestId, PRODUCER_NAME);
+    final ImageRequest imageRequest = producerContext.getImageRequest();
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
 
-  @Override
-  protected ImageRequest.RequestLevel getProducerRequestLevel() {
-    return ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE;
-  }
+    CloseableReference<PooledByteBuffer> cachedReference = mMemoryCache.get(cacheKey);
 
-  @Override
-  protected boolean shouldCacheReturnedValues() {
-    return true;
-  }
+    if (cachedReference != null) {
+      listener.onProducerFinishWithSuccess(
+          requestId,
+          PRODUCER_NAME,
+          listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "true") : null);
+      consumer.onProgressUpdate(1f);
+      consumer.onNewResult(cachedReference, true);
+      cachedReference.close();
+      return;
+    }
 
-  @Override
-  protected boolean shouldCacheResult(
-      CloseableReference<PooledByteBuffer> result,
-      CacheKey cacheKey,
-      boolean isLast) {
-    return isLast;
-  }
+    if (producerContext.getLowestPermittedRequestLevel().getValue() >=
+        ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.getValue()) {
+      listener.onProducerFinishWithSuccess(
+          requestId,
+          PRODUCER_NAME,
+          listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+      consumer.onNewResult(null, true);
+      return;
+    }
 
-  @Override
-  protected String getProducerName() {
-    return PRODUCER_NAME;
+    Consumer<CloseableReference<PooledByteBuffer>> consumerOfNextProducer = new DelegatingConsumer<
+        CloseableReference<PooledByteBuffer>,
+        CloseableReference<PooledByteBuffer>>(consumer) {
+      @Override
+      public void onNewResultImpl(CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
+        // intermediate or null results are not cached, so we just forward them
+        if (!isLast || newResult == null) {
+          getConsumer().onNewResult(newResult, isLast);
+          return;
+        }
+        // cache and forward the last result
+        CloseableReference<PooledByteBuffer> cachedResult = mMemoryCache.cache(cacheKey, newResult);
+        try {
+          getConsumer().onProgressUpdate(1f);
+          getConsumer().onNewResult((cachedResult != null) ? cachedResult : newResult, true);
+        } finally {
+          CloseableReference.closeSafely(cachedResult);
+        }
+      }
+    };
+
+    listener.onProducerFinishWithSuccess(
+        requestId,
+        PRODUCER_NAME,
+        listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+    mNextProducer.produceResults(consumerOfNextProducer, producerContext);
   }
 }
