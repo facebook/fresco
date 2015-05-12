@@ -96,7 +96,8 @@ def adb(command):
 def install_apks(cpu):
     """ Installs sample app and comparison apks """
     print("Installing sample app...")
-    gradle(':sample:install%sDebug' % cpu, ':sample:install%sDebugTest' % cpu)
+    gradle(':sample:install%sDebug' % cpu,
+           ':sample:install%sDebugAndroidTest' % cpu)
 
 
 class ComparisonTest:
