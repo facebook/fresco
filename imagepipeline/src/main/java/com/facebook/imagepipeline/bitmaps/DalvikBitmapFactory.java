@@ -73,12 +73,7 @@ public class DalvikBitmapFactory {
     try {
       CloseableReference<Bitmap> bitmapRef =
           decodeJPEGFromPooledByteBuffer(jpgRef, jpgRef.get().size());
-      Bitmap underlying = bitmapRef.get();
-      for (int x = 0; x < underlying.getWidth(); x++) {
-        for (int y = 0; y < underlying.getHeight(); y++) {
-          underlying.setPixel(x, y, Color.TRANSPARENT);
-        }
-      }
+      bitmapRef.get().eraseColor(Color.TRANSPARENT);
       return bitmapRef;
     } finally {
       jpgRef.close();
