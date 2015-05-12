@@ -9,11 +9,8 @@
 
 package com.facebook.drawee.generic;
 
-import javax.annotation.Nullable;
-
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -38,6 +35,8 @@ import com.facebook.drawee.drawable.SettableDrawable;
 import com.facebook.drawee.drawable.VisibilityAwareDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+
+import javax.annotation.Nullable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
@@ -637,7 +636,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         break;
       case BITMAP_ONLY:
         for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
-          Drawable layer = mFadeDrawable.getDrawable(i);
+          Drawable layer = getLayerChildDrawable(i);
           if (layer instanceof Rounded) {
             Rounded rounded = (Rounded) layer;
             applyRoundingParams(rounded, roundingParams);
