@@ -56,6 +56,15 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * Resize or rotate the image 
 * Modify the downloaded image in-place
 * Decode WebP images, even on older versions of Android that don't fully support them
+
+# Who Uses Fresco?
+
+* [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
+* [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
+* [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
+* [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
+  
+*Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
 # More information
 
