@@ -62,7 +62,13 @@
     title: Using Other Network Layers
   - id: using-other-image-loaders
     title: Using Other Image Loaders
-- title: Contributing to Fresco
+- title: Shipping your App
+  items:
+  - id: proguard
+    title: Using ProGuard
+  - id: multi-apk
+    title: Using multiple APKs
+- title: Contributors' Guide
   items:
   - id: building-from-source
     title: Building from Source

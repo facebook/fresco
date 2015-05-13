@@ -4,6 +4,7 @@ title: Using Other Image Loaders
 layout: docs
 permalink: /docs/using-other-image-loaders.html
 prev: using-other-network-layers.html
+next: proguard.html
 ---
 
 Drawee is not tied to a particular image loading mechanism and can be used with other image loaders.

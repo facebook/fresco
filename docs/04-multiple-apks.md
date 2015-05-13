@@ -1,10 +1,11 @@
-
-Fresco's binary download consists of four .aar (Android archive) files. Decompressed, these take up a total space of:
-
-### Using ProGuard with Fresco
-
-
-### Using product flavors
+---
+id: multiple-apks
+title: Shipping Multiple APKs
+layout: docs
+permalink: /docs/multiple-apks.html
+prev: proguard.html
+next: building-from-source.html
+---
 
 Fresco is written mostly in Java, but there is some C++ as well. C++ code has to be compiled for each of the CPUs Android can run on. Currently, Fresco supports three CPUs.
 
@@ -16,7 +17,7 @@ Fresco's binary download has copies of native .so files for all three platforms.
 
 If your application is not used by devices running Android 2.3 (Gingerbread), you will not need the `armeabi` flavor. If you do not use emulators to test your app, you will not need the `x86` flavor.
 
-#### Using product flavors in Android Studio / Gradle
+### Android Studio / Gradle
 
 Edit your `build.gradle` file as follows:
 
@@ -47,16 +48,16 @@ See the [Android Gradle documentation](http://tools.android.com/tech-docs/new-bu
 
 You can leave out the `arm` flavor if your app requires Android 3.0 or higher to run.
 
-#### Using product flavors in Eclipse 
+### Eclipse 
 
 By default, Eclipse produces a single APK for all CPU flavors. To separate them requires more complexity and more effort than in Gradle.
 
-In addition to the standard zip file, Fresco offers a [multi-APK zip file](https://github.com/facebook/fresco/releases/download/v{{site.current_version}}/frescolib-v{{site.current_version}}-multi.zip). However, it is not enough to download it - you must alter your project too.
+Instead of Fresco's standard zip file for eclipse, download the [multi-APK zip file](https://github.com/facebook/fresco/releases/download/v{{site.current_version}}/frescolib-v{{site.current_version}}-multi.zip). However, it is not enough to download it - you must alter your project too.
 
-1. Follow [Android's instructions]() for converting your code into a multi-APK project.
+1. Follow [Android's instructions](http://developer.android.com/training/multiple-apks/api.html) for converting your code into a multi-APK project.
 2. Each flavored project should depend on the corresponding `fresco-<flavor>` project. (If you are using OkHttp, also depend on the `imagepipeline-okhttp-<flavor>` project.)
 
 
-#### Uploading your app to the Play Store
+### Uploading to the Play Store
 
-You can either upload a single APK that all users can download, or separate, smaller APKs for each CPU. The [Android documentation](http://developer.android.com/google/play/publishing/multiple-apks.html) provides instructions on how to do this.
+You can either upload a single APK that all users can download, or separate, smaller APKs for each CPU. The [Play Store documentation](http://developer.android.com/google/play/publishing/multiple-apks.html) provides instructions on how to do this.
