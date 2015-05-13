@@ -44,11 +44,11 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @VisibleForTesting final Matrix mLastTransform = new Matrix();
   @VisibleForTesting float mBorderWidth = 0;
   @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
+  @VisibleForTesting boolean mIsNonzero = true;
 
   private final Path mPath = new Path();
   private boolean mIsPathDirty = true;
   /** True if this rounded bitmap drawable will actually do anything. */
-  private boolean mIsNonzero = true;
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean mIsShaderTransformDirty = true;
@@ -181,7 +181,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   private void updateNonzero() {
     if (mIsPathDirty) {
       mIsNonzero = false;
-      if (mBorderWidth > 0) {
+      if (mIsCircle || mBorderWidth > 0) {
         mIsNonzero = true;
       }
       for (int i = 0; i < mCornerRadii.length; i++) {

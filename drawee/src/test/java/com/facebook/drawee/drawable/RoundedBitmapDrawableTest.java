@@ -11,6 +11,7 @@ package com.facebook.drawee.drawable;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
@@ -32,6 +33,7 @@ public class RoundedBitmapDrawableTest {
 
   RoundedBitmapDrawable mRoundedBitmapDrawable;
   private final Drawable.Callback mCallback = mock(Drawable.Callback.class);
+  private final Canvas mCanvas = mock(Canvas.class);
 
   @Before
   public void setUp() {
@@ -78,5 +80,31 @@ public class RoundedBitmapDrawableTest {
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
     assertEquals(color, mRoundedBitmapDrawable.mBorderColor);
     assertEquals(width, mRoundedBitmapDrawable.mBorderWidth, 0);
+  }
+
+  @Test
+  public void testNonzeroDefaultFalse() {
+    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+  }
+
+  @Test
+  public void testNonZeroOnSet() {
+    mRoundedBitmapDrawable.setRadius(0);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertFalse(mRoundedBitmapDrawable.mIsNonzero);
+    mRoundedBitmapDrawable.setRadius(5);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+  }
+
+  @Test
+  public void testNonZeroCircle() {
+    mRoundedBitmapDrawable.setCircle(true);
+    mRoundedBitmapDrawable.setRadius(0);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+    mRoundedBitmapDrawable.setCircle(false);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertFalse(mRoundedBitmapDrawable.mIsNonzero);
   }
 }
