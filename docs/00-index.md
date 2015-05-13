@@ -20,19 +20,6 @@ dependencies {
 }
 ```
 
-### Maven
-
-Add the following to the `<dependencies>` section of your `pom.xml` file:
-
-
-```xml
-<dependency>
-  <groupId>com.facebook.fresco</groupId>
-  <artifactId>fresco</artifactId>
-  <version>LATEST</version>
-</dependency>
-```
-
 ### Eclipse ADT
 
 Download the [zip file](https://github.com/facebook/fresco/releases/download/v{{site.current_version}}/frescolib-v{{site.current_version}}.zip).
