@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import javax.annotation.Nullable;
+
 import android.graphics.Rect;
 import android.util.Pair;
 
@@ -44,41 +46,55 @@ public class AddImageTransformMetaDataProducer
   private class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
       CloseableReference<PooledByteBuffer>,
       Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
-    private final ImageTransformMetaData.Builder mMetaDataBuilder;
+    @Nullable private ImageTransformMetaData mMetaData = null;
 
     private AddImageTransformMetaDataConsumer(
         Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer) {
       super(consumer);
-      mMetaDataBuilder = new ImageTransformMetaData.Builder();
     }
 
     @Override
     protected void onNewResultImpl(
         CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
-      mMetaDataBuilder.reset();
       if (newResult == null) {
-        getConsumer().onNewResult(Pair.create(newResult, mMetaDataBuilder.build()), isLast);
+        getConsumer().onNewResult(
+            Pair.create(newResult, new ImageTransformMetaData.Builder().build()),
+            isLast);
         return;
       }
 
-      final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-          new PooledByteBufferInputStream(newResult.get()));
-      mMetaDataBuilder.setImageFormat(imageFormat);
-      if (imageFormat == ImageFormat.JPEG && isLast) {
-        mMetaDataBuilder.setRotationAngle(getRotationAngle(newResult));
-        Rect dimensions = JfifUtil.getDimensions(new PooledByteBufferInputStream(newResult.get()));
-        if (dimensions != null) {
-          mMetaDataBuilder.setWidth(dimensions.width());
-          mMetaDataBuilder.setHeight(dimensions.height());
+      if (mMetaData == null || mMetaData.getImageFormat() == ImageFormat.UNKNOWN) {
+        final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+            new PooledByteBufferInputStream(newResult.get()));
+        ImageTransformMetaData.Builder builder = new ImageTransformMetaData.Builder();
+        builder.setImageFormat(imageFormat);
+        boolean metaDataComplete = false;
+        if (imageFormat != ImageFormat.JPEG) {
+          metaDataComplete = true;
+        } else {
+          Rect dimensions =
+              JfifUtil.getDimensions(new PooledByteBufferInputStream(newResult.get()));
+          if (dimensions != null) {
+            metaDataComplete = true;
+            builder.setWidth(dimensions.width());
+            builder.setHeight(dimensions.height());
+            // We don't know for sure that the rotation angle is set at this point. But it might
+            // never get set, so let's assume that if we've got the dimensions then we've got the
+            // rotation angle, else we'll never propagate intermediate results.
+            builder.setRotationAngle(getRotationAngle(newResult));
+          }
+        }
+        if (metaDataComplete) {
+          mMetaData = builder.build();
         }
       }
-      getConsumer().onNewResult(Pair.create(newResult, mMetaDataBuilder.build()), isLast);
+      getConsumer().onNewResult(Pair.create(newResult, mMetaData), isLast);
     }
+  }
 
-    // Gets the correction angle based on the image's orientation
-    private int getRotationAngle(final CloseableReference<PooledByteBuffer> inputRef) {
-      return JfifUtil.getAutoRotateAngleFromOrientation(
-          JfifUtil.getOrientation(new PooledByteBufferInputStream(inputRef.get())));
-    }
+  // Gets the correction angle based on the image's orientation
+  private static int getRotationAngle(final CloseableReference<PooledByteBuffer> inputRef) {
+    return JfifUtil.getAutoRotateAngleFromOrientation(
+        JfifUtil.getOrientation(new PooledByteBufferInputStream(inputRef.get())));
   }
 }

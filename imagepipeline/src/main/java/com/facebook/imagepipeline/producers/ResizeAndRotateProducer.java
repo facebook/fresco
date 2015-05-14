@@ -49,6 +49,9 @@ public class ResizeAndRotateProducer extends ImageTransformProducer<
       final ImageRequest imageRequest,
       boolean isLast) {
     ImageTransformMetaData metaData = input.second;
+    if (metaData == null) {
+      return getStateIfUnknown(isLast);
+    }
     switch (metaData.getImageFormat()) {
       case JPEG:
         return isLast ?
@@ -57,10 +60,14 @@ public class ResizeAndRotateProducer extends ImageTransformProducer<
                     getScaleNumerator(imageRequest, metaData) != JpegTranscoder.SCALE_DENOMINATOR) :
             TriState.UNSET;
       case UNKNOWN:
-        return isLast ? TriState.NO : TriState.UNSET;
+        return getStateIfUnknown(isLast);
       default:
         return TriState.NO;
     }
+  }
+
+  private static TriState getStateIfUnknown(boolean isLast) {
+    return isLast ? TriState.NO : TriState.UNSET;
   }
 
   @Override
