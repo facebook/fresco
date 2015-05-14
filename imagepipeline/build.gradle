@@ -208,15 +208,3 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 artifacts.add('archives', sourcesJar)
-
-def jarList = new ArrayList()
-task setJarList(dependsOn: assembleRelease) << {
-    configurations.compile.each {
-        jarList.add(it)
-    }
-}
-
-task copyDeps(dependsOn: setJarList, type: Copy) {
-    from jarList
-    into 'build/external'
-}
