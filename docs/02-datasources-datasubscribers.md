@@ -27,7 +27,8 @@ dataSource.subscribe(new BaseBitmapDataSubscriber() {
     public void onFailureImpl(DataSource dataSource) {
       // No cleanup required here.
     }
-  });
+  },
+  executor);
 ```
 
 A snap to use, right? There is a caveat. 
