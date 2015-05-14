@@ -8,6 +8,7 @@
  */
 package com.facebook.imagepipeline.producers;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 import java.util.concurrent.Executor;
@@ -22,15 +23,18 @@ import com.facebook.common.references.CloseableReference;
 /**
  * Manages jobs so that only one can be executed at a time and no more often than once in
  * <code>mMinimumJobIntervalMs</code> milliseconds.
+ *
+ * @param <T> The type of the input to the job.
+ * @param <E> The type of any extra information that the job should receive.
  */
-public class JobScheduler<T> {
+public class JobScheduler<T, E> {
 
-  public static interface JobRunnable<T> {
-    void run(CloseableReference<T> inputRef, boolean isLast);
+  public static interface JobRunnable<T, E> {
+    void run(CloseableReference<T> inputRef, @Nullable E extra, boolean isLast);
   }
 
   private final Executor mExecutor;
-  private final JobRunnable<T> mJobRunnable;
+  private final JobRunnable<T, E> mJobRunnable;
   private final Runnable mDoJobRunnable;
   private final Runnable mSubmitJobRunnable;
   private final int mMinimumJobIntervalMs;
@@ -40,24 +44,21 @@ public class JobScheduler<T> {
 
   // job data
   @GuardedBy("this")
-  @VisibleForTesting
-  CloseableReference<T> mInputRef;
+  @VisibleForTesting CloseableReference<T> mInputRef;
   @GuardedBy("this")
-  @VisibleForTesting
-  boolean mIsLast;
+  @VisibleForTesting @Nullable E mExtra;
+  @GuardedBy("this")
+  @VisibleForTesting boolean mIsLast;
 
   // job state
   @GuardedBy("this")
-  @VisibleForTesting
-  JobState mJobState;
+  @VisibleForTesting JobState mJobState;
   @GuardedBy("this")
-  @VisibleForTesting
-  long mJobSubmitTime;
+  @VisibleForTesting long mJobSubmitTime;
   @GuardedBy("this")
-  @VisibleForTesting
-  long mJobStartTime;
+  @VisibleForTesting long mJobStartTime;
 
-  public JobScheduler(Executor executor, JobRunnable<T> jobRunnable, int minimumJobIntervalMs) {
+  public JobScheduler(Executor executor, JobRunnable<T, E> jobRunnable, int minimumJobIntervalMs) {
     mExecutor = executor;
     mJobRunnable = jobRunnable;
     mMinimumJobIntervalMs = minimumJobIntervalMs;
@@ -91,9 +92,21 @@ public class JobScheduler<T> {
     synchronized (this) {
       oldRef = mInputRef;
       mInputRef = null;
+      mExtra = null;
       mIsLast = false;
     }
     CloseableReference.closeSafely(oldRef);
+  }
+
+  /**
+   * Updates the job.
+   *
+   * <p> Calls {@link JobScheduler#updateJob(CloseableReference, E extra, boolean)} with null extra.
+   *
+   * @return whether the job was successfully updated.
+   */
+  public boolean updateJob(CloseableReference<T> inputRef, boolean isLast) {
+    return updateJob(inputRef, null, isLast);
   }
 
   /**
@@ -105,7 +118,7 @@ public class JobScheduler<T> {
    *
    * @return whether the job was successfully updated.
    */
-  public boolean updateJob(CloseableReference<T> inputRef, boolean isLast) {
+  public boolean updateJob(CloseableReference<T> inputRef, @Nullable E extra, boolean isLast) {
     if (!shouldProcess(inputRef, isLast)) {
       return false;
     }
@@ -113,6 +126,7 @@ public class JobScheduler<T> {
     synchronized (this) {
       oldRef = mInputRef;
       mInputRef = CloseableReference.cloneOrNull(inputRef);
+      mExtra = extra;
       mIsLast = isLast;
     }
     CloseableReference.closeSafely(oldRef);
@@ -181,11 +195,14 @@ public class JobScheduler<T> {
   private void doJob() {
     long now = SystemClock.uptimeMillis();
     CloseableReference<T> inputRef;
+    E extra;
     boolean isLast;
     synchronized (this) {
       inputRef = mInputRef;
+      extra = mExtra;
       isLast = mIsLast;
       mInputRef = null;
+      mExtra = null;
       mIsLast = false;
       mJobState = JobState.RUNNING;
       mJobStartTime = now;
@@ -194,7 +211,7 @@ public class JobScheduler<T> {
     try {
       // we need to do a check in case the job got cleared in the meantime
       if (shouldProcess(inputRef, isLast)) {
-        mJobRunnable.run(inputRef, isLast);
+        mJobRunnable.run(inputRef, extra, isLast);
       }
     } finally {
       CloseableReference.closeSafely(inputRef);
@@ -223,7 +240,7 @@ public class JobScheduler<T> {
 
   private static <T> boolean shouldProcess(CloseableReference<T> inputRef, boolean isLast) {
     // the last result should always be processed, whereas
-    // an intermediate result should only be processed if valid
+    // an intermediate result should be processed only if valid
     return isLast || CloseableReference.isValid(inputRef);
   }
 

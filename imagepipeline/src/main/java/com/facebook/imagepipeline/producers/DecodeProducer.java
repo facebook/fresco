@@ -96,7 +96,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @GuardedBy("this")
     private boolean mIsFinished;
 
-    private final JobScheduler<PooledByteBuffer> mJobScheduler;
+    private final JobScheduler<PooledByteBuffer, Void> mJobScheduler;
 
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
@@ -106,9 +106,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       mProducerListener = producerContext.getListener();
       mImageDecodeOptions = producerContext.getImageRequest().getImageDecodeOptions();
       mIsFinished = false;
-      JobRunnable<PooledByteBuffer> job = new JobRunnable<PooledByteBuffer>() {
+      JobRunnable<PooledByteBuffer, Void> job = new JobRunnable<PooledByteBuffer, Void>() {
         @Override
-        public void run(CloseableReference<PooledByteBuffer> inputRef, boolean isLast) {
+        public void run(CloseableReference<PooledByteBuffer> inputRef, Void extra, boolean isLast) {
           doDecode(inputRef, isLast);
         }
       };

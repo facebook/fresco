@@ -61,6 +61,7 @@ public class FrescoAdapter extends ImageListAdapter<InstrumentedDraweeView> {
         ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
             .setResizeOptions(
                 new ResizeOptions(view.getLayoutParams().width, view.getLayoutParams().height))
+            .setProgressiveRenderingEnabled(true)
             .build();
     DraweeController draweeController = Fresco.newDraweeControllerBuilder()
         .setImageRequest(imageRequest)
