@@ -37,4 +37,4 @@ You should now be able to build your app with Fresco.
 
 If you want to use OkHttp as the network layer, see the [separate instructions](using-other-network-layers.html#_).
 
-If you get a "Jar Mismatch" warning about android-support-v4.jar, delete the one in frescolib/imagepipeline/libs.
+If you get a `Jar Mismatch` warning about `android-support-v4.jar`, delete the one in `frescolib/imagepipeline/libs.`
