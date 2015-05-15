@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.backends.okhttp;
 
 import android.net.Uri;
 import android.os.Looper;
+import android.os.SystemClock;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
@@ -28,14 +29,33 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
  * Network fetcher that uses OkHttp as a backend.
  */
-public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
+public class OkHttpNetworkFetcher extends
+    BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
+
+  public static class OkHttpNetworkFetchState extends FetchState {
+    public long submitTime;
+    public long responseTime;
+    public long fetchCompleteTime;
+
+    public OkHttpNetworkFetchState(
+        Consumer<CloseableReference<PooledByteBuffer>> consumer,
+        ProducerContext producerContext) {
+      super(consumer, producerContext);
+    }
+  }
 
   private static final String TAG = "OkHttpNetworkFetchProducer";
+  private static final String QUEUE_TIME = "queue_time";
+  private static final String FETCH_TIME = "fetch_time";
+  private static final String TOTAL_TIME = "total_time";
+  private static final String IMAGE_SIZE = "image_size";
 
   private final OkHttpClient mOkHttpClient;
 
@@ -50,15 +70,16 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
   }
 
   @Override
-  public FetchState createFetchState(
+  public OkHttpNetworkFetchState createFetchState(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext context) {
-    return new FetchState(consumer, context);
+    return new OkHttpNetworkFetchState(consumer, context);
   }
 
   @Override
-  public void fetch(final FetchState requestState, final Callback callback) {
-    final Uri uri = requestState.getUri();
+  public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
+    fetchState.submitTime = SystemClock.elapsedRealtime();
+    final Uri uri = fetchState.getUri();
     final Request request = new Request.Builder()
         .cacheControl(new CacheControl.Builder().noStore().build())
         .url(uri.toString())
@@ -66,7 +87,7 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
         .build();
     final Call call = mOkHttpClient.newCall(request);
 
-    requestState.getContext().addCallbacks(
+    fetchState.getContext().addCallbacks(
         new BaseProducerContextCallbacks() {
           @Override
           public void onCancellationRequested() {
@@ -86,6 +107,7 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
         new com.squareup.okhttp.Callback() {
           @Override
           public void onResponse(Response response) {
+            fetchState.responseTime = SystemClock.elapsedRealtime();
             final ResponseBody body = response.body();
             try {
               long contentLength = body.contentLength();
@@ -109,6 +131,21 @@ public class OkHttpNetworkFetcher extends BaseNetworkFetcher<FetchState> {
             handleException(call, e, callback);
           }
         });
+  }
+
+  @Override
+  public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
+    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
+  }
+
+  @Override
+  public Map<String, String> getExtraMap(OkHttpNetworkFetchState fetchState, int byteSize) {
+    Map<String, String> extraMap = new HashMap<>(4);
+    extraMap.put(QUEUE_TIME, Long.toString(fetchState.responseTime - fetchState.submitTime));
+    extraMap.put(FETCH_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.responseTime));
+    extraMap.put(TOTAL_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.submitTime));
+    extraMap.put(IMAGE_SIZE, Integer.toString(byteSize));
+    return extraMap;
   }
 
   /**
