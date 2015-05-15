@@ -46,8 +46,6 @@ android {
 
 See the [Android Gradle documentation](http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Product-flavors) for more details on how product flavors work.
 
-You can leave out the `arm` flavor if your app requires Android 3.0 or higher to run.
-
 ### Eclipse 
 
 By default, Eclipse produces a single APK for all CPU flavors. To separate them requires more complexity and effort than in Gradle.
