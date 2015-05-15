@@ -24,8 +24,8 @@ dependencies {
 apply from: rootProject.file('release.gradle')
 
 android {
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+    compileSdkVersion 22
 
     packagingOptions {
         exclude 'NOTICE'
