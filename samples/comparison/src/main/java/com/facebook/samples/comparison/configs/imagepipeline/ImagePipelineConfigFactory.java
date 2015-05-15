@@ -15,6 +15,9 @@ package com.facebook.samples.comparison.configs.imagepipeline;
 
 import android.content.Context;
 
+import com.facebook.common.internal.Sets;
+import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.squareup.okhttp.OkHttpClient;
 
 import com.facebook.cache.disk.DiskCacheConfig;
@@ -41,6 +44,7 @@ public class ImagePipelineConfigFactory {
     if (sImagePipelineConfig == null) {
       ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context);
       configureCaches(configBuilder, context);
+      configureLoggingListeners(configBuilder);
       sImagePipelineConfig = configBuilder.build();
     }
     return sImagePipelineConfig;
@@ -55,6 +59,7 @@ public class ImagePipelineConfigFactory {
       ImagePipelineConfig.Builder configBuilder =
         OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
       configureCaches(configBuilder, context);
+      configureLoggingListeners(configBuilder);
       sOkHttpImagePipelineConfig = configBuilder.build();
     }
     return sOkHttpImagePipelineConfig;
@@ -85,5 +90,10 @@ public class ImagePipelineConfigFactory {
                 .setBaseDirectoryName(IMAGE_PIPELINE_CACHE_DIR)
                 .setMaxCacheSize(ConfigConstants.MAX_DISK_CACHE_SIZE)
                 .build());
+  }
+
+  private static void configureLoggingListeners(ImagePipelineConfig.Builder configBuilder) {
+    configBuilder.setRequestListeners(
+        Sets.newHashSet((RequestListener) new RequestLoggingListener()));
   }
 }
