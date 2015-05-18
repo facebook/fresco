@@ -23,17 +23,17 @@ public class ImmutableMap {
   private ImmutableMap() {}
 
   public static <K, V> Map<K, V> of() {
-    return Collections.unmodifiableMap(Maps.<K, V>newHashMap());
+    return Collections.unmodifiableMap(new HashMap<K, V>());
   }
 
   public static <K, V> Map<K, V> of(K k1, V v1) {
-    Map<K, V> map = Maps.newHashMap();
+    Map<K, V> map = new HashMap<>();
     map.put(k1, v1);
     return Collections.unmodifiableMap(map);
   }
 
   public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2) {
-    Map<K, V> map = Maps.newHashMap();
+    Map<K, V> map = new HashMap<>();
     map.put(k1, v1);
     map.put(k2, v2);
     return Collections.unmodifiableMap(map);
@@ -41,7 +41,7 @@ public class ImmutableMap {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3) {
-    Map<K, V> map = Maps.newHashMap();
+    Map<K, V> map = new HashMap<>();
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);
@@ -50,7 +50,7 @@ public class ImmutableMap {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
-    Map<K, V> map = Maps.newHashMap();
+    Map<K, V> map = new HashMap<>();
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);
@@ -60,7 +60,7 @@ public class ImmutableMap {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
-    Map<K, V> map = Maps.newHashMap();
+    Map<K, V> map = new HashMap<>();
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);

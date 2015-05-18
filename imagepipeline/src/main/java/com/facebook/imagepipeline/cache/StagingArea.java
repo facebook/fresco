@@ -11,9 +11,9 @@ package com.facebook.imagepipeline.cache;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
@@ -32,7 +32,7 @@ public class StagingArea {
   private Map<CacheKey, CloseableReference<PooledByteBuffer>> mMap;
 
   private StagingArea() {
-    mMap = Maps.newHashMap();
+    mMap = new HashMap<>();
   }
 
   public static StagingArea getInstance() {

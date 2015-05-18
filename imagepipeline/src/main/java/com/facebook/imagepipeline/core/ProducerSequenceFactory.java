@@ -9,13 +9,13 @@
 
 package com.facebook.imagepipeline.core;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import android.net.Uri;
 import android.os.Build;
 import android.util.Pair;
 
-import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.media.MediaUtils;
@@ -27,7 +27,6 @@ import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
-import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.ImageTransformMetaData;
@@ -80,8 +79,8 @@ public class ProducerSequenceFactory {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
-    mPostprocessorSequences = Maps.newHashMap();
-    mCloseableImagePrefetchSequences = Maps.newHashMap();
+    mPostprocessorSequences = new HashMap<>();
+    mCloseableImagePrefetchSequences = new HashMap<>();
   }
 
   /**

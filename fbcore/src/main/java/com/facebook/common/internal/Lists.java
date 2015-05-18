@@ -24,7 +24,7 @@ import static com.facebook.common.internal.Preconditions.checkNotNull;
 
 /**
  * Static utility methods pertaining to {@link List} instances. Also see this
- * class's counterparts {@link Sets}, {@link Maps} and {@link Queues}.
+ * class's counterpart {@link Sets}.
  *
  * <p>See the Guava User Guide article on <a href=
  * "http://code.google.com/p/guava-libraries/wiki/CollectionUtilitiesExplained#Lists">

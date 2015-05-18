@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import android.util.Pair;
 
-import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.VisibleForTesting;
@@ -54,9 +54,9 @@ public abstract class MultiplexProducer<K, T> implements Producer<CloseableRefer
   @VisibleForTesting final Map<K, Multiplexer> mMultiplexers;
   private final Producer<CloseableReference<T>> mNextProducer;
 
-  protected MultiplexProducer(Producer nextProducer) {
+  protected MultiplexProducer(Producer<CloseableReference<T>> nextProducer) {
     mNextProducer = nextProducer;
-    mMultiplexers = Maps.newHashMap();
+    mMultiplexers = new HashMap<>();
   }
 
   @Override
