@@ -42,4 +42,11 @@ public class TimeConversions {
   public static long millisecondsToSeconds(long timeMs) {
     return timeMs / TimeConstants.MS_PER_SECOND;
   }
+
+  /**
+   * Convert time in milliseconds to seconds without rounding if possible.
+   */
+  public static double millisecondsToSecondsAsDouble(long timeMs) {
+    return ((double) timeMs) / ((double) TimeConstants.MS_PER_SECOND);
+  }
 }
