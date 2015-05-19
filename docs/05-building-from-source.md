@@ -19,7 +19,7 @@ The following tools must be installed on your system in order to build Fresco:
 
 You don't need to download Gradle itself; the build scripts or Android Studio will do that for you.
 
-Fresco does not support source builds with Eclipse, Ant, or Maven. We do not plan to ever add such support. Eclipse users can already [include](index.html#) inde
+Fresco does not support source builds with Eclipse, Ant, or Maven. We do not plan to ever add such support. Eclipse users can [include](index.html#eclipse-adt) Fresco in their projects instead.
 
 ### Configuring Gradle
 
