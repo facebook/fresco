@@ -35,6 +35,8 @@ For full details, visit the documentation on our web site, available in English 
 
 <a href="http://fresco-cn.org/docs/index.html"><img src="http://frescolib.org/static/GetStarted-zh.png" width="104" height="42"/></a>
 
+<a href="http://fresco.recrack.com/docs/index.html"><img src="http://frescolib.org/static/GetStarted-ko.png" width="104" height="42"/></a>
+
 ## Join the Fresco community
 
 Please use our [issues page](https://github.com/facebook/fresco/issues) to let us know of any problems.
