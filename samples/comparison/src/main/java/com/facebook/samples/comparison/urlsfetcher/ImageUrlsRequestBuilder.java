@@ -12,10 +12,10 @@
 
 package com.facebook.samples.comparison.urlsfetcher;
 
-import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.Preconditions;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Builds ImageUrlsRequest.
@@ -28,7 +28,7 @@ public class ImageUrlsRequestBuilder {
 
   public ImageUrlsRequestBuilder(final String endpointUrl) {
     mEndpointUrl = Preconditions.checkNotNull(endpointUrl);
-    mRequestedImageFormats = Maps.newHashMap();
+    mRequestedImageFormats = new HashMap<>();
   }
 
   /**
