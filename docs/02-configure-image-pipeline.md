@@ -19,7 +19,7 @@ Here is a maximal example. Rare is the app that actually needs all of these sett
 
 
 ```java
-ImagePipelineConfig config = ImagePipelineConfig.newBuilder()
+ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
     .setBitmapMemoryCacheParamsSupplier(bitmapCacheParamsSupplier)
     .setCacheKeyFactory(cacheKeyFactory)
     .setEncodedMemoryCacheParamsSupplier(encodedCacheParamsSupplier)
