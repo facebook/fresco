@@ -122,6 +122,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
     @Override
     public void draw(Canvas canvas) {
+      if (!isVisible()) {
+        return;
+      }
       if (mVisibilityCallback != null) {
         mVisibilityCallback.onDraw();
       }

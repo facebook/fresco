@@ -10,6 +10,7 @@
 package com.facebook.drawee.generic;
 
 import android.annotation.TargetApi;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -938,6 +939,20 @@ public class GenericDraweeHierarchyTest {
     for (int i = 0; i < numberOfLayers; i++) {
       assertEquals(true, fadeDrawable.isLayerOn(firstLayerIndex + i));
     }
+  }
+
+  @Test
+  public void testDrawVisibleDrawableOnly() {
+    GenericDraweeHierarchy dh = mBuilder
+        .setPlaceholderImage(mPlaceholderImage)
+        .build();
+    Canvas mockCanvas = mock(Canvas.class);
+    dh.getTopLevelDrawable().setVisible(false, true);
+    dh.getTopLevelDrawable().draw(mockCanvas);
+    verify(mPlaceholderImage, never()).draw(mockCanvas);
+    dh.getTopLevelDrawable().setVisible(true, true);
+    dh.getTopLevelDrawable().draw(mockCanvas);
+    verify(mPlaceholderImage).draw(mockCanvas);
   }
 
   @Test
