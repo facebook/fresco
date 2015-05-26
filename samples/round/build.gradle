@@ -23,27 +23,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro'
         }
     }
-    productFlavors {
-    }
+
     lintOptions {
         warning 'InvalidPackage'
     }
 
-    productFlavors {
-        x86 {
-            ndk {
-                abiFilter "x86"
-            }
-        }
-        armv7 {
-            ndk {
-                abiFilter "armeabi-v7a"
-            }
-        }
-        arm {
-            ndk {
-                abiFilter "armeabi"
-            }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a', 'armeabi'
+            universalApk false
         }
     }
 }
