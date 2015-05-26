@@ -792,11 +792,11 @@ public abstract class BasePool<V> implements Pool<V> {
   public static class PoolSizeViolationException extends RuntimeException {
     public PoolSizeViolationException(int hardCap, int usedBytes, int freeBytes, int allocSize) {
       super(
-          "Pool hard cap violation? " +
-              "Hard cap = " + hardCap +
-              "Used size = " + usedBytes +
-              "Free size = " + freeBytes +
-              "Request size = " + allocSize);
+          "Pool hard cap violation?" +
+              " Hard cap = " + hardCap +
+              " Used size = " + usedBytes +
+              " Free size = " + freeBytes +
+              " Request size = " + allocSize);
     }
   }
 }
