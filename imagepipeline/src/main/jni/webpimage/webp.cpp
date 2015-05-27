@@ -226,7 +226,7 @@ jobject WebPImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>&
   jobject ret = pEnv->NewObject(
       sClazzWebPImage,
       sWebPImageConstructor,
-      (jint) spNativeContext.get());
+      (jlong) spNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spNativeContext->refCount = 1;
@@ -278,7 +278,7 @@ std::unique_ptr<WebPImageNativeContext, WebPImageNativeContextReleaser>
   std::unique_ptr<WebPImageNativeContext, WebPImageNativeContextReleaser> ret(nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   WebPImageNativeContext* pNativeContext =
-      (WebPImageNativeContext*) pEnv->GetIntField(thiz, sWebPImageFieldNativeContext);
+      (WebPImageNativeContext*) pEnv->GetLongField(thiz, sWebPImageFieldNativeContext);
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -474,7 +474,7 @@ jobject WebPImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   jobject ret = pEnv->NewObject(
       sClazzWebPFrame,
       sWebPFrameConstructor,
-      (jint) spFrameNativeContext.get());
+      (jlong) spFrameNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spFrameNativeContext->refCount = 1;
@@ -525,7 +525,7 @@ std::unique_ptr<WebPFrameNativeContext, WebPFrameNativeContextReleaser>
   std::unique_ptr<WebPFrameNativeContext, WebPFrameNativeContextReleaser> ret(nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   WebPFrameNativeContext* pNativeContext =
-      (WebPFrameNativeContext*) pEnv->GetIntField(thiz, sWebPFrameFieldNativeContext);
+      (WebPFrameNativeContext*) pEnv->GetLongField(thiz, sWebPFrameFieldNativeContext);
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -555,9 +555,9 @@ jint WebPImage_nativeGetSizeInBytes(JNIEnv* pEnv, jobject thiz) {
 void WebImage_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   WebPImageNativeContext* pNativeContext =
-      (WebPImageNativeContext*) pEnv->GetIntField(thiz, sWebPImageFieldNativeContext);
+      (WebPImageNativeContext*) pEnv->GetLongField(thiz, sWebPImageFieldNativeContext);
   if (pNativeContext != nullptr) {
-    pEnv->SetIntField(thiz, sWebPImageFieldNativeContext, 0);
+    pEnv->SetLongField(thiz, sWebPImageFieldNativeContext, 0);
     WebPImageNativeContext_releaseRef(pEnv, thiz, pNativeContext);
   }
 
@@ -765,9 +765,9 @@ jboolean WebPFrame_nativeShouldBlendWithPreviousFrame(JNIEnv* pEnv, jobject thiz
 void WebPFrame_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   WebPFrameNativeContext* pNativeContext =
-      (WebPFrameNativeContext*) pEnv->GetIntField(thiz, sWebPFrameFieldNativeContext);
+      (WebPFrameNativeContext*) pEnv->GetLongField(thiz, sWebPFrameFieldNativeContext);
   if (pNativeContext) {
-    pEnv->SetIntField(thiz, sWebPFrameFieldNativeContext, 0);
+    pEnv->SetLongField(thiz, sWebPFrameFieldNativeContext, 0);
     WebPFrameNativeContext_releaseRef(pEnv, thiz, pNativeContext);
   }
   pEnv->MonitorExit(thiz);
@@ -869,13 +869,13 @@ int initWebPImage(JNIEnv* pEnv) {
   }
 
   // WebPImage.mNativeContext
-  sWebPImageFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzWebPImage, "mNativeContext", "I");
+  sWebPImageFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzWebPImage, "mNativeContext", "J");
   if (!sWebPImageFieldNativeContext) {
     return JNI_ERR;
   }
 
   // WebPImage.<init>
-  sWebPImageConstructor = getMethodIdOrThrow(pEnv, sClazzWebPImage, "<init>", "(I)V");
+  sWebPImageConstructor = getMethodIdOrThrow(pEnv, sClazzWebPImage, "<init>", "(J)V");
   if (!sWebPImageConstructor) {
     return JNI_ERR;
   }
@@ -895,13 +895,13 @@ int initWebPImage(JNIEnv* pEnv) {
   }
 
   // WebPFrame.mNativeContext
-  sWebPFrameFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzWebPFrame, "mNativeContext", "I");
+  sWebPFrameFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzWebPFrame, "mNativeContext", "J");
   if (!sWebPFrameFieldNativeContext) {
     return JNI_ERR;
   }
 
   // WebPFrame.<init>
-  sWebPFrameConstructor = getMethodIdOrThrow(pEnv, sClazzWebPFrame, "<init>", "(I)V");
+  sWebPFrameConstructor = getMethodIdOrThrow(pEnv, sClazzWebPFrame, "<init>", "(J)V");
   if (!sWebPFrameConstructor) {
     return JNI_ERR;
   }

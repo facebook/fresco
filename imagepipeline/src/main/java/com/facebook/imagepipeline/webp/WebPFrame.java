@@ -25,7 +25,7 @@ public class WebPFrame implements AnimatedImageFrame {
   // Accessed by native methods
   @SuppressWarnings("unused")
   @DoNotStrip
-  private int mNativeContext;
+  private long mNativeContext;
 
   /**
    * Constructs the frame with the native pointer. This is called by native code.
@@ -33,7 +33,7 @@ public class WebPFrame implements AnimatedImageFrame {
    * @param nativeContext the native pointer
    */
   @DoNotStrip
-  WebPFrame(int nativeContext) {
+  WebPFrame(long nativeContext) {
     mNativeContext = nativeContext;
   }
 

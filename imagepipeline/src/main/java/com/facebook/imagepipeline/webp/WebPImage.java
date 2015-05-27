@@ -33,7 +33,7 @@ public class WebPImage implements AnimatedImage {
   // Accessed by native methods
   @SuppressWarnings("unused")
   @DoNotStrip
-  private int mNativeContext;
+  private long mNativeContext;
 
   private static synchronized void ensure() {
     if (!sInitialized) {
@@ -49,7 +49,7 @@ public class WebPImage implements AnimatedImage {
    * @param nativeContext the native pointer
    */
   @DoNotStrip
-  WebPImage(int nativeContext) {
+  WebPImage(long nativeContext) {
     mNativeContext = nativeContext;
   }
 
