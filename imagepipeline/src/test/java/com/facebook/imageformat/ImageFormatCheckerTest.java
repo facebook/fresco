@@ -31,42 +31,47 @@ public class ImageFormatCheckerTest {
 
   @Test
   public void testSimpleWebps() throws Exception {
-    singleImageTypeTest(getSimpleWebpNames(), ImageFormat.WEBP_SIMPLE);
+    singleImageTypeTest(getNames(2, "webps/%d_webp_plain.webp"), ImageFormat.WEBP_SIMPLE);
   }
 
   @Test
   public void testLosslessWebps() throws Exception {
-    singleImageTypeTest(getLosslessWebpNames(), ImageFormat.WEBP_LOSSLESS);
+    singleImageTypeTest(getNames(5, "webps/%d_webp_ll.webp"), ImageFormat.WEBP_LOSSLESS);
   }
 
   @Test
   public void testExtendedWebpsWithAlpha() throws Exception {
-    singleImageTypeTest(getExtendedWebpWithAlphaNames(), ImageFormat.WEBP_EXTENDED_WITH_ALPHA);
+    singleImageTypeTest(getNames(5, "webps/%d_webp_ea.webp"), ImageFormat.WEBP_EXTENDED_WITH_ALPHA);
   }
 
   @Test
   public void testExtendedWebpsWithoutAlpha() throws Exception {
-    singleImageTypeTest(getExtendedWebpWithoutAlphaNames(), ImageFormat.WEBP_EXTENDED);
+    singleImageTypeTest(getName("webps/1_webp_e.webp"), ImageFormat.WEBP_EXTENDED);
   }
 
   @Test
   public void testAnimatedWebps() throws Exception {
-    singleImageTypeTest(getAnimatedWebpNames(), ImageFormat.WEBP_ANIMATED);
+    singleImageTypeTest(getName("webps/1_webp_anim.webp"), ImageFormat.WEBP_ANIMATED);
   }
 
   @Test
   public void testJpegs() throws Exception {
-    singleImageTypeTest(getJpegNames(), ImageFormat.JPEG);
+    singleImageTypeTest(getNames(5, "jpegs/%d.jpeg"), ImageFormat.JPEG);
   }
 
   @Test
   public void testPngs() throws Exception {
-    singleImageTypeTest(getPngNames(), ImageFormat.PNG);
+    singleImageTypeTest(getNames(5, "pngs/%d.png"), ImageFormat.PNG);
   }
 
   @Test
   public void testGifs() throws Exception {
-    singleImageTypeTest(getGifsNames(), ImageFormat.GIF);
+    singleImageTypeTest(getNames(5, "gifs/%d.gif"), ImageFormat.GIF);
+  }
+
+  @Test
+  public void testBmps() throws Exception {
+    singleImageTypeTest(getNames(5, "bmps/%d.bmp"), ImageFormat.BMP);
   }
 
   private void singleImageTypeTest(
@@ -86,58 +91,14 @@ public class ImageFormatCheckerTest {
     }
   }
 
-  private List<String> getSimpleWebpNames() {
+  private static List<String> getName(String path) {
+    return Lists.newArrayList(path);
+  }
+
+  private static List<String> getNames(int amount, String pathFormat) {
     List<String> result = new ArrayList<>();
-    for (int i = 1; i <= 2; ++i) {
-      result.add(String.format("webps/%d_webp_plain.webp", i));
-    }
-    return result;
-  }
-
-  private List<String> getLosslessWebpNames() {
-    List<String> result = new ArrayList<>();
-    for (int i = 1; i <= 5; ++i) {
-      result.add(String.format("webps/%d_webp_ll.webp", i));
-    }
-    return result;
-  }
-
-  private List<String> getExtendedWebpWithoutAlphaNames() {
-    return Lists.newArrayList("webps/1_webp_e.webp");
-  }
-
-  private List<String> getExtendedWebpWithAlphaNames() {
-    List<String> result = new ArrayList<>();
-    for (int i = 1; i <= 5; ++i) {
-      result.add(String.format("webps/%d_webp_ea.webp", i));
-    }
-    return result;
-  }
-
-  private List<String> getAnimatedWebpNames() {
-    return Lists.newArrayList("webps/1_webp_anim.webp");
-  }
-
-  private List<String> getJpegNames() {
-    List<String> result = new ArrayList<>();
-    for (int i = 1; i <= 5; ++i) {
-      result.add(String.format("jpegs/%d.jpeg", i));
-    }
-    return result;
-  }
-
-  private List<String> getPngNames() {
-    List<String> result = new ArrayList<>();
-    for (int i = 1; i <= 5; ++i) {
-      result.add(String.format("pngs/%d.png", i));
-    }
-    return result;
-  }
-
-  private List<String> getGifsNames() {
-    List<String> result = new ArrayList<>();
-    for (int i = 1; i <= 5; ++i) {
-      result.add(String.format("gifs/%d.gif", i));
+    for (int i = 1; i <= amount; ++i) {
+      result.add(String.format(pathFormat, i));
     }
     return result;
   }
