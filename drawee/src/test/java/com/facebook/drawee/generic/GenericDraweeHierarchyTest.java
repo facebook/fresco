@@ -30,6 +30,7 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.SettableDrawable;
+
 import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
@@ -1108,6 +1109,41 @@ public class GenericDraweeHierarchyTest {
         dh.getRoundingParams().getRoundingMethod());
     float[] expectedRadii = new float[] {9, 9, 9, 9, 9, 9, 9, 9};
     assertArrayEquals(expectedRadii, dh.getRoundingParams().getCornersRadii(), 0);
+  }
+
+  @Test
+  public void testSetRoundingParamsOverlay_PreviouslyBitmap() {
+    GenericDraweeHierarchy dh = mBuilder
+        .setPlaceholderImage(mPlaceholderImage)
+        .setRoundingParams(RoundingParams.asCircle())
+        .build();
+
+    assertTrue(dh.getTopLevelDrawable() instanceof FadeDrawable);
+    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable();
+    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
+    assertTrue(placeholderBranch.getCurrent() instanceof RoundedBitmapDrawable);
+
+    dh.setRoundingParams(
+        RoundingParams.asCircle().setOverlayColor(Color.BLUE));
+    assertTrue(dh.getTopLevelDrawable() instanceof RoundedCornersDrawable);
+  }
+
+  @Test
+  public void testSetRoundingParamsBitmap_PreviouslyOverlay() {
+    GenericDraweeHierarchy dh = mBuilder
+        .setPlaceholderImage(mPlaceholderImage)
+        .setRoundingParams(RoundingParams.asCircle().setOverlayColor(Color.BLACK))
+        .build();
+
+    assertTrue(dh.getTopLevelDrawable() instanceof RoundedCornersDrawable);
+    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
+    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
+    assertFalse(placeholderBranch.getCurrent() instanceof RoundedBitmapDrawable);
+
+    dh.setRoundingParams(RoundingParams.asCircle());
+    assertTrue(dh.getTopLevelDrawable() instanceof FadeDrawable);
+    placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
+    assertTrue(placeholderBranch.getCurrent() instanceof RoundedBitmapDrawable);
   }
 
   private <T, F> void assertAssignableFrom(Class<T> to, Class<F> from) {

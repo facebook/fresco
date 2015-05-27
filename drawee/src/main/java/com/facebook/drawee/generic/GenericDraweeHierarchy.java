@@ -138,7 +138,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private final Resources mResources;
 
-  private final Drawable mTopLevelDrawable;
+  private Drawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
   private final SettableDrawable mActualImageSettableDrawable;
 
@@ -637,29 +637,63 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * Sets the rounding params.
    */
   public void setRoundingParams(RoundingParams roundingParams) {
-    Preconditions.checkState(
-        mRoundingParams != null && roundingParams != null &&
-            roundingParams.getRoundingMethod() == mRoundingParams.getRoundingMethod(),
-        "Rounding method cannot be changed and it has to be set during construction time.");
     mRoundingParams = roundingParams;
-    switch (roundingParams.getRoundingMethod()) {
-      case OVERLAY_COLOR:
+
+    updateOverlayColorRounding();
+    updateBitmapOnlyRounding();
+  }
+
+  private void updateOverlayColorRounding() {
+    if (mRoundingParams != null &&
+        mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
+      // Overlay rounding requested - either update the overlay params or add a new top-level
+      // drawable that will do the requested rounding.
+      if (mTopLevelDrawable instanceof RoundedCornersDrawable) {
         RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) mTopLevelDrawable;
-        applyRoundingParams(roundedCornersDrawable, roundingParams);
-        roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
-        break;
-      case BITMAP_ONLY:
-        for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
-          Drawable layer = getLayerChildDrawable(i);
-          if (layer instanceof Rounded) {
-            Rounded rounded = (Rounded) layer;
-            applyRoundingParams(rounded, roundingParams);
+        applyRoundingParams(roundedCornersDrawable, mRoundingParams);
+        roundedCornersDrawable.setOverlayColor(mRoundingParams.getOverlayColor());
+      } else {
+        mTopLevelDrawable = maybeWrapWithRoundedOverlayColor(mRoundingParams, mTopLevelDrawable);
+      }
+    } else if (mTopLevelDrawable instanceof RoundedCornersDrawable) {
+      // Overlay rounding no longer required so remove top-level drawable that was doing the
+      // rounding.
+      mTopLevelDrawable = mTopLevelDrawable.getCurrent();
+    }
+  }
+
+  private void updateBitmapOnlyRounding() {
+    if (mRoundingParams != null &&
+        mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
+      // Bitmap rounding - either update the params or wrap the current drawable in a drawable
+      // that will round it.
+      for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
+        Drawable layer = getLayerChildDrawable(i);
+        if (layer instanceof Rounded) {
+          Rounded rounded = (Rounded) layer;
+          applyRoundingParams(rounded, mRoundingParams);
+        } else {
+          Drawable roundedLayer = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, layer);
+          if (roundedLayer != layer) {
+            setLayerChildDrawable(i, roundedLayer);
           }
         }
-        break;
-      default:
-        break;
+      }
+    } else {
+      // No bitmap rounding requested - reset all layers so no rounding occurs.
+      for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
+        final Drawable layer = getLayerChildDrawable(i);
+        if (layer instanceof Rounded) {
+          resetRoundedDrawable((Rounded) layer);
+        }
+      }
     }
+  }
+
+  private static void resetRoundedDrawable(Rounded rounded) {
+    rounded.setCircle(false);
+    rounded.setRadius(0);
+    rounded.setBorder(Color.TRANSPARENT, 0);
   }
 
   /**
