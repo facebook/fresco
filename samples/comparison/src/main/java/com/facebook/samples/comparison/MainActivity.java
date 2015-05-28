@@ -12,10 +12,13 @@
 
 package com.facebook.samples.comparison;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +44,7 @@ import com.facebook.samples.comparison.urlsfetcher.ImageSize;
 import com.facebook.samples.comparison.urlsfetcher.ImageUrlsFetcher;
 import com.facebook.samples.comparison.urlsfetcher.ImageUrlsRequestBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +60,10 @@ public class MainActivity extends ActionBarActivity {
   public static final int UIL_INDEX = 5;
   public static final int VOLLEY_INDEX = 6;
 
+  // These need to be in sync with {@link R.array.image_sources}
+  public static final int NETWORK_INDEX = 1;
+  public static final int LOCAL_INDEX = 2;
+
   private static final long STATS_CLOCK_INTERVAL_MS = 1000;
   private static final int DEFAULT_MESSAGE_SIZE = 1024;
   private static final int BYTES_IN_MEGABYTE = 1024 * 1024;
@@ -63,22 +71,27 @@ public class MainActivity extends ActionBarActivity {
   private static final String EXTRA_ALLOW_ANIMATIONS = "allow_animations";
   private static final String EXTRA_USE_DRAWEE = "use_drawee";
   private static final String EXTRA_CURRENT_ADAPTER_INDEX = "current_adapter_index";
+  private static final String EXTRA_CURRENT_SOURCE_ADAPTER_INDEX = "current_source_adapter_index";
 
   private Handler mHandler;
   private Runnable mStatsClockTickRunnable;
 
   private TextView mStatsDisplay;
   private Spinner mLoaderSelect;
+  private Spinner mSourceSelect;
   private ListView mImageList;
 
   private boolean mUseDrawee;
   private boolean mAllowAnimations;
-  private int mCurrentAdapterIndex;
+  private int mCurrentLoaderAdapterIndex;
+  private int mCurrentSourceAdapterIndex;
 
   private ImageListAdapter mCurrentAdapter;
   private PerfListener mPerfListener;
 
-  private List<String> mImageUrls;
+  private List<String> mImageUrls = new ArrayList<>();
+
+  private boolean mUrlsLocal = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +102,13 @@ public class MainActivity extends ActionBarActivity {
 
     mAllowAnimations = true;
     mUseDrawee = true;
-    mCurrentAdapterIndex = 0;
+    mCurrentLoaderAdapterIndex = 0;
+    mCurrentSourceAdapterIndex = 0;
     if (savedInstanceState != null) {
       mAllowAnimations = savedInstanceState.getBoolean(EXTRA_ALLOW_ANIMATIONS);
       mUseDrawee = savedInstanceState.getBoolean(EXTRA_USE_DRAWEE);
-      mCurrentAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_ADAPTER_INDEX);
+      mCurrentLoaderAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_ADAPTER_INDEX);
+      mCurrentSourceAdapterIndex = savedInstanceState.getInt(EXTRA_CURRENT_SOURCE_ADAPTER_INDEX);
     }
 
     mHandler = new Handler(Looper.getMainLooper());
@@ -114,13 +129,25 @@ public class MainActivity extends ActionBarActivity {
     mLoaderSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        setAdapter(position);
+        setLoaderAdapter(position);
       }
       @Override
       public void onNothingSelected(AdapterView<?> parent) {
       }
     });
-    mLoaderSelect.setSelection(mCurrentAdapterIndex);
+    mLoaderSelect.setSelection(mCurrentLoaderAdapterIndex);
+
+    mSourceSelect = (Spinner) findViewById(R.id.source_select);
+    mSourceSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        setSourceAdapter(position);
+      }
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+      }
+    });
+    mSourceSelect.setSelection(mCurrentSourceAdapterIndex);
   }
 
   @Override
@@ -128,7 +155,8 @@ public class MainActivity extends ActionBarActivity {
     super.onSaveInstanceState(outState);
     outState.putBoolean(EXTRA_ALLOW_ANIMATIONS, mAllowAnimations);
     outState.putBoolean(EXTRA_USE_DRAWEE, mUseDrawee);
-    outState.putInt(EXTRA_CURRENT_ADAPTER_INDEX, mCurrentAdapterIndex);
+    outState.putInt(EXTRA_CURRENT_ADAPTER_INDEX, mCurrentLoaderAdapterIndex);
+    outState.putInt(EXTRA_CURRENT_SOURCE_ADAPTER_INDEX, mCurrentSourceAdapterIndex);
   }
 
   @Override
@@ -178,25 +206,30 @@ public class MainActivity extends ActionBarActivity {
     mAllowAnimations = allowAnimations;
     supportInvalidateOptionsMenu();
     updateAdapter(null);
-    reloadUrls();
+    loadUrls();
   }
 
   @VisibleForTesting
   public void setUseDrawee(boolean useDrawee) {
     mUseDrawee = useDrawee;
     supportInvalidateOptionsMenu();
-    setAdapter(mCurrentAdapterIndex);
+    setLoaderAdapter(mCurrentLoaderAdapterIndex);
+    setSourceAdapter(mCurrentSourceAdapterIndex);
   }
 
-  private void setAdapter(int index) {
-    FLog.w(TAG, "onImageLoaderSelect: %d", index);
+  private void resetAdapter() {
     if (mCurrentAdapter != null) {
       mCurrentAdapter.shutDown();
       mCurrentAdapter = null;
       System.gc();
     }
+  }
 
-    mCurrentAdapterIndex = index;
+  private void setLoaderAdapter(int index) {
+    FLog.v(TAG, "onImageLoaderSelect: %d", index);
+    resetAdapter();
+
+    mCurrentLoaderAdapterIndex = index;
     mPerfListener = new PerfListener();
     switch (index) {
       case FRESCO_INDEX:
@@ -206,8 +239,8 @@ public class MainActivity extends ActionBarActivity {
                 R.id.image_list,
                 mPerfListener,
                 index == FRESCO_INDEX ?
-                    ImagePipelineConfigFactory.getImagePipelineConfig(this) :
-                    ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
+                        ImagePipelineConfigFactory.getImagePipelineConfig(this) :
+                        ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
         break;
       case GLIDE_INDEX:
         mCurrentAdapter = new GlideAdapter(this, R.id.image_list, mPerfListener);
@@ -220,8 +253,8 @@ public class MainActivity extends ActionBarActivity {
         break;
       case VOLLEY_INDEX:
         mCurrentAdapter = mUseDrawee ?
-            new VolleyDraweeAdapter(this, R.id.image_list, mPerfListener) :
-            new VolleyAdapter(this, R.id.image_list, mPerfListener);
+                new VolleyDraweeAdapter(this, R.id.image_list, mPerfListener) :
+                new VolleyAdapter(this, R.id.image_list, mPerfListener);
         break;
       default:
         mCurrentAdapter = null;
@@ -229,14 +262,38 @@ public class MainActivity extends ActionBarActivity {
     }
 
     mImageList.setAdapter(mCurrentAdapter);
-
-    if (mImageUrls != null && !mImageUrls.isEmpty()) {
-      updateAdapter(mImageUrls);
-    } else {
-      reloadUrls();
-    }
+    updateAdapter(mImageUrls);
 
     updateStats();
+  }
+
+  private void setSourceAdapter(int index) {
+    FLog.v(TAG, "onImageSourceSelect: %d", index);
+
+    mCurrentSourceAdapterIndex = index;
+    switch (index) {
+      case NETWORK_INDEX:
+        mUrlsLocal = false;
+        break;
+      case LOCAL_INDEX:
+        mUrlsLocal = true;
+        break;
+      default:
+        resetAdapter();
+        mImageUrls.clear();
+        return;
+    }
+
+    loadUrls();
+    setLoaderAdapter(mCurrentLoaderAdapterIndex);
+  }
+
+  private void loadUrls() {
+    if (mUrlsLocal) {
+      loadLocalUrls();
+    } else {
+      loadNetworkUrls();
+    }
   }
 
   private void scheduleNextStatsClockTick() {
@@ -247,29 +304,51 @@ public class MainActivity extends ActionBarActivity {
     mHandler.removeCallbacks(mStatsClockTickRunnable);
   }
 
-  private void reloadUrls() {
+  private void loadNetworkUrls() {
     String url = "https://api.imgur.com/3/gallery/hot/viral/0.json";
     ImageUrlsRequestBuilder builder = new ImageUrlsRequestBuilder(url)
         .addImageFormat(
             ImageFormat.JPEG,
             ImageSize.LARGE_THUMBNAIL)
         .addImageFormat(
-            ImageFormat.PNG,
-            ImageSize.LARGE_THUMBNAIL);
+                ImageFormat.PNG,
+                ImageSize.LARGE_THUMBNAIL);
     if (mAllowAnimations) {
       builder.addImageFormat(
           ImageFormat.GIF,
           ImageSize.ORIGINAL_IMAGE);
     }
     ImageUrlsFetcher.getImageUrls(
-        builder.build(),
-        new ImageUrlsFetcher.Callback() {
-          @Override
-          public void onFinish(List<String> result) {
-            mImageUrls = result;
-            updateAdapter(mImageUrls);
-          }
-        });
+            builder.build(),
+            new ImageUrlsFetcher.Callback() {
+              @Override
+              public void onFinish(List<String> result) {
+                // If the user changes to local images before the call comes back, then this should
+                // be ignored
+                if (!mUrlsLocal) {
+                  mImageUrls = result;
+                  updateAdapter(mImageUrls);
+                }
+              }
+            });
+  }
+
+  private void loadLocalUrls() {
+    Uri externalContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    String[] projection = {MediaStore.Images.Media._ID};
+    Cursor cursor = getContentResolver().query(externalContentUri, projection, null, null, null);
+
+    mImageUrls.clear();
+
+    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+
+    String imageId;
+    Uri imageUri;
+    while (cursor.moveToNext()) {
+      imageId = cursor.getString(columnIndex);
+      imageUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId);
+      mImageUrls.add(imageUri.toString());
+    }
   }
 
   private void updateAdapter(List<String> urls) {

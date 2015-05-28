@@ -16,13 +16,32 @@
       android:layout_height="wrap_content"
       android:typeface="monospace"/>
 
-  <Spinner
-      android:id="@+id/loader_select"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:entries="@array/image_loaders"
-      android:prompt="@string/select_image_loader"
-      />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:weightSum="1">
+
+        <Spinner
+            android:id="@+id/loader_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:entries="@array/image_loaders"
+            android:prompt="@string/select_image_loader"
+            />
+
+        <Spinner
+            android:id="@+id/source_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:entries="@array/image_sources"
+            android:prompt="@string/select_image_loader"
+            />
+
+    </LinearLayout>
 
   <ListView
       android:id="@+id/image_list"
