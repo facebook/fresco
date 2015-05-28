@@ -40,6 +40,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   private MainActivity mActivity;
   private ListView mImageList;
   private Spinner mLoaderSelect;
+  private Spinner mSourceSelect;
 
   public ScrollTest() {
     super(MainActivity.class);
@@ -51,6 +52,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
     mActivity = getActivity();
     mImageList = (ListView) mActivity.findViewById(R.id.image_list);
     mLoaderSelect = (Spinner) mActivity.findViewById(R.id.loader_select);
+    mSourceSelect = (Spinner) mActivity.findViewById(R.id.source_select);
     FLog.setMinimumLoggingLevel(FLog.INFO);
   }
 
@@ -59,41 +61,62 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
     super.tearDown();
   }
 
-  public void testFresco() throws Exception {
-    runScenario(MainActivity.FRESCO_INDEX, true);
+  public void testFrescoNetwork() throws Exception {
+    runScenario(MainActivity.FRESCO_INDEX, MainActivity.NETWORK_INDEX, true);
   }
 
-  public void testFrescoOkhttp() throws Exception {
-    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, true);
+  public void testFrescoOkhttpNetwork() throws Exception {
+    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, MainActivity.NETWORK_INDEX, true);
   }
 
-  public void testGlide() throws Exception {
-    runScenario(MainActivity.GLIDE_INDEX, false);
+  public void testGlideNetwork() throws Exception {
+    runScenario(MainActivity.GLIDE_INDEX, MainActivity.NETWORK_INDEX, false);
   }
 
-  public void testPicasso() throws Exception {
-    runScenario(MainActivity.PICASSO_INDEX, false);
+  public void testPicassoNetwork() throws Exception {
+    runScenario(MainActivity.PICASSO_INDEX, MainActivity.NETWORK_INDEX, false);
   }
 
-  public void testUil() throws Exception {
-    runScenario(MainActivity.UIL_INDEX, false);
+  public void testUilNetwork() throws Exception {
+    runScenario(MainActivity.UIL_INDEX, MainActivity.NETWORK_INDEX, false);
   }
 
-  public void testVolley() throws Exception {
-    runScenario(MainActivity.VOLLEY_INDEX, false);
+  public void testVolleyNetwork() throws Exception {
+    runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX, false);
   }
 
-  public void testDraweeVolley() throws Exception {
-    runScenario(MainActivity.VOLLEY_INDEX, true);
+  public void testDraweeVolleyNetwork() throws Exception {
+    runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX, true);
+  }
+
+  public void testFrescoLocal() throws Exception {
+    runScenario(MainActivity.FRESCO_INDEX, MainActivity.LOCAL_INDEX, true);
+  }
+
+  public void testFrescoOkhttpLocal() throws Exception {
+    runScenario(MainActivity.FRESCO_OKHTTP_INDEX, MainActivity.LOCAL_INDEX, true);
+  }
+
+  public void testGlideLocal() throws Exception {
+    runScenario(MainActivity.GLIDE_INDEX, MainActivity.LOCAL_INDEX, false);
+  }
+
+  public void testPicassoLocal() throws Exception {
+    runScenario(MainActivity.PICASSO_INDEX, MainActivity.LOCAL_INDEX, false);
+  }
+
+  public void testUilLocal() throws Exception {
+    runScenario(MainActivity.UIL_INDEX, MainActivity.LOCAL_INDEX, false);
   }
 
   /**
    * Runs the test for given library.
    */
-  private void runScenario(int libraryIndex, boolean useDrawee) throws Exception {
+  private void runScenario(int libraryIndex, int sourceIndex, boolean useDrawee) throws Exception {
     disableAnimatedImages();
     setUseDrawee(useDrawee);
     selectFramework(libraryIndex);
+    selectSource(sourceIndex);
     TouchUtils.tapView(this, mImageList);
     waitForImages();
     scrollMultipleTimes(SCROLLS);
@@ -105,12 +128,12 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
    */
   private void disableAnimatedImages() {
     getInstrumentation().runOnMainSync(
-        new Runnable() {
-          @Override
-          public void run() {
-            mActivity.setAllowAnimations(false);
-          }
-        });
+            new Runnable() {
+              @Override
+              public void run() {
+                mActivity.setAllowAnimations(false);
+              }
+            });
   }
 
   /**
@@ -135,6 +158,19 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
           @Override
           public void run() {
             mLoaderSelect.setSelection(libraryIndex, true);
+          }
+        });
+  }
+
+  /**
+   * Selects the source from which to fetch the images.
+   */
+  private void selectSource(final int sourceIndex) {
+    getInstrumentation().runOnMainSync(
+        new Runnable() {
+          @Override
+          public void run() {
+            mSourceSelect.setSelection(sourceIndex, true);
           }
         });
   }

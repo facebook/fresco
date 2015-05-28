@@ -43,14 +43,13 @@ TESTS = (
     'drawee-volley'
 )
 
-CPUS = (
-    'Arm',
-    'ArmV7',
-    'X86'
+TEST_SOURCES = (
+    'network',
+    'local'
 )
 
 """ Appends test class name to method name """
-TEST_PATTERN = 'test{}'
+TEST_PATTERN = 'test{}{}'
 
 """ Named tuple containing relevant numbers reported by a test """
 Stats = namedtuple('Stats', [
@@ -66,7 +65,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='Runs comparison test and processes results')
     parser.add_argument('-s', '--scenarios', choices=TESTS, nargs='+')
-    parser.add_argument('-c', '--cpu', choices=CPUS, default='ArmV7')
+    parser.add_argument('-d', '--sources', choices=TEST_SOURCES, nargs='+')
     return parser.parse_args()
 
 
@@ -93,11 +92,11 @@ def adb(command):
     run_command('adb {}'.format(command))
 
 
-def install_apks(cpu):
+def install_apks():
     """ Installs comparison app and test apks """
     print("Installing comparison app...")
-    gradle(':samples:comparison:install%sDebug' % cpu,
-           ':samples:comparison:install%sDebugAndroidTest' % cpu)
+    gradle(':samples:comparison:installDebug',
+           ':samples:comparison:installDebugAndroidTest')
 
 
 class ComparisonTest:
@@ -176,6 +175,7 @@ def print_stats(stats):
         sum(stats.success_wait_times) +
         sum(stats.cancellation_wait_times) +
         sum(stats.failure_wait_times))
+
     avg_wait_time = float(total_wait_time) / total_count
 
     max_java_heap = max(stats.java_heap_sizes)
@@ -192,29 +192,39 @@ def print_stats(stats):
     print("Total skipped frames = {}".format(total_skipped_frames))
 
 
-def get_test_name(option_name):
+def get_test_name(option_name, source_name):
     return TEST_PATTERN.format(
-        ''.join(word.capitalize() for word in option_name.split('-')))
+        ''.join(word.capitalize() for word in option_name.split('-')), source_name.capitalize())
 
+def valid_scenario(scenario_name, source_name):
+    return source_name != 'local' or (scenario_name != 'volley' and scenario_name != 'drawee-volley')
 
 def main():
     args = parse_args()
     scenarios = []
+    sources = []
     if args.scenarios:
         scenarios = args.scenarios
     else:
         scenarios = TESTS
 
-    install_apks(args.cpu)
+    if args.sources:
+        sources = args.sources
+    else:
+        sources = TEST_SOURCES
+
+    install_apks()
 
     for scenario_name in scenarios:
-        print()
-        print('Testing {}'.format(scenario_name))
-        test = ComparisonTest(get_test_name(scenario_name))
-        test()
-        stats = get_stats(test.logcat)
-        print_stats(stats)
-
+        for source_name in sources:
+            if valid_scenario(scenario_name, source_name):
+                print()
+                print('Testing {} {}'.format(scenario_name, source_name))
+                print(get_test_name(scenario_name, source_name))
+                test = ComparisonTest(get_test_name(scenario_name, source_name))
+                test()
+                stats = get_stats(test.logcat)
+                print_stats(stats)
 
 if __name__ == "__main__":
     main()
