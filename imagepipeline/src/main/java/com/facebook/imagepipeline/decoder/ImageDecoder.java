@@ -9,11 +9,10 @@
 
 package com.facebook.imagepipeline.decoder;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.GifFormatChecker;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
@@ -25,6 +24,8 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+
+import javax.annotation.Nullable;
 
 /**
  * Decodes images.
@@ -83,7 +84,7 @@ public class ImageDecoder {
         return decodeJpeg(pooledByteBufferRef, length, qualityInfo);
 
       case GIF:
-        return decodeAnimatedGif(pooledByteBufferRef, options);
+        return decodeGif(pooledByteBufferRef, options);
 
       case WEBP_ANIMATED:
         return decodeAnimatedWebp(pooledByteBufferRef, options);
@@ -97,12 +98,16 @@ public class ImageDecoder {
    * Decodes gif into CloseableImage.
    *
    * @param pooledByteBufferRef
-   * @return a CloseableGifImage
+   * @return a CloseableImage
    */
-  public CloseableImage decodeAnimatedGif(
+  public CloseableImage decodeGif(
       CloseableReference<PooledByteBuffer> pooledByteBufferRef,
       ImageDecodeOptions options) {
-    return mAnimatedImageFactory.decodeGif(pooledByteBufferRef, options);
+    PooledByteBufferInputStream is = new PooledByteBufferInputStream(pooledByteBufferRef.get());
+    if (GifFormatChecker.isAnimated(is)) {
+      return mAnimatedImageFactory.decodeGif(pooledByteBufferRef, options);
+    }
+    return decodeStaticImage(pooledByteBufferRef);
   }
 
   /**
