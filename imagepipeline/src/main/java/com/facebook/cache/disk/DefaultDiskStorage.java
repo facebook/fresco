@@ -589,10 +589,10 @@ public class DefaultDiskStorage implements DiskStorage {
     }
 
     public static FileType fromExtension(String extension) {
-      for (FileType ft: FileType.values()) {
-        if (ft.extension.equals(extension)) {
-          return ft;
-        }
+      if (CONTENT_FILE_EXTENSION.equals(extension)) {
+        return CONTENT;
+      } else if (TEMP_FILE_EXTENSION.equals(extension)) {
+        return TEMP;
       }
       return null;
     }
