@@ -7,15 +7,17 @@ prev: proguard.html
 next: building-from-source.html
 ---
 
-Fresco is written mostly in Java, but there is some C++ as well. C++ code has to be compiled for each of the CPU types (called "ABIs") Android can run on. Currently, Fresco supports three ABIs.
+Fresco is written mostly in Java, but there is some C++ as well. C++ code has to be compiled for each of the CPU types (called "ABIs") Android can run on. Currently, Fresco supports five ABIs.
 
-1. `armeabiv-v7a`: Version 7 or higher of the ARM processor. Most Android phones released since 2011 are using this.
+1. `armeabiv-v7a`: Version 7 or higher of the ARM processor. Most Android phones released from 2011-15 are using this.
+2. `arm64-v8a`: 64-bit ARM processors. Found on new devices, like the Samsung Galaxy S6.
 1. `armeabi`: Older phones using v5 or v6 of the ARM processor. 
-1. `x86`: Mostly used by emulators running on desktops or laptops.
+1. `x86`: Mostly used by tablets, and by emulators.
+2. `x86_64`: Used by 64-bit tablets.
 
-Fresco's binary download has copies of native `.so` files for all three platforms. You can reduce the size of your app considerably by creating separate APKs for each processor type.
+Fresco's binary download has copies of native `.so` files for all five platforms. You can reduce the size of your app considerably by creating separate APKs for each processor type.
 
-If your application is not used by devices running Android 2.3 (Gingerbread), you will not need the `armeabi` flavor. If you do not use emulators to test your app, you will not need the `x86` flavor.
+If your application is not used by devices running Android 2.3 (Gingerbread), you will not need the `armeabi` flavor. 
 
 ### Android Studio / Gradle
 
@@ -24,27 +26,18 @@ Edit your `build.gradle` file as follows:
 ```groovy
 android {
   // rest of your app's logic
-  productFlavors {
-    armv7 {
-      ndk {
-        abiFilter "armeabi-v7a"
-      }
-    }
-    arm {
-      ndk {
-        abiFilter "armeabi"
-      }
-    }
-    x86 {
-      ndk {
-        abiFilter "x86"
-      }
+  splits {
+    abi {
+        enable true
+        reset()
+        include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+        universalApk false
     }
   }
 }
 ```
 
-See the [Android Gradle documentation](http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Product-flavors) for more details on how product flavors work.
+See the [Android Gradle documentation](http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits) for more details on how splits work.
 
 ### Eclipse 
 
