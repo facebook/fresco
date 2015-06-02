@@ -245,10 +245,13 @@ public class ProducerFactory {
     return new ThreadHandoffProducer<T>(mExecutorSupplier.forBackground(), nextProducer);
   }
 
-  public static <T> ThrottlingProducer<T> newThrottlingProducer(
+  public <T> ThrottlingProducer<T> newThrottlingProducer(
       int maxSimultaneousRequests,
       Producer<T> nextProducer) {
-    return new ThrottlingProducer<T>(maxSimultaneousRequests, nextProducer);
+    return new ThrottlingProducer<T>(
+        maxSimultaneousRequests,
+        mExecutorSupplier.forBackground(),
+        nextProducer);
   }
 
   public WebpTranscodeProducer newWebpTranscodeProducer(

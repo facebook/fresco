@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.concurrent.GuardedBy;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executor;
 
 import android.util.Pair;
 
@@ -33,9 +34,14 @@ public class ThrottlingProducer<T> implements Producer<T> {
   private int mNumCurrentRequests;
   @GuardedBy("this")
   private final ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>> mPendingRequests;
+  private final Executor mExecutor;
 
-  public ThrottlingProducer(int maxSimultaneousRequests, final Producer<T> nextProducer) {
+  public ThrottlingProducer(
+      int maxSimultaneousRequests,
+      Executor executor,
+      final Producer<T> nextProducer) {
     mMaxSimultaneousRequests = maxSimultaneousRequests;
+    mExecutor = Preconditions.checkNotNull(executor);
     mNextProducer = Preconditions.checkNotNull(nextProducer);
     mPendingRequests = new ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>>();
     mNumCurrentRequests = 0;
@@ -95,7 +101,7 @@ public class ThrottlingProducer<T> implements Producer<T> {
     }
 
     private void onRequestFinished() {
-      Pair<Consumer<T>, ProducerContext> nextRequestPair;
+      final Pair<Consumer<T>, ProducerContext> nextRequestPair;
       synchronized (ThrottlingProducer.this) {
         nextRequestPair = mPendingRequests.poll();
         if (nextRequestPair == null) {
@@ -104,7 +110,13 @@ public class ThrottlingProducer<T> implements Producer<T> {
       }
 
       if (nextRequestPair != null) {
-        produceResultsInternal(nextRequestPair.first, nextRequestPair.second);
+        mExecutor.execute(
+            new Runnable() {
+              @Override
+              public void run() {
+                produceResultsInternal(nextRequestPair.first, nextRequestPair.second);
+              }
+            });
       }
     }
   }
