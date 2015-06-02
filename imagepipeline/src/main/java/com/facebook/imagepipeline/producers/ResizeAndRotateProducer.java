@@ -174,6 +174,10 @@ public class ResizeAndRotateProducer
         getScaleNumerator(request, metaData) != JpegTranscoder.SCALE_DENOMINATOR);
   }
 
+  @VisibleForTesting static int roundNumerator(float maxRatio) {
+    return (int) (0.75f + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
+  }
+
   private static int getScaleNumerator(ImageRequest imageRequest, ImageTransformMetaData metaData) {
     final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
     if (resizeOptions == null) {
@@ -187,8 +191,7 @@ public class ResizeAndRotateProducer
 
     final float widthRatio = ((float) resizeOptions.width) / widthAfterRotation;
     final float heightRatio = ((float) resizeOptions.height) / heightAfterRotation;
-    final int numerator =
-        (int) Math.ceil(Math.max(widthRatio, heightRatio) * JpegTranscoder.SCALE_DENOMINATOR);
+    int numerator = roundNumerator(Math.max(widthRatio, heightRatio));
 
     if (numerator > MAX_JPEG_SCALE_NUMERATOR) {
       return MAX_JPEG_SCALE_NUMERATOR;
