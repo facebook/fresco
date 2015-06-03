@@ -138,7 +138,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private final Resources mResources;
 
-  private Drawable mTopLevelDrawable;
+  private final SettableDrawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
   private final SettableDrawable mActualImageSettableDrawable;
 
@@ -283,7 +283,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     root = maybeWrapWithRoundedOverlayColor(mRoundingParams, root);
 
     // top-level drawable
-    mTopLevelDrawable = root;
+    mTopLevelDrawable = new SettableDrawable(root);
     mTopLevelDrawable.mutate();
 
     resetFade();
@@ -644,21 +644,23 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   private void updateOverlayColorRounding() {
+    Drawable topDrawableChild = mTopLevelDrawable.getCurrent();
     if (mRoundingParams != null &&
         mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
-      // Overlay rounding requested - either update the overlay params or add a new top-level
+      // Overlay rounding requested - either update the overlay params or add a new
       // drawable that will do the requested rounding.
-      if (mTopLevelDrawable instanceof RoundedCornersDrawable) {
-        RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) mTopLevelDrawable;
+      if (topDrawableChild instanceof RoundedCornersDrawable) {
+        RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) topDrawableChild;
         applyRoundingParams(roundedCornersDrawable, mRoundingParams);
         roundedCornersDrawable.setOverlayColor(mRoundingParams.getOverlayColor());
       } else {
-        mTopLevelDrawable = maybeWrapWithRoundedOverlayColor(mRoundingParams, mTopLevelDrawable);
+        mTopLevelDrawable.setCurrent(
+            maybeWrapWithRoundedOverlayColor(mRoundingParams, topDrawableChild));
       }
-    } else if (mTopLevelDrawable instanceof RoundedCornersDrawable) {
-      // Overlay rounding no longer required so remove top-level drawable that was doing the
+    } else if (topDrawableChild instanceof RoundedCornersDrawable) {
+      // Overlay rounding no longer required so remove drawable that was doing the
       // rounding.
-      mTopLevelDrawable = mTopLevelDrawable.getCurrent();
+      mTopLevelDrawable.setCurrent(topDrawableChild.getCurrent());
     }
   }
 
