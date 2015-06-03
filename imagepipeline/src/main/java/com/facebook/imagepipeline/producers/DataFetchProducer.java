@@ -17,6 +17,7 @@ import java.util.concurrent.Executor;
 import android.net.Uri;
 import android.util.Base64;
 
+import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -39,9 +40,8 @@ public class DataFetchProducer extends LocalFetchProducer {
   private static final String PRODUCER_NAME = "DataFetchProducer";
 
   public DataFetchProducer(
-      Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory) {
-    super(executor, pooledByteBufferFactory);
+    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory);
   }
 
   @Override

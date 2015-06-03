@@ -141,7 +141,7 @@ public class ProducerFactory {
   }
 
   public DataFetchProducer newDataFetchProducer() {
-    return new DataFetchProducer(mExecutorSupplier.forBackground(), mPooledByteBufferFactory);
+    return new DataFetchProducer(mPooledByteBufferFactory);
   }
 
   public DecodeProducer newDecodeProducer(
@@ -221,7 +221,7 @@ public class ProducerFactory {
   public PostprocessorProducer newPostprocessorProducer(
       Producer<CloseableReference<CloseableImage>> nextProducer) {
     return new PostprocessorProducer(
-        nextProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackground());
+        nextProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackgroundTasks());
   }
 
   public static RemoveImageTransformMetaDataProducer newRemoveImageTransformMetaDataProducer(
@@ -232,7 +232,7 @@ public class ProducerFactory {
   public ResizeAndRotateProducer newResizeAndRotateProducer(
       Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer) {
     return new ResizeAndRotateProducer(
-        mExecutorSupplier.forTransform(),
+        mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
         nextProducer);
   }
@@ -242,7 +242,9 @@ public class ProducerFactory {
   }
 
   public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(Producer<T> nextProducer) {
-    return new ThreadHandoffProducer<T>(mExecutorSupplier.forBackground(), nextProducer);
+    return new ThreadHandoffProducer<T>(
+        mExecutorSupplier.forLightweightBackgroundTasks(),
+        nextProducer);
   }
 
   public <T> ThrottlingProducer<T> newThrottlingProducer(
@@ -250,14 +252,14 @@ public class ProducerFactory {
       Producer<T> nextProducer) {
     return new ThrottlingProducer<T>(
         maxSimultaneousRequests,
-        mExecutorSupplier.forBackground(),
+        mExecutorSupplier.forLightweightBackgroundTasks(),
         nextProducer);
   }
 
   public WebpTranscodeProducer newWebpTranscodeProducer(
       Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
     return new WebpTranscodeProducer(
-        mExecutorSupplier.forTransform(),
+        mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
         nextProducer);
   }
