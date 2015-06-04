@@ -46,8 +46,8 @@ When [constructing a hierarchy](using-drawees-code.html), you can pass an instan
 
 ```java
 RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
-roundingParams.setOverlayColor(R.color.green);
 // alternatively use fromCornersRadii or asCircle
+roundingParams.setOverlayColor(R.color.green);
 genericDraweeHierarchyBuilder
     .setRoundingParams(roundingParams);
 ```
@@ -55,15 +55,11 @@ genericDraweeHierarchyBuilder
 You can also change most of the rounding parameters on the fly:
 
 ```java
-RoundingParams roundingParams = 
-    mSimpleDraweeView.getHierarchy().getRoundingParams();
+RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
 roundingParams.setBorder(R.color.red, 1.0);
 roundingParams.setRoundAsCircle(true);
 mSimpleDraweeView.getHierarchy().setRoundingParams(roundingParams);
 ```
-
-The one exception to this is that the `RoundingMethod` cannot be changed when changing dynamically. Attempting to do so will throw an `IllegalStateException.`
-
 
 ### Caveats
 
