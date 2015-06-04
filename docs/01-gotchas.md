@@ -7,6 +7,12 @@ prev: writing-custom-views.html
 next: intro-image-pipeline.html
 ---
 
+#### Don't use ScrollViews
+
+If you want to scroll through a long list of images, you should use a [RecyclerView](http://developer.android.com/reference/android/support/v7/widget/RecyclerView.html), [ListView](https://developer.android.com/reference/android/widget/ListView.html), or [GridView](https://developer.android.com/reference/android/widget/GridView.html). All of these re-use their child views continually as you scroll through them. Fresco descendant views receive the system events that let them manage memory correctly.
+
+`ScrollView` does not do this. Thus, Fresco views aren't told when they have gone off-screen, and hold onto their image memory until your Fragment or Activity is stopped. Your app will be at a much greater risk of OOMs.
+
 #### Don't downcast
 
 It is tempting to downcast objects returns by Fresco classes into actual objects that appear to give you greater control. At best, this will result in fragile code that gets broken next release; at worst, it will lead to very subtle bugs.
