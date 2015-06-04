@@ -39,6 +39,11 @@ public class EncodedImage implements Closeable {
   private final int mHeight;
 
   public EncodedImage(
+      CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
+    this(pooledByteBufferRef, ImageFormat.UNKNOWN);
+  }
+
+  public EncodedImage(
       CloseableReference<PooledByteBuffer> pooledByteBufferRef,
       ImageFormat imageFormat) {
     this(pooledByteBufferRef, imageFormat, UNKNOWN_ROTATION_ANGLE, UNKNOWN_WIDTH, UNKNOWN_HEIGHT);
@@ -50,8 +55,8 @@ public class EncodedImage implements Closeable {
       int rotationAngle,
       int width,
       int height) {
-    Preconditions.checkNotNull(pooledByteBufferRef);
-    this.mPooledByteBufferRef = CloseableReference.cloneOrNull(pooledByteBufferRef);
+    Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
+    this.mPooledByteBufferRef = pooledByteBufferRef.clone();
     this.mImageFormat = imageFormat;
     this.mRotationAngle = rotationAngle;
     this.mWidth = width;
@@ -69,12 +74,17 @@ public class EncodedImage implements Closeable {
 
   public EncodedImage cloneOrNull() {
     CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
-    return (pooledByteBufferRef == null) ? null : new EncodedImage(
-        mPooledByteBufferRef.cloneOrNull(),
-        mImageFormat,
-        mRotationAngle,
-        mWidth,
-        mHeight);
+    try {
+      return (pooledByteBufferRef == null) ? null : new EncodedImage(
+          pooledByteBufferRef,
+          mImageFormat,
+          mRotationAngle,
+          mWidth,
+          mHeight);
+    } finally {
+      // Close the recently created reference since it will be cloned again in the constructor.
+      CloseableReference.closeSafely(pooledByteBufferRef);
+    }
   }
 
   /**
