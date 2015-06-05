@@ -66,13 +66,14 @@ public class ResizeAndRotateProducer
       Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
 
     private final ProducerContext mProducerContext;
-
     private final JobScheduler<PooledByteBuffer, ImageTransformMetaData> mJobScheduler;
+    private boolean mIsCancelled;
 
     public TransformingConsumer(
         final Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer,
         final ProducerContext producerContext) {
       super(consumer);
+      mIsCancelled = false;
       mProducerContext = producerContext;
       JobScheduler.JobRunnable<PooledByteBuffer, ImageTransformMetaData>
           job = new JobScheduler.JobRunnable<PooledByteBuffer, ImageTransformMetaData>() {
@@ -96,6 +97,9 @@ public class ResizeAndRotateProducer
             @Override
             public void onCancellationRequested() {
               mJobScheduler.clearJob();
+              mIsCancelled = true;
+              // this only works if it is safe to discard the output of previous producer
+              consumer.onCancellation();
             }
           });
     }
@@ -104,6 +108,9 @@ public class ResizeAndRotateProducer
     protected void onNewResultImpl(
         @Nullable Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> newResult,
         boolean isLast) {
+      if (mIsCancelled) {
+        return;
+      }
       if (newResult == null) {
         if (isLast) {
           getConsumer().onNewResult(null, true);
