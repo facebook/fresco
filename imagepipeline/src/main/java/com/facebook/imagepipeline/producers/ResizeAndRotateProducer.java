@@ -22,8 +22,8 @@ import com.facebook.common.util.TriState;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.JpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -39,6 +39,8 @@ public class ResizeAndRotateProducer
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
+
+  private static final float MAX_BITMAP_SIZE = 2048f;
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
@@ -181,6 +183,25 @@ public class ResizeAndRotateProducer
         getScaleNumerator(request, metaData) != JpegTranscoder.SCALE_DENOMINATOR);
   }
 
+  @VisibleForTesting static float determineResizeRatio(
+      ResizeOptions resizeOptions,
+      int width,
+      int height) {
+    final float widthRatio = ((float) resizeOptions.width) / width;
+    final float heightRatio = ((float) resizeOptions.height) / height;
+    float ratio = Math.max(widthRatio, heightRatio);
+
+    // TODO: The limit is larger than this on newer devices. The problem is to get the real limit,
+    // you have to call Canvas.getMaximumBitmapWidth/Height on a real HW-accelerated Canvas.
+    if (width * ratio > MAX_BITMAP_SIZE) {
+      ratio = MAX_BITMAP_SIZE / width;
+    }
+    if (height * ratio > MAX_BITMAP_SIZE) {
+      ratio = MAX_BITMAP_SIZE / height;
+    }
+    return ratio;
+  }
+
   @VisibleForTesting static int roundNumerator(float maxRatio) {
     return (int) (0.75f + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
@@ -196,9 +217,9 @@ public class ResizeAndRotateProducer
     final int widthAfterRotation = swapDimensions ? metaData.getHeight() : metaData.getWidth();
     final int heightAfterRotation = swapDimensions ? metaData.getWidth() : metaData.getHeight();
 
-    final float widthRatio = ((float) resizeOptions.width) / widthAfterRotation;
-    final float heightRatio = ((float) resizeOptions.height) / heightAfterRotation;
-    int numerator = roundNumerator(Math.max(widthRatio, heightRatio));
+    float ratio = determineResizeRatio(resizeOptions, widthAfterRotation, heightAfterRotation);
+
+    int numerator = roundNumerator(ratio);
 
     if (numerator > MAX_JPEG_SCALE_NUMERATOR) {
       return MAX_JPEG_SCALE_NUMERATOR;
