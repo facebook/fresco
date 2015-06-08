@@ -31,7 +31,9 @@ dataSource.subscribe(new BaseBitmapDataSubscriber() {
   executor);
 ```
 
-A snap to use, right? There is a caveat. 
+A snap to use, right? There are caveats.
+
+You can not use this subscriber for animated images.
 
 You can **not** assign the bitmap to any variable not in the scope of the `onNewResultImpl` method. The reason is that, after the subscriber has finished executing, the image pipeline will recycle the bitmap and free its memory. If you try to draw the bitmap after that, your app will crash with an `IllegalStateException.`
 
