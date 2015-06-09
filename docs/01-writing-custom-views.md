@@ -72,7 +72,7 @@ public boolean onTouchEvent(MotionEvent event) {
 You must call 
 
 ```java
-Drawable drawable = mDraweeHolder.getHierarchy().getTopLevelDrawable();
+Drawable drawable = mDraweeHolder.getTopLevelDrawable();
 drawable.setBounds(...);
 ```
 or the Drawee won't appear at all.
