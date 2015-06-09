@@ -82,12 +82,26 @@ or the Drawee won't appear at all.
 
 #### Other responsibilities
 
+* Set [Drawable.Callback] (http://developer.android.com/reference/android/graphics/drawable/Drawable.Callback.html)
+
+```java
+// When a holder is set to the view for the first time,
+// don't forget to set the callback to its top-level drawable:
+mDraweeHolder = ...
+mDraweeHolder.getTopLevelDrawable().setCallback(this);
+
+// In case the old holder is no longer needed,
+// don't forget to clear the callback from its top-level drawable:
+mDraweeHolder.getTopLevelDrawable().setCallback(null);
+mDraweeHolder = ...
+```
+
 * Override `verifyDrawable:`
 
 ```java
 @Override
 protected boolean verifyDrawable(Drawable who) {
-  if (who == mDraweeHolder.getHierarchy().getTopLevelDrawable()) {
+  if (who == mDraweeHolder.getTopLevelDrawable()) {
     return true;
   }
   // other logic for other Drawables in your view, if any
