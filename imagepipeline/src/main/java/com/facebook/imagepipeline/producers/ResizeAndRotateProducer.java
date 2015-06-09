@@ -157,6 +157,14 @@ public class ResizeAndRotateProducer
             DEFAULT_JPEG_QUALITY);
         // TODO t7065568: metaData is no longer up to date!
         ret = Pair.create(CloseableReference.of(outputStream.toByteBuffer()), metaData);
+
+        try {
+          mProducerContext.getListener().
+              onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, null);
+          getConsumer().onNewResult(ret, isLast);
+        } finally {
+          CloseableReference.closeSafely(ret.first);
+        }
       } catch (Exception e) {
         mProducerContext.getListener().
             onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, null);
@@ -165,9 +173,6 @@ public class ResizeAndRotateProducer
       } finally {
         outputStream.close();
       }
-      mProducerContext.getListener().
-          onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, null);
-      getConsumer().onNewResult(ret, isLast);
     }
   }
 
