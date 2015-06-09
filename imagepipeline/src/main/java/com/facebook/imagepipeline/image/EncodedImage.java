@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import java.io.Closeable;
 import java.io.InputStream;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -167,5 +168,16 @@ public class EncodedImage implements Closeable {
     return encodedImage.mRotationAngle >= 0
         && encodedImage.mWidth >= 0
         && encodedImage.mHeight >= 0;
+  }
+
+  /**
+   * Closes the encoded image handling null.
+   *
+   * @param encodedImage the encoded image to close
+   */
+  public static void closeSafely(@Nullable EncodedImage encodedImage) {
+    if (encodedImage != null) {
+      encodedImage.close();
+    }
   }
 }
