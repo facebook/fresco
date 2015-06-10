@@ -24,12 +24,14 @@ public class TimeConstants {
   public static final long HOURS_PER_DAY = 24;
   public static final long DAYS_PER_WEEK = 7;
   public static final long DAYS_PER_MONTH = 30;
+  public static final long MONTHS_PER_YEAR = 12;
   public static final long DAYS_PER_YEAR = 365;
 
   public static final long MS_PER_MINUTE = MS_PER_SECOND * SECONDS_PER_MINUTE;
   public static final long MS_PER_HOUR = MS_PER_MINUTE * MINUTES_PER_HOUR;
   public static final long MS_PER_DAY = MS_PER_HOUR * HOURS_PER_DAY;
   public static final long MS_PER_WEEK = MS_PER_DAY * DAYS_PER_WEEK;
+  public static final long MS_PER_MONTH = MS_PER_DAY * DAYS_PER_MONTH;
   public static final long MS_PER_YEAR = MS_PER_DAY * DAYS_PER_YEAR;
 
   public static final long SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR;
