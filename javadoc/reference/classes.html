@@ -144,6 +144,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="./com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
+    <li class="api apilevel-">
   <a href="./com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="./com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
@@ -175,6 +177,12 @@
   <a href="./com/facebook/drawee/view/package-summary.html">com.facebook.drawee.view</a></li>
     <li class="api apilevel-">
   <a href="./com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
+    <li class="api apilevel-">
+  <a href="./com/facebook/imagepipeline/animated/factory/package-summary.html">com.facebook.imagepipeline.animated.factory</a></li>
+    <li class="api apilevel-">
+  <a href="./com/facebook/imagepipeline/animated/impl/package-summary.html">com.facebook.imagepipeline.animated.impl</a></li>
+    <li class="api apilevel-">
+  <a href="./com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
   <a href="./com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
     <li class="api apilevel-">
@@ -303,18 +311,48 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawableBackend.html">AnimatedDrawableBackend</a></td>
+            <td class="jd-descrcol" width="100%">Interface that <code><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code> uses that abstracts out the image format.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a></td>
+            <td class="jd-descrcol" width="100%">Assisted provider for <code><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawableBackend.html">AnimatedDrawableBackend</a></code>.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a></td>
+            <td class="jd-descrcol" width="100%">Factory for instances of <code><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawableOptions.html">AnimatedDrawableOptions</a></td>
+            <td class="jd-descrcol" width="100%">Options for creating <code><a href="./com/facebook/imagepipeline/animated/base/AnimatableDrawable.html">AnimatableDrawable</a></code>.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/util/AnimatedDrawableUtil.html">AnimatedDrawableUtil</a></td>
+            <td class="jd-descrcol" width="100%">Utility methods for <code><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/base/AnimatedImage.html">AnimatedImage</a></td>
             <td class="jd-descrcol" width="100%">Common interface for an animated image.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/base/AnimatedImageFrame.html">AnimatedImageFrame</a></td>
             <td class="jd-descrcol" width="100%">Common interface for a frame of an animated image.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/base/AnimatedImageResult.html">AnimatedImageResult</a></td>
             <td class="jd-descrcol" width="100%">The result of decoding an animated image.&nbsp;</td>
         </tr>
@@ -384,6 +422,12 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/binaryresource/BinaryResource.html">BinaryResource</a></td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></td>
             <td class="jd-descrcol" width="100%">Cache key for BitmapMemoryCache
 &nbsp;</td>
@@ -423,7 +467,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/cache/common/CacheKey.html">CacheKey</a></td>
-            <td class="jd-descrcol" width="100%">Strongly typed cache key that is a simple wrapper around a String object.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Strongly typed cache key to be used instead of Object.&nbsp;</td>
         </tr>
     
     
@@ -528,12 +572,24 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/cache/disk/DiskCacheConfig.html">DiskCacheConfig</a></td>
-            <td class="jd-descrcol" width="100%">Configuration class for a DiskStorageCache.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Configuration class for a <code><a href="./com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a></code>.&nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/cache/disk/DiskCacheConfig.Builder.html">DiskCacheConfig.Builder</a></td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a></td>
+            <td class="jd-descrcol" width="100%">Cache that manages disk storage.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/cache/disk/DiskStorageCache.Params.html">DiskStorageCache.Params</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
@@ -602,24 +658,30 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/cache/disk/FileCache.html">FileCache</a></td>
+            <td class="jd-descrcol" width="100%">Interface that caches based on disk should implement.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/logging/FLog.html">FLog</a></td>
             <td class="jd-descrcol" width="100%">Logging wrapper with format style support.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/controller/ForwardingControllerListener.html">ForwardingControllerListener</a>&lt;INFO&gt;</td>
             <td class="jd-descrcol" width="100%">Listener that forwards controller events to multiple listeners.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/listener/ForwardingRequestListener.html">ForwardingRequestListener</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/backends/pipeline/Fresco.html">Fresco</a></td>
             <td class="jd-descrcol" width="100%">Fresco entry point.&nbsp;</td>
         </tr>
@@ -757,37 +819,43 @@
     
     
         <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</td>
+            <td class="jd-descrcol" width="100%">Interface for the image pipeline memory cache.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></td>
             <td class="jd-descrcol" width="100%">Configuration for a memory cache.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/memory/MemoryTrimmable.html">MemoryTrimmable</a></td>
             <td class="jd-descrcol" width="100%">A class can implement this interface to react to a <code><a href="./com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a></code>'s request to
  trim memory.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a></td>
             <td class="jd-descrcol" width="100%">A class which keeps a list of other classes to be notified of system memory events.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/memory/MemoryTrimType.html">MemoryTrimType</a></td>
             <td class="jd-descrcol" width="100%">Types of memory trim.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/view/MultiDraweeHolder.html">MultiDraweeHolder</a>&lt;DH&nbsp;extends&nbsp;<a href="./com/facebook/drawee/interfaces/DraweeHierarchy.html">DraweeHierarchy</a>&gt;</td>
             <td class="jd-descrcol" width="100%">Contains multiple Drawee holders.&nbsp;</td>
         </tr>
@@ -1093,6 +1161,12 @@
     
     
         <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/decoder/SimpleProgressiveJpegConfig.DynamicValueConfig.html">SimpleProgressiveJpegConfig.DynamicValueConfig</a></td>
+            <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/internal/Supplier.html">Supplier</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">A class that can supply objects of a single type.&nbsp;</td>
         </tr>

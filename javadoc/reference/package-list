@@ -1,3 +1,4 @@
+com.facebook.binaryresource
 com.facebook.cache.common
 com.facebook.cache.disk
 com.facebook.common.disk
@@ -14,6 +15,9 @@ com.facebook.drawee.generic
 com.facebook.drawee.interfaces
 com.facebook.drawee.view
 com.facebook.imagepipeline.animated.base
+com.facebook.imagepipeline.animated.factory
+com.facebook.imagepipeline.animated.impl
+com.facebook.imagepipeline.animated.util
 com.facebook.imagepipeline.backends.okhttp
 com.facebook.imagepipeline.bitmaps
 com.facebook.imagepipeline.cache

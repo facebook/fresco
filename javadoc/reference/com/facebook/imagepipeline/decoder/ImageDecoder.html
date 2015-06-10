@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
@@ -176,6 +178,12 @@
   <a href="../../../../com/facebook/drawee/view/package-summary.html">com.facebook.drawee.view</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/factory/package-summary.html">com.facebook.imagepipeline.animated.factory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/impl/package-summary.html">com.facebook.imagepipeline.animated.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
     <li class="api apilevel-">
@@ -209,6 +217,7 @@
     <li><h2>Interfaces</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html">ProgressiveJpegConfig</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/decoder/SimpleProgressiveJpegConfig.DynamicValueConfig.html">SimpleProgressiveJpegConfig.DynamicValueConfig</a></li>
       </ul>
     </li>
               
@@ -476,9 +485,9 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeAnimatedGif(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeAnimatedGif</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, ImageDecodeOptions options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeAnimatedWebp(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeAnimatedWebp</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, ImageDecodeOptions options)
         
-        <div class="jd-descrdiv">Decodes gif into CloseableImage.</div>
+        <div class="jd-descrdiv">Decode a webp animated image into a CloseableImage.</div>
   
   </td></tr>
 
@@ -494,9 +503,9 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeAnimatedWebp(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeAnimatedWebp</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, ImageDecodeOptions options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeGif(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeGif</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, ImageDecodeOptions options)
         
-        <div class="jd-descrdiv">Decode a webp animated image into a CloseableImage.</div>
+        <div class="jd-descrdiv">Decodes gif into CloseableImage.</div>
   
   </td></tr>
 
@@ -849,42 +858,6 @@ From class
 
 
 
-<a id="decodeAnimatedGif(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
-      </span>
-      <span class="sympad">decodeAnimatedGif</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, ImageDecodeOptions options)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Decodes gif into CloseableImage.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>a CloseableGifImage
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="decodeAnimatedWebp(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -925,6 +898,42 @@ From class
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>a <code><a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></code>
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="decodeGif(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
+      </span>
+      <span class="sympad">decodeGif</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, ImageDecodeOptions options)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Decodes gif into CloseableImage.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a CloseableImage
 </li></ul>
   </div>
 

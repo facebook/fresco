@@ -145,6 +145,8 @@
               <ul>
                 
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
@@ -176,6 +178,12 @@
   <a href="../../../../com/facebook/drawee/view/package-summary.html">com.facebook.drawee.view</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/factory/package-summary.html">com.facebook.imagepipeline.animated.factory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/impl/package-summary.html">com.facebook.imagepipeline.animated.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
     <li class="api apilevel-">
@@ -211,6 +219,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></li>
       </ul>
     </li>
@@ -355,7 +364,7 @@ Summary:
       
         <a href="../../../../com/facebook/common/memory/MemoryTrimmable.html">MemoryTrimmable</a> 
       
-        MemoryCache&lt;K,&nbsp;V&gt; 
+        <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt; 
       
   
   
@@ -508,7 +517,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#CountingMemoryCache(<any>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)">CountingMemoryCache</a></span>(<any> valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)">CountingMemoryCache</a></span>(ValueDescriptor&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)
         
   </td></tr>
 
@@ -993,7 +1002,7 @@ From interface
           class="jd-expando-trigger-img" /></a>
 From interface
 
-  com.facebook.imagepipeline.cache.MemoryCache
+  <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">com.facebook.imagepipeline.cache.MemoryCache</a>
 
 <div id="inherited-methods-com.facebook.imagepipeline.cache.MemoryCache">
   <div id="inherited-methods-com.facebook.imagepipeline.cache.MemoryCache-list"
@@ -1015,8 +1024,10 @@ From interface
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">cache</span>(K arg0, <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt; arg1)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html#cache(K, com.facebook.common.references.CloseableReference<V>)">cache</a></span>(K key, <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt; value)
         
+        <div class="jd-descrdiv">Caches the the given key-value pair.</div>
+  
   </td></tr>
 
 
@@ -1031,8 +1042,10 @@ From interface
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">get</span>(K arg0)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html#get(K)">get</a></span>(K key)
         
+        <div class="jd-descrdiv">Gets the item with the given key, or null if there is no such item.</div>
+  
   </td></tr>
 
 
@@ -1044,11 +1057,13 @@ From interface
             
             
             
-            long
+            int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">removeAll</span>(Predicate&lt;K&gt; arg0)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html#removeAll(com.android.internal.util.Predicate<K>)">removeAll</a></span>(Predicate&lt;K&gt; predicate)
         
+        <div class="jd-descrdiv">Removes all the items from the cache whose keys match the specified predicate.</div>
+  
   </td></tr>
 
 
@@ -1129,7 +1144,7 @@ From interface
 
 
 
-<a id="CountingMemoryCache(<any>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)"></a>
+<a id="CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1142,7 +1157,7 @@ From interface
         
       </span>
       <span class="sympad">CountingMemoryCache</span>
-      <span class="normal">(<any> valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)</span>
+      <span class="normal">(ValueDescriptor&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1274,6 +1289,11 @@ From interface
 
  <p> It is the caller's responsibility to close the returned reference once not needed anymore.
 </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a reference to the cached value, or null if the item was not found
+</li></ul>
+  </div>
 
     </div>
 </div>
