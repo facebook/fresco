@@ -37,16 +37,6 @@ public interface LoggingDelegate {
   boolean isLoggable(int level);
 
   /**
-   * Gets whether the specified level and tag is loggable. How the delegate handles checking the
-   * tag is up to the delegate.
-   *
-   * @param tag the lag to check
-   * @param level the level
-   * @return whether it's loggable
-   */
-  boolean isLoggable(String tag, int level);
-
-  /**
    * Send a {@link android.util.Log#VERBOSE} log message.
    *
    * @param tag Used to identify the source of a log message.  It usually identifies
