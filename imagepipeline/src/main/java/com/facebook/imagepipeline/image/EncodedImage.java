@@ -180,4 +180,12 @@ public class EncodedImage implements Closeable {
       encodedImage.close();
     }
   }
+
+  /**
+   * Checks if the encoded image is valid i.e. is not null, and is not closed.
+   * @return true if the encoded image is valid
+   */
+  public static boolean isValid(@Nullable EncodedImage encodedImage) {
+    return encodedImage != null && encodedImage.isValid();
+  }
 }
