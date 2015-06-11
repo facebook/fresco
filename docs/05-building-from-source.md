@@ -25,16 +25,18 @@ Fresco does not support source builds with Eclipse, Ant, or Maven. We do not pla
 
 Both command-line and Android Studio users need to edit the `gradle.properties` file. This is normally located in your home directory, in a subdirectory called `.gradle`. If it is not already there, create it.
 
-On Unix-like systems, including Mac OS X, add a line like this:
+On Unix-like systems, including Mac OS X, add lines like this:
 
 ```groovy
-ndk.path=/path/to/android_ndk/r10d
+ndk.path=/path/to/android_ndk/r10e
+org.gradle.daemon=true
 ```
 
-On Windows systems, add a line like this:
+On Windows systems, add lines like this:
 
 ```groovy
-ndk.path=C\:\\path\\to\\android_ndk\\r10d
+ndk.path=C\:\\path\\to\\android_ndk\\r10e
+org.gradle.daemon=true
 ```
 
 Windows' backslashes and colons need to be escaped in order for Gradle to read them correctly.
