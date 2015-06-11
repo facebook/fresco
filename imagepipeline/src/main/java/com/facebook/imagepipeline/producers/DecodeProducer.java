@@ -15,21 +15,24 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import android.graphics.Bitmap;
+
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
-import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.ByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imageformat.ImageFormat;
 
 import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
 
@@ -43,6 +46,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   public static final String PRODUCER_NAME = "DecodeProducer";
 
   // keys for extra map
+  private static final String BITMAP_SIZE_KEY = "bitmapSize";
   private static final String QUEUE_TIME_KEY = "queueTime";
   private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
   private static final String IS_FINAL_KEY = "isFinal";
@@ -161,27 +165,38 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       QualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo(bytesRef);
 
       mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
-      CloseableImage image;
+      CloseableImage image = null;
       try {
         image = mImageDecoder.decodeImage(bytesRef, format, length, quality, mImageDecodeOptions);
       } catch (Exception e) {
-        Map<String, String> extraMap = getExtraMap(queueTime, quality, isLast);
+        Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
         mProducerListener.
             onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
         handleError(e);
         return;
       }
-      Map<String, String> extraMap = getExtraMap(queueTime, quality, isLast);
+      Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
       mProducerListener.
           onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
       handleResult(image, isLast);
     }
 
-    private Map<String, String> getExtraMap(long queueTime, QualityInfo quality, boolean isFinal) {
+    private Map<String, String> getExtraMap(
+        @Nullable CloseableImage image,
+        long queueTime,
+        QualityInfo quality,
+        boolean isFinal) {
       if (!mProducerListener.requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
+      String size = null;
+      if (image instanceof CloseableStaticBitmap) {
+        Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
+        size = bitmap.getWidth() + "x" + bitmap.getHeight();
+      }
       return ImmutableMap.of(
+          BITMAP_SIZE_KEY,
+          size,
           QUEUE_TIME_KEY,
           String.valueOf(queueTime),
           HAS_GOOD_QUALITY_KEY,
@@ -282,6 +297,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   }
 
   private class NetworkImagesProgressiveDecoder extends ProgressiveDecoder {
+
     private final ProgressiveJpegParser mProgressiveJpegParser;
     private final ProgressiveJpegConfig mProgressiveJpegConfig;
     private int mLastScheduledScanNumber;

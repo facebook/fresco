@@ -11,10 +11,12 @@ package com.facebook.imagepipeline.producers;
 
 import javax.annotation.Nullable;
 
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 import android.util.Pair;
 
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
@@ -35,7 +37,12 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class ResizeAndRotateProducer
     implements Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
+
   private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
+  private static final String ORIGINAL_SIZE_KEY = "Original size";
+  private static final String REQUESTED_SIZE_KEY = "Requested size";
+  private static final String FRACTION_KEY = "Fraction";
+
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
@@ -148,31 +155,51 @@ public class ResizeAndRotateProducer
       ImageRequest imageRequest = mProducerContext.getImageRequest();
       Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> ret;
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
+      Map<String, String> extraMap = null;
       try {
+        int numerator = getScaleNumerator(imageRequest, metaData);
+        extraMap = getExtraMap(metaData, imageRequest, numerator);
         JpegTranscoder.transcodeJpeg(
             new PooledByteBufferInputStream(inputRef.get()),
             outputStream,
             getRotationAngle(imageRequest, metaData),
-            getScaleNumerator(imageRequest, metaData),
+            numerator,
             DEFAULT_JPEG_QUALITY);
         // TODO t7065568: metaData is no longer up to date!
         ret = Pair.create(CloseableReference.of(outputStream.toByteBuffer()), metaData);
 
         try {
           mProducerContext.getListener().
-              onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, null);
+              onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
           getConsumer().onNewResult(ret, isLast);
         } finally {
           CloseableReference.closeSafely(ret.first);
         }
       } catch (Exception e) {
         mProducerContext.getListener().
-            onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, null);
+            onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
         getConsumer().onFailure(e);
         return;
       } finally {
         outputStream.close();
       }
+    }
+
+    private Map<String, String> getExtraMap(
+        ImageTransformMetaData metaData,
+        ImageRequest imageRequest,
+        int numerator) {
+      if (!mProducerContext.getListener().requiresExtraMap(mProducerContext.getId())) {
+        return null;
+      }
+      String originalSize = metaData.getWidth() + "x" + metaData.getHeight();
+      String requestedSize =
+          imageRequest.getResizeOptions().width + "x" + imageRequest.getResizeOptions().height;
+      String fraction = numerator > 0 ? numerator + "/8" : "";
+      return ImmutableMap.of(
+          ORIGINAL_SIZE_KEY, originalSize,
+          REQUESTED_SIZE_KEY, requestedSize,
+          FRACTION_KEY, fraction);
     }
   }
 
