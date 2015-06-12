@@ -66,6 +66,14 @@ You can customize networking behavior by [setting your own network layer](using-
 
 To change the behavior for all other operations, pass in an instance of [ExecutorSupplier](../javadoc/reference/com/facebook/imagepipeline/core/ExecutorSupplier.html).
 
+### Using a MemoryTrimmableRegistry
+
+If your application listens to system memory events, it can pass them over to Fresco to trim memory caches.
+
+The easiest way for most apps to listen to events is to override [Activity.onTrimMemory](http://developer.android.com/reference/android/app/Activity.html#onTrimMemory(int)). You can also use any subclass of [ComponentCallbacks2](http://developer.android.com/reference/android/content/ComponentCallbacks2.html).
+
+You should have an implementation of [MemoryTrimmableRegistry](http://frescolib.org/javadoc/reference/com/facebook/common/memory/MemoryTrimmableRegistry.html). This object should keep a collection of [MemoryTrimmable](http://frescolib.org/javadoc/reference/com/facebook/common/memory/MemoryTrimmable.html) objects - Fresco's caches will be among them. When getting a system memory event, you call the appropriate `MemoryTrimmable` method on each of the trimmables.
+
 ### Configuring the memory caches
 
 The bitmap cache and the encoded memory cache are configured by a Supplier of a [MemoryCacheParams](../javadoc/reference/com/facebook/imagepipeline/cache/MemoryCacheParams.html#MemoryCacheParams\(int, int, int, int, int\)) object.
