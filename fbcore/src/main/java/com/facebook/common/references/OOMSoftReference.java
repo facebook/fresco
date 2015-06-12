@@ -24,8 +24,8 @@ import java.lang.ref.SoftReference;
  * there is memory pressure. SoftReferences as implemented by Dalvik blindly treat every second
  * SoftReference as a WeakReference every time a garbage collection happens, - i.e. clear it unless
  * there is something else referring to it:
- *  <a href="https://fburl.com/dalviksoftref">dalvik</a>
- *  <a href="https://fburl.com/artsoftref">art</a>
+ *  <a href="https://goo.gl/Pe6aS7">dalvik</a>
+ *  <a href="https://goo.gl/BYaUZE">art</a>
  * It will however clear every SoftReference if we don't have enough memory to satisfy an
  * allocation after a garbage collection.
  *
