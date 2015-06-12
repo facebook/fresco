@@ -367,20 +367,23 @@ public class MainActivity extends ActionBarActivity {
     final Runtime runtime = Runtime.getRuntime();
     final long heapMemory = runtime.totalMemory() - runtime.freeMemory();
     final StringBuilder sb = new StringBuilder(DEFAULT_MESSAGE_SIZE);
-    // When changing format of output below, make sure to sync "scripts/test_runner.py" as well.
-    appendSize(sb, "Java heap size:          ", heapMemory, "\n");
-    appendSize(sb, "Native heap size:        ", Debug.getNativeHeapSize(), "\n");
-    appendTime(sb, "Average photo wait time: ", mPerfListener.getAverageWaitTime(), "\n");
-    appendNumber(sb, "Outstanding requests:    ", mPerfListener.getOutstandingRequests(), "\n");
-    appendNumber(sb, "Cancelled requests:      ", mPerfListener.getCancelledRequests(), "\n");
+    // When changing format of output below, make sure to sync "run_comparison.py" as well
+    sb.append("Heap: ");
+    appendSize(sb, heapMemory);
+    sb.append(" Java ");
+    appendSize(sb, Debug.getNativeHeapSize());
+    sb.append(" native\n");
+    appendTime(sb, "Avg wait time: ", mPerfListener.getAverageWaitTime(), "\n");
+    appendNumber(sb, "Requests: ", mPerfListener.getOutstandingRequests(), " outsdng ");
+    appendNumber(sb, "", mPerfListener.getCancelledRequests(), " cncld\n");
     final String message = sb.toString();
     mStatsDisplay.setText(message);
     FLog.i(TAG, message);
   }
 
-  private static void appendSize(StringBuilder sb, String prefix, long bytes, String suffix) {
-    String value = String.format(Locale.getDefault(), "%.2f", (float) bytes / BYTES_IN_MEGABYTE);
-    appendValue(sb, prefix, value + " MB", suffix);
+  private static void appendSize(StringBuilder sb, long bytes) {
+    String value = String.format(Locale.getDefault(), "%.1f MB", (float) bytes / BYTES_IN_MEGABYTE);
+    sb.append(value);
   }
 
   private static void appendTime(StringBuilder sb, String prefix, long timeMs, String suffix) {

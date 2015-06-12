@@ -144,11 +144,11 @@ def get_stats(logs):
     cancellation_wait_times = [
         int(match.group(1)) for match in map(pattern.search, logs) if match]
 
-    pattern = re.compile("""Java heap size:\s+(\d+.\d+) MB""")
+    pattern = re.compile("""\s+(\d+.\d+) MB Java""")
     java_heap_sizes = [
         float(match.group(1)) for match in map(pattern.search, logs) if match]
 
-    pattern = re.compile("""Native heap size:\s+(\d+.\d+) MB""")
+    pattern = re.compile("""\s+(\d+.\d+) MB native""")
     native_heap_sizes = [
         float(match.group(1)) for match in map(pattern.search, logs) if match]
 
