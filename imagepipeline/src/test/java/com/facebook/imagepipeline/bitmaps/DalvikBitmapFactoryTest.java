@@ -19,6 +19,7 @@ import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -74,7 +75,8 @@ public class DalvikBitmapFactoryTest {
   private SharedByteArray mSharedByteArray;
 
   private DalvikBitmapFactory mDalvikBitmapFactory;
-  private CloseableReference<PooledByteBuffer> mInputImageRef;
+  private CloseableReference<PooledByteBuffer> mByteBufferRef;
+  private EncodedImage mEncodedImage;
   private byte[] mInputBuf;
   private byte[] mDecodeBuf;
   private CloseableReference<byte[]> mDecodeBufRef;
@@ -101,7 +103,8 @@ public class DalvikBitmapFactoryTest {
 
     mInputBuf = new byte[LENGTH];
     PooledByteBuffer input = new TrivialPooledByteBuffer(mInputBuf, POINTER);
-    mInputImageRef = CloseableReference.of(input);
+    mByteBufferRef = CloseableReference.of(input);
+    mEncodedImage = new EncodedImage(mByteBufferRef);
 
     mDecodeBuf = new byte[LENGTH + 2];
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));
@@ -116,8 +119,8 @@ public class DalvikBitmapFactoryTest {
   @Test
   public void testDecode_Jpeg_Detailed() {
     setUpJpegDecode();
-    CloseableReference<Bitmap> result = mDalvikBitmapFactory.decodeJPEGFromPooledByteBuffer(
-        mInputImageRef,
+    CloseableReference<Bitmap> result = mDalvikBitmapFactory.decodeJPEGFromEncodedImage(
+        mEncodedImage,
         IMAGE_SIZE);
     verifyDecodesJpeg(result);
   }
@@ -126,7 +129,7 @@ public class DalvikBitmapFactoryTest {
   public void testDecodeJpeg_incomplete() {
     when(mSharedByteArray.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
     CloseableReference<Bitmap> result =
-        mDalvikBitmapFactory.decodeJPEGFromPooledByteBuffer(mInputImageRef, IMAGE_SIZE);
+        mDalvikBitmapFactory.decodeJPEGFromEncodedImage(mEncodedImage, IMAGE_SIZE);
     verify(mSharedByteArray).get(IMAGE_SIZE + 2);
     verifyStatic();
     BitmapFactory.decodeByteArray(
@@ -136,7 +139,7 @@ public class DalvikBitmapFactoryTest {
         argThat(new BitmapFactoryOptionsMatcher()));
     assertEquals((byte) 0xff, mDecodeBuf[5]);
     assertEquals((byte) 0xd9, mDecodeBuf[6]);
-    assertEquals(1, mInputImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertEquals(mBitmap, result.get());
     assertTrue(result.isValid());
     assertEquals(1, mBitmapCounter.getCount());
@@ -148,7 +151,7 @@ public class DalvikBitmapFactoryTest {
   public void testHitBitmapLimit_static() {
     mBitmapCounter.increase(MockBitmapFactory.createForSize(MAX_BITMAP_SIZE));
     try {
-      mDalvikBitmapFactory.decodeFromPooledByteBuffer(mInputImageRef);
+      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage);
     } finally {
       verify(mBitmap).recycle();
       assertEquals(1, mBitmapCounter.getCount());
@@ -161,7 +164,7 @@ public class DalvikBitmapFactoryTest {
     PowerMockito.doThrow(new ConcurrentModificationException()).when(Bitmaps.class);
     Bitmaps.pinBitmap(any(Bitmap.class));
     try {
-      mDalvikBitmapFactory.decodeFromPooledByteBuffer(mInputImageRef);
+      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage);
     } finally {
       verify(mBitmap).recycle();
       assertEquals(0, mBitmapCounter.getCount());
@@ -170,7 +173,7 @@ public class DalvikBitmapFactoryTest {
   }
 
   private void verifyDecodesStatic(CloseableReference<Bitmap> result) {
-    assertEquals(1, mInputImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertEquals(mBitmap, result.get());
     assertTrue(result.isValid());
     assertEquals(1, mBitmapCounter.getCount());
@@ -194,7 +197,7 @@ public class DalvikBitmapFactoryTest {
         eq(0),
         eq(IMAGE_SIZE),
         argThat(new BitmapFactoryOptionsMatcher()));
-    assertEquals(1, mInputImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertEquals(mBitmap, result.get());
     assertTrue(result.isValid());
     assertEquals(1, mBitmapCounter.getCount());

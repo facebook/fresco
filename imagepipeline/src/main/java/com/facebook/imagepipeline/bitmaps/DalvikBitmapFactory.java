@@ -20,6 +20,8 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -71,10 +73,15 @@ public class DalvikBitmapFactory {
   CloseableReference<Bitmap> createBitmap(short width, short height) {
     CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(width, height);
     try {
-      CloseableReference<Bitmap> bitmapRef =
-          decodeJPEGFromPooledByteBuffer(jpgRef, jpgRef.get().size());
-      bitmapRef.get().eraseColor(Color.TRANSPARENT);
-      return bitmapRef;
+      EncodedImage encodedImage = new EncodedImage(jpgRef, ImageFormat.JPEG);
+      try {
+        CloseableReference<Bitmap> bitmapRef =
+            decodeJPEGFromEncodedImage(encodedImage, jpgRef.get().size());
+        bitmapRef.get().eraseColor(Color.TRANSPARENT);
+        return bitmapRef;
+      } finally {
+        EncodedImage.closeSafely(encodedImage);
+      }
     } finally {
       jpgRef.close();
     }
@@ -83,51 +90,62 @@ public class DalvikBitmapFactory {
   /**
    * Creates a bitmap from encoded bytes.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with reference to the encoded bytes
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeFromPooledByteBuffer(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
-    final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
+  CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
+    CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
+    final PooledByteBuffer pooledByteBuffer = bytesRef.get();
     final int length = pooledByteBuffer.size();
-    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length);
     try {
-      final byte[] encodedBytesArray = encodedBytesArrayRef.get();
-      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      return doDecodeBitmap(encodedBytesArray, length);
+      final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length);
+      try {
+        final byte[] encodedBytesArray = encodedBytesArrayRef.get();
+        pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+        return doDecodeBitmap(encodedBytesArray, length);
+      } finally {
+        CloseableReference.closeSafely(encodedBytesArrayRef);
+      }
     } finally {
-      encodedBytesArrayRef.close();
+        CloseableReference.closeSafely(bytesRef);
     }
   }
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with reference to the encoded bytes
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
+  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      final EncodedImage encodedImage,
       int length) {
-    final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
-    Preconditions.checkArgument(length <= pooledByteBuffer.size());
-    // allocate bigger array in case EOI needs to be added
-    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length + 2);
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
     try {
-      byte[] encodedBytesArray = encodedBytesArrayRef.get();
-      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      if (!endsWithEOI(encodedBytesArray, length)) {
-        putEOI(encodedBytesArray, length);
-        length += 2;
+      final PooledByteBuffer pooledByteBuffer = bytesRef.get();
+      Preconditions.checkArgument(length <= pooledByteBuffer.size());
+      // allocate bigger array in case EOI needs to be added
+      final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length + 2);
+      try {
+        byte[] encodedBytesArray = encodedBytesArrayRef.get();
+        pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+        if (!endsWithEOI(encodedBytesArray, length)) {
+          putEOI(encodedBytesArray, length);
+          length += 2;
+        }
+        return doDecodeBitmap(encodedBytesArray, length);
+      } finally {
+        CloseableReference.closeSafely(encodedBytesArrayRef);
       }
-      return doDecodeBitmap(encodedBytesArray, length);
     } finally {
-      encodedBytesArrayRef.close();
+      CloseableReference.closeSafely(bytesRef);
     }
   }
 

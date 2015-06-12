@@ -9,24 +9,25 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import javax.annotation.concurrent.GuardedBy;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Bitmap factory for ART VM (Lollipop and up).
@@ -75,28 +76,30 @@ public class ArtBitmapFactory {
   /**
    * Creates a bitmap from encoded bytes.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with a reference to the encoded bytes
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeFromPooledByteBuffer(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
-    return doDecodeStaticImage(new PooledByteBufferInputStream(pooledByteBufferRef.get()));
+  CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
+    return doDecodeStaticImage(encodedImage.getInputStream());
   }
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with reference to the encoded bytes
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
+  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      EncodedImage encodedImage,
       int length) {
-    final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
-    final InputStream jpegBufferInputStream = new PooledByteBufferInputStream(pooledByteBuffer);
+    final InputStream jpegBufferInputStream = encodedImage.getInputStream();
+    // At this point the InputStream from the encoded image should not be null since in the
+    // pipeline,this comes from a call stack where this was checked before. Also this method needs
+    // the InputStream to decode the image so this can't be null.
+    Preconditions.checkNotNull(jpegBufferInputStream);
     jpegBufferInputStream.mark(Integer.MAX_VALUE);
 
     boolean isJpegComplete;
@@ -109,17 +112,23 @@ public class ArtBitmapFactory {
       throw new RuntimeException(ioe);
     }
 
-    InputStream jpegDataStream = jpegBufferInputStream;
-    if (pooledByteBuffer.size() > length) {
-      jpegDataStream = new LimitedInputStream(jpegDataStream, length);
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    try {
+      InputStream jpegDataStream = jpegBufferInputStream;
+      if (bytesRef.get().size() > length) {
+        jpegDataStream = new LimitedInputStream(jpegDataStream, length);
+      }
+      if (!isJpegComplete) {
+        jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
+      }
+      return doDecodeStaticImage(jpegDataStream);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
     }
-    if (!isJpegComplete) {
-      jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
-    }
-    return doDecodeStaticImage(jpegDataStream);
   }
 
   private CloseableReference<Bitmap> doDecodeStaticImage(InputStream inputStream) {
+    Preconditions.checkNotNull(inputStream);
     inputStream.mark(Integer.MAX_VALUE);
     final BitmapFactory.Options options = getDecodeOptionsForStream(inputStream);
     try {

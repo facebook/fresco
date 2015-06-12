@@ -21,13 +21,13 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
-import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.ByteArrayPool;
@@ -55,14 +55,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final Executor mExecutor;
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
-  private final Producer<CloseableReference<PooledByteBuffer>> mNextProducer;
+  private final Producer<EncodedImage> mNextProducer;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
       final Executor executor,
       final ImageDecoder imageDecoder,
       final ProgressiveJpegConfig progressiveJpegConfig,
-      final Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      final Producer<EncodedImage> nextProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -90,8 +90,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   }
 
   private abstract class ProgressiveDecoder extends DelegatingConsumer<
-      CloseableReference<PooledByteBuffer>,
-      CloseableReference<CloseableImage>> {
+      EncodedImage, CloseableReference<CloseableImage>> {
 
     private final ProducerContext mProducerContext;
     private final ProducerListener mProducerListener;
@@ -100,7 +99,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @GuardedBy("this")
     private boolean mIsFinished;
 
-    private final JobScheduler<PooledByteBuffer, Void> mJobScheduler;
+    private final JobScheduler mJobScheduler;
 
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
@@ -110,13 +109,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       mProducerListener = producerContext.getListener();
       mImageDecodeOptions = producerContext.getImageRequest().getImageDecodeOptions();
       mIsFinished = false;
-      JobRunnable<PooledByteBuffer, Void> job = new JobRunnable<PooledByteBuffer, Void>() {
+      JobRunnable job = new JobRunnable() {
         @Override
-        public void run(CloseableReference<PooledByteBuffer> inputRef, Void extra, boolean isLast) {
-          doDecode(inputRef, isLast);
+        public void run(EncodedImage encodedImage, boolean isLast) {
+          doDecode(encodedImage, isLast);
         }
       };
-      mJobScheduler = new JobScheduler<>(mExecutor, job, mImageDecodeOptions.minDecodeIntervalMs);
+      mJobScheduler = new JobScheduler(mExecutor, job, mImageDecodeOptions.minDecodeIntervalMs);
       mProducerContext.addCallbacks(
           new BaseProducerContextCallbacks() {
             @Override
@@ -129,7 +128,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
-    public void onNewResultImpl(CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
+    public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       if (!updateDecodeJob(newResult, isLast)) {
         return;
       }
@@ -149,36 +148,42 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     /** Updates the decode job. */
-    protected boolean updateDecodeJob(CloseableReference<PooledByteBuffer> ref, boolean isLast) {
+    protected boolean updateDecodeJob(EncodedImage ref, boolean isLast) {
       return mJobScheduler.updateJob(ref, isLast);
     }
 
     /** Performs the decode synchronously. */
-    private void doDecode(CloseableReference<PooledByteBuffer> bytesRef, boolean isLast) {
-      if (isFinished() || !CloseableReference.isValid(bytesRef)) {
+    private void doDecode(EncodedImage encodedImage, boolean isLast) {
+      if (isFinished() || !EncodedImage.isValid(encodedImage)) {
         return;
       }
 
-      long queueTime = mJobScheduler.getQueuedTime();
-      ImageFormat format = isLast ? ImageFormat.UNKNOWN : getImageFormat(bytesRef);
-      int length = isLast ? bytesRef.get().size() : getIntermediateImageEndOffset(bytesRef);
-      QualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo(bytesRef);
-
-      mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
-      CloseableImage image = null;
+      CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
       try {
-        image = mImageDecoder.decodeImage(bytesRef, format, length, quality, mImageDecodeOptions);
-      } catch (Exception e) {
+        long queueTime = mJobScheduler.getQueuedTime();
+        int length = isLast ? bytesRef.get().size() : getIntermediateImageEndOffset(bytesRef);
+        QualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo(bytesRef);
+
+        mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
+        CloseableImage image = null;
+        try {
+          image = mImageDecoder.decodeImage(encodedImage, length, quality, mImageDecodeOptions);
+        } catch (Exception e) {
+          Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
+          mProducerListener.
+              onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
+          handleError(e);
+          return;
+        } finally {
+          CloseableReference.closeSafely(bytesRef);
+        }
         Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
         mProducerListener.
-            onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
-        handleError(e);
-        return;
+            onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
+        handleResult(image, isLast);
+      } finally {
+        EncodedImage.closeSafely(encodedImage);
       }
-      Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
-      mProducerListener.
-          onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
-      handleResult(image, isLast);
     }
 
     private Map<String, String> getExtraMap(
@@ -255,8 +260,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       getConsumer().onCancellation();
     }
 
-    protected abstract ImageFormat getImageFormat(CloseableReference<PooledByteBuffer> ref);
-
     protected abstract int getIntermediateImageEndOffset(CloseableReference<PooledByteBuffer> ref);
 
     protected abstract QualityInfo getQualityInfo(CloseableReference<PooledByteBuffer> ref);
@@ -271,18 +274,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
-    protected synchronized boolean updateDecodeJob(
-        CloseableReference<PooledByteBuffer> inputRef,
-        boolean isLast) {
+    protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, boolean isLast) {
       if (!isLast) {
         return false;
       }
-      return super.updateDecodeJob(inputRef, isLast);
-    }
-
-    @Override
-    protected ImageFormat getImageFormat(CloseableReference<PooledByteBuffer> inputRef) {
-      return ImageFormat.UNKNOWN;
+      return super.updateDecodeJob(encodedImage, isLast);
     }
 
     @Override
@@ -314,28 +310,26 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
-    protected synchronized boolean updateDecodeJob(
-        CloseableReference<PooledByteBuffer> inputRef,
-        boolean isLast) {
-      boolean ret = super.updateDecodeJob(inputRef, isLast);
-      if (!isLast && CloseableReference.isValid(inputRef)) {
-        if (!mProgressiveJpegParser.parseMoreData(inputRef)) {
-          return false;
+    protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, boolean isLast) {
+      boolean ret = super.updateDecodeJob(encodedImage, isLast);
+      if (!isLast && EncodedImage.isValid(encodedImage)) {
+        CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+        try {
+          if (!mProgressiveJpegParser.parseMoreData(bytesRef)) {
+            return false;
+          }
+          int scanNum = mProgressiveJpegParser.getBestScanNumber();
+          if (scanNum <= mLastScheduledScanNumber ||
+              scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(
+                  mLastScheduledScanNumber)) {
+            return false;
+          }
+          mLastScheduledScanNumber = scanNum;
+        } finally {
+          CloseableReference.closeSafely(bytesRef);
         }
-        int scanNum = mProgressiveJpegParser.getBestScanNumber();
-        if (scanNum <= mLastScheduledScanNumber ||
-            scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(mLastScheduledScanNumber)) {
-          return false;
-        }
-        mLastScheduledScanNumber = scanNum;
       }
       return ret;
-    }
-
-    @Override
-    @Nullable
-    protected ImageFormat getImageFormat(CloseableReference<PooledByteBuffer> inputRef) {
-      return mProgressiveJpegParser.isJpeg() ? ImageFormat.JPEG : ImageFormat.UNKNOWN;
     }
 
     @Override

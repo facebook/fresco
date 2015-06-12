@@ -16,7 +16,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
  * Bitmap factory optimized for the platform.
@@ -74,38 +74,37 @@ public class PlatformBitmapFactory {
 
   /**
    * Creates a bitmap from encoded bytes. Supports JPEG but callers should use
-   * {@link #decodeJPEGFromPooledByteBuffer} for partial JPEGs.
+   * {@link #decodeJPEGFromEncodedImage} for partial JPEGs.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the reference to the encoded image with the reference to the encoded bytes
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  public CloseableReference<Bitmap> decodeFromPooledByteBuffer(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
+  public CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return mArtBitmapFactory.decodeFromPooledByteBuffer(pooledByteBufferRef);
+      return mArtBitmapFactory.decodeFromEncodedImage(encodedImage);
     } else {
-      return mDalvikBitmapFactory.decodeFromPooledByteBuffer(pooledByteBufferRef);
+      return mDalvikBitmapFactory.decodeFromEncodedImage(encodedImage);
     }
   }
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the reference to the encoded image with the reference to the encoded bytes
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  public CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      EncodedImage encodedImage,
       int length) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return mArtBitmapFactory.decodeJPEGFromPooledByteBuffer(pooledByteBufferRef, length);
+      return mArtBitmapFactory.decodeJPEGFromEncodedImage(encodedImage, length);
     } else {
-      return mDalvikBitmapFactory.decodeJPEGFromPooledByteBuffer(pooledByteBufferRef, length);
+      return mDalvikBitmapFactory.decodeJPEGFromEncodedImage(encodedImage, length);
     }
   }
 }

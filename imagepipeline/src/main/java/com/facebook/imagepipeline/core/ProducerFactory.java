@@ -13,7 +13,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.util.Pair;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
@@ -24,6 +23,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.ByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -37,7 +37,6 @@ import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.DiskCacheProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
-import com.facebook.imagepipeline.producers.ImageTransformMetaData;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
@@ -49,7 +48,6 @@ import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
-import com.facebook.imagepipeline.producers.RemoveImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
 import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
@@ -135,8 +133,8 @@ public class ProducerFactory {
   }
 
   public static BranchOnSeparateImagesProducer newBranchOnSeparateImagesProducer(
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer1,
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer2) {
+      Producer<EncodedImage> nextProducer1,
+      Producer<EncodedImage> nextProducer2) {
     return new BranchOnSeparateImagesProducer(nextProducer1, nextProducer2);
   }
 
@@ -144,8 +142,7 @@ public class ProducerFactory {
     return new DataFetchProducer(mPooledByteBufferFactory);
   }
 
-  public DecodeProducer newDecodeProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+  public DecodeProducer newDecodeProducer(Producer<EncodedImage> nextProducer) {
     return new DecodeProducer(
         mByteArrayPool,
         mExecutorSupplier.forDecode(),
@@ -224,13 +221,7 @@ public class ProducerFactory {
         nextProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackgroundTasks());
   }
 
-  public static RemoveImageTransformMetaDataProducer newRemoveImageTransformMetaDataProducer(
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer) {
-    return new RemoveImageTransformMetaDataProducer(nextProducer);
-  }
-
-  public ResizeAndRotateProducer newResizeAndRotateProducer(
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer) {
+  public ResizeAndRotateProducer newResizeAndRotateProducer(Producer<EncodedImage> nextProducer) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,

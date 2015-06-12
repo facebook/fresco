@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.gif.GifImage;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.webp.WebPImage;
 
@@ -50,34 +51,46 @@ public class AnimatedImageFactory {
   /**
    * Decodes a GIF into a CloseableImage.
    *
-   * @param pooledByteBufferRef native byte array holding the encoded bytes
+   * @param encodedImage encoded image (native byte array holding the encoded bytes and meta data)
    * @param options the options for the decode
    * @return a {@link CloseableImage} for the GIF image
    */
   public CloseableImage decodeGif(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
+      final EncodedImage encodedImage,
       final ImageDecodeOptions options) {
-    Preconditions.checkState(!options.forceOldAnimationCode);
-    final PooledByteBuffer input = pooledByteBufferRef.get();
-    GifImage gifImage = GifImage.create(input.getNativePtr(), input.size());
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
+    try {
+      Preconditions.checkState(!options.forceOldAnimationCode);
+      final PooledByteBuffer input = bytesRef.get();
+      GifImage gifImage = GifImage.create(input.getNativePtr(), input.size());
 
-    return getCloseableImage(options, gifImage);
+      return getCloseableImage(options, gifImage);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
+    }
   }
 
   /**
    * Decode a WebP into a CloseableImage.
    *
-   * @param pooledByteBufferRef native byte array holding the encoded bytes
+   * @param encodedImage encoded image (native byte array holding the encoded bytes and meta data)
    * @param options the options for the decode
    * @return a {@link CloseableImage} for the WebP image
    */
   public CloseableImage decodeWebP(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
+      final EncodedImage encodedImage,
       final ImageDecodeOptions options) {
-    Preconditions.checkArgument(!options.forceOldAnimationCode);
-    final PooledByteBuffer input = pooledByteBufferRef.get();
-    WebPImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
-    return getCloseableImage(options, webPImage);
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
+    try {
+      Preconditions.checkArgument(!options.forceOldAnimationCode);
+      final PooledByteBuffer input = bytesRef.get();
+      WebPImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
+      return getCloseableImage(options, webPImage);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
+    }
   }
 
   private CloseableAnimatedImage getCloseableImage(

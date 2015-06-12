@@ -29,9 +29,9 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public class EncodedImage implements Closeable {
-  private static final int UNKNOWN_ROTATION_ANGLE = -1;
-  private static final int UNKNOWN_WIDTH = -1;
-  private static final int UNKNOWN_HEIGHT = -1;
+  public static final int UNKNOWN_ROTATION_ANGLE = -1;
+  public static final int UNKNOWN_WIDTH = -1;
+  public static final int UNKNOWN_HEIGHT = -1;
 
   private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
   private final ImageFormat mImageFormat;

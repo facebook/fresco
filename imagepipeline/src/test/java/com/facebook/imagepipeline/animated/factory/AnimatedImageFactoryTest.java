@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
@@ -101,9 +102,12 @@ public class AnimatedImageFactoryTest {
     when(WebPImage.create(byteBuffer.getNativePtr(), byteBuffer.size()))
         .thenReturn(mockWebPImage);
 
+    EncodedImage encodedImage = new EncodedImage(
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
-            CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER),
+            encodedImage,
             ImageDecodeOptions.defaults());
 
     // Verify we got the right result
@@ -145,9 +149,11 @@ public class AnimatedImageFactoryTest {
     ImageDecodeOptions imageDecodeOptions = ImageDecodeOptions.newBuilder()
         .setDecodePreviewFrame(true)
         .build();
+    EncodedImage encodedImage = new EncodedImage(
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
-            CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER),
+            encodedImage,
             imageDecodeOptions);
 
     // Verify we got the right result
@@ -198,9 +204,13 @@ public class AnimatedImageFactoryTest {
         .setDecodePreviewFrame(true)
         .setDecodeAllFrames(true)
         .build();
+
+    EncodedImage encodedImage = new EncodedImage(
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
-            CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER),
+            encodedImage,
             imageDecodeOptions);
 
     // Verify we got the right result

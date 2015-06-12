@@ -14,7 +14,6 @@ import java.util.Map;
 
 import android.net.Uri;
 import android.os.Build;
-import android.util.Pair;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -22,14 +21,13 @@ import com.facebook.common.media.MediaUtils;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
-import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
-import com.facebook.imagepipeline.producers.ImageTransformMetaData;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
@@ -39,6 +37,7 @@ import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
+import com.facebook.imagepipeline.producers.RemoveImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
 import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
@@ -54,11 +53,10 @@ public class ProducerSequenceFactory {
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
-  @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>>
-      mBackgroundNetworkFetchToEncodedMemorySequence;
+  @VisibleForTesting Producer<EncodedImage> mBackgroundNetworkFetchToEncodedMemorySequence;
+  @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>> mEncodedImageProducerSequence;
   @VisibleForTesting Producer<Void> mNetworkFetchToEncodedMemoryPrefetchSequence;
-  private Producer<CloseableReference<PooledByteBuffer>>
-      mCommonNetworkFetchToEncodedMemorySequence;
+  private Producer<EncodedImage> mCommonNetworkFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalImageFileFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalVideoFileFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalContentUriFetchSequence;
@@ -92,7 +90,13 @@ public class ProducerSequenceFactory {
   public Producer<CloseableReference<PooledByteBuffer>> getEncodedImageProducerSequence(
       ImageRequest imageRequest) {
     validateEncodedImageRequest(imageRequest);
-    return getBackgroundNetworkFetchToEncodedMemorySequence();
+    synchronized (this) {
+      if (mEncodedImageProducerSequence == null) {
+        mEncodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
+            getBackgroundNetworkFetchToEncodedMemorySequence());
+      }
+    }
+    return mEncodedImageProducerSequence;
   }
 
   /**
@@ -193,13 +197,13 @@ public class ProducerSequenceFactory {
    * background-thread hand-off -> multiplex -> encoded cache ->
    * disk cache -> (webp transcode) -> network fetch.
    */
-  private synchronized Producer<CloseableReference<PooledByteBuffer>>
+  private synchronized Producer<EncodedImage>
       getBackgroundNetworkFetchToEncodedMemorySequence() {
     if (mBackgroundNetworkFetchToEncodedMemorySequence == null) {
       // Use hand-off producer to ensure that we don't do any unnecessary work on the UI thread.
       mBackgroundNetworkFetchToEncodedMemorySequence =
           mProducerFactory.newBackgroundThreadHandoffProducer(
-              getCommonNetworkFetchToEncodedMemorySequence());
+                  getCommonNetworkFetchToEncodedMemorySequence());
     }
     return mBackgroundNetworkFetchToEncodedMemorySequence;
   }
@@ -212,7 +216,7 @@ public class ProducerSequenceFactory {
     if (mNetworkFetchToEncodedMemoryPrefetchSequence == null) {
       mNetworkFetchToEncodedMemoryPrefetchSequence =
           mProducerFactory.newSwallowResultProducer(
-              getBackgroundNetworkFetchToEncodedMemorySequence());
+                  getBackgroundNetworkFetchToEncodedMemorySequence());
     }
     return mNetworkFetchToEncodedMemoryPrefetchSequence;
   }
@@ -220,14 +224,18 @@ public class ProducerSequenceFactory {
   /**
    * multiplex -> encoded cache -> disk cache -> (webp transcode) -> network fetch.
    */
-  private synchronized Producer<CloseableReference<PooledByteBuffer>>
-      getCommonNetworkFetchToEncodedMemorySequence() {
+  private synchronized Producer<EncodedImage> getCommonNetworkFetchToEncodedMemorySequence() {
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
-      mCommonNetworkFetchToEncodedMemorySequence = newEncodedCacheMultiplexToTranscodeSequence(
-          mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
+      Producer<CloseableReference<PooledByteBuffer>> nextProducer =
+          newEncodedCacheMultiplexToTranscodeSequence(
+              mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
+      mCommonNetworkFetchToEncodedMemorySequence =
+          ProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
+
       if (mResizeAndRotateEnabledForNetwork) {
         mCommonNetworkFetchToEncodedMemorySequence =
-            newResizeAndRotateImagesSequence(mCommonNetworkFetchToEncodedMemorySequence);
+            mProducerFactory.newResizeAndRotateProducer(
+                mCommonNetworkFetchToEncodedMemorySequence);
       }
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
@@ -339,9 +347,7 @@ public class ProducerSequenceFactory {
           mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
       ResizeAndRotateProducer resizeAndRotateProducer =
           mProducerFactory.newResizeAndRotateProducer(addImageTransformMetaDataProducer);
-      nextProducer =
-          mProducerFactory.newRemoveImageTransformMetaDataProducer(resizeAndRotateProducer);
-      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(nextProducer);
+      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(resizeAndRotateProducer);
     }
     return mDataFetchSequence;
   }
@@ -353,9 +359,8 @@ public class ProducerSequenceFactory {
    */
   private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToLocalTransformSequence(
       Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
-    Producer<CloseableReference<PooledByteBuffer>> nextProducerAfterDecode =
-        newEncodedCacheMultiplexToTranscodeSequence(nextProducer);
-    nextProducerAfterDecode = newLocalTransformationsSequence(nextProducerAfterDecode);
+    nextProducer = newEncodedCacheMultiplexToTranscodeSequence(nextProducer);
+    Producer<EncodedImage> nextProducerAfterDecode = newLocalTransformationsSequence(nextProducer);
     return newBitmapCacheGetToDecodeSequence(nextProducerAfterDecode);
   }
 
@@ -365,7 +370,7 @@ public class ProducerSequenceFactory {
    * @return bitmap cache get to decode sequence
    */
   private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToDecodeSequence(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     DecodeProducer decodeProducer = mProducerFactory.newDecodeProducer(nextProducer);
     return newBitmapCacheGetToBitmapCacheSequence(decodeProducer);
   }
@@ -403,44 +408,31 @@ public class ProducerSequenceFactory {
     return mProducerFactory.newBitmapMemoryCacheGetProducer(threadHandoffProducer);
   }
 
-  private Producer<CloseableReference<PooledByteBuffer>>
-      newResizeAndRotateImagesSequence(
-          Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
-    AddImageTransformMetaDataProducer addImageTransformMetaDataProducer =
-        ProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
-    ResizeAndRotateProducer networkImageResizeAndRotateProducer =
-        mProducerFactory.newResizeAndRotateProducer(addImageTransformMetaDataProducer);
-    return ProducerFactory.newRemoveImageTransformMetaDataProducer(
-            networkImageResizeAndRotateProducer);
-  }
-
   /**
-   * Remove image transform meta data -> branch on separate images
+   * Branch on separate images
    *   -> exif resize and rotate -> exif thumbnail creation
    *   -> local image resize and rotate -> add meta data producer
    * @param nextProducer next producer in the sequence after add meta data producer
    * @return local transformations sequence
    */
-  private Producer<CloseableReference<PooledByteBuffer>> newLocalTransformationsSequence(
+  private Producer<EncodedImage> newLocalTransformationsSequence(
       Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
     AddImageTransformMetaDataProducer addImageTransformMetaDataProducer =
         mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
     ResizeAndRotateProducer localImageResizeAndRotateProducer =
         mProducerFactory.newResizeAndRotateProducer(addImageTransformMetaDataProducer);
-    ThrottlingProducer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>>
+    ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(
-            MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE,
-            localImageResizeAndRotateProducer);
+                MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE,
+                localImageResizeAndRotateProducer);
     LocalExifThumbnailProducer localExifThumbnailProducer =
         mProducerFactory.newLocalExifThumbnailProducer();
     ResizeAndRotateProducer exifThumbnailResizeAndRotateProducer =
         mProducerFactory.newResizeAndRotateProducer(localExifThumbnailProducer);
-    BranchOnSeparateImagesProducer branchOnSeparateImagesProducer =
-        mProducerFactory.newBranchOnSeparateImagesProducer(
+    return mProducerFactory.newBranchOnSeparateImagesProducer(
             exifThumbnailResizeAndRotateProducer,
             localImageThrottlingProducer);
-    return mProducerFactory.newRemoveImageTransformMetaDataProducer(branchOnSeparateImagesProducer);
 
   }
 
