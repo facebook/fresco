@@ -17,17 +17,17 @@ import android.net.Uri;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.samples.comparison.Drawables;
-import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
-import com.facebook.samples.comparison.instrumentation.PerfListener;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.samples.comparison.Drawables;
+import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
+import com.facebook.samples.comparison.instrumentation.PerfListener;
 
 /** Populate the list view with images using the Fresco image pipeline. */
 public class FrescoAdapter extends ImageListAdapter<InstrumentedDraweeView> {
@@ -50,8 +50,8 @@ public class FrescoAdapter extends ImageListAdapter<InstrumentedDraweeView> {
     GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(getContext().getResources())
         .setPlaceholderImage(Drawables.sPlaceholderDrawable)
         .setFailureImage(Drawables.sErrorDrawable)
-        .setRoundingParams(RoundingParams.asCircle())
         .setProgressBarImage(new ProgressBarDrawable())
+        .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
         .build();
     return new InstrumentedDraweeView(getContext(), gdh);
   }

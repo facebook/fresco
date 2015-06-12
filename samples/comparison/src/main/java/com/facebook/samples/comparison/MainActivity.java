@@ -24,7 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -79,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
   private TextView mStatsDisplay;
   private Spinner mLoaderSelect;
   private Spinner mSourceSelect;
-  private ListView mImageList;
+  private GridView mImageGrid;
 
   private boolean mUseDrawee;
   private boolean mAllowAnimations;
@@ -124,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
     mPerfListener = new PerfListener();
 
     mStatsDisplay = (TextView) findViewById(R.id.stats_display);
-    mImageList = (ListView) findViewById(R.id.image_list);
+    mImageGrid = (GridView) findViewById(R.id.image_grid);
     mLoaderSelect = (Spinner) findViewById(R.id.loader_select);
     mLoaderSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
@@ -236,32 +236,32 @@ public class MainActivity extends ActionBarActivity {
       case FRESCO_OKHTTP_INDEX:
         mCurrentAdapter = new FrescoAdapter(
                 this,
-                R.id.image_list,
+                R.id.image_grid,
                 mPerfListener,
                 index == FRESCO_INDEX ?
                         ImagePipelineConfigFactory.getImagePipelineConfig(this) :
                         ImagePipelineConfigFactory.getOkHttpImagePipelineConfig(this));
         break;
       case GLIDE_INDEX:
-        mCurrentAdapter = new GlideAdapter(this, R.id.image_list, mPerfListener);
+        mCurrentAdapter = new GlideAdapter(this, R.id.image_grid, mPerfListener);
         break;
       case PICASSO_INDEX:
-        mCurrentAdapter = new PicassoAdapter(this, R.id.image_list, mPerfListener);
+        mCurrentAdapter = new PicassoAdapter(this, R.id.image_grid, mPerfListener);
         break;
       case UIL_INDEX:
-        mCurrentAdapter = new UilAdapter(this, R.id.image_list, mPerfListener);
+        mCurrentAdapter = new UilAdapter(this, R.id.image_grid, mPerfListener);
         break;
       case VOLLEY_INDEX:
         mCurrentAdapter = mUseDrawee ?
-                new VolleyDraweeAdapter(this, R.id.image_list, mPerfListener) :
-                new VolleyAdapter(this, R.id.image_list, mPerfListener);
+                new VolleyDraweeAdapter(this, R.id.image_grid, mPerfListener) :
+                new VolleyAdapter(this, R.id.image_grid, mPerfListener);
         break;
       default:
         mCurrentAdapter = null;
         return;
     }
 
-    mImageList.setAdapter(mCurrentAdapter);
+    mImageGrid.setAdapter(mCurrentAdapter);
     updateAdapter(mImageUrls);
 
     updateStats();

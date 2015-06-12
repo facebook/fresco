@@ -17,7 +17,7 @@ import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.view.Display;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.Spinner;
 
 import com.facebook.common.logging.FLog;
@@ -38,7 +38,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   private static final int WAIT_BEFORE_TEST_END_MS = 5000;
 
   private MainActivity mActivity;
-  private ListView mImageList;
+  private GridView mImageList;
   private Spinner mLoaderSelect;
   private Spinner mSourceSelect;
 
@@ -50,7 +50,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   public void setUp() throws Exception {
     super.setUp();
     mActivity = getActivity();
-    mImageList = (ListView) mActivity.findViewById(R.id.image_list);
+    mImageList = (GridView) mActivity.findViewById(R.id.image_grid);
     mLoaderSelect = (Spinner) mActivity.findViewById(R.id.loader_select);
     mSourceSelect = (Spinner) mActivity.findViewById(R.id.source_select);
     FLog.setMinimumLoggingLevel(FLog.INFO);

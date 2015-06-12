@@ -43,11 +43,16 @@
 
     </LinearLayout>
 
-  <ListView
-      android:id="@+id/image_list"
-      android:layout_width="wrap_content"
+  <GridView
+      android:id="@+id/image_grid"
+      android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
+      android:numColumns="auto_fit"
+      android:stretchMode="columnWidth"
+      android:columnWidth="90dp"
+      android:horizontalSpacing="10dp"
+      android:gravity="center"
       />
 
 </LinearLayout>
