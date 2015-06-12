@@ -44,6 +44,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
 
   private static final float MAX_BITMAP_SIZE = 2048f;
+  private static final float ROUNDUP_FRACTION = 2.0f/3;
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
@@ -224,7 +225,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   @VisibleForTesting static int roundNumerator(float maxRatio) {
-    return (int) (0.75f + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
+    return (int) (ROUNDUP_FRACTION + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
 
   private static int getScaleNumerator(ImageRequest imageRequest, EncodedImage encodedImage) {
