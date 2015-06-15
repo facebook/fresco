@@ -497,6 +497,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mFadeDrawable.setDrawable(mControllerOverlayIndex, drawable);
   }
 
+  public void setFadeDuration(int durationMs) {
+    mFadeDrawable.setTransitionDuration(durationMs);
+  }
+
   // Helper methods for accessing layers
 
   /**
