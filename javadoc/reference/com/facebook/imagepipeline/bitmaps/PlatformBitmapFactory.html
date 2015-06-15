@@ -497,7 +497,7 @@ Summary:
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>)">decodeFromPooledByteBuffer</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage)">decodeFromEncodedImage</a></span>(EncodedImage encodedImage)
         
         <div class="jd-descrdiv">Creates a bitmap from encoded bytes.</div>
   
@@ -515,7 +515,7 @@ Summary:
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, int)">decodeJPEGFromPooledByteBuffer</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, int length)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, int)">decodeJPEGFromEncodedImage</a></span>(EncodedImage encodedImage, int length)
         
         <div class="jd-descrdiv">Creates a bitmap from encoded JPEG bytes.</div>
   
@@ -937,7 +937,7 @@ From class
 </div>
 
 
-<a id="decodeFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>)"></a>
+<a id="decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -949,8 +949,8 @@ From class
          
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
-      <span class="sympad">decodeFromPooledByteBuffer</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef)</span>
+      <span class="sympad">decodeFromEncodedImage</span>
+      <span class="normal">(EncodedImage encodedImage)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -963,13 +963,13 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap from encoded bytes. Supports JPEG but callers should use
- <code><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, int)">decodeJPEGFromPooledByteBuffer(CloseableReference<PooledByteBuffer>, int)</a></code> for partial JPEGs.</p></div>
+ <code><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, int)">decodeJPEGFromEncodedImage(EncodedImage, int)</a></code> for partial JPEGs.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>pooledByteBufferRef</th>
-          <td>the reference to the encoded bytes</td>
+          <th>encodedImage</th>
+          <td>the reference to the encoded image with the reference to the encoded bytes</td>
         </tr>
       </table>
   </div>
@@ -996,7 +996,7 @@ From class
 </div>
 
 
-<a id="decodeJPEGFromPooledByteBuffer(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.memory.PooledByteBuffer>, int)"></a>
+<a id="decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1008,8 +1008,8 @@ From class
          
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
-      <span class="sympad">decodeJPEGFromPooledByteBuffer</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; pooledByteBufferRef, int length)</span>
+      <span class="sympad">decodeJPEGFromEncodedImage</span>
+      <span class="normal">(EncodedImage encodedImage, int length)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1026,8 +1026,8 @@ From class
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>pooledByteBufferRef</th>
-          <td>the reference to the encoded bytes</td>
+          <th>encodedImage</th>
+          <td>the reference to the encoded image with the reference to the encoded bytes</td>
         </tr>
         <tr>
           <th>length</th>

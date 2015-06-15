@@ -8798,7 +8798,7 @@
 <parameter name="height" type="int">
 </parameter>
 </method>
-<method name="decodeFromPooledByteBuffer"
+<method name="decodeFromEncodedImage"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
  abstract="false"
  native="false"
@@ -8808,10 +8808,10 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 </method>
-<method name="decodeJPEGFromPooledByteBuffer"
+<method name="decodeJPEGFromEncodedImage"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
  abstract="false"
  native="false"
@@ -8821,7 +8821,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 <parameter name="length" type="int">
 </parameter>
@@ -10588,7 +10588,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 <parameter name="options" type="com.facebook.imagepipeline.common.ImageDecodeOptions">
 </parameter>
@@ -10603,7 +10603,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 <parameter name="options" type="com.facebook.imagepipeline.common.ImageDecodeOptions">
 </parameter>
@@ -10618,9 +10618,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
-</parameter>
-<parameter name="imageFormat" type="com.facebook.imageformat.ImageFormat">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 <parameter name="length" type="int">
 </parameter>
@@ -10639,7 +10637,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 <parameter name="length" type="int">
 </parameter>
@@ -10656,7 +10654,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 </method>
 </class>
