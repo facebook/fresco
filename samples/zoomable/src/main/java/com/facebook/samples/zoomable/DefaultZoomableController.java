@@ -35,6 +35,7 @@ public class DefaultZoomableController
   private boolean mIsTranslationEnabled = true;
 
   private float mMinScaleFactor = 1.0f;
+  private float mMaxScaleFactor = 3.f;
 
   private final RectF mViewBounds = new RectF();
   private final RectF mImageBounds = new RectF();
@@ -120,6 +121,16 @@ public class DefaultZoomableController
   @Override
   public void setViewBounds(RectF viewBounds) {
     mViewBounds.set(viewBounds);
+  }
+
+  /** Sets the minimum scale factor */
+  public void setMinScaleFactor(float scale) {
+    mMinScaleFactor = scale;
+  }
+
+  /** Sets the max scale factor */
+  public void setMaxScaleFactor(float scale) {
+    mMaxScaleFactor = scale;
   }
 
   /**
@@ -242,6 +253,9 @@ public class DefaultZoomableController
     float currentScale = getScaleFactor();
     if (currentScale < mMinScaleFactor) {
       float scale = mMinScaleFactor / currentScale;
+      mActiveTransform.postScale(scale, scale, pivotX, pivotY);
+    } else if (currentScale > mMaxScaleFactor) {
+      float scale = mMaxScaleFactor / currentScale;
       mActiveTransform.postScale(scale, scale, pivotX, pivotY);
     }
   }
