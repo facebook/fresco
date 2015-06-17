@@ -40,11 +40,6 @@ public class EncodedImage implements Closeable {
   private final int mHeight;
 
   public EncodedImage(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
-    this(pooledByteBufferRef, ImageFormat.UNKNOWN);
-  }
-
-  public EncodedImage(
       CloseableReference<PooledByteBuffer> pooledByteBufferRef,
       ImageFormat imageFormat) {
     this(pooledByteBufferRef, imageFormat, UNKNOWN_ROTATION_ANGLE, UNKNOWN_WIDTH, UNKNOWN_HEIGHT);

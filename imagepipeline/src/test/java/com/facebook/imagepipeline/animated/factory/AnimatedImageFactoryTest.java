@@ -16,6 +16,7 @@ import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
@@ -103,7 +104,7 @@ public class AnimatedImageFactoryTest {
         .thenReturn(mockWebPImage);
 
     EncodedImage encodedImage = new EncodedImage(
-        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER), ImageFormat.UNKNOWN);
 
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
@@ -150,7 +151,7 @@ public class AnimatedImageFactoryTest {
         .setDecodePreviewFrame(true)
         .build();
     EncodedImage encodedImage = new EncodedImage(
-        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER), ImageFormat.UNKNOWN);
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
             encodedImage,
@@ -206,7 +207,7 @@ public class AnimatedImageFactoryTest {
         .build();
 
     EncodedImage encodedImage = new EncodedImage(
-        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER), ImageFormat.UNKNOWN);
 
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(

@@ -27,6 +27,7 @@ import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -97,7 +98,7 @@ public class ArtBitmapFactoryTest {
     mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool);
 
     mByteBufferRef = CloseableReference.of(mPooledByteBuffer);
-    mEncodedImage = new EncodedImage(mByteBufferRef);
+    mEncodedImage = new EncodedImage(mByteBufferRef, ImageFormat.UNKNOWN);
     mBitmap = MockBitmapFactory.create();
     doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_PIXELS);
 

@@ -19,6 +19,7 @@ import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
@@ -104,7 +105,7 @@ public class DalvikBitmapFactoryTest {
     mInputBuf = new byte[LENGTH];
     PooledByteBuffer input = new TrivialPooledByteBuffer(mInputBuf, POINTER);
     mByteBufferRef = CloseableReference.of(input);
-    mEncodedImage = new EncodedImage(mByteBufferRef);
+    mEncodedImage = new EncodedImage(mByteBufferRef, ImageFormat.UNKNOWN);
 
     mDecodeBuf = new byte[LENGTH + 2];
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));
