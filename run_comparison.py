@@ -48,6 +48,14 @@ TEST_SOURCES = (
     'local'
 )
 
+ABIS = (
+    'arm64-v8a',
+    'armeabi',
+    'armeabi-v7a',
+    'x86',
+    'x86_64'
+)
+
 """ Appends test class name to method name """
 TEST_PATTERN = 'test{}{}'
 
@@ -66,6 +74,7 @@ def parse_args():
         description='Runs comparison test and processes results')
     parser.add_argument('-s', '--scenarios', choices=TESTS, nargs='+')
     parser.add_argument('-d', '--sources', choices=TEST_SOURCES, nargs='+')
+    parser.add_argument('-c', '--cpu', choices=ABIS)
     return parser.parse_args()
 
 
@@ -92,11 +101,16 @@ def adb(command):
     run_command('adb {}'.format(command))
 
 
-def install_apks():
+def install_apks(abi):
     """ Installs comparison app and test apks """
     print("Installing comparison app...")
-    gradle(':samples:comparison:installDebug',
-           ':samples:comparison:installDebugAndroidTest')
+    gradle(':samples:comparison:assembleDebug',
+           ':samples:comparison:assembleDebugAndroidTest')
+    cmd = ('install -r samples/comparison/build/outputs/apk/comparison-'
+           '{}-debug.apk'.format(abi))
+    adb(cmd)
+    adb('install -r samples/comparison/build/outputs/apk/'
+        'comparison-debug-androidTest-unaligned.apk')
 
 
 class ComparisonTest:
@@ -213,7 +227,7 @@ def main():
     else:
         sources = TEST_SOURCES
 
-    install_apks()
+    install_apks(args.cpu)
 
     for scenario_name in scenarios:
         for source_name in sources:
