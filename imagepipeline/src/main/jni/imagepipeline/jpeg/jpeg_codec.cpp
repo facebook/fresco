@@ -64,7 +64,7 @@ static void writeMetadata(
     jpeg_compress_struct& cinfo,
     const DecodedImage& decoded_image) {
 
-  const int metadata_length = decoded_image.getMetadataLength();
+  const unsigned metadata_length = decoded_image.getMetadataLength();
   if (metadata_length == 0 || metadata_length > JPEG_METADATA_LIMIT) {
     return;
   }
@@ -146,14 +146,15 @@ void encodeJpegIntoOutputStream(
  */
 JXFORM_CODE getTransformForRotationType(RotationType rotation_type) {
   switch (rotation_type) {
-  case RotationType::ROTATE_0:
-    return JXFORM_NONE;
   case RotationType::ROTATE_90:
     return JXFORM_ROT_90;
   case RotationType::ROTATE_180:
     return JXFORM_ROT_180;
   case RotationType::ROTATE_270:
     return JXFORM_ROT_270;
+  case RotationType::ROTATE_0:
+  default:
+    return JXFORM_NONE;
   }
 }
 
