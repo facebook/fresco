@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
 
+import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.cache.common.CacheKey;
@@ -20,7 +21,8 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Multiplex producer that uses the encoded cache key to combine requests.
  */
 public class EncodedCacheKeyMultiplexProducer extends
-    MultiplexProducer<Pair<CacheKey, ImageRequest.RequestLevel>, PooledByteBuffer> {
+    MultiplexProducer<Pair<CacheKey, ImageRequest.RequestLevel>,
+        CloseableReference<PooledByteBuffer>> {
 
   private final CacheKeyFactory mCacheKeyFactory;
 
@@ -33,5 +35,10 @@ public class EncodedCacheKeyMultiplexProducer extends
     return Pair.create(
         mCacheKeyFactory.getEncodedCacheKey(producerContext.getImageRequest()),
         producerContext.getLowestPermittedRequestLevel());
+  }
+
+  public CloseableReference<PooledByteBuffer> cloneOrNull(
+      CloseableReference<PooledByteBuffer> ref) {
+    return CloseableReference.cloneOrNull(ref);
   }
 }
