@@ -35,6 +35,7 @@ public class DefaultZoomableController
   private boolean mIsTranslationEnabled = true;
 
   private float mMinScaleFactor = 1.0f;
+  private float mMaxScaleFactor = Float.POSITIVE_INFINITY;
 
   private final RectF mViewBounds = new RectF();
   private final RectF mImageBounds = new RectF();
@@ -110,16 +111,56 @@ public class DefaultZoomableController
     return  mIsTranslationEnabled;
   }
 
+  /** Gets the image bounds before zoomable transformation is applied. */
+  public RectF getImageBounds() {
+    return mImageBounds;
+  }
+
   /** Sets the image bounds before zoomable transformation is applied. */
   @Override
   public void setImageBounds(RectF imageBounds) {
     mImageBounds.set(imageBounds);
   }
 
+  /** Gets the view bounds. */
+  public RectF getViewBounds() {
+    return mViewBounds;
+  }
+
   /** Sets the view bounds. */
   @Override
   public void setViewBounds(RectF viewBounds) {
     mViewBounds.set(viewBounds);
+  }
+
+  /** Gets the minimum scale factor allowed. */
+  public float getMinScaleFactor() {
+    return mMinScaleFactor;
+  }
+
+  /**
+   * Sets the minimum scale factor allowed.
+   * <p>
+   * Note that the hierarchy performs scaling as well, which
+   * is not accounted here, so the actual scale factor may differ.
+   */
+  public void setMinScaleFactor(float minScaleFactor) {
+    mMinScaleFactor = minScaleFactor;
+  }
+
+  /** Gets the maximum scale factor allowed. */
+  public float getMaxScaleFactor() {
+    return mMaxScaleFactor;
+  }
+
+  /**
+   * Sets the maximum scale factor allowed.
+   * <p>
+   * Note that the hierarchy performs scaling as well, which
+   * is not accounted here, so the actual scale factor may differ.
+   */
+  public void setMaxScaleFactor(float maxScaleFactor) {
+    mMaxScaleFactor = maxScaleFactor;
   }
 
   /**
@@ -190,6 +231,16 @@ public class DefaultZoomableController
     return mActiveTransform;
   }
 
+  /**
+   * Sets the zoomable transformation. Cancels the current gesture if one is happening.
+   */
+  public void setTransform(Matrix activeTransform) {
+    if (mGestureDetector.isGestureInProgress()) {
+      mGestureDetector.reset();
+    }
+    mActiveTransform.set(activeTransform);
+  }
+
   /** Notifies controller of the received touch event.  */
   @Override
   public boolean onTouchEvent(MotionEvent event) {
@@ -199,10 +250,37 @@ public class DefaultZoomableController
     return false;
   }
 
+  /**
+   * Zooms to the desired scale and positions the view so that imagePoint is in the center.
+   * <p>
+   * It might not be possible to center imagePoint (= a corner for e.g.), in those cases the view
+   * will be adjusted so that there are no black bars in it.
+   * Resets any previous transform and cancels the current gesture if one is happening.
+   *
+   * @param scale desired scale, will be limited to {min, max} scale factor
+   * @param imagePoint 2D point in image's relative coordinate system (i.e. 0 <= x, y <= 1)
+   */
+  public void zoomToImagePoint(float scale, PointF imagePoint) {
+    if (mGestureDetector.isGestureInProgress()) {
+      mGestureDetector.reset();
+    }
+    scale = limit(scale, mMinScaleFactor, mMaxScaleFactor);
+    float[] points = mTempValues;
+    points[0] = imagePoint.x;
+    points[1] = imagePoint.y;
+    mapRelativeToAbsolute(points, points, 1);
+    mActiveTransform.setScale(scale, scale, points[0], points[1]);
+    mActiveTransform.postTranslate(
+        mViewBounds.centerX() - points[0],
+        mViewBounds.centerY() - points[1]);
+    limitTranslation();
+  }
+
   /* TransformGestureDetector.Listener methods  */
 
   @Override
   public void onGestureBegin(TransformGestureDetector detector) {
+    mPreviousTransform.set(mActiveTransform);
   }
 
   @Override
@@ -220,7 +298,9 @@ public class DefaultZoomableController
     if (mIsTranslationEnabled) {
       mActiveTransform.postTranslate(detector.getTranslationX(), detector.getTranslationY());
     }
-    limitTranslation();
+    if (limitTranslation()) {
+      mGestureDetector.restartGesture();
+    }
     if (mListener != null) {
       mListener.onTransformChanged(mActiveTransform);
     }
@@ -240,13 +320,19 @@ public class DefaultZoomableController
 
   private void limitScale(float pivotX, float pivotY) {
     float currentScale = getScaleFactor();
-    if (currentScale < mMinScaleFactor) {
-      float scale = mMinScaleFactor / currentScale;
+    float targetScale = limit(currentScale, mMinScaleFactor, mMaxScaleFactor);
+    if (targetScale != currentScale) {
+      float scale = targetScale / currentScale;
       mActiveTransform.postScale(scale, scale, pivotX, pivotY);
     }
   }
 
-  private void limitTranslation() {
+  /**
+   * Keeps the view inside the image if possible, if not (i.e. image is smaller than view)
+   * centers the image.
+   * @return whether adjustments were needed or not
+   */
+  private boolean limitTranslation() {
     RectF bounds = mTransformedImageBounds;
     bounds.set(mImageBounds);
     mActiveTransform.mapRect(bounds);
@@ -255,8 +341,9 @@ public class DefaultZoomableController
     float offsetTop = getOffset(bounds.top, bounds.height(), mViewBounds.height());
     if (offsetLeft != bounds.left || offsetTop != bounds.top) {
       mActiveTransform.postTranslate(offsetLeft - bounds.left, offsetTop - bounds.top);
-      mGestureDetector.restartGesture();
+      return true;
     }
+    return false;
   }
 
   private float getOffset(float offset, float imageDimension, float viewDimension) {
