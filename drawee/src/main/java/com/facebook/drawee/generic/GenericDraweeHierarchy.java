@@ -11,6 +11,7 @@ package com.facebook.drawee.generic;
 
 import javax.annotation.Nullable;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -89,12 +90,12 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
  */
 public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
-  private static class RootFadeDrawable extends FadeDrawable implements VisibilityAwareDrawable {
+  public static class RootDrawable extends ForwardingDrawable implements VisibilityAwareDrawable {
     @Nullable
     private VisibilityCallback mVisibilityCallback;
 
-    public RootFadeDrawable(Drawable[] layers) {
-      super(layers);
+    public RootDrawable(Drawable drawable) {
+      super(drawable);
     }
 
     @Override
@@ -120,6 +121,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       return super.setVisible(visible, restart);
     }
 
+    @SuppressLint("WrongCall")
     @Override
     public void draw(Canvas canvas) {
       if (!isVisible()) {
@@ -138,7 +140,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private final Resources mResources;
 
-  private final SettableDrawable mTopLevelDrawable;
+  private final RootDrawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
   private final SettableDrawable mActualImageSettableDrawable;
 
@@ -272,18 +274,16 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       layers[mControllerOverlayIndex] = mEmptyControllerOverlayDrawable;
     }
 
-    Drawable root;
-
     // fade drawable composed of branches
-    mFadeDrawable = new RootFadeDrawable(layers);
+    mFadeDrawable = new FadeDrawable(layers);
     mFadeDrawable.setTransitionDuration(builder.getFadeDuration());
-    root = mFadeDrawable;
 
     // rounded corners drawable (optional)
-    root = maybeWrapWithRoundedOverlayColor(mRoundingParams, root);
+    Drawable maybeRoundedDrawable =
+        maybeWrapWithRoundedOverlayColor(mRoundingParams, mFadeDrawable);
 
     // top-level drawable
-    mTopLevelDrawable = new SettableDrawable(root);
+    mTopLevelDrawable = new RootDrawable(maybeRoundedDrawable);
     mTopLevelDrawable.mutate();
 
     resetFade();
