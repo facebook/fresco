@@ -19,7 +19,6 @@ import android.net.Uri;
 import com.facebook.drawee.backends.volley.VolleyDraweeControllerBuilderSupplier;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.samples.comparison.Drawables;
 import com.facebook.samples.comparison.configs.volley.SampleVolleyFactory;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
@@ -47,7 +46,6 @@ public class VolleyDraweeAdapter extends ImageListAdapter<InstrumentedDraweeView
     GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(getContext().getResources())
         .setPlaceholderImage(Drawables.sPlaceholderDrawable)
         .setFailureImage(Drawables.sErrorDrawable)
-        .setRoundingParams(RoundingParams.asCircle())
         .build();
     InstrumentedDraweeView view = new InstrumentedDraweeView(getContext());
     view.setHierarchy(gdh);
