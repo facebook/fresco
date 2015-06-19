@@ -160,7 +160,7 @@ public class ImagePipelineConfig {
         new EmptyJpegGenerator(mPoolFactory.getPooledByteBufferFactory()),
         mPoolFactory.getSharedByteArray());
     ArtBitmapFactory factoryLollipop =
-        new ArtBitmapFactory(mPoolFactory.getBitmapPool());
+        new ArtBitmapFactory(mPoolFactory.getBitmapPool(), 1);
     mPlatformBitmapFactory =
         new PlatformBitmapFactory(
             factoryGingerbread,

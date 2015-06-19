@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Random;
@@ -84,7 +85,7 @@ public class ArtBitmapFactoryTest {
   public Answer<Bitmap> mBitmapFactoryDefaultAnswer;
   private EncodedImage mEncodedImage;
   private byte[] mEncodedBytes;
-
+  private byte[] mTempStorage;
 
   @Before
   public void setUp() throws Exception {
@@ -95,7 +96,7 @@ public class ArtBitmapFactoryTest {
 
     mPooledByteBuffer = new TrivialPooledByteBuffer(mEncodedBytes);
     mBitmapPool = mock(BitmapPool.class);
-    mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool);
+    mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool, 1);
 
     mByteBufferRef = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mByteBufferRef, ImageFormat.UNKNOWN);
@@ -112,8 +113,12 @@ public class ArtBitmapFactoryTest {
         return options.inJustDecodeBounds ? null : mBitmap;
       }
     };
-
     whenBitmapFactoryDecodeStream().thenAnswer(mBitmapFactoryDefaultAnswer);
+
+    ByteBuffer buf = mArtBitmapFactory.mDecodeBuffers.acquire();
+    mTempStorage = buf.array();
+    mArtBitmapFactory.mDecodeBuffers.release(buf);
+
   }
 
   @Test
@@ -217,12 +222,12 @@ public class ArtBitmapFactoryTest {
   }
 
   private void verifyBitmapFactoryOptions(BitmapFactory.Options options) {
-    assertNotNull(options.inTempStorage);
     if (!options.inJustDecodeBounds) {
       assertTrue(options.inDither);
       assertTrue(options.inMutable);
       assertSame(Bitmaps.BITMAP_CONFIG, options.inPreferredConfig);
       assertNotNull(options.inBitmap);
+      assertSame(mTempStorage, options.inTempStorage);
       final int inBitmapWidth = options.inBitmap.getWidth();
       final int inBitmapHeight = options.inBitmap.getHeight();
       assertTrue(inBitmapWidth * inBitmapHeight >= MockBitmapFactory.DEFAULT_BITMAP_PIXELS);
