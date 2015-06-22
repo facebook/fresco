@@ -17,7 +17,7 @@ import com.facebook.common.logging.FLog;
  * A simple wrapper around an image that implements {@link Closeable}
  */
 public abstract class CloseableImage implements Closeable, ImageInfo {
-  private static final Class<?> TAG = CloseableImage.class;
+  private static final String TAG = "CloseableImage";
 
   /**
    * @return size in bytes of the bitmap(s)
@@ -63,7 +63,8 @@ public abstract class CloseableImage implements Closeable, ImageInfo {
     }
     FLog.w(
         TAG,
-        "finalize: CloseableImage %x still open.",
+        "finalize: %s %x still open.",
+        this.getClass().getSimpleName(),
         System.identityHashCode(this));
     try {
       close();
