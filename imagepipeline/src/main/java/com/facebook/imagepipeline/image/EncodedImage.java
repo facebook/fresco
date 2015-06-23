@@ -200,11 +200,9 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Only valid the image format is JPEG.
-   * @return true if all the image information has loaded, false otherwise.
+   * Returns true if all the image information has loaded, false otherwise.
    */
-  public static boolean isJpegMetaDataAvailable(EncodedImage encodedImage) {
-    Preconditions.checkArgument(encodedImage.getImageFormat() == ImageFormat.JPEG);
+  public static boolean isMetaDataAvailable(EncodedImage encodedImage) {
     return encodedImage.mRotationAngle >= 0
         && encodedImage.mWidth >= 0
         && encodedImage.mHeight >= 0;
