@@ -11,7 +11,9 @@ package com.facebook.imagepipeline.image;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.SharedReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
@@ -225,5 +227,15 @@ public class EncodedImage implements Closeable {
    */
   public static boolean isValid(@Nullable EncodedImage encodedImage) {
     return encodedImage != null && encodedImage.isValid();
+  }
+
+  /**
+   * A test-only method to get the underlying references.
+   *
+   * <p><b>DO NOT USE in application code.</b>
+   */
+  @VisibleForTesting
+  public synchronized SharedReference<PooledByteBuffer> getUnderlyingReferenceTestOnly() {
+    return mPooledByteBufferRef.getUnderlyingReferenceTestOnly();
   }
 }

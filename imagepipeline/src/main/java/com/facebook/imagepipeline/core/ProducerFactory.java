@@ -113,7 +113,7 @@ public class ProducerFactory {
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     return new AddImageTransformMetaDataProducer(nextProducer);
   }
 
@@ -152,7 +152,7 @@ public class ProducerFactory {
   }
 
   public DiskCacheProducer newDiskCacheProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     return new DiskCacheProducer(
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
@@ -161,12 +161,12 @@ public class ProducerFactory {
   }
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, nextProducer);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     return new EncodedMemoryCacheProducer(mEncodedMemoryCache, mCacheKeyFactory, nextProducer);
   }
 
@@ -248,7 +248,7 @@ public class ProducerFactory {
   }
 
   public WebpTranscodeProducer newWebpTranscodeProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     return new WebpTranscodeProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,

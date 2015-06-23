@@ -14,7 +14,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 
 import com.facebook.common.logging.FLog;
-import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.BaseNetworkFetcher;
 import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
@@ -45,7 +45,7 @@ public class OkHttpNetworkFetcher extends
     public long fetchCompleteTime;
 
     public OkHttpNetworkFetchState(
-        Consumer<CloseableReference<PooledByteBuffer>> consumer,
+        Consumer<EncodedImage> consumer,
         ProducerContext producerContext) {
       super(consumer, producerContext);
     }
@@ -71,7 +71,7 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public OkHttpNetworkFetchState createFetchState(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
+      Consumer<EncodedImage> consumer,
       ProducerContext context) {
     return new OkHttpNetworkFetchState(consumer, context);
   }

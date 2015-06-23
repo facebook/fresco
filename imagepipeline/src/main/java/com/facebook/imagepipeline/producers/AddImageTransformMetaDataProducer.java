@@ -11,13 +11,13 @@ package com.facebook.imagepipeline.producers;
 
 import android.graphics.Rect;
 
-import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imageutils.JfifUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Add image transform meta data producer
@@ -26,10 +26,9 @@ import com.facebook.imageutils.JfifUtil;
  * result that it returns to the consumer.
  */
 public class AddImageTransformMetaDataProducer implements Producer<EncodedImage> {
-  private final Producer<CloseableReference<PooledByteBuffer>> mNextProducer;
+  private final Producer<EncodedImage> mNextProducer;
 
-  public AddImageTransformMetaDataProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+  public AddImageTransformMetaDataProducer(Producer<EncodedImage> nextProducer) {
     mNextProducer = nextProducer;
   }
 
@@ -39,42 +38,35 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
   }
 
   private static class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
-      CloseableReference<PooledByteBuffer>, EncodedImage> {
+      EncodedImage, EncodedImage> {
 
     private AddImageTransformMetaDataConsumer(Consumer<EncodedImage> consumer) {
       super(consumer);
     }
 
     @Override
-    protected void onNewResultImpl(
-        CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
+    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       if (newResult == null) {
         getConsumer().onNewResult(null, isLast);
         return;
       }
-      EncodedImage encodedImage = getEncodedImage(newResult);
-      try {
-        getConsumer().onNewResult(encodedImage, isLast);
-      } finally {
-        EncodedImage.closeSafely(encodedImage);
-      }
+      EncodedImage encodedImage = setEncodedImageMetaData(newResult);
+      getConsumer().onNewResult(encodedImage, isLast);
     }
   }
 
-  // Gets the encoded image with the dimensions set if that information is available.
-  private static EncodedImage getEncodedImage(CloseableReference<PooledByteBuffer> bytesRef) {
+  // Returns the encoded image with the dimensions set if that information is available.
+  private static EncodedImage setEncodedImageMetaData(EncodedImage encodedImage) {
     final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-        new PooledByteBufferInputStream(bytesRef.get()));
-    EncodedImage encodedImage = new EncodedImage(bytesRef);
+        encodedImage.getInputStream());
     encodedImage.setImageFormat(imageFormat);
     if (imageFormat == ImageFormat.JPEG) {
-      Rect dimensions =
-          JfifUtil.getDimensions(new PooledByteBufferInputStream(bytesRef.get()));
+      Rect dimensions = JfifUtil.getDimensions(encodedImage.getInputStream());
       if (dimensions != null) {
         // We don't know for sure that the rotation angle is set at this point. But it might
         // never get set, so let's assume that if we've got the dimensions then we've got the
         // rotation angle, else we'll never propagate intermediate results.
-        encodedImage.setRotationAngle(getRotationAngle(bytesRef));
+        encodedImage.setRotationAngle(getRotationAngle(encodedImage));
         encodedImage.setWidth(dimensions.width());
         encodedImage.setHeight(dimensions.height());
       }
@@ -83,8 +75,18 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
   }
 
   // Gets the correction angle based on the image's orientation
-  private static int getRotationAngle(final CloseableReference<PooledByteBuffer> inputRef) {
-    return JfifUtil.getAutoRotateAngleFromOrientation(
-        JfifUtil.getOrientation(new PooledByteBufferInputStream(inputRef.get())));
+  private static int getRotationAngle(final EncodedImage encodedImage) {
+    InputStream is = encodedImage.getInputStream();
+    try {
+      return JfifUtil.getAutoRotateAngleFromOrientation(JfifUtil.getOrientation(is));
+    } finally {
+      if (is != null) {
+        try {
+          is.close();
+        } catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
+      }
+    }
   }
 }

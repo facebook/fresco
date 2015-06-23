@@ -226,7 +226,7 @@ public class ProducerSequenceFactory {
    */
   private synchronized Producer<EncodedImage> getCommonNetworkFetchToEncodedMemorySequence() {
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer =
+      Producer<EncodedImage> nextProducer =
           newEncodedCacheMultiplexToTranscodeSequence(
               mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
       mCommonNetworkFetchToEncodedMemorySequence =
@@ -338,8 +338,7 @@ public class ProducerSequenceFactory {
    */
   private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
     if (mDataFetchSequence == null) {
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer =
-          mProducerFactory.newDataFetchProducer();
+      Producer<EncodedImage> nextProducer = mProducerFactory.newDataFetchProducer();
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
         nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
       }
@@ -358,7 +357,7 @@ public class ProducerSequenceFactory {
    * @return the new sequence
    */
   private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToLocalTransformSequence(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     nextProducer = newEncodedCacheMultiplexToTranscodeSequence(nextProducer);
     Producer<EncodedImage> nextProducerAfterDecode = newLocalTransformationsSequence(nextProducer);
     return newBitmapCacheGetToDecodeSequence(nextProducerAfterDecode);
@@ -380,9 +379,8 @@ public class ProducerSequenceFactory {
    * @param nextProducer next producer in the sequence
    * @return encoded cache multiplex to webp transcode sequence
    */
-  private Producer<CloseableReference<PooledByteBuffer>>
-      newEncodedCacheMultiplexToTranscodeSequence(
-          Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+  private Producer<EncodedImage> newEncodedCacheMultiplexToTranscodeSequence(
+          Producer<EncodedImage> nextProducer) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
       nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
     }
@@ -416,7 +414,7 @@ public class ProducerSequenceFactory {
    * @return local transformations sequence
    */
   private Producer<EncodedImage> newLocalTransformationsSequence(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     AddImageTransformMetaDataProducer addImageTransformMetaDataProducer =
         mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
     ResizeAndRotateProducer localImageResizeAndRotateProducer =

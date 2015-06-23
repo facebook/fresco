@@ -19,8 +19,8 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
@@ -33,39 +33,34 @@ import com.facebook.imagepipeline.nativecode.WebpTranscoder;
  * case prior to version 4.2.1.
  * <p> If the image is not WebP, no transformation is applied.
  */
-public class WebpTranscodeProducer implements Producer<CloseableReference<PooledByteBuffer>> {
+public class WebpTranscodeProducer implements Producer<EncodedImage> {
   private static final String PRODUCER_NAME = "WebpTranscodeProducer";
   private static final int DEFAULT_JPEG_QUALITY = 80;
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final Producer<CloseableReference<PooledByteBuffer>> mNextProducer;
+  private final Producer<EncodedImage> mNextProducer;
 
   public WebpTranscodeProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mNextProducer = Preconditions.checkNotNull(nextProducer);
   }
 
   @Override
-  public void produceResults(
-      final Consumer<CloseableReference<PooledByteBuffer>> consumer,
-      final ProducerContext context) {
+  public void produceResults(final Consumer<EncodedImage> consumer, final ProducerContext context) {
     mNextProducer.produceResults(new WebpTranscodeConsumer(consumer, context), context);
   }
 
-  private class WebpTranscodeConsumer extends DelegatingConsumer<
-      CloseableReference<PooledByteBuffer>,
-      CloseableReference<PooledByteBuffer>> {
-
+  private class WebpTranscodeConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
     private final ProducerContext mContext;
     private TriState mShouldTranscodeWhenFinished;
 
     public WebpTranscodeConsumer(
-        final Consumer<CloseableReference<PooledByteBuffer>> consumer,
+        final Consumer<EncodedImage> consumer,
         final ProducerContext context) {
       super(consumer);
       mContext = context;
@@ -73,9 +68,7 @@ public class WebpTranscodeProducer implements Producer<CloseableReference<Pooled
     }
 
     @Override
-    protected void onNewResultImpl(
-        @Nullable CloseableReference<PooledByteBuffer> newResult,
-        boolean isLast) {
+    protected void onNewResultImpl(@Nullable EncodedImage newResult, boolean isLast) {
       // try to determine if the last result should be transformed
       if (mShouldTranscodeWhenFinished == TriState.UNSET && newResult != null) {
         mShouldTranscodeWhenFinished = shouldTranscode(newResult);
@@ -98,58 +91,64 @@ public class WebpTranscodeProducer implements Producer<CloseableReference<Pooled
   }
 
   private void transcodeLastResult(
-      final CloseableReference<PooledByteBuffer> originalResult,
-      final Consumer<CloseableReference<PooledByteBuffer>> consumer,
+      final EncodedImage originalResult,
+      final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
     Preconditions.checkNotNull(originalResult);
-    final CloseableReference<PooledByteBuffer> imageRefCopy = originalResult.clone();
-    final StatefulProducerRunnable<CloseableReference<PooledByteBuffer>> runnable =
-        new StatefulProducerRunnable<CloseableReference<PooledByteBuffer>>(
+    final EncodedImage encodedImageCopy = EncodedImage.cloneOrNull(originalResult);
+    final StatefulProducerRunnable<EncodedImage> runnable =
+        new StatefulProducerRunnable<EncodedImage>(
             consumer,
             producerContext.getListener(),
             PRODUCER_NAME,
             producerContext.getId()) {
           @Override
-          protected CloseableReference<PooledByteBuffer> getResult() throws Exception {
+          protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
             try {
-              doTranscode(imageRefCopy, outputStream);
-              return CloseableReference.of(outputStream.toByteBuffer());
+              doTranscode(encodedImageCopy, outputStream);
+              CloseableReference<PooledByteBuffer> ref =
+                  CloseableReference.of(outputStream.toByteBuffer());
+              try {
+                return new EncodedImage(ref);
+              } finally {
+                CloseableReference.closeSafely(ref);
+              }
             } finally {
               outputStream.close();
             }
           }
 
           @Override
-          protected void disposeResult(CloseableReference<PooledByteBuffer> result) {
-            CloseableReference.closeSafely(result);
+          protected void disposeResult(EncodedImage result) {
+            EncodedImage.closeSafely(result);
           }
 
           @Override
-          protected void onSuccess(CloseableReference<PooledByteBuffer> result) {
-            imageRefCopy.close();
+          protected void onSuccess(EncodedImage result) {
+            EncodedImage.closeSafely(encodedImageCopy);
             super.onSuccess(result);
           }
 
           @Override
           protected void onFailure(Exception e) {
-            imageRefCopy.close();
+            EncodedImage.closeSafely(encodedImageCopy);
             super.onFailure(e);
           }
 
           @Override
           protected void onCancellation() {
-            imageRefCopy.close();
+            EncodedImage.closeSafely(encodedImageCopy);
             super.onCancellation();
           }
         };
     mExecutor.execute(runnable);
   }
 
-  private static TriState shouldTranscode(final CloseableReference<PooledByteBuffer> imageRef) {
-    Preconditions.checkNotNull(imageRef);
-    InputStream imageInputStream = new PooledByteBufferInputStream(imageRef.get());
-    ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
+  private static TriState shouldTranscode(final EncodedImage encodedImage) {
+    Preconditions.checkNotNull(encodedImage);
+    ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+        encodedImage.getInputStream());
     switch (imageFormat) {
       case WEBP_SIMPLE:
       case WEBP_LOSSLESS:
@@ -167,9 +166,9 @@ public class WebpTranscodeProducer implements Producer<CloseableReference<Pooled
   }
 
   private static void doTranscode(
-      final CloseableReference<PooledByteBuffer> imageRef,
+      final EncodedImage encodedImage,
       final PooledByteBufferOutputStream outputStream) throws Exception {
-    InputStream imageInputStream = new PooledByteBufferInputStream(imageRef.get());
+    InputStream imageInputStream = encodedImage.getInputStream();
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
     switch (imageFormat) {
       case WEBP_SIMPLE:

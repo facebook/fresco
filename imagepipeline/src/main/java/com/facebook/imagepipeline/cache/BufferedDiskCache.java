@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteStreams;
 import com.facebook.binaryresource.BinaryResource;
@@ -70,13 +70,13 @@ public class BufferedDiskCache {
    * @return ListenableFuture that resolves to cached element or null if one cannot be retrieved;
    *   returned future never rethrows any exception
    */
-  public Task<CloseableReference<PooledByteBuffer>> get(
+  public Task<EncodedImage> get(
       final CacheKey key,
       final AtomicBoolean isCancelled) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(isCancelled);
 
-    final CloseableReference<PooledByteBuffer> pinnedImage = mStagingArea.get(key);
+    final EncodedImage pinnedImage = mStagingArea.get(key);
     if (pinnedImage != null) {
       FLog.v(TAG, "Found image for %s in staging area", key.toString());
       mImageCacheStatsTracker.onStagingAreaHit();
@@ -85,14 +85,14 @@ public class BufferedDiskCache {
 
     try {
       return Task.call(
-          new Callable<CloseableReference<PooledByteBuffer>>() {
+          new Callable<EncodedImage>() {
             @Override
-            public CloseableReference<PooledByteBuffer> call()
+            public EncodedImage call()
                 throws Exception {
               if (isCancelled.get()) {
                 throw new CancellationException();
               }
-              CloseableReference<PooledByteBuffer> result = mStagingArea.get(key);
+              EncodedImage result = mStagingArea.get(key);
               if (result != null) {
                 FLog.v(TAG, "Found image for %s in staging area", key.toString());
                 mImageCacheStatsTracker.onStagingAreaHit();
@@ -102,7 +102,12 @@ public class BufferedDiskCache {
 
                 try {
                   final PooledByteBuffer buffer = readFromDiskCache(key);
-                  result = CloseableReference.of(buffer);
+                  CloseableReference<PooledByteBuffer> ref = CloseableReference.of(buffer);
+                  try {
+                    result = new EncodedImage(ref);
+                  } finally {
+                    CloseableReference.closeSafely(ref);
+                  }
                 } catch (Exception exception) {
                   return null;
                 }
@@ -133,32 +138,32 @@ public class BufferedDiskCache {
   }
 
   /**
-   * Associates byteBuffer with given key in disk cache. Disk write is performed on background
+   * Associates encodedImage with given key in disk cache. Disk write is performed on background
    * thread, so the caller of this method is not blocked
    */
   public void put(
       final CacheKey key,
-      CloseableReference<PooledByteBuffer> byteBuffer) {
+      EncodedImage encodedImage) {
     Preconditions.checkNotNull(key);
-    Preconditions.checkArgument(CloseableReference.isValid(byteBuffer));
+    Preconditions.checkArgument(EncodedImage.isValid(encodedImage));
 
-    // Store byteBuffer in staging area
-    mStagingArea.put(key, byteBuffer);
+    // Store encodedImage in staging area
+    mStagingArea.put(key, encodedImage);
 
     // Write to disk cache. This will be executed on background thread, so increment the ref count.
     // When this write completes (with success/failure), then we will bump down the ref count
     // again.
-    final CloseableReference<PooledByteBuffer> finalByteBuffer = byteBuffer.clone();
+    final EncodedImage finalEncodedImage = EncodedImage.cloneOrNull(encodedImage);
     try {
       mWriteExecutor.execute(
           new Runnable() {
             @Override
             public void run() {
               try {
-                writeToDiskCache(key, finalByteBuffer.get());
+                writeToDiskCache(key, finalEncodedImage);
               } finally {
-                mStagingArea.remove(key, finalByteBuffer);
-                finalByteBuffer.close();
+                mStagingArea.remove(key, finalEncodedImage);
+                EncodedImage.closeSafely(finalEncodedImage);
               }
             }
           });
@@ -170,8 +175,8 @@ public class BufferedDiskCache {
           exception,
           "Failed to schedule disk-cache write for %s",
           key.toString());
-      mStagingArea.remove(key, byteBuffer);
-      finalByteBuffer.close();
+      mStagingArea.remove(key, encodedImage);
+      EncodedImage.closeSafely(finalEncodedImage);
     }
   }
 
@@ -218,14 +223,14 @@ public class BufferedDiskCache {
    */
   private void writeToDiskCache(
       final CacheKey key,
-      final PooledByteBuffer buffer) {
+      final EncodedImage encodedImage) {
     FLog.v(TAG, "About to write to disk-cache for key %s", key.toString());
     try {
       mFileCache.insert(
           key, new WriterCallback() {
             @Override
             public void write(OutputStream os) throws IOException {
-              mPooledByteStreams.copy(new PooledByteBufferInputStream(buffer), os);
+              mPooledByteStreams.copy(encodedImage.getInputStream(), os);
             }
           }
       );

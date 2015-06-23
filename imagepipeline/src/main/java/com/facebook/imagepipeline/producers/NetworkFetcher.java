@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
  * Interface that specifies network fetcher used by the image pipeline.
@@ -66,7 +65,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @return a new fetch state instance
    */
   public FETCH_STATE createFetchState(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
+      Consumer<EncodedImage> consumer,
       ProducerContext producerContext);
 
   /**
