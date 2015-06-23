@@ -99,7 +99,7 @@ public class ArtBitmapFactoryTest {
     mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool, 1);
 
     mByteBufferRef = CloseableReference.of(mPooledByteBuffer);
-    mEncodedImage = new EncodedImage(mByteBufferRef, ImageFormat.UNKNOWN);
+    mEncodedImage = new EncodedImage(mByteBufferRef);
     mBitmap = MockBitmapFactory.create();
     doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_PIXELS);
 

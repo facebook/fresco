@@ -65,6 +65,8 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
   private static EncodedImage getEncodedImage(CloseableReference<PooledByteBuffer> bytesRef) {
     final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
         new PooledByteBufferInputStream(bytesRef.get()));
+    EncodedImage encodedImage = new EncodedImage(bytesRef);
+    encodedImage.setImageFormat(imageFormat);
     if (imageFormat == ImageFormat.JPEG) {
       Rect dimensions =
           JfifUtil.getDimensions(new PooledByteBufferInputStream(bytesRef.get()));
@@ -72,15 +74,12 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
         // We don't know for sure that the rotation angle is set at this point. But it might
         // never get set, so let's assume that if we've got the dimensions then we've got the
         // rotation angle, else we'll never propagate intermediate results.
-        return new EncodedImage(
-            bytesRef,
-            imageFormat,
-            getRotationAngle(bytesRef),
-            dimensions.width(),
-            dimensions.height());
+        encodedImage.setRotationAngle(getRotationAngle(bytesRef));
+        encodedImage.setWidth(dimensions.width());
+        encodedImage.setHeight(dimensions.height());
       }
     }
-    return new EncodedImage(bytesRef, imageFormat);
+    return encodedImage;
   }
 
   // Gets the correction angle based on the image's orientation

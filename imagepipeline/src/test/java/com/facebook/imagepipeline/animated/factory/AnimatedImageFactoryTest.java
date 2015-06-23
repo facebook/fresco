@@ -104,7 +104,8 @@ public class AnimatedImageFactoryTest {
         .thenReturn(mockWebPImage);
 
     EncodedImage encodedImage = new EncodedImage(
-        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER), ImageFormat.UNKNOWN);
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
 
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
@@ -151,7 +152,8 @@ public class AnimatedImageFactoryTest {
         .setDecodePreviewFrame(true)
         .build();
     EncodedImage encodedImage = new EncodedImage(
-        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER), ImageFormat.UNKNOWN);
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
             encodedImage,
@@ -207,7 +209,8 @@ public class AnimatedImageFactoryTest {
         .build();
 
     EncodedImage encodedImage = new EncodedImage(
-        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER), ImageFormat.UNKNOWN);
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
 
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(

@@ -154,7 +154,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         CloseableReference<PooledByteBuffer> ref =
             CloseableReference.of(outputStream.toByteBuffer());
         try {
-          ret = new EncodedImage(ref, ImageFormat.JPEG);
+          ret = new EncodedImage(ref);
+          ret.setImageFormat(ImageFormat.JPEG);
         } finally {
           CloseableReference.closeSafely(ref);
         }

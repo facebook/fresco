@@ -105,7 +105,7 @@ public class DalvikBitmapFactoryTest {
     mInputBuf = new byte[LENGTH];
     PooledByteBuffer input = new TrivialPooledByteBuffer(mInputBuf, POINTER);
     mByteBufferRef = CloseableReference.of(input);
-    mEncodedImage = new EncodedImage(mByteBufferRef, ImageFormat.UNKNOWN);
+    mEncodedImage = new EncodedImage(mByteBufferRef);
 
     mDecodeBuf = new byte[LENGTH + 2];
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));

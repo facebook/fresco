@@ -108,12 +108,12 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
     int rotationAngle = getRotationAngle(exifInterface);
     int width = dimensions != null ? dimensions.width() : EncodedImage.UNKNOWN_WIDTH;
     int height = dimensions != null ? dimensions.height() : EncodedImage.UNKNOWN_HEIGHT;
-    return new EncodedImage(
-        CloseableReference.of(imageBytes),
-        ImageFormat.JPEG,
-        rotationAngle,
-        width,
-        height);
+    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(imageBytes));
+    encodedImage.setImageFormat(ImageFormat.JPEG);
+    encodedImage.setRotationAngle(rotationAngle);
+    encodedImage.setWidth(width);
+    encodedImage.setHeight(height);
+    return encodedImage;
   }
 
   // Gets the correction angle based on the image's orientation

@@ -73,7 +73,8 @@ public class DalvikBitmapFactory {
   CloseableReference<Bitmap> createBitmap(short width, short height) {
     CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(width, height);
     try {
-      EncodedImage encodedImage = new EncodedImage(jpgRef, ImageFormat.JPEG);
+      EncodedImage encodedImage = new EncodedImage(jpgRef);
+      encodedImage.setImageFormat(ImageFormat.JPEG);
       try {
         CloseableReference<Bitmap> bitmapRef =
             decodeJPEGFromEncodedImage(encodedImage, jpgRef.get().size());

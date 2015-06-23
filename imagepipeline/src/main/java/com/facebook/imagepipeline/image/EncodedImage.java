@@ -43,51 +43,21 @@ public class EncodedImage implements Closeable {
   private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
   private final Supplier<InputStream> mInputStreamSupplier;
 
-  private final ImageFormat mImageFormat;
-  private final int mRotationAngle;
-  private final int mWidth;
-  private final int mHeight;
+  private ImageFormat mImageFormat = ImageFormat.UNKNOWN;
+  private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
+  private int mWidth = UNKNOWN_WIDTH;
+  private int mHeight = UNKNOWN_HEIGHT;
 
-  public EncodedImage(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      ImageFormat imageFormat) {
-    this(pooledByteBufferRef, imageFormat, UNKNOWN_ROTATION_ANGLE, UNKNOWN_WIDTH, UNKNOWN_HEIGHT);
-  }
-
-  public EncodedImage(
-      Supplier<InputStream> inputStreamSupplier,
-      ImageFormat imageFormat) {
-    this(inputStreamSupplier, imageFormat, UNKNOWN_ROTATION_ANGLE, UNKNOWN_WIDTH, UNKNOWN_HEIGHT);
-  }
-
-  public EncodedImage(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      ImageFormat imageFormat,
-      int rotationAngle,
-      int width,
-      int height) {
+  public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
     this.mPooledByteBufferRef = pooledByteBufferRef.clone();
     this.mInputStreamSupplier = null;
-    this.mImageFormat = imageFormat;
-    this.mRotationAngle = rotationAngle;
-    this.mWidth = width;
-    this.mHeight = height;
   }
 
-  public EncodedImage(
-      Supplier<InputStream> inputStreamSupplier,
-      ImageFormat imageFormat,
-      int rotationAngle,
-      int width,
-      int height) {
+  public EncodedImage(Supplier<InputStream> inputStreamSupplier) {
     Preconditions.checkNotNull(inputStreamSupplier);
     this.mPooledByteBufferRef = null;
     this.mInputStreamSupplier = inputStreamSupplier;
-    this.mImageFormat = imageFormat;
-    this.mRotationAngle = rotationAngle;
-    this.mWidth = width;
-    this.mHeight = height;
   }
 
   /**
@@ -100,28 +70,25 @@ public class EncodedImage implements Closeable {
   }
 
   public EncodedImage cloneOrNull() {
+    EncodedImage encodedImage;
     if (mInputStreamSupplier != null) {
-      return new EncodedImage(
-          mInputStreamSupplier,
-          mImageFormat,
-          mRotationAngle,
-          mWidth,
-          mHeight
-      );
+       encodedImage = new EncodedImage(mInputStreamSupplier);
+    } else {
+      CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
+      try {
+        encodedImage = (pooledByteBufferRef == null) ? null : new EncodedImage(pooledByteBufferRef);
+      } finally {
+        // Close the recently created reference since it will be cloned again in the constructor.
+        CloseableReference.closeSafely(pooledByteBufferRef);
+      }
     }
-
-    CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
-    try {
-      return (pooledByteBufferRef == null) ? null : new EncodedImage(
-          pooledByteBufferRef,
-          mImageFormat,
-          mRotationAngle,
-          mWidth,
-          mHeight);
-    } finally {
-      // Close the recently created reference since it will be cloned again in the constructor.
-      CloseableReference.closeSafely(pooledByteBufferRef);
+    if (encodedImage != null) {
+      encodedImage.setImageFormat(mImageFormat);
+      encodedImage.setRotationAngle(mRotationAngle);
+      encodedImage.setWidth(mWidth);
+      encodedImage.setHeight(mHeight);
     }
+    return encodedImage;
   }
 
   /**
@@ -168,6 +135,34 @@ public class EncodedImage implements Closeable {
       }
     }
     return null;
+  }
+
+  /**
+   * Sets the image format
+   */
+  public void setImageFormat(ImageFormat imageFormat) {
+    this.mImageFormat = imageFormat;
+  }
+
+  /**
+   * Sets the image height
+   */
+  public void setHeight(int height) {
+    this.mHeight = height;
+  }
+
+  /**
+   * Sets the image width
+   */
+  public void setWidth(int width) {
+    this.mWidth = width;
+  }
+
+  /**
+   * Sets the image rotation angle
+   */
+  public void setRotationAngle(int rotationAngle) {
+    this.mRotationAngle = rotationAngle;
   }
 
   /**
