@@ -10,6 +10,7 @@
 package com.facebook.imagepipeline.image;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -22,8 +23,14 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Class that contains all the information for an encoded image, both the ByteBuffer representing it
- * and the extracted meta data that is useful for image transforms.
+ * Class that contains all the information for an encoded image, both the image bytes (held on
+ * either a byte buffer or a supplier of input streams) and the extracted meta data that is useful
+ * for image transforms.
+ *
+ * <p> Only one of the input stream supplier or the byte buffer can be set. If using an input stream
+ * supplier, the methods that return a byte buffer will simply return null. However, getInputStream
+ * will always be supported, either from the supplier or an input stream created from the byte
+ * buffer held.
  *
  * <p>Currently the data is useful for rotation and resize.
  */
@@ -34,6 +41,8 @@ public class EncodedImage implements Closeable {
   public static final int UNKNOWN_HEIGHT = -1;
 
   private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
+  private final Supplier<InputStream> mInputStreamSupplier;
+
   private final ImageFormat mImageFormat;
   private final int mRotationAngle;
   private final int mWidth;
@@ -46,6 +55,12 @@ public class EncodedImage implements Closeable {
   }
 
   public EncodedImage(
+      Supplier<InputStream> inputStreamSupplier,
+      ImageFormat imageFormat) {
+    this(inputStreamSupplier, imageFormat, UNKNOWN_ROTATION_ANGLE, UNKNOWN_WIDTH, UNKNOWN_HEIGHT);
+  }
+
+  public EncodedImage(
       CloseableReference<PooledByteBuffer> pooledByteBufferRef,
       ImageFormat imageFormat,
       int rotationAngle,
@@ -53,6 +68,22 @@ public class EncodedImage implements Closeable {
       int height) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
     this.mPooledByteBufferRef = pooledByteBufferRef.clone();
+    this.mInputStreamSupplier = null;
+    this.mImageFormat = imageFormat;
+    this.mRotationAngle = rotationAngle;
+    this.mWidth = width;
+    this.mHeight = height;
+  }
+
+  public EncodedImage(
+      Supplier<InputStream> inputStreamSupplier,
+      ImageFormat imageFormat,
+      int rotationAngle,
+      int width,
+      int height) {
+    Preconditions.checkNotNull(inputStreamSupplier);
+    this.mPooledByteBufferRef = null;
+    this.mInputStreamSupplier = inputStreamSupplier;
     this.mImageFormat = imageFormat;
     this.mRotationAngle = rotationAngle;
     this.mWidth = width;
@@ -69,6 +100,16 @@ public class EncodedImage implements Closeable {
   }
 
   public EncodedImage cloneOrNull() {
+    if (mInputStreamSupplier != null) {
+      return new EncodedImage(
+          mInputStreamSupplier,
+          mImageFormat,
+          mRotationAngle,
+          mWidth,
+          mHeight
+      );
+    }
+
     CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
     try {
       return (pooledByteBufferRef == null) ? null : new EncodedImage(
@@ -92,10 +133,11 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Returns true if the internal buffer reference is valid, false otherwise.
+   * Returns true if the internal buffer reference is valid or the InputStream Supplier is not null,
+   * false otherwise.
    */
   public synchronized boolean isValid() {
-    return CloseableReference.isValid(mPooledByteBufferRef);
+    return CloseableReference.isValid(mPooledByteBufferRef) || mInputStreamSupplier != null;
   }
 
   /**
@@ -108,9 +150,15 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Returns an InputStream for the internal buffer reference if valid, null otherwise.
+   * Returns an InputStream from the internal InputStream Supplier if it's not null. Otherwise
+   * returns an InputStream for the internal buffer reference if valid and null otherwise.
+   *
+   * <p>The caller has to close the InputStream after using it.
    */
   public InputStream getInputStream() {
+    if (mInputStreamSupplier != null) {
+      return mInputStreamSupplier.get();
+    }
     CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
     if (pooledByteBufferRef != null) {
       try {
