@@ -42,12 +42,15 @@ public class DalvikBitmapFactory {
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
   private final SharedByteArray mSharedByteArray;
+  private final boolean mDownsampleEnabled;
 
   public DalvikBitmapFactory(
       EmptyJpegGenerator jpegGenerator,
-      SharedByteArray sharedByteArray) {
+      SharedByteArray sharedByteArray,
+      boolean downsampleEnabled) {
     mJpegGenerator = jpegGenerator;
     mSharedByteArray = sharedByteArray;
+    mDownsampleEnabled = downsampleEnabled;
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
     mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
       @Override
@@ -106,7 +109,7 @@ public class DalvikBitmapFactory {
       try {
         final byte[] encodedBytesArray = encodedBytesArrayRef.get();
         pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-        return doDecodeBitmap(encodedBytesArray, length);
+        return doDecodeBitmap(encodedBytesArray, length, encodedImage.getSampleSize());
       } finally {
         CloseableReference.closeSafely(encodedBytesArrayRef);
       }
@@ -141,7 +144,7 @@ public class DalvikBitmapFactory {
           putEOI(encodedBytesArray, length);
           length += 2;
         }
-        return doDecodeBitmap(encodedBytesArray, length);
+        return doDecodeBitmap(encodedBytesArray, length, encodedImage.getSampleSize());
       } finally {
         CloseableReference.closeSafely(encodedBytesArrayRef);
       }
@@ -155,8 +158,10 @@ public class DalvikBitmapFactory {
    */
   private CloseableReference<Bitmap> doDecodeBitmap(
       final byte[] encodedBytes,
-      final int length) {
-    final Bitmap bitmap = decodeAsPurgeableBitmap(encodedBytes, length);
+      final int length,
+      final int sampleSize) {
+    final Bitmap bitmap =
+        decodeAsPurgeableBitmap(encodedBytes, length, sampleSize, mDownsampleEnabled);
 
     try {
       // Real decoding happens here - if the image was corrupted, this will throw an exception
@@ -181,12 +186,16 @@ public class DalvikBitmapFactory {
    * @return a purgeable bitmap
    */
   @SuppressLint("NewApi")
-  private static Bitmap decodeAsPurgeableBitmap(byte[] encodedBytes, int size) {
+  private static Bitmap decodeAsPurgeableBitmap(
+      byte[] encodedBytes, int size, int sampleSize, boolean downsampleEnabled) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
     // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
     options.inPurgeable = true;
+    if (downsampleEnabled) {
+      options.inSampleSize = sampleSize;
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       options.inMutable = true;  // no known perf difference; allows postprocessing to work
     }

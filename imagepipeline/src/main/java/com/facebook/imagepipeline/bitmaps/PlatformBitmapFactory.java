@@ -81,7 +81,8 @@ public class PlatformBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  public CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
+  public CloseableReference<Bitmap> decodeFromEncodedImage(
+      final EncodedImage encodedImage) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       return mArtBitmapFactory.decodeFromEncodedImage(encodedImage);
     } else {

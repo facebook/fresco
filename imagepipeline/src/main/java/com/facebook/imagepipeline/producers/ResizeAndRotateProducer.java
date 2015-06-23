@@ -48,14 +48,17 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
+  private final boolean mDownsampleEnabled;
   private final Producer<EncodedImage> mNextProducer;
 
   public ResizeAndRotateProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
+      boolean downsampleEnabled,
       Producer<EncodedImage> nextProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
+    mDownsampleEnabled = downsampleEnabled;
     mNextProducer = Preconditions.checkNotNull(nextProducer);
   }
 
@@ -117,7 +120,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
         return;
       }
-      TriState shouldTransform = shouldTransform(mProducerContext.getImageRequest(), newResult);
+      TriState shouldTransform =
+          shouldTransform(mProducerContext.getImageRequest(), newResult, mDownsampleEnabled);
       // ignore the intermediate result if we don't know what to do with it
       if (!isLast && shouldTransform == TriState.UNSET) {
         return;
@@ -149,22 +153,28 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             encodedImage.getInputStream(),
             outputStream,
             getRotationAngle(imageRequest, encodedImage),
-            getScaleNumerator(imageRequest, encodedImage),
+            numerator,
             DEFAULT_JPEG_QUALITY);
         CloseableReference<PooledByteBuffer> ref =
             CloseableReference.of(outputStream.toByteBuffer());
         try {
           ret = new EncodedImage(ref);
           ret.setImageFormat(ImageFormat.JPEG);
+          try {
+            if (encodedImage.getImageFormat() == ImageFormat.JPEG &&
+                EncodedImage.isMetaDataAvailable(encodedImage)) {
+              ret.setRotationAngle(encodedImage.getRotationAngle());
+              ret.setWidth(encodedImage.getWidth());
+              ret.setHeight(encodedImage.getHeight());
+            }
+            mProducerContext.getListener().
+                onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
+            getConsumer().onNewResult(ret, isLast);
+          } finally {
+            EncodedImage.closeSafely(ret);
+          }
         } finally {
           CloseableReference.closeSafely(ref);
-        }
-        try {
-          mProducerContext.getListener().
-              onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
-          getConsumer().onNewResult(ret, isLast);
-        } finally {
-          EncodedImage.closeSafely(ret);
         }
       } catch (Exception e) {
         mProducerContext.getListener().
@@ -194,7 +204,10 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     }
   }
 
-  private static TriState shouldTransform(ImageRequest request, EncodedImage encodedImage) {
+  private static TriState shouldTransform(
+      ImageRequest request,
+      EncodedImage encodedImage,
+      boolean downsampleEnabled) {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
     }
@@ -203,7 +216,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     }
     return TriState.valueOf(
         getRotationAngle(request, encodedImage) != 0 ||
-        getScaleNumerator(request, encodedImage) != JpegTranscoder.SCALE_DENOMINATOR);
+            shouldResize(getScaleNumerator(request, encodedImage), downsampleEnabled));
   }
 
   @VisibleForTesting static float determineResizeRatio(
@@ -229,7 +242,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return (int) (ROUNDUP_FRACTION + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
 
-  private static int getScaleNumerator(ImageRequest imageRequest, EncodedImage encodedImage) {
+  private static int getScaleNumerator(
+      ImageRequest imageRequest,
+      EncodedImage encodedImage) {
     final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
     if (resizeOptions == null) {
       return JpegTranscoder.SCALE_DENOMINATOR;
@@ -243,16 +258,11 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             encodedImage.getHeight();
 
     float ratio = determineResizeRatio(resizeOptions, widthAfterRotation, heightAfterRotation);
-
     int numerator = roundNumerator(ratio);
-
     if (numerator > MAX_JPEG_SCALE_NUMERATOR) {
       return MAX_JPEG_SCALE_NUMERATOR;
     }
-    if (numerator < 1) {
-      return 1;
-    }
-    return numerator;
+    return (numerator < 1) ? 1 : numerator;
   }
 
   private static int getRotationAngle(ImageRequest imageRequest, EncodedImage encodedImage) {
@@ -263,5 +273,10 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     Preconditions.checkArgument(
         rotationAngle == 0 || rotationAngle == 90 || rotationAngle == 180 || rotationAngle == 270);
     return rotationAngle;
+  }
+
+  private static boolean shouldResize(int numerator, boolean downsampleEnabled) {
+    return !(downsampleEnabled && numerator <= (MAX_JPEG_SCALE_NUMERATOR / 2))
+        && numerator < MAX_JPEG_SCALE_NUMERATOR;
   }
 }

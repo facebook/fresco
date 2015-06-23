@@ -42,6 +42,8 @@ public class EncodedImage implements Closeable {
   public static final int UNKNOWN_WIDTH = -1;
   public static final int UNKNOWN_HEIGHT = -1;
 
+  public static final int DEFAULT_SAMPLE_SIZE = 1;
+
   private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
   private final Supplier<InputStream> mInputStreamSupplier;
 
@@ -49,6 +51,7 @@ public class EncodedImage implements Closeable {
   private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
   private int mWidth = UNKNOWN_WIDTH;
   private int mHeight = UNKNOWN_HEIGHT;
+  private int mSampleSize = DEFAULT_SAMPLE_SIZE;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -168,6 +171,13 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Sets the image sample size
+   */
+  public void setSampleSize(int sampleSize) {
+    this.mSampleSize = sampleSize;
+  }
+
+  /**
    * Returns the image format if known, otherwise ImageFormat.UNKNOWN.
    */
   public ImageFormat getImageFormat() {
@@ -197,6 +207,14 @@ public class EncodedImage implements Closeable {
    */
   public int getHeight() {
     return mHeight;
+  }
+
+  /**
+   * Only valid if the image format is JPEG.
+   * @return sample size of the image.
+   */
+  public int getSampleSize() {
+    return mSampleSize;
   }
 
   /**

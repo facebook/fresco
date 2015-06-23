@@ -56,17 +56,20 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final Producer<EncodedImage> mNextProducer;
+  private final boolean mDownsampleEnabled;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
       final Executor executor,
       final ImageDecoder imageDecoder,
       final ProgressiveJpegConfig progressiveJpegConfig,
+      final boolean downsampleEnabled,
       final Producer<EncodedImage> nextProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
     mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
+    mDownsampleEnabled = downsampleEnabled;
     mNextProducer = Preconditions.checkNotNull(nextProducer);
   }
 
@@ -112,7 +115,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       JobRunnable job = new JobRunnable() {
         @Override
         public void run(EncodedImage encodedImage, boolean isLast) {
-          doDecode(encodedImage, isLast);
+          if (encodedImage != null) {
+            if (mDownsampleEnabled) {
+              encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
+                  producerContext.getImageRequest(), encodedImage));
+            }
+            doDecode(encodedImage, isLast);
+          }
         }
       };
       mJobScheduler = new JobScheduler(mExecutor, job, mImageDecodeOptions.minDecodeIntervalMs);

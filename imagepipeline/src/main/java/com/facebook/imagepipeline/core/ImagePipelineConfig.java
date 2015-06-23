@@ -74,6 +74,7 @@ public class ImagePipelineConfig {
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
+  private final boolean mDownsampleEnabled;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -82,12 +83,12 @@ public class ImagePipelineConfig {
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
   private final NetworkFetcher mNetworkFetcher;
+  private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final PoolFactory mPoolFactory;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final Set<RequestListener> mRequestListeners;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
-  private final PlatformBitmapFactory mPlatformBitmapFactory;
 
   private ImagePipelineConfig(Builder builder) {
     mBitmapMemoryCacheParamsSupplier =
@@ -100,6 +101,7 @@ public class ImagePipelineConfig {
             DefaultCacheKeyFactory.getInstance() :
             builder.mCacheKeyFactory;
     mContext = Preconditions.checkNotNull(builder.mContext);
+    mDownsampleEnabled = builder.mDownsampleEnabled;
     mEncodedMemoryCacheParamsSupplier =
         builder.mEncodedMemoryCacheParamsSupplier == null ?
             new DefaultEncodedMemoryCacheParamsSupplier() :
@@ -158,9 +160,9 @@ public class ImagePipelineConfig {
     GingerbreadBitmapFactory factoryGingerbread = new GingerbreadBitmapFactory();
     DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
         new EmptyJpegGenerator(mPoolFactory.getPooledByteBufferFactory()),
-        mPoolFactory.getSharedByteArray());
+        mPoolFactory.getSharedByteArray(), isDownsampleEnabled());
     ArtBitmapFactory factoryLollipop =
-        new ArtBitmapFactory(mPoolFactory.getBitmapPool(), 1);
+        new ArtBitmapFactory(mPoolFactory.getBitmapPool(), 1, isDownsampleEnabled());
     mPlatformBitmapFactory =
         new PlatformBitmapFactory(
             factoryGingerbread,
@@ -241,6 +243,10 @@ public class ImagePipelineConfig {
     return mNetworkFetcher;
   }
 
+  public boolean isDownsampleEnabled() {
+    return mDownsampleEnabled;
+  }
+
   public PoolFactory getPoolFactory() {
     return mPoolFactory;
   }
@@ -275,6 +281,7 @@ public class ImagePipelineConfig {
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
+    private boolean mDownsampleEnabled = false;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
     private ExecutorSupplier mExecutorSupplier;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -322,6 +329,10 @@ public class ImagePipelineConfig {
     public Builder setExecutorSupplier(ExecutorSupplier executorSupplier) {
       mExecutorSupplier = executorSupplier;
       return this;
+    }
+
+    public void setDownsampleEnabled(boolean downsampleEnabled) {
+      this.mDownsampleEnabled = downsampleEnabled;
     }
 
     public Builder setImageCacheStatsTracker(ImageCacheStatsTracker imageCacheStatsTracker) {

@@ -96,7 +96,9 @@ public class ImageDecoder {
    * @param encodedImage input image (encoded bytes plus meta data)
    * @return a CloseableImage
    */
-  public CloseableImage decodeGif(EncodedImage encodedImage, ImageDecodeOptions options) {
+  public CloseableImage decodeGif(
+      EncodedImage encodedImage,
+      ImageDecodeOptions options) {
     PooledByteBufferInputStream is = (PooledByteBufferInputStream) encodedImage.getInputStream();
     if (is == null) {
       return null;
@@ -111,7 +113,8 @@ public class ImageDecoder {
    * @param encodedImage input image (encoded bytes plus meta data)
    * @return a CloseableStaticBitmap
    */
-  public synchronized CloseableStaticBitmap decodeStaticImage(final EncodedImage encodedImage) {
+  public synchronized CloseableStaticBitmap decodeStaticImage(
+      final EncodedImage encodedImage) {
     CloseableReference<Bitmap> bitmapReference =
         mBitmapFactoryWithPool.decodeFromEncodedImage(encodedImage);
     try {

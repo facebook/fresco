@@ -64,6 +64,7 @@ public class ProducerFactory {
   private final ByteArrayPool mByteArrayPool;
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
+  private final boolean mDownsampleEnabled;
 
   // Dependencies used by multiple steps
   private final ExecutorSupplier mExecutorSupplier;
@@ -84,6 +85,7 @@ public class ProducerFactory {
       ByteArrayPool byteArrayPool,
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
+      boolean downsampleEnabled,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
@@ -99,6 +101,7 @@ public class ProducerFactory {
     mByteArrayPool = byteArrayPool;
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
+    mDownsampleEnabled = downsampleEnabled;
 
     mExecutorSupplier = executorSupplier;
     mPooledByteBufferFactory = pooledByteBufferFactory;
@@ -148,6 +151,7 @@ public class ProducerFactory {
         mExecutorSupplier.forDecode(),
         mImageDecoder,
         mProgressiveJpegConfig,
+        mDownsampleEnabled,
         nextProducer);
   }
 
@@ -225,6 +229,7 @@ public class ProducerFactory {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         nextProducer);
   }
 

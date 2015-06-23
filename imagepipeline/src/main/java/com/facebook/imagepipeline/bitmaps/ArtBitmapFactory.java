@@ -45,6 +45,7 @@ public class ArtBitmapFactory {
   private static final int DECODE_BUFFER_SIZE = 16 * 1024;
 
   private final BitmapPool mBitmapPool;
+  private final boolean mDownsampleEnabled;
 
   /**
    * ArtPlatformImageDecoder decodes images from InputStream - to do so we need to provide
@@ -58,12 +59,13 @@ public class ArtBitmapFactory {
       (byte) JfifUtil.MARKER_FIRST_BYTE,
       (byte) JfifUtil.MARKER_EOI};
 
-  public ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads) {
+  public ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads, boolean downsampleEnabled) {
     mBitmapPool = bitmapPool;
     mDecodeBuffers = new SynchronizedPool<>(maxNumThreads);
     for (int i = 0; i < maxNumThreads; i++) {
       mDecodeBuffers.release(ByteBuffer.allocate(DECODE_BUFFER_SIZE));
     }
+    mDownsampleEnabled = downsampleEnabled;
   }
 
   /**
@@ -88,7 +90,7 @@ public class ArtBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
-    return doDecodeStaticImage(encodedImage.getInputStream());
+    return doDecodeStaticImage(encodedImage.getInputStream(), encodedImage.getSampleSize());
   }
 
   /**
@@ -99,9 +101,7 @@ public class ArtBitmapFactory {
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
-      EncodedImage encodedImage,
-      int length) {
+  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(EncodedImage encodedImage, int length) {
     final InputStream jpegBufferInputStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
     // pipeline,this comes from a call stack where this was checked before. Also this method needs
@@ -128,16 +128,16 @@ public class ArtBitmapFactory {
       if (!isJpegComplete) {
         jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
       }
-      return doDecodeStaticImage(jpegDataStream);
+      return doDecodeStaticImage(jpegDataStream, encodedImage.getSampleSize());
     } finally {
       CloseableReference.closeSafely(bytesRef);
     }
   }
 
-  private CloseableReference<Bitmap> doDecodeStaticImage(InputStream inputStream) {
+  private CloseableReference<Bitmap> doDecodeStaticImage(InputStream inputStream, int sampleSize) {
     Preconditions.checkNotNull(inputStream);
     inputStream.mark(Integer.MAX_VALUE);
-    final BitmapFactory.Options options = getDecodeOptionsForStream(inputStream);
+    final BitmapFactory.Options options = getDecodeOptionsForStream(inputStream, sampleSize);
     try {
       inputStream.reset();
     } catch (IOException ioe) {
@@ -177,9 +177,11 @@ public class ArtBitmapFactory {
   /**
    * Options returned by this method are configured with mDecodeBuffer which is GuardedBy("this")
    */
-  private BitmapFactory.Options getDecodeOptionsForStream(InputStream inputStream) {
+  private BitmapFactory.Options getDecodeOptionsForStream(InputStream inputStream, int sampleSize) {
     final BitmapFactory.Options options = new BitmapFactory.Options();
-
+    if (mDownsampleEnabled) {
+      options.inSampleSize = sampleSize;
+    }
     options.inJustDecodeBounds = true;
     // fill outWidth and outHeight
     BitmapFactory.decodeStream(inputStream, null, options);

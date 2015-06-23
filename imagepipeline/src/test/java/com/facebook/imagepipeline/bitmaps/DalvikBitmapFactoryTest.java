@@ -114,7 +114,8 @@ public class DalvikBitmapFactoryTest {
     mockStatic(Bitmaps.class);
     mDalvikBitmapFactory = new DalvikBitmapFactory(
         null,
-        mSharedByteArray);
+        mSharedByteArray,
+        false);
   }
 
   @Test

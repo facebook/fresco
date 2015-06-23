@@ -189,6 +189,7 @@ public class ImagePipelineFactory {
               mConfig.getPoolFactory().getCommonByteArrayPool(),
               mConfig.getImageDecoder(),
               mConfig.getProgressiveJpegConfig(),
+              mConfig.isDownsampleEnabled(),
               mConfig.getExecutorSupplier(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
               getBitmapMemoryCache(),
