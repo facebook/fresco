@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
@@ -484,14 +483,14 @@ public abstract class BasePool<V> implements Pool<V> {
    */
   @VisibleForTesting
   void trimToNothing() {
-    final List<Queue<V>> freeListList = new ArrayList<Queue<V>>(mBuckets.size());
+    final List<Bucket<V>> bucketsToTrim = new ArrayList<>(mBuckets.size());
     final SparseIntArray inUseCounts = new SparseIntArray();
 
     synchronized (this) {
       for (int i = 0; i < mBuckets.size(); ++i) {
         final Bucket<V> bucket = mBuckets.valueAt(i);
-        if (!bucket.mFreeList.isEmpty()) {
-          freeListList.add(bucket.mFreeList);
+        if (bucket.getFreeListSize() > 0) {
+          bucketsToTrim.add(bucket);
         }
         inUseCounts.put(mBuckets.keyAt(i), bucket.getInUseCount());
       }
@@ -510,16 +509,21 @@ public abstract class BasePool<V> implements Pool<V> {
     // Explicitly free all the values.
     // All the core data structures have now been reset. We no longer need to block other calls.
     // This is true even for a concurrent trim() call
-    for (int i = 0; i < freeListList.size(); ++i) {
-      final Queue<V> freeList = freeListList.get(i);
-      while (!freeList.isEmpty()) {
+    for (int i = 0; i < bucketsToTrim.size(); ++i) {
+      final Bucket<V> bucket = bucketsToTrim.get(i);
+      while (true) {
         // what happens if we run into an exception during the recycle. I'm going to ignore
         // these exceptions for now, and let the GC handle the rest of the to-be-recycled-bitmaps
         // in its usual fashion
-        free(freeList.poll());
+        V item = bucket.pop();
+        if (item == null) {
+          break;
+        }
+        free(item);
       }
     }
   }
+
 
   /**
    * Trim the (free portion of the) pool so that the pool size is at or below the soft cap.
@@ -611,12 +615,16 @@ public abstract class BasePool<V> implements Pool<V> {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(TAG, "creating new bucket %s", bucketedSize);
     }
-    Bucket<V> newBucket = new Bucket<V>(
+    Bucket<V> newBucket = newBucket(bucketedSize);
+    mBuckets.put(bucketedSize, newBucket);
+    return newBucket;
+  }
+
+  Bucket<V> newBucket(int bucketedSize) {
+    return new Bucket<V>(
         /*itemSize*/getSizeInBytes(bucketedSize),
         /*maxLength*/Integer.MAX_VALUE,
         /*inUseLength*/0);
-    mBuckets.put(bucketedSize, newBucket);
-    return newBucket;
   }
 
   /**
