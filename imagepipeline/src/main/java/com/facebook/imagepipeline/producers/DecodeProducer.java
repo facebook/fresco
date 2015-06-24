@@ -203,20 +203,30 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       if (!mProducerListener.requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
-      String size = null;
+      String queueStr = String.valueOf(queueTime);
+      String qualityStr = String.valueOf(quality.isOfGoodEnoughQuality());
+      String finalStr = String.valueOf(isFinal);
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
-        size = bitmap.getWidth() + "x" + bitmap.getHeight();
+        String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
+        return ImmutableMap.of(
+            BITMAP_SIZE_KEY,
+            sizeStr,
+            QUEUE_TIME_KEY,
+            queueStr,
+            HAS_GOOD_QUALITY_KEY,
+            qualityStr,
+            IS_FINAL_KEY,
+            finalStr);
+      } else {
+        return ImmutableMap.of(
+            QUEUE_TIME_KEY,
+            queueStr,
+            HAS_GOOD_QUALITY_KEY,
+            qualityStr,
+            IS_FINAL_KEY,
+            finalStr);
       }
-      return ImmutableMap.of(
-          BITMAP_SIZE_KEY,
-          size,
-          QUEUE_TIME_KEY,
-          String.valueOf(queueTime),
-          HAS_GOOD_QUALITY_KEY,
-          String.valueOf(quality.isOfGoodEnoughQuality()),
-          IS_FINAL_KEY,
-          String.valueOf(isFinal));
     }
 
     /**
