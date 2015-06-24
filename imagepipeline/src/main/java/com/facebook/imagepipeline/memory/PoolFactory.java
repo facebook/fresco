@@ -22,7 +22,7 @@ public class PoolFactory {
   private final PoolConfig mConfig;
 
   private BitmapPool mBitmapPool;
-  private ByteArrayPool mCommonByteArrayPool;
+  private ByteArrayPool mSmallByteArrayPool;
   private NativeMemoryChunkPool mNativeMemoryChunkPool;
   private PooledByteBufferFactory mPooledByteBufferFactory;
   private PooledByteStreams mPooledByteStreams;
@@ -42,14 +42,14 @@ public class PoolFactory {
     return mBitmapPool;
   }
 
-  public ByteArrayPool getCommonByteArrayPool() {
-    if (mCommonByteArrayPool == null) {
-      mCommonByteArrayPool = new GenericByteArrayPool(
+  public ByteArrayPool getSmallByteArrayPool() {
+    if (mSmallByteArrayPool == null) {
+      mSmallByteArrayPool = new GenericByteArrayPool(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getCommonByteArrayPoolParams(),
-          mConfig.getCommonByteArrayPoolStatsTracker());
+          mConfig.getSmallByteArrayPoolParams(),
+          mConfig.getSmallByteArrayPoolStatsTracker());
     }
-    return mCommonByteArrayPool;
+    return mSmallByteArrayPool;
   }
 
   public NativeMemoryChunkPool getNativeMemoryChunkPool() {
@@ -73,7 +73,7 @@ public class PoolFactory {
 
   public PooledByteStreams getPooledByteStreams() {
     if (mPooledByteStreams == null) {
-      mPooledByteStreams = new PooledByteStreams(getCommonByteArrayPool());
+      mPooledByteStreams = new PooledByteStreams(getSmallByteArrayPool());
     }
     return mPooledByteStreams;
   }
