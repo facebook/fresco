@@ -1,0 +1,26 @@
+{% include header-cn.html %}
+
+{% if page.hero %}
+  {% include hero-cn.html %}
+{% endif %}
+
+<section class='content'><div class='width'>
+
+<article>
+
+{{ content }}
+
+</article>
+
+</div></section>
+
+
+
+{% if page.hero %}
+  <header class='hero'><div class='width'>
+    <div class="buttons-unit">
+      <a href="/docs-cn/index.html#_" class="button">开始使用</a>
+    </div>
+{% include footer.html %}
+  </div></header>
+{% endif %}
