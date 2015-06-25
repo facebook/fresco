@@ -41,11 +41,14 @@ public class EncodedImage implements Closeable {
   public static final int UNKNOWN_ROTATION_ANGLE = -1;
   public static final int UNKNOWN_WIDTH = -1;
   public static final int UNKNOWN_HEIGHT = -1;
+  public static final int UNKNOWN_STREAM_SIZE = -1;
 
   public static final int DEFAULT_SAMPLE_SIZE = 1;
 
   private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
   private final Supplier<InputStream> mInputStreamSupplier;
+
+  private int mStreamSize = -1;
 
   private ImageFormat mImageFormat = ImageFormat.UNKNOWN;
   private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
@@ -63,6 +66,13 @@ public class EncodedImage implements Closeable {
     Preconditions.checkNotNull(inputStreamSupplier);
     this.mPooledByteBufferRef = null;
     this.mInputStreamSupplier = inputStreamSupplier;
+  }
+
+  public EncodedImage(Supplier<InputStream> inputStreamSupplier, int  streamSize) {
+    Preconditions.checkNotNull(inputStreamSupplier);
+    this.mPooledByteBufferRef = null;
+    this.mInputStreamSupplier = inputStreamSupplier;
+    this.mStreamSize = streamSize;
   }
 
   /**
@@ -178,6 +188,15 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Sets the size of an image if backed by an InputStream
+   *
+   * <p> Ignored if backed by a ByteBuffer
+   */
+  public void setStreamSize(int streamSize) {
+    this.mStreamSize = streamSize;
+  }
+
+  /**
    * Returns the image format if known, otherwise ImageFormat.UNKNOWN.
    */
   public ImageFormat getImageFormat() {
@@ -215,6 +234,20 @@ public class EncodedImage implements Closeable {
    */
   public int getSampleSize() {
     return mSampleSize;
+  }
+
+  /**
+   * Returns the size of the backing structure.
+   *
+   * <p> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. If it's an
+   * InputStream, return the size if it was set, -1 otherwise.
+   */
+  public int getSize() {
+    if (mPooledByteBufferRef != null) {
+      return (mPooledByteBufferRef.get() == null) ?
+          UNKNOWN_STREAM_SIZE : mPooledByteBufferRef.get().size();
+    }
+    return mStreamSize;
   }
 
   /**

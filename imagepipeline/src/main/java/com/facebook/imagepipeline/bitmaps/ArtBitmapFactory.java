@@ -24,7 +24,6 @@ import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
@@ -119,19 +118,14 @@ public class ArtBitmapFactory {
       throw new RuntimeException(ioe);
     }
 
-    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
-    try {
-      InputStream jpegDataStream = jpegBufferInputStream;
-      if (bytesRef.get().size() > length) {
-        jpegDataStream = new LimitedInputStream(jpegDataStream, length);
-      }
-      if (!isJpegComplete) {
-        jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
-      }
-      return doDecodeStaticImage(jpegDataStream, encodedImage.getSampleSize());
-    } finally {
-      CloseableReference.closeSafely(bytesRef);
+    InputStream jpegDataStream = jpegBufferInputStream;
+    if (encodedImage.getSize() > length) {
+      jpegDataStream = new LimitedInputStream(jpegDataStream, length);
     }
+    if (!isJpegComplete) {
+      jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
+    }
+    return doDecodeStaticImage(jpegDataStream, encodedImage.getSampleSize());
   }
 
   private CloseableReference<Bitmap> doDecodeStaticImage(InputStream inputStream, int sampleSize) {

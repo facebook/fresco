@@ -31,7 +31,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.ByteArrayPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
@@ -167,11 +166,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         return;
       }
 
-      CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
       try {
         long queueTime = mJobScheduler.getQueuedTime();
-        int length = isLast ? bytesRef.get().size() : getIntermediateImageEndOffset(bytesRef);
-        QualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo(bytesRef);
+        int length = isLast ?
+            encodedImage.getSize() : getIntermediateImageEndOffset(encodedImage);
+        QualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo();
 
         mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
         CloseableImage image = null;
@@ -183,8 +182,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
               onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
           handleError(e);
           return;
-        } finally {
-          CloseableReference.closeSafely(bytesRef);
         }
         Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
         mProducerListener.
@@ -279,9 +276,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       getConsumer().onCancellation();
     }
 
-    protected abstract int getIntermediateImageEndOffset(CloseableReference<PooledByteBuffer> ref);
+    protected abstract int getIntermediateImageEndOffset(EncodedImage encodedImage);
 
-    protected abstract QualityInfo getQualityInfo(CloseableReference<PooledByteBuffer> ref);
+    protected abstract QualityInfo getQualityInfo();
   }
 
   private class LocalImagesProgressiveDecoder extends ProgressiveDecoder {
@@ -301,12 +298,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
-    protected int getIntermediateImageEndOffset(CloseableReference<PooledByteBuffer> inputRef) {
-      return inputRef.get().size();
+    protected int getIntermediateImageEndOffset(EncodedImage encodedImage) {
+      return encodedImage.getSize();
     }
 
     @Override
-    protected QualityInfo getQualityInfo(CloseableReference<PooledByteBuffer> inputRef) {
+    protected QualityInfo getQualityInfo() {
       return ImmutableQualityInfo.of(0, false, false);
     }
   }
@@ -332,32 +329,27 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, boolean isLast) {
       boolean ret = super.updateDecodeJob(encodedImage, isLast);
       if (!isLast && EncodedImage.isValid(encodedImage)) {
-        CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
-        try {
-          if (!mProgressiveJpegParser.parseMoreData(bytesRef)) {
-            return false;
-          }
-          int scanNum = mProgressiveJpegParser.getBestScanNumber();
-          if (scanNum <= mLastScheduledScanNumber ||
-              scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(
-                  mLastScheduledScanNumber)) {
-            return false;
-          }
-          mLastScheduledScanNumber = scanNum;
-        } finally {
-          CloseableReference.closeSafely(bytesRef);
+        if (!mProgressiveJpegParser.parseMoreData(encodedImage)) {
+          return false;
         }
+        int scanNum = mProgressiveJpegParser.getBestScanNumber();
+        if (scanNum <= mLastScheduledScanNumber ||
+            scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(
+                mLastScheduledScanNumber)) {
+          return false;
+        }
+        mLastScheduledScanNumber = scanNum;
       }
       return ret;
     }
 
     @Override
-    protected int getIntermediateImageEndOffset(CloseableReference<PooledByteBuffer> inputRef) {
+    protected int getIntermediateImageEndOffset(EncodedImage encodedImage) {
       return mProgressiveJpegParser.getBestScanEndOffset();
     }
 
     @Override
-    protected QualityInfo getQualityInfo(CloseableReference<PooledByteBuffer> inputRef) {
+    protected QualityInfo getQualityInfo() {
       return mProgressiveJpegConfig.getQualityInfo(mProgressiveJpegParser.getBestScanNumber());
     }
   }
