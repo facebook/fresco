@@ -27,6 +27,7 @@ public class PoolFactory {
   private PooledByteBufferFactory mPooledByteBufferFactory;
   private PooledByteStreams mPooledByteStreams;
   private SharedByteArray mSharedByteArray;
+  private FlexByteArrayPool mFlexByteArrayPool;
 
   public PoolFactory(PoolConfig config) {
     mConfig = Preconditions.checkNotNull(config);
@@ -85,5 +86,15 @@ public class PoolFactory {
           mConfig.getSharedByteArrayParams());
     }
     return mSharedByteArray;
+  }
+
+  public FlexByteArrayPool getFlexByteArrayPool() {
+    if (mFlexByteArrayPool == null) {
+      mFlexByteArrayPool = new FlexByteArrayPool(
+          mConfig.getMemoryTrimmableRegistry(),
+          mConfig.getSharedByteArrayParams(),
+          1);
+    }
+    return mFlexByteArrayPool;
   }
 }
