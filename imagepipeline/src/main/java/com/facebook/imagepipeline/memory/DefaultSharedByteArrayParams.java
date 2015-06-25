@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.memory;
 
+import android.util.SparseIntArray;
+
 import com.facebook.common.util.ByteConstants;
 
 /**
@@ -16,18 +18,26 @@ import com.facebook.common.util.ByteConstants;
  */
 public class DefaultSharedByteArrayParams {
   // the default max buffer size we'll use
-  private static final int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
+  public static final int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
   // the min buffer size we'll use
   private static final int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
 
   private DefaultSharedByteArrayParams() {
   }
 
+  public static SparseIntArray generateBuckets(int min, int max) {
+    SparseIntArray buckets = new SparseIntArray();
+    for (int i = min; i <= max; i*=2) {
+      buckets.put(i, 1);
+    }
+    return buckets;
+  }
+
   public static PoolParams get() {
     return new PoolParams(
         DEFAULT_MAX_BYTE_ARRAY_SIZE,
         DEFAULT_MAX_BYTE_ARRAY_SIZE,
-        null,
+        generateBuckets(DEFAULT_MIN_BYTE_ARRAY_SIZE, DEFAULT_MAX_BYTE_ARRAY_SIZE),
         DEFAULT_MIN_BYTE_ARRAY_SIZE,
         DEFAULT_MAX_BYTE_ARRAY_SIZE
     );
