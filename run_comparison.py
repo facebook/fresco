@@ -74,7 +74,7 @@ def parse_args():
         description='Runs comparison test and processes results')
     parser.add_argument('-s', '--scenarios', choices=TESTS, nargs='+')
     parser.add_argument('-d', '--sources', choices=TEST_SOURCES, nargs='+')
-    parser.add_argument('-c', '--cpu', choices=ABIS)
+    parser.add_argument('-c', '--cpu', choices=ABIS, required=True)
     return parser.parse_args()
 
 
