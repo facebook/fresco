@@ -638,7 +638,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    */
   public void setRoundingParams(RoundingParams roundingParams) {
     mRoundingParams = roundingParams;
-
     updateOverlayColorRounding();
     updateBitmapOnlyRounding();
   }
@@ -654,13 +653,17 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         applyRoundingParams(roundedCornersDrawable, mRoundingParams);
         roundedCornersDrawable.setOverlayColor(mRoundingParams.getOverlayColor());
       } else {
-        mTopLevelDrawable.setCurrent(
-            maybeWrapWithRoundedOverlayColor(mRoundingParams, topDrawableChild));
+        // important: remove the child before wrapping it with a new parent!
+        topDrawableChild = mTopLevelDrawable.setCurrent(mEmptyActualImageDrawable);
+        topDrawableChild = maybeWrapWithRoundedOverlayColor(mRoundingParams, topDrawableChild);
+        mTopLevelDrawable.setCurrent(topDrawableChild);
       }
     } else if (topDrawableChild instanceof RoundedCornersDrawable) {
-      // Overlay rounding no longer required so remove drawable that was doing the
-      // rounding.
-      mTopLevelDrawable.setCurrent(topDrawableChild.getCurrent());
+      // Overlay rounding no longer required so remove drawable that was doing the rounding.
+      RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) topDrawableChild;
+      // Extract the drawable out of roundedCornersDrawable before setting it to a new parent.
+      topDrawableChild = roundedCornersDrawable.setCurrent(mEmptyActualImageDrawable);
+      mTopLevelDrawable.setCurrent(topDrawableChild);
     }
   }
 
@@ -675,10 +678,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
           Rounded rounded = (Rounded) layer;
           applyRoundingParams(rounded, mRoundingParams);
         } else {
+          // important: remove the child before wrapping it with a new parent!
+          setLayerChildDrawable(i, mEmptyActualImageDrawable);
           Drawable roundedLayer = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, layer);
-          if (roundedLayer != layer) {
-            setLayerChildDrawable(i, roundedLayer);
-          }
+          setLayerChildDrawable(i, roundedLayer);
         }
       }
     } else {
