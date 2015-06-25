@@ -60,6 +60,6 @@ Fresco 的 image pipeline 设计，允许用户在多方面控制图片的加载
 # 了解更多
 
 * [相关博客](https://code.facebook.com/posts/366199913563917): Fresco的发布
-* [下载](docs/download-fresco.html) Fresco
-* [文档](docs/index.html)
+* [下载](docs-cn/index.html) Fresco
+* [文档](docs-cn/getting-started.html)
 * [GitHub](https://github.com/facebook/fresco)的源码
