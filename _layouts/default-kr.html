@@ -1,0 +1,26 @@
+{% include header-kr.html %}
+
+{% if page.hero %}
+  {% include hero-kr.html %}
+{% endif %}
+
+<section class='content'><div class='width'>
+
+<article>
+
+{{ content }}
+
+</article>
+
+</div></section>
+
+
+
+{% if page.hero %}
+  <header class='hero'><div class='width'>
+    <div class="buttons-unit">
+      <a href="/docs-kr/index.html#_" class="button">시작하기</a>
+    </div>
+{% include footer.html %}
+  </div></header>
+{% endif %}

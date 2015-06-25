@@ -1,0 +1,64 @@
+- title: 配置和使用
+  items:
+  - id: index
+    title: 引入到项目
+  - id: compile-in-android-studio
+    title: 关于在Android Studio中编译
+  - id: getting-started
+    title: 配置和开始使用
+  - id: concepts
+    title: 关键概念
+  - id: supported-uris
+    title: 支持的 URIs
+- title: Drawee 指南
+  items:
+  - id: using-drawees-xml
+    title: 在XML中使用 Drawees
+  - id: using-drawees-code
+    title: 在Java代码中使用 Drawees
+  - id: drawee-components
+    title: Drawee的各种效果配置
+  - id: scaling
+    title: 缩放
+  - id: rounded-corners-and-circles
+    title: 圆角/圆圈
+  - id: using-controllerbuilder
+    title: 使用ControllerBuilder
+  - id: progressive-jpegs
+    title: 渐进式JPEG图
+  - id: animations
+    title: 动画图(gif)
+  - id: requesting-multiple-images
+    title: 多图请求及图片复用
+  - id: listening-download-events
+    title: 监听下载事件
+  - id: resizing-rotating
+    title: 缩放和旋转
+  - id: modifying-image
+    title: 图片的修改
+  - id: image-requests
+    title: 图片请求
+  - id: writing-custom-views
+    title: 自定义View
+  - id: gotchas
+    title: 一些陷阱
+- title: Image Pipeline 指南
+  items:
+  - id: intro-image-pipeline
+    title: 什么是Image Pipeline
+  - id: configure-image-pipeline
+    title: 配置Image Pipeline
+  - id: caching
+    title: 缓存的行为控制
+  - id: using-image-pipeline
+    title: 直接使用Image Pipeline
+  - id: datasources-datasubscribers
+    title: 数据源/订阅数据源
+  - id: closeable-references
+    title: 可关闭的引用
+- title: 第三方类库
+  items:
+  - id: using-other-network-layers
+    title: 自定义网络加载
+  - id: using-other-image-loaders
+    title: 使用其他的Image Loader
