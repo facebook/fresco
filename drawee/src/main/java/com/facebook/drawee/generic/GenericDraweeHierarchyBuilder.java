@@ -11,6 +11,7 @@ package com.facebook.drawee.generic;
 
 import javax.annotation.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.res.Resources;
@@ -20,7 +21,6 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -347,7 +347,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setBackground(Drawable background) {
-    mBackgrounds = Lists.newArrayList(background);
+    mBackgrounds = Arrays.asList(background);
     return this;
   }
 
@@ -373,7 +373,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setOverlay(Drawable overlay) {
-    mOverlays = Lists.newArrayList(overlay);
+    mOverlays = Arrays.asList(overlay);
     return this;
   }
 
