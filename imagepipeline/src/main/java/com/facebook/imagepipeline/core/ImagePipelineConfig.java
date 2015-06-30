@@ -331,8 +331,9 @@ public class ImagePipelineConfig {
       return this;
     }
 
-    public void setDownsampleEnabled(boolean downsampleEnabled) {
+    public Builder setDownsampleEnabled(boolean downsampleEnabled) {
       this.mDownsampleEnabled = downsampleEnabled;
+      return this;
     }
 
     public Builder setImageCacheStatsTracker(ImageCacheStatsTracker imageCacheStatsTracker) {
