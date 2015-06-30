@@ -13,6 +13,9 @@
 package com.facebook.samples.comparison.configs.imagepipeline;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.content.Context;
 
 import com.facebook.common.internal.Sets;
@@ -93,7 +96,8 @@ public class ImagePipelineConfigFactory {
   }
 
   private static void configureLoggingListeners(ImagePipelineConfig.Builder configBuilder) {
-    configBuilder.setRequestListeners(
-        Sets.newHashSet((RequestListener) new RequestLoggingListener()));
+    Set<RequestListener> requestListeners = new HashSet<>();
+    requestListeners.add(new RequestLoggingListener());
+    configBuilder.setRequestListeners(requestListeners);
   }
 }

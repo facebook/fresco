@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.facebook.common.internal.Sets;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -31,6 +30,7 @@ import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class MainActivity extends Activity {
@@ -65,8 +65,10 @@ public class MainActivity extends Activity {
         .setOverlayColor(Color.WHITE);
     GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
 
-    Set<ScaleType> useBitmapOnly =
-        Sets.newHashSet(ScaleType.CENTER_CROP, ScaleType.CENTER, ScaleType.FOCUS_CROP);
+    Set<ScaleType> useBitmapOnly = new HashSet<>();
+    useBitmapOnly.add(ScaleType.CENTER_CROP);
+    useBitmapOnly.add(ScaleType.CENTER);
+    useBitmapOnly.add(ScaleType.FOCUS_CROP);
 
     for (ScaleType scaleType : ScaleType.values()) {
       builder.setActualImageScaleType(scaleType);
