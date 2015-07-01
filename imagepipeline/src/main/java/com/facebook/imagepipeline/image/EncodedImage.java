@@ -72,7 +72,7 @@ public class EncodedImage implements Closeable {
     this.mInputStreamSupplier = inputStreamSupplier;
   }
 
-  public EncodedImage(Supplier<InputStream> inputStreamSupplier, int  streamSize) {
+  public EncodedImage(Supplier<InputStream> inputStreamSupplier, int streamSize) {
     Preconditions.checkNotNull(inputStreamSupplier);
     this.mPooledByteBufferRef = null;
     this.mInputStreamSupplier = inputStreamSupplier;
@@ -91,7 +91,7 @@ public class EncodedImage implements Closeable {
   public EncodedImage cloneOrNull() {
     EncodedImage encodedImage;
     if (mInputStreamSupplier != null) {
-       encodedImage = new EncodedImage(mInputStreamSupplier);
+       encodedImage = new EncodedImage(mInputStreamSupplier, mStreamSize);
     } else {
       CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
       try {
@@ -106,6 +106,7 @@ public class EncodedImage implements Closeable {
       encodedImage.setRotationAngle(mRotationAngle);
       encodedImage.setWidth(mWidth);
       encodedImage.setHeight(mHeight);
+      encodedImage.setSampleSize(mSampleSize);
     }
     return encodedImage;
   }
