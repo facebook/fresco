@@ -9,15 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import android.graphics.Rect;
-
-import com.facebook.imageformat.ImageFormat;
-import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imageutils.JfifUtil;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Add image transform meta data producer
@@ -50,43 +42,10 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
         getConsumer().onNewResult(null, isLast);
         return;
       }
-      EncodedImage encodedImage = setEncodedImageMetaData(newResult);
-      getConsumer().onNewResult(encodedImage, isLast);
-    }
-  }
-
-  // Returns the encoded image with the dimensions set if that information is available.
-  private static EncodedImage setEncodedImageMetaData(EncodedImage encodedImage) {
-    final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-        encodedImage.getInputStream());
-    encodedImage.setImageFormat(imageFormat);
-    if (imageFormat == ImageFormat.JPEG) {
-      Rect dimensions = JfifUtil.getDimensions(encodedImage.getInputStream());
-      if (dimensions != null) {
-        // We don't know for sure that the rotation angle is set at this point. But it might
-        // never get set, so let's assume that if we've got the dimensions then we've got the
-        // rotation angle, else we'll never propagate intermediate results.
-        encodedImage.setRotationAngle(getRotationAngle(encodedImage));
-        encodedImage.setWidth(dimensions.width());
-        encodedImage.setHeight(dimensions.height());
+      if (!EncodedImage.isMetaDataAvailable(newResult)) {
+        newResult.parseMetaData();
       }
-    }
-    return encodedImage;
-  }
-
-  // Gets the correction angle based on the image's orientation
-  private static int getRotationAngle(final EncodedImage encodedImage) {
-    InputStream is = encodedImage.getInputStream();
-    try {
-      return JfifUtil.getAutoRotateAngleFromOrientation(JfifUtil.getOrientation(is));
-    } finally {
-      if (is != null) {
-        try {
-          is.close();
-        } catch (IOException ioe) {
-          throw new RuntimeException(ioe);
-        }
-      }
+      getConsumer().onNewResult(newResult, isLast);
     }
   }
 }

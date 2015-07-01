@@ -9,14 +9,18 @@
 
 package com.facebook.imagepipeline.image;
 
+import android.graphics.Rect;
+
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imageutils.JfifUtil;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -248,6 +252,27 @@ public class EncodedImage implements Closeable {
           UNKNOWN_STREAM_SIZE : mPooledByteBufferRef.get().size();
     }
     return mStreamSize;
+  }
+
+  /**
+   * Sets the encoded image meta data.
+   */
+  public void parseMetaData() {
+    final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+        getInputStream());
+    mImageFormat = imageFormat;
+    if (imageFormat == ImageFormat.JPEG) {
+      Rect dimensions = JfifUtil.getDimensions(getInputStream());
+      if (dimensions != null) {
+        // We don't know for sure that the rotation angle is set at this point. But it might
+        // never get set, so let's assume that if we've got the dimensions then we've got the
+        // rotation angle, else we'll never propagate intermediate results.
+        mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
+            JfifUtil.getOrientation(getInputStream()));
+        mWidth = dimensions.width();
+        mHeight = dimensions.height();
+      }
+    }
   }
 
   /**

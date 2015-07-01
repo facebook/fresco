@@ -9,6 +9,7 @@
 package com.facebook.imagepipeline.producers;
 
 
+
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -16,6 +17,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
+
 
 public class DownsampleUtil {
 
