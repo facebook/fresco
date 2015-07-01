@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imageutils.JfifUtil;
 
 import java.io.Closeable;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.annotation.Nullable;
@@ -49,8 +50,10 @@ public class EncodedImage implements Closeable {
 
   public static final int DEFAULT_SAMPLE_SIZE = 1;
 
-  private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
-  private final Supplier<InputStream> mInputStreamSupplier;
+  // Only one of this will be set. The EncodedImage can either be backed by a ByteBuffer or a
+  // Supplier of InputStream, but not both.
+  private final @Nullable CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
+  private final @Nullable Supplier<FileInputStream> mInputStreamSupplier;
 
   private int mStreamSize = -1;
 
@@ -66,16 +69,14 @@ public class EncodedImage implements Closeable {
     this.mInputStreamSupplier = null;
   }
 
-  public EncodedImage(Supplier<InputStream> inputStreamSupplier) {
+  public EncodedImage(Supplier<FileInputStream> inputStreamSupplier) {
     Preconditions.checkNotNull(inputStreamSupplier);
     this.mPooledByteBufferRef = null;
     this.mInputStreamSupplier = inputStreamSupplier;
   }
 
-  public EncodedImage(Supplier<InputStream> inputStreamSupplier, int streamSize) {
-    Preconditions.checkNotNull(inputStreamSupplier);
-    this.mPooledByteBufferRef = null;
-    this.mInputStreamSupplier = inputStreamSupplier;
+  public EncodedImage(Supplier<FileInputStream> inputStreamSupplier, int streamSize) {
+    this(inputStreamSupplier);
     this.mStreamSize = streamSize;
   }
 
@@ -93,7 +94,8 @@ public class EncodedImage implements Closeable {
     if (mInputStreamSupplier != null) {
        encodedImage = new EncodedImage(mInputStreamSupplier, mStreamSize);
     } else {
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
+      CloseableReference<PooledByteBuffer> pooledByteBufferRef =
+          CloseableReference.cloneOrNull(mPooledByteBufferRef);
       try {
         encodedImage = (pooledByteBufferRef == null) ? null : new EncodedImage(pooledByteBufferRef);
       } finally {
@@ -146,7 +148,8 @@ public class EncodedImage implements Closeable {
     if (mInputStreamSupplier != null) {
       return mInputStreamSupplier.get();
     }
-    CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
+    CloseableReference<PooledByteBuffer> pooledByteBufferRef =
+        CloseableReference.cloneOrNull(mPooledByteBufferRef);
     if (pooledByteBufferRef != null) {
       try {
         return new PooledByteBufferInputStream(pooledByteBufferRef.get());
@@ -311,6 +314,7 @@ public class EncodedImage implements Closeable {
    */
   @VisibleForTesting
   public synchronized SharedReference<PooledByteBuffer> getUnderlyingReferenceTestOnly() {
-    return mPooledByteBufferRef.getUnderlyingReferenceTestOnly();
+    return (mPooledByteBufferRef != null) ?
+        mPooledByteBufferRef.getUnderlyingReferenceTestOnly() : null;
   }
 }
