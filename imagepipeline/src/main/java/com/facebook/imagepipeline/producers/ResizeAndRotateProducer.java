@@ -161,12 +161,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           ret = new EncodedImage(ref);
           ret.setImageFormat(ImageFormat.JPEG);
           try {
-            if (encodedImage.getImageFormat() == ImageFormat.JPEG &&
-                EncodedImage.isMetaDataAvailable(encodedImage)) {
-              ret.setRotationAngle(encodedImage.getRotationAngle());
-              ret.setWidth(encodedImage.getWidth());
-              ret.setHeight(encodedImage.getHeight());
-            }
+            ret.parseMetaData();
             mProducerContext.getListener().
                 onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
             getConsumer().onNewResult(ret, isLast);
