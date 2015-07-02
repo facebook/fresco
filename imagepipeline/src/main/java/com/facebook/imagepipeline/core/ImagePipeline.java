@@ -175,18 +175,15 @@ public class ImagePipeline {
     try {
       Producer<CloseableReference<PooledByteBuffer>> producerSequence =
           mProducerSequenceFactory.getEncodedImageProducerSequence(imageRequest);
+      // The resize options are used to determine whether images are going to be downsampled during
+      // decode or not. For the case where the image has to be downsampled and it's a local image it
+      // will be kept as a FileInputStream until decoding instead of reading it in memory. Since
+      // this method returns an encoded image, it should always be read into memory. Therefore, the
+      // resize options are ignored to avoid treating the image as if it was to be downsampled
+      // during decode.
       if (imageRequest.getResizeOptions() != null) {
-        ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(
-            imageRequest.getSourceUri());
-        imageRequest =
-            builder.setAutoRotateEnabled(imageRequest.getAutoRotateEnabled())
-            .setImageDecodeOptions(imageRequest.getImageDecodeOptions())
-            .setImageType(imageRequest.getImageType())
-            .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
-            .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
-            .setPostprocessor(imageRequest.getPostprocessor())
-            .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
-            .setRequestPriority(imageRequest.getPriority())
+        imageRequest = ImageRequestBuilder.fromRequest(imageRequest)
+            .setResizeOptions(null)
             .build();
       }
       return submitFetchRequest(
