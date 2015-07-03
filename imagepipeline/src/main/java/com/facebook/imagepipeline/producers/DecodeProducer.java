@@ -46,7 +46,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
   // keys for extra map
   private static final String BITMAP_SIZE_KEY = "bitmapSize";
-  private static final String QUEUE_TIME_KEY = "queueTime";
   private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
   private static final String IS_FINAL_KEY = "isFinal";
 
@@ -209,7 +208,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         return ImmutableMap.of(
             BITMAP_SIZE_KEY,
             sizeStr,
-            QUEUE_TIME_KEY,
+            JobScheduler.QUEUE_TIME_KEY,
             queueStr,
             HAS_GOOD_QUALITY_KEY,
             qualityStr,
@@ -217,7 +216,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             finalStr);
       } else {
         return ImmutableMap.of(
-            QUEUE_TIME_KEY,
+            JobScheduler.QUEUE_TIME_KEY,
             queueStr,
             HAS_GOOD_QUALITY_KEY,
             qualityStr,

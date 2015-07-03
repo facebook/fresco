@@ -195,7 +195,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return ImmutableMap.of(
           ORIGINAL_SIZE_KEY, originalSize,
           REQUESTED_SIZE_KEY, requestedSize,
-          FRACTION_KEY, fraction);
+          FRACTION_KEY, fraction,
+          JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()));
     }
   }
 

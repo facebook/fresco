@@ -25,6 +25,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
  */
 public class JobScheduler {
 
+  static final String QUEUE_TIME_KEY = "queueTime";
+
   public static interface JobRunnable {
     void run(EncodedImage encodedImage, boolean isLast);
   }
