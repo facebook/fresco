@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * CloseableImage that contains one Bitmap.
@@ -31,7 +32,6 @@ public class CloseableStaticBitmap extends CloseableBitmap {
 
   // quality info
   private final QualityInfo mQualityInfo;
-
 
   /**
    * Creates a new instance of a CloseableStaticBitmap.
@@ -91,6 +91,7 @@ public class CloseableStaticBitmap extends CloseableBitmap {
 
   /**
    * Gets the underlying bitmap.
+   *
    * @return the underlying bitmap
    */
   @Override
@@ -103,8 +104,7 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   @Override
   public int getSizeInBytes() {
-    Bitmap bitmap = mBitmap;
-    return (bitmap == null) ? 0 : bitmap.getHeight() * bitmap.getRowBytes();
+    return BitmapUtil.getSizeInBytes(mBitmap);
   }
 
   /**
