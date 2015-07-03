@@ -18,7 +18,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 
-
 public class DownsampleUtil {
 
   private static final float MAX_BITMAP_SIZE = 2048f;

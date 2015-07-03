@@ -15,7 +15,9 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -47,21 +49,35 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   }
 
   @Override
-  protected InputStream getInputStream(ImageRequest imageRequest) throws IOException {
+  protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
     Uri uri = imageRequest.getSourceUri();
     if (isContactUri(uri)) {
       // If a Contact URI is provided, use the special helper to open that contact's photo.
-      return ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri);
+      return getByteBufferBackedEncodedImage(
+          ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri),
+          getLength(imageRequest));
     }
 
     if (isCameraUri(uri)) {
-      String pathname = getCameraPath(uri);
+      final String pathname = getCameraPath(uri);
       if (pathname != null) {
-        return new FileInputStream(pathname);
+        Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
+          @Override
+          public FileInputStream get() {
+            try {
+              return new FileInputStream(pathname);
+            } catch (IOException ioe) {
+              throw new RuntimeException(ioe);
+            }
+          }
+        };
+        return new EncodedImage(sup, getLength(imageRequest));
       }
     }
 
-    return mContentResolver.openInputStream(uri);
+    return getByteBufferBackedEncodedImage(
+        mContentResolver.openInputStream(uri),
+        getLength(imageRequest));
   }
 
   /**
@@ -93,8 +109,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     }
   }
 
-  @Override
-  protected int getLength(ImageRequest imageRequest) {
+  private int getLength(ImageRequest imageRequest) {
     Uri uri = imageRequest.getSourceUri();
     if (isCameraUri(uri)) {
       String pathname = getCameraPath(uri);

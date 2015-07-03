@@ -25,6 +25,8 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 
+import java.io.InputStream;
+
 /**
  * Decodes images.
  *
@@ -99,7 +101,7 @@ public class ImageDecoder {
   public CloseableImage decodeGif(
       EncodedImage encodedImage,
       ImageDecodeOptions options) {
-    PooledByteBufferInputStream is = (PooledByteBufferInputStream) encodedImage.getInputStream();
+    InputStream is = encodedImage.getInputStream();
     if (is == null) {
       return null;
     }
