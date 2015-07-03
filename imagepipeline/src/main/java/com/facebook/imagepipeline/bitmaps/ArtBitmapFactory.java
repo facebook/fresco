@@ -27,7 +27,6 @@ import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
@@ -89,7 +88,8 @@ public class ArtBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
-    return doDecodeStaticImage(encodedImage.getInputStream(), encodedImage.getSampleSize());
+    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
+    return decodeStaticImageFromStream(encodedImage.getInputStream(), options);
   }
 
   /**
@@ -101,30 +101,27 @@ public class ArtBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   CloseableReference<Bitmap> decodeJPEGFromEncodedImage(EncodedImage encodedImage, int length) {
+    boolean isJpegComplete = encodedImage.isCompleteAt(length);
+    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
+
     InputStream jpegDataStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
     // pipeline,this comes from a call stack where this was checked before. Also this method needs
     // the InputStream to decode the image so this can't be null.
     Preconditions.checkNotNull(jpegDataStream);
-    boolean isJpegComplete = encodedImage.isCompleteAt(length);
     if (encodedImage.getSize() > length) {
       jpegDataStream = new LimitedInputStream(jpegDataStream, length);
     }
     if (!isJpegComplete) {
       jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
     }
-    return doDecodeStaticImage(jpegDataStream, encodedImage.getSampleSize());
+    return decodeStaticImageFromStream(jpegDataStream, options);
   }
 
-  private CloseableReference<Bitmap> doDecodeStaticImage(InputStream inputStream, int sampleSize) {
+  private CloseableReference<Bitmap> decodeStaticImageFromStream(
+      InputStream inputStream,
+      BitmapFactory.Options options) {
     Preconditions.checkNotNull(inputStream);
-    inputStream.mark(Integer.MAX_VALUE);
-    final BitmapFactory.Options options = getDecodeOptionsForStream(inputStream, sampleSize);
-    try {
-      inputStream.reset();
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
 
     final Bitmap bitmapToReuse = mBitmapPool.get(options.outHeight * options.outWidth);
     if (bitmapToReuse == null) {
@@ -159,14 +156,14 @@ public class ArtBitmapFactory {
   /**
    * Options returned by this method are configured with mDecodeBuffer which is GuardedBy("this")
    */
-  private BitmapFactory.Options getDecodeOptionsForStream(InputStream inputStream, int sampleSize) {
+  private BitmapFactory.Options getDecodeOptionsForStream(EncodedImage encodedImage) {
     final BitmapFactory.Options options = new BitmapFactory.Options();
     if (mDownsampleEnabled) {
-      options.inSampleSize = sampleSize;
+      options.inSampleSize = encodedImage.getSampleSize();
     }
     options.inJustDecodeBounds = true;
     // fill outWidth and outHeight
-    BitmapFactory.decodeStream(inputStream, null, options);
+    BitmapFactory.decodeStream(encodedImage.getInputStream(), null, options);
     if (options.outWidth == -1 || options.outHeight == -1) {
       throw new IllegalArgumentException();
     }
