@@ -245,6 +245,25 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Returns true if the image is a JPEG and its data is already complete at the specified length,
+   * false otherwise.
+   */
+  public boolean isCompleteAt(int length) {
+    if (mImageFormat != ImageFormat.JPEG) {
+      return true;
+    }
+    // If the image is backed by FileInputStreams return true since they will always be complete.
+    if (mInputStreamSupplier != null) {
+      return true;
+    }
+    // The image should be backed by a ByteBuffer
+    Preconditions.checkNotNull(mPooledByteBufferRef);
+    PooledByteBuffer buf = mPooledByteBufferRef.get();
+    return (buf.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE)
+        && (buf.read(length - 1) == (byte) JfifUtil.MARKER_EOI);
+  }
+
+  /**
    * Returns the size of the backing structure.
    *
    * <p> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. If it's an

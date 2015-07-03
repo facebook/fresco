@@ -101,24 +101,12 @@ public class ArtBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   CloseableReference<Bitmap> decodeJPEGFromEncodedImage(EncodedImage encodedImage, int length) {
-    final InputStream jpegBufferInputStream = encodedImage.getInputStream();
+    InputStream jpegDataStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
     // pipeline,this comes from a call stack where this was checked before. Also this method needs
     // the InputStream to decode the image so this can't be null.
-    Preconditions.checkNotNull(jpegBufferInputStream);
-    jpegBufferInputStream.mark(Integer.MAX_VALUE);
-
-    boolean isJpegComplete;
-    try {
-      jpegBufferInputStream.skip(length - 2);
-      isJpegComplete = (jpegBufferInputStream.read() == JfifUtil.MARKER_FIRST_BYTE) &&
-          (jpegBufferInputStream.read() == JfifUtil.MARKER_EOI);
-      jpegBufferInputStream.reset();
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
-
-    InputStream jpegDataStream = jpegBufferInputStream;
+    Preconditions.checkNotNull(jpegDataStream);
+    boolean isJpegComplete = encodedImage.isCompleteAt(length);
     if (encodedImage.getSize() > length) {
       jpegDataStream = new LimitedInputStream(jpegDataStream, length);
     }
