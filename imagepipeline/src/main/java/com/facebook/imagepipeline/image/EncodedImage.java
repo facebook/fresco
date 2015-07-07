@@ -21,6 +21,7 @@ import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.imageutils.PngUtil;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
@@ -284,17 +285,23 @@ public class EncodedImage implements Closeable {
     final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
         getInputStream());
     mImageFormat = imageFormat;
+    Rect dimensions = null;
     if (imageFormat == ImageFormat.JPEG) {
-      Rect dimensions = JfifUtil.getDimensions(getInputStream());
+      dimensions = JfifUtil.getDimensions(getInputStream());
       if (dimensions != null) {
         // We don't know for sure that the rotation angle is set at this point. But it might
         // never get set, so let's assume that if we've got the dimensions then we've got the
         // rotation angle, else we'll never propagate intermediate results.
         mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
             JfifUtil.getOrientation(getInputStream()));
-        mWidth = dimensions.width();
-        mHeight = dimensions.height();
       }
+    } else if (imageFormat == ImageFormat.PNG) {
+      dimensions = PngUtil.getDimensions(getInputStream());
+      mRotationAngle = 0;
+    }
+    if (dimensions != null) {
+      mWidth = dimensions.width();
+      mHeight = dimensions.height();
     }
   }
 
