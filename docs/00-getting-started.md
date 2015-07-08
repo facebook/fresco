@@ -15,7 +15,7 @@ For images from the network, you will need to to request Internet permission fro
   <uses-permission android:name="android.permission.INTERNET"/>
 ```
 
-Near your application startup, before your app calls ```setContentView()```, initialize the Fresco class:
+Near your application startup, before your app calls ```setContentView()```, initialize the Fresco class. You should only call `Fresco.initialize` once. Your Application class would be a good place. Doing it in each Activity is wrong.
 
 ```java
 Fresco.initialize(context);
