@@ -25,7 +25,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.SharedByteArray;
+import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
@@ -44,16 +44,17 @@ public class DalvikBitmapFactory {
   private final EmptyJpegGenerator mJpegGenerator;
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
-  private final SharedByteArray mSharedByteArray;
+  private final FlexByteArrayPool mFlexByteArrayPool;
   private final boolean mDownsampleEnabled;
 
   public DalvikBitmapFactory(
       EmptyJpegGenerator jpegGenerator,
-      SharedByteArray sharedByteArray,
+      FlexByteArrayPool flexByteArrayPool,
       boolean downsampleEnabled) {
     mJpegGenerator = jpegGenerator;
-    mSharedByteArray = sharedByteArray;
+    mFlexByteArrayPool = flexByteArrayPool;
     mDownsampleEnabled = downsampleEnabled;
+
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
     mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
       @Override
@@ -180,7 +181,7 @@ public class DalvikBitmapFactory {
       BitmapFactory.Options options) {
     final PooledByteBuffer pooledByteBuffer = bytesRef.get();
     final int length = pooledByteBuffer.size();
-    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length);
+    final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length);
     try {
       final byte[] encodedBytesArray = encodedBytesArrayRef.get();
       pooledByteBuffer.read(0, encodedBytesArray, 0, length);
@@ -210,7 +211,7 @@ public class DalvikBitmapFactory {
     final PooledByteBuffer pooledByteBuffer = bytesRef.get();
     Preconditions.checkArgument(length <= pooledByteBuffer.size());
     // allocate bigger array in case EOI needs to be added
-    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length + 2);
+    final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length + 2);
     try {
       byte[] encodedBytesArray = encodedBytesArrayRef.get();
       pooledByteBuffer.read(0, encodedBytesArray, 0, length);

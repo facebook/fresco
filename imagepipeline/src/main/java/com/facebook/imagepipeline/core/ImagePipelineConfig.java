@@ -160,7 +160,8 @@ public class ImagePipelineConfig {
     GingerbreadBitmapFactory factoryGingerbread = new GingerbreadBitmapFactory();
     DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
         new EmptyJpegGenerator(mPoolFactory.getPooledByteBufferFactory()),
-        mPoolFactory.getSharedByteArray(), isDownsampleEnabled());
+        mPoolFactory.getFlexByteArrayPool(),
+        isDownsampleEnabled());
     ArtBitmapFactory factoryLollipop =
         new ArtBitmapFactory(mPoolFactory.getBitmapPool(), 1, isDownsampleEnabled());
     mPlatformBitmapFactory =

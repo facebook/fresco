@@ -24,7 +24,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.SharedByteArray;
+import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
@@ -73,7 +73,7 @@ public class DalvikBitmapFactoryTest {
   private static final int MAX_BITMAP_SIZE =
       MAX_BITMAP_COUNT * MockBitmapFactory.DEFAULT_BITMAP_SIZE;
 
-  private SharedByteArray mSharedByteArray;
+  private FlexByteArrayPool mFlexByteArrayPool;
 
   private DalvikBitmapFactory mDalvikBitmapFactory;
   private CloseableReference<PooledByteBuffer> mByteBufferRef;
@@ -86,7 +86,7 @@ public class DalvikBitmapFactoryTest {
 
   @Before
   public void setUp() {
-    mSharedByteArray = mock(SharedByteArray.class);
+    mFlexByteArrayPool = mock(FlexByteArrayPool.class);
 
     mBitmap = MockBitmapFactory.create();
     mBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_SIZE);
@@ -109,12 +109,12 @@ public class DalvikBitmapFactoryTest {
 
     mDecodeBuf = new byte[LENGTH + 2];
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));
-    when(mSharedByteArray.get(Integer.valueOf(LENGTH))).thenReturn(mDecodeBufRef);
+    when(mFlexByteArrayPool.get(Integer.valueOf(LENGTH))).thenReturn(mDecodeBufRef);
 
     mockStatic(Bitmaps.class);
     mDalvikBitmapFactory = new DalvikBitmapFactory(
         null,
-        mSharedByteArray,
+        mFlexByteArrayPool,
         false);
   }
 
@@ -129,10 +129,10 @@ public class DalvikBitmapFactoryTest {
 
   @Test
   public void testDecodeJpeg_incomplete() {
-    when(mSharedByteArray.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
+    when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
     CloseableReference<Bitmap> result =
         mDalvikBitmapFactory.decodeJPEGFromEncodedImage(mEncodedImage, IMAGE_SIZE);
-    verify(mSharedByteArray).get(IMAGE_SIZE + 2);
+    verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
     verifyStatic();
     BitmapFactory.decodeByteArray(
         same(mDecodeBuf),
@@ -188,11 +188,11 @@ public class DalvikBitmapFactoryTest {
   private void setUpJpegDecode() {
     mInputBuf[3] = (byte) 0xff;
     mInputBuf[4] = (byte) 0xd9;
-    when(mSharedByteArray.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
+    when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
   }
 
   private void verifyDecodesJpeg(CloseableReference<Bitmap> result) {
-    verify(mSharedByteArray).get(IMAGE_SIZE + 2);
+    verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
     verifyStatic();
     BitmapFactory.decodeByteArray(
         same(mDecodeBuf),
