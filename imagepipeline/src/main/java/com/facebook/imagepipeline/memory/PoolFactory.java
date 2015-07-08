@@ -92,8 +92,7 @@ public class PoolFactory {
     if (mFlexByteArrayPool == null) {
       mFlexByteArrayPool = new FlexByteArrayPool(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getFlexByteArrayPoolParams(),
-          1);
+          mConfig.getFlexByteArrayPoolParams());
     }
     return mFlexByteArrayPool;
   }

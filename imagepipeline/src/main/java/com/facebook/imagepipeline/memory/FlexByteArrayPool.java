@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
@@ -32,13 +33,12 @@ public class FlexByteArrayPool {
 
   public FlexByteArrayPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
-      PoolParams params,
-      int maxNumThreads) {
+      PoolParams params) {
+    Preconditions.checkArgument(params.maxNumThreads > 0);
     mDelegatePool = new SoftRefByteArrayPool(
         memoryTrimmableRegistry,
         params,
-        NoOpPoolStatsTracker.getInstance(),
-        maxNumThreads);
+        NoOpPoolStatsTracker.getInstance());
     mResourceReleaser = new ResourceReleaser<byte[]>() {
       @Override
       public void release(byte[] unused) {
@@ -64,20 +64,19 @@ public class FlexByteArrayPool {
   }
 
   @VisibleForTesting static class SoftRefByteArrayPool extends GenericByteArrayPool {
-    private final int mMaxNumThreads;
-
     public SoftRefByteArrayPool(
         MemoryTrimmableRegistry memoryTrimmableRegistry,
         PoolParams poolParams,
-        PoolStatsTracker poolStatsTracker,
-        int maxNumThreads) {
+        PoolStatsTracker poolStatsTracker) {
       super(memoryTrimmableRegistry, poolParams, poolStatsTracker);
-      mMaxNumThreads = maxNumThreads;
     }
 
     @Override
     Bucket<byte[]> newBucket(int bucketedSize) {
-      return new OOMSoftReferenceBucket<>(getSizeInBytes(bucketedSize), mMaxNumThreads, 0);
+      return new OOMSoftReferenceBucket<>(
+          getSizeInBytes(bucketedSize),
+          mPoolParams.maxNumThreads,
+          0);
     }
   }
 }

@@ -21,6 +21,8 @@ public class DefaultFlexByteArrayPoolParams {
   public static final int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
   // the min buffer size we'll use
   private static final int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
+  // the maximum number of threads permitted to touch this pool
+  public static final int DEFAULT_MAX_NUM_THREADS = 1;
 
   private DefaultFlexByteArrayPoolParams() {
   }
@@ -39,7 +41,7 @@ public class DefaultFlexByteArrayPoolParams {
         DEFAULT_MAX_BYTE_ARRAY_SIZE,
         generateBuckets(DEFAULT_MIN_BYTE_ARRAY_SIZE, DEFAULT_MAX_BYTE_ARRAY_SIZE),
         DEFAULT_MIN_BYTE_ARRAY_SIZE,
-        DEFAULT_MAX_BYTE_ARRAY_SIZE
-    );
+        DEFAULT_MAX_BYTE_ARRAY_SIZE,
+        DEFAULT_MAX_NUM_THREADS);
   }
 }
