@@ -16,13 +16,13 @@ import com.facebook.common.util.ByteConstants;
 /**
  * Provides pool parameters ({@link PoolParams}) for {@link SharedByteArray}
  */
-public class DefaultSharedByteArrayParams {
+public class DefaultFlexByteArrayPoolParams {
   // the default max buffer size we'll use
   public static final int DEFAULT_MAX_BYTE_ARRAY_SIZE = 4 * ByteConstants.MB;
   // the min buffer size we'll use
   private static final int DEFAULT_MIN_BYTE_ARRAY_SIZE = 128 * ByteConstants.KB;
 
-  private DefaultSharedByteArrayParams() {
+  private DefaultFlexByteArrayPoolParams() {
   }
 
   public static SparseIntArray generateBuckets(int min, int max) {

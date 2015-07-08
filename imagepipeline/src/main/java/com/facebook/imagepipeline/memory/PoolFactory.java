@@ -83,7 +83,7 @@ public class PoolFactory {
     if (mSharedByteArray == null) {
       mSharedByteArray = new SharedByteArray(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getSharedByteArrayParams());
+          mConfig.getFlexByteArrayPoolParams());
     }
     return mSharedByteArray;
   }
@@ -92,7 +92,7 @@ public class PoolFactory {
     if (mFlexByteArrayPool == null) {
       mFlexByteArrayPool = new FlexByteArrayPool(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getSharedByteArrayParams(),
+          mConfig.getFlexByteArrayPoolParams(),
           1);
     }
     return mFlexByteArrayPool;

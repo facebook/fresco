@@ -22,10 +22,10 @@ public class PoolConfig {
 
   private final PoolParams mBitmapPoolParams;
   private final PoolStatsTracker mBitmapPoolStatsTracker;
+  private final PoolParams mFlexByteArrayPoolParams;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
   private final PoolParams mNativeMemoryChunkPoolParams;
   private final PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-  private final PoolParams mSharedByteArrayParams;
   private final PoolParams mSmallByteArrayPoolParams;
   private final PoolStatsTracker mSmallByteArrayPoolStatsTracker;
 
@@ -38,6 +38,10 @@ public class PoolConfig {
         builder.mBitmapPoolStatsTracker == null ?
             NoOpPoolStatsTracker.getInstance() :
             builder.mBitmapPoolStatsTracker;
+    mFlexByteArrayPoolParams =
+        builder.mFlexByteArrayPoolParams == null ?
+            DefaultFlexByteArrayPoolParams.get() :
+            builder.mFlexByteArrayPoolParams;
     mMemoryTrimmableRegistry =
         builder.mMemoryTrimmableRegistry == null ?
             NoOpMemoryTrimmableRegistry.getInstance() :
@@ -50,10 +54,6 @@ public class PoolConfig {
         builder.mNativeMemoryChunkPoolStatsTracker == null ?
             NoOpPoolStatsTracker.getInstance() :
             builder.mNativeMemoryChunkPoolStatsTracker;
-    mSharedByteArrayParams =
-        builder.mSharedByteArrayParams == null ?
-            DefaultSharedByteArrayParams.get() :
-            builder.mSharedByteArrayParams;
     mSmallByteArrayPoolParams =
         builder.mSmallByteArrayPoolParams == null ?
             DefaultByteArrayPoolParams.get() :
@@ -84,8 +84,8 @@ public class PoolConfig {
     return mNativeMemoryChunkPoolStatsTracker;
   }
 
-  public PoolParams getSharedByteArrayParams() {
-    return mSharedByteArrayParams;
+  public PoolParams getFlexByteArrayPoolParams() {
+    return mFlexByteArrayPoolParams;
   }
 
   public PoolParams getSmallByteArrayPoolParams() {
@@ -109,7 +109,7 @@ public class PoolConfig {
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
     private PoolParams mNativeMemoryChunkPoolParams;
     private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-    private PoolParams mSharedByteArrayParams;
+    private PoolParams mFlexByteArrayPoolParams;
 
     private Builder() {
     }
@@ -122,6 +122,11 @@ public class PoolConfig {
     public Builder setBitmapPoolStatsTracker(
         PoolStatsTracker bitmapPoolStatsTracker) {
       mBitmapPoolStatsTracker = Preconditions.checkNotNull(bitmapPoolStatsTracker);
+      return this;
+    }
+
+    public Builder setFlexByteArrayPoolParams(PoolParams flexByteArrayPoolParams) {
+      mFlexByteArrayPoolParams = flexByteArrayPoolParams;
       return this;
     }
 
@@ -151,11 +156,6 @@ public class PoolConfig {
         PoolStatsTracker nativeMemoryChunkPoolStatsTracker) {
       mNativeMemoryChunkPoolStatsTracker =
           Preconditions.checkNotNull(nativeMemoryChunkPoolStatsTracker);
-      return this;
-    }
-
-    public Builder setSharedByteArrayParams(PoolParams sharedByteArrayParams) {
-      mSharedByteArrayParams = sharedByteArrayParams;
       return this;
     }
 
