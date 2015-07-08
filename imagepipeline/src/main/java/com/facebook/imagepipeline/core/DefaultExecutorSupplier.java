@@ -26,18 +26,17 @@ import com.facebook.common.executors.SerialDelegatingExecutor;
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
   private static final int NUM_IO_BOUND_THREADS = 2;
-  private static final int NUM_CPU_BOUND_THREADS = Runtime.getRuntime().availableProcessors();
   private static final int KEEP_ALIVE_SECONDS = 60;
 
   private final Executor mIoBoundExecutor;
   private final Executor mCpuBoundExecutor;
   private final Executor mDecodeExecutor;
 
-  public DefaultExecutorSupplier() {
+  public DefaultExecutorSupplier(int numCpuBoundThreads) {
     mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
     mCpuBoundExecutor = new ThreadPoolExecutor(
         1,                     // keep at least that many threads alive
-        NUM_CPU_BOUND_THREADS, // maximum number of allowed threads
+        numCpuBoundThreads, // maximum number of allowed threads
         KEEP_ALIVE_SECONDS,    // amount of seconds each cached thread waits before being terminated
         TimeUnit.SECONDS,
         new LinkedBlockingQueue<Runnable>());

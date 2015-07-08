@@ -52,6 +52,10 @@ public class PoolFactory {
     return mFlexByteArrayPool;
   }
 
+  public int getFlexByteArrayPoolMaxNumThreads() {
+    return mConfig.getFlexByteArrayPoolParams().maxNumThreads;
+  }
+
   public NativeMemoryChunkPool getNativeMemoryChunkPool() {
     if (mNativeMemoryChunkPool == null) {
       mNativeMemoryChunkPool = new NativeMemoryChunkPool(

@@ -106,10 +106,6 @@ public class ImagePipelineConfig {
         builder.mEncodedMemoryCacheParamsSupplier == null ?
             new DefaultEncodedMemoryCacheParamsSupplier() :
             builder.mEncodedMemoryCacheParamsSupplier;
-    mExecutorSupplier =
-        builder.mExecutorSupplier == null ?
-            new DefaultExecutorSupplier() :
-            builder.mExecutorSupplier;
     mImageCacheStatsTracker =
         builder.mImageCacheStatsTracker == null ?
             NoOpImageCacheStatsTracker.getInstance() :
@@ -149,6 +145,8 @@ public class ImagePipelineConfig {
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
 
+    int decodeThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
+
     mAnimatedDrawableUtil = new AnimatedDrawableUtil();
     AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
         new AnimatedDrawableBackendProvider() {
@@ -163,7 +161,7 @@ public class ImagePipelineConfig {
         mPoolFactory.getFlexByteArrayPool(),
         isDownsampleEnabled());
     ArtBitmapFactory factoryLollipop =
-        new ArtBitmapFactory(mPoolFactory.getBitmapPool(), 1, isDownsampleEnabled());
+        new ArtBitmapFactory(mPoolFactory.getBitmapPool(), decodeThreads, isDownsampleEnabled());
     mPlatformBitmapFactory =
         new PlatformBitmapFactory(
             factoryGingerbread,
@@ -173,6 +171,10 @@ public class ImagePipelineConfig {
     mAnimatedImageFactory = builder.mAnimatedImageFactory == null ?
         new AnimatedImageFactory(animatedDrawableBackendProvider, mPlatformBitmapFactory) :
         builder.mAnimatedImageFactory;
+
+    mExecutorSupplier =
+        builder.mExecutorSupplier == null ?
+            new DefaultExecutorSupplier(decodeThreads) : builder.mExecutorSupplier;
 
     mImageDecoder =
         builder.mImageDecoder == null ?
