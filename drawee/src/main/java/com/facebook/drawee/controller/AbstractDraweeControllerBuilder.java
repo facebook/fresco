@@ -11,6 +11,7 @@ package com.facebook.drawee.controller;
 
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,7 +19,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -27,9 +27,9 @@ import com.facebook.datasource.DataSources;
 import com.facebook.datasource.FirstAvailableDataSourceSupplier;
 import com.facebook.datasource.IncreasingQualityDataSourceSupplier;
 import com.facebook.drawee.components.RetryManager;
-import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
 
 /**
  * Base implementation for Drawee controller builders.
@@ -277,8 +277,7 @@ public abstract class AbstractDraweeControllerBuilder <
 
     // increasing-quality supplier; highest-quality supplier goes first
     if (supplier != null && mLowResImageRequest != null) {
-      List<Supplier<DataSource<IMAGE>>> suppliers =
-          Lists.newArrayListWithCapacity(2);
+      List<Supplier<DataSource<IMAGE>>> suppliers = new ArrayList<>(2);
       suppliers.add(supplier);
       suppliers.add(getDataSourceSupplierForRequest(mLowResImageRequest));
       supplier = IncreasingQualityDataSourceSupplier.create(suppliers);
@@ -294,8 +293,7 @@ public abstract class AbstractDraweeControllerBuilder <
 
   protected Supplier<DataSource<IMAGE>> getFirstAvailableDataSourceSupplier(
       REQUEST[] imageRequests) {
-    List<Supplier<DataSource<IMAGE>>> suppliers =
-        Lists.newArrayListWithCapacity(imageRequests.length * 2);
+    List<Supplier<DataSource<IMAGE>>> suppliers = new ArrayList<>(imageRequests.length * 2);
     // we first add cache-only suppliers, then the full-fetch ones
     for (int i = 0; i < imageRequests.length; i++) {
       suppliers.add(getDataSourceSupplierForRequest(imageRequests[i], /*cacheOnly */ true));

@@ -19,6 +19,7 @@ package com.facebook.common.internal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -107,7 +108,7 @@ public final class Sets {
    * to the way {@code IdentityHashMap} handles key lookups.
    */
   public static <E> Set<E> newIdentityHashSet() {
-    return Sets.newSetFromMap(Maps.<E, Boolean>newIdentityHashMap());
+    return Sets.newSetFromMap(new IdentityHashMap<E, Boolean>());
   }
 
   /**

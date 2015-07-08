@@ -11,12 +11,12 @@ package com.facebook.drawee.drawable;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class RoundedBitmapDrawableTest {
   private Resources mResources;
   private Bitmap mBitmap;
@@ -33,6 +33,7 @@ public class RoundedBitmapDrawableTest {
 
   RoundedBitmapDrawable mRoundedBitmapDrawable;
   private final Drawable.Callback mCallback = mock(Drawable.Callback.class);
+  private final Canvas mCanvas = mock(Canvas.class);
 
   @Before
   public void setUp() {
@@ -59,14 +60,14 @@ public class RoundedBitmapDrawableTest {
 
   @Test
   public void testSetRadii() {
-    mRoundedBitmapDrawable.setCornerRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
+    mRoundedBitmapDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
     assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, mRoundedBitmapDrawable.mCornerRadii, 0);
   }
 
   @Test
   public void testSetRadius() {
-    mRoundedBitmapDrawable.setCornerRadius(9);
+    mRoundedBitmapDrawable.setRadius(9);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
     assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundedBitmapDrawable.mCornerRadii, 0);
   }
@@ -79,5 +80,31 @@ public class RoundedBitmapDrawableTest {
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
     assertEquals(color, mRoundedBitmapDrawable.mBorderColor);
     assertEquals(width, mRoundedBitmapDrawable.mBorderWidth, 0);
+  }
+
+  @Test
+  public void testNonzeroDefaultFalse() {
+    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+  }
+
+  @Test
+  public void testNonZeroOnSet() {
+    mRoundedBitmapDrawable.setRadius(0);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertFalse(mRoundedBitmapDrawable.mIsNonzero);
+    mRoundedBitmapDrawable.setRadius(5);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+  }
+
+  @Test
+  public void testNonZeroCircle() {
+    mRoundedBitmapDrawable.setCircle(true);
+    mRoundedBitmapDrawable.setRadius(0);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+    mRoundedBitmapDrawable.setCircle(false);
+    mRoundedBitmapDrawable.draw(mCanvas);
+    assertFalse(mRoundedBitmapDrawable.mIsNonzero);
   }
 }

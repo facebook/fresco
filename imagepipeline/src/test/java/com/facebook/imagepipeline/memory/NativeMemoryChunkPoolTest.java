@@ -13,18 +13,18 @@ import android.util.SparseIntArray;
 
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunk;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for {@link NativeMemoryChunkPool}
  */
-@RunWith(WithTestDefaultsRunner.class)
-public class NativeMemoryChunkPoolTest {
+@RunWith(RobolectricTestRunner.class)
+public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
   private NativeMemoryChunkPool mPool;
 
   @Before

@@ -60,12 +60,12 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   }
 
   @Override
-  public Executor forTransform() {
+  public Executor forBackgroundTasks() {
     return mCpuBoundExecutor;
   }
 
   @Override
-  public Executor forBackground() {
+  public Executor forLightweightBackgroundTasks() {
     return mCpuBoundExecutor;
   }
 }

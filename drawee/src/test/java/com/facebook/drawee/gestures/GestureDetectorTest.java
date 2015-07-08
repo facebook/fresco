@@ -11,7 +11,7 @@ package com.facebook.drawee.gestures;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link GestureDetector}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GestureDetectorTest {
 
   private GestureDetector.ClickListener mClickListener;

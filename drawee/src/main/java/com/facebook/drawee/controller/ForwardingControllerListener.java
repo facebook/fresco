@@ -12,22 +12,21 @@ package com.facebook.drawee.controller;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.drawable.Animatable;
 import android.util.Log;
-
-import com.facebook.common.internal.Lists;
 
 /**
  * Listener that forwards controller events to multiple listeners.
  */
 @ThreadSafe
 public class ForwardingControllerListener<INFO> implements ControllerListener<INFO> {
-  private static final String TAG = "ForwardingControllerListener";
+  // lint only allows 23 characters in a tag
+  private static final String TAG = "FdingControllerListener";
 
-  private final List<ControllerListener<? super INFO>> mListeners
-      = Lists.newArrayListWithCapacity(2);
+  private final List<ControllerListener<? super INFO>> mListeners = new ArrayList<>(2);
 
   public ForwardingControllerListener() {
   }

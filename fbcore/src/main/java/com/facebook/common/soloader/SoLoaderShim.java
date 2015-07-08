@@ -9,8 +9,6 @@
 
 package com.facebook.common.soloader;
 
-import com.facebook.common.internal.Preconditions;
-
 /**
  * A shim for loading shared libraries that the app can override.
  */
@@ -43,7 +41,9 @@ public class SoLoaderShim {
    * @param handler the new handler
    */
   public static void setHandler(Handler handler) {
-    Preconditions.checkNotNull(handler);
+    if (handler == null) {
+      throw new NullPointerException("Handler cannot be null");
+    }
     sHandler = handler;
   }
 

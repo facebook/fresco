@@ -11,8 +11,7 @@ package com.facebook.imagepipeline.producers;
 
 import android.net.Uri;
 
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -38,9 +37,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
   }
 
   @Override
-  public FetchState createFetchState(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
-      ProducerContext context) {
+  public FetchState createFetchState(Consumer<EncodedImage> consumer, ProducerContext context) {
     return new FetchState(consumer, context);
   }
 
@@ -51,19 +48,35 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
           @Override
           public void run() {
             HttpURLConnection connection = null;
-            try {
-              Uri uri = fetchState.getUri();
-              URL url = new URL(uri.toString());
-              connection = (HttpURLConnection) url.openConnection();
-              InputStream is = connection.getInputStream();
-              callback.onResponse(is, -1);
-            } catch (Exception e) {
-              callback.onFailure(e);
-            } finally {
-              if (connection != null) {
-                connection.disconnect();
+            Uri uri = fetchState.getUri();
+            String scheme = uri.getScheme();
+            String uriString = fetchState.getUri().toString();
+            while (true) {
+              String nextUriString;
+              String nextScheme;
+              InputStream is;
+              try {
+                URL url = new URL(uriString);
+                connection = (HttpURLConnection) url.openConnection();
+                nextUriString = connection.getHeaderField("Location");
+                nextScheme = (nextUriString == null) ? null : Uri.parse(nextUriString).getScheme();
+                if (nextUriString == null || nextScheme.equals(scheme)) {
+                  is = connection.getInputStream();
+                  callback.onResponse(is, -1);
+                  break;
+                }
+                uriString = nextUriString;
+                scheme = nextScheme;
+              } catch (Exception e) {
+                callback.onFailure(e);
+                break;
+              } finally {
+                if (connection != null) {
+                  connection.disconnect();
+                }
               }
-            }
+          }
+
           }
         });
     fetchState.getContext().addCallbacks(

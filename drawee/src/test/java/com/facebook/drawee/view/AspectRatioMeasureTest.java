@@ -10,7 +10,7 @@
 package com.facebook.drawee.view;
 
 import com.facebook.drawee.view.AspectRatioMeasure;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static android.view.View.MeasureSpec.*;
 import static android.view.ViewGroup.LayoutParams;
 import static android.view.ViewGroup.LayoutParams.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AspectRatioMeasureTest {
 
   AspectRatioMeasure.Spec mSpec = new AspectRatioMeasure.Spec();

@@ -10,7 +10,7 @@
 package com.facebook.imagepipeline.memory;
 
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static junit.framework.Assert.*;
 /**
  * Tests for {@link NativeMemoryChunkInputStream}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PooledByteBufferInputStreamTest {
   private static final byte[] BYTES = new byte[] {1, 123, -20, 3, 6, 23, 1};
   private PooledByteBufferInputStream mStream;

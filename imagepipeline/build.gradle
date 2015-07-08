@@ -4,7 +4,7 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'robolectric'
+apply plugin: 'org.robolectric'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
 
@@ -18,41 +18,18 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
 
-    androidTestCompile "com.google.guava:guava:${GUAVA_VERSION}"
-    androidTestCompile "junit:junit:${JUNIT_VERSION}"
-    androidTestCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    androidTestCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testCompile "com.google.guava:guava:${GUAVA_VERSION}"
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testCompile "org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
 }
 apply from: rootProject.file('release.gradle')
-
-
-def generatedTestSources = "$buildDir/generated-src/test"
-
-
-// Gradle and Buck need different versions of the test runner.
-// For gradle, WithTestDefaultsRunner just is a direct sub-class of RobolectricTestRunner.
-task generateTestSources {
-    doLast {
-        File file = new File(generatedTestSources)
-        file.mkdirs();
-        def generated = new File(generatedTestSources, "WithTestDefaultsRunner.java")
-        generated.text =
-                "package com.facebook.testing.robolectric.v2;\n" +
-                "import org.robolectric.RobolectricTestRunner;\n" +
-                "import org.junit.runners.model.InitializationError;\n" +
-                "public class WithTestDefaultsRunner extends RobolectricTestRunner {\n" +
-                "  public WithTestDefaultsRunner(final Class<?> testClass) " +
-                        "throws InitializationError {" +
-                "    super(testClass);" +
-                "  }" +
-                "}"
-    }
-}
-
-test.dependsOn(generateTestSources)
 
 // We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
 // We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
@@ -231,15 +208,3 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 artifacts.add('archives', sourcesJar)
-
-def jarList = new ArrayList()
-task setJarList() << {
-    configurations.compile.each {
-        jarList.add(it)
-    }
-}
-
-task copyDeps(dependsOn: setJarList, type: Copy) {
-    from jarList
-    into 'build/external'
-}

@@ -30,25 +30,18 @@ LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_LDLIBS := -llog
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
+
 LOCAL_SHARED_LIBRARIES += webp
 
-ifeq ($(BUCK_BUILD), 1)
-  LOCAL_SHARED_LIBRARIES += fb_jpegturbo
-  LOCAL_CFLAGS += $(BUCK_DEP_CFLAGS)
-  LOCAL_LDFLAGS += $(BUCK_DEP_LDFLAGS)
-  include $(BUILD_SHARED_LIBRARY)
-else
-  LOCAL_STATIC_LIBRARIES += fb_jpegturbo
-  LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
+LOCAL_STATIC_LIBRARIES += fb_jpegturbo
+LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
 
-  LOCAL_LDLIBS += -lz
-  LOCAL_STATIC_LIBRARIES += fb_png
-  LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
+LOCAL_LDLIBS += -lz
 
-  include $(BUILD_SHARED_LIBRARY)
-  $(call import-module,libpng-1.6.10)
-endif
+LOCAL_STATIC_LIBRARIES += fb_png
+LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 
-
-$(call import-module,libjpeg-turbo-1.3.x)
+include $(BUILD_SHARED_LIBRARY)
+$(call import-module,libpng-1.6.10)
 $(call import-module,libwebp-0.4.2)
+$(call import-module,libjpeg-turbo-1.3.x)

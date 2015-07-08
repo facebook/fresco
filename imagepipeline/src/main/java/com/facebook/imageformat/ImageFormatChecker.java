@@ -55,6 +55,10 @@ public class ImageFormatChecker {
       return ImageFormat.GIF;
     }
 
+    if (isBmpHeader(imageHeaderBytes, headerSize)) {
+      return ImageFormat.BMP;
+    }
+
     return ImageFormat.UNKNOWN;
   }
 
@@ -353,6 +357,26 @@ public class ImageFormatChecker {
         matchBytePattern(imageHeaderBytes, 0, GIF_HEADER_89A);
   }
 
+  /**
+   * Every bmp image starts with "BM" bytes
+   */
+  private static final byte[] BMP_HEADER = asciiBytes("BM");
+
+  /**
+   * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a bmp image.
+   * Details on BMP header can be found <a href="http://www.onicos.com/staff/iz/formats/bmp.html">
+   * </a>
+   * @param imageHeaderBytes
+   * @param headerSize
+   * @return true if imageHeaderBytes is a valid header for a bmp image
+   */
+  private static boolean isBmpHeader(final byte[] imageHeaderBytes, final int headerSize) {
+    if (headerSize < BMP_HEADER.length) {
+      return false;
+    }
+    return matchBytePattern(imageHeaderBytes, 0, BMP_HEADER);
+  }
+
 
   /**
    * Maximum header size for any image type.
@@ -366,5 +390,6 @@ public class ImageFormatChecker {
       SIMPLE_WEBP_HEADER_LENGTH,
       JPEG_HEADER.length,
       PNG_HEADER.length,
-      GIF_HEADER_LENGTH);
+      GIF_HEADER_LENGTH,
+      BMP_HEADER.length);
 }

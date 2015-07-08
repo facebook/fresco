@@ -11,10 +11,9 @@ package com.facebook.imageutils;
 
 import android.graphics.Rect;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static com.facebook.imageutils.JfifTestUtils.*;
@@ -23,8 +22,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests {@link JfifUtil}
  */
-@Config(manifest=Config.NONE)
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class JfifUtilTest {
 
   // Test cases without APP1 block

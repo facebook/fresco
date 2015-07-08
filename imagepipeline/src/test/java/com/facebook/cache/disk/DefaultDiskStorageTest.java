@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,19 +27,22 @@ import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.internal.Files;
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.SystemClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,9 +53,13 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for 'default' disk storage
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareOnlyThisForTest({SystemClock.class})
 public class DefaultDiskStorageTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   private File mDirectory;
   private SystemClock mClock;
@@ -203,7 +211,7 @@ public class DefaultDiskStorageTest {
     assertEquals(2, remaining.size());
 
     // none of them with timestamp close to time2
-    List<DiskStorage.Entry> entries1 = Lists.newArrayList(storage.getEntries());
+    List<DiskStorage.Entry> entries1 = new ArrayList<>(storage.getEntries());
     assertEquals(2, entries1.size());
     // first
     DiskStorage.Entry entry = entries1.get(0);
@@ -447,7 +455,7 @@ public class DefaultDiskStorageTest {
     final byte[] CONTENT2 = "content2".getBytes("UTF-8");
     final byte[] CONTENT3 = "content3-biggest".getBytes("UTF-8");
 
-    List<File> files = Lists.newArrayListWithCapacity(4);
+    List<File> files = new ArrayList<>(4);
     files.add(write(storage, resourceId0, CONTENT0));
     when(mClock.now()).thenReturn(1000L);
     files.add(write(storage, resourceId1, CONTENT1));
@@ -528,7 +536,7 @@ public class DefaultDiskStorageTest {
   }
 
   private List<File> findNewFiles(File directory, Set<File> existing, boolean recurse) {
-    List<File> result = Lists.newArrayList();
+    List<File> result = new ArrayList<>();
     findNewFiles(directory, existing, recurse, result);
     return result;
   }
@@ -558,7 +566,7 @@ public class DefaultDiskStorageTest {
   private static List<DefaultDiskStorage.EntryImpl> retrieveEntries(
       DiskStorage storage)
       throws IOException {
-    List<DiskStorage.Entry> entries = Lists.newArrayList(storage.getEntries());
+    List<DiskStorage.Entry> entries = new ArrayList<>(storage.getEntries());
 
     Collections.sort(entries, new Comparator<DiskStorage.Entry>() {
       @Override
@@ -568,7 +576,7 @@ public class DefaultDiskStorageTest {
         return (al < bl) ? -1 : ((al > bl) ? 1 : 0);
       }
     });
-    List<DefaultDiskStorage.EntryImpl> newEntries = Lists.newArrayList();
+    List<DefaultDiskStorage.EntryImpl> newEntries = new ArrayList<>();
     for (DiskStorage.Entry entry: entries) {
       newEntries.add((DefaultDiskStorage.EntryImpl)entry);
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fresco Comparison App</string>
+    <string name="action_settings">Settings</string>
+    <string name="select_image_loader">Select image loader</string>
+    <string name="select_image_source">Select image source</string>
+
+    <!-- If you change the order of the elements, update the indices in the MainActivity.java -->
+    <string-array name="image_loaders">
+      <item>None</item>
+      <item>Fresco</item>
+      <item>Fresco + OkHttp</item>
+      <item>Glide</item>
+      <item>Picasso</item>
+      <item>Universal Image Loader</item>
+      <item>Volley</item>
+    </string-array>
+
+    <!-- If you change the order of the elements, update the indices in the MainActivity.java -->
+    <string-array name="image_sources">
+        <item>None</item>
+        <item>Network</item>
+        <item>Local</item>
+    </string-array>
+</resources>

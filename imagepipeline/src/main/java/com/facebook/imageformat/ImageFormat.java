@@ -22,6 +22,7 @@ public enum ImageFormat {
   JPEG,
   PNG,
   GIF,
+  BMP,
   /**
    * Unknown image. This is needed in case we fail to detect any type for particular image.
    */

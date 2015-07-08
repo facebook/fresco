@@ -18,7 +18,7 @@ import android.graphics.drawable.StateListDrawable;
 import com.facebook.common.internal.Lists;
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyBuilderTest {
 
   private final Drawable mBackgroundDrawable1 = mock(BitmapDrawable.class);

@@ -34,9 +34,15 @@ public interface ExecutorSupplier {
   /** Executor used for all decodes. */
   Executor forDecode();
 
-  /** Executor used for all image transformations, such as transcoding, resizing, and rotating. */
-  Executor forTransform();
+  /**
+   *  Executor used for background tasks such as image transcoding, resizing, rotating and
+   *  post processing.
+   */
+  Executor forBackgroundTasks();
 
-  /** Executor used for background operations, such as postprocessing. */
-  Executor forBackground();
+  /**
+   * Executor used for lightweight background operations, such as handing request off the
+   * main thread.
+   */
+  Executor forLightweightBackgroundTasks();
 }

@@ -11,7 +11,7 @@ package com.facebook.drawee.drawable;
 
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class SettableDrawableTest {
   private Drawable mUnderlyingDrawable0;
   private Drawable mUnderlyingDrawable1;

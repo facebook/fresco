@@ -13,17 +13,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import com.facebook.common.internal.CountingOutputStream;
-import com.facebook.common.internal.Lists;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.time.Clock;
-import com.facebook.common.time.SystemClock;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
@@ -31,6 +26,11 @@ import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.file.FileTreeVisitor;
 import com.facebook.common.file.FileUtils;
+import com.facebook.common.internal.CountingOutputStream;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.time.Clock;
+import com.facebook.common.time.SystemClock;
 
 /**
  * The default disk storage implementation. Subsumes both 'simple' and 'sharded' implementations
@@ -230,7 +230,7 @@ public class DefaultDiskStorage implements DiskStorage {
    */
   private class EntriesCollector implements FileTreeVisitor {
 
-    private final List<Entry> result = Lists.newArrayList();
+    private final List<Entry> result = new ArrayList<>();
 
     @Override
     public void preVisitDirectory(File directory) {
@@ -589,10 +589,10 @@ public class DefaultDiskStorage implements DiskStorage {
     }
 
     public static FileType fromExtension(String extension) {
-      for (FileType ft: FileType.values()) {
-        if (ft.extension.equals(extension)) {
-          return ft;
-        }
+      if (CONTENT_FILE_EXTENSION.equals(extension)) {
+        return CONTENT;
+      } else if (TEMP_FILE_EXTENSION.equals(extension)) {
+        return TEMP;
       }
       return null;
     }

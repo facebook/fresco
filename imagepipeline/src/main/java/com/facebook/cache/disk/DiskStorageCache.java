@@ -24,11 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
-import com.facebook.common.internal.Lists;
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.logging.FLog;
-import com.facebook.common.time.Clock;
-import com.facebook.common.util.SecureHashUtil;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
@@ -37,7 +32,11 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
 import com.facebook.common.disk.DiskTrimmableRegistry;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.statfs.StatFsHelper;
+import com.facebook.common.time.Clock;
+import com.facebook.common.util.SecureHashUtil;
 
 /**
  * Cache that manages disk storage.
@@ -445,7 +444,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    */
   private Collection<DiskStorage.Entry> getSortedEntries(
      Collection<DiskStorage.Entry> allEntries) {
-    final ArrayList<DiskStorage.Entry> entriesList = Lists.newArrayList(allEntries);
+    final ArrayList<DiskStorage.Entry> entriesList = new ArrayList<>(allEntries);
     final long threshold =
         mClock.now() + DiskStorageCache.FUTURE_TIMESTAMP_THRESHOLD_MS;
     Collections.sort(entriesList, new TimestampComparator(threshold));

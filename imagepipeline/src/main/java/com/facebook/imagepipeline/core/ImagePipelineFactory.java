@@ -9,11 +9,11 @@
 
 package com.facebook.imagepipeline.core;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Rect;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheFactory;
@@ -34,7 +34,6 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
@@ -42,7 +41,6 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
-import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
@@ -90,7 +88,6 @@ public class ImagePipelineFactory {
   private CountingMemoryCache<CacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
-  private EmptyJpegGenerator mEmptyJpegGenerator;
   private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainBufferedDiskCache;
@@ -189,9 +186,10 @@ public class ImagePipelineFactory {
       mProducerFactory =
           new ProducerFactory(
               mConfig.getContext(),
-              mConfig.getPoolFactory().getCommonByteArrayPool(),
+              mConfig.getPoolFactory().getSmallByteArrayPool(),
               mConfig.getImageDecoder(),
               mConfig.getProgressiveJpegConfig(),
+              mConfig.isDownsampleEnabled(),
               mConfig.getExecutorSupplier(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
               getBitmapMemoryCache(),

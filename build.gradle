@@ -27,6 +27,20 @@ subprojects {
 
     afterEvaluate { project ->
       allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
+
+        if (project.tasks.matching { it.name == 'assembleRelease'}) {
+            def jarList = new ArrayList()
+            task setJarList(dependsOn: assembleRelease) << {
+                configurations.compile.each {
+                    jarList.add(it)
+                }
+            }
+
+            task copyDeps(dependsOn: setJarList, type: Copy) {
+                from jarList
+                into 'build/external'
+            }
+        }
     }
 }
 

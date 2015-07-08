@@ -86,7 +86,7 @@ static boolean isFillInputBuffer(j_decompress_ptr dinfo) {
 static void isSkipInputData(j_decompress_ptr dinfo, long num_bytes) {
   JpegInputStreamWrapper* src = (JpegInputStreamWrapper*) dinfo->src;
   if (num_bytes > 0) {
-    if (src->public_fields.bytes_in_buffer > num_bytes) {
+    if (src->public_fields.bytes_in_buffer > (unsigned long) num_bytes) {
       src->public_fields.next_input_byte += (size_t) num_bytes;
       src->public_fields.bytes_in_buffer -= (size_t) num_bytes;
     } else {
@@ -94,7 +94,7 @@ static void isSkipInputData(j_decompress_ptr dinfo, long num_bytes) {
       JNIEnv* env = src->env;
       // We could at least try to skip appropriate amout of bytes...
       // TODO: 3752653
-      jlong skipped = env->CallLongMethod(
+      env->CallLongMethod(
           src->inputStream,
           midInputStreamSkip,
           (jlong) to_skip);
@@ -115,7 +115,7 @@ static void isTermSource(j_decompress_ptr dinfo) {
 
 JpegInputStreamWrapper::JpegInputStreamWrapper(
     JNIEnv* env,
-    jobject inputStream) : env(env), inputStream(inputStream) {
+    jobject inputStream) : inputStream(inputStream), env(env) {
   public_fields.init_source = isInitSource;
   public_fields.fill_input_buffer = isFillInputBuffer;
   public_fields.skip_input_data = isSkipInputData;
@@ -203,7 +203,7 @@ static void osTermDestination(j_compress_ptr cinfo) {
 
 JpegOutputStreamWrapper::JpegOutputStreamWrapper(
     JNIEnv* env,
-    jobject output_stream) : env(env), outputStream(output_stream) {
+    jobject output_stream) : outputStream(output_stream), env(env) {
   public_fields.init_destination = osInitDestination;
   public_fields.empty_output_buffer = osEmptyOutputBuffer;
   public_fields.term_destination = osTermDestination;

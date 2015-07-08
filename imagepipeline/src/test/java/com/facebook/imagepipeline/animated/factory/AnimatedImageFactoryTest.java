@@ -1,4 +1,12 @@
-// Copyright 2004-present Facebook. All Rights Reserved.
+/*
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
 
 package com.facebook.imagepipeline.animated.factory;
 
@@ -8,6 +16,7 @@ import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
@@ -15,11 +24,16 @@ import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imagepipeline.webp.WebPImage;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+
+import org.junit.Rule;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +47,16 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link AnimatedImageFactory}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
     WebPImage.class,
     AnimatedImageFactory.class,
     AnimatedImageCompositor.class})
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 public class AnimatedImageFactoryTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   static {
     SoLoaderShim.setInTestMode();
@@ -85,9 +103,13 @@ public class AnimatedImageFactoryTest {
     when(WebPImage.create(byteBuffer.getNativePtr(), byteBuffer.size()))
         .thenReturn(mockWebPImage);
 
+    EncodedImage encodedImage = new EncodedImage(
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
+
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
-            CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER),
+            encodedImage,
             ImageDecodeOptions.defaults());
 
     // Verify we got the right result
@@ -129,9 +151,12 @@ public class AnimatedImageFactoryTest {
     ImageDecodeOptions imageDecodeOptions = ImageDecodeOptions.newBuilder()
         .setDecodePreviewFrame(true)
         .build();
+    EncodedImage encodedImage = new EncodedImage(
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
-            CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER),
+            encodedImage,
             imageDecodeOptions);
 
     // Verify we got the right result
@@ -182,9 +207,14 @@ public class AnimatedImageFactoryTest {
         .setDecodePreviewFrame(true)
         .setDecodeAllFrames(true)
         .build();
+
+    EncodedImage encodedImage = new EncodedImage(
+        CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
+    encodedImage.setImageFormat(ImageFormat.UNKNOWN);
+
     CloseableAnimatedImage closeableImage =
         (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
-            CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER),
+            encodedImage,
             imageDecodeOptions);
 
     // Verify we got the right result

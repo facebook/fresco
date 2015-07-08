@@ -12,7 +12,7 @@ package com.facebook.drawee.drawable;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class MatrixDrawableTest {
   private Drawable mUnderlyingDrawable;
   private Matrix mMatrix1;

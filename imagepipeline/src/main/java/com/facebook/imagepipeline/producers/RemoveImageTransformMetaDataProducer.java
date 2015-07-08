@@ -9,9 +9,8 @@
 
 package com.facebook.imagepipeline.producers;
 
-import android.util.Pair;
-
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
@@ -22,11 +21,10 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
  */
 public class RemoveImageTransformMetaDataProducer
     implements Producer<CloseableReference<PooledByteBuffer>> {
-  private final Producer<
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> mNextProducer;
+  private final Producer<EncodedImage> mNextProducer;
 
   public RemoveImageTransformMetaDataProducer(
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer) {
+      Producer<EncodedImage> nextProducer) {
     mNextProducer = nextProducer;
   }
 
@@ -37,9 +35,8 @@ public class RemoveImageTransformMetaDataProducer
     mNextProducer.produceResults(new RemoveImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private class RemoveImageTransformMetaDataConsumer extends DelegatingConsumer<
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>,
-      CloseableReference<PooledByteBuffer>> {
+  private class RemoveImageTransformMetaDataConsumer extends DelegatingConsumer<EncodedImage,
+          CloseableReference<PooledByteBuffer>> {
 
     private RemoveImageTransformMetaDataConsumer(
         Consumer<CloseableReference<PooledByteBuffer>> consumer) {
@@ -47,10 +44,16 @@ public class RemoveImageTransformMetaDataProducer
     }
 
     @Override
-    protected void onNewResultImpl(
-        Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> newResult,
-        boolean isLast) {
-      getConsumer().onNewResult(newResult == null ? null : newResult.first, isLast);
+    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+      CloseableReference<PooledByteBuffer> ret = null;
+      try {
+        if (EncodedImage.isValid(newResult)) {
+          ret = newResult.getByteBufferRef();
+        }
+        getConsumer().onNewResult(ret, isLast);
+      } finally {
+        CloseableReference.closeSafely(ret);
+      }
     }
   }
 }

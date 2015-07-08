@@ -18,13 +18,7 @@ LOCAL_CFLAGS += $(FRESCO_CPP_CFLAGS)
 LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_LDLIBS += -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
-ifeq ($(BUCK_BUILD), 1)
-  LOCAL_CFLAGS += $(BUCK_DEP_CFLAGS)
-  LOCAL_LDFLAGS += $(BUCK_DEP_LDFLAGS)
-  include $(BUILD_SHARED_LIBRARY)
-else
-  LOCAL_LDLIBS += -llog -ldl -landroid
-  LOCAL_STATIC_LIBRARIES += gif
-  include $(BUILD_SHARED_LIBRARY)
-  $(call import-module, giflib)
-endif
+LOCAL_LDLIBS += -llog -ldl -landroid
+LOCAL_STATIC_LIBRARIES += gif
+include $(BUILD_SHARED_LIBRARY)
+$(call import-module, giflib)

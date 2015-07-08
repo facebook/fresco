@@ -12,11 +12,11 @@ package com.facebook.imagepipeline.image;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
@@ -40,8 +40,8 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
       List<Integer> durations) {
     Preconditions.checkNotNull(bitmapReferences);
     Preconditions.checkState(bitmapReferences.size() >= 1, "Need at least 1 frame!");
-    mBitmapReferences = Lists.newArrayList();
-    mBitmaps = Lists.newArrayList();
+    mBitmapReferences = new ArrayList<>();
+    mBitmaps = new ArrayList<>();
     for (CloseableReference<Bitmap> bitmapReference : bitmapReferences) {
       mBitmapReferences.add(bitmapReference.clone());
       mBitmaps.add(bitmapReference.get());
@@ -62,8 +62,8 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
       ResourceReleaser<Bitmap> resourceReleaser) {
     Preconditions.checkNotNull(bitmaps);
     Preconditions.checkState(bitmaps.size() >= 1, "Need at least 1 frame!");
-    mBitmaps = Lists.newArrayList();
-    mBitmapReferences = Lists.newArrayList();
+    mBitmaps = new ArrayList<>();
+    mBitmapReferences = new ArrayList<>();
     for (Bitmap bitmap : bitmaps) {
       mBitmapReferences.add(CloseableReference.of(bitmap, resourceReleaser));
       mBitmaps.add(bitmap);

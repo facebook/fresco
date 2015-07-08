@@ -29,14 +29,18 @@ import com.facebook.common.disk.DiskTrimmableRegistry;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.SystemClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -54,9 +58,13 @@ import static org.mockito.Mockito.when;
 /**
  * Test for {@link DiskStorageCache}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareOnlyThisForTest({SystemClock.class})
 public class DiskStorageCacheTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   private static final String CACHE_TYPE = "media_test";
 

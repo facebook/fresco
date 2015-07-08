@@ -20,6 +20,7 @@ import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
@@ -40,6 +41,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.listener.RequestListener;
 
 import com.android.internal.util.Predicate;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * The entry point for the image pipeline.
@@ -160,6 +162,8 @@ public class ImagePipeline {
    * Submits a request for execution and returns a DataSource representing the pending encoded
    * image(s).
    *
+   * <p> The ResizeOptions in the imageRequest will be ignored for this fetch
+   *
    * <p>The returned DataSource must be closed once the client has finished with it.
    * @param imageRequest the request to submit
    * @return a DataSource representing the pending encoded image(s)
@@ -167,9 +171,24 @@ public class ImagePipeline {
   public DataSource<CloseableReference<PooledByteBuffer>> fetchEncodedImage(
       ImageRequest imageRequest,
       Object callerContext) {
+    Preconditions.checkNotNull(imageRequest.getSourceUri());
     try {
       Producer<CloseableReference<PooledByteBuffer>> producerSequence =
           mProducerSequenceFactory.getEncodedImageProducerSequence(imageRequest);
+      if (imageRequest.getResizeOptions() != null) {
+        ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(
+            imageRequest.getSourceUri());
+        imageRequest =
+            builder.setAutoRotateEnabled(imageRequest.getAutoRotateEnabled())
+            .setImageDecodeOptions(imageRequest.getImageDecodeOptions())
+            .setImageType(imageRequest.getImageType())
+            .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
+            .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
+            .setPostprocessor(imageRequest.getPostprocessor())
+            .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
+            .setRequestPriority(imageRequest.getPriority())
+            .build();
+      }
       return submitFetchRequest(
           producerSequence,
           imageRequest,

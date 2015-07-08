@@ -302,7 +302,7 @@ int readSingleFrame(
   }
 
   size_t imageSize = pSavedImage->ImageDesc.Width * pSavedImage->ImageDesc.Height;
-  if (imageSize > pGifFile->SWidth * pGifFile->SHeight) {
+  if (imageSize > (unsigned)(pGifFile->SWidth * pGifFile->SHeight)) {
     return GIF_ERROR;
   }
 
@@ -541,7 +541,7 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
   jobject ret = pEnv->NewObject(
       sClazzGifImage,
       sGifImageConstructor,
-      (jint) spNativeContext.get());
+      (jlong) spNativeContext.get());
   if (ret != nullptr) {
     // Ownership was transferred.
     spNativeContext->refCount = 1;
@@ -590,7 +590,7 @@ std::unique_ptr<GifImageNativeContext, GifImageNativeContextReleaser>
   std::unique_ptr<GifImageNativeContext, GifImageNativeContextReleaser> ret(nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   GifImageNativeContext* pNativeContext =
-      (GifImageNativeContext*) pEnv->GetIntField(thiz, sGifImageFieldNativeContext);
+      (GifImageNativeContext*) pEnv->GetLongField(thiz, sGifImageFieldNativeContext);
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -780,7 +780,7 @@ jobject GifImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   jobject ret = pEnv->NewObject(
       sClazzGifFrame,
       sGifFrameConstructor,
-      (jint) spFrameNativeContext.get());
+      (jlong) spFrameNativeContext.get());
   if (ret != nullptr) {
     // pEnv->NewObject will have already instructed the environment to throw an exception.
     spFrameNativeContext->refCount = 1;
@@ -829,7 +829,7 @@ std::unique_ptr<GifFrameNativeContext, GifFrameNativeContextReleaser>
   std::unique_ptr<GifFrameNativeContext, GifFrameNativeContextReleaser> ret(nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   GifFrameNativeContext* pNativeContext =
-      (GifFrameNativeContext*) pEnv->GetIntField(thiz, sGifFrameFieldNativeContext);
+      (GifFrameNativeContext*) pEnv->GetLongField(thiz, sGifFrameFieldNativeContext);
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -864,9 +864,9 @@ jint GifImage_nativeGetSizeInBytes(JNIEnv* pEnv, jobject thiz) {
 void GifImage_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   GifImageNativeContext* pNativeContext =
-      (GifImageNativeContext*) pEnv->GetIntField(thiz, sGifImageFieldNativeContext);
+      (GifImageNativeContext*) pEnv->GetLongField(thiz, sGifImageFieldNativeContext);
   if (pNativeContext != nullptr) {
-    pEnv->SetIntField(thiz, sGifImageFieldNativeContext, 0);
+    pEnv->SetLongField(thiz, sGifImageFieldNativeContext, 0);
     GifImageNativeContext_releaseRef(pEnv, thiz, pNativeContext);
   }
   pEnv->MonitorExit(thiz);
@@ -1000,7 +1000,12 @@ void GifFrame_nativeRenderFrame(
     return;
   }
 
-  if (bitmapInfo.width < width || bitmapInfo.height < height) {
+  if (width < 0 || height < 0) {
+    throwIllegalArgumentException(pEnv, "Width or height is negative");
+    return;
+  }
+  
+  if (bitmapInfo.width < (unsigned) width || bitmapInfo.height < (unsigned) height) {
     throwIllegalStateException(pEnv, "Width or height is too small");
     return;
   }
@@ -1156,9 +1161,9 @@ jint GifFrame_nativeGetDisposalMode(JNIEnv* pEnv, jobject thiz) {
 void GifFrame_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   GifFrameNativeContext* pNativeContext =
-      (GifFrameNativeContext*) pEnv->GetIntField(thiz, sGifFrameFieldNativeContext);
+      (GifFrameNativeContext*) pEnv->GetLongField(thiz, sGifFrameFieldNativeContext);
   if (pNativeContext) {
-    pEnv->SetIntField(thiz, sGifFrameFieldNativeContext, 0);
+    pEnv->SetLongField(thiz, sGifFrameFieldNativeContext, 0);
     GifFrameNativeContext_releaseRef(pEnv, thiz, pNativeContext);
   }
   pEnv->MonitorExit(thiz);
@@ -1262,13 +1267,13 @@ int initGifImage(JNIEnv* pEnv) {
   }
 
   // GifImage.mNativeContext
-  sGifImageFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzGifImage, "mNativeContext", "I");
+  sGifImageFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzGifImage, "mNativeContext", "J");
   if (!sGifImageFieldNativeContext) {
     return JNI_ERR;
   }
 
   // GifImage.<init>
-  sGifImageConstructor = getMethodIdOrThrow(pEnv, sClazzGifImage, "<init>", "(I)V");
+  sGifImageConstructor = getMethodIdOrThrow(pEnv, sClazzGifImage, "<init>", "(J)V");
   if (!sGifImageConstructor) {
     return JNI_ERR;
   }
@@ -1288,13 +1293,13 @@ int initGifImage(JNIEnv* pEnv) {
   }
 
   // GifFrame.mNativeContext
-  sGifFrameFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzGifFrame, "mNativeContext", "I");
+  sGifFrameFieldNativeContext = getFieldIdOrThrow(pEnv, sClazzGifFrame, "mNativeContext", "J");
   if (!sGifFrameFieldNativeContext) {
     return JNI_ERR;
   }
 
   // GifFrame.<init>
-  sGifFrameConstructor = getMethodIdOrThrow(pEnv, sClazzGifFrame, "<init>", "(I)V");
+  sGifFrameConstructor = getMethodIdOrThrow(pEnv, sClazzGifFrame, "<init>", "(J)V");
   if (!sGifFrameConstructor) {
     return JNI_ERR;
   }

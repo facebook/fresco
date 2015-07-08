@@ -12,7 +12,7 @@ package com.facebook.drawee.drawable;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class RoundedCornersDrawableTest {
 
   private Drawable mUnderlyingDrawable;
@@ -61,7 +61,7 @@ public class RoundedCornersDrawableTest {
 
   @Test
   public void testSetRadii() {
-    mRoundedCornersDrawable.setRadii(new float[] {1, 2, 3, 4, 5, 6, 7, 8});
+    mRoundedCornersDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
     assertArrayEquals(new float[] {1, 2, 3, 4, 5, 6, 7, 8}, mRoundedCornersDrawable.mRadii, 0);
   }

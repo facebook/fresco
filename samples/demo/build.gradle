@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile project(':drawee-backends:drawee-pipeline')
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
+    defaultConfig {
+        applicationId "com.facebook.samples.demo"
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 1
+        versionName "${VERSION_NAME}"
+
+        testApplicationId "com.facebook.samples.demo.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro'
+        }
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            universalApk false
+        }
+    }
+}

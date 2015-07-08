@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.drawable;
 
-import java.util.Arrays;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,10 +20,12 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 
+import java.util.Arrays;
+
 /**
  * Drawable that draws underlying drawable with rounded corners.
  */
-public class RoundedCornersDrawable extends ForwardingDrawable {
+public class RoundedCornersDrawable extends ForwardingDrawable implements Rounded {
 
   public enum Type {
     /**
@@ -76,6 +76,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param isCircle whether or not to round as circle
    */
+  @Override
   public void setCircle(boolean isCircle) {
     mIsCircle = isCircle;
     updatePath();
@@ -87,6 +88,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param radius corner radius in pixels
    */
+  @Override
   public void setRadius(float radius) {
     Arrays.fill(mRadii, radius);
     updatePath();
@@ -100,6 +102,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param radii Array of 8 values, 4 pairs of [X,Y] radii
    */
+  @Override
   public void setRadii(float[] radii) {
     if (radii == null) {
       Arrays.fill(mRadii, 0);
@@ -126,6 +129,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    * @param color of the border
    * @param width of the border
    */
+  @Override
   public void setBorder(int color, float width) {
     mBorderColor = color;
     mBorderWidth = width;

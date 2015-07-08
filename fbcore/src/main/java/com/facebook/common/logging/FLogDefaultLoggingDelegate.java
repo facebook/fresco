@@ -58,21 +58,6 @@ public class FLogDefaultLoggingDelegate implements LoggingDelegate {
   }
 
   @Override
-  public boolean isLoggable(String tag, int level) {
-    try {
-      return mMinimumLoggingLevel <= level && Log.isLoggable(tag, level);
-    } catch (IllegalArgumentException e) {
-      // isLoggable yields an IllegalArgumentException if tag.length() > 23.  we could
-      // hard-code this constant in here, but if the SDK changes the length, we're in for a
-      // real treat.  thus, we catch the exception.
-      //
-      // We're making an educated guess as to a reasonably policy for when the exception
-      // happens, which is to log.
-      return true;
-    }
-  }
-
-  @Override
   public void v(String tag, String msg) {
     println(Log.VERBOSE, tag, msg);
   }

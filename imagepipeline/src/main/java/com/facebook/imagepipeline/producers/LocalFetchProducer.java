@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -21,7 +22,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 /**
  * Represents a local fetch producer.
  */
-public abstract class LocalFetchProducer implements Producer<CloseableReference<PooledByteBuffer>> {
+public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
@@ -35,32 +36,35 @@ public abstract class LocalFetchProducer implements Producer<CloseableReference<
 
   @Override
   public void produceResults(
-      final Consumer<CloseableReference<PooledByteBuffer>> consumer,
+      final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
 
     final ProducerListener listener = producerContext.getListener();
     final String requestId = producerContext.getId();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     final StatefulProducerRunnable cancellableProducerRunnable =
-        new StatefulProducerRunnable<CloseableReference<PooledByteBuffer>>(
+        new StatefulProducerRunnable<EncodedImage>(
             consumer,
             listener,
             getProducerName(),
             requestId) {
 
           @Override
-          protected CloseableReference<PooledByteBuffer> getResult() throws Exception {
+          protected EncodedImage getResult() throws Exception {
             InputStream inputStream = null;
+            CloseableReference<PooledByteBuffer> ref = null;
             try {
               inputStream = getInputStream(imageRequest);
               int length = getLength(imageRequest);
               if (length < 0) {
-                return CloseableReference.of(mPooledByteBufferFactory.newByteBuffer(inputStream));
+                ref = CloseableReference.of(mPooledByteBufferFactory.newByteBuffer(inputStream));
               } else {
-                return CloseableReference.of(
+                ref = CloseableReference.of(
                     mPooledByteBufferFactory.newByteBuffer(inputStream, length));
               }
+              return new EncodedImage(ref);
             } finally {
+              CloseableReference.closeSafely(ref);
               if (inputStream != null) {
                 inputStream.close();
               }
@@ -68,8 +72,8 @@ public abstract class LocalFetchProducer implements Producer<CloseableReference<
           }
 
           @Override
-          protected void disposeResult(CloseableReference<PooledByteBuffer> result) {
-            CloseableReference.closeSafely(result);
+          protected void disposeResult(EncodedImage result) {
+            EncodedImage.closeSafely(result);
           }
         };
 

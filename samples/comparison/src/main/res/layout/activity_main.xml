@@ -1,0 +1,58 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+  <TextView
+      android:id="@+id/stats_display"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:typeface="monospace"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:weightSum="1">
+
+        <Spinner
+            android:id="@+id/loader_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:entries="@array/image_loaders"
+            android:prompt="@string/select_image_loader"
+            />
+
+        <Spinner
+            android:id="@+id/source_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:entries="@array/image_sources"
+            android:prompt="@string/select_image_loader"
+            />
+
+    </LinearLayout>
+
+  <GridView
+      android:id="@+id/image_grid"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:numColumns="auto_fit"
+      android:stretchMode="columnWidth"
+      android:columnWidth="90dp"
+      android:horizontalSpacing="10dp"
+      android:gravity="center"
+      />
+
+</LinearLayout>

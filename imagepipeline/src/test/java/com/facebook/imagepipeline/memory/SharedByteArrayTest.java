@@ -12,7 +12,7 @@ package com.facebook.imagepipeline.memory;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Tests for {@link SharedByteArray}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class SharedByteArrayTest {
 
   private SharedByteArray mArray;
