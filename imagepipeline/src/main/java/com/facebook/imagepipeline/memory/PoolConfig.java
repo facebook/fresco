@@ -104,12 +104,12 @@ public class PoolConfig {
 
     private PoolParams mBitmapPoolParams;
     private PoolStatsTracker mBitmapPoolStatsTracker;
-    private PoolParams mSmallByteArrayPoolParams;
-    private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
+    private PoolParams mFlexByteArrayPoolParams;
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
     private PoolParams mNativeMemoryChunkPoolParams;
     private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-    private PoolParams mFlexByteArrayPoolParams;
+    private PoolParams mSmallByteArrayPoolParams;
+    private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
 
     private Builder() {
     }
@@ -130,18 +130,6 @@ public class PoolConfig {
       return this;
     }
 
-    public Builder setSmallByteArrayPoolParams(PoolParams commonByteArrayPoolParams) {
-      mSmallByteArrayPoolParams = Preconditions.checkNotNull(commonByteArrayPoolParams);
-      return this;
-    }
-
-    public Builder setSmallByteArrayPoolStatsTracker(
-        PoolStatsTracker smallByteArrayPoolStatsTracker) {
-      mSmallByteArrayPoolStatsTracker =
-          Preconditions.checkNotNull(smallByteArrayPoolStatsTracker);
-      return this;
-    }
-
     public Builder setMemoryTrimmableRegistry(MemoryTrimmableRegistry memoryTrimmableRegistry) {
       mMemoryTrimmableRegistry = memoryTrimmableRegistry;
       return this;
@@ -156,6 +144,18 @@ public class PoolConfig {
         PoolStatsTracker nativeMemoryChunkPoolStatsTracker) {
       mNativeMemoryChunkPoolStatsTracker =
           Preconditions.checkNotNull(nativeMemoryChunkPoolStatsTracker);
+      return this;
+    }
+
+    public Builder setSmallByteArrayPoolParams(PoolParams commonByteArrayPoolParams) {
+      mSmallByteArrayPoolParams = Preconditions.checkNotNull(commonByteArrayPoolParams);
+      return this;
+    }
+
+    public Builder setSmallByteArrayPoolStatsTracker(
+        PoolStatsTracker smallByteArrayPoolStatsTracker) {
+      mSmallByteArrayPoolStatsTracker =
+          Preconditions.checkNotNull(smallByteArrayPoolStatsTracker);
       return this;
     }
 
