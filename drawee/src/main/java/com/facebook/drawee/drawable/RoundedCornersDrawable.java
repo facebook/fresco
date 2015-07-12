@@ -44,12 +44,15 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
 
   @VisibleForTesting Type mType = Type.OVERLAY_COLOR;
   @VisibleForTesting final float[] mRadii = new float[8];
+  @VisibleForTesting final float[] mBorderRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @VisibleForTesting boolean mIsCircle = false;
   @VisibleForTesting float mBorderWidth = 0;
   @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
   @VisibleForTesting int mOverlayColor = Color.TRANSPARENT;
+  @VisibleForTesting float mPadding = 0;
   private final Path mPath = new Path();
+  private final Path mBorderPath = new Path();
   private final RectF mTempRectangle = new RectF();
 
   /**
@@ -138,6 +141,12 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   @Override
+  public void setPadding(float padding) {
+    mPadding = padding;
+    invalidateSelf();
+  }
+
+  @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
     updatePath();
@@ -145,16 +154,50 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
 
   private void updatePath() {
     mPath.reset();
+    mBorderPath.reset();
     mTempRectangle.set(getBounds());
+    switch (mType){
+      case CLIPPING:
+        mTempRectangle.inset(mPadding, mPadding);
+        if (mIsCircle) {
+          mPath.addCircle(
+                  mTempRectangle.centerX(),
+                  mTempRectangle.centerY(),
+                  Math.min(mTempRectangle.width(), mTempRectangle.height()) / 2,
+                  Path.Direction.CW);
+        } else {
+          mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
+        }
+        mTempRectangle.inset(-mPadding, -mPadding);
+        break;
+      case OVERLAY_COLOR:
+        mTempRectangle.inset(mPadding, mPadding);
+        if (mIsCircle) {
+          mPath.addCircle(
+                  mTempRectangle.centerX(),
+                  mTempRectangle.centerY(),
+                  Math.min(mTempRectangle.width(), mTempRectangle.height()) / 2,
+                  Path.Direction.CW);
+        } else {
+          mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
+        }
+        mTempRectangle.inset(-mPadding, -mPadding);
+        break;
+    }
+
     mTempRectangle.inset(mBorderWidth/2, mBorderWidth/2);
     if (mIsCircle) {
-      mPath.addCircle(
-          mTempRectangle.centerX(),
-          mTempRectangle.centerY(),
-          Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
-          Path.Direction.CW);
+      mBorderPath.addCircle(
+              mTempRectangle.centerX(),
+              mTempRectangle.centerY(),
+              Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
+              Path.Direction.CW);
     } else {
-      mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
+      mBorderRadii[0] = mBorderRadii[1] = mRadii[0] + mPadding - mBorderWidth/2;
+      mBorderRadii[2] = mBorderRadii[3] = mRadii[2] + mPadding - mBorderWidth/2;
+      mBorderRadii[4] = mBorderRadii[5] = mRadii[4] + mPadding - mBorderWidth/2;
+      mBorderRadii[6] = mBorderRadii[7] = mRadii[6] + mPadding - mBorderWidth/2;
+      mBorderPath.addRoundRect(mTempRectangle, mBorderRadii, Path.Direction.CW);
     }
     mTempRectangle.inset(-mBorderWidth/2, -mBorderWidth/2);
   }
@@ -162,17 +205,20 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   @Override
   public void draw(Canvas canvas) {
     Rect bounds = getBounds();
+    int saveCount = canvas.save();
     switch (mType) {
       case CLIPPING:
         // clip, note: doesn't support anti-aliasing
-        int saveCount = canvas.save();
         mPath.setFillType(Path.FillType.EVEN_ODD);
         canvas.clipPath(mPath);
         super.draw(canvas);
         canvas.restoreToCount(saveCount);
         break;
       case OVERLAY_COLOR:
+        mPath.setFillType(Path.FillType.EVEN_ODD);
+        canvas.clipPath(mPath);
         super.draw(canvas);
+        canvas.restoreToCount(saveCount);
         mPaint.setColor(mOverlayColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
@@ -210,7 +256,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
       mPaint.setColor(mBorderColor);
       mPaint.setStrokeWidth(mBorderWidth);
       mPath.setFillType(Path.FillType.EVEN_ODD);
-      canvas.drawPath(mPath, mPaint);
+      canvas.drawPath(mBorderPath, mPaint);
     }
   }
 }

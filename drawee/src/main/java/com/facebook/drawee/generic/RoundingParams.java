@@ -43,6 +43,7 @@ public class RoundingParams {
   private int mOverlayColor = 0;
   private float mBorderWidth = 0;
   private int mBorderColor = Color.TRANSPARENT;
+  private float mPadding = 0;
 
   /**
    *  Sets whether to round as circle.
@@ -193,6 +194,12 @@ public class RoundingParams {
     return this;
   }
 
+  public RoundingParams setPadding(float padding){
+    Preconditions.checkArgument(padding >= 0, "the padding cannot be < 0");
+    mPadding = padding;
+    return this;
+  }
+
   /** Gets the border width */
   public float getBorderWidth() {
     return mBorderWidth;
@@ -201,5 +208,10 @@ public class RoundingParams {
   /** Gets the border color */
   public int getBorderColor() {
     return mBorderColor;
+  }
+
+  /** Gets the padding size */
+  public float getPadding(){
+    return mPadding;
   }
 }

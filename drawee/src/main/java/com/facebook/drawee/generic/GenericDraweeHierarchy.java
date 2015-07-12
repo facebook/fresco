@@ -324,6 +324,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private static void applyRoundingParams(Rounded rounded, RoundingParams roundingParams) {
     rounded.setCircle(roundingParams.getRoundAsCircle());
     rounded.setRadii(roundingParams.getCornersRadii());
+    rounded.setPadding(roundingParams.getPadding());
     rounded.setBorder(
         roundingParams.getBorderColor(),
         roundingParams.getBorderWidth());
@@ -703,6 +704,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     rounded.setCircle(false);
     rounded.setRadius(0);
     rounded.setBorder(Color.TRANSPARENT, 0);
+    rounded.setPadding(0);
   }
 
   /**
