@@ -17,15 +17,15 @@ public interface ImageInfo {
   /**
    * @return width of the image
    */
-  public int getWidth();
+  int getWidth();
 
   /**
    * @return height of the image
    */
-  public int getHeight();
+  int getHeight();
 
   /**
    * @return quality information for the image
    */
-  public QualityInfo getQualityInfo();
+  QualityInfo getQualityInfo();
 }

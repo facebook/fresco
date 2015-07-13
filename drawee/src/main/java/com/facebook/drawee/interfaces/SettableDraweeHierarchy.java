@@ -51,7 +51,7 @@ public interface SettableDraweeHierarchy extends DraweeHierarchy {
    * Called by controller when the hierarchy should be reset to its initial state. Any image
    * previously set by {@code setImage} should be detached and not used anymore.
    */
-  public void reset();
+  void reset();
 
   /**
    * Called by controller when the future that provides the actual image completes successfully.
@@ -60,7 +60,7 @@ public interface SettableDraweeHierarchy extends DraweeHierarchy {
    * @param progress number in range [0, 1] that indicates progress
    * @param immediate if true, image will be shown immediately (without fade effect)
    */
-  public void setImage(Drawable drawable, float progress, boolean immediate);
+  void setImage(Drawable drawable, float progress, boolean immediate);
 
   /**
    * Called by controller to update the progress.
@@ -68,14 +68,14 @@ public interface SettableDraweeHierarchy extends DraweeHierarchy {
    * @param progress number in range [0, 1] that indicates progress
    * @param immediate if true, progressbar will be shown/hidden immediately (without fade effect)
    */
-  public void setProgress(float progress, boolean immediate);
+  void setProgress(float progress, boolean immediate);
 
   /**
    * Called by controller when the future that provides the actual image completes with failure.
    * Hierarchy can choose to display between different images based on cause of failure.
    * @param throwable cause of failure
    */
-  public void setFailure(Throwable throwable);
+  void setFailure(Throwable throwable);
 
   /**
    * Called by controller when the future that provides the actual image completes with failure,
@@ -83,11 +83,11 @@ public interface SettableDraweeHierarchy extends DraweeHierarchy {
    * Hierarchy can choose to display a retry image.
    * @param throwable cause of failure
    */
-  public void setRetry(Throwable throwable);
+  void setRetry(Throwable throwable);
 
   /**
    * Called by controller if it needs to display some controller overlay.
    * @param drawable drawable to be displayed as controller overlay
    */
-  public void setControllerOverlay(Drawable drawable);
+  void setControllerOverlay(Drawable drawable);
 }

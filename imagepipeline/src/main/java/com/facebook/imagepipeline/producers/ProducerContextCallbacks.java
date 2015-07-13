@@ -17,20 +17,20 @@ public interface ProducerContextCallbacks {
   /**
    * Method that is called when a client cancels the request.
    */
-  public void onCancellationRequested();
+  void onCancellationRequested();
 
   /**
    * Method that is called when a request is no longer a prefetch, or vice versa.
    */
-  public void onIsPrefetchChanged();
+  void onIsPrefetchChanged();
 
   /**
    * Method that is called when intermediate results start or stop being expected.
    */
-  public void onIsIntermediateResultExpectedChanged();
+  void onIsIntermediateResultExpectedChanged();
 
   /**
    * Method that is called when the priority of the request changes.
    */
-  public void onPriorityChanged();
+  void onPriorityChanged();
 }

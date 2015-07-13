@@ -17,11 +17,11 @@ package com.facebook.cache.common;
 public interface CacheKey {
 
   /** This is useful for instrumentation and debugging purposes. */
-  public String toString();
+  String toString();
 
   /** This method must be implemented, otherwise the cache keys will be be compared by reference. */
-  public boolean equals(Object o);
+  boolean equals(Object o);
 
   /** This method must be implemented with accordance to the {@link #equals} method. */
-  public int hashCode();
+  int hashCode();
 }

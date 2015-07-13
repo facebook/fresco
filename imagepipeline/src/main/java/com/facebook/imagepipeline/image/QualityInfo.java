@@ -20,19 +20,19 @@ public interface QualityInfo {
    * <p> This is useful for caching in order to determine whether the new result is of higher
    * quality than what's already in the cache.
    */
-  public int getQuality();
+  int getQuality();
 
   /**
    * Whether the image is of good-enough quality.
    * <p> When fetching image progressively, the few first results can be of really poor quality,
    * but eventually, they get really close to original image, and we mark those as good-enough.
    */
-  public boolean isOfGoodEnoughQuality();
+  boolean isOfGoodEnoughQuality();
 
   /**
    * Whether the image is of full quality.
    * <p> For progressive JPEGs, this is the final scan. For other image types, this is always true.
    */
-  public boolean isOfFullQuality();
+  boolean isOfFullQuality();
 
 }
