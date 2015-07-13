@@ -115,7 +115,7 @@ public class ImageDecoder {
    * @param encodedImage input image (encoded bytes plus meta data)
    * @return a CloseableStaticBitmap
    */
-  public synchronized CloseableStaticBitmap decodeStaticImage(
+  public CloseableStaticBitmap decodeStaticImage(
       final EncodedImage encodedImage) {
     CloseableReference<Bitmap> bitmapReference =
         mBitmapFactoryWithPool.decodeFromEncodedImage(encodedImage);
@@ -134,7 +134,7 @@ public class ImageDecoder {
    * @param qualityInfo quality info for the image
    * @return a CloseableStaticBitmap
    */
-  public synchronized CloseableStaticBitmap decodeJpeg(
+  public CloseableStaticBitmap decodeJpeg(
       final EncodedImage encodedImage,
       int length,
       QualityInfo qualityInfo) {
