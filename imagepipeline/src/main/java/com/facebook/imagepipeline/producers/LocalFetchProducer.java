@@ -54,18 +54,25 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
             encodedImage.parseMetaData();
             if (EncodedImage.isMetaDataAvailable(encodedImage)) {
-              int sampleSize = DownsampleUtil.determineSampleSize(imageRequest, encodedImage);
-              // If the image is not going to be downsampled, read it all into memory
-              if (sampleSize == EncodedImage.DEFAULT_SAMPLE_SIZE) {
-                EncodedImage oldEncodedImage = encodedImage;
-                try {
-                  encodedImage = getByteBufferBackedEncodedImage(
-                      oldEncodedImage.getInputStream(), oldEncodedImage.getSize());
-                } finally {
-                  EncodedImage.closeSafely(oldEncodedImage);
+              encodedImage.setSampleSize(
+                  DownsampleUtil.determineSampleSize(imageRequest, encodedImage));
+            }
+            // If the image is not going to be downsampled, read it into memory
+            if (encodedImage.getSampleSize() == EncodedImage.DEFAULT_SAMPLE_SIZE) {
+              CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+              try {
+                if (bytesRef == null) {
+                  EncodedImage oldEncodedImage = encodedImage;
+                  try {
+                    encodedImage = getByteBufferBackedEncodedImage(
+                        oldEncodedImage.getInputStream(), oldEncodedImage.getSize());
+                  } finally {
+                    EncodedImage.closeSafely(oldEncodedImage);
+                  }
                 }
+              } finally {
+                CloseableReference.closeSafely(bytesRef);
               }
-              encodedImage.setSampleSize(sampleSize);
             }
             return encodedImage;
           }
