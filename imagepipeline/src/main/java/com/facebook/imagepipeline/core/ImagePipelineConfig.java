@@ -91,6 +91,7 @@ public class ImagePipelineConfig {
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
 
   private ImagePipelineConfig(Builder builder) {
+    mAnimatedDrawableUtil = new AnimatedDrawableUtil();
     mBitmapMemoryCacheParamsSupplier =
         builder.mBitmapMemoryCacheParamsSupplier == null ?
             new DefaultBitmapMemoryCacheParamsSupplier(
@@ -127,6 +128,10 @@ public class ImagePipelineConfig {
         builder.mMemoryTrimmableRegistry == null ?
             NoOpMemoryTrimmableRegistry.getInstance() :
             builder.mMemoryTrimmableRegistry;
+    mNetworkFetcher =
+        builder.mNetworkFetcher == null ?
+            new HttpUrlConnectionNetworkFetcher() :
+            builder.mNetworkFetcher;
     mPoolFactory =
         builder.mPoolFactory == null ?
             new PoolFactory(PoolConfig.newBuilder().build()) :
@@ -145,16 +150,14 @@ public class ImagePipelineConfig {
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
 
+    // Below this comment can't be built in alphabetical order, because of dependencies
+
     int decodeThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
 
-    mAnimatedDrawableUtil = new AnimatedDrawableUtil();
-    AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
-        new AnimatedDrawableBackendProvider() {
-      @Override
-      public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
-        return new AnimatedDrawableBackendImpl(mAnimatedDrawableUtil, imageResult, bounds);
-      }
-    };
+    mExecutorSupplier =
+        builder.mExecutorSupplier == null ?
+            new DefaultExecutorSupplier(decodeThreads) : builder.mExecutorSupplier;
+
     GingerbreadBitmapFactory factoryGingerbread = new GingerbreadBitmapFactory();
     DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
         new EmptyJpegGenerator(mPoolFactory.getPooledByteBufferFactory()),
@@ -168,22 +171,22 @@ public class ImagePipelineConfig {
             factoryICS,
             factoryLollipop);
 
+    AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
+        new AnimatedDrawableBackendProvider() {
+          @Override
+          public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
+            return new AnimatedDrawableBackendImpl(mAnimatedDrawableUtil, imageResult, bounds);
+          }
+        };
     mAnimatedImageFactory = builder.mAnimatedImageFactory == null ?
         new AnimatedImageFactory(animatedDrawableBackendProvider, mPlatformBitmapFactory) :
         builder.mAnimatedImageFactory;
-
-    mExecutorSupplier =
-        builder.mExecutorSupplier == null ?
-            new DefaultExecutorSupplier(decodeThreads) : builder.mExecutorSupplier;
 
     mImageDecoder =
         builder.mImageDecoder == null ?
             new ImageDecoder(mAnimatedImageFactory, mPlatformBitmapFactory) :
             builder.mImageDecoder;
-    mNetworkFetcher =
-        builder.mNetworkFetcher == null ?
-            new HttpUrlConnectionNetworkFetcher() :
-            builder.mNetworkFetcher;
+
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
@@ -303,7 +306,6 @@ public class ImagePipelineConfig {
       // Doesn't use a setter as always required.
       mContext = Preconditions.checkNotNull(context);
     }
-
 
     public Builder setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory) {
       mAnimatedImageFactory = animatedImageFactory;
