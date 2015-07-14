@@ -46,6 +46,7 @@ import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
+import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
@@ -217,6 +218,12 @@ public class ProducerFactory {
 
   public static <T> NullProducer<T> newNullProducer() {
     return new NullProducer<T>();
+  }
+
+  public PostprocessedBitmapMemoryCacheProducer newPostprocessorBitmapMemoryCacheProducer(
+      Producer<CloseableReference<CloseableImage>> nextProducer) {
+    return new PostprocessedBitmapMemoryCacheProducer(
+        mBitmapMemoryCache, mCacheKeyFactory, nextProducer);
   }
 
   public PostprocessorProducer newPostprocessorProducer(
