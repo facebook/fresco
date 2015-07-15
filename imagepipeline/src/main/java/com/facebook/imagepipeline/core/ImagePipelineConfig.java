@@ -17,6 +17,7 @@ import java.util.Set;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
@@ -158,18 +159,8 @@ public class ImagePipelineConfig {
         builder.mExecutorSupplier == null ?
             new DefaultExecutorSupplier(decodeThreads) : builder.mExecutorSupplier;
 
-    GingerbreadBitmapFactory factoryGingerbread = new GingerbreadBitmapFactory();
-    DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
-        new EmptyJpegGenerator(mPoolFactory.getPooledByteBufferFactory()),
-        mPoolFactory.getFlexByteArrayPool(),
-        isDownsampleEnabled());
-    ArtBitmapFactory factoryLollipop =
-        new ArtBitmapFactory(mPoolFactory.getBitmapPool(), decodeThreads, isDownsampleEnabled());
     mPlatformBitmapFactory =
-        new PlatformBitmapFactory(
-            factoryGingerbread,
-            factoryICS,
-            factoryLollipop);
+        buildPlatformBitmapFactory(mPoolFactory, decodeThreads, mDownsampleEnabled);
 
     AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
         new AnimatedDrawableBackendProvider() {
@@ -187,6 +178,27 @@ public class ImagePipelineConfig {
             new ImageDecoder(mAnimatedImageFactory, mPlatformBitmapFactory) :
             builder.mImageDecoder;
 
+  }
+
+  private static PlatformBitmapFactory buildPlatformBitmapFactory(
+      PoolFactory poolFactory,
+      int decodeThreads,
+      boolean downsampleEnabled) {
+    GingerbreadBitmapFactory factoryGingerbread =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ?
+            new GingerbreadBitmapFactory() : null;
+    DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
+        new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
+        poolFactory.getFlexByteArrayPool(),
+        downsampleEnabled);
+    ArtBitmapFactory factoryLollipop =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+            new ArtBitmapFactory(poolFactory.getBitmapPool(), decodeThreads, downsampleEnabled) :
+            null;
+    return new PlatformBitmapFactory(
+        factoryGingerbread,
+        factoryICS,
+        factoryLollipop);
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
