@@ -289,11 +289,10 @@ public class EncodedImage implements Closeable {
     if (imageFormat == ImageFormat.JPEG) {
       dimensions = JfifUtil.getDimensions(getInputStream());
       if (dimensions != null) {
-        // We don't know for sure that the rotation angle is set at this point. But it might
-        // never get set, so let's assume that if we've got the dimensions then we've got the
-        // rotation angle, else we'll never propagate intermediate results.
-        mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
-            JfifUtil.getOrientation(getInputStream()));
+        if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
+          mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
+              JfifUtil.getOrientation(getInputStream()));
+        }
       }
     } else if (imageFormat == ImageFormat.PNG) {
       dimensions = PngUtil.getDimensions(getInputStream());
