@@ -118,7 +118,7 @@ public class PostprocessedBitmapMemoryCacheProducer
     protected void onNewResultImpl(CloseableReference<CloseableImage> newResult, boolean isLast) {
       // Given a null result, we just pass it on.
       if (newResult == null) {
-        getConsumer().onNewResult(null, true);
+        getConsumer().onNewResult(null, isLast);
         return;
       }
 
@@ -145,7 +145,7 @@ public class PostprocessedBitmapMemoryCacheProducer
       try {
         getConsumer().onProgressUpdate(1f);
         getConsumer().onNewResult(
-            (newCachedResult != null) ? newCachedResult : newResult, true);
+            (newCachedResult != null) ? newCachedResult : newResult, isLast);
       } finally {
         CloseableReference.closeSafely(newCachedResult);
       }
