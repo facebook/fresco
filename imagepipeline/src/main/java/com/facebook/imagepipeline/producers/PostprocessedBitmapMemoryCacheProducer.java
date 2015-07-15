@@ -116,12 +116,6 @@ public class PostprocessedBitmapMemoryCacheProducer
 
     @Override
     protected void onNewResultImpl(CloseableReference<CloseableImage> newResult, boolean isLast) {
-      // We should only receive final results from the postprocessor, but let's be defensive just
-      // in case.
-      if (!isLast) {
-        return;
-      }
-
       // Given a null result, we just pass it on.
       if (newResult == null) {
         getConsumer().onNewResult(null, true);
