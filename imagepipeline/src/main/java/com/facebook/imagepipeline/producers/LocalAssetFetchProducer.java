@@ -31,8 +31,9 @@ public class LocalAssetFetchProducer extends LocalFetchProducer {
   public LocalAssetFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
+      boolean downsampleEnabled,
       AssetManager assetManager) {
-    super(executor, pooledByteBufferFactory);
+    super(executor, pooledByteBufferFactory, downsampleEnabled);
     mAssetManager = assetManager;
   }
 

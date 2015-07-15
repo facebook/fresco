@@ -143,7 +143,7 @@ public class ProducerFactory {
   }
 
   public DataFetchProducer newDataFetchProducer() {
-    return new DataFetchProducer(mPooledByteBufferFactory);
+    return new DataFetchProducer(mPooledByteBufferFactory, mDownsampleEnabled);
   }
 
   public DecodeProducer newDecodeProducer(Producer<EncodedImage> nextProducer) {
@@ -179,6 +179,7 @@ public class ProducerFactory {
     return new LocalAssetFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         mAssetManager);
   }
 
@@ -186,6 +187,7 @@ public class ProducerFactory {
     return new LocalContentUriFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         mContentResolver);
   }
 
@@ -198,13 +200,15 @@ public class ProducerFactory {
   public LocalFileFetchProducer newLocalFileFetchProducer() {
     return new LocalFileFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
-        mPooledByteBufferFactory);
+        mPooledByteBufferFactory,
+        mDownsampleEnabled);
   }
 
   public LocalResourceFetchProducer newLocalResourceFetchProducer() {
     return new LocalResourceFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         mResources);
   }
 

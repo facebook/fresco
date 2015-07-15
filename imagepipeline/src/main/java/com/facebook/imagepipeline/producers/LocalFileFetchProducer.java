@@ -28,8 +28,9 @@ public class LocalFileFetchProducer extends LocalFetchProducer {
 
   public LocalFileFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
-    super(executor, pooledByteBufferFactory);
+      PooledByteBufferFactory pooledByteBufferFactory,
+      boolean downsampleEnabled) {
+    super(executor, pooledByteBufferFactory, downsampleEnabled);
   }
 
   @Override

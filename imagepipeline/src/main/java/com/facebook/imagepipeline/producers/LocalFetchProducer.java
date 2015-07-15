@@ -26,12 +26,15 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
+  private final boolean mDownsampleEnabled;
 
   protected LocalFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
+      PooledByteBufferFactory pooledByteBufferFactory,
+      boolean downsampleEnabled) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
+    mDownsampleEnabled = downsampleEnabled;
   }
 
   @Override
@@ -53,7 +56,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
           protected EncodedImage getResult() throws Exception {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
             encodedImage.parseMetaData();
-            if (EncodedImage.isMetaDataAvailable(encodedImage)) {
+            if (mDownsampleEnabled && EncodedImage.isMetaDataAvailable(encodedImage)) {
               encodedImage.setSampleSize(
                   DownsampleUtil.determineSampleSize(imageRequest, encodedImage));
             }
