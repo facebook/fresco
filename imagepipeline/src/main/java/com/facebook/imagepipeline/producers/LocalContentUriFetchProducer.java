@@ -47,6 +47,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
 
   private static final Rect MINI_THUMBNAIL_DIMENSIONS = new Rect(0, 0, 512, 384);
   private static final Rect MICRO_THUMBNAIL_DIMENSIONS = new Rect(0, 0, 96, 96);
+  private static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f/3;
 
   private static final int NO_THUMBNAIL = 0;
 
@@ -166,21 +167,25 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     return null;
   }
 
-  // Returns the smallest possible thumbnail kind bigger than the requested size in the resize
-  // options.
+  // Returns the smallest possible thumbnail kind that has an acceptable size (meaning the resize
+  // options requested size is smaller than 4/3 its size).
+  // We can add a small interval of acceptance over the size of the thumbnail since the quality lost
+  // when scaling it to fit a view will not be significant.
   private static int getThumbnailKind(ResizeOptions resizeOptions) {
-    if (isSmallerThanThumbnail(resizeOptions, MICRO_THUMBNAIL_DIMENSIONS)) {
+    if (isThumbnailBigEnough(resizeOptions, MICRO_THUMBNAIL_DIMENSIONS)) {
       return MediaStore.Images.Thumbnails.MICRO_KIND;
-    } else if (isSmallerThanThumbnail(resizeOptions, MINI_THUMBNAIL_DIMENSIONS)) {
+    } else if (isThumbnailBigEnough(resizeOptions, MINI_THUMBNAIL_DIMENSIONS)) {
       return MediaStore.Images.Thumbnails.MINI_KIND;
     }
     return NO_THUMBNAIL;
   }
 
   @VisibleForTesting
-  static boolean isSmallerThanThumbnail(ResizeOptions resizeOptions, Rect thumbnailDimensions) {
-    return resizeOptions.width <= thumbnailDimensions.width()
-        && resizeOptions.height <= thumbnailDimensions.height();
+  static boolean isThumbnailBigEnough(ResizeOptions resizeOptions, Rect thumbnailDimensions) {
+    return resizeOptions.width <=
+        thumbnailDimensions.width() * ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO
+        && resizeOptions.height <=
+        thumbnailDimensions.height() * ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO;
   }
 
   private int getLength(ImageRequest imageRequest) {
