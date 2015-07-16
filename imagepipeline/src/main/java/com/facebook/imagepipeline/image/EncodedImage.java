@@ -56,13 +56,12 @@ public class EncodedImage implements Closeable {
   private final @Nullable CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
   private final @Nullable Supplier<FileInputStream> mInputStreamSupplier;
 
-  private int mStreamSize = -1;
-
   private ImageFormat mImageFormat = ImageFormat.UNKNOWN;
   private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
   private int mWidth = UNKNOWN_WIDTH;
   private int mHeight = UNKNOWN_HEIGHT;
   private int mSampleSize = DEFAULT_SAMPLE_SIZE;
+  private int mStreamSize = UNKNOWN_STREAM_SIZE;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -105,11 +104,7 @@ public class EncodedImage implements Closeable {
       }
     }
     if (encodedImage != null) {
-      encodedImage.setImageFormat(mImageFormat);
-      encodedImage.setRotationAngle(mRotationAngle);
-      encodedImage.setWidth(mWidth);
-      encodedImage.setHeight(mHeight);
-      encodedImage.setSampleSize(mSampleSize);
+      encodedImage.copyMetaDataFrom(this);
     }
     return encodedImage;
   }

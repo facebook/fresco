@@ -101,6 +101,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
               EncodedImage cachedEncodedImage;
               try {
                 cachedEncodedImage = new EncodedImage(cachedResult);
+                cachedEncodedImage.copyMetaDataFrom(newResult);
               } finally {
                 CloseableReference.closeSafely(cachedResult);
               }

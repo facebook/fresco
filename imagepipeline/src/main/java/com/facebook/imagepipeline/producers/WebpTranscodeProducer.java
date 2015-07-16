@@ -110,7 +110,9 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
               CloseableReference<PooledByteBuffer> ref =
                   CloseableReference.of(outputStream.toByteBuffer());
               try {
-                return new EncodedImage(ref);
+                EncodedImage encodedImage = new EncodedImage(ref);
+                encodedImage.copyMetaDataFrom(encodedImageCopy);
+                return encodedImage;
               } finally {
                 CloseableReference.closeSafely(ref);
               }

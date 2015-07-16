@@ -69,6 +69,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
                   try {
                     encodedImage = getByteBufferBackedEncodedImage(
                         oldEncodedImage.getInputStream(), oldEncodedImage.getSize());
+                    encodedImage.copyMetaDataFrom(oldEncodedImage);
                   } finally {
                     EncodedImage.closeSafely(oldEncodedImage);
                   }
