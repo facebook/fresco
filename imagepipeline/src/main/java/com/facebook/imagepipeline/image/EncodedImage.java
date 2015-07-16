@@ -305,6 +305,20 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Copy the meta data from another EncodedImage.
+   *
+   * @param encodedImage the EncodedImage to copy the meta data from.
+   */
+  public void copyMetaDataFrom(EncodedImage encodedImage) {
+    mImageFormat = encodedImage.getImageFormat();
+    mWidth = encodedImage.getWidth();
+    mHeight = encodedImage.getHeight();
+    mRotationAngle = encodedImage.getRotationAngle();
+    mSampleSize = encodedImage.getSampleSize();
+    mStreamSize = encodedImage.getSize();
+  }
+
+  /**
    * Returns true if all the image information has loaded, false otherwise.
    */
   public static boolean isMetaDataAvailable(EncodedImage encodedImage) {
