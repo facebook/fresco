@@ -9,12 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.Executor;
 
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -35,17 +32,8 @@ public class LocalFileFetchProducer extends LocalFetchProducer {
 
   @Override
   protected EncodedImage getEncodedImage(final ImageRequest imageRequest) throws IOException {
-    Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
-      @Override
-      public FileInputStream get() {
-        try {
-          return new FileInputStream(imageRequest.getSourceFile());
-        } catch (IOException ioe) {
-          throw new RuntimeException(ioe);
-        }
-      }
-    };
-    return new EncodedImage(sup, (int) imageRequest.getSourceFile().length());
+    return getFileBackedEncodedImage(
+        imageRequest.getSourceFile(), (int) imageRequest.getSourceFile().length());
   }
 
   @Override

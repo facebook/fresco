@@ -9,10 +9,13 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -111,6 +114,24 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     } finally {
       CloseableReference.closeSafely(ref);
     }
+  }
+
+  protected EncodedImage getFileBackedEncodedImage(final String pathname, int length) {
+    return getFileBackedEncodedImage(new File(pathname), length);
+  }
+
+  protected EncodedImage getFileBackedEncodedImage(final File file, int length) {
+    Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
+      @Override
+      public FileInputStream get() {
+        try {
+          return new FileInputStream(file);
+        } catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
+      }
+    };
+    return new EncodedImage(sup, length);
   }
 
   /**

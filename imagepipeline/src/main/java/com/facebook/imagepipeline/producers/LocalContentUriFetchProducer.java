@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -24,7 +23,6 @@ import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
@@ -75,17 +73,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     if (isCameraUri(uri)) {
       final String pathname = getCameraPath(uri, imageRequest.getResizeOptions());
       if (pathname != null) {
-        Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
-          @Override
-          public FileInputStream get() {
-            try {
-              return new FileInputStream(pathname);
-            } catch (IOException ioe) {
-              throw new RuntimeException(ioe);
-            }
-          }
-        };
-        return new EncodedImage(sup, getLength(imageRequest));
+        return getFileBackedEncodedImage(pathname, getLength(imageRequest));
       }
     }
 
