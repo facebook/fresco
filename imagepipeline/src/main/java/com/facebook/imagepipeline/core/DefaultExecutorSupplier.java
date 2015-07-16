@@ -11,7 +11,7 @@ package com.facebook.imagepipeline.core;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -32,14 +32,17 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   private final Executor mCpuBoundExecutor;
   private final Executor mDecodeExecutor;
 
-  public DefaultExecutorSupplier(int numCpuBoundThreads) {
+  public DefaultExecutorSupplier() {
     mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
     mCpuBoundExecutor = new ThreadPoolExecutor(
         1,                     // keep at least that many threads alive
-        numCpuBoundThreads, // maximum number of allowed threads
+        100,                   // maximum number of allowed threads. Set at 100 as an arbitrary
+                               // higher bound that is not supposed to be hit. Still the pool
+                               // should be able to grow when the queue is so that the app doesn't
+                               // stall.
         KEEP_ALIVE_SECONDS,    // amount of seconds each cached thread waits before being terminated
         TimeUnit.SECONDS,
-        new LinkedBlockingQueue<Runnable>());
+        new SynchronousQueue<Runnable>());
     mDecodeExecutor = new SerialDelegatingExecutor(mCpuBoundExecutor);
   }
 

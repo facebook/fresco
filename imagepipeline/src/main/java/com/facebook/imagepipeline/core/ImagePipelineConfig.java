@@ -151,7 +151,7 @@ public class ImagePipelineConfig {
     int decodeThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
     mExecutorSupplier =
         builder.mExecutorSupplier == null ?
-            new DefaultExecutorSupplier(decodeThreads) : builder.mExecutorSupplier;
+            new DefaultExecutorSupplier() : builder.mExecutorSupplier;
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
