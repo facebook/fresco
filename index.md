@@ -59,12 +59,13 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 
 # Who Uses Fresco?
 
+* [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
+* [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
 * [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
 * [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
-* [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
-* [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android)
+* [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
