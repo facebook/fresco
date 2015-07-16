@@ -33,6 +33,8 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   // quality info
   private final QualityInfo mQualityInfo;
 
+  private final int mRotationAngle;
+
   /**
    * Creates a new instance of a CloseableStaticBitmap.
    *
@@ -42,12 +44,14 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   public CloseableStaticBitmap(
       Bitmap bitmap,
       ResourceReleaser<Bitmap> resourceReleaser,
-      QualityInfo qualityInfo) {
+      QualityInfo qualityInfo,
+      int rotationAngle) {
     mBitmap = Preconditions.checkNotNull(bitmap);
     mBitmapReference = CloseableReference.of(
         mBitmap,
         Preconditions.checkNotNull(resourceReleaser));
     mQualityInfo = qualityInfo;
+    mRotationAngle = rotationAngle;
   }
 
   /**
@@ -58,10 +62,12 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   public CloseableStaticBitmap(
       CloseableReference<Bitmap> bitmapReference,
-      QualityInfo qualityInfo) {
+      QualityInfo qualityInfo,
+      int rotationAngle) {
     mBitmapReference = Preconditions.checkNotNull(bitmapReference.cloneOrNull());
     mBitmap = mBitmapReference.get();
     mQualityInfo = qualityInfo;
+    mRotationAngle = rotationAngle;
   }
 
   /**
@@ -123,6 +129,13 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   public int getHeight() {
     Bitmap bitmap = mBitmap;
     return (bitmap == null) ? 0 : bitmap.getHeight();
+  }
+
+  /**
+   * @return the rotation angle of the image
+   */
+  public int getRotationAngle() {
+    return mRotationAngle;
   }
 
   /**

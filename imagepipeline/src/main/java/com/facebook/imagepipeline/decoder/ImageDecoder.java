@@ -120,7 +120,10 @@ public class ImageDecoder {
     CloseableReference<Bitmap> bitmapReference =
         mBitmapFactoryWithPool.decodeFromEncodedImage(encodedImage);
     try {
-      return new CloseableStaticBitmap(bitmapReference, ImmutableQualityInfo.FULL_QUALITY);
+      return new CloseableStaticBitmap(
+          bitmapReference,
+          ImmutableQualityInfo.FULL_QUALITY,
+          encodedImage.getRotationAngle());
     } finally {
       bitmapReference.close();
     }
@@ -141,7 +144,10 @@ public class ImageDecoder {
     CloseableReference<Bitmap> bitmapReference =
         mBitmapFactoryWithPool.decodeJPEGFromEncodedImage(encodedImage, length);
     try {
-      return new CloseableStaticBitmap(bitmapReference, qualityInfo);
+      return new CloseableStaticBitmap(
+          bitmapReference,
+          qualityInfo,
+          encodedImage.getRotationAngle());
     } finally {
       bitmapReference.close();
     }

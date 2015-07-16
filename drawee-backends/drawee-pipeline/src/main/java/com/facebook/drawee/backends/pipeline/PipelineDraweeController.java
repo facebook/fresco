@@ -22,6 +22,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.drawable.OrientedBitmapDrawable;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -102,7 +103,10 @@ public class PipelineDraweeController
     CloseableImage closeableImage = image.get();
     if (closeableImage instanceof CloseableStaticBitmap) {
       CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-      return new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+      return new OrientedBitmapDrawable(
+          mResources,
+          closeableStaticBitmap.getUnderlyingBitmap(),
+          closeableStaticBitmap.getRotationAngle());
     } else if (closeableImage instanceof CloseableAnimatedImage) {
       return mAnimatedDrawableFactory.create(
           ((CloseableAnimatedImage) closeableImage).getImageResult());
