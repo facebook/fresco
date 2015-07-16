@@ -15,13 +15,11 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.facebook.common.executors.SerialDelegatingExecutor;
-
 /**
  * Basic implementation of {@link ExecutorSupplier}.
  *
  * <p> Provides one thread pool for the CPU-bound operations and another thread pool for the
- * IO-bound operations. Decoding, a CPU-intensive operation, is limited to one thread.
+ * IO-bound operations.
  */
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
@@ -30,7 +28,6 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
 
   private final Executor mIoBoundExecutor;
   private final Executor mCpuBoundExecutor;
-  private final Executor mDecodeExecutor;
 
   public DefaultExecutorSupplier() {
     mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
@@ -43,7 +40,6 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
         KEEP_ALIVE_SECONDS,    // amount of seconds each cached thread waits before being terminated
         TimeUnit.SECONDS,
         new SynchronousQueue<Runnable>());
-    mDecodeExecutor = new SerialDelegatingExecutor(mCpuBoundExecutor);
   }
 
   @Override
@@ -58,7 +54,7 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
 
   @Override
   public Executor forDecode() {
-    return mDecodeExecutor;
+    return mCpuBoundExecutor;
   }
 
   @Override
