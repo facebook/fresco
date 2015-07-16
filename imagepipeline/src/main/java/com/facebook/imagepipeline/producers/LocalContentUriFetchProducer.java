@@ -12,15 +12,18 @@ package com.facebook.imagepipeline.producers;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.JfifUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +35,9 @@ import javax.annotation.Nullable;
  * Represents a local content Uri fetch producer.
  */
 public class LocalContentUriFetchProducer extends LocalFetchProducer {
+
+  private static final Class<?> TAG = LocalContentUriFetchProducer.class;
+
   @VisibleForTesting static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
   private static final String DISPLAY_PHOTO_PATH =
       Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo").getPath();
@@ -67,19 +73,19 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       // If a Contact URI is provided, use the special helper to open that contact's photo.
       return getByteBufferBackedEncodedImage(
           ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri),
-          getLength(imageRequest));
+          EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
     if (isCameraUri(uri)) {
-      final String pathname = getCameraPath(uri, imageRequest.getResizeOptions());
-      if (pathname != null) {
-        return getFileBackedEncodedImage(pathname, getLength(imageRequest));
+      EncodedImage cameraImage = getCameraImage(uri, imageRequest.getResizeOptions());
+      if (cameraImage != null) {
+        return cameraImage;
       }
     }
 
     return getByteBufferBackedEncodedImage(
         mContentResolver.openInputStream(uri),
-        getLength(imageRequest));
+        EncodedImage.UNKNOWN_STREAM_SIZE);
   }
 
   /**
@@ -98,7 +104,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         uriString.startsWith(MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
   }
 
-  private @Nullable String getCameraPath(Uri uri, ResizeOptions resizeOptions) {
+  private @Nullable EncodedImage getCameraImage(Uri uri, ResizeOptions resizeOptions) {
     Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
     if (cursor == null) {
       return null;
@@ -108,23 +114,29 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         return null;
       }
       cursor.moveToFirst();
+      final String pathname =
+          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
       if (resizeOptions != null) {
         int imageIdColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-        String thumbnailUri = getThumbnailPath(resizeOptions, cursor.getInt(imageIdColumnIndex));
-        if (thumbnailUri != null) {
-          return thumbnailUri;
+        EncodedImage thumbnail = getThumbnail(resizeOptions, cursor.getInt(imageIdColumnIndex));
+        if (thumbnail != null) {
+          thumbnail.setRotationAngle(getRotationAngle(pathname));
+          return thumbnail;
         }
       }
-      return cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+      if (pathname != null) {
+        return getFileBackedEncodedImage(pathname, getLength(pathname));
+      }
     } finally {
       cursor.close();
     }
+    return null;
   }
 
-  // Gets the path of the smallest possible thumbnail that is bigger than the requested size in the
-  // resize options or null if either the thumbnails are smaller than the requested size or there
-  // are no stored thumbnails.
-  private String getThumbnailPath(ResizeOptions resizeOptions, int imageId) {
+  // Gets the smallest possible thumbnail that is bigger than the requested size in the resize
+  // options or null if either the thumbnails are smaller than the requested size or there are no
+  // stored thumbnails.
+  private EncodedImage getThumbnail(ResizeOptions resizeOptions, int imageId) {
     int thumbnailKind = getThumbnailKind(resizeOptions);
     if (thumbnailKind == NO_THUMBNAIL) {
       return null;
@@ -141,10 +153,10 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
       thumbnailCursor.moveToFirst();
       if (thumbnailCursor.getCount() > 0) {
-        String thumbnailUri = thumbnailCursor.getString(
+        final String thumbnailUri = thumbnailCursor.getString(
             thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
         if (new File(thumbnailUri).exists()) {
-          return thumbnailUri;
+          return getFileBackedEncodedImage(thumbnailUri, getLength(thumbnailUri));
         }
       }
     } finally {
@@ -176,18 +188,25 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         thumbnailDimensions.height() * ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO;
   }
 
-  private int getLength(ImageRequest imageRequest) {
-    Uri uri = imageRequest.getSourceUri();
-    if (isCameraUri(uri)) {
-      String pathname = getCameraPath(uri, imageRequest.getResizeOptions());
-      return pathname == null ? -1 : (int) new File(pathname).length();
-    } else {
-      return -1;
-    }
+  private static int getLength(String pathname) {
+    return pathname == null ? -1 : (int) new File(pathname).length();
   }
 
   @Override
   protected String getProducerName() {
     return PRODUCER_NAME;
+  }
+
+  private static int getRotationAngle(String pathname) {
+    if (pathname != null) {
+      try {
+        ExifInterface exif = new ExifInterface(pathname);
+        return JfifUtil.getAutoRotateAngleFromOrientation(exif.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL));
+      } catch (IOException ioe) {
+        FLog.e(TAG, ioe, "Unable to retrieve thumbnail rotation for %s", pathname);
+      }
+    }
+    return 0;
   }
 }
