@@ -11,11 +11,12 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.concurrent.GuardedBy;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
-import com.facebook.common.executors.UiThreadExecutorService;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
 
@@ -27,7 +28,20 @@ public class JobScheduler {
 
   static final String QUEUE_TIME_KEY = "queueTime";
 
-  public static interface JobRunnable {
+  @VisibleForTesting
+  static class JobStartExecutorSupplier {
+
+    private static ScheduledExecutorService sJobStarterExecutor;
+
+    static ScheduledExecutorService get() {
+      if (sJobStarterExecutor == null) {
+        sJobStarterExecutor = Executors.newSingleThreadScheduledExecutor();
+      }
+      return sJobStarterExecutor;
+    }
+  }
+
+  public interface JobRunnable {
     void run(EncodedImage encodedImage, boolean isLast);
   }
 
@@ -162,10 +176,9 @@ public class JobScheduler {
   private void enqueueJob(long delay) {
     // If we make mExecutor be a {@link ScheduledexecutorService}, we could just have
     // `mExecutor.schedule(mDoJobRunnable, delay)` and avoid mSubmitJobRunnable and
-    // UiThreadExecutorService altogether. That would require some refactoring though.
+    // JobStartExecutorSupplier altogether. That would require some refactoring though.
     if (delay > 0) {
-      UiThreadExecutorService.getInstance()
-          .schedule(mSubmitJobRunnable, delay, TimeUnit.MILLISECONDS);
+      JobStartExecutorSupplier.get().schedule(mSubmitJobRunnable, delay, TimeUnit.MILLISECONDS);
     } else {
       mSubmitJobRunnable.run();
     }
