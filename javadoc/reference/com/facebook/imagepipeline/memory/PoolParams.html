@@ -295,9 +295,12 @@ Summary:
 
 
 
+  <a href="#constants">Constants</a>
+  
 
 
-  <a href="#lfields">Fields</a>
+
+  &#124; <a href="#lfields">Fields</a>
   
 
 
@@ -452,6 +455,22 @@ Summary:
 
 
 
+<!-- =========== ENUM CONSTANT SUMMARY =========== -->
+<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
+
+
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#IGNORE_THREADS">IGNORE_THREADS</a></td>
+        <td class="jd-descrcol" width="100%">If maxNumThreads is set to this level, the pool doesn't actually care what it is </td>
+    </tr>
+    
+    
+
+</table>
+
+
 
 
 
@@ -490,12 +509,23 @@ Summary:
           
           final
           int</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxNumThreads">maxNumThreads</a></td>
+          <td class="jd-descrcol" width="100%">The maximum number of threads that may be accessing this pool.</td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          final
+          int</td>
           <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#maxSizeHardCap">maxSizeHardCap</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
-      <tr class=" api apilevel-" >
+      <tr class="alt-color api apilevel-" >
           <td class="jd-typecol">
           public
           
@@ -506,7 +536,7 @@ Summary:
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
+      <tr class=" api apilevel-" >
           <td class="jd-typecol">
           public
           
@@ -578,7 +608,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#PoolParams(int, int, android.util.SparseIntArray, int, int)">PoolParams</a></span>(int maxSizeSoftCap, int maxSizeHardCap, SparseIntArray bucketSizes, int minBucketSize, int maxBucketSize)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html#PoolParams(int, int, android.util.SparseIntArray, int, int, int)">PoolParams</a></span>(int maxSizeSoftCap, int maxSizeHardCap, SparseIntArray bucketSizes, int minBucketSize, int maxBucketSize, int maxNumThreads)
         
         <div class="jd-descrdiv">Set up pool params</div>
   
@@ -762,7 +792,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -778,7 +808,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -794,7 +824,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -826,6 +856,53 @@ From class
 
 
 <!-- Constants -->
+
+
+<!-- ========= ENUM CONSTANTS DETAIL ======== -->
+<h2>Constants</h2>
+
+
+
+
+<a id="IGNORE_THREADS"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        IGNORE_THREADS
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>If maxNumThreads is set to this level, the pool doesn't actually care what it is </p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                -1
+                (0xffffffff)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
 
 
 <!-- Fields -->
@@ -890,6 +967,39 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="maxNumThreads"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+        final 
+        int
+      </span>
+        maxNumThreads
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The maximum number of threads that may be accessing this pool.
+
+ <p>Pool implementations may or may not need this to be set.
+</p></div>
 
     
     </div>
@@ -1090,7 +1200,7 @@ From class
 </div>
 
 
-<a id="PoolParams(int, int, android.util.SparseIntArray, int, int)"></a>
+<a id="PoolParams(int, int, android.util.SparseIntArray, int, int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1103,7 +1213,7 @@ From class
         
       </span>
       <span class="sympad">PoolParams</span>
-      <span class="normal">(int maxSizeSoftCap, int maxSizeHardCap, SparseIntArray bucketSizes, int minBucketSize, int maxBucketSize)</span>
+      <span class="normal">(int maxSizeSoftCap, int maxSizeHardCap, SparseIntArray bucketSizes, int minBucketSize, int maxBucketSize, int maxNumThreads)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1137,7 +1247,11 @@ From class
         </tr>
         <tr>
           <th>maxBucketSize</th>
-          <td>max bucket size for the pool
+          <td>max bucket size for the pool</td>
+        </tr>
+        <tr>
+          <th>maxNumThreads</th>
+          <td>the maximum number of threads in th epool, or -1 if the pool doesn't care
 </td>
         </tr>
       </table>

@@ -218,6 +218,7 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html">GenericDraweeHierarchy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html">GenericDraweeHierarchyBuilder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a></li>
       </ul>
@@ -295,6 +296,8 @@
 
 Summary:
 
+  <a href="#nestedclasses">Nested Classes</a>
+  
 
 
 
@@ -305,7 +308,8 @@ Summary:
 
 
 
-  <a href="#pubmethods">Methods</a>
+
+  &#124; <a href="#pubmethods">Methods</a>
   
 
 
@@ -461,6 +465,27 @@ Summary:
 
 <h2>Summary</h2>
 
+
+
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
+
+
+  
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        class</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></td>
+      <td class="jd-descrcol" width="100%">&nbsp;</td>
+    </tr>
+    
+    
+
+</table>
 
 
 
@@ -647,10 +672,8 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setFailure(java.lang.Throwable)">setFailure</a></span>(Throwable throwable)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setFadeDuration(int)">setFadeDuration</a></span>(int durationMs)
         
-        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure.</div>
-  
   </td></tr>
 
 
@@ -665,9 +688,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setImage(android.graphics.drawable.Drawable, float, boolean)">setImage</a></span>(Drawable drawable, float progress, boolean immediate)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setFailure(java.lang.Throwable)">setFailure</a></span>(Throwable throwable)
         
-        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes successfully.</div>
+        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure.</div>
   
   </td></tr>
 
@@ -683,9 +706,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(int)">setPlaceholderImage</a></span>(int resourceId)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setImage(android.graphics.drawable.Drawable, float, boolean)">setImage</a></span>(Drawable drawable, float progress, boolean immediate)
         
-        <div class="jd-descrdiv">Sets a new placeholder drawable using the supplied resource ID.</div>
+        <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes successfully.</div>
   
   </td></tr>
 
@@ -719,13 +742,31 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(int)">setPlaceholderImage</a></span>(int resourceId)
+        
+        <div class="jd-descrdiv">Sets a new placeholder drawable using the supplied resource ID.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImageFocusPoint(android.graphics.PointF)">setPlaceholderImageFocusPoint</a></span>(PointF focusPoint)
         
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -743,7 +784,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -762,7 +803,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -952,7 +993,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -968,7 +1009,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -984,7 +1025,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1499,6 +1540,37 @@ From interface
 </div>
 
 
+<a id="setFadeDuration(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setFadeDuration</span>
+      <span class="normal">(int durationMs)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="setFailure(java.lang.Throwable)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1591,6 +1663,40 @@ From interface
 </div>
 
 
+<a id="setPlaceholderImage(android.graphics.drawable.Drawable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setPlaceholderImage</span>
+      <span class="normal">(Drawable drawable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable.
+
+ <p>The placeholder scale type will not be changed.
+</p></div>
+
+    </div>
+</div>
+
+
 <a id="setPlaceholderImage(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1629,40 +1735,6 @@ From interface
         </tr>
       </table>
   </div>
-
-    </div>
-</div>
-
-
-<a id="setPlaceholderImage(android.graphics.drawable.Drawable)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setPlaceholderImage</span>
-      <span class="normal">(Drawable drawable)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable.
-
- <p>The placeholder scale type will not be changed.
-</p></div>
 
     </div>
 </div>

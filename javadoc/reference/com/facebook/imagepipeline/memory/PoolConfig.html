@@ -506,29 +506,13 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html#getCommonByteArrayPoolParams()">getCommonByteArrayPoolParams</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html#getFlexByteArrayPoolParams()">getFlexByteArrayPoolParams</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html#getCommonByteArrayPoolStatsTracker()">getCommonByteArrayPoolStatsTracker</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -544,7 +528,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -560,7 +544,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -576,7 +560,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -586,7 +570,23 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html#getSharedByteArrayParams()">getSharedByteArrayParams</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html#getSmallByteArrayPoolParams()">getSmallByteArrayPoolParams</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html#getSmallByteArrayPoolStatsTracker()">getSmallByteArrayPoolStatsTracker</a></span>()
         
   </td></tr>
 
@@ -780,7 +780,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -796,7 +796,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -812,7 +812,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -927,7 +927,7 @@ From class
 </div>
 
 
-<a id="getCommonByteArrayPoolParams()"></a>
+<a id="getFlexByteArrayPoolParams()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -939,38 +939,7 @@ From class
          
         <a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a>
       </span>
-      <span class="sympad">getCommonByteArrayPoolParams</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="getCommonByteArrayPoolStatsTracker()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a>
-      </span>
-      <span class="sympad">getCommonByteArrayPoolStatsTracker</span>
+      <span class="sympad">getFlexByteArrayPoolParams</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1082,7 +1051,7 @@ From class
 </div>
 
 
-<a id="getSharedByteArrayParams()"></a>
+<a id="getSmallByteArrayPoolParams()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1094,7 +1063,38 @@ From class
          
         <a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a>
       </span>
-      <span class="sympad">getSharedByteArrayParams</span>
+      <span class="sympad">getSmallByteArrayPoolParams</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getSmallByteArrayPoolStatsTracker()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a>
+      </span>
+      <span class="sympad">getSmallByteArrayPoolStatsTracker</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">

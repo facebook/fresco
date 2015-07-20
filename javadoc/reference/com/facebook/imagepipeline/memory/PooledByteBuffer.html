@@ -524,12 +524,12 @@ Summary:
             
             
             
-            byte
+            void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int)">read</a></span>(int offset)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int, byte[], int, int)">read</a></span>(int offset, byte[] buffer, int bufferOffset, int length)
         
-        <div class="jd-descrdiv">Read byte at given offset</div>
+        <div class="jd-descrdiv">Read consecutive bytes.</div>
   
   </td></tr>
 
@@ -542,12 +542,12 @@ Summary:
             
             
             
-            void
+            byte
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int, byte[], int, int)">read</a></span>(int offset, byte[] buffer, int bufferOffset, int length)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int)">read</a></span>(int offset)
         
-        <div class="jd-descrdiv">Read consecutive bytes.</div>
+        <div class="jd-descrdiv">Read byte at given offset</div>
   
   </td></tr>
 
@@ -814,42 +814,6 @@ From interface
 </div>
 
 
-<a id="read(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        byte
-      </span>
-      <span class="sympad">read</span>
-      <span class="normal">(int offset)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Read byte at given offset</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>byte at given offset
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="read(int, byte[], int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -900,6 +864,42 @@ From interface
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>number of bytes copied
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="read(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        byte
+      </span>
+      <span class="sympad">read</span>
+      <span class="normal">(int offset)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Read byte at given offset</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>byte at given offset
 </li></ul>
   </div>
 

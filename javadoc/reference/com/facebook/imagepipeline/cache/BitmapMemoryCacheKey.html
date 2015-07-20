@@ -456,7 +456,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, com.facebook.imagepipeline.common.ImageDecodeOptions)">BitmapMemoryCacheKey</a></span>(String sourceString, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, boolean autoRotated, ImageDecodeOptions imageDecodeOptions)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, com.facebook.imagepipeline.common.ImageDecodeOptions, com.facebook.cache.common.CacheKey, java.lang.String)">BitmapMemoryCacheKey</a></span>(String sourceString, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, boolean autoRotated, ImageDecodeOptions imageDecodeOptions, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> postprocessorCacheKey, String postprocessorName)
         
   </td></tr>
 
@@ -501,13 +501,29 @@ Summary:
             String
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#getSourceUriString()">getSourceUriString</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#getPostprocessorName()">getPostprocessorName</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#getSourceUriString()">getSourceUriString</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -523,7 +539,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -711,7 +727,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -727,7 +743,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -743,7 +759,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -868,7 +884,7 @@ From interface
 
 
 
-<a id="BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+<a id="BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, com.facebook.imagepipeline.common.ImageDecodeOptions, com.facebook.cache.common.CacheKey, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -881,7 +897,7 @@ From interface
         
       </span>
       <span class="sympad">BitmapMemoryCacheKey</span>
-      <span class="normal">(String sourceString, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, boolean autoRotated, ImageDecodeOptions imageDecodeOptions)</span>
+      <span class="normal">(String sourceString, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, boolean autoRotated, ImageDecodeOptions imageDecodeOptions, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> postprocessorCacheKey, String postprocessorName)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -928,6 +944,37 @@ From interface
       </span>
       <span class="sympad">equals</span>
       <span class="normal">(Object o)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getPostprocessorName()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getPostprocessorName</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>

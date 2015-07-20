@@ -544,7 +544,7 @@ Summary:
             ValueAnimator
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html#createValueAnimator(int)">createValueAnimator</a></span>(int maxDurationMs)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html#createValueAnimator()">createValueAnimator</a></span>()
         
         <div class="jd-descrdiv">An animator that will animate the drawable directly.</div>
   
@@ -562,7 +562,7 @@ Summary:
             ValueAnimator
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html#createValueAnimator()">createValueAnimator</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html#createValueAnimator(int)">createValueAnimator</a></span>(int maxDurationMs)
         
         <div class="jd-descrdiv">An animator that will animate the drawable directly.</div>
   
@@ -1011,7 +1011,7 @@ From class
             Drawable
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">createFromXml</span>(Resources arg0, XmlPullParser arg1, Resources.Theme arg2)
+        <span class="sympad">createFromXml</span>(Resources arg0, XmlPullParser arg1)
         
   </td></tr>
 
@@ -1027,7 +1027,7 @@ From class
             Drawable
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">createFromXml</span>(Resources arg0, XmlPullParser arg1)
+        <span class="sympad">createFromXml</span>(Resources arg0, XmlPullParser arg1, Resources.Theme arg2)
         
   </td></tr>
 
@@ -1043,7 +1043,7 @@ From class
             Drawable
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">createFromXmlInner</span>(Resources arg0, XmlPullParser arg1, AttributeSet arg2)
+        <span class="sympad">createFromXmlInner</span>(Resources arg0, XmlPullParser arg1, AttributeSet arg2, Resources.Theme arg3)
         
   </td></tr>
 
@@ -1059,7 +1059,7 @@ From class
             Drawable
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">createFromXmlInner</span>(Resources arg0, XmlPullParser arg1, AttributeSet arg2, Resources.Theme arg3)
+        <span class="sympad">createFromXmlInner</span>(Resources arg0, XmlPullParser arg1, AttributeSet arg2)
         
   </td></tr>
 
@@ -1619,7 +1619,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setBounds</span>(Rect arg0)
+        <span class="sympad">setBounds</span>(int arg0, int arg1, int arg2, int arg3)
         
   </td></tr>
 
@@ -1635,7 +1635,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setBounds</span>(int arg0, int arg1, int arg2, int arg3)
+        <span class="sympad">setBounds</span>(Rect arg0)
         
   </td></tr>
 
@@ -1675,22 +1675,6 @@ From class
 	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
             
             
             
@@ -1700,6 +1684,22 @@ From class
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad">setColorFilter</span>(int arg0, PorterDuff.Mode arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
         
   </td></tr>
 
@@ -2045,7 +2045,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -2061,7 +2061,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -2077,7 +2077,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -2253,7 +2253,7 @@ From interface
             ValueAnimator
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator(int)">createValueAnimator</a></span>(int maxDurationMs)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator()">createValueAnimator</a></span>()
         
         <div class="jd-descrdiv">An animator that will animate the drawable directly.</div>
   
@@ -2271,7 +2271,7 @@ From interface
             ValueAnimator
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator()">createValueAnimator</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator(int)">createValueAnimator</a></span>(int maxDurationMs)
         
         <div class="jd-descrdiv">An animator that will animate the drawable directly.</div>
   
@@ -2401,6 +2401,43 @@ From interface
 </div>
 
 
+<a id="createValueAnimator()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        ValueAnimator
+      </span>
+      <span class="sympad">createValueAnimator</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>An animator that will animate the drawable directly. The loop count and duration will
+ be determined by metadata in the original image. Update listener is attached automatically.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a new animator
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="createValueAnimator(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2437,43 +2474,6 @@ From interface
         </tr>
       </table>
   </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>a new animator
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="createValueAnimator()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        ValueAnimator
-      </span>
-      <span class="sympad">createValueAnimator</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>An animator that will animate the drawable directly. The loop count and duration will
- be determined by metadata in the original image. Update listener is attached automatically.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>a new animator

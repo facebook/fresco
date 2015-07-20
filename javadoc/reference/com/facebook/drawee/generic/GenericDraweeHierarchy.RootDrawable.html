@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  ProgressBarDrawable - Fresco API
+  GenericDraweeHierarchy.RootDrawable - Fresco API
 
 
 | Fresco
@@ -168,9 +168,9 @@
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
-    <li class="selected api apilevel-">
-  <a href="../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/drawee/generic/package-summary.html">com.facebook.drawee.generic</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/interfaces/package-summary.html">com.facebook.drawee.interfaces</a></li>
@@ -217,15 +217,17 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html">ProgressBarDrawable</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.html">ScalingUtils</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html">GenericDraweeHierarchy</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html">GenericDraweeHierarchyBuilder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a></li>
       </ul>
     </li>
               
               
     <li><h2>Enums</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/RoundingParams.RoundingMethod.html">RoundingParams.RoundingMethod</a></li>
       </ul>
     </li>
               
@@ -272,6 +274,43 @@
   
   
   
+   
+  
+  
+
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
   
 
   
@@ -294,8 +333,11 @@ Summary:
 
 
 
+  <a href="#inhfields">Inherited Fields</a>
+  
 
-  <a href="#pubctors">Ctors</a>
+
+  &#124; <a href="#pubctors">Ctors</a>
   
 
 
@@ -303,9 +345,6 @@ Summary:
   &#124; <a href="#pubmethods">Methods</a>
   
 
-
-  &#124; <a href="#promethods">Protected Methods</a>
-  
 
 
   &#124; <a href="#inhmethods">Inherited Methods</a>
@@ -328,11 +367,11 @@ Summary:
 
 <div id="jd-header">
     public
-     
+    static 
      
     
     class
-<h1>ProgressBarDrawable</h1>
+<h1>GenericDraweeHierarchy.RootDrawable</h1>
 
 
 
@@ -341,12 +380,21 @@ Summary:
   
 
   
-    extends Drawable<br/>
+  
+  
+
+  
+    extends ForwardingDrawable<br/>
   
   
   
 
   
+  
+      implements 
+      
+        VisibilityAwareDrawable 
+      
   
   
 
@@ -361,7 +409,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="4" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -369,7 +417,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="2" class="jd-inheritance-class-cell">android.graphics.drawable.Drawable</td>
+        <td colspan="3" class="jd-inheritance-class-cell">android.graphics.drawable.Drawable</td>
     </tr>
     
 
@@ -379,7 +427,19 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.drawee.drawable.ProgressBarDrawable</td>
+        <td colspan="2" class="jd-inheritance-class-cell">com.facebook.drawee.drawable.ForwardingDrawable</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.drawee.generic.GenericDraweeHierarchy.RootDrawable</td>
     </tr>
     
 
@@ -393,10 +453,6 @@ Summary:
 
 <div class="jd-descr">
 
-
-<h2>Class Overview</h2>
-<p>Drawable that displays a progress bar based on the level.
-</p>
 
 
 
@@ -444,6 +500,61 @@ Summary:
 
 
 
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="inhfields" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Fields</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-com.facebook.drawee.drawable.ForwardingDrawable" class="jd-expando-trigger closed"
+          ><img id="inherited-fields-com.facebook.drawee.drawable.ForwardingDrawable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From class
+com.facebook.drawee.drawable.ForwardingDrawable
+<div id="inherited-fields-com.facebook.drawee.drawable.ForwardingDrawable">
+  <div id="inherited-fields-com.facebook.drawee.drawable.ForwardingDrawable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-fields-com.facebook.drawee.drawable.ForwardingDrawable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          TransformCallback</td>
+          <td class="jd-linkcol">mTransformCallback</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</table>
+
+
 
 
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -462,7 +573,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#ProgressBarDrawable()">ProgressBarDrawable</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html#RootDrawable(android.graphics.drawable.Drawable)">RootDrawable</a></span>(Drawable drawable)
         
   </td></tr>
 
@@ -491,7 +602,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#draw(android.graphics.Canvas)">draw</a></span>(Canvas canvas)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html#draw(android.graphics.Canvas)">draw</a></span>(Canvas canvas)
         
   </td></tr>
 
@@ -507,10 +618,8 @@ Summary:
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#getBackgroundColor()">getBackgroundColor</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html#getIntrinsicHeight()">getIntrinsicHeight</a></span>()
         
-        <div class="jd-descrdiv">Gets the progress bar background color.</div>
-  
   </td></tr>
 
 
@@ -525,10 +634,8 @@ Summary:
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#getBarWidth()">getBarWidth</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html#getIntrinsicWidth()">getIntrinsicWidth</a></span>()
         
-        <div class="jd-descrdiv">Gets the progress bar width.</div>
-  
   </td></tr>
 
 
@@ -540,46 +647,10 @@ Summary:
             
             
             
-            int
+            void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#getColor()">getColor</a></span>()
-        
-        <div class="jd-descrdiv">Gets the progress bar color.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#getHideWhenZero()">getHideWhenZero</a></span>()
-        
-        <div class="jd-descrdiv">Gets whether the progress bar should be hidden when the progress is 0.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#getOpacity()">getOpacity</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html#setVisibilityCallback(com.facebook.drawee.drawable.VisibilityCallback)">setVisibilityCallback</a></span>(VisibilityCallback visibilityCallback)
         
   </td></tr>
 
@@ -595,132 +666,8 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#getPadding(android.graphics.Rect)">getPadding</a></span>(Rect padding)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html#setVisible(boolean, boolean)">setVisible</a></span>(boolean visible, boolean restart)
         
-        <div class="jd-descrdiv">Gets the progress bar padding.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setAlpha(int)">setAlpha</a></span>(int alpha)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setBackgroundColor(int)">setBackgroundColor</a></span>(int backgroundColor)
-        
-        <div class="jd-descrdiv">Sets the progress bar background color.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setBarWidth(int)">setBarWidth</a></span>(int barWidth)
-        
-        <div class="jd-descrdiv">Sets the progress bar width.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setColor(int)">setColor</a></span>(int color)
-        
-        <div class="jd-descrdiv">Sets the progress bar color.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setColorFilter(android.graphics.ColorFilter)">setColorFilter</a></span>(ColorFilter cf)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setHideWhenZero(boolean)">setHideWhenZero</a></span>(boolean hideWhenZero)
-        
-        <div class="jd-descrdiv">Sets whether the progress bar should be hidden when the progress is 0.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#setPadding(int)">setPadding</a></span>(int padding)
-        
-        <div class="jd-descrdiv">Sets the progress bar padding.</div>
-  
   </td></tr>
 
 
@@ -728,31 +675,6 @@ Summary:
 </table>
 
 
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="promethods" class="jd-sumtable"><tr><th colspan="12">Protected Methods</th></tr>
-
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html#onLevelChange(int)">onLevelChange</a></span>(int level)
-        
-  </td></tr>
-
-
-
-</table>
 
 
 
@@ -762,6 +684,448 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.drawable.ForwardingDrawable" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.drawee.drawable.ForwardingDrawable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  com.facebook.drawee.drawable.ForwardingDrawable
+
+<div id="inherited-methods-com.facebook.drawee.drawable.ForwardingDrawable">
+  <div id="inherited-methods-com.facebook.drawee.drawable.ForwardingDrawable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.drawee.drawable.ForwardingDrawable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">draw</span>(Canvas arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Drawable
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getCurrent</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getIntrinsicHeight</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getIntrinsicWidth</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getOpacity</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getPadding</span>(Rect arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getParentTransform</span>(Matrix arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getRootBounds</span>(RectF arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getTransform</span>(Matrix arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getTransformedBounds</span>(RectF arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">invalidateDrawable</span>(Drawable arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">isStateful</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Drawable
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">mutate</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">onBoundsChange</span>(Rect arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">onLevelChange</span>(int arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">onStateChange</span>(int[] arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">scheduleDrawable</span>(Drawable arg0, Runnable arg1, long arg2)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setAlpha</span>(int arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Drawable
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setCurrent</span>(Drawable arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Drawable
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setCurrentWithoutInvalidate</span>(Drawable arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setDither</span>(boolean arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setFilterBitmap</span>(boolean arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setTransformCallback</span>(TransformCallback arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setVisible</span>(boolean arg0, boolean arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">unscheduleDrawable</span>(Drawable arg0, Runnable arg1)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
 
 
 <tr class="api apilevel-" >
@@ -2015,6 +2379,222 @@ From class
 </td></tr>
 
 
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-android.graphics.drawable.Drawable.Callback" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-android.graphics.drawable.Drawable.Callback-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  android.graphics.drawable.Drawable.Callback
+
+<div id="inherited-methods-android.graphics.drawable.Drawable.Callback">
+  <div id="inherited-methods-android.graphics.drawable.Drawable.Callback-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-android.graphics.drawable.Drawable.Callback-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">invalidateDrawable</span>(Drawable arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">scheduleDrawable</span>(Drawable arg0, Runnable arg1, long arg2)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">unscheduleDrawable</span>(Drawable arg0, Runnable arg1)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.drawable.TransformAwareDrawable" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.drawee.drawable.TransformAwareDrawable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  com.facebook.drawee.drawable.TransformAwareDrawable
+
+<div id="inherited-methods-com.facebook.drawee.drawable.TransformAwareDrawable">
+  <div id="inherited-methods-com.facebook.drawee.drawable.TransformAwareDrawable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.drawee.drawable.TransformAwareDrawable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setTransformCallback</span>(TransformCallback arg0)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.drawable.TransformCallback" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.drawee.drawable.TransformCallback-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  com.facebook.drawee.drawable.TransformCallback
+
+<div id="inherited-methods-com.facebook.drawee.drawable.TransformCallback">
+  <div id="inherited-methods-com.facebook.drawee.drawable.TransformCallback-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.drawee.drawable.TransformCallback-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getRootBounds</span>(RectF arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getTransform</span>(Matrix arg0)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.drawable.VisibilityAwareDrawable" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.drawee.drawable.VisibilityAwareDrawable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  com.facebook.drawee.drawable.VisibilityAwareDrawable
+
+<div id="inherited-methods-com.facebook.drawee.drawable.VisibilityAwareDrawable">
+  <div id="inherited-methods-com.facebook.drawee.drawable.VisibilityAwareDrawable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.drawee.drawable.VisibilityAwareDrawable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">setVisibilityCallback</span>(VisibilityCallback arg0)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
 </table>
 
 
@@ -2049,7 +2629,7 @@ From class
 
 
 
-<a id="ProgressBarDrawable()"></a>
+<a id="RootDrawable(android.graphics.drawable.Drawable)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2061,8 +2641,8 @@ From class
          
         
       </span>
-      <span class="sympad">ProgressBarDrawable</span>
-      <span class="normal">()</span>
+      <span class="sympad">RootDrawable</span>
+      <span class="normal">(Drawable drawable)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2126,7 +2706,7 @@ From class
 </div>
 
 
-<a id="getBackgroundColor()"></a>
+<a id="getIntrinsicHeight()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2138,7 +2718,7 @@ From class
          
         int
       </span>
-      <span class="sympad">getBackgroundColor</span>
+      <span class="sympad">getIntrinsicHeight</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -2151,13 +2731,13 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the progress bar background color. </p></div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
 
 
-<a id="getBarWidth()"></a>
+<a id="getIntrinsicWidth()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2169,7 +2749,7 @@ From class
          
         int
       </span>
-      <span class="sympad">getBarWidth</span>
+      <span class="sympad">getIntrinsicWidth</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -2182,13 +2762,13 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the progress bar width. </p></div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
 
 
-<a id="getColor()"></a>
+<a id="setVisibilityCallback(com.facebook.drawee.drawable.VisibilityCallback)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2198,10 +2778,10 @@ From class
          
          
          
-        int
+        void
       </span>
-      <span class="sympad">getColor</span>
-      <span class="normal">()</span>
+      <span class="sympad">setVisibilityCallback</span>
+      <span class="normal">(VisibilityCallback visibilityCallback)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2213,13 +2793,13 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the progress bar color. </p></div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
 
 
-<a id="getHideWhenZero()"></a>
+<a id="setVisible(boolean, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2231,39 +2811,8 @@ From class
          
         boolean
       </span>
-      <span class="sympad">getHideWhenZero</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets whether the progress bar should be hidden when the progress is 0. </p></div>
-
-    </div>
-</div>
-
-
-<a id="getOpacity()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        int
-      </span>
-      <span class="sympad">getOpacity</span>
-      <span class="normal">()</span>
+      <span class="sympad">setVisible</span>
+      <span class="normal">(boolean visible, boolean restart)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2276,254 +2825,6 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="getPadding(android.graphics.Rect)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">getPadding</span>
-      <span class="normal">(Rect padding)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the progress bar padding. </p></div>
-
-    </div>
-</div>
-
-
-<a id="setAlpha(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setAlpha</span>
-      <span class="normal">(int alpha)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setBackgroundColor(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setBackgroundColor</span>
-      <span class="normal">(int backgroundColor)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the progress bar background color. </p></div>
-
-    </div>
-</div>
-
-
-<a id="setBarWidth(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setBarWidth</span>
-      <span class="normal">(int barWidth)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the progress bar width. </p></div>
-
-    </div>
-</div>
-
-
-<a id="setColor(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setColor</span>
-      <span class="normal">(int color)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the progress bar color. </p></div>
-
-    </div>
-</div>
-
-
-<a id="setColorFilter(android.graphics.ColorFilter)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setColorFilter</span>
-      <span class="normal">(ColorFilter cf)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setHideWhenZero(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setHideWhenZero</span>
-      <span class="normal">(boolean hideWhenZero)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets whether the progress bar should be hidden when the progress is 0. </p></div>
-
-    </div>
-</div>
-
-
-<a id="setPadding(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setPadding</span>
-      <span class="normal">(int padding)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the progress bar padding. </p></div>
 
     </div>
 </div>
@@ -2533,42 +2834,6 @@ From class
 
 
 <!-- ========= METHOD DETAIL ======== -->
-
-<h2>Protected Methods</h2>
-
-
-
-<a id="onLevelChange(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        protected 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">onLevelChange</span>
-      <span class="normal">(int level)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
 
 
 

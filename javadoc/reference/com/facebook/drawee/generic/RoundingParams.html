@@ -218,6 +218,7 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html">GenericDraweeHierarchy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html">GenericDraweeHierarchyBuilder</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a></li>
       </ul>
@@ -690,7 +691,7 @@ Summary:
             <a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html#setCornersRadii(float[])">setCornersRadii</a></span>(float[] radii)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html#setCornersRadii(float, float, float, float)">setCornersRadii</a></span>(float topLeft, float topRight, float bottomRight, float bottomLeft)
         
         <div class="jd-descrdiv">Sets the rounded corners radii.</div>
   
@@ -708,7 +709,7 @@ Summary:
             <a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html#setCornersRadii(float, float, float, float)">setCornersRadii</a></span>(float topLeft, float topRight, float bottomRight, float bottomLeft)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html#setCornersRadii(float[])">setCornersRadii</a></span>(float[] radii)
         
         <div class="jd-descrdiv">Sets the rounded corners radii.</div>
   
@@ -960,7 +961,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -976,7 +977,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -992,7 +993,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1442,52 +1443,6 @@ From class
 </div>
 
 
-<a id="setCornersRadii(float[])"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a>
-      </span>
-      <span class="sympad">setCornersRadii</span>
-      <span class="normal">(float[] radii)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the rounded corners radii.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>radii</th>
-          <td>float array of 8 radii in pixels. Each corner receives two radius values [X, Y].
-     The corners are ordered top-left, top-right, bottom-right, bottom-left.</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>modified instance
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="setCornersRadii(float, float, float, float)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1532,6 +1487,52 @@ From class
         <tr>
           <th>bottomLeft</th>
           <td>bottom-left corner radius in pixels</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>modified instance
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="setCornersRadii(float[])"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a>
+      </span>
+      <span class="sympad">setCornersRadii</span>
+      <span class="normal">(float[] radii)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the rounded corners radii.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>radii</th>
+          <td>float array of 8 radii in pixels. Each corner receives two radius values [X, Y].
+     The corners are ordered top-left, top-right, bottom-right, bottom-left.</td>
         </tr>
       </table>
   </div>
