@@ -35,6 +35,32 @@ Like the encoded memory cache, this cache stores compressed image, which must be
 
 Unlike the others, this cache is not cleared when your app is backgrounded, or if it exits, or even if the device is turned off. The user can, of course, always clear it from Android's Settings menu.
 
+### Evicting from cache
+
+You can use the methods in [ImagePipeline](../javadoc/reference/com/facebook/imagepipeline/core/ImagePipeline.html) to evict individual entries from cache:
+
+```java
+ImagePipeline imagePipeline = Fresco.getImagePipeline();
+Uri uri;
+imagePipeline.evictFromMemoryCache(uri);
+imagePipeline.evictFromDiskCache(uri);
+
+// combines above two lines
+imagePipeline.evictFromCache(uri);
+```
+
+`evictFromDiskCache(Uri)` assumes you are using the default cache key factory. If you have configured a custom one, you may need to use `evictFromDiskCache(ImageRequest)` instead.
+
+### Clearing the cache
+
+```java
+ImagePipeline imagePipeline = Fresco.getImagePipeline();
+imagePipeline.clearMemoryCaches();
+imagePipeline.clearDiskCaches();
+
+// combines above two lines
+imagePipeline.clearCaches();
+```
 
 ### Using one disk cache or two?
 

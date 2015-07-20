@@ -48,7 +48,7 @@ mSimpleDraweeView.setController(controller);
 
 #### Things to Know
 
-The image is copied before it enters your postprocessor. The copy of the image in cache is *not* affected by any changes you make in your postprocessor. On Android 4.x and lower, the copy is stored outside the Java heap, just as the original image was.
+The image is copied before it enters your postprocessor. The original of the image in cache is *not* affected by any changes you make in your postprocessor. On Android 4.x and lower, the copy is stored outside the Java heap, just as the original image was.
 
 If you show the same image repeatedly, you must specify the postprocessor each time it is requested. You are free to use different postprocessors on different requests for the same image.
 
@@ -109,6 +109,36 @@ Do **not** use the Android `Bitmap.createBitmap` method, which creates a bitmap 
 #### Which to override?
 
 Do not override more than one of the three `process` methods. Doing so can produce unpredictable results.
+
+#### Caching postprocessed images
+
+You can optionally cache the output of the postprocessor. This will be stored in cache alongside the original image. 
+
+In order for this to happen, your postprocessor must implement and return a non-null value from the `getPostprocessorCacheKey` method. 
+
+To get a cache hit, the postprocessor on a subsequent request must be of the same class and return the same key. If not, its result will override any previous cache entry for that class.
+
+Example:
+
+```java
+public class OperationPostprocessor extends BasePostprocessor {
+  private int myParameter;
+   
+  public OperationPostprocessor(int param) {
+    myParameter = param;
+  }
+   
+  public void process(Bitmap bitmap) { 
+    doSomething(myParameter);
+  }
+   
+  public CacheKey getPostprocessorCacheKey() {
+    return new MyCacheKey(myParameter);
+  }
+}
+```
+
+If you always want the cache to hit, just return a constant value in `getPostprocessorCacheKey`. If your postprocessor will always return a different result, and so you never want the cache to hit, return null.
 
 #### Repeated Postprocessors
 
