@@ -42,6 +42,7 @@ public class PicassoAdapter extends ImageListAdapter<InstrumentedImageView> {
 
   @Override
   protected void bind(InstrumentedImageView view, String uri) {
+    mPicasso.cancelRequest(view);
     mPicasso
         .load(uri)
         .placeholder(Drawables.sPlaceholderDrawable)

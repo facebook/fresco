@@ -26,6 +26,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import glob
+import os
 import re
 import tempfile
 
@@ -55,6 +57,7 @@ ABIS = (
     'x86',
     'x86_64'
 )
+
 
 """ Appends test class name to method name """
 TEST_PATTERN = 'test{}{}'
@@ -145,6 +148,16 @@ class ComparisonTest:
             self.logcat = logcat_file.readlines()
 
 
+def get_float_from_logs(regex, logs):
+    pattern = re.compile(regex)
+    return [float(match.group(1)) for match in map(pattern.search, logs) if match]
+
+
+def get_int_from_logs(regex, logs):
+    pattern = re.compile(regex)
+    return [int(match.group(1)) for match in map(pattern.search, logs) if match]
+
+
 def get_stats(logs):
     pattern = re.compile("""]: loaded after (\d+) ms""")
     success_wait_times = [
@@ -213,6 +226,33 @@ def get_test_name(option_name, source_name):
 def valid_scenario(scenario_name, source_name):
     return source_name != 'local' or (scenario_name != 'volley' and scenario_name != 'drawee-volley')
 
+
+def list_producers():
+    sdir = os.path.dirname(os.path.abspath(__file__))
+    producer_path = '%s/imagepipeline/src/main/java/com/facebook/imagepipeline/producers/*Producer.java' % sdir
+    files = glob.glob(producer_path)
+    return [f.split('.')[0].split('/')[-1] for f in files]
+
+
+def print_fresco_perf_line(margin, name, times):
+    length = len(times)
+    if length == 0:
+        return
+    print("%s: %d requests, avg %d" % (name.rjust(margin), length, float(sum(times)) / length))
+
+
+def print_fresco_perf(logs):
+    producers = list_producers()
+    margin = max([len(p) for p in producers])
+    requests = get_int_from_logs(""".*RequestLoggingListener.*onRequestSuccess.*elapsedTime:\s(\d+).*""", logs)
+    print_fresco_perf_line(margin, 'Total', requests)
+    for producer in producers:
+        queue = get_int_from_logs(".*onProducerFinishWithSuccess.*producer:\s%s.*queueTime=(\d+).*" % producer, logs)
+        print_fresco_perf_line(margin, '%s queue' % producer, queue)
+        times = get_int_from_logs(".*onProducerFinishWithSuccess.*producer:\s%s.*elapsedTime:\s(\d+).*" % producer, logs)
+        print_fresco_perf_line(margin, producer, times)
+
+
 def main():
     args = parse_args()
     scenarios = []
@@ -239,6 +279,9 @@ def main():
                 test()
                 stats = get_stats(test.logcat)
                 print_stats(stats)
+                if scenario_name[:6] == 'fresco':
+                    print()
+                    print_fresco_perf(test.logcat)
 
 if __name__ == "__main__":
     main()

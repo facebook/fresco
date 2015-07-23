@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * CloseableImage that contains array of Bitmaps and frame durations.
@@ -52,6 +53,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Creates a new instance of a CloseableStaticBitmap.
+   *
    * @param bitmaps the bitmap frames. This list must be immutable.
    * @param durations the frame durations, This list must be immutable.
    * @param resourceReleaser ResourceReleaser to release the bitmaps to
@@ -100,6 +102,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Gets the bitmap frames.
+   *
    * @return bitmap frames
    */
   public List<Bitmap> getBitmaps() {
@@ -108,6 +111,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Gets the frame durations.
+   *
    * @return frame durations
    */
   public List<Integer> getDurations() {
@@ -116,6 +120,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Gets the first frame.
+   *
    * @return the first frame
    */
   @Override
@@ -130,10 +135,10 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
   @Override
   public int getSizeInBytes() {
     List<Bitmap> bitmaps = mBitmaps;
-    if (bitmaps == null) {
+    if (bitmaps == null || bitmaps.size() == 0) {
       return 0;
     } else {
-      return bitmaps.get(0).getHeight() * bitmaps.get(0).getRowBytes() * bitmaps.size();
+      return BitmapUtil.getSizeInBytes(bitmaps.get(0)) * bitmaps.size();
     }
   }
 

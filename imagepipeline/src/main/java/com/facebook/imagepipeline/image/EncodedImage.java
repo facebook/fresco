@@ -9,16 +9,22 @@
 
 package com.facebook.imagepipeline.image;
 
+import android.graphics.Rect;
+
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imageutils.JfifUtil;
+import com.facebook.imageutils.PngUtil;
 
 import java.io.Closeable;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.annotation.Nullable;
@@ -45,16 +51,17 @@ public class EncodedImage implements Closeable {
 
   public static final int DEFAULT_SAMPLE_SIZE = 1;
 
-  private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
-  private final Supplier<InputStream> mInputStreamSupplier;
-
-  private int mStreamSize = -1;
+  // Only one of this will be set. The EncodedImage can either be backed by a ByteBuffer or a
+  // Supplier of InputStream, but not both.
+  private final @Nullable CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
+  private final @Nullable Supplier<FileInputStream> mInputStreamSupplier;
 
   private ImageFormat mImageFormat = ImageFormat.UNKNOWN;
   private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
   private int mWidth = UNKNOWN_WIDTH;
   private int mHeight = UNKNOWN_HEIGHT;
   private int mSampleSize = DEFAULT_SAMPLE_SIZE;
+  private int mStreamSize = UNKNOWN_STREAM_SIZE;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -62,16 +69,14 @@ public class EncodedImage implements Closeable {
     this.mInputStreamSupplier = null;
   }
 
-  public EncodedImage(Supplier<InputStream> inputStreamSupplier) {
+  public EncodedImage(Supplier<FileInputStream> inputStreamSupplier) {
     Preconditions.checkNotNull(inputStreamSupplier);
     this.mPooledByteBufferRef = null;
     this.mInputStreamSupplier = inputStreamSupplier;
   }
 
-  public EncodedImage(Supplier<InputStream> inputStreamSupplier, int  streamSize) {
-    Preconditions.checkNotNull(inputStreamSupplier);
-    this.mPooledByteBufferRef = null;
-    this.mInputStreamSupplier = inputStreamSupplier;
+  public EncodedImage(Supplier<FileInputStream> inputStreamSupplier, int streamSize) {
+    this(inputStreamSupplier);
     this.mStreamSize = streamSize;
   }
 
@@ -87,9 +92,10 @@ public class EncodedImage implements Closeable {
   public EncodedImage cloneOrNull() {
     EncodedImage encodedImage;
     if (mInputStreamSupplier != null) {
-       encodedImage = new EncodedImage(mInputStreamSupplier);
+       encodedImage = new EncodedImage(mInputStreamSupplier, mStreamSize);
     } else {
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
+      CloseableReference<PooledByteBuffer> pooledByteBufferRef =
+          CloseableReference.cloneOrNull(mPooledByteBufferRef);
       try {
         encodedImage = (pooledByteBufferRef == null) ? null : new EncodedImage(pooledByteBufferRef);
       } finally {
@@ -98,10 +104,7 @@ public class EncodedImage implements Closeable {
       }
     }
     if (encodedImage != null) {
-      encodedImage.setImageFormat(mImageFormat);
-      encodedImage.setRotationAngle(mRotationAngle);
-      encodedImage.setWidth(mWidth);
-      encodedImage.setHeight(mHeight);
+      encodedImage.copyMetaDataFrom(this);
     }
     return encodedImage;
   }
@@ -141,7 +144,8 @@ public class EncodedImage implements Closeable {
     if (mInputStreamSupplier != null) {
       return mInputStreamSupplier.get();
     }
-    CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
+    CloseableReference<PooledByteBuffer> pooledByteBufferRef =
+        CloseableReference.cloneOrNull(mPooledByteBufferRef);
     if (pooledByteBufferRef != null) {
       try {
         return new PooledByteBufferInputStream(pooledByteBufferRef.get());
@@ -237,6 +241,25 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Returns true if the image is a JPEG and its data is already complete at the specified length,
+   * false otherwise.
+   */
+  public boolean isCompleteAt(int length) {
+    if (mImageFormat != ImageFormat.JPEG) {
+      return true;
+    }
+    // If the image is backed by FileInputStreams return true since they will always be complete.
+    if (mInputStreamSupplier != null) {
+      return true;
+    }
+    // The image should be backed by a ByteBuffer
+    Preconditions.checkNotNull(mPooledByteBufferRef);
+    PooledByteBuffer buf = mPooledByteBufferRef.get();
+    return (buf.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE)
+        && (buf.read(length - 1) == (byte) JfifUtil.MARKER_EOI);
+  }
+
+  /**
    * Returns the size of the backing structure.
    *
    * <p> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. If it's an
@@ -248,6 +271,46 @@ public class EncodedImage implements Closeable {
           UNKNOWN_STREAM_SIZE : mPooledByteBufferRef.get().size();
     }
     return mStreamSize;
+  }
+
+  /**
+   * Sets the encoded image meta data.
+   */
+  public void parseMetaData() {
+    final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+        getInputStream());
+    mImageFormat = imageFormat;
+    Rect dimensions = null;
+    if (imageFormat == ImageFormat.JPEG) {
+      dimensions = JfifUtil.getDimensions(getInputStream());
+      if (dimensions != null) {
+        if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
+          mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
+              JfifUtil.getOrientation(getInputStream()));
+        }
+      }
+    } else if (imageFormat == ImageFormat.PNG) {
+      dimensions = PngUtil.getDimensions(getInputStream());
+      mRotationAngle = 0;
+    }
+    if (dimensions != null) {
+      mWidth = dimensions.width();
+      mHeight = dimensions.height();
+    }
+  }
+
+  /**
+   * Copy the meta data from another EncodedImage.
+   *
+   * @param encodedImage the EncodedImage to copy the meta data from.
+   */
+  public void copyMetaDataFrom(EncodedImage encodedImage) {
+    mImageFormat = encodedImage.getImageFormat();
+    mWidth = encodedImage.getWidth();
+    mHeight = encodedImage.getHeight();
+    mRotationAngle = encodedImage.getRotationAngle();
+    mSampleSize = encodedImage.getSampleSize();
+    mStreamSize = encodedImage.getSize();
   }
 
   /**
@@ -285,6 +348,7 @@ public class EncodedImage implements Closeable {
    */
   @VisibleForTesting
   public synchronized SharedReference<PooledByteBuffer> getUnderlyingReferenceTestOnly() {
-    return mPooledByteBufferRef.getUnderlyingReferenceTestOnly();
+    return (mPooledByteBufferRef != null) ?
+        mPooledByteBufferRef.getUnderlyingReferenceTestOnly() : null;
   }
 }

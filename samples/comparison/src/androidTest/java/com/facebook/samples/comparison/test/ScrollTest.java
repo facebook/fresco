@@ -31,9 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * app by scrolling down SCROLLS times.
  */
 public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
-  private static final int SCROLLS = 30;
+  private static final int SCROLLS = 10;
   private static final int SCROLL_TIME_MS = 1000;
-  private static final int BEFORE_SCROLL_TIME_MS = 500;
+  private static final int BEFORE_SCROLL_TIME_MS = 1500;
   private static final int WAIT_FOR_IMAGES_INTERCHECK_MS = 1000;
   private static final int WAIT_BEFORE_TEST_END_MS = 5000;
 

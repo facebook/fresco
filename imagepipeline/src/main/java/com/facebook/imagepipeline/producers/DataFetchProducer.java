@@ -11,8 +11,6 @@ package com.facebook.imagepipeline.producers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.Executor;
 
 import android.net.Uri;
 import android.util.Base64;
@@ -20,6 +18,7 @@ import android.util.Base64;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -40,18 +39,15 @@ public class DataFetchProducer extends LocalFetchProducer {
   private static final String PRODUCER_NAME = "DataFetchProducer";
 
   public DataFetchProducer(
-      PooledByteBufferFactory pooledByteBufferFactory) {
-    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory);
+      PooledByteBufferFactory pooledByteBufferFactory,
+      boolean downsampleEnabled) {
+    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory, downsampleEnabled);
   }
 
   @Override
-  protected InputStream getInputStream(ImageRequest imageRequest) throws IOException {
-    return new ByteArrayInputStream(getData(imageRequest.getSourceUri().toString()));
-  }
-
-  @Override
-  protected int getLength(ImageRequest imageRequest) {
-    return getData(imageRequest.getSourceUri().toString()).length;
+  protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
+    byte[] data = getData(imageRequest.getSourceUri().toString());
+    return getByteBufferBackedEncodedImage(new ByteArrayInputStream(data), data.length);
   }
 
   @Override

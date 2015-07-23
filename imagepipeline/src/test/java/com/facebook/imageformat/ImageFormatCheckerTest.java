@@ -12,9 +12,8 @@ package com.facebook.imageformat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import com.facebook.common.internal.Lists;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -110,7 +109,7 @@ public class ImageFormatCheckerTest {
   }
 
   private static List<String> getName(String path) {
-    return Lists.newArrayList(path);
+    return Arrays.asList(path);
   }
 
   private static List<String> getNames(int amount, String pathFormat) {

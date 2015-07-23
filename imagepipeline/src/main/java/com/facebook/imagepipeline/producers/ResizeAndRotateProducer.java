@@ -161,12 +161,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           ret = new EncodedImage(ref);
           ret.setImageFormat(ImageFormat.JPEG);
           try {
-            if (encodedImage.getImageFormat() == ImageFormat.JPEG &&
-                EncodedImage.isMetaDataAvailable(encodedImage)) {
-              ret.setRotationAngle(encodedImage.getRotationAngle());
-              ret.setWidth(encodedImage.getWidth());
-              ret.setHeight(encodedImage.getHeight());
-            }
+            ret.parseMetaData();
             mProducerContext.getListener().
                 onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
             getConsumer().onNewResult(ret, isLast);
@@ -200,7 +195,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return ImmutableMap.of(
           ORIGINAL_SIZE_KEY, originalSize,
           REQUESTED_SIZE_KEY, requestedSize,
-          FRACTION_KEY, fraction);
+          FRACTION_KEY, fraction,
+          JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()));
     }
   }
 

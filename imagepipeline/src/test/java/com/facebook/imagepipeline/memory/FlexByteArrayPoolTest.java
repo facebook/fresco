@@ -47,7 +47,8 @@ public class FlexByteArrayPoolTest {
             Integer.MAX_VALUE,
             buckets,
             MIN_BUFFER_SIZE,
-            MAX_BUFFER_SIZE), 1);
+            MAX_BUFFER_SIZE,
+            1));
     mDelegatePool = mPool.mDelegatePool;
   }
 

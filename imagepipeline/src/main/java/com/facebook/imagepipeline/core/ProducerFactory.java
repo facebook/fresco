@@ -46,6 +46,7 @@ import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
+import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
@@ -142,7 +143,7 @@ public class ProducerFactory {
   }
 
   public DataFetchProducer newDataFetchProducer() {
-    return new DataFetchProducer(mPooledByteBufferFactory);
+    return new DataFetchProducer(mPooledByteBufferFactory, mDownsampleEnabled);
   }
 
   public DecodeProducer newDecodeProducer(Producer<EncodedImage> nextProducer) {
@@ -178,6 +179,7 @@ public class ProducerFactory {
     return new LocalAssetFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         mAssetManager);
   }
 
@@ -185,6 +187,7 @@ public class ProducerFactory {
     return new LocalContentUriFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         mContentResolver);
   }
 
@@ -197,13 +200,15 @@ public class ProducerFactory {
   public LocalFileFetchProducer newLocalFileFetchProducer() {
     return new LocalFileFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
-        mPooledByteBufferFactory);
+        mPooledByteBufferFactory,
+        mDownsampleEnabled);
   }
 
   public LocalResourceFetchProducer newLocalResourceFetchProducer() {
     return new LocalResourceFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         mResources);
   }
 
@@ -217,6 +222,12 @@ public class ProducerFactory {
 
   public static <T> NullProducer<T> newNullProducer() {
     return new NullProducer<T>();
+  }
+
+  public PostprocessedBitmapMemoryCacheProducer newPostprocessorBitmapMemoryCacheProducer(
+      Producer<CloseableReference<CloseableImage>> nextProducer) {
+    return new PostprocessedBitmapMemoryCacheProducer(
+        mBitmapMemoryCache, mCacheKeyFactory, nextProducer);
   }
 
   public PostprocessorProducer newPostprocessorProducer(

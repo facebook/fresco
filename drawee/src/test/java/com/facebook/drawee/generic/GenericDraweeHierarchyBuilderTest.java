@@ -9,13 +9,14 @@
 
 package com.facebook.drawee.generic;
 
+import java.util.Arrays;
+
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import org.robolectric.RobolectricTestRunner;
@@ -120,8 +121,8 @@ public class GenericDraweeHierarchyBuilderTest {
     assertSame(null, builder.getActualImageMatrix());
 
     // test backgrounds & overlays
-    builder.setBackgrounds(Lists.newArrayList(mBackgroundDrawable1, mBackgroundDrawable2));
-    builder.setOverlays(Lists.newArrayList(mOverlayDrawable1, mOverlayDrawable2));
+    builder.setBackgrounds(Arrays.asList(mBackgroundDrawable1, mBackgroundDrawable2));
+    builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
     assertArrayEquals(
         builder.getBackgrounds().toArray(),
         new Drawable[]{mBackgroundDrawable1, mBackgroundDrawable2});

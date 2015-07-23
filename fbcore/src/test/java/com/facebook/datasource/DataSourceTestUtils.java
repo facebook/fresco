@@ -11,11 +11,11 @@ package com.facebook.datasource;
 
 import javax.annotation.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.executors.CallerThreadExecutor;
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Supplier;
 
 import org.mockito.ArgumentCaptor;
@@ -114,7 +114,7 @@ public class DataSourceTestUtils {
           mDataSourceSupplier2,
           mDataSourceSupplier3,
           mDataSubscriber);
-      mSuppliers = Lists.newArrayList(
+      mSuppliers = Arrays.asList(
           mDataSourceSupplier1,
           mDataSourceSupplier2,
           mDataSourceSupplier3);

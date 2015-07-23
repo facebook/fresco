@@ -75,7 +75,8 @@ public class LocalVideoThumbnailProducer implements
                         value.recycle();
                       }
                     },
-                    ImmutableQualityInfo.FULL_QUALITY));
+                    ImmutableQualityInfo.FULL_QUALITY,
+                    0));
           }
 
           @Override

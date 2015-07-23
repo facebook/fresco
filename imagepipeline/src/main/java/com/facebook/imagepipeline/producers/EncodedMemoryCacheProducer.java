@@ -90,29 +90,31 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           }
           // cache and forward the last result
           CloseableReference<PooledByteBuffer> ref = newResult.getByteBufferRef();
-          CloseableReference<PooledByteBuffer> cachedResult;
-          try {
-            cachedResult = mMemoryCache.cache(cacheKey, ref);
-          } finally {
-            CloseableReference.closeSafely(ref);
-          }
-          if (cachedResult != null) {
-            EncodedImage cachedEncodedImage;
+          if (ref != null) {
+            CloseableReference<PooledByteBuffer> cachedResult;
             try {
-              cachedEncodedImage = new EncodedImage(cachedResult);
+              cachedResult = mMemoryCache.cache(cacheKey, ref);
             } finally {
-              CloseableReference.closeSafely(cachedResult);
+              CloseableReference.closeSafely(ref);
             }
-            try {
-              getConsumer().onProgressUpdate(1f);
-              getConsumer().onNewResult(cachedEncodedImage, true);
-            } finally {
-              EncodedImage.closeSafely(cachedEncodedImage);
+            if (cachedResult != null) {
+              EncodedImage cachedEncodedImage;
+              try {
+                cachedEncodedImage = new EncodedImage(cachedResult);
+                cachedEncodedImage.copyMetaDataFrom(newResult);
+              } finally {
+                CloseableReference.closeSafely(cachedResult);
+              }
+              try {
+                getConsumer().onProgressUpdate(1f);
+                getConsumer().onNewResult(cachedEncodedImage, true);
+                return;
+              } finally {
+                EncodedImage.closeSafely(cachedEncodedImage);
+              }
             }
-          } else {
-            getConsumer().onNewResult(newResult, true);
           }
-
+          getConsumer().onNewResult(newResult, true);
         }
       };
 

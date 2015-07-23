@@ -35,6 +35,7 @@ import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
+import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.RemoveImageTransformMetaDataProducer;
@@ -442,7 +443,9 @@ public class ProducerSequenceFactory {
     if (!mPostprocessorSequences.containsKey(nextProducer)) {
       PostprocessorProducer postprocessorProducer =
           mProducerFactory.newPostprocessorProducer(nextProducer);
-      mPostprocessorSequences.put(nextProducer, postprocessorProducer);
+      PostprocessedBitmapMemoryCacheProducer postprocessedBitmapMemoryCacheProducer =
+          mProducerFactory.newPostprocessorBitmapMemoryCacheProducer(postprocessorProducer);
+      mPostprocessorSequences.put(nextProducer, postprocessedBitmapMemoryCacheProducer);
     }
     return mPostprocessorSequences.get(nextProducer);
   }

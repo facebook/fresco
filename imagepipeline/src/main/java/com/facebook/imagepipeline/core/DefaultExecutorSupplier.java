@@ -11,37 +11,35 @@ package com.facebook.imagepipeline.core;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import com.facebook.common.executors.SerialDelegatingExecutor;
 
 /**
  * Basic implementation of {@link ExecutorSupplier}.
  *
  * <p> Provides one thread pool for the CPU-bound operations and another thread pool for the
- * IO-bound operations. Decoding, a CPU-intensive operation, is limited to one thread.
+ * IO-bound operations.
  */
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
   private static final int NUM_IO_BOUND_THREADS = 2;
-  private static final int NUM_CPU_BOUND_THREADS = Runtime.getRuntime().availableProcessors();
   private static final int KEEP_ALIVE_SECONDS = 60;
 
   private final Executor mIoBoundExecutor;
   private final Executor mCpuBoundExecutor;
-  private final Executor mDecodeExecutor;
 
   public DefaultExecutorSupplier() {
     mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
     mCpuBoundExecutor = new ThreadPoolExecutor(
         1,                     // keep at least that many threads alive
-        NUM_CPU_BOUND_THREADS, // maximum number of allowed threads
+        100,                   // maximum number of allowed threads. Set at 100 as an arbitrary
+                               // higher bound that is not supposed to be hit. Still the pool
+                               // should be able to grow when the queue is so that the app doesn't
+                               // stall.
         KEEP_ALIVE_SECONDS,    // amount of seconds each cached thread waits before being terminated
         TimeUnit.SECONDS,
-        new LinkedBlockingQueue<Runnable>());
-    mDecodeExecutor = new SerialDelegatingExecutor(mCpuBoundExecutor);
+        new SynchronousQueue<Runnable>());
   }
 
   @Override
@@ -56,7 +54,7 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
 
   @Override
   public Executor forDecode() {
-    return mDecodeExecutor;
+    return mCpuBoundExecutor;
   }
 
   @Override

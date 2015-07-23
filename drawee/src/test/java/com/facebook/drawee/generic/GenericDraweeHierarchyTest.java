@@ -9,6 +9,8 @@
 
 package com.facebook.drawee.generic;
 
+import java.util.Arrays;
+
 import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,7 +23,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.DrawableTestUtils;
 import com.facebook.drawee.drawable.FadeDrawable;
@@ -345,7 +346,7 @@ public class GenericDraweeHierarchyTest {
   public void testHierarchy_WithBackgrounds() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage, null)
-        .setBackgrounds(Lists.newArrayList(mBackground1, mBackground2))
+        .setBackgrounds(Arrays.asList(mBackground1, mBackground2))
         .build();
 
     assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
@@ -386,7 +387,7 @@ public class GenericDraweeHierarchyTest {
   public void testHierarchy_WithOverlays() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage, null)
-        .setOverlays(Lists.newArrayList(mOverlay1, mOverlay2))
+        .setOverlays(Arrays.asList(mOverlay1, mOverlay2))
         .build();
 
     assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
@@ -427,8 +428,8 @@ public class GenericDraweeHierarchyTest {
   public void testHierarchy_WithBackgroundsAndOverlays() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage, null)
-        .setBackgrounds(Lists.newArrayList(mBackground1, mBackground2))
-        .setOverlays(Lists.newArrayList(mOverlay1, mOverlay2))
+        .setBackgrounds(Arrays.asList(mBackground1, mBackground2))
+        .setOverlays(Arrays.asList(mOverlay1, mOverlay2))
         .build();
 
     assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
@@ -633,8 +634,8 @@ public class GenericDraweeHierarchyTest {
   @Test
   public void testControlling_WithAllLayers() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setBackgrounds(Lists.newArrayList(mBackground1, mBackground2))
-        .setOverlays(Lists.newArrayList(mOverlay1, mOverlay2))
+        .setBackgrounds(Arrays.asList(mBackground1, mBackground2))
+        .setOverlays(Arrays.asList(mOverlay1, mOverlay2))
         .setPlaceholderImage(mPlaceholderImage, null)
         .setRetryImage(mRetryImage, null)
         .setFailureImage(mFailureImage, null)
