@@ -22,7 +22,7 @@ If you wish to customize your own progress indicator, be aware that in order for
 ```java
 class CustomProgressBar extends Drawable {
    @Override
-   protected void onLevelChange(int level) {
+   protected boolean onLevelChange(int level) {
      // level is on a scale of 0-10,000
      // where 10,000 means fully downloaded
      
