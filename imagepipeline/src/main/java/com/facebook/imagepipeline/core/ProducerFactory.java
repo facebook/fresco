@@ -66,6 +66,7 @@ public class ProducerFactory {
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final boolean mDownsampleEnabled;
+  private final boolean mResizeAndRotateEnabledForNetwork;
 
   // Dependencies used by multiple steps
   private final ExecutorSupplier mExecutorSupplier;
@@ -87,6 +88,7 @@ public class ProducerFactory {
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
       boolean downsampleEnabled,
+      boolean resizeAndRotateEnabledForNetwork,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
@@ -103,6 +105,7 @@ public class ProducerFactory {
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
     mDownsampleEnabled = downsampleEnabled;
+    mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
 
     mExecutorSupplier = executorSupplier;
     mPooledByteBufferFactory = pooledByteBufferFactory;
@@ -143,7 +146,7 @@ public class ProducerFactory {
   }
 
   public DataFetchProducer newDataFetchProducer() {
-    return new DataFetchProducer(mPooledByteBufferFactory, mDownsampleEnabled);
+    return new DataFetchProducer(mPooledByteBufferFactory);
   }
 
   public DecodeProducer newDecodeProducer(Producer<EncodedImage> nextProducer) {
@@ -153,6 +156,7 @@ public class ProducerFactory {
         mImageDecoder,
         mProgressiveJpegConfig,
         mDownsampleEnabled,
+        mResizeAndRotateEnabledForNetwork,
         nextProducer);
   }
 
@@ -179,7 +183,6 @@ public class ProducerFactory {
     return new LocalAssetFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mDownsampleEnabled,
         mAssetManager);
   }
 
@@ -187,7 +190,6 @@ public class ProducerFactory {
     return new LocalContentUriFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mDownsampleEnabled,
         mContentResolver);
   }
 
@@ -200,15 +202,13 @@ public class ProducerFactory {
   public LocalFileFetchProducer newLocalFileFetchProducer() {
     return new LocalFileFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
-        mPooledByteBufferFactory,
-        mDownsampleEnabled);
+        mPooledByteBufferFactory);
   }
 
   public LocalResourceFetchProducer newLocalResourceFetchProducer() {
     return new LocalResourceFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mDownsampleEnabled,
         mResources);
   }
 
@@ -217,7 +217,10 @@ public class ProducerFactory {
   }
 
   public NetworkFetchProducer newNetworkFetchProducer(NetworkFetcher networkFetcher) {
-    return new NetworkFetchProducer(mPooledByteBufferFactory, mByteArrayPool, networkFetcher);
+    return new NetworkFetchProducer(
+        mPooledByteBufferFactory,
+        mByteArrayPool,
+        networkFetcher);
   }
 
   public static <T> NullProducer<T> newNullProducer() {

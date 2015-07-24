@@ -60,9 +60,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   public LocalContentUriFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      boolean downsampleEnabled,
       ContentResolver contentResolver) {
-    super(executor, pooledByteBufferFactory, downsampleEnabled);
+    super(executor, pooledByteBufferFactory);
     mContentResolver = contentResolver;
   }
 
