@@ -241,20 +241,17 @@ public class ImagePipelineFactory {
   }
 
   public static PlatformBitmapFactory buildPlatformBitmapFactory(
-      PoolFactory poolFactory,
-      boolean isDownsampleEnabled) {
+      PoolFactory poolFactory) {
     GingerbreadBitmapFactory factoryGingerbread =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ?
             new GingerbreadBitmapFactory() : null;
     DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
         new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
-        poolFactory.getFlexByteArrayPool(),
-        isDownsampleEnabled);
+        poolFactory.getFlexByteArrayPool());
     ArtBitmapFactory factoryLollipop = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
         new ArtBitmapFactory(
             poolFactory.getBitmapPool(),
-            poolFactory.getFlexByteArrayPoolMaxNumThreads(),
-            isDownsampleEnabled) :
+            poolFactory.getFlexByteArrayPoolMaxNumThreads()) :
         null;
     return new PlatformBitmapFactory(factoryGingerbread, factoryICS, factoryLollipop);
   }
@@ -262,8 +259,7 @@ public class ImagePipelineFactory {
   private PlatformBitmapFactory getPlatformBitmapFactory() {
     if (mPlatformBitmapFactory == null) {
       mPlatformBitmapFactory = buildPlatformBitmapFactory(
-          mConfig.getPoolFactory(),
-          mConfig.isDownsampleEnabled());
+          mConfig.getPoolFactory());
     }
     return mPlatformBitmapFactory;
   }

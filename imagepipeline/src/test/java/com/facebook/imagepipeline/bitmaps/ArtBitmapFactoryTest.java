@@ -96,7 +96,7 @@ public class ArtBitmapFactoryTest {
 
     mPooledByteBuffer = new TrivialPooledByteBuffer(mEncodedBytes);
     mBitmapPool = mock(BitmapPool.class);
-    mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool, 1, false);
+    mArtBitmapFactory = new ArtBitmapFactory(mBitmapPool, 1);
 
     mByteBufferRef = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mByteBufferRef);

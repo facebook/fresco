@@ -41,15 +41,12 @@ public class DalvikBitmapFactory {
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
   private final FlexByteArrayPool mFlexByteArrayPool;
-  private final boolean mDownsampleEnabled;
 
   public DalvikBitmapFactory(
       EmptyJpegGenerator jpegGenerator,
-      FlexByteArrayPool flexByteArrayPool,
-      boolean downsampleEnabled) {
+      FlexByteArrayPool flexByteArrayPool) {
     mJpegGenerator = jpegGenerator;
     mFlexByteArrayPool = flexByteArrayPool;
-    mDownsampleEnabled = downsampleEnabled;
 
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
     mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
@@ -101,8 +98,7 @@ public class DalvikBitmapFactory {
    */
   CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
-        encodedImage.getSampleSize(),
-        mDownsampleEnabled);
+        encodedImage.getSampleSize());
     CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
@@ -126,8 +122,7 @@ public class DalvikBitmapFactory {
       final EncodedImage encodedImage,
       int length) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
-        encodedImage.getSampleSize(),
-        mDownsampleEnabled);
+        encodedImage.getSampleSize());
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
@@ -219,16 +214,14 @@ public class DalvikBitmapFactory {
   }
 
   private static BitmapFactory.Options getBitmapFactoryOptions(
-      int sampleSize,
-      boolean downsampleEnabled) {
+      int sampleSize) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
     // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
     options.inPurgeable = true;
-    if (downsampleEnabled) {
-      options.inSampleSize = sampleSize;
-    }
+    // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
+    options.inSampleSize = sampleSize;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       options.inMutable = true;  // no known perf difference; allows postprocessing to work
     }

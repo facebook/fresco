@@ -112,10 +112,7 @@ public class DalvikBitmapFactoryTest {
     when(mFlexByteArrayPool.get(Integer.valueOf(LENGTH))).thenReturn(mDecodeBufRef);
 
     mockStatic(Bitmaps.class);
-    mDalvikBitmapFactory = new DalvikBitmapFactory(
-        null,
-        mFlexByteArrayPool,
-        false);
+    mDalvikBitmapFactory = new DalvikBitmapFactory(null, mFlexByteArrayPool);
   }
 
   @Test
