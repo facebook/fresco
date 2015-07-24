@@ -32,8 +32,9 @@ public class LocalFileFetchProducer extends LocalFetchProducer {
 
   @Override
   protected EncodedImage getEncodedImage(final ImageRequest imageRequest) throws IOException {
-    return getFileBackedEncodedImage(
-        imageRequest.getSourceFile(), (int) imageRequest.getSourceFile().length());
+    return getByteBufferBackedEncodedImage(
+        imageRequest.getSourceFile().toString(),
+        (int) imageRequest.getSourceFile().length());
   }
 
   @Override
