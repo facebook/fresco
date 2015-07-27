@@ -292,7 +292,8 @@ public class ImagePipelineFactory {
           new ProducerSequenceFactory(
               getProducerFactory(),
               mConfig.getNetworkFetcher(),
-              mConfig.isResizeAndRotateEnabledForNetwork());
+              mConfig.isResizeAndRotateEnabledForNetwork(),
+              mConfig.isDownsampleEnabled());
     }
     return mProducerSequenceFactory;
   }

@@ -23,14 +23,12 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
-import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
@@ -39,7 +37,6 @@ import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProduc
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.RemoveImageTransformMetaDataProducer;
-import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
 import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
@@ -51,6 +48,7 @@ public class ProducerSequenceFactory {
   private final ProducerFactory mProducerFactory;
   private final NetworkFetcher mNetworkFetcher;
   private final boolean mResizeAndRotateEnabledForNetwork;
+  private final boolean mDownsampleEnabled;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -74,10 +72,12 @@ public class ProducerSequenceFactory {
   public ProducerSequenceFactory(
       ProducerFactory producerFactory,
       NetworkFetcher networkFetcher,
-      boolean resizeAndRotateEnabledForNetwork) {
+      boolean resizeAndRotateEnabledForNetwork,
+      boolean downsampleEnabled) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
+    mDownsampleEnabled = downsampleEnabled;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
   }
@@ -233,7 +233,7 @@ public class ProducerSequenceFactory {
       mCommonNetworkFetchToEncodedMemorySequence =
           ProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
 
-      if (mResizeAndRotateEnabledForNetwork) {
+      if (mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled) {
         mCommonNetworkFetchToEncodedMemorySequence =
             mProducerFactory.newResizeAndRotateProducer(
                 mCommonNetworkFetchToEncodedMemorySequence);
@@ -343,11 +343,11 @@ public class ProducerSequenceFactory {
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
         nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
       }
-      AddImageTransformMetaDataProducer addImageTransformMetaDataProducer =
-          mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
-      ResizeAndRotateProducer resizeAndRotateProducer =
-          mProducerFactory.newResizeAndRotateProducer(addImageTransformMetaDataProducer);
-      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(resizeAndRotateProducer);
+      nextProducer = mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
+      if (!mDownsampleEnabled) {
+        nextProducer = mProducerFactory.newResizeAndRotateProducer(nextProducer);
+      }
+      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(nextProducer);
     }
     return mDataFetchSequence;
   }
@@ -416,23 +416,26 @@ public class ProducerSequenceFactory {
    */
   private Producer<EncodedImage> newLocalTransformationsSequence(
       Producer<EncodedImage> nextProducer) {
-    AddImageTransformMetaDataProducer addImageTransformMetaDataProducer =
+    Producer<EncodedImage> localImageProducer =
         mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
-    ResizeAndRotateProducer localImageResizeAndRotateProducer =
-        mProducerFactory.newResizeAndRotateProducer(addImageTransformMetaDataProducer);
+    if (!mDownsampleEnabled) {
+      localImageProducer =
+          mProducerFactory.newResizeAndRotateProducer(localImageProducer);
+    }
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(
-                MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE,
-                localImageResizeAndRotateProducer);
-    LocalExifThumbnailProducer localExifThumbnailProducer =
+            MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE,
+            localImageProducer);
+    Producer<EncodedImage> localExifThumbnailProducer =
         mProducerFactory.newLocalExifThumbnailProducer();
-    ResizeAndRotateProducer exifThumbnailResizeAndRotateProducer =
-        mProducerFactory.newResizeAndRotateProducer(localExifThumbnailProducer);
+    if (!mDownsampleEnabled) {
+      localExifThumbnailProducer =
+          mProducerFactory.newResizeAndRotateProducer(localExifThumbnailProducer);
+    }
     return mProducerFactory.newBranchOnSeparateImagesProducer(
-            exifThumbnailResizeAndRotateProducer,
-            localImageThrottlingProducer);
-
+        localExifThumbnailProducer,
+        localImageThrottlingProducer);
   }
 
   /**
