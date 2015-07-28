@@ -189,8 +189,14 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         return null;
       }
       String originalSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
-      String requestedSize =
-          imageRequest.getResizeOptions().width + "x" + imageRequest.getResizeOptions().height;
+
+      String requestedSize;
+      if (imageRequest.getResizeOptions() != null) {
+        requestedSize = imageRequest.getResizeOptions().width + "x" + imageRequest.getResizeOptions().height;
+      } else {
+        requestedSize = "-1x-1";
+      }
+
       String fraction = numerator > 0 ? numerator + "/8" : "";
       return ImmutableMap.of(
           ORIGINAL_SIZE_KEY, originalSize,
@@ -216,9 +222,14 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   @VisibleForTesting static float determineResizeRatio(
-      ResizeOptions resizeOptions,
-      int width,
-      int height) {
+          ResizeOptions resizeOptions,
+          int width,
+          int height) {
+
+    if (resizeOptions == null) {
+      return 1.0f;
+    }
+
     final float widthRatio = ((float) resizeOptions.width) / width;
     final float heightRatio = ((float) resizeOptions.height) / height;
     float ratio = Math.max(widthRatio, heightRatio);
