@@ -157,6 +157,9 @@ public abstract class ForwardingDrawable extends Drawable
 
   @Override
   public Drawable mutate() {
+    if (!mCurrentDelegate.getPadding()) {
+      mCurrentDelegate.setPadding(new RectF());
+    }
     mCurrentDelegate.mutate();
     return this;
   }
