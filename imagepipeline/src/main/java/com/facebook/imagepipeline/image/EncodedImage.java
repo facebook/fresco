@@ -9,7 +9,7 @@
 
 package com.facebook.imagepipeline.image;
 
-import android.graphics.Rect;
+import android.util.Pair;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -19,8 +19,8 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
-import com.facebook.imageutils.PngUtil;
 
 import java.io.Closeable;
 import java.io.InputStream;
@@ -232,22 +232,25 @@ public class EncodedImage implements Closeable {
     final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
         getInputStream());
     mImageFormat = imageFormat;
-    Rect dimensions = null;
-    if (imageFormat == ImageFormat.JPEG) {
-      dimensions = JfifUtil.getDimensions(getInputStream());
+    // Dimensions decoding is not yet supported for WebP since BitmapUtil.decodeDimensions has a
+    // bug where it will return 100x100 for some WebPs even though those are not its actual
+    // dimensions
+    if (!ImageFormat.isWebpFormat(imageFormat)) {
+      Pair<Integer, Integer> dimensions = BitmapUtil.decodeDimensions(getInputStream());
       if (dimensions != null) {
-        if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
-          mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
-              JfifUtil.getOrientation(getInputStream()));
+        mWidth = dimensions.first;
+        mHeight = dimensions.second;
+
+        // Load the rotation angle only if we have the dimensions
+        if (imageFormat == ImageFormat.JPEG) {
+          if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
+            mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
+                JfifUtil.getOrientation(getInputStream()));
+          }
+        } else {
+          mRotationAngle = 0;
         }
       }
-    } else if (imageFormat == ImageFormat.PNG) {
-      dimensions = PngUtil.getDimensions(getInputStream());
-      mRotationAngle = 0;
-    }
-    if (dimensions != null) {
-      mWidth = dimensions.width();
-      mHeight = dimensions.height();
     }
   }
 
