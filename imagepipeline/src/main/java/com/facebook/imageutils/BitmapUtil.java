@@ -32,14 +32,25 @@ public final class BitmapUtil {
   public static int getSizeInBytes(@Nullable Bitmap bitmap) {
     if (bitmap == null) {
       return 0;
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      return bitmap.getAllocationByteCount();
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      return bitmap.getByteCount();
-    } else {
-      // Estimate for earlier platforms.
-      return bitmap.getWidth() * bitmap.getRowBytes();
     }
+
+    // There's a known issue in KitKat where getAllocationByteCount() can throw an NPE. This was
+    // apparently fixed in MR1: http://bit.ly/1IvdRpd. So we do a version check here, and
+    // catch any potential NPEs just to be safe.
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      try {
+        return bitmap.getAllocationByteCount();
+      } catch (NullPointerException npe) {
+        // Swallow exception and try fallbacks.
+      }
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      return bitmap.getByteCount();
+    }
+
+    // Estimate for earlier platforms.
+    return bitmap.getWidth() * bitmap.getRowBytes();
   }
 
   /**
