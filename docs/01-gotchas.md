@@ -33,6 +33,10 @@ This is for the same reason as the above. Drawables cannot be shared in multiple
 
 You are completely free, of course, to use the same resourceID in multiple hierarchies and views. Android will create a separate instance of each Drawable for each view.
 
+#### Do not control hierarchy directly
+
+Do not interact with `SettableDraweeHierarchy` methods (reset, setImage, ...). Those are to be used by controller only.
+
 #### Don't set images directly on a DraweeView
 
 Currently ```DraweeView``` is a subclass of Android's ImageView. This has various methods to set an image (such as setImageBitmap, setImageDrawable)
