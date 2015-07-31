@@ -35,7 +35,7 @@ You are completely free, of course, to use the same resourceID in multiple hiera
 
 #### Do not control hierarchy directly
 
-Do not interact with `SettableDraweeHierarchy` methods (reset, setImage, ...). Those are to be used by controller only.
+Do not interact with `SettableDraweeHierarchy` methods (`reset`, `setImage`, ...). Those are to be used by controller only.
 
 #### Don't set images directly on a DraweeView
 
