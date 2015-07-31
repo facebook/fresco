@@ -11,9 +11,11 @@ package com.facebook.imagepipeline.producers;
 
 import javax.annotation.Nullable;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -144,11 +146,13 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
       Map<String, String> extraMap = null;
       EncodedImage ret = null;
+      InputStream is = null;
       try {
         int numerator = getScaleNumerator(imageRequest, encodedImage);
         extraMap = getExtraMap(encodedImage, imageRequest, numerator);
+        is = encodedImage.getInputStream();
         JpegTranscoder.transcodeJpeg(
-            encodedImage.getInputStream(),
+            is,
             outputStream,
             getRotationAngle(imageRequest, encodedImage),
             numerator,
@@ -175,6 +179,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         getConsumer().onFailure(e);
         return;
       } finally {
+        Closeables.closeQuietly(is);
         outputStream.close();
       }
     }
