@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.animated.testing;
+package com.facebook.imagepipeline.testing;
 
 /**
  * A queue of nodes sorted by timestamp for the purpose of implementing a scheduled executor.

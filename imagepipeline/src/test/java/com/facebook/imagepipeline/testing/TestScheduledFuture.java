@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.animated.testing;
+package com.facebook.imagepipeline.testing;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Delayed;
@@ -16,8 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import com.facebook.common.testing.FakeClock;
 
 public class TestScheduledFuture<V> implements ScheduledFuture<V> {
 
