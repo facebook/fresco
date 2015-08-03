@@ -7,6 +7,7 @@ dependencies {
     compile "com.mcxiaoke.volley:library:${VOLLEY_VERSION}"
     compile "com.nostra13.universalimageloader:universal-image-loader:${UIL_VERSION}"
     compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+    compile 'com.android.support:recyclerview-v7:21.+'
 
     compile project(':drawee')
     compile project(':drawee-backends:drawee-pipeline')

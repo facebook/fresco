@@ -13,47 +13,44 @@
 package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
-
-import com.facebook.samples.comparison.Drawables;
 import com.facebook.samples.comparison.configs.picasso.SamplePicassoFactory;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
+import com.facebook.samples.comparison.holders.BaseViewHolder;
+import com.facebook.samples.comparison.holders.PicassoHolder;
 
-/** Populate the list view with images using the Picasso library. */
-public class PicassoAdapter extends ImageListAdapter<InstrumentedImageView> {
+import com.squareup.picasso.Picasso;
+
+/**
+ * RecyclerView Adapter for Picasso
+ */
+public class PicassoAdapter extends ImageListAdapter {
+
   private final Picasso mPicasso;
 
-  public PicassoAdapter(Context context, int resourceId, PerfListener perfListener) {
-    super(context, resourceId, perfListener);
+  public PicassoAdapter(
+      Context context,
+      PerfListener perfListener) {
+    super(context, perfListener);
     mPicasso = SamplePicassoFactory.getPicasso(context);
   }
 
   @Override
-  protected Class<InstrumentedImageView> getViewClass() {
-    return InstrumentedImageView.class;
+  public PicassoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    final InstrumentedImageView instrImageView = new InstrumentedImageView(getContext());
+    return new PicassoHolder(getContext(), mPicasso, parent, instrImageView, getPerfListener());
   }
 
   @Override
-  protected InstrumentedImageView createView() {
-    return new InstrumentedImageView(getContext());
-  }
-
-  @Override
-  protected void bind(InstrumentedImageView view, String uri) {
-    mPicasso.cancelRequest(view);
-    mPicasso
-        .load(uri)
-        .placeholder(Drawables.sPlaceholderDrawable)
-        .error(Drawables.sErrorDrawable)
-        .fit()
-        .into(view);
+  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
+    holder.bind(getItem(position));
   }
 
   @Override
   public void shutDown() {
-    for (int i = 0; i < getCount(); i++) {
+    for (int i = 0; i < getItemCount(); i++) {
       String uri = getItem(i);
       mPicasso.invalidate(uri);
     }
