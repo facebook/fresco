@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
   public static final int NETWORK_INDEX = 1;
   public static final int LOCAL_INDEX = 2;
 
-  private static final int COLS_NUMBER = 2;
+  private static final int COLS_NUMBER = 3;
 
   private static final long STATS_CLOCK_INTERVAL_MS = 1000;
   private static final int DEFAULT_MESSAGE_SIZE = 1024;

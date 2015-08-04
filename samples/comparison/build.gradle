@@ -9,6 +9,7 @@ dependencies {
     compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
     compile 'com.android.support:recyclerview-v7:21.+'
 
+
     compile project(':drawee')
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-backends:drawee-volley')
