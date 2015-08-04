@@ -9,11 +9,11 @@
 
 package com.facebook.imagepipeline.core;
 
+import android.os.Process;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Basic implementation of {@link ExecutorSupplier}.
@@ -24,22 +24,28 @@ import java.util.concurrent.TimeUnit;
 public class DefaultExecutorSupplier implements ExecutorSupplier {
   // Allows for simultaneous reads and writes.
   private static final int NUM_IO_BOUND_THREADS = 2;
-  private static final int KEEP_ALIVE_SECONDS = 60;
+  private static final int NUM_LIGHTWEIGHT_BACKGROUND_THREADS = 1;
 
   private final Executor mIoBoundExecutor;
-  private final Executor mCpuBoundExecutor;
+  private final Executor mDecodeExecutor;
+  private final Executor mBackgroundExecutor;
+  private final Executor mLightWeightBackgroundExecutor;
 
-  public DefaultExecutorSupplier() {
+  public DefaultExecutorSupplier(int numCpuBoundThreads) {
+    ThreadFactory backgroundPriorityThreadFactory =
+        new PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND);
+
     mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
-    mCpuBoundExecutor = new ThreadPoolExecutor(
-        1,                     // keep at least that many threads alive
-        100,                   // maximum number of allowed threads. Set at 100 as an arbitrary
-                               // higher bound that is not supposed to be hit. Still the pool
-                               // should be able to grow when the queue is so that the app doesn't
-                               // stall.
-        KEEP_ALIVE_SECONDS,    // amount of seconds each cached thread waits before being terminated
-        TimeUnit.SECONDS,
-        new SynchronousQueue<Runnable>());
+    mDecodeExecutor = Executors.newFixedThreadPool(
+        numCpuBoundThreads,
+        backgroundPriorityThreadFactory);
+    mBackgroundExecutor = Executors.newFixedThreadPool(
+        numCpuBoundThreads,
+        backgroundPriorityThreadFactory);
+    mLightWeightBackgroundExecutor = Executors.newFixedThreadPool(
+        NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
+        backgroundPriorityThreadFactory);
+
   }
 
   @Override
@@ -54,16 +60,16 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
 
   @Override
   public Executor forDecode() {
-    return mCpuBoundExecutor;
+    return mDecodeExecutor;
   }
 
   @Override
   public Executor forBackgroundTasks() {
-    return mCpuBoundExecutor;
+    return mBackgroundExecutor;
   }
 
   @Override
   public Executor forLightweightBackgroundTasks() {
-    return mCpuBoundExecutor;
+    return mLightWeightBackgroundExecutor;
   }
 }
