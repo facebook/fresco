@@ -347,21 +347,46 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       @Nullable RoundingParams roundingParams,
       Resources resources,
       Drawable drawable) {
-    if (roundingParams != null &&
-        roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
-      if (drawable instanceof BitmapDrawable) {
-        RoundedBitmapDrawable roundedBitmapDrawable =
-            RoundedBitmapDrawable.fromBitmapDrawable(resources, (BitmapDrawable) drawable);
-        applyRoundingParams(roundedBitmapDrawable, roundingParams);
-        return roundedBitmapDrawable;
+    if (roundingParams == null ||
+        roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
+      return drawable;
+    }
+
+    if (drawable instanceof BitmapDrawable || drawable instanceof ColorDrawable) {
+      return applyRounding(roundingParams, resources, drawable);
+    } else {
+      Drawable parent = drawable;
+      Drawable child = parent.getCurrent();
+      while (child != null && parent != child) {
+        if (parent instanceof ForwardingDrawable &&
+            (child instanceof BitmapDrawable || child instanceof ColorDrawable)) {
+          ((ForwardingDrawable) parent).setCurrent(
+              applyRounding(roundingParams, resources, child));
+        }
+        parent = child;
+        child = parent.getCurrent();
       }
-      if (drawable instanceof ColorDrawable &&
-          Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        RoundedColorDrawable roundedColorDrawable =
-            RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
-        applyRoundingParams(roundedColorDrawable, roundingParams);
-        return roundedColorDrawable;
-      }
+    }
+
+    return drawable;
+  }
+
+  private static Drawable applyRounding(
+      @Nullable RoundingParams roundingParams,
+      Resources resources,
+      Drawable drawable) {
+    if (drawable instanceof BitmapDrawable) {
+      RoundedBitmapDrawable roundedBitmapDrawable =
+          RoundedBitmapDrawable.fromBitmapDrawable(resources, (BitmapDrawable) drawable);
+      applyRoundingParams(roundedBitmapDrawable, roundingParams);
+      return roundedBitmapDrawable;
+    }
+    if (drawable instanceof ColorDrawable &&
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      RoundedColorDrawable roundedColorDrawable =
+          RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
+      applyRoundingParams(roundedColorDrawable, roundingParams);
+      return roundedColorDrawable;
     }
     return drawable;
   }
