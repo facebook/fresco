@@ -9,7 +9,7 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 
 import com.facebook.common.references.CloseableReference;
@@ -36,7 +36,7 @@ public class ListDataSourceTest {
   private RuntimeException mRuntimeException;
 
   @Mock public ResourceReleaser<Integer> mResourceReleaser;
-  @Mock public DataSubscriber<ArrayList<CloseableReference<Integer>>> mDataSubscriber;
+  @Mock public DataSubscriber<List<CloseableReference<Integer>>> mDataSubscriber;
 
   @Before
   public void setUp() {
