@@ -115,13 +115,13 @@ public class OkHttpNetworkFetcher extends
                 contentLength = 0;
               }
               callback.onResponse(body.byteStream(), (int) contentLength);
-            } catch (IOException ioe) {
-              handleException(call, ioe, callback);
+            } catch (Exception e) {
+              handleException(call, e, callback);
             } finally {
               try {
                 body.close();
-              } catch (IOException ioe) {
-                FLog.w(TAG, "Exception when closing response body", ioe);
+              } catch (Exception e) {
+                FLog.w(TAG, "Exception when closing response body", e);
               }
             }
           }
@@ -149,17 +149,17 @@ public class OkHttpNetworkFetcher extends
   }
 
   /**
-   * Handles IOExceptions.
+   * Handles exceptions.
    *
    * <p> OkHttp notifies callers of cancellations via an IOException. If IOException is caught
    * after request cancellation, then the exception is interpreted as successful cancellation
    * and onCancellation is called. Otherwise onFailure is called.
    */
-  private void handleException(final Call call, final IOException ioe, final Callback callback) {
+  private void handleException(final Call call, final Exception e, final Callback callback) {
     if (call.isCanceled()) {
       callback.onCancellation();
     } else {
-      callback.onFailure(ioe);
+      callback.onFailure(e);
     }
   }
 }
