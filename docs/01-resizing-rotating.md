@@ -11,10 +11,11 @@ These features require you to [construct an image request](using-controllerbuild
 
 ## Resizing Images
 
-### Terminology: resizing vs scaling
+### Terminology
 
-- **Resizing** is a pipeline operation executed in software. It returns a completely new bitmap, of a different size.
 - **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn upscaled or downscaled.
+- **Resizing** is a pipeline operation executed in software. It returns a completely new bitmap, of a different size.
+- **Downsampling** is also a pipeline operation implemented in software. Rather than create a new bitmap, it simply changes the size of the image while it is being decoded.
 
 ### Should you resize or scale?
 
@@ -58,6 +59,20 @@ PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
     .build();
 mSimpleDraweeView.setController(controller);
 ```
+
+## Downsampling
+
+Downsampling is an experimental feature added recently to Fresco. To use it, you must explicitly enable it when [configuring the image pipeline](configure-image-pipeline.html#_):
+
+```java
+   .setDownsampleEnabled(true)
+```
+
+If this option is on, the image pipeline will downsample your images instead of resizing them. You must still call `setResizeOptions` for each image request as above.
+
+Downsampling is generally faster than resizing. It also supports PNG and WebP (except animated) images as well as JPEG.
+
+We hope to turn this on by default in a future release.
 
 ## <a name="rotate"></a>Auto-rotation
 

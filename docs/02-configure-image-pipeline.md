@@ -22,6 +22,7 @@ Here is a maximal example. Rare is the app that actually needs all of these sett
 ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
     .setBitmapMemoryCacheParamsSupplier(bitmapCacheParamsSupplier)
     .setCacheKeyFactory(cacheKeyFactory)
+    .setDownsampleEnabled(true)
     .setEncodedMemoryCacheParamsSupplier(encodedCacheParamsSupplier)
     .setExecutorSupplier(executorSupplier)
     .setImageCacheStatsTracker(imageCacheStatsTracker)
