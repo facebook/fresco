@@ -58,7 +58,7 @@ PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
 mSimpleDraweeView.setController(controller);
 ```
 
-## Downsampling
+### Downsampling
 
 Downsampling is an experimental feature added recently to Fresco. To use it, you must explicitly enable it when [configuring the image pipeline](configure-image-pipeline.html#_):
 
@@ -72,7 +72,7 @@ Downsampling is generally faster than resizing. It also supports PNG and WebP (e
 
 We hope to turn this on by default in a future release.
 
-## <a name="rotate"></a>Auto-rotation
+### <a name="rotate"></a>Auto-rotation
 
 It's very annoying to users to see their images show up sideways! Many devices store the orientation of the image in metadata in the JPEG file. If you want images to be automatically rotated to match the device's orientation, you can say so in the image request:
 
