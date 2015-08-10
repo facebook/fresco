@@ -194,6 +194,10 @@ public class RoundingParams {
     return this;
   }
 
+  /**
+   * Sets the padding on rounded drawable
+   * @param padding the padding in pixels
+   */
   public RoundingParams setPadding(float padding){
     Preconditions.checkArgument(padding >= 0, "the padding cannot be < 0");
     mPadding = padding;
@@ -211,7 +215,7 @@ public class RoundingParams {
   }
 
   /** Gets the padding size */
-  public float getPadding(){
+  public float getPadding() {
     return mPadding;
   }
 }

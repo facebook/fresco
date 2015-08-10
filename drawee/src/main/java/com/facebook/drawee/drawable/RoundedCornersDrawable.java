@@ -143,6 +143,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   @Override
   public void setPadding(float padding) {
     mPadding = padding;
+    updatePath();
     invalidateSelf();
   }
 
@@ -156,34 +157,18 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     mPath.reset();
     mBorderPath.reset();
     mTempRectangle.set(getBounds());
-    switch (mType){
-      case CLIPPING:
-        mTempRectangle.inset(mPadding, mPadding);
-        if (mIsCircle) {
-          mPath.addCircle(
-                  mTempRectangle.centerX(),
-                  mTempRectangle.centerY(),
-                  Math.min(mTempRectangle.width(), mTempRectangle.height()) / 2,
-                  Path.Direction.CW);
-        } else {
-          mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
-        }
-        mTempRectangle.inset(-mPadding, -mPadding);
-        break;
-      case OVERLAY_COLOR:
-        mTempRectangle.inset(mPadding, mPadding);
-        if (mIsCircle) {
-          mPath.addCircle(
-                  mTempRectangle.centerX(),
-                  mTempRectangle.centerY(),
-                  Math.min(mTempRectangle.width(), mTempRectangle.height()) / 2,
-                  Path.Direction.CW);
-        } else {
-          mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
-        }
-        mTempRectangle.inset(-mPadding, -mPadding);
-        break;
+
+    mTempRectangle.inset(mPadding, mPadding);
+    if (mIsCircle) {
+      mPath.addCircle(
+              mTempRectangle.centerX(),
+              mTempRectangle.centerY(),
+              Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
+              Path.Direction.CW);
+    } else {
+      mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
     }
+    mTempRectangle.inset(-mPadding, -mPadding);
 
     mTempRectangle.inset(mBorderWidth/2, mBorderWidth/2);
     if (mIsCircle) {
@@ -193,10 +178,14 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
               Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
               Path.Direction.CW);
     } else {
-      mBorderRadii[0] = mBorderRadii[1] = mRadii[0] + mPadding - mBorderWidth/2;
-      mBorderRadii[2] = mBorderRadii[3] = mRadii[2] + mPadding - mBorderWidth/2;
-      mBorderRadii[4] = mBorderRadii[5] = mRadii[4] + mPadding - mBorderWidth/2;
-      mBorderRadii[6] = mBorderRadii[7] = mRadii[6] + mPadding - mBorderWidth/2;
+      mBorderRadii[0] = mRadii[0] + mPadding - mBorderWidth/2;
+      mBorderRadii[1] = mRadii[1] + mPadding - mBorderWidth/2;
+      mBorderRadii[2] = mRadii[2] + mPadding - mBorderWidth/2;
+      mBorderRadii[3] = mRadii[3] + mPadding - mBorderWidth/2;
+      mBorderRadii[4] = mRadii[4] + mPadding - mBorderWidth/2;
+      mBorderRadii[5] = mRadii[5] + mPadding - mBorderWidth/2;
+      mBorderRadii[6] = mRadii[6] + mPadding - mBorderWidth/2;
+      mBorderRadii[7] = mRadii[7] + mPadding - mBorderWidth/2;
       mBorderPath.addRoundRect(mTempRectangle, mBorderRadii, Path.Direction.CW);
     }
     mTempRectangle.inset(-mBorderWidth/2, -mBorderWidth/2);
@@ -205,9 +194,9 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   @Override
   public void draw(Canvas canvas) {
     Rect bounds = getBounds();
-    int saveCount = canvas.save();
     switch (mType) {
       case CLIPPING:
+        int saveCount = canvas.save();
         // clip, note: doesn't support anti-aliasing
         mPath.setFillType(Path.FillType.EVEN_ODD);
         canvas.clipPath(mPath);
@@ -215,10 +204,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
         canvas.restoreToCount(saveCount);
         break;
       case OVERLAY_COLOR:
-        mPath.setFillType(Path.FillType.EVEN_ODD);
-        canvas.clipPath(mPath);
         super.draw(canvas);
-        canvas.restoreToCount(saveCount);
         mPaint.setColor(mOverlayColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
