@@ -9,8 +9,6 @@ next: modifying-image.html
 
 These features require you to [construct an image request](using-controllerbuilder.html#ImageRequest) directly.
 
-## Resizing Images
-
 ### Terminology
 
 - **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn upscaled or downscaled.
