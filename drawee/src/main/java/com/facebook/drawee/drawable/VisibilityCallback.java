@@ -19,10 +19,10 @@ public interface VisibilityCallback {
    *
    * @param visible whether or not the drawable is visible
    */
-  public void onVisibilityChange(boolean visible);
+  void onVisibilityChange(boolean visible);
 
   /**
    * Called when the drawable gets drawn.
    */
-  public void onDraw();
+  void onDraw();
 }

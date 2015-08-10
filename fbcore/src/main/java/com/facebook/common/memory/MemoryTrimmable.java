@@ -19,5 +19,5 @@ public interface MemoryTrimmable {
   /**
    * Trim memory.
    */
-  public void trim(MemoryTrimType trimType);
+  void trim(MemoryTrimType trimType);
 }

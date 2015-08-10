@@ -31,7 +31,7 @@ public interface ControllerListener<INFO> {
    * @param id controller id
    * @param callerContext caller context
    */
-  public void onSubmit(String id, Object callerContext);
+  void onSubmit(String id, Object callerContext);
 
   /**
    * Called after the final image has been set.
@@ -39,33 +39,33 @@ public interface ControllerListener<INFO> {
    * @param imageInfo image info
    * @param animatable
    */
-  public void onFinalImageSet(String id, @Nullable INFO imageInfo, @Nullable Animatable animatable);
+  void onFinalImageSet(String id, @Nullable INFO imageInfo, @Nullable Animatable animatable);
 
   /**
    * Called after any intermediate image has been set.
    * @param id controller id
    * @param imageInfo image info
    */
-  public void onIntermediateImageSet(String id, @Nullable INFO imageInfo);
+  void onIntermediateImageSet(String id, @Nullable INFO imageInfo);
 
   /**
    * Called after the fetch of the intermediate image failed.
    * @param id controller id
    * @param throwable failure cause
    */
-  public void onIntermediateImageFailed(String id, Throwable throwable);
+  void onIntermediateImageFailed(String id, Throwable throwable);
 
   /**
    * Called after the fetch of the final image failed.
    * @param id controller id
    * @param throwable failure cause
    */
-  public void onFailure(String id, Throwable throwable);
+  void onFailure(String id, Throwable throwable);
 
   /**
    * Called after the controller released the fetched image.
    * <p> IMPORTANT: It is not safe to reuse the controller from within this callback!
    * @param id controller id
    */
-  public void onRelease(String id);
+  void onRelease(String id);
 }

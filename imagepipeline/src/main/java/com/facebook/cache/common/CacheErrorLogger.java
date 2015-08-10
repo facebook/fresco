@@ -19,7 +19,7 @@ public interface CacheErrorLogger {
   /**
    * A categorizaton of different cache and storage related errors.
    */
-  public enum CacheErrorCategory {
+  enum CacheErrorCategory {
     READ_DECODE,
     READ_FILE,
     READ_FILE_NOT_FOUND,
@@ -49,7 +49,7 @@ public interface CacheErrorLogger {
    * @param message An optional error message
    * @param throwable An optional exception
    */
-  public void logError(
+  void logError(
       CacheErrorCategory category,
       Class<?> clazz,
       String message,
