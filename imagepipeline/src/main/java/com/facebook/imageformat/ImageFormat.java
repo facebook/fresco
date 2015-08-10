@@ -27,4 +27,12 @@ public enum ImageFormat {
    * Unknown image. This is needed in case we fail to detect any type for particular image.
    */
   UNKNOWN;
+
+  public static boolean isWebpFormat(ImageFormat imageFormat) {
+    return imageFormat == WEBP_SIMPLE ||
+        imageFormat == WEBP_LOSSLESS ||
+        imageFormat == WEBP_EXTENDED ||
+        imageFormat == WEBP_EXTENDED_WITH_ALPHA ||
+        imageFormat == WEBP_ANIMATED;
+  }
 }

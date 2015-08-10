@@ -95,20 +95,20 @@ public class ArrayDrawable extends Drawable
 
   @Override
   public int getIntrinsicWidth() {
-    int width = 0;
+    int width = -1;
     for (int i = 0; i < mLayers.length; i++) {
       width = Math.max(width, mLayers[i].getIntrinsicWidth());
     }
-    return width;
+    return width > 0 ? width : -1;
   }
 
   @Override
   public int getIntrinsicHeight() {
-    int height = 0;
+    int height = -1;
     for (int i = 0; i < mLayers.length; i++) {
       height = Math.max(height, mLayers[i].getIntrinsicHeight());
     }
-    return height;
+    return height > 0 ? height : -1;
   }
 
   @Override

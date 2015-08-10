@@ -11,7 +11,12 @@ package com.facebook.imageutils;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.util.Pair;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import javax.annotation.Nullable;
 
@@ -27,14 +32,51 @@ public final class BitmapUtil {
   public static int getSizeInBytes(@Nullable Bitmap bitmap) {
     if (bitmap == null) {
       return 0;
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      return bitmap.getAllocationByteCount();
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      return bitmap.getByteCount();
-    } else {
-      // Estimate for earlier platforms.
-      return bitmap.getWidth() * bitmap.getRowBytes();
     }
+
+    // There's a known issue in KitKat where getAllocationByteCount() can throw an NPE. This was
+    // apparently fixed in MR1: http://bit.ly/1IvdRpd. So we do a version check here, and
+    // catch any potential NPEs just to be safe.
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      try {
+        return bitmap.getAllocationByteCount();
+      } catch (NullPointerException npe) {
+        // Swallow exception and try fallbacks.
+      }
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      return bitmap.getByteCount();
+    }
+
+    // Estimate for earlier platforms.
+    return bitmap.getWidth() * bitmap.getRowBytes();
+  }
+
+  /**
+   * Decodes only the bounds of an image and returns its width and height or null if the size can't
+   * be determined
+   * @param bytes the input byte array of the image
+   * @return dimensions of the image
+   */
+  public static @Nullable Pair<Integer, Integer> decodeDimensions(byte[] bytes) {
+    // wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
+    return decodeDimensions(new ByteArrayInputStream(bytes));
+  }
+
+  /**
+   * Decodes only the bounds of an image and returns its width and height or null if the size can't
+   * be determined
+   * @param is the InputStream containing the image data
+   * @return dimensions of the image
+   */
+  public static @Nullable Pair<Integer, Integer> decodeDimensions(InputStream is) {
+    BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+
+    BitmapFactory.decodeStream(is, null, options);
+    return (options.outWidth == -1 || options.outHeight == -1) ?
+        null : new Pair(options.outWidth, options.outHeight);
   }
 
 }

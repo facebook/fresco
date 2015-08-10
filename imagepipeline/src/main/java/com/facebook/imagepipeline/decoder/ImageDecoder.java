@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
 
+import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.GifFormatChecker;
 import com.facebook.imageformat.ImageFormat;
@@ -105,10 +106,14 @@ public class ImageDecoder {
     if (is == null) {
       return null;
     }
-    if (GifFormatChecker.isAnimated(is)) {
-      return mAnimatedImageFactory.decodeGif(encodedImage, options);
+    try {
+      if (GifFormatChecker.isAnimated(is)) {
+        return mAnimatedImageFactory.decodeGif(encodedImage, options);
+      }
+      return decodeStaticImage(encodedImage);
+    } finally {
+      Closeables.closeQuietly(is);
     }
-    return decodeStaticImage(encodedImage);
   }
 
   /**

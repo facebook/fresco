@@ -109,6 +109,8 @@ def install_apks(abi):
     print("Installing comparison app...")
     gradle(':samples:comparison:assembleDebug',
            ':samples:comparison:assembleDebugAndroidTest')
+    adb('uninstall com.facebook.samples.comparison')
+    adb('uninstall com.facebook.samples.comparison.test')
     cmd = ('install -r samples/comparison/build/outputs/apk/comparison-'
            '{}-debug.apk'.format(abi))
     adb(cmd)

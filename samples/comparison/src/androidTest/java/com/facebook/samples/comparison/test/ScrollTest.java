@@ -19,6 +19,7 @@ import android.test.TouchUtils;
 import android.view.Display;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.support.v7.widget.RecyclerView;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.comparison.MainActivity;
@@ -38,7 +39,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   private static final int WAIT_BEFORE_TEST_END_MS = 5000;
 
   private MainActivity mActivity;
-  private GridView mImageList;
+  private RecyclerView mImageList;
   private Spinner mLoaderSelect;
   private Spinner mSourceSelect;
 
@@ -50,7 +51,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   public void setUp() throws Exception {
     super.setUp();
     mActivity = getActivity();
-    mImageList = (GridView) mActivity.findViewById(R.id.image_grid);
+    mImageList = (RecyclerView) mActivity.findViewById(R.id.image_grid);
     mLoaderSelect = (Spinner) mActivity.findViewById(R.id.loader_select);
     mSourceSelect = (Spinner) mActivity.findViewById(R.id.source_select);
     FLog.setMinimumLoggingLevel(FLog.INFO);
@@ -187,7 +188,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
           new Runnable() {
             @Override
             public void run() {
-              mImagesLoaded.set(mImageList.getAdapter().getCount() > 0);
+              mImagesLoaded.set(mImageList.getAdapter().getItemCount() > 0);
             }
           });
     }
@@ -197,17 +198,21 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
    * Scrolls the list view given number of times.
    */
   private void scrollMultipleTimes(int times) throws Exception {
-    final int height = getDisplayHeight();
-    for (int i = 0; i < times; ++i) {
+    final int itemCount = mImageList.getAdapter().getItemCount();
+    final int step = 6;
+    int currentItem = 0;
+    while (currentItem < itemCount) {
       Thread.sleep(BEFORE_SCROLL_TIME_MS);
+      final int finalCurrentItem = currentItem;
       getInstrumentation().runOnMainSync(
           new Runnable() {
             @Override
             public void run() {
-              mImageList.smoothScrollBy(height / 2, SCROLL_TIME_MS);
+              mImageList.smoothScrollToPosition(finalCurrentItem);
             }
           });
       Thread.sleep(SCROLL_TIME_MS);
+      currentItem += step;
     }
   }
 

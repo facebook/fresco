@@ -13,45 +13,39 @@
 package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.facebook.samples.comparison.Drawables;
+
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
+import com.facebook.samples.comparison.holders.BaseViewHolder;
+import com.facebook.samples.comparison.holders.GlideHolder;
 
-/** Populate the list view with images using the Glide library. */
-public class GlideAdapter extends ImageListAdapter<InstrumentedImageView> {
+/**
+ * RecyclerView Adapter for Glide
+ */
+public class GlideAdapter extends ImageListAdapter {
 
-  private final Context mContext;
-
-  public GlideAdapter(Context context, int resourceId, PerfListener perfListener) {
-    super(context, resourceId, perfListener);
-    mContext = context;
+  public GlideAdapter(
+      Context context,
+      PerfListener perfListener) {
+    super(context, perfListener);
   }
 
   @Override
-  protected Class<InstrumentedImageView> getViewClass() {
-    return InstrumentedImageView.class;
+  public GlideHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    final InstrumentedImageView instrumentedImageView = new InstrumentedImageView(getContext());
+    return new GlideHolder(getContext(), parent, instrumentedImageView, getPerfListener());
   }
 
   @Override
-  protected InstrumentedImageView createView() {
-    return new InstrumentedImageView(getContext());
-  }
-
-  @Override
-  protected void bind(InstrumentedImageView view, String uri) {
-    Glide.with(mContext)
-        .load(uri)
-        .placeholder(Drawables.sPlaceholderDrawable)
-        .error(Drawables.sErrorDrawable)
-        .crossFade()
-        .into(view);
+  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
+    holder.bind(getItem(position));
   }
 
   @Override
   public void shutDown() {
-    super.clear();
-    Glide.get(mContext).clearMemory();
+    Glide.get(getContext()).clearMemory();
   }
 }

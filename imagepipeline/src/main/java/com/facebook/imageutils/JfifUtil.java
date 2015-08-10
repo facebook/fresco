@@ -81,42 +81,6 @@ public class JfifUtil {
   }
 
   /**
-   * Get image width and height from jpeg header
-   * @param jpeg the input byte array of jpeg image
-   * @return dimensions of the image in form of Rect.
-   */
-  public static Rect getDimensions(byte[] jpeg) {
-    // wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
-    return getDimensions(new ByteArrayInputStream(jpeg));
-  }
-
-  /**
-   * Get image width and height from jpeg header
-   * @param is the input stream of jpeg image
-   * @return dimensions of the image in form of Rect
-   */
-  public static Rect getDimensions(InputStream is) {
-    try {
-      if (moveToMarker(is, MARKER_SOFn)) {
-        // read block length
-        // subtract 2 as length contain SIZE field we just read
-        int length = StreamProcessor.readPackedInt(is, 2, false) - 2;
-        if (length > 6) {
-          // SOFn structure: 0xFFCn|length(2)|bitDepth(1)|height(2)|width(2)|...
-          int bitDepth = StreamProcessor.readPackedInt(is, 1, false);
-          int height = StreamProcessor.readPackedInt(is, 2, false);
-          int width = StreamProcessor.readPackedInt(is, 2, false);
-          return new Rect(0, 0, width, height);
-        }
-      }
-    } catch (IOException ioe) {
-      FLog.e(TAG, ioe, "%x: getDimensions", is.hashCode());
-      // log and return null.
-    }
-    return null;
-  }
-
-  /**
    *  Reads the content of the input stream until specified marker is found. Marker will be
    *  consumed and the input stream will be positioned after the specified marker.
    *  @param is the input stream to read bytes from

@@ -7,10 +7,9 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.animated.testing;
+package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.testing.FakeClock;
 
 /**
  * A queue that executes items according to the passage of time.

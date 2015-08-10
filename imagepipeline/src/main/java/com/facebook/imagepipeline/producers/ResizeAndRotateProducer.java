@@ -11,9 +11,11 @@ package com.facebook.imagepipeline.producers;
 
 import javax.annotation.Nullable;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -32,6 +34,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Resizes and rotates JPEG image according to the EXIF orientation data.
  *
  * <p> If the image is not JPEG, no transformation is applied.
+ * <p>Should not be used if downsampling is in use.
  */
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
@@ -48,17 +51,14 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final boolean mDownsampleEnabled;
   private final Producer<EncodedImage> mNextProducer;
 
   public ResizeAndRotateProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      boolean downsampleEnabled,
       Producer<EncodedImage> nextProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
-    mDownsampleEnabled = downsampleEnabled;
     mNextProducer = Preconditions.checkNotNull(nextProducer);
   }
 
@@ -121,7 +121,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         return;
       }
       TriState shouldTransform =
-          shouldTransform(mProducerContext.getImageRequest(), newResult, mDownsampleEnabled);
+          shouldTransform(mProducerContext.getImageRequest(), newResult);
       // ignore the intermediate result if we don't know what to do with it
       if (!isLast && shouldTransform == TriState.UNSET) {
         return;
@@ -146,11 +146,13 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
       Map<String, String> extraMap = null;
       EncodedImage ret = null;
+      InputStream is = null;
       try {
         int numerator = getScaleNumerator(imageRequest, encodedImage);
         extraMap = getExtraMap(encodedImage, imageRequest, numerator);
+        is = encodedImage.getInputStream();
         JpegTranscoder.transcodeJpeg(
-            encodedImage.getInputStream(),
+            is,
             outputStream,
             getRotationAngle(imageRequest, encodedImage),
             numerator,
@@ -177,6 +179,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         getConsumer().onFailure(e);
         return;
       } finally {
+        Closeables.closeQuietly(is);
         outputStream.close();
       }
     }
@@ -189,8 +192,15 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         return null;
       }
       String originalSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
-      String requestedSize =
-          imageRequest.getResizeOptions().width + "x" + imageRequest.getResizeOptions().height;
+
+      String requestedSize;
+      if (imageRequest.getResizeOptions() != null) {
+        requestedSize =
+            imageRequest.getResizeOptions().width + "x" + imageRequest.getResizeOptions().height;
+      } else {
+        requestedSize = "Unspecified";
+      }
+
       String fraction = numerator > 0 ? numerator + "/8" : "";
       return ImmutableMap.of(
           ORIGINAL_SIZE_KEY, originalSize,
@@ -202,8 +212,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private static TriState shouldTransform(
       ImageRequest request,
-      EncodedImage encodedImage,
-      boolean downsampleEnabled) {
+      EncodedImage encodedImage) {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
     }
@@ -212,13 +221,18 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     }
     return TriState.valueOf(
         getRotationAngle(request, encodedImage) != 0 ||
-            shouldResize(getScaleNumerator(request, encodedImage), downsampleEnabled));
+            shouldResize(getScaleNumerator(request, encodedImage)));
   }
 
   @VisibleForTesting static float determineResizeRatio(
       ResizeOptions resizeOptions,
       int width,
       int height) {
+
+    if (resizeOptions == null) {
+      return 1.0f;
+    }
+
     final float widthRatio = ((float) resizeOptions.width) / width;
     final float heightRatio = ((float) resizeOptions.height) / height;
     float ratio = Math.max(widthRatio, heightRatio);
@@ -271,8 +285,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return rotationAngle;
   }
 
-  private static boolean shouldResize(int numerator, boolean downsampleEnabled) {
-    return !(downsampleEnabled && numerator <= (MAX_JPEG_SCALE_NUMERATOR / 2))
-        && numerator < MAX_JPEG_SCALE_NUMERATOR;
+  private static boolean shouldResize(int numerator) {
+    return numerator < MAX_JPEG_SCALE_NUMERATOR;
   }
 }

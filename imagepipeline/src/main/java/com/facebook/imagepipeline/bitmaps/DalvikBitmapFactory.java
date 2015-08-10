@@ -15,7 +15,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 
-import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
@@ -29,9 +28,6 @@ import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,15 +41,12 @@ public class DalvikBitmapFactory {
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
   private final FlexByteArrayPool mFlexByteArrayPool;
-  private final boolean mDownsampleEnabled;
 
   public DalvikBitmapFactory(
       EmptyJpegGenerator jpegGenerator,
-      FlexByteArrayPool flexByteArrayPool,
-      boolean downsampleEnabled) {
+      FlexByteArrayPool flexByteArrayPool) {
     mJpegGenerator = jpegGenerator;
     mFlexByteArrayPool = flexByteArrayPool;
-    mDownsampleEnabled = downsampleEnabled;
 
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
     mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
@@ -105,20 +98,15 @@ public class DalvikBitmapFactory {
    */
   CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
-        encodedImage.getSampleSize(),
-        mDownsampleEnabled);
+        encodedImage.getSampleSize());
     CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
-    Bitmap bitmap;
-    if (bytesRef != null) {
-      try {
-        bitmap = decodeByteArrayAsPurgeable(bytesRef, options);
-      } finally {
-        CloseableReference.closeSafely(bytesRef);
-      }
-    } else {
-      bitmap = decodeEncodedImageWithInputStreamAsPurgeable(encodedImage, options);
+    Preconditions.checkNotNull(bytesRef);
+    try {
+      Bitmap bitmap = decodeByteArrayAsPurgeable(bytesRef, options);
+      return pinBitmap(bitmap);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
     }
-    return pinBitmap(bitmap);
   }
 
   /**
@@ -134,20 +122,15 @@ public class DalvikBitmapFactory {
       final EncodedImage encodedImage,
       int length) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
-        encodedImage.getSampleSize(),
-        mDownsampleEnabled);
+        encodedImage.getSampleSize());
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
-    Bitmap bitmap;
-    if (bytesRef != null) {
-      try {
-        bitmap = decodeJPEGByteArrayAsPurgeable(bytesRef, length, options);
-      } finally {
-        CloseableReference.closeSafely(bytesRef);
-      }
-    } else {
-      bitmap = decodeEncodedImageWithInputStreamAsPurgeable(encodedImage, options);
+    Preconditions.checkNotNull(bytesRef);
+    try {
+      Bitmap bitmap = decodeJPEGByteArrayAsPurgeable(bytesRef, length, options);
+      return pinBitmap(bitmap);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
     }
-    return pinBitmap(bitmap);
   }
 
   /**
@@ -230,57 +213,15 @@ public class DalvikBitmapFactory {
     }
   }
 
-  /**
-   * Gets the FileInputStream containing the encoded image and returns a purgeable bitmap from the
-   * encoded bytes.
-   *
-   * <p> Only valid if the EncodedImage is backed by a supplier of FileInputStream.
-   */
-  private Bitmap decodeEncodedImageWithInputStreamAsPurgeable(
-      EncodedImage encodedImage,
-      BitmapFactory.Options options) {
-    InputStream is = encodedImage.getInputStream();
-    try {
-      Preconditions.checkNotNull(is);
-      Preconditions.checkArgument(is instanceof FileInputStream);
-      return decodeFileInputStreamAsPurgeable((FileInputStream) is, options);
-    } finally {
-      Closeables.closeQuietly(is);
-    }
-  }
-
-  /**
-   * Decode the input into a purgeable bitmap
-   *
-   * @param fis the FileInputStream that contains the encoded bytes
-   * @return a purgeable bitmap
-   */
-  private Bitmap decodeFileInputStreamAsPurgeable(
-      FileInputStream fis,
-      BitmapFactory.Options options) {
-    Bitmap bitmap;
-    try {
-      bitmap = BitmapFactory.decodeFileDescriptor(
-          fis.getFD(),
-          null,
-          options);
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
-    return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
-  }
-
   private static BitmapFactory.Options getBitmapFactoryOptions(
-      int sampleSize,
-      boolean downsampleEnabled) {
+      int sampleSize) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
     // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
     options.inPurgeable = true;
-    if (downsampleEnabled) {
-      options.inSampleSize = sampleSize;
-    }
+    // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
+    options.inSampleSize = sampleSize;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       options.inMutable = true;  // no known perf difference; allows postprocessing to work
     }

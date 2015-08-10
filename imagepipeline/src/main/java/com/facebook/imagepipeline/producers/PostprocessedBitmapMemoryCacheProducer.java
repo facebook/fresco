@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 
 import com.android.internal.util.Predicate;
 
@@ -64,29 +65,28 @@ public class PostprocessedBitmapMemoryCacheProducer
     final CacheKey postprocessorCacheKey = postprocessor.getPostprocessorCacheKey();
     final CacheKey cacheKey;
     CloseableReference<CloseableImage> cachedReference = null;
-    final String postprocessorName;
     if (postprocessorCacheKey != null) {
       cacheKey = mCacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest);
       cachedReference = mMemoryCache.get(cacheKey);
-      postprocessorName = postprocessor.getClass().getName();
     } else {
       cacheKey = null;
-      postprocessorName = null;
     }
-
     if (cachedReference != null) {
       listener.onProducerFinishWithSuccess(
           requestId,
           getProducerName(),
           listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "true") : null);
-      consumer.onProgressUpdate(1f);
+      consumer.onProgressUpdate(1.0f);
       consumer.onNewResult(cachedReference, true);
       cachedReference.close();
     } else {
+      final boolean isRepeatedProcessor = postprocessor instanceof RepeatedPostprocessor;
+      final String processorName = postprocessor.getClass().getName();
       Consumer<CloseableReference<CloseableImage>> cachedConsumer = new CachedPostprocessorConsumer(
           consumer,
           cacheKey,
-          postprocessorName,
+          isRepeatedProcessor,
+          processorName,
           mMemoryCache);
       listener.onProducerFinishWithSuccess(
           requestId,
@@ -101,21 +101,27 @@ public class PostprocessedBitmapMemoryCacheProducer
       CloseableReference<CloseableImage>> {
 
     private final CacheKey mCacheKey;
-    private final String mPostprocessorName;
+    private final boolean mIsRepeatedProcessor;
+    private final String mProcessorName;
     private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
     public CachedPostprocessorConsumer(final Consumer<CloseableReference<CloseableImage>> consumer,
         final CacheKey cacheKey,
-        final String postprocessorName,
+        final boolean isRepeatedProcessor,
+        final String processorName,
         final MemoryCache<CacheKey, CloseableImage> memoryCache) {
       super(consumer);
       this.mCacheKey = cacheKey;
-      this.mPostprocessorName = postprocessorName;
+      this.mIsRepeatedProcessor = isRepeatedProcessor;
+      this.mProcessorName = processorName;
       this.mMemoryCache = memoryCache;
     }
 
     @Override
     protected void onNewResultImpl(CloseableReference<CloseableImage> newResult, boolean isLast) {
+      if (!isLast && !mIsRepeatedProcessor) {
+        return;
+      }
       // Given a null result, we just pass it on.
       if (newResult == null) {
         getConsumer().onNewResult(null, isLast);
@@ -125,19 +131,17 @@ public class PostprocessedBitmapMemoryCacheProducer
       // cache and forward the new result
       final CloseableReference<CloseableImage> newCachedResult;
       if (mCacheKey != null) {
-        if (mPostprocessorName != null) {
-          mMemoryCache.removeAll(
-              new Predicate<CacheKey>() {
-                @Override
-                public boolean apply(CacheKey cacheKey) {
-                  if (cacheKey instanceof BitmapMemoryCacheKey) {
-                    return mPostprocessorName.equals(
-                        ((BitmapMemoryCacheKey) cacheKey).getPostprocessorName());
-                  }
-                  return false;
+        mMemoryCache.removeAll(
+            new Predicate<CacheKey>() {
+              @Override
+              public boolean apply(CacheKey cacheKey) {
+                if (cacheKey instanceof BitmapMemoryCacheKey) {
+                  return mProcessorName.equals(
+                      ((BitmapMemoryCacheKey) cacheKey).getPostprocessorName());
                 }
-              });
-        }
+                return false;
+              }
+            });
         newCachedResult = mMemoryCache.cache(mCacheKey, newResult);
       } else {
         newCachedResult = newResult;

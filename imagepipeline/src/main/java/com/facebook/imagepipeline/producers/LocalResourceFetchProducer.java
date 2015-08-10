@@ -31,9 +31,8 @@ public class LocalResourceFetchProducer extends LocalFetchProducer {
   public LocalResourceFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      boolean downsampleEnabled,
       Resources resources) {
-    super(executor, pooledByteBufferFactory, downsampleEnabled);
+    super(executor, pooledByteBufferFactory);
     mResources = resources;
   }
 

@@ -60,9 +60,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   public LocalContentUriFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      boolean downsampleEnabled,
       ContentResolver contentResolver) {
-    super(executor, pooledByteBufferFactory, downsampleEnabled);
+    super(executor, pooledByteBufferFactory);
     mContentResolver = contentResolver;
   }
 
@@ -104,7 +103,9 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         uriString.startsWith(MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
   }
 
-  private @Nullable EncodedImage getCameraImage(Uri uri, ResizeOptions resizeOptions) {
+  private @Nullable EncodedImage getCameraImage(
+      Uri uri,
+      ResizeOptions resizeOptions) throws IOException{
     Cursor cursor = mContentResolver.query(uri, PROJECTION, null, null, null);
     if (cursor == null) {
       return null;
@@ -125,7 +126,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         }
       }
       if (pathname != null) {
-        return getFileBackedEncodedImage(pathname, getLength(pathname));
+        return getByteBufferBackedEncodedImage(pathname, getLength(pathname));
       }
     } finally {
       cursor.close();
@@ -136,7 +137,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   // Gets the smallest possible thumbnail that is bigger than the requested size in the resize
   // options or null if either the thumbnails are smaller than the requested size or there are no
   // stored thumbnails.
-  private EncodedImage getThumbnail(ResizeOptions resizeOptions, int imageId) {
+  private EncodedImage getThumbnail(ResizeOptions resizeOptions, int imageId) throws IOException{
     int thumbnailKind = getThumbnailKind(resizeOptions);
     if (thumbnailKind == NO_THUMBNAIL) {
       return null;
@@ -156,7 +157,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         final String thumbnailUri = thumbnailCursor.getString(
             thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
         if (new File(thumbnailUri).exists()) {
-          return getFileBackedEncodedImage(thumbnailUri, getLength(thumbnailUri));
+          return getByteBufferBackedEncodedImage(thumbnailUri, getLength(thumbnailUri));
         }
       }
     } finally {

@@ -43,7 +43,6 @@ public class ArtBitmapFactory {
   private static final int DECODE_BUFFER_SIZE = 16 * 1024;
 
   private final BitmapPool mBitmapPool;
-  private final boolean mDownsampleEnabled;
 
   /**
    * ArtPlatformImageDecoder decodes images from InputStream - to do so we need to provide
@@ -57,13 +56,12 @@ public class ArtBitmapFactory {
       (byte) JfifUtil.MARKER_FIRST_BYTE,
       (byte) JfifUtil.MARKER_EOI};
 
-  public ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads, boolean downsampleEnabled) {
+  public ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads) {
     mBitmapPool = bitmapPool;
     mDecodeBuffers = new SynchronizedPool<>(maxNumThreads);
     for (int i = 0; i < maxNumThreads; i++) {
       mDecodeBuffers.release(ByteBuffer.allocate(DECODE_BUFFER_SIZE));
     }
-    mDownsampleEnabled = downsampleEnabled;
   }
 
   /**
@@ -158,9 +156,8 @@ public class ArtBitmapFactory {
    */
   private BitmapFactory.Options getDecodeOptionsForStream(EncodedImage encodedImage) {
     final BitmapFactory.Options options = new BitmapFactory.Options();
-    if (mDownsampleEnabled) {
-      options.inSampleSize = encodedImage.getSampleSize();
-    }
+    // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
+    options.inSampleSize = encodedImage.getSampleSize();
     options.inJustDecodeBounds = true;
     // fill outWidth and outHeight
     BitmapFactory.decodeStream(encodedImage.getInputStream(), null, options);

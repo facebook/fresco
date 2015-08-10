@@ -167,12 +167,12 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   @Override
   public void draw(Canvas canvas) {
+    updateTransform();
     updateNonzero();
     if (!mIsNonzero) {
       super.draw(canvas);
       return;
     }
-    updateTransform();
     updatePath();
     updatePaint();
     int saveCount = canvas.save();

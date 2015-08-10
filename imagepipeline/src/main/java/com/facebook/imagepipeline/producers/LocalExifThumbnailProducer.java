@@ -15,6 +15,7 @@ import java.util.concurrent.Executor;
 
 import android.graphics.Rect;
 import android.media.ExifInterface;
+import android.util.Pair;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
@@ -25,6 +26,7 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 
 /**
@@ -104,10 +106,11 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
   private EncodedImage buildEncodedImage(
       PooledByteBuffer imageBytes,
       ExifInterface exifInterface) {
-    Rect dimensions = JfifUtil.getDimensions(new PooledByteBufferInputStream(imageBytes));
+    Pair<Integer, Integer> dimensions =
+        BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
     int rotationAngle = getRotationAngle(exifInterface);
-    int width = dimensions != null ? dimensions.width() : EncodedImage.UNKNOWN_WIDTH;
-    int height = dimensions != null ? dimensions.height() : EncodedImage.UNKNOWN_HEIGHT;
+    int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
+    int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
     EncodedImage encodedImage = new EncodedImage(CloseableReference.of(imageBytes));
     encodedImage.setImageFormat(ImageFormat.JPEG);
     encodedImage.setRotationAngle(rotationAngle);

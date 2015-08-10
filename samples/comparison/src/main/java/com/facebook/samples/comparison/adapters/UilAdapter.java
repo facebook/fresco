@@ -13,35 +13,41 @@
 package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
 import com.facebook.samples.comparison.configs.uil.SampleUilFactory;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
+import com.facebook.samples.comparison.holders.BaseViewHolder;
+import com.facebook.samples.comparison.holders.UilHolder;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-/** Populate the list view with images using the Universal Image Loader library. */
-public class UilAdapter extends ImageListAdapter<InstrumentedImageView> {
+/**
+ * RecyclerView Adapter for Universal ImageLoader
+ */
+public class UilAdapter extends ImageListAdapter {
 
   private final ImageLoader mImageLoader;
 
-  public UilAdapter(Context context, int resourceId, PerfListener perfListener) {
-    super(context, resourceId, perfListener);
+  public UilAdapter(
+      Context context,
+      PerfListener perfListener) {
+    super(context, perfListener);
     mImageLoader = SampleUilFactory.getImageLoader(context);
   }
 
   @Override
-  protected Class<InstrumentedImageView> getViewClass() {
-    return InstrumentedImageView.class;
+  public UilHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    final InstrumentedImageView instrumentedImageView = new InstrumentedImageView(getContext());
+    return new UilHolder(
+        getContext(), mImageLoader, parent,
+        instrumentedImageView, getPerfListener());
   }
 
   @Override
-  protected InstrumentedImageView createView() {
-    return new InstrumentedImageView(getContext());
-  }
-
-  @Override
-  protected void bind(InstrumentedImageView view, String uri) {
-    mImageLoader.displayImage(uri, view);
+  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
+    holder.bind(getItem(position));
   }
 
   @Override

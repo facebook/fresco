@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.animated.testing;
+package com.facebook.imagepipeline.testing;
 
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
@@ -16,7 +16,6 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.facebook.common.executors.SerialExecutorService;
-import com.facebook.common.testing.FakeClock;
 
 /**
  * Implementation of {@link java.util.concurrent.ExecutorService} for unit tests.

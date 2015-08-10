@@ -55,6 +55,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final Producer<EncodedImage> mNextProducer;
   private final boolean mDownsampleEnabled;
+  private final boolean mDownsampleEnabledForNetwork;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -62,12 +63,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final ImageDecoder imageDecoder,
       final ProgressiveJpegConfig progressiveJpegConfig,
       final boolean downsampleEnabled,
+      final boolean downsampleEnabledForNetwork,
       final Producer<EncodedImage> nextProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
     mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
     mDownsampleEnabled = downsampleEnabled;
+    mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
     mNextProducer = Preconditions.checkNotNull(nextProducer);
   }
 
@@ -115,8 +118,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         public void run(EncodedImage encodedImage, boolean isLast) {
           if (encodedImage != null) {
             if (mDownsampleEnabled) {
-              encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
-                  producerContext.getImageRequest(), encodedImage));
+              ImageRequest request = producerContext.getImageRequest();
+              if (mDownsampleEnabledForNetwork ||
+                  !UriUtil.isNetworkUri(request.getSourceUri())) {
+                encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
+                    request, encodedImage));
+              }
             }
             doDecode(encodedImage, isLast);
           }

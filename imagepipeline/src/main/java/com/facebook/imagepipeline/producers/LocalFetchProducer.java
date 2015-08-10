@@ -9,13 +9,12 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 
-import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -29,15 +28,12 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final boolean mDownsampleEnabled;
 
   protected LocalFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory,
-      boolean downsampleEnabled) {
+      PooledByteBufferFactory pooledByteBufferFactory) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
-    mDownsampleEnabled = downsampleEnabled;
   }
 
   @Override
@@ -58,29 +54,10 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
           @Override
           protected EncodedImage getResult() throws Exception {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
+            if (encodedImage == null) {
+              return null;
+            }
             encodedImage.parseMetaData();
-            if (mDownsampleEnabled && EncodedImage.isMetaDataAvailable(encodedImage)) {
-              encodedImage.setSampleSize(
-                  DownsampleUtil.determineSampleSize(imageRequest, encodedImage));
-            }
-            // If the image is not going to be downsampled, read it into memory
-            if (encodedImage.getSampleSize() == EncodedImage.DEFAULT_SAMPLE_SIZE) {
-              CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
-              try {
-                if (bytesRef == null) {
-                  EncodedImage oldEncodedImage = encodedImage;
-                  try {
-                    encodedImage = getByteBufferBackedEncodedImage(
-                        oldEncodedImage.getInputStream(), oldEncodedImage.getSize());
-                    encodedImage.copyMetaDataFrom(oldEncodedImage);
-                  } finally {
-                    EncodedImage.closeSafely(oldEncodedImage);
-                  }
-                }
-              } finally {
-                CloseableReference.closeSafely(bytesRef);
-              }
-            }
             return encodedImage;
           }
 
@@ -100,6 +77,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     mExecutor.execute(cancellableProducerRunnable);
   }
 
+  /** Creates a memory-backed encoded image from the stream. The stream is closed. */
   protected EncodedImage getByteBufferBackedEncodedImage(
       InputStream inputStream,
       int length) throws IOException {
@@ -112,26 +90,16 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
       }
       return new EncodedImage(ref);
     } finally {
+      Closeables.closeQuietly(inputStream);
       CloseableReference.closeSafely(ref);
     }
   }
 
-  protected EncodedImage getFileBackedEncodedImage(final String pathname, int length) {
-    return getFileBackedEncodedImage(new File(pathname), length);
-  }
-
-  protected EncodedImage getFileBackedEncodedImage(final File file, int length) {
-    Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
-      @Override
-      public FileInputStream get() {
-        try {
-          return new FileInputStream(file);
-        } catch (IOException ioe) {
-          throw new RuntimeException(ioe);
-        }
-      }
-    };
-    return new EncodedImage(sup, length);
+  protected EncodedImage getByteBufferBackedEncodedImage(
+      String pathname,
+      int length) throws IOException {
+    FileInputStream fis = new FileInputStream(pathname);
+    return getByteBufferBackedEncodedImage(fis, length);
   }
 
   /**

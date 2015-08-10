@@ -148,10 +148,10 @@ public class ImagePipelineConfig {
 
     // Below this comment can't be built in alphabetical order, because of dependencies
 
-    int decodeThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
+    int numCpuBoundThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
     mExecutorSupplier =
         builder.mExecutorSupplier == null ?
-            new DefaultExecutorSupplier() : builder.mExecutorSupplier;
+            new DefaultExecutorSupplier(numCpuBoundThreads) : builder.mExecutorSupplier;
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
