@@ -1,6 +1,6 @@
 ---
 id: modifying-image
-title: Modifying the Image
+title: Modifying the Image (Postprocessing)
 layout: docs
 permalink: /docs/modifying-image.html
 prev: resizing-rotating.html
@@ -178,3 +178,11 @@ meshPostprocessor.setColor(Color.BLUE);
 ```
 
 You should have still have one `Postprocessor` instance per image request, as internally the class is stateful.
+
+#### Transparent bitmaps
+
+Depending on the nature of the postprocessor, the destination bitmap will not always be completely opaque. This can sometimes lead to difficulties because of the `Bitmap.hasAlpha` flag. Namely if that flag is false (which is the default value), Android will select a faster drawing path that doesn't do blending. This will cause a translucent image to appear with black instead of transparent pixels. To workaround that, set this flag to true on your destination bitmap:
+
+```
+destinationBitmap.setHasAlpha(true);
+```
