@@ -545,9 +545,10 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)">evictFromDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(android.net.Uri)">evictFromDiskCache</a></span>(Uri uri)
         
-        <div class="jd-descrdiv">Removes all images with the specified Uri from disk cache.</div>
+        <div class="jd-descrdiv"><p>If you have supplied your own cache key factory when configuring the pipeline, this method
+ may not work correctly.</div>
   
   </td></tr>
 
@@ -563,10 +564,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(android.net.Uri)">evictFromDiskCache</a></span>(Uri uri)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)">evictFromDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
         
-        <div class="jd-descrdiv"><p>If you have supplied your own cache key factory when configuring the pipeline, this method
- may not work correctly.</div>
+        <div class="jd-descrdiv">Removes all images with the specified Uri from disk cache.</div>
   
   </td></tr>
 
@@ -873,7 +873,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -889,7 +889,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -905,7 +905,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1136,47 +1136,6 @@ From class
 </div>
 
 
-<a id="evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">evictFromDiskCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Removes all images with the specified Uri from disk cache.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageRequest</th>
-          <td>The imageRequest for the image to evict from disk cache
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="evictFromDiskCache(android.net.Uri)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1211,6 +1170,47 @@ From class
         <tr>
           <th>uri</th>
           <td>The uri of the image to evict
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">evictFromDiskCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Removes all images with the specified Uri from disk cache.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>The imageRequest for the image to evict from disk cache
 </td>
         </tr>
       </table>

@@ -2645,13 +2645,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(int arg0, PorterDuff.Mode arg1)
+        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
         
   </td></tr>
 
@@ -2661,13 +2661,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
+        <span class="sympad">setColorFilter</span>(int arg0)
         
   </td></tr>
 
@@ -2683,7 +2683,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(int arg0)
+        <span class="sympad">setColorFilter</span>(int arg0, PorterDuff.Mode arg1)
         
   </td></tr>
 
@@ -3029,7 +3029,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1)
+        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1, int arg2)
         
   </td></tr>
 
@@ -3045,7 +3045,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1, int arg2)
+        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1)
         
   </td></tr>
 
@@ -3141,7 +3141,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">awakenScrollBars</span>(int arg0, boolean arg1)
+        <span class="sympad">awakenScrollBars</span>(int arg0)
         
   </td></tr>
 
@@ -3157,7 +3157,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">awakenScrollBars</span>(int arg0)
+        <span class="sympad">awakenScrollBars</span>(int arg0, boolean arg1)
         
   </td></tr>
 
@@ -3205,7 +3205,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">buildDrawingCache</span>(boolean arg0)
+        <span class="sympad">buildDrawingCache</span>()
         
   </td></tr>
 
@@ -3221,7 +3221,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">buildDrawingCache</span>()
+        <span class="sympad">buildDrawingCache</span>(boolean arg0)
         
   </td></tr>
 
@@ -4613,7 +4613,7 @@ From class
             Bitmap
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getDrawingCache</span>()
+        <span class="sympad">getDrawingCache</span>(boolean arg0)
         
   </td></tr>
 
@@ -4629,7 +4629,7 @@ From class
             Bitmap
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getDrawingCache</span>(boolean arg0)
+        <span class="sympad">getDrawingCache</span>()
         
   </td></tr>
 
@@ -4783,13 +4783,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0)
+        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0, Point arg1)
         
   </td></tr>
 
@@ -4799,13 +4799,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0, Point arg1)
+        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0)
         
   </td></tr>
 
@@ -5893,7 +5893,7 @@ From class
             Object
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getTag</span>()
+        <span class="sympad">getTag</span>(int arg0)
         
   </td></tr>
 
@@ -5909,7 +5909,7 @@ From class
             Object
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getTag</span>(int arg0)
+        <span class="sympad">getTag</span>()
         
   </td></tr>
 
@@ -6469,7 +6469,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">invalidate</span>()
+        <span class="sympad">invalidate</span>(Rect arg0)
         
   </td></tr>
 
@@ -6485,7 +6485,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">invalidate</span>(Rect arg0)
+        <span class="sympad">invalidate</span>(int arg0, int arg1, int arg2, int arg3)
         
   </td></tr>
 
@@ -6501,7 +6501,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">invalidate</span>(int arg0, int arg1, int arg2, int arg3)
+        <span class="sympad">invalidate</span>()
         
   </td></tr>
 
@@ -8197,7 +8197,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">postInvalidate</span>()
+        <span class="sympad">postInvalidate</span>(int arg0, int arg1, int arg2, int arg3)
         
   </td></tr>
 
@@ -8213,7 +8213,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">postInvalidate</span>(int arg0, int arg1, int arg2, int arg3)
+        <span class="sympad">postInvalidate</span>()
         
   </td></tr>
 
@@ -8415,13 +8415,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">requestFocus</span>(int arg0)
+        <span class="sympad">requestFocus</span>(int arg0, Rect arg1)
         
   </td></tr>
 
@@ -8437,7 +8437,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">requestFocus</span>()
+        <span class="sympad">requestFocus</span>(int arg0)
         
   </td></tr>
 
@@ -8447,13 +8447,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">requestFocus</span>(int arg0, Rect arg1)
+        <span class="sympad">requestFocus</span>()
         
   </td></tr>
 
@@ -10549,7 +10549,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">unscheduleDrawable</span>(Drawable arg0, Runnable arg1)
+        <span class="sympad">unscheduleDrawable</span>(Drawable arg0)
         
   </td></tr>
 
@@ -10565,7 +10565,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">unscheduleDrawable</span>(Drawable arg0)
+        <span class="sympad">unscheduleDrawable</span>(Drawable arg0, Runnable arg1)
         
   </td></tr>
 
@@ -10783,7 +10783,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -10799,7 +10799,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -10815,7 +10815,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 

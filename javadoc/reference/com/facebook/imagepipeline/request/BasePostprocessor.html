@@ -560,13 +560,12 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+            void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process</a></span>(Bitmap bitmap)
         
-        <div class="jd-descrdiv">Clients should override this method only if the post-processed bitmap has to be of a different
- size than the source bitmap.</div>
+        <div class="jd-descrdiv">Clients should override this method if the post-processing can be done in place.</div>
   
   </td></tr>
 
@@ -579,12 +578,13 @@ Summary:
             
             
             
-            void
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, android.graphics.Bitmap)">process</a></span>(Bitmap destBitmap, Bitmap sourceBitmap)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
         
-        <div class="jd-descrdiv">Clients should override this method if the post-processing cannot be done in place.</div>
+        <div class="jd-descrdiv">Clients should override this method only if the post-processed bitmap has to be of a different
+ size than the source bitmap.</div>
   
   </td></tr>
 
@@ -600,9 +600,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process</a></span>(Bitmap bitmap)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, android.graphics.Bitmap)">process</a></span>(Bitmap destBitmap, Bitmap sourceBitmap)
         
-        <div class="jd-descrdiv">Clients should override this method if the post-processing can be done in place.</div>
+        <div class="jd-descrdiv">Clients should override this method if the post-processing cannot be done in place.</div>
   
   </td></tr>
 
@@ -780,7 +780,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -796,7 +796,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -812,7 +812,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1054,6 +1054,50 @@ From interface
 </div>
 
 
+<a id="process(android.graphics.Bitmap)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">process</span>
+      <span class="normal">(Bitmap bitmap)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Clients should override this method if the post-processing can be done in place.
+
+ <p> The provided bitmap is a copy of the source bitmap and the implementation is free to
+ modify it.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>bitmap</th>
+          <td>the bitmap to be used both as input and as output
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1154,50 +1198,6 @@ From interface
         <tr>
           <th>sourceBitmap</th>
           <td>the source bitmap to be used as input
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="process(android.graphics.Bitmap)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">process</span>
-      <span class="normal">(Bitmap bitmap)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Clients should override this method if the post-processing can be done in place.
-
- <p> The provided bitmap is a copy of the source bitmap and the implementation is free to
- modify it.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>bitmap</th>
-          <td>the bitmap to be used both as input and as output
 </td>
         </tr>
       </table>

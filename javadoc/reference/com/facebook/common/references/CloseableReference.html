@@ -519,17 +519,15 @@ Summary:
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
+            synchronized
             
             
-            static
-            &lt;T&gt;
+            
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#cloneOrNull(com.facebook.common.references.CloseableReference<T>)">cloneOrNull</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt; ref)
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#cloneOrNull()">cloneOrNull</a></span>()
         
-        <div class="jd-descrdiv">Returns the cloned reference if valid, null otherwise.</div>
-  
   </td></tr>
 
 
@@ -555,15 +553,17 @@ Summary:
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
-            synchronized
             
             
-            
+            static
+            &lt;T&gt;
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#cloneOrNull()">cloneOrNull</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#cloneOrNull(com.facebook.common.references.CloseableReference<T>)">cloneOrNull</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt; ref)
         
+        <div class="jd-descrdiv">Returns the cloned reference if valid, null otherwise.</div>
+  
   </td></tr>
 
 
@@ -596,9 +596,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#closeSafely(java.lang.Iterable<? extends com.facebook.common.references.CloseableReference<?>>)">closeSafely</a></span>(Iterable&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;?&gt;&gt; references)
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#closeSafely(com.facebook.common.references.CloseableReference<?>)">closeSafely</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;?&gt; ref)
         
-        <div class="jd-descrdiv">Closes the references in the iterable handling null.</div>
+        <div class="jd-descrdiv">Closes the reference handling null.</div>
   
   </td></tr>
 
@@ -614,9 +614,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#closeSafely(com.facebook.common.references.CloseableReference<?>)">closeSafely</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;?&gt; ref)
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#closeSafely(java.lang.Iterable<? extends com.facebook.common.references.CloseableReference<?>>)">closeSafely</a></span>(Iterable&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;?&gt;&gt; references)
         
-        <div class="jd-descrdiv">Closes the reference handling null.</div>
+        <div class="jd-descrdiv">Closes the references in the iterable handling null.</div>
   
   </td></tr>
 
@@ -679,24 +679,6 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
-            synchronized
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#isValid()">isValid</a></span>()
-        
-        <div class="jd-descrdiv">Checks if this closable-reference is valid i.e.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
             
             
             static
@@ -712,25 +694,25 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
+            synchronized
             
             
-            static
-            &lt;T&nbsp;extends&nbsp;Closeable&gt;
-            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+            
+            boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#of(T)">of</a></span>(T t)
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#isValid()">isValid</a></span>()
         
-        <div class="jd-descrdiv">Constructs a CloseableReference.</div>
+        <div class="jd-descrdiv">Checks if this closable-reference is valid i.e.</div>
   
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -744,6 +726,24 @@ Summary:
         
         <div class="jd-descrdiv">Constructs a CloseableReference (wrapping a SharedReference) of T with provided
  ResourceReleaser<T>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;T&nbsp;extends&nbsp;Closeable&gt;
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#of(T)">of</a></span>(T t)
+        
+        <div class="jd-descrdiv">Constructs a CloseableReference.</div>
   
   </td></tr>
 
@@ -946,7 +946,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -962,7 +962,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -978,7 +978,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1150,20 +1150,20 @@ From interface
 </div>
 
 
-<a id="cloneOrNull(com.facebook.common.references.CloseableReference<T>)"></a>
+<a id="cloneOrNull()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
          
          
          
+        synchronized 
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
       </span>
       <span class="sympad">cloneOrNull</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt; ref)</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1175,17 +1175,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns the cloned reference if valid, null otherwise.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>ref</th>
-          <td>the reference to clone
-</td>
-        </tr>
-      </table>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
@@ -1238,20 +1228,20 @@ From interface
 </div>
 
 
-<a id="cloneOrNull()"></a>
+<a id="cloneOrNull(com.facebook.common.references.CloseableReference<T>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
+        static 
          
          
          
-        synchronized 
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
       </span>
       <span class="sympad">cloneOrNull</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt; ref)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1263,7 +1253,17 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the cloned reference if valid, null otherwise.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>ref</th>
+          <td>the reference to clone
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -1306,47 +1306,6 @@ From interface
 </div>
 
 
-<a id="closeSafely(java.lang.Iterable<? extends com.facebook.common.references.CloseableReference<?>>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">closeSafely</span>
-      <span class="normal">(Iterable&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;?&gt;&gt; references)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Closes the references in the iterable handling null.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>references</th>
-          <td>the reference to close
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="closeSafely(com.facebook.common.references.CloseableReference<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1378,6 +1337,47 @@ From interface
       <table class="jd-tagtable">
         <tr>
           <th>ref</th>
+          <td>the reference to close
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="closeSafely(java.lang.Iterable<? extends com.facebook.common.references.CloseableReference<?>>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">closeSafely</span>
+      <span class="normal">(Iterable&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;?&gt;&gt; references)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Closes the references in the iterable handling null.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>references</th>
           <td>the reference to close
 </td>
         </tr>
@@ -1488,42 +1488,6 @@ From interface
 </div>
 
 
-<a id="isValid()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-        synchronized 
-        boolean
-      </span>
-      <span class="sympad">isValid</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Checks if this closable-reference is valid i.e. is not closed.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if the closeable reference is valid
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="isValid(com.facebook.common.references.CloseableReference<?>)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1560,20 +1524,20 @@ From interface
 </div>
 
 
-<a id="of(T)"></a>
+<a id="isValid()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
          
          
          
-        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+        synchronized 
+        boolean
       </span>
-      <span class="sympad">of</span>
-      <span class="normal">(T t)</span>
+      <span class="sympad">isValid</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1585,10 +1549,12 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Constructs a CloseableReference.
-
- <p>Returns null if the parameter is null.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Checks if this closable-reference is valid i.e. is not closed.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the closeable reference is valid
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -1621,6 +1587,40 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Constructs a CloseableReference (wrapping a SharedReference) of T with provided
  ResourceReleaser<T>. If t is null, this will just return null.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="of(T)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;T&gt;
+      </span>
+      <span class="sympad">of</span>
+      <span class="normal">(T t)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a CloseableReference.
+
+ <p>Returns null if the parameter is null.
 </p></div>
 
     </div>

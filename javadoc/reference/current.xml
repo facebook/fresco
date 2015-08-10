@@ -827,7 +827,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="Params"
+<constructor name="DiskStorageCache.Params"
  type="com.facebook.cache.disk.DiskStorageCache.Params"
  static="false"
  final="false"
@@ -2935,7 +2935,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="NullReferenceException"
+<constructor name="SharedReference.NullReferenceException"
  type="com.facebook.common.references.SharedReference.NullReferenceException"
  static="false"
  final="false"
@@ -5950,7 +5950,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="RootDrawable"
+<constructor name="GenericDraweeHierarchy.RootDrawable"
  type="com.facebook.drawee.generic.GenericDraweeHierarchy.RootDrawable"
  static="false"
  final="false"
@@ -10433,8 +10433,6 @@
 >
 <parameter name="poolFactory" type="com.facebook.imagepipeline.memory.PoolFactory">
 </parameter>
-<parameter name="isDownsampleEnabled" type="boolean">
-</parameter>
 </method>
 <method name="getAnimatedDrawableFactory"
  return="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory"
@@ -12837,7 +12835,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="ClosedException"
+<constructor name="PooledByteBuffer.ClosedException"
  type="com.facebook.imagepipeline.memory.PooledByteBuffer.ClosedException"
  static="false"
  final="false"
@@ -14315,7 +14313,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<constructor name="BuilderException"
+<constructor name="ImageRequestBuilder.BuilderException"
  type="com.facebook.imagepipeline.request.ImageRequestBuilder.BuilderException"
  static="false"
  final="false"

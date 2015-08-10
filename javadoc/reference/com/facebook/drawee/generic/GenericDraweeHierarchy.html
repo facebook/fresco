@@ -724,9 +724,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(android.graphics.drawable.Drawable)">setPlaceholderImage</a></span>(Drawable drawable)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(int)">setPlaceholderImage</a></span>(int resourceId)
         
-        <div class="jd-descrdiv">Sets a new placeholder drawable.</div>
+        <div class="jd-descrdiv">Sets a new placeholder drawable using the supplied resource ID.</div>
   
   </td></tr>
 
@@ -742,9 +742,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(int)">setPlaceholderImage</a></span>(int resourceId)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(android.graphics.drawable.Drawable)">setPlaceholderImage</a></span>(Drawable drawable)
         
-        <div class="jd-descrdiv">Sets a new placeholder drawable using the supplied resource ID.</div>
+        <div class="jd-descrdiv">Sets a new placeholder drawable.</div>
   
   </td></tr>
 
@@ -993,7 +993,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1009,7 +1009,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1025,7 +1025,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1663,40 +1663,6 @@ From interface
 </div>
 
 
-<a id="setPlaceholderImage(android.graphics.drawable.Drawable)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setPlaceholderImage</span>
-      <span class="normal">(Drawable drawable)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable.
-
- <p>The placeholder scale type will not be changed.
-</p></div>
-
-    </div>
-</div>
-
-
 <a id="setPlaceholderImage(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1735,6 +1701,40 @@ From interface
         </tr>
       </table>
   </div>
+
+    </div>
+</div>
+
+
+<a id="setPlaceholderImage(android.graphics.drawable.Drawable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setPlaceholderImage</span>
+      <span class="normal">(Drawable drawable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable.
+
+ <p>The placeholder scale type will not be changed.
+</p></div>
 
     </div>
 </div>
