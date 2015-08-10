@@ -9,7 +9,7 @@ next: concepts.html
 
 If you just want to download an image and display it, showing a placeholder until it comes, use a [SimpleDraweeView](../javadoc/reference/com/facebook/drawee/view/SimpleDraweeView.html). 
 
-For images from the network, you will need to to request Internet permission from your users. Add this line to your ```AndroidManifest.xml``` file:
+For images from the network, you will need to request Internet permission from your users. Add this line to your ```AndroidManifest.xml``` file:
 
 ```xml
   <uses-permission android:name="android.permission.INTERNET"/>
