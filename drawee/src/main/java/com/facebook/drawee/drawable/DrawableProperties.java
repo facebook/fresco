@@ -10,43 +10,61 @@
 package com.facebook.drawee.drawable;
 
 import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 
+/**
+ * Set of properties for drawable. There are no default values and only gets applied if were set
+ * explicitly.
+ */
 public class DrawableProperties {
 
-  private int mAlpha = 255;
-  private ColorFilter mColorFilter = null;
-  private boolean mDither = true;
-  private boolean mFilterBitmap = true;
-
-  public int getAlpha() {
-    return mAlpha;
-  }
+  private final Property<Integer> mAlphaProperty = new Property<>();
+  private final Property<ColorFilter> mColorFilterProperty = new Property<>();
+  private final Property<Boolean> mDitherProperty = new Property<>();
+  private final Property<Boolean> mFilterBitmapProperty = new Property<>();
 
   public void setAlpha(int alpha) {
-    mAlpha = alpha;
-  }
-
-  public ColorFilter getColorFilter() {
-    return mColorFilter;
+    mAlphaProperty.setValue(alpha);
   }
 
   public void setColorFilter(ColorFilter colorFilter) {
-    mColorFilter = colorFilter;
-  }
-
-  public boolean isDither() {
-    return mDither;
+    mColorFilterProperty.setValue(colorFilter);
   }
 
   public void setDither(boolean dither) {
-    mDither = dither;
-  }
-
-  public boolean isFilterBitmap() {
-    return mFilterBitmap;
+    mDitherProperty.setValue(dither);
   }
 
   public void setFilterBitmap(boolean filterBitmap) {
-    mFilterBitmap = filterBitmap;
+    mFilterBitmapProperty.setValue(filterBitmap);
+  }
+
+  public void applyTo(Drawable drawable) {
+    if (drawable == null) {
+      return;
+    }
+    if (mAlphaProperty.mIsSet) {
+      drawable.setAlpha(mAlphaProperty.mValue);
+    }
+    if (mColorFilterProperty.mIsSet) {
+      drawable.setColorFilter(mColorFilterProperty.mValue);
+    }
+    if (mDitherProperty.mIsSet) {
+      drawable.setDither(mDitherProperty.mValue);
+    }
+    if (mFilterBitmapProperty.mIsSet) {
+      drawable.setFilterBitmap(mFilterBitmapProperty.mValue);
+    }
+  }
+
+  private static class Property<T> {
+
+    private T mValue;
+    private boolean mIsSet;
+
+    public void setValue(T value) {
+      mValue = value;
+      mIsSet = true;
+    }
   }
 }
