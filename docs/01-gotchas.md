@@ -15,7 +15,7 @@ If you want to scroll through a long list of images, you should use a [RecyclerV
 
 #### Don't downcast
 
-It is tempting to downcast objects returns by Fresco classes into actual objects that appear to give you greater control. At best, this will result in fragile code that gets broken next release; at worst, it will lead to very subtle bugs.
+It is tempting to downcast objects returned by Fresco classes into actual objects that appear to give you greater control. At best, this will result in fragile code that gets broken next release; at worst, it will lead to very subtle bugs.
 
 #### Don't use getTopLevelDrawable
 
