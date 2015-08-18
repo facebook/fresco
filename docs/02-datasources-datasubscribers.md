@@ -11,6 +11,47 @@ A [DataSource](../javadoc/reference/com/facebook/datasource/DataSource.html) is,
 
 After submitting an image request, the image pipeline returns a data source. To get a result out if it, you need to use a [DataSubscriber](../javadoc/reference/com/facebook/datasource/DataSubscriber.html).
 
+### To get encoded image...
+
+```java
+    DataSource<CloseableReference<PooledByteBuffer>> dataSource =
+        mImagePipeline.fetchEncodedImage(imageRequest, CALLER_CONTEXT);
+
+    DataSubscriber<CloseableReference<PooledByteBuffer>> dataSubscriber =
+        new BaseDataSubscriber<CloseableReference<PooledByteBuffer>>() {
+          @Override
+          protected void onNewResultImpl(
+              DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
+            if (!dataSource.isFinished()) {
+              return;
+            }
+            CloseableReference<PooledByteBuffer> buffRef = dataSource.getResult();
+            if (buffRef != null) {
+              PooledByteBufferInputStream is = new PooledByteBufferInputStream(buffRef.get());
+              try {
+                ImageFormat imageFormat = ImageFormatChecker.getImageFormat(is);
+                // TODO: write input stream to file
+                ...
+              } catch (...) {
+                ...
+              } finally {
+                Closeables.closeQuietly(is);
+                CloseableReference.closeSafely(buffRef);
+              }
+            }
+          }
+
+          @Override
+          protected void onFailureImpl(
+              DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
+            ...
+          }
+        };
+
+    dataSource.subscribe(dataSubscriber, executor);
+```
+
+
 ### I just want a bitmap...
 
 If your request to the pipeline is for a decoded image - an Android [Bitmap](http://developer.android.com/reference/android/graphics/Bitmap.html), you can take advantage of our easier-to-use [BaseBitmapDataSubscriber](../javadoc/reference/com/facebook/imagepipeline/datasource/BaseBitmapDataSubscriber):
