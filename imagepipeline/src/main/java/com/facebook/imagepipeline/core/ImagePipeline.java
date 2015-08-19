@@ -126,6 +126,32 @@ public class ImagePipeline {
   }
 
   /**
+   * Returns a DataSource supplier that will on get submit the request for execution and return a
+   * DataSource representing the pending results of the task.
+   *
+   * @param imageRequest the request to submit (what to execute).
+   * @return a DataSource representing pending results and completion of the request
+   */
+  public Supplier<DataSource<CloseableReference<PooledByteBuffer>>>
+      getEncodedImageDataSourceSupplier(
+          final ImageRequest imageRequest,
+          final Object callerContext) {
+    return new Supplier<DataSource<CloseableReference<PooledByteBuffer>>>() {
+      @Override
+      public DataSource<CloseableReference<PooledByteBuffer>> get() {
+        return fetchEncodedImage(imageRequest, callerContext);
+      }
+
+      @Override
+      public String toString() {
+        return Objects.toStringHelper(this)
+            .add("uri", imageRequest.getSourceUri())
+            .toString();
+      }
+    };
+  }
+
+  /**
    * Submits a request for bitmap cache lookup.
    *
    * @param imageRequest the request to submit
