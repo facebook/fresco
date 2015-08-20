@@ -59,6 +59,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 
 # Who Uses Fresco?
 
+* [Bakar](https://play.google.com/store/apps/details?id=com.bakar
 * [nice](https://play.google.com/store/apps/details?id=com.nice.main)
 * [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
 * [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android)
