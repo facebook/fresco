@@ -18,53 +18,46 @@ import android.graphics.drawable.Drawable;
  */
 public class DrawableProperties {
 
-  private final Property<Integer> mAlphaProperty = new Property<>();
-  private final Property<ColorFilter> mColorFilterProperty = new Property<>();
-  private final Property<Boolean> mDitherProperty = new Property<>();
-  private final Property<Boolean> mFilterBitmapProperty = new Property<>();
+  private static final int UNSET = -1;
+
+  private int mAlpha = UNSET;
+  private boolean mIsSetColorFilter = false;
+  private ColorFilter mColorFilter = null;
+  private int mDither = UNSET;
+  private int mFilterBitmap = UNSET;
 
   public void setAlpha(int alpha) {
-    mAlphaProperty.setValue(alpha);
+    mAlpha = alpha;
   }
 
   public void setColorFilter(ColorFilter colorFilter) {
-    mColorFilterProperty.setValue(colorFilter);
+    mColorFilter = colorFilter;
+    mIsSetColorFilter = true;
   }
 
   public void setDither(boolean dither) {
-    mDitherProperty.setValue(dither);
+    mDither = dither ? 1 : 0;
   }
 
   public void setFilterBitmap(boolean filterBitmap) {
-    mFilterBitmapProperty.setValue(filterBitmap);
+    mFilterBitmap = filterBitmap ? 1 : 0;
   }
 
   public void applyTo(Drawable drawable) {
     if (drawable == null) {
       return;
     }
-    if (mAlphaProperty.mIsSet) {
-      drawable.setAlpha(mAlphaProperty.mValue);
+    if (mAlpha != UNSET) {
+      drawable.setAlpha(mAlpha);
     }
-    if (mColorFilterProperty.mIsSet) {
-      drawable.setColorFilter(mColorFilterProperty.mValue);
+    if (mIsSetColorFilter) {
+      drawable.setColorFilter(mColorFilter);
     }
-    if (mDitherProperty.mIsSet) {
-      drawable.setDither(mDitherProperty.mValue);
+    if (mDither != UNSET) {
+      drawable.setDither(mDither != 0);
     }
-    if (mFilterBitmapProperty.mIsSet) {
-      drawable.setFilterBitmap(mFilterBitmapProperty.mValue);
-    }
-  }
-
-  private static class Property<T> {
-
-    private T mValue;
-    private boolean mIsSet;
-
-    public void setValue(T value) {
-      mValue = value;
-      mIsSet = true;
+    if (mFilterBitmap != UNSET) {
+      drawable.setFilterBitmap(mFilterBitmap != 0);
     }
   }
 }
