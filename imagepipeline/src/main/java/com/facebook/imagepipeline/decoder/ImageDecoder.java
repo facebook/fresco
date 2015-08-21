@@ -24,7 +24,6 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 
 import java.io.InputStream;
 

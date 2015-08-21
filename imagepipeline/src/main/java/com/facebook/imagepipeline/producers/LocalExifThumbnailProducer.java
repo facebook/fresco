@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.util.Pair;
 
