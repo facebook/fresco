@@ -14,6 +14,7 @@ import javax.annotation.concurrent.GuardedBy;
 import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Counts bitmaps - keeps track of both, count and total size in bytes.
@@ -44,7 +45,7 @@ public class BitmapCounter {
    * @return true if and only if bitmap is successfully included in the count
    */
   public synchronized boolean increase(Bitmap bitmap) {
-    final int bitmapSize = getBitmapSize(bitmap);
+    final int bitmapSize = BitmapUtil.getSizeInBytes(bitmap);
     if (mCount >= mMaxCount || mSize + bitmapSize > mMaxSize) {
       return false;
     }
@@ -60,10 +61,13 @@ public class BitmapCounter {
    * @param bitmap to be excluded from the count
    */
   public synchronized void decrease(Bitmap bitmap) {
-    final int bitmapSize = getBitmapSize(bitmap);
-    Preconditions.checkArgument(bitmapSize <= mSize);
-    Preconditions.checkArgument(mCount > 0);
-
+    final int bitmapSize = BitmapUtil.getSizeInBytes(bitmap);
+    Preconditions.checkArgument(mCount > 0, "No bitmaps registered.");
+    Preconditions.checkArgument(
+        bitmapSize <= mSize,
+        "Bitmap size bigger than the total registered size: %d, %d",
+        bitmapSize,
+        mSize);
     mSize -= bitmapSize;
     mCount--;
   }
@@ -80,10 +84,5 @@ public class BitmapCounter {
    */
   public synchronized long getSize() {
     return mSize;
-  }
-
-  public static int getBitmapSize(Bitmap bitmap) {
-    Preconditions.checkNotNull(bitmap);
-    return bitmap.getRowBytes() * bitmap.getHeight();
   }
 }

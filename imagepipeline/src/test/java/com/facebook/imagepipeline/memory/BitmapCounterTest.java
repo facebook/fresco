@@ -10,6 +10,7 @@
 package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 
 import org.junit.*;
 import org.junit.runner.*;
@@ -93,6 +94,12 @@ public class BitmapCounterTest {
     final Bitmap bitmap = mock(Bitmap.class);
     doReturn(1).when(bitmap).getHeight();
     doReturn(size).when(bitmap).getRowBytes();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      doReturn(size).when(bitmap).getByteCount();
+    }
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      doReturn(size).when(bitmap).getAllocationByteCount();
+    }
     return bitmap;
   }
 }
