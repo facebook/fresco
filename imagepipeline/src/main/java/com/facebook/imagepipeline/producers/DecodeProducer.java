@@ -143,6 +143,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+      if (isLast && !EncodedImage.isValid(newResult)) {
+        handleError(new NullPointerException("Encoded image is not valid."));
+        return;
+      }
       if (!updateDecodeJob(newResult, isLast)) {
         return;
       }
