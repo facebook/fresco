@@ -67,6 +67,7 @@ public abstract class AbstractDraweeControllerBuilder <
   private @Nullable ControllerListener<? super INFO> mControllerListener;
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
+  private boolean mRetainImageOnFailure;
   // old controller to reuse
   private @Nullable DraweeController mOldController;
 
@@ -186,6 +187,17 @@ public abstract class AbstractDraweeControllerBuilder <
     return mTapToRetryEnabled;
   }
 
+  /** Sets whether to display last available image in case of failure. */
+  public BUILDER setRetainImageOnFailure(boolean enabled) {
+    mRetainImageOnFailure = enabled;
+    return getThis();
+  }
+
+  /** Gets whether to retain image on failure. */
+  public boolean getRetainImageOnFailure() {
+    return mRetainImageOnFailure;
+  }
+
   /** Sets whether to auto play animations. */
   public BUILDER setAutoPlayAnimations(boolean enabled) {
     mAutoPlayAnimations = enabled;
@@ -250,6 +262,7 @@ public abstract class AbstractDraweeControllerBuilder <
   /** Builds a regular controller. */
   protected AbstractDraweeController buildController() {
     AbstractDraweeController controller = obtainController();
+    controller.setRetainImageOnFailure(getRetainImageOnFailure());
     maybeBuildAndSetRetryManager(controller);
     maybeAttachListeners(controller);
     return controller;
