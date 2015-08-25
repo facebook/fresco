@@ -29,7 +29,7 @@ public interface DataSource<T> {
   /**
    * @return true if the data source is closed, false otherwise
    */
-  public boolean isClosed();
+  boolean isClosed();
 
   /**
    * The most recent result of the asynchronous computation.

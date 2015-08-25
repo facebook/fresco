@@ -37,5 +37,5 @@ public interface DraweeHierarchy {
    * the same instance of its top level drawable.
    * @return top level drawable
    */
-  public Drawable getTopLevelDrawable();
+  Drawable getTopLevelDrawable();
 }
