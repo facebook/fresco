@@ -200,6 +200,10 @@ def print_stats(stats):
     failures = len(stats.failure_wait_times)
     total_count = successes + cancellations + failures
 
+    if total_count == 0:
+        print("Unable to read logs.")
+        return
+
     total_wait_time = (
         sum(stats.success_wait_times) +
         sum(stats.cancellation_wait_times) +
