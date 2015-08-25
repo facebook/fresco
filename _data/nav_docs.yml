@@ -72,3 +72,5 @@
   items:
   - id: building-from-source
     title: Building from Source
+  - id: sample-code
+    title: Sample code
