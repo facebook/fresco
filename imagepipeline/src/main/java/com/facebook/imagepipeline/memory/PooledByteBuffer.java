@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.memory;
 
 import java.io.Closeable;
-import java.io.InputStream;
 
 /**
  * A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the

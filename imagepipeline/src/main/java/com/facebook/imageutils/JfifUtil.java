@@ -13,17 +13,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.graphics.Rect;
-
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.logging.FLog;
 
 /**
  * Util for obtaining information from JPEG file.
  */
 public class JfifUtil {
-
-  private static final Class<?> TAG = JfifUtil.class;
 
   /**
    * Definitions of jpeg markers as well as overall description of jpeg file format can be found
