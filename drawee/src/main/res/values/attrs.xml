@@ -21,10 +21,11 @@
       <enum name="fitXY" value="0" />
       <enum name="fitStart" value="1" />
       <enum name="fitCenter" value="2" />
-      <enum name="center" value="3" />
-      <enum name="centerInside" value="4" />
-      <enum name="centerCrop" value="5" />
-      <enum name="focusCrop" value="6" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
     </attr>
 
     <!-- A drawable to be be used as a retry image. -->
@@ -35,10 +36,11 @@
       <enum name="fitXY" value="0" />
       <enum name="fitStart" value="1" />
       <enum name="fitCenter" value="2" />
-      <enum name="center" value="3" />
-      <enum name="centerInside" value="4" />
-      <enum name="centerCrop" value="5" />
-      <enum name="focusCrop" value="6" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
     </attr>
 
     <!-- A drawable to be be used as a failure image. -->
@@ -49,10 +51,11 @@
       <enum name="fitXY" value="0" />
       <enum name="fitStart" value="1" />
       <enum name="fitCenter" value="2" />
-      <enum name="center" value="3" />
-      <enum name="centerInside" value="4" />
-      <enum name="centerCrop" value="5" />
-      <enum name="focusCrop" value="6" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
     </attr>
 
     <!-- A drawable to be be used as a progress bar. -->
@@ -63,10 +66,11 @@
       <enum name="fitXY" value="0" />
       <enum name="fitStart" value="1" />
       <enum name="fitCenter" value="2" />
-      <enum name="center" value="3" />
-      <enum name="centerInside" value="4" />
-      <enum name="centerCrop" value="5" />
-      <enum name="focusCrop" value="6" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
     </attr>
     <!-- Progress bar Auto Rotate interval in milliseconds -->
     <attr name="progressBarAutoRotateInterval" format="integer"/>
@@ -77,10 +81,11 @@
       <enum name="fitXY" value="0" />
       <enum name="fitStart" value="1" />
       <enum name="fitCenter" value="2" />
-      <enum name="center" value="3" />
-      <enum name="centerInside" value="4" />
-      <enum name="centerCrop" value="5" />
-      <enum name="focusCrop" value="6" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
     </attr>
 
     <!-- A drawable or color to be used as a background. -->
