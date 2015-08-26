@@ -22,7 +22,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import robolectric2.shadows.ShadowMotionEvent;
 
-import static com.facebook.drawee.gestures.MotionEventTestUtils.obtainMotionEvent;
+import static com.facebook.samples.gestures.MotionEventTestUtils.obtainMotionEvent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
