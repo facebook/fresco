@@ -14,12 +14,11 @@ package com.facebook.samples.comparison.test;
 
 import android.graphics.Point;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.view.Display;
-import android.widget.GridView;
 import android.widget.Spinner;
-import android.support.v7.widget.RecyclerView;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.comparison.MainActivity;
@@ -201,7 +200,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
     final int itemCount = mImageList.getAdapter().getItemCount();
     final int step = 6;
     int currentItem = 0;
-    while (currentItem < itemCount) {
+    for (int i = 0; i < times && currentItem < itemCount; i++) {
       Thread.sleep(BEFORE_SCROLL_TIME_MS);
       final int finalCurrentItem = currentItem;
       getInstrumentation().runOnMainSync(
