@@ -19,6 +19,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.common.Priority;
@@ -57,8 +58,8 @@ public class OrchestratorTest {
   private ImagePipeline mImagePipeline;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  private DiskStorageCache mMainDiskStorageCache;
-  private DiskStorageCache mSmallImageDiskStorageCache;
+  private BufferedDiskCache mMainDiskStorageCache;
+  private BufferedDiskCache mSmallImageDiskStorageCache;
   private RequestListener mRequestListener1;
   private RequestListener mRequestListener2;
 
@@ -71,8 +72,8 @@ public class OrchestratorTest {
     mRequestListener2 = mock(RequestListener.class);
     mBitmapMemoryCache = mock(MemoryCache.class);
     mEncodedMemoryCache = mock(MemoryCache.class);
-    mMainDiskStorageCache = mock(DiskStorageCache.class);
-    mSmallImageDiskStorageCache = mock(DiskStorageCache.class);
+    mMainDiskStorageCache = mock(BufferedDiskCache.class);
+    mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
     mImagePipeline = new ImagePipeline(
         mProducerSequenceFactory,
         Sets.newHashSet(mRequestListener1, mRequestListener2),

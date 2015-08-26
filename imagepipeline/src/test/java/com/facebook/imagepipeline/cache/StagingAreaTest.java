@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class StagingAreaTest {
   private StagingArea mStagingArea;
   private CloseableReference<PooledByteBuffer> mCloseableReference;
-  private CloseableReference<PooledByteBuffer> mSecondCloseableReference;
+  private CloseableReference<PooledByteBuffer> mCloseableReference2;
   private EncodedImage mEncodedImage;
   private EncodedImage mSecondEncodedImage;
   private CacheKey mCacheKey;
@@ -35,9 +35,9 @@ public class StagingAreaTest {
   public void setUp() {
     mStagingArea = StagingArea.getInstance();
     mCloseableReference = CloseableReference.of(mock(PooledByteBuffer.class));
-    mSecondCloseableReference = CloseableReference.of(mock(PooledByteBuffer.class));
+    mCloseableReference2 = CloseableReference.of(mock(PooledByteBuffer.class));
     mEncodedImage = new EncodedImage(mCloseableReference);
-    mSecondEncodedImage = new EncodedImage(mSecondCloseableReference);
+    mSecondEncodedImage = new EncodedImage(mCloseableReference2);
     mCacheKey = new SimpleCacheKey("http://this.is/uri");
     mStagingArea.put(mCacheKey, mEncodedImage);
   }
@@ -62,7 +62,7 @@ public class StagingAreaTest {
         mSecondEncodedImage);
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
-        mSecondCloseableReference.getUnderlyingReferenceTestOnly(),
+        mCloseableReference2.getUnderlyingReferenceTestOnly(),
         mStagingArea.get(mCacheKey).getByteBufferRef().getUnderlyingReferenceTestOnly());
   }
 
@@ -87,6 +87,22 @@ public class StagingAreaTest {
   public void testRemoveWithBadRef() {
     assertFalse(mStagingArea.remove(mCacheKey, mSecondEncodedImage));
     assertTrue(CloseableReference.isValid(mCloseableReference));
-    assertTrue(CloseableReference.isValid(mSecondCloseableReference));
+    assertTrue(CloseableReference.isValid(mCloseableReference2));
+  }
+
+  @Test
+  public void testRemoveWithoutValueCheck() {
+    assertTrue(mStagingArea.remove(mCacheKey));
+    assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertFalse(mStagingArea.remove(mCacheKey));
+  }
+
+  @Test
+  public void testClearAll() {
+    mStagingArea.put(new SimpleCacheKey("second"), mSecondEncodedImage);
+    mStagingArea.clearAll();
+    assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertEquals(2, mCloseableReference2.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertFalse(mStagingArea.remove(mCacheKey));
   }
 }

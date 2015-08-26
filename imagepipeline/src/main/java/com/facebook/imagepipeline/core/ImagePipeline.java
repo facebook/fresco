@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -27,7 +26,9 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
+import com.facebook.datasource.SettableDataSource;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.Priority;
@@ -41,9 +42,12 @@ import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.listener.RequestListener;
 
+import bolts.Continuation;
 import com.android.internal.util.Predicate;
 
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+
+import bolts.Task;
 
 /**
  * The entry point for the image pipeline.
@@ -59,8 +63,8 @@ public class ImagePipeline {
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
-  private final DiskStorageCache mMainDiskStorageCache;
-  private final DiskStorageCache mSmallImageDiskStorageCache;
+  private final BufferedDiskCache mMainBufferedDiskCache;
+  private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
 
   private AtomicLong mIdCounter;
@@ -71,8 +75,8 @@ public class ImagePipeline {
       Supplier<Boolean> isPrefetchEnabledSupplier,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
-      DiskStorageCache mainDiskStorageCache,
-      DiskStorageCache smallImageDiskStorageCache,
+      BufferedDiskCache mainBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
@@ -80,8 +84,8 @@ public class ImagePipeline {
     mIsPrefetchEnabledSupplier = isPrefetchEnabledSupplier;
     mBitmapMemoryCache = bitmapMemoryCache;
     mEncodedMemoryCache = encodedMemoryCache;
-    mMainDiskStorageCache = mainDiskStorageCache;
-    mSmallImageDiskStorageCache = smallImageDiskStorageCache;
+    mMainBufferedDiskCache = mainBufferedDiskCache;
+    mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
   }
 
@@ -318,9 +322,7 @@ public class ImagePipeline {
    * @param uri The uri of the image to evict
    */
   public void evictFromDiskCache(final Uri uri) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(ImageRequest.fromUri(uri));
-    mMainDiskStorageCache.remove(cacheKey);
-    mSmallImageDiskStorageCache.remove(cacheKey);
+    evictFromDiskCache(ImageRequest.fromUri(uri));
   }
 
   /**
@@ -330,8 +332,8 @@ public class ImagePipeline {
    */
   public void evictFromDiskCache(final ImageRequest imageRequest) {
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
-    mMainDiskStorageCache.remove(cacheKey);
-    mSmallImageDiskStorageCache.remove(cacheKey);
+    mMainBufferedDiskCache.remove(cacheKey);
+    mSmallImageBufferedDiskCache.remove(cacheKey);
   }
 
   /**
@@ -365,8 +367,8 @@ public class ImagePipeline {
    * Clear disk caches
    */
   public void clearDiskCaches() {
-    mMainDiskStorageCache.clearAll();
-    mSmallImageDiskStorageCache.clearAll();
+    mMainBufferedDiskCache.clearAll();
+    mSmallImageBufferedDiskCache.clearAll();
   }
 
   /**
@@ -375,6 +377,67 @@ public class ImagePipeline {
   public void clearCaches() {
     clearMemoryCaches();
     clearDiskCaches();
+  }
+
+  /**
+   * Returns whether the image is stored in the bitmap memory cache.
+   *
+   * @param imageRequest the imageRequest for the image to be looked up.
+   * @return true if the image was found in the bitmap memory cache, false otherwise.
+   */
+  public boolean isInBitmapMemoryCache(final ImageRequest imageRequest) {
+    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest);
+    CloseableReference<CloseableImage> ref = mBitmapMemoryCache.get(cacheKey);
+    try {
+      return CloseableReference.isValid(ref);
+    } finally {
+      CloseableReference.closeSafely(ref);
+    }
+  }
+
+  /**
+   * Returns whether the image is stored in the disk cache.
+   *
+   * <p>If you have supplied your own cache key factory when configuring the pipeline, this method
+   * may not work correctly. It will only work if the custom factory builds the cache key entirely
+   * from the URI. If that is not the case, use {@link #isInDiskCache(ImageRequest)}.
+   *
+   * @param uri the uri for the image to be looked up.
+   * @return true if the image was found in the disk cache, false otherwise.
+   */
+  public DataSource<Boolean> isInDiskCache(final Uri uri) {
+    return isInDiskCache(ImageRequest.fromUri(uri));
+  }
+
+  /**
+   * Returns whether the image is stored in the disk cache.
+   *
+   * @param imageRequest the imageRequest for the image to be looked up.
+   * @return true if the image was found in the disk cache, false otherwise.
+   */
+  public DataSource<Boolean> isInDiskCache(final ImageRequest imageRequest) {
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final SettableDataSource<Boolean> dataSource = SettableDataSource.create();
+    mMainBufferedDiskCache.contains(cacheKey)
+        .continueWithTask(
+            new Continuation<Boolean, Task<Boolean>>() {
+              @Override
+              public Task<Boolean> then(Task<Boolean> task) throws Exception {
+                if (!task.isCancelled() && !task.isFaulted() && task.getResult()) {
+                  return Task.forResult(true);
+                }
+                return mSmallImageBufferedDiskCache.contains(cacheKey);
+              }
+            })
+        .continueWith(
+            new Continuation<Boolean, Void>() {
+              @Override
+              public Void then(Task<Boolean> task) throws Exception {
+                dataSource.setResult(!task.isCancelled() && !task.isFaulted() && task.getResult());
+                return null;
+              }
+            });
+    return dataSource;
   }
 
   private <T> DataSource<CloseableReference<T>> submitFetchRequest(

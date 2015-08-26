@@ -233,8 +233,8 @@ public class ImagePipelineFactory {
               mConfig.getIsPrefetchEnabledSupplier(),
               getBitmapMemoryCache(),
               getEncodedMemoryCache(),
-              getMainDiskStorageCache(),
-              getSmallImageDiskStorageCache(),
+              getMainBufferedDiskCache(),
+              getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory());
     }
     return mImagePipeline;
