@@ -12,6 +12,8 @@
 
 package com.facebook.samples.comparison.test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -23,8 +25,6 @@ import android.widget.Spinner;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.comparison.MainActivity;
 import com.facebook.samples.comparison.R;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Instrumentation test that tests glide, picasso, uil and volley in the sample
@@ -197,21 +197,17 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
    * Scrolls the list view given number of times.
    */
   private void scrollMultipleTimes(int times) throws Exception {
-    final int itemCount = mImageList.getAdapter().getItemCount();
-    final int step = 6;
-    int currentItem = 0;
-    for (int i = 0; i < times && currentItem < itemCount; i++) {
+    final int height = getDisplayHeight();
+    for (int i = 0; i < times; i++) {
       Thread.sleep(BEFORE_SCROLL_TIME_MS);
-      final int finalCurrentItem = currentItem;
       getInstrumentation().runOnMainSync(
           new Runnable() {
             @Override
             public void run() {
-              mImageList.smoothScrollToPosition(finalCurrentItem);
+              mImageList.smoothScrollBy(0, height / 2);
             }
           });
       Thread.sleep(SCROLL_TIME_MS);
-      currentItem += step;
     }
   }
 
