@@ -38,4 +38,4 @@ The round app shows the same image scaled in several different ways, with and wi
 
 ### The uri app
 
-The uri app loads an image from an uri provided via TextView. Handy to test whether Fresco is able to display particular image.
+The uri app loads an image from an uri provided via TextView. It's handy to test whether Fresco is able to display a particular image.
