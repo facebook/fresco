@@ -292,19 +292,10 @@ public class ImagePipeline {
    * @param uri The uri of the image to evict
    */
   public void evictFromMemoryCache(final Uri uri) {
-    final String cacheKeySourceString = mCacheKeyFactory.getCacheKeySourceUri(uri).toString();
-    Predicate<CacheKey> bitmapCachePredicate =
-        new Predicate<CacheKey>() {
-          @Override
-          public boolean apply(CacheKey key) {
-            if (key instanceof BitmapMemoryCacheKey) {
-              return ((BitmapMemoryCacheKey) key).getSourceUriString().equals(cacheKeySourceString);
-            }
-            return false;
-          }
-        };
+    Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
     mBitmapMemoryCache.removeAll(bitmapCachePredicate);
 
+    final String cacheKeySourceString = mCacheKeyFactory.getCacheKeySourceUri(uri).toString();
     Predicate<CacheKey> encodedCachePredicate =
         new Predicate<CacheKey>() {
           @Override
@@ -378,6 +369,17 @@ public class ImagePipeline {
     clearMemoryCaches();
     clearDiskCaches();
   }
+
+  /**
+   * Returns whether the image is stored in the bitmap memory cache.
+   *
+   * @param uri the uri for the image to be looked up.
+   * @return true if the image was found in the bitmap memory cache, false otherwise
+   */
+  public boolean isInBitmapMemoryCache(final Uri uri) {
+    Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
+    return mBitmapMemoryCache.contains(bitmapCachePredicate);
+ }
 
   /**
    * Returns whether the image is stored in the bitmap memory cache.
@@ -495,5 +497,18 @@ public class ImagePipeline {
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
+  }
+
+  private Predicate<CacheKey> predicateForUri(Uri uri) {
+    final String cacheKeySourceString = mCacheKeyFactory.getCacheKeySourceUri(uri).toString();
+    return new Predicate<CacheKey>() {
+          @Override
+          public boolean apply(CacheKey key) {
+            if (key instanceof BitmapMemoryCacheKey) {
+              return ((BitmapMemoryCacheKey) key).getSourceUriString().equals(cacheKeySourceString);
+            }
+            return false;
+          }
+        };
   }
 }

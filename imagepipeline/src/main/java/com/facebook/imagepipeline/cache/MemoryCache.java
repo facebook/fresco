@@ -53,5 +53,13 @@ public interface MemoryCache<K, V> {
    * @param predicate returns true if an item with the given key should be removed
    * @return number of the items removed from the cache
    */
-  int removeAll(Predicate<K> predicate);
+  public int removeAll(Predicate<K> predicate);
+
+  /**
+   * Find if any of the items from the cache whose keys match the specified predicate.
+   *
+   * @param predicate returns true if an item with the given key matches
+   * @return true if the predicate was found in the cache, false otherwise
+   */
+  public boolean contains(Predicate<K> predicate);
 }

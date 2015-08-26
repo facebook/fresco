@@ -217,4 +217,25 @@ public class BufferedDiskCacheTest {
         mEncodedImage.getUnderlyingReferenceTestOnly(),
         encodedImage.getUnderlyingReferenceTestOnly());
   }
+
+  @Test
+  public void testPins2() {
+    Task<Boolean> readTask = mBufferedDiskCache.contains(mCacheKey);
+    assertFalse(readTask.isCompleted());
+    when(mStagingArea.get(mCacheKey)).thenReturn(mEncodedImage);
+    mReadPriorityExecutor.runUntilIdle();
+    verify(mFileCache, never()).getResource(eq(mCacheKey));
+  }
+
+  @Test
+  public void testUnpins2() {
+    mBufferedDiskCache.remove(mCacheKey);
+    verify(mStagingArea).remove(mCacheKey);
+  }
+
+  @Test
+  public void testUpins3() {
+    mBufferedDiskCache.clearAll();
+    verify(mStagingArea).clearAll();
+  }
 }

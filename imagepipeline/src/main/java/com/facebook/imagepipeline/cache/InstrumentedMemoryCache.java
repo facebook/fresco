@@ -44,4 +44,9 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   public int removeAll(Predicate<K> predicate) {
     return mDelegate.removeAll(predicate);
   }
+
+  @Override
+  public boolean contains(Predicate<K> predicate) {
+    return mDelegate.contains(predicate);
+  }
 }
