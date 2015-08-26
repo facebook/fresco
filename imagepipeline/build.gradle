@@ -192,8 +192,9 @@ android {
         ['memchunk', []],
         ['webpimage', [copyLibwebp]]]
 
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
     sourceSets {
         main {
             jni.srcDirs = []
