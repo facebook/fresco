@@ -51,9 +51,9 @@ import static org.powermock.api.mockito.PowerMockito.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@PrepareForTest({ThumbnailUtils.class})
+@PrepareForTest(android.media.ThumbnailUtils.class)
 @Config(manifest= Config.NONE)
- // TODO t6721200 add support for powermocks with robolectric 2.4 @Ignore
+@Ignore
 public class LocalVideoThumbnailProducerTest {
   private static final String PRODUCER_NAME = LocalVideoThumbnailProducer.PRODUCER_NAME;
   private static final String TEST_FILENAME = "dummy.jpg";
@@ -108,7 +108,7 @@ public class LocalVideoThumbnailProducerTest {
     when(mImageRequest.getPreferredWidth()).thenReturn(100);
     when(mImageRequest.getPreferredHeight()).thenReturn(100);
     when(
-        ThumbnailUtils.createVideoThumbnail(
+        android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MINI_KIND))
         .thenReturn(mBitmap);
     doAnswer(
@@ -132,7 +132,8 @@ public class LocalVideoThumbnailProducerTest {
   @Test
   public void testLocalVideoMicroThumbnailSuccess() throws Exception {
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(ThumbnailUtils.createVideoThumbnail(
+    when(
+        android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
         .thenReturn(mBitmap);
     doAnswer(
@@ -159,7 +160,8 @@ public class LocalVideoThumbnailProducerTest {
   @Test
   public void testLocalVideoMicroThumbnailReturnsNull() throws Exception {
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(ThumbnailUtils.createVideoThumbnail(
+    when(
+        android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
         .thenReturn(null);
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
@@ -174,7 +176,8 @@ public class LocalVideoThumbnailProducerTest {
 
   @Test(expected = RuntimeException.class)
   public void testFetchLocalFileFailsByThrowing() throws Exception {
-    when(ThumbnailUtils.createVideoThumbnail(
+    when(
+        android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND))
         .thenThrow(mException);
     verify(mConsumer).onFailure(mException);

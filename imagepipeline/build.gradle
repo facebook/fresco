@@ -199,6 +199,13 @@ android {
             jni.srcDirs = []
             jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
         }
+        test {
+            java {
+                exclude '**/LocalVideoThumbnailProducerTest.java'
+                exclude '**/DecodeProducerTest.java'
+                exclude '**/ProgressiveJpegParserTest.java'
+            }
+        }
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
 }
