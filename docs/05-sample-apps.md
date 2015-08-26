@@ -35,3 +35,7 @@ The demo app shows the wide variety of images Fresco supports - baseline and pro
 ### The round app
 
 The round app shows the same image scaled in several different ways, with and without a circle applied.
+
+### The uri app
+
+The uri app loads an image from an uri provided via TextView. Handy to test whether Fresco is able to display particular image.
