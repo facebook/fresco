@@ -62,6 +62,8 @@ DataSubscriber<Boolean> subscriber = new BaseDataSubscriber<Boolean>() {
 inDiskCacheSource.subscribe(subscriber, executor);
 ```
 
+This assumes you are using the default cache key factory. If you have configured a custom one, you may need to use the methods that take an `ImageRequest` argument instead.
+
 ### Evicting from cache
 
 [ImagePipeline](../javadoc/reference/com/facebook/imagepipeline/core/ImagePipeline.html) also has methods to evict individual entries from cache:
@@ -76,7 +78,7 @@ imagePipeline.evictFromDiskCache(uri);
 imagePipeline.evictFromCache(uri);
 ```
 
-`evictFromDiskCache(Uri)` assumes you are using the default cache key factory. If you have configured a custom one, you may need to use `evictFromDiskCache(ImageRequest)` instead.
+As above, `evictFromDiskCache(Uri)` assumes you are using the default cache key factory. Users with a custom factory should use `evictFromDiskCache(ImageRequest)` instead.
 
 ### Clearing the cache
 
