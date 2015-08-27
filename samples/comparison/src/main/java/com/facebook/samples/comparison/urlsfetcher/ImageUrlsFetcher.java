@@ -71,7 +71,6 @@ public class ImageUrlsFetcher {
 
   private static List<String> getImageUrls(ImageUrlsRequest request) {
     List<String> urls = new ArrayList<String>();
-    urls.add("http://pooyak.com/p/progjpeg/jpegload.cgi?o=3");
     try {
       String rawJson = downloadContentAsString(request.getEndpointUrl());
       if (rawJson == null) {
