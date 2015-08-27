@@ -37,6 +37,7 @@ import android.widget.TextView;
 
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import com.facebook.samples.comparison.adapters.AQueryAdapter;
 import com.facebook.samples.comparison.adapters.FrescoAdapter;
 import com.facebook.samples.comparison.adapters.GlideAdapter;
 import com.facebook.samples.comparison.adapters.ImageListAdapter;
@@ -66,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
   public static final int PICASSO_INDEX = 4;
   public static final int UIL_INDEX = 5;
   public static final int VOLLEY_INDEX = 6;
+  public static final int AQUERY_INDEX = 7;
 
   // These need to be in sync with {@link R.array.image_sources}
   public static final int NETWORK_INDEX = 1;
@@ -267,6 +269,9 @@ public class MainActivity extends ActionBarActivity {
         mCurrentAdapter = mUseDrawee ?
             new VolleyDraweeAdapter(this, mPerfListener) :
             new VolleyAdapter(this, mPerfListener);
+        break;
+      case AQUERY_INDEX:
+        mCurrentAdapter = new AQueryAdapter(this, mPerfListener);
         break;
       default:
         mCurrentAdapter = null;

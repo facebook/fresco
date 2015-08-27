@@ -52,7 +52,9 @@ public class InstrumentedImageView extends ImageView implements Instrumented {
 
   @Override
   public void setImageDrawable(final Drawable drawable) {
-    Preconditions.checkNotNull(drawable);
+    if (drawable == null) {// AQuery preset drawable to be null if not found in cache
+      return;
+    }
     if (drawable == Drawables.sPlaceholderDrawable) {
       // ignore
     } else if (drawable == Drawables.sErrorDrawable) {
