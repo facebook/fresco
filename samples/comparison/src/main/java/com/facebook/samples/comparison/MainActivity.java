@@ -13,7 +13,9 @@
 package com.facebook.samples.comparison;
 
 import android.database.Cursor;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
@@ -22,6 +24,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -410,5 +413,19 @@ public class MainActivity extends ActionBarActivity {
 
   private static void appendValue(StringBuilder sb, String prefix, String value, String suffix) {
     sb.append(prefix).append(value).append(suffix);
+  }
+
+  /**
+   * Determines display's height.
+   */
+  public int getDisplayHeight() {
+    Display display = getWindowManager().getDefaultDisplay();
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+      return display.getHeight();
+    } else {
+      final Point size = new Point();
+      display.getSize(size);
+      return size.y;
+    }
   }
 }
