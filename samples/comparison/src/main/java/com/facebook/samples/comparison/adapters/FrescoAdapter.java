@@ -45,7 +45,7 @@ public class FrescoAdapter extends ImageListAdapter {
         .setPlaceholderImage(Drawables.sPlaceholderDrawable)
         .setFailureImage(Drawables.sErrorDrawable)
         .setProgressBarImage(new ProgressBarDrawable())
-        .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
+        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
         .build();
     final InstrumentedDraweeView instrView = new InstrumentedDraweeView(getContext(), gdh);
 

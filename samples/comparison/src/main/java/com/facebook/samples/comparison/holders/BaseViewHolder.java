@@ -13,12 +13,12 @@
 package com.facebook.samples.comparison.holders;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
+import com.facebook.samples.comparison.MainActivity;
 import com.facebook.samples.comparison.instrumentation.Instrumented;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
@@ -72,9 +72,6 @@ public abstract class BaseViewHolder<V extends View & Instrumented>
   }
 
   private int calcDesiredSize(int parentWidth, int parentHeight) {
-    int orientation = mContext.getResources().getConfiguration().orientation;
-    int desiredSize = (orientation == Configuration.ORIENTATION_LANDSCAPE) ?
-        parentHeight / 2 : parentHeight / 3;
-    return Math.min(desiredSize, parentWidth);
+    return MainActivity.calcDesiredSize(mContext, parentWidth, parentHeight);
   }
 }

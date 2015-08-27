@@ -16,10 +16,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
+import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
@@ -36,17 +36,19 @@ public class FrescoHolder extends BaseViewHolder<InstrumentedDraweeView> {
   }
 
   @Override
-  protected void onBind(String uri) {
-    ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
-            .setResizeOptions(
-                new ResizeOptions(
-                    mImageView.getLayoutParams().width,
-                    mImageView.getLayoutParams().height))
-            .setProgressiveRenderingEnabled(true)
-            .build();
+  protected void onBind(String uriString) {
+    Uri uri = Uri.parse(uriString);
+    ImageRequestBuilder imageRequestBuilder =
+        ImageRequestBuilder.newBuilderWithSource(uri);
+    if (UriUtil.isNetworkUri(uri)) {
+      imageRequestBuilder.setProgressiveRenderingEnabled(true);
+    } else {
+      imageRequestBuilder.setResizeOptions(new ResizeOptions(
+          mImageView.getLayoutParams().width,
+          mImageView.getLayoutParams().height));
+    }
     DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(imageRequest)
+        .setImageRequest(imageRequestBuilder.build())
         .setOldController(mImageView.getController())
         .setControllerListener(mImageView.getListener())
         .setAutoPlayAnimations(true)
