@@ -35,9 +35,36 @@ Like the encoded memory cache, this cache stores compressed image, which must be
 
 Unlike the others, this cache is not cleared when your app is backgrounded, or if it exits, or even if the device is turned off. The user can, of course, always clear it from Android's Settings menu.
 
+### Checking to see if an item is in cache
+
+You can use the methods in [ImagePipeline](../javadoc/reference/com/facebook/imagepipeline/core/ImagePipeline.html) to see if an item is in cache. The check for the memory cache is synchronous:
+
+```java
+ImagePipeline imagePipeline = Fresco.getImagePipeline();
+Uri uri;
+boolean inMemoryCache = imagePipeline.isInBitmapMemoryCache(uri);
+```
+
+The check for the disk cache is asynchronous, since the disk check must be done on another thread. You can call it like this:
+
+```java
+DataSource<Boolean> inDiskCacheSource = imagePipeline.isInDiskCache(uri);
+DataSubscriber<Boolean> subscriber = new BaseDataSubscriber<Boolean>() {
+    @Override
+    protected void onNewResultImpl(DataSource<Boolean> dataSource) {
+      if (!dataSource.isFinished()) {
+        return;
+      }
+      boolean isInCache = dataSource.getResult();
+      // your code here
+    }
+  };
+inDiskCacheSource.subscribe(subscriber, executor);
+```
+
 ### Evicting from cache
 
-You can use the methods in [ImagePipeline](../javadoc/reference/com/facebook/imagepipeline/core/ImagePipeline.html) to evict individual entries from cache:
+[ImagePipeline](../javadoc/reference/com/facebook/imagepipeline/core/ImagePipeline.html) also has methods to evict individual entries from cache:
 
 ```java
 ImagePipeline imagePipeline = Fresco.getImagePipeline();
