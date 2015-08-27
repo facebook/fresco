@@ -289,8 +289,8 @@ def main():
 
     install_apks(args.cpu)
 
-    for scenario_name in scenarios:
-        for source_name in sources:
+    for source_name in sources:
+        for scenario_name in scenarios:
             if valid_scenario(scenario_name, source_name):
                 print()
                 print('Testing {} {}'.format(scenario_name, source_name))
