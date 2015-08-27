@@ -805,7 +805,7 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(REQUEST[])">getFirstAvailableDataSourceSupplier</a></span>(REQUEST[] imageRequests)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(REQUEST[], boolean)">getFirstAvailableDataSourceSupplier</a></span>(REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst)
         
   </td></tr>
 
@@ -893,6 +893,24 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getRetainImageOnFailure()">getRetainImageOnFailure</a></span>()
+        
+        <div class="jd-descrdiv">Gets whether to retain image on failure.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getTapToRetryEnabled()">getTapToRetryEnabled</a></span>()
         
         <div class="jd-descrdiv">Gets whether tap-to-retry is enabled.</div>
@@ -901,7 +919,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -919,7 +937,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -937,7 +955,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -955,7 +973,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -973,7 +991,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -991,7 +1009,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1009,7 +1027,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1027,7 +1045,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1045,7 +1063,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1063,7 +1081,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1081,7 +1099,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1099,7 +1117,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1110,6 +1128,24 @@ From class
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setFirstAvailableImageRequests(REQUEST[])">setFirstAvailableImageRequests</a></span>(REQUEST[] firstAvailableImageRequests)
+        
+        <div class="jd-descrdiv">Sets the array of first-available image requests that will be probed in order.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            BUILDER
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setFirstAvailableImageRequests(REQUEST[], boolean)">setFirstAvailableImageRequests</a></span>(REQUEST[] firstAvailableImageRequests, boolean tryCacheOnlyFirst)
         
         <div class="jd-descrdiv">Sets the array of first-available image requests that will be probed in order.</div>
   
@@ -1181,6 +1217,24 @@ From class
             BUILDER
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setRetainImageOnFailure(boolean)">setRetainImageOnFailure</a></span>(boolean enabled)
+        
+        <div class="jd-descrdiv">Sets whether to display last available image in case of failure.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            BUILDER
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setTapToRetryEnabled(boolean)">setTapToRetryEnabled</a></span>(boolean enabled)
         
         <div class="jd-descrdiv">Sets whether tap-to-retry is enabled.</div>
@@ -1189,7 +1243,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             

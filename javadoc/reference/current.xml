@@ -4566,6 +4566,19 @@
 <parameter name="hierarchy" type="com.facebook.drawee.interfaces.DraweeHierarchy">
 </parameter>
 </method>
+<method name="setRetainImageOnFailure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="enabled" type="boolean">
+</parameter>
+</method>
 <method name="setRetryManager"
  return="void"
  abstract="false"
@@ -4769,6 +4782,8 @@
 >
 <parameter name="imageRequests" type="REQUEST[]">
 </parameter>
+<parameter name="tryBitmapCacheOnlyFirst" type="boolean">
+</parameter>
 </method>
 <method name="getFirstAvailableImageRequests"
  return="REQUEST[]"
@@ -4805,6 +4820,17 @@
 </method>
 <method name="getOldController"
  return="com.facebook.drawee.interfaces.DraweeController"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getRetainImageOnFailure"
+ return="boolean"
  abstract="false"
  native="false"
  synchronized="false"
@@ -4973,6 +4999,21 @@
 <parameter name="firstAvailableImageRequests" type="REQUEST[]">
 </parameter>
 </method>
+<method name="setFirstAvailableImageRequests"
+ return="BUILDER"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="firstAvailableImageRequests" type="REQUEST[]">
+</parameter>
+<parameter name="tryCacheOnlyFirst" type="boolean">
+</parameter>
+</method>
 <method name="setImageRequest"
  return="BUILDER"
  abstract="false"
@@ -5010,6 +5051,19 @@
  visibility="public"
 >
 <parameter name="oldController" type="com.facebook.drawee.interfaces.DraweeController">
+</parameter>
+</method>
+<method name="setRetainImageOnFailure"
+ return="BUILDER"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="enabled" type="boolean">
 </parameter>
 </method>
 <method name="setTapToRetryEnabled"
@@ -5669,19 +5723,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<method name="fromString"
- return="com.facebook.drawee.drawable.ScalingUtils.ScaleType"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="value" type="java.lang.String">
-</parameter>
-</method>
 <method name="valueOf"
  return="com.facebook.drawee.drawable.ScalingUtils.ScaleType"
  abstract="false"
@@ -9042,6 +9083,19 @@
  visibility="public"
 >
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="predicate" type="com.android.internal.util.Predicate&lt;K&gt;">
+</parameter>
+</method>
 <method name="get"
  return="com.facebook.common.references.CloseableReference&lt;V&gt;"
  abstract="false"
@@ -9438,6 +9492,19 @@
 <parameter name="value" type="com.facebook.common.references.CloseableReference&lt;V&gt;">
 </parameter>
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="predicate" type="com.android.internal.util.Predicate&lt;K&gt;">
+</parameter>
+</method>
 <method name="get"
  return="com.facebook.common.references.CloseableReference&lt;V&gt;"
  abstract="true"
@@ -9718,9 +9785,9 @@
 </parameter>
 <parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
 </parameter>
-<parameter name="mainDiskStorageCache" type="com.facebook.cache.disk.DiskStorageCache">
+<parameter name="mainBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
-<parameter name="smallImageDiskStorageCache" type="com.facebook.cache.disk.DiskStorageCache">
+<parameter name="smallImageBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
@@ -9870,6 +9937,73 @@
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
 <parameter name="bitmapCacheOnly" type="boolean">
+</parameter>
+</method>
+<method name="getEncodedImageDataSourceSupplier"
+ return="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="isInBitmapMemoryCache"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+</method>
+<method name="isInBitmapMemoryCache"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+</method>
+<method name="isInDiskCache"
+ return="com.facebook.datasource.DataSource&lt;java.lang.Boolean&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+</method>
+<method name="isInDiskCache"
+ return="com.facebook.datasource.DataSource&lt;java.lang.Boolean&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
 </parameter>
 </method>
 <method name="prefetchToBitmapCache"

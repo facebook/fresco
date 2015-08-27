@@ -683,6 +683,24 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getRetainImageOnFailure()">getRetainImageOnFailure</a></span>()
+        
+        <div class="jd-descrdiv">Gets whether to retain image on failure.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getTapToRetryEnabled()">getTapToRetryEnabled</a></span>()
         
         <div class="jd-descrdiv">Gets whether tap-to-retry is enabled.</div>
@@ -691,7 +709,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -709,7 +727,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -727,7 +745,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -745,7 +763,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -763,7 +781,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -781,7 +799,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -792,6 +810,24 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setFirstAvailableImageRequests(REQUEST[])">setFirstAvailableImageRequests</a></span>(REQUEST[] firstAvailableImageRequests)
+        
+        <div class="jd-descrdiv">Sets the array of first-available image requests that will be probed in order.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            BUILDER
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setFirstAvailableImageRequests(REQUEST[], boolean)">setFirstAvailableImageRequests</a></span>(REQUEST[] firstAvailableImageRequests, boolean tryCacheOnlyFirst)
         
         <div class="jd-descrdiv">Sets the array of first-available image requests that will be probed in order.</div>
   
@@ -854,6 +890,24 @@ Summary:
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            BUILDER
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setRetainImageOnFailure(boolean)">setRetainImageOnFailure</a></span>(boolean enabled)
+        
+        <div class="jd-descrdiv">Sets whether to display last available image in case of failure.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -998,7 +1052,7 @@ Summary:
             <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(REQUEST[])">getFirstAvailableDataSourceSupplier</a></span>(REQUEST[] imageRequests)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(REQUEST[], boolean)">getFirstAvailableDataSourceSupplier</a></span>(REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst)
         
   </td></tr>
 
@@ -1805,6 +1859,37 @@ From interface
 </div>
 
 
+<a id="getRetainImageOnFailure()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">getRetainImageOnFailure</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets whether to retain image on failure. </p></div>
+
+    </div>
+</div>
+
+
 <a id="getTapToRetryEnabled()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2028,6 +2113,50 @@ From interface
 </div>
 
 
+<a id="setFirstAvailableImageRequests(REQUEST[], boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        BUILDER
+      </span>
+      <span class="sympad">setFirstAvailableImageRequests</span>
+      <span class="normal">(REQUEST[] firstAvailableImageRequests, boolean tryCacheOnlyFirst)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the array of first-available image requests that will be probed in order.
+ <p> For performance reasons, the array is not deep-copied, but only stored by reference.
+ Please don't modify once submitted.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>tryCacheOnlyFirst</th>
+          <td>if set, bitmap cache only requests will be tried in order before
+    the supplied requests.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="setImageRequest(REQUEST)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2116,6 +2245,37 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the old controller to be reused if possible. </p></div>
+
+    </div>
+</div>
+
+
+<a id="setRetainImageOnFailure(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        BUILDER
+      </span>
+      <span class="sympad">setRetainImageOnFailure</span>
+      <span class="normal">(boolean enabled)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets whether to display last available image in case of failure. </p></div>
 
     </div>
 </div>
@@ -2356,7 +2516,7 @@ From interface
 </div>
 
 
-<a id="getFirstAvailableDataSourceSupplier(REQUEST[])"></a>
+<a id="getFirstAvailableDataSourceSupplier(REQUEST[], boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2369,7 +2529,7 @@ From interface
         <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
       </span>
       <span class="sympad">getFirstAvailableDataSourceSupplier</span>
-      <span class="normal">(REQUEST[] imageRequests)</span>
+      <span class="normal">(REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst)</span>
     </h4>
       <div class="api-level">
         <div>

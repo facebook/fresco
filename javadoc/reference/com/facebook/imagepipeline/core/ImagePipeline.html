@@ -440,7 +440,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#ImagePipeline(com.facebook.imagepipeline.core.ProducerSequenceFactory, java.util.Set<com.facebook.imagepipeline.listener.RequestListener>, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.cache.disk.DiskStorageCache, com.facebook.cache.disk.DiskStorageCache, com.facebook.imagepipeline.cache.CacheKeyFactory)">ImagePipeline</a></span>(ProducerSequenceFactory producerSequenceFactory, Set&lt;<a href="../../../../com/facebook/imagepipeline/listener/RequestListener.html">RequestListener</a>&gt; requestListeners, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; isPrefetchEnabledSupplier, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a> mainDiskStorageCache, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a> smallImageDiskStorageCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#ImagePipeline(com.facebook.imagepipeline.core.ProducerSequenceFactory, java.util.Set<com.facebook.imagepipeline.listener.RequestListener>, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory)">ImagePipeline</a></span>(ProducerSequenceFactory producerSequenceFactory, Set&lt;<a href="../../../../com/facebook/imagepipeline/listener/RequestListener.html">RequestListener</a>&gt; requestListeners, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; isPrefetchEnabledSupplier, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, BufferedDiskCache mainBufferedDiskCache, BufferedDiskCache smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory)
         
   </td></tr>
 
@@ -545,10 +545,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(android.net.Uri)">evictFromDiskCache</a></span>(Uri uri)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)">evictFromDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
         
-        <div class="jd-descrdiv"><p>If you have supplied your own cache key factory when configuring the pipeline, this method
- may not work correctly.</div>
+        <div class="jd-descrdiv">Removes all images with the specified Uri from disk cache.</div>
   
   </td></tr>
 
@@ -564,9 +563,10 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)">evictFromDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(android.net.Uri)">evictFromDiskCache</a></span>(Uri uri)
         
-        <div class="jd-descrdiv">Removes all images with the specified Uri from disk cache.</div>
+        <div class="jd-descrdiv"><p>If you have supplied your own cache key factory when configuring the pipeline, this method
+ may not work correctly.</div>
   
   </td></tr>
 
@@ -672,6 +672,97 @@ Summary:
             
             
             
+            <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt;&gt;&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#getEncodedImageDataSourceSupplier(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getEncodedImageDataSourceSupplier</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext)
+        
+        <div class="jd-descrdiv">Returns a DataSource supplier that will on get submit the request for execution and return a
+ DataSource representing the pending results of the task.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInBitmapMemoryCache(android.net.Uri)">isInBitmapMemoryCache</a></span>(Uri uri)
+        
+        <div class="jd-descrdiv">Returns whether the image is stored in the bitmap memory cache.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInBitmapMemoryCache(com.facebook.imagepipeline.request.ImageRequest)">isInBitmapMemoryCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        
+        <div class="jd-descrdiv">Returns whether the image is stored in the bitmap memory cache.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(android.net.Uri)">isInDiskCache</a></span>(Uri uri)
+        
+        <div class="jd-descrdiv">Returns whether the image is stored in the disk cache.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)">isInDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        
+        <div class="jd-descrdiv">Returns whether the image is stored in the disk cache.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Void&gt;
         </td>
         <td class="jd-linkcol" width="100%">
@@ -683,7 +774,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -950,7 +1041,7 @@ From class
 
 
 
-<a id="ImagePipeline(com.facebook.imagepipeline.core.ProducerSequenceFactory, java.util.Set<com.facebook.imagepipeline.listener.RequestListener>, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.cache.disk.DiskStorageCache, com.facebook.cache.disk.DiskStorageCache, com.facebook.imagepipeline.cache.CacheKeyFactory)"></a>
+<a id="ImagePipeline(com.facebook.imagepipeline.core.ProducerSequenceFactory, java.util.Set<com.facebook.imagepipeline.listener.RequestListener>, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer>, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -963,7 +1054,7 @@ From class
         
       </span>
       <span class="sympad">ImagePipeline</span>
-      <span class="normal">(ProducerSequenceFactory producerSequenceFactory, Set&lt;<a href="../../../../com/facebook/imagepipeline/listener/RequestListener.html">RequestListener</a>&gt; requestListeners, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; isPrefetchEnabledSupplier, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a> mainDiskStorageCache, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a> smallImageDiskStorageCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory)</span>
+      <span class="normal">(ProducerSequenceFactory producerSequenceFactory, Set&lt;<a href="../../../../com/facebook/imagepipeline/listener/RequestListener.html">RequestListener</a>&gt; requestListeners, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; isPrefetchEnabledSupplier, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, BufferedDiskCache mainBufferedDiskCache, BufferedDiskCache smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1136,6 +1227,47 @@ From class
 </div>
 
 
+<a id="evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">evictFromDiskCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Removes all images with the specified Uri from disk cache.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>The imageRequest for the image to evict from disk cache
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="evictFromDiskCache(android.net.Uri)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1170,47 +1302,6 @@ From class
         <tr>
           <th>uri</th>
           <td>The uri of the image to evict
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">evictFromDiskCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Removes all images with the specified Uri from disk cache.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageRequest</th>
-          <td>The imageRequest for the image to evict from disk cache
 </td>
         </tr>
       </table>
@@ -1446,6 +1537,236 @@ From class
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>a DataSource representing pending results and completion of the request
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getEncodedImageDataSourceSupplier(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt;&gt;&gt;
+      </span>
+      <span class="sympad">getEncodedImageDataSourceSupplier</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns a DataSource supplier that will on get submit the request for execution and return a
+ DataSource representing the pending results of the task.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>the request to submit (what to execute).</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a DataSource representing pending results and completion of the request
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isInBitmapMemoryCache(android.net.Uri)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isInBitmapMemoryCache</span>
+      <span class="normal">(Uri uri)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the bitmap memory cache.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>uri</th>
+          <td>the uri for the image to be looked up.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the image was found in the bitmap memory cache, false otherwise
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isInBitmapMemoryCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isInBitmapMemoryCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the bitmap memory cache.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>the imageRequest for the image to be looked up.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the image was found in the bitmap memory cache, false otherwise.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isInDiskCache(android.net.Uri)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
+      </span>
+      <span class="sympad">isInDiskCache</span>
+      <span class="normal">(Uri uri)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the disk cache.
+
+ <p>If you have supplied your own cache key factory when configuring the pipeline, this method
+ may not work correctly. It will only work if the custom factory builds the cache key entirely
+ from the URI. If that is not the case, use <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)">isInDiskCache(ImageRequest)</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>uri</th>
+          <td>the uri for the image to be looked up.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the image was found in the disk cache, false otherwise.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
+      </span>
+      <span class="sympad">isInDiskCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the disk cache.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>the imageRequest for the image to be looked up.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the image was found in the disk cache, false otherwise.
 </li></ul>
   </div>
 
