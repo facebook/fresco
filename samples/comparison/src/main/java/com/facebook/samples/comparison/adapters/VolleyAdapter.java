@@ -16,13 +16,11 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.android.volley.toolbox.ImageLoader;
-
 import com.facebook.samples.comparison.R;
 import com.facebook.samples.comparison.configs.volley.SampleVolleyFactory;
+import com.facebook.samples.comparison.holders.VolleyHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedNetworkImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.BaseViewHolder;
-import com.facebook.samples.comparison.holders.VolleyHolder;
 
 /**
  * RecyclerView Adapter for Volley
@@ -46,11 +44,6 @@ public class VolleyAdapter extends ImageListAdapter {
     return new VolleyHolder(
         getContext(), mImageLoader, parent,
         view, getPerfListener());
-  }
-
-  @Override
-  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
-    holder.bind(getItem(position));
   }
 
   @Override

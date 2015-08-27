@@ -63,6 +63,11 @@ public abstract class ImageListAdapter extends RecyclerView.Adapter<BaseViewHold
     mModel.clear();
   }
 
+  @Override
+  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
+    holder.bind(getItem(position));
+  }
+
   /**
    * Releases any resources and tears down the adapter.
    */

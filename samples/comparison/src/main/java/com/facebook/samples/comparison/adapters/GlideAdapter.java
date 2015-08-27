@@ -16,11 +16,9 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-
+import com.facebook.samples.comparison.holders.GlideHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.BaseViewHolder;
-import com.facebook.samples.comparison.holders.GlideHolder;
 
 /**
  * RecyclerView Adapter for Glide
@@ -37,11 +35,6 @@ public class GlideAdapter extends ImageListAdapter {
   public GlideHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final InstrumentedImageView instrumentedImageView = new InstrumentedImageView(getContext());
     return new GlideHolder(getContext(), parent, instrumentedImageView, getPerfListener());
-  }
-
-  @Override
-  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
-    holder.bind(getItem(position));
   }
 
   @Override

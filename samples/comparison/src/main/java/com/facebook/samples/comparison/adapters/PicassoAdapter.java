@@ -16,11 +16,9 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.facebook.samples.comparison.configs.picasso.SamplePicassoFactory;
+import com.facebook.samples.comparison.holders.PicassoHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.BaseViewHolder;
-import com.facebook.samples.comparison.holders.PicassoHolder;
-
 import com.squareup.picasso.Picasso;
 
 /**
@@ -41,11 +39,6 @@ public class PicassoAdapter extends ImageListAdapter {
   public PicassoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final InstrumentedImageView instrImageView = new InstrumentedImageView(getContext());
     return new PicassoHolder(getContext(), mPicasso, parent, instrImageView, getPerfListener());
-  }
-
-  @Override
-  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
-    holder.bind(getItem(position));
   }
 
   @Override

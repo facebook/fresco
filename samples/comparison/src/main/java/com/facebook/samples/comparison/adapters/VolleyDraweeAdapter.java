@@ -20,10 +20,9 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.samples.comparison.Drawables;
 import com.facebook.samples.comparison.configs.volley.SampleVolleyFactory;
+import com.facebook.samples.comparison.holders.VolleyDraweeHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.BaseViewHolder;
-import com.facebook.samples.comparison.holders.VolleyDraweeHolder;
 
 /**
  * RecyclerView Adapter for Volley using Drawee
@@ -50,11 +49,6 @@ public class VolleyDraweeAdapter extends ImageListAdapter {
     InstrumentedDraweeView view = new InstrumentedDraweeView(getContext());
     view.setHierarchy(gdh);
     return new VolleyDraweeHolder(getContext(), parent, view, getPerfListener());
-  }
-
-  @Override
-  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
-    holder.bind(getItem(position));
   }
 
   @Override

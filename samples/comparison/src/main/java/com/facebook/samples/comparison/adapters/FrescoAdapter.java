@@ -22,10 +22,9 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.samples.comparison.Drawables;
+import com.facebook.samples.comparison.holders.FrescoHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.BaseViewHolder;
-import com.facebook.samples.comparison.holders.FrescoHolder;
 
 /**
  * RecyclerView Adapter for Fresco
@@ -51,11 +50,6 @@ public class FrescoAdapter extends ImageListAdapter {
     final InstrumentedDraweeView instrView = new InstrumentedDraweeView(getContext(), gdh);
 
     return new FrescoHolder(getContext(), parent, instrView, getPerfListener());
-  }
-
-  @Override
-  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
-    holder.bind(getItem(position));
   }
 
   @Override

@@ -16,11 +16,9 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.facebook.samples.comparison.configs.uil.SampleUilFactory;
+import com.facebook.samples.comparison.holders.UilHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.BaseViewHolder;
-import com.facebook.samples.comparison.holders.UilHolder;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -43,11 +41,6 @@ public class UilAdapter extends ImageListAdapter {
     return new UilHolder(
         getContext(), mImageLoader, parent,
         instrumentedImageView, getPerfListener());
-  }
-
-  @Override
-  public void onBindViewHolder(BaseViewHolder<?> holder, int position) {
-    holder.bind(getItem(position));
   }
 
   @Override
