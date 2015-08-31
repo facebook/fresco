@@ -151,6 +151,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final int mFailureImageIndex;
   private final int mControllerOverlayIndex;
 
+  private ScaleType mPlaceHolderScaleType;
   private RoundingParams mRoundingParams;
 
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
@@ -173,9 +174,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         mRoundingParams,
         mResources,
         placeholderImageBranch);
+    mPlaceHolderScaleType = builder.getPlaceholderImageScaleType();
+    if (mPlaceHolderScaleType == null) {
+        mPlaceHolderScaleType = GenericDraweeHierarchyBuilder.DEFAULT_SCALE_TYPE;
+    }
     placeholderImageBranch = maybeWrapWithScaleType(
-        placeholderImageBranch,
-        builder.getPlaceholderImageScaleType());
+            placeholderImageBranch,
+            mPlaceHolderScaleType);
     mPlaceholderImageIndex = numLayers++;
 
     // actual image branch
@@ -640,6 +645,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       drawable = getEmptyPlaceholderDrawable();
     }
     drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
+    maybeWrapWithScaleType(drawable, mPlaceHolderScaleType);
     setLayerChildDrawable(mPlaceholderImageIndex, drawable);
   }
 
