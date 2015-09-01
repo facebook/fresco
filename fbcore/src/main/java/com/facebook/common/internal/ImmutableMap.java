@@ -19,8 +19,11 @@ import java.util.Map;
  * <p>We do not replicate Guava's ImmutableMap class here. This class merely returns standard
  * {@link HashMap}s wrapped so that they throw UnsupportedOperationExceptions on any write method.
  */
-public class ImmutableMap {
-  private ImmutableMap() {}
+public class ImmutableMap<K, V> extends HashMap<K, V> {
+
+  private ImmutableMap(Map<? extends K, ? extends V> map) {
+    super(map);
+  }
 
   public static <K, V> Map<K, V> of() {
     return Collections.unmodifiableMap(new HashMap<K, V>());
@@ -70,4 +73,9 @@ public class ImmutableMap {
   }
 
   // looking for of() with > 5 entries? Use the put method instead
+
+  // Dummy method at the moment to help us enforce types.
+  public static <K, V> ImmutableMap<K, V> copyOf(Map<? extends K, ? extends V> map) {
+    return new ImmutableMap<>(map);
+  }
 }
