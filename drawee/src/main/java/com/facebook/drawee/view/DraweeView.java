@@ -12,9 +12,11 @@ package com.facebook.drawee.view;
 import javax.annotation.Nullable;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -59,6 +61,13 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
   private void init(Context context) {
     mDraweeHolder = DraweeHolder.create(null, context);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      ColorStateList imageTintList = getImageTintList();
+      if (imageTintList == null) {
+        return;
+      }
+      setColorFilter(imageTintList.getDefaultColor());
+    }
   }
 
   /** Sets the hierarchy. */
