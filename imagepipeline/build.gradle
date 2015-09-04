@@ -66,7 +66,7 @@ task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
 }
 
 task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'https://github.com/webmproject/libwebp/archive/v0.4.2.tar.gz'
+    src 'https://github.com/webmproject/libwebp/archive/v0.4.3.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir
@@ -88,7 +88,7 @@ task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
 }
 
 task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.2.tar.gz"))
+    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.3.tar.gz"))
     into "${downloadsDir}"
 }
 
@@ -114,10 +114,10 @@ task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
 }
 
 task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
-    from "${unpackLibwebp.destinationDir}/libwebp-0.4.2"
-    from 'src/main/jni/third-party/libwebp-0.4.2'
+    from "${unpackLibwebp.destinationDir}/libwebp-0.4.3"
+    from 'src/main/jni/third-party/libwebp-0.4.3'
     include('src/**/*.c', 'src/**/*.h', '*.mk')
-    into "${mergeDir}/libwebp-0.4.2"
+    into "${mergeDir}/libwebp-0.4.3"
 }
 
 task fetchNativeDeps(dependsOn: [copyGiflib, copyLibjpeg, copyLibpng, copyLibwebp]) {
