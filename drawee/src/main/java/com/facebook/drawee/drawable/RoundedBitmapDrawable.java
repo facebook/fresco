@@ -150,7 +150,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @Override
   public void setColorFilter(ColorFilter colorFilter) {
     mPaint.setColorFilter(colorFilter);
-    invalidateSelf();
+    super.setColorFilter(colorFilter);
   }
 
   @Override
