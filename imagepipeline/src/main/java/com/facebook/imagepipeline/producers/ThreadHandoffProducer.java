@@ -23,11 +23,11 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
   protected static final String PRODUCER_NAME = "BackgroundThreadHandoffProducer";
 
   private final Executor mExecutor;
-  private final Producer<T> mNextProducer;
+  private final Producer<T> mInputProducer;
 
-  public ThreadHandoffProducer(final Executor executorService, final Producer<T> nextProducer) {
+  public ThreadHandoffProducer(final Executor executorService, final Producer<T> inputProducer) {
     mExecutor = Preconditions.checkNotNull(executorService);
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
   }
 
   @Override
@@ -42,7 +42,7 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
       @Override
       protected void onSuccess(T ignored) {
         producerListener.onProducerFinishWithSuccess(requestId, PRODUCER_NAME, null);
-        mNextProducer.produceResults(consumer, context);
+        mInputProducer.produceResults(consumer, context);
       }
 
       @Override

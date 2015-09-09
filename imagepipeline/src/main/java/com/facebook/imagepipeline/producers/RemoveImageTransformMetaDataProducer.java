@@ -21,18 +21,18 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
  */
 public class RemoveImageTransformMetaDataProducer
     implements Producer<CloseableReference<PooledByteBuffer>> {
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public RemoveImageTransformMetaDataProducer(
-      Producer<EncodedImage> nextProducer) {
-    mNextProducer = nextProducer;
+      Producer<EncodedImage> inputProducer) {
+    mInputProducer = inputProducer;
   }
 
   @Override
   public void produceResults(
       Consumer<CloseableReference<PooledByteBuffer>> consumer,
       ProducerContext context) {
-    mNextProducer.produceResults(new RemoveImageTransformMetaDataConsumer(consumer), context);
+    mInputProducer.produceResults(new RemoveImageTransformMetaDataConsumer(consumer), context);
   }
 
   private class RemoveImageTransformMetaDataConsumer extends DelegatingConsumer<EncodedImage,

@@ -227,11 +227,11 @@ public class ProducerSequenceFactory {
    */
   private synchronized Producer<EncodedImage> getCommonNetworkFetchToEncodedMemorySequence() {
     if (mCommonNetworkFetchToEncodedMemorySequence == null) {
-      Producer<EncodedImage> nextProducer =
+      Producer<EncodedImage> inputProducer =
           newEncodedCacheMultiplexToTranscodeSequence(
               mProducerFactory.newNetworkFetchProducer(mNetworkFetcher));
       mCommonNetworkFetchToEncodedMemorySequence =
-          ProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
+          ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
 
       if (mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled) {
         mCommonNetworkFetchToEncodedMemorySequence =
@@ -339,67 +339,68 @@ public class ProducerSequenceFactory {
    */
   private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
     if (mDataFetchSequence == null) {
-      Producer<EncodedImage> nextProducer = mProducerFactory.newDataFetchProducer();
+      Producer<EncodedImage> inputProducer = mProducerFactory.newDataFetchProducer();
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
+        inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
-      nextProducer = mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
+      inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
       if (!mDownsampleEnabled) {
-        nextProducer = mProducerFactory.newResizeAndRotateProducer(nextProducer);
+        inputProducer = mProducerFactory.newResizeAndRotateProducer(inputProducer);
       }
-      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(nextProducer);
+      mDataFetchSequence = newBitmapCacheGetToDecodeSequence(inputProducer);
     }
     return mDataFetchSequence;
   }
 
   /**
    * Creates a new fetch sequence that just needs the source producer.
-   * @param nextProducer the source producer
+   * @param inputProducer the source producer
    * @return the new sequence
    */
   private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToLocalTransformSequence(
-      Producer<EncodedImage> nextProducer) {
-    nextProducer = newEncodedCacheMultiplexToTranscodeSequence(nextProducer);
-    Producer<EncodedImage> nextProducerAfterDecode = newLocalTransformationsSequence(nextProducer);
-    return newBitmapCacheGetToDecodeSequence(nextProducerAfterDecode);
+      Producer<EncodedImage> inputProducer) {
+    inputProducer = newEncodedCacheMultiplexToTranscodeSequence(inputProducer);
+    Producer<EncodedImage> inputProducerAfterDecode =
+        newLocalTransformationsSequence(inputProducer);
+    return newBitmapCacheGetToDecodeSequence(inputProducerAfterDecode);
   }
 
   /**
    * Same as {@code newBitmapCacheGetToBitmapCacheSequence} but with an extra DecodeProducer.
-   * @param nextProducer next producer in the sequence after decode
+   * @param inputProducer producer providing the input to the decode
    * @return bitmap cache get to decode sequence
    */
   private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToDecodeSequence(
-      Producer<EncodedImage> nextProducer) {
-    DecodeProducer decodeProducer = mProducerFactory.newDecodeProducer(nextProducer);
+      Producer<EncodedImage> inputProducer) {
+    DecodeProducer decodeProducer = mProducerFactory.newDecodeProducer(inputProducer);
     return newBitmapCacheGetToBitmapCacheSequence(decodeProducer);
   }
 
   /**
    * encoded cache multiplex -> encoded cache -> (disk cache) -> (webp transcode)
-   * @param nextProducer next producer in the sequence
+   * @param inputProducer producer providing the input to the transcode
    * @return encoded cache multiplex to webp transcode sequence
    */
   private Producer<EncodedImage> newEncodedCacheMultiplexToTranscodeSequence(
-          Producer<EncodedImage> nextProducer) {
+          Producer<EncodedImage> inputProducer) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      nextProducer = mProducerFactory.newWebpTranscodeProducer(nextProducer);
+      inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
     }
-    nextProducer = mProducerFactory.newDiskCacheProducer(nextProducer);
+    inputProducer = mProducerFactory.newDiskCacheProducer(inputProducer);
     EncodedMemoryCacheProducer encodedMemoryCacheProducer =
-        mProducerFactory.newEncodedMemoryCacheProducer(nextProducer);
+        mProducerFactory.newEncodedMemoryCacheProducer(inputProducer);
     return mProducerFactory.newEncodedCacheKeyMultiplexProducer(encodedMemoryCacheProducer);
   }
 
   /**
    * Bitmap cache get -> thread hand off -> multiplex -> bitmap cache
-   * @param nextProducer next producer in the sequence after bitmap cache
+   * @param inputProducer producer providing the input to the bitmap cache
    * @return bitmap cache get to bitmap cache sequence
    */
   private Producer<CloseableReference<CloseableImage>> newBitmapCacheGetToBitmapCacheSequence(
-      Producer<CloseableReference<CloseableImage>> nextProducer) {
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
     BitmapMemoryCacheProducer bitmapMemoryCacheProducer =
-        mProducerFactory.newBitmapMemoryCacheProducer(nextProducer);
+        mProducerFactory.newBitmapMemoryCacheProducer(inputProducer);
     BitmapMemoryCacheKeyMultiplexProducer bitmapKeyMultiplexProducer =
         mProducerFactory.newBitmapMemoryCacheKeyMultiplexProducer(bitmapMemoryCacheProducer);
     ThreadHandoffProducer<CloseableReference<CloseableImage>> threadHandoffProducer =
@@ -411,13 +412,13 @@ public class ProducerSequenceFactory {
    * Branch on separate images
    *   -> exif resize and rotate -> exif thumbnail creation
    *   -> local image resize and rotate -> add meta data producer
-   * @param nextProducer next producer in the sequence after add meta data producer
+   * @param inputProducer producer providing the input to add meta data producer
    * @return local transformations sequence
    */
   private Producer<EncodedImage> newLocalTransformationsSequence(
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     Producer<EncodedImage> localImageProducer =
-        mProducerFactory.newAddImageTransformMetaDataProducer(nextProducer);
+        mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
     if (!mDownsampleEnabled) {
       localImageProducer =
           mProducerFactory.newResizeAndRotateProducer(localImageProducer);
@@ -439,30 +440,30 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * post-processor producer -> copy producer -> next producer
+   * post-processor producer -> copy producer -> inputProducer
    */
   private synchronized Producer<CloseableReference<CloseableImage>> getPostprocessorSequence(
-      Producer<CloseableReference<CloseableImage>> nextProducer) {
-    if (!mPostprocessorSequences.containsKey(nextProducer)) {
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    if (!mPostprocessorSequences.containsKey(inputProducer)) {
       PostprocessorProducer postprocessorProducer =
-          mProducerFactory.newPostprocessorProducer(nextProducer);
+          mProducerFactory.newPostprocessorProducer(inputProducer);
       PostprocessedBitmapMemoryCacheProducer postprocessedBitmapMemoryCacheProducer =
           mProducerFactory.newPostprocessorBitmapMemoryCacheProducer(postprocessorProducer);
-      mPostprocessorSequences.put(nextProducer, postprocessedBitmapMemoryCacheProducer);
+      mPostprocessorSequences.put(inputProducer, postprocessedBitmapMemoryCacheProducer);
     }
-    return mPostprocessorSequences.get(nextProducer);
+    return mPostprocessorSequences.get(inputProducer);
   }
 
   /**
-   * swallow result producer -> next producer
+   * swallow result producer -> inputProducer
    */
   private synchronized Producer<Void> getDecodedImagePrefetchSequence(
-      Producer<CloseableReference<CloseableImage>> nextProducer) {
-    if (!mCloseableImagePrefetchSequences.containsKey(nextProducer)) {
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    if (!mCloseableImagePrefetchSequences.containsKey(inputProducer)) {
       SwallowResultProducer<CloseableReference<CloseableImage>> swallowResultProducer =
-          mProducerFactory.newSwallowResultProducer(nextProducer);
-      mCloseableImagePrefetchSequences.put(nextProducer, swallowResultProducer);
+          mProducerFactory.newSwallowResultProducer(inputProducer);
+      mCloseableImagePrefetchSequences.put(inputProducer, swallowResultProducer);
     }
-    return mCloseableImagePrefetchSequences.get(nextProducer);
+    return mCloseableImagePrefetchSequences.get(inputProducer);
   }
 }

@@ -56,7 +56,7 @@ public class ResizeAndRotateProducerTest {
     SoLoaderShim.setInTestMode();
   }
 
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerListener mProducerListener;
   @Mock public Consumer<EncodedImage> mConsumer;
@@ -123,7 +123,7 @@ public class ResizeAndRotateProducerTest {
     mResizeAndRotateProducer = new ResizeAndRotateProducer(
         mTestExecutorService,
         mPooledByteBufferFactory,
-        mNextProducer);
+        mInputProducer);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
     when(mProducerContext.getListener()).thenReturn(mProducerListener);
@@ -140,7 +140,7 @@ public class ResizeAndRotateProducerTest {
                 (Consumer<EncodedImage>) invocation.getArguments()[0];
             return null;
           }
-        }).when(mNextProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+        }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
     doReturn(mPooledByteBufferOutputStream).when(mPooledByteBufferFactory).newOutputStream();
     mPooledByteBuffer = new TrivialPooledByteBuffer(new byte[]{1}, 0);
     doReturn(mPooledByteBuffer).when(mPooledByteBufferOutputStream).toByteBuffer();

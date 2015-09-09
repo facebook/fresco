@@ -54,7 +54,7 @@ public class BitmapMemoryCacheProducerTest {
   private static final int INTERMEDIATE_SCAN_2 = 5;
   @Mock public MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   @Mock public CacheKeyFactory mCacheKeyFactory;
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
   @Mock public ProducerContext mProducerContext;
   @Mock public ImageRequest mImageRequest;
@@ -74,7 +74,7 @@ public class BitmapMemoryCacheProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mBitmapMemoryCacheProducer =
-        new BitmapMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mNextProducer);
+        new BitmapMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mInputProducer);
     mBitmapMemoryCacheKey = mock(BitmapMemoryCacheKey.class);
     mCloseableImage1 = mock(CloseableImage.class);
     when(mCloseableImage1.getQualityInfo()).thenReturn(ImmutableQualityInfo.FULL_QUALITY);
@@ -121,7 +121,7 @@ public class BitmapMemoryCacheProducerTest {
     when(mCloseableImage2.isStateful()).thenReturn(true);
 
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     when(mMemoryCache.get(mBitmapMemoryCacheKey)).thenReturn(null);
 
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
@@ -136,7 +136,7 @@ public class BitmapMemoryCacheProducerTest {
   @Test
   public void testBitmapMemoryCacheGetIntermediateImage() {
     setupBitmapMemoryCacheGetIntermediateImage();
-    setupNextProducerNotFound();
+    setupInputProducerNotFound();
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mIntermediateImageReference, false);
     verify(mConsumer).onNewResult(null, true);
@@ -149,7 +149,7 @@ public class BitmapMemoryCacheProducerTest {
   @Test
   public void testCacheIntermediateImageAsNoImagePresent() {
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     when(mMemoryCache.get(mBitmapMemoryCacheKey)).thenReturn(null);
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mMemoryCache).cache(mBitmapMemoryCacheKey, mIntermediateImageReference);
@@ -166,7 +166,7 @@ public class BitmapMemoryCacheProducerTest {
   @Test
   public void testCacheIntermediateImageAsBetterScan() {
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     CloseableImage closeableImage = mock(CloseableImage.class);
     when(closeableImage.getQualityInfo())
         .thenReturn(ImmutableQualityInfo.of(INTERMEDIATE_SCAN_1, false, false));
@@ -192,7 +192,7 @@ public class BitmapMemoryCacheProducerTest {
   @Test
   public void testDontCacheIntermediateImageAsAlreadyHaveSameQuality() {
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     CloseableImage closeableImage = mock(CloseableImage.class);
     when(closeableImage.getQualityInfo())
         .thenReturn(ImmutableQualityInfo.of(INTERMEDIATE_SCAN_2, true, false));
@@ -217,7 +217,7 @@ public class BitmapMemoryCacheProducerTest {
   @Test
   public void testDontCacheIntermediateImageAsAlreadyHaveFullQuality() {
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     CloseableImage closeableImage = mock(CloseableImage.class);
     when(closeableImage.getQualityInfo()).thenReturn(ImmutableQualityInfo.FULL_QUALITY);
     CloseableReference<CloseableImage> closeableImageRef = CloseableReference.of(closeableImage);
@@ -239,9 +239,9 @@ public class BitmapMemoryCacheProducerTest {
   }
 
   @Test
-  public void testBitmapMemoryCacheGetNotFoundNextProducerNotFound() {
+  public void testBitmapMemoryCacheGetNotFoundInputProducerNotFound() {
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerNotFound();
+    setupInputProducerNotFound();
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -259,7 +259,7 @@ public class BitmapMemoryCacheProducerTest {
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
-    verifyNoMoreInteractions(mNextProducer);
+    verifyNoMoreInteractions(mInputProducer);
   }
 
   @Test
@@ -274,13 +274,13 @@ public class BitmapMemoryCacheProducerTest {
     Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
     Assert.assertTrue(!mIntermediateImageReference.isValid());
-    verifyNoMoreInteractions(mNextProducer);
+    verifyNoMoreInteractions(mInputProducer);
   }
 
   @Test
-  public void testBitmapMemoryCacheGetNotFoundNextProducerFailure() {
+  public void testBitmapMemoryCacheGetNotFoundInputProducerFailure() {
     setupBitmapMemoryCacheGetNotFound();
-    setupNextProducerFailure();
+    setupInputProducerFailure();
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onFailure(mException);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -302,23 +302,23 @@ public class BitmapMemoryCacheProducerTest {
         .thenReturn(mIntermediateImageReference);
   }
 
-  private void setupNextProducerStreamingSuccess() {
+  private void setupInputProducerStreamingSuccess() {
     doAnswer(new ProduceResultsNewResultAnswer(
             Arrays.asList(mIntermediateImageReference, mFinalImageReference)))
-        .when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerNotFound() {
+  private void setupInputProducerNotFound() {
     final List<CloseableReference<CloseableImage>> nullArray =
         new ArrayList<CloseableReference<CloseableImage>>(1);
     nullArray.add(null);
     doAnswer(new ProduceResultsNewResultAnswer(nullArray))
-        .when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerFailure() {
+  private void setupInputProducerFailure() {
     doAnswer(new ProduceResultsFailureAnswer()).
-        when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {

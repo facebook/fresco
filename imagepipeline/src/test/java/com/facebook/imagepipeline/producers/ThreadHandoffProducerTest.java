@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
 public class ThreadHandoffProducerTest {
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerListener mProducerListener;
@@ -50,14 +50,14 @@ public class ThreadHandoffProducerTest {
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mThreadHandoffProducer = new ThreadHandoffProducer(
         mTestExecutorService,
-        mNextProducer);
+        mInputProducer);
   }
 
   @Test
   public void testSuccess() {
     mThreadHandoffProducer.produceResults(mConsumer, mProducerContext);
     mTestExecutorService.runUntilIdle();
-    verify(mNextProducer).produceResults(mConsumer, mProducerContext);
+    verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verify(mProducerListener).onProducerStart(mRequestId, ThreadHandoffProducer.PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(
         mRequestId,
@@ -71,7 +71,7 @@ public class ThreadHandoffProducerTest {
     mThreadHandoffProducer.produceResults(mConsumer, mProducerContext);
     mProducerContext.cancel();
     mTestExecutorService.runUntilIdle();
-    verify(mNextProducer, never()).produceResults(mConsumer, mProducerContext);
+    verify(mInputProducer, never()).produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onCancellation();
     verify(mProducerListener).onProducerStart(mRequestId, ThreadHandoffProducer.PRODUCER_NAME);
     verify(mProducerListener).requiresExtraMap(mRequestId);

@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
 public class SwallowResultProducerTest {
-  @Mock public Producer<CloseableReference<CloseableImage>> mNextProducer;
+  @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<Void> mConsumer;
   @Mock public ProducerContext mProducerContext;
   @Mock public Exception mException;
@@ -50,14 +50,14 @@ public class SwallowResultProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mSwallowResultProducer =
-        new SwallowResultProducer<CloseableReference<CloseableImage>>(mNextProducer);
+        new SwallowResultProducer<CloseableReference<CloseableImage>>(mInputProducer);
     mFinalImageReference = CloseableReference.of(mock(CloseableImage.class));
     mIntermediateImageReference = CloseableReference.of(mock(CloseableImage.class));
   }
 
   @Test
   public void testSwallowResults() {
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     mSwallowResultProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, true);
     verifyNoMoreInteractions(mConsumer);
@@ -65,7 +65,7 @@ public class SwallowResultProducerTest {
 
   @Test
   public void testPassOnNullResult() {
-    setupNextProducerNotFound();
+    setupInputProducerNotFound();
     mSwallowResultProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, true);
     verifyNoMoreInteractions(mConsumer);
@@ -73,7 +73,7 @@ public class SwallowResultProducerTest {
 
   @Test
   public void testPassOnFailure() {
-    setupNextProducerFailure();
+    setupInputProducerFailure();
     mSwallowResultProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onFailure(mException);
     verifyNoMoreInteractions(mConsumer);
@@ -81,35 +81,35 @@ public class SwallowResultProducerTest {
 
   @Test
   public void testPassOnCancellation() {
-    setupNextProducerCancellation();
+    setupInputProducerCancellation();
     mSwallowResultProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onCancellation();
     verifyNoMoreInteractions(mConsumer);
   }
 
-  private void setupNextProducerStreamingSuccess() {
+  private void setupInputProducerStreamingSuccess() {
     doAnswer(new ProduceResultsNewResultAnswer(
             Arrays.asList(mIntermediateImageReference, mFinalImageReference)))
-        .when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerNotFound() {
+  private void setupInputProducerNotFound() {
     final List<CloseableReference<CloseableImage>> empty =
         new ArrayList<CloseableReference<CloseableImage>>(1);
     empty.add(null);
     doAnswer(
         new ProduceResultsNewResultAnswer(empty))
-                .when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+                .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerFailure() {
+  private void setupInputProducerFailure() {
     doAnswer(new ProduceResultsFailureAnswer()).
-        when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerCancellation() {
+  private void setupInputProducerCancellation() {
     doAnswer(new ProduceResultsCancellationAnswer()).
-        when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {

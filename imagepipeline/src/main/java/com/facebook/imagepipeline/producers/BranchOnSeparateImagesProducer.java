@@ -20,13 +20,13 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class BranchOnSeparateImagesProducer
     implements Producer<EncodedImage> {
-  private final Producer<EncodedImage> mNextProducer1;
-  private final Producer<EncodedImage> mNextProducer2;
+  private final Producer<EncodedImage> mInputProducer1;
+  private final Producer<EncodedImage> mInputProducer2;
 
   public BranchOnSeparateImagesProducer(
-      Producer<EncodedImage> nextProducer1, Producer<EncodedImage> nextProducer2) {
-    mNextProducer1 = nextProducer1;
-    mNextProducer2 = nextProducer2;
+      Producer<EncodedImage> inputProducer1, Producer<EncodedImage> inputProducer2) {
+    mInputProducer1 = inputProducer1;
+    mInputProducer2 = inputProducer2;
   }
 
   @Override
@@ -34,7 +34,7 @@ public class BranchOnSeparateImagesProducer
       Consumer<EncodedImage> consumer,
       ProducerContext context) {
     OnFirstImageConsumer onFirstImageConsumer = new OnFirstImageConsumer(consumer, context);
-    mNextProducer1.produceResults(onFirstImageConsumer, context);
+    mInputProducer1.produceResults(onFirstImageConsumer, context);
   }
 
   private class OnFirstImageConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
@@ -56,13 +56,13 @@ public class BranchOnSeparateImagesProducer
         getConsumer().onNewResult(newResult, isLast && isGoodEnough);
       }
       if (isLast && !isGoodEnough) {
-        mNextProducer2.produceResults(getConsumer(), mProducerContext);
+        mInputProducer2.produceResults(getConsumer(), mProducerContext);
       }
     }
 
     @Override
     protected void onFailureImpl(Throwable t) {
-      mNextProducer2.produceResults(getConsumer(), mProducerContext);
+      mInputProducer2.produceResults(getConsumer(), mProducerContext);
     }
 
     private boolean isResultGoodEnough(EncodedImage encodedImage, ImageRequest imageRequest) {

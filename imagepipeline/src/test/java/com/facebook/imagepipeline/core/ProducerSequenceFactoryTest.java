@@ -277,7 +277,8 @@ public class ProducerSequenceFactoryTest {
     }
 
     @Override
-    public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(Producer<T> nextProducer) {
+    public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(
+        Producer<T> inputProducer) {
       return mock(ThreadHandoffProducer.class);
     }
 
@@ -293,19 +294,20 @@ public class ProducerSequenceFactoryTest {
 
     @Override
     public WebpTranscodeProducer newWebpTranscodeProducer(
-        Producer<EncodedImage> nextProducer) {
+        Producer<EncodedImage> inputProducer) {
       return mock(WebpTranscodeProducer.class);
     }
 
     @Override
-    public ResizeAndRotateProducer newResizeAndRotateProducer(Producer<EncodedImage> nextProducer) {
+    public ResizeAndRotateProducer newResizeAndRotateProducer(
+        Producer<EncodedImage> inputProducer) {
       return mock(ResizeAndRotateProducer.class);
     }
 
     @Override
     public <T> ThrottlingProducer<T> newThrottlingProducer(
         int maxSimultaneousRequests,
-        Producer<T> nextProducer) {
+        Producer<T> inputProducer) {
       return mock(ThrottlingProducer.class);
     }
 
@@ -315,7 +317,7 @@ public class ProducerSequenceFactoryTest {
     }
 
     @Override
-    public DecodeProducer newDecodeProducer(Producer<EncodedImage> nextProducer) {
+    public DecodeProducer newDecodeProducer(Producer<EncodedImage> inputProducer) {
       return mock(DecodeProducer.class);
     }
 
@@ -331,7 +333,7 @@ public class ProducerSequenceFactoryTest {
 
     @Override
     public PostprocessorProducer newPostprocessorProducer(
-        Producer<CloseableReference<CloseableImage>> nextProducer) {
+        Producer<CloseableReference<CloseableImage>> inputProducer) {
       return mock(PostprocessorProducer.class);
     }
   }

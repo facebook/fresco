@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 @PrepareForTest({ImageFormatChecker.class, JfifUtil.class, BitmapUtil.class})
 @Config(manifest= Config.NONE)
 public class AddImageTransformMetaDataProducerTest {
-  @Mock public Producer<EncodedImage> mNextProducer;
+  @Mock public Producer<EncodedImage> mInputProducer;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ProducerContext mProducerContext;
   @Mock public Exception mException;
@@ -63,7 +63,7 @@ public class AddImageTransformMetaDataProducerTest {
     MockitoAnnotations.initMocks(this);
     PowerMockito.mockStatic(ImageFormatChecker.class, JfifUtil.class, BitmapUtil.class);
 
-    mAddMetaDataProducer = new AddImageTransformMetaDataProducer(mNextProducer);
+    mAddMetaDataProducer = new AddImageTransformMetaDataProducer(mInputProducer);
 
     mIntermediateResultBufferRef = CloseableReference.of(mock(PooledByteBuffer.class));
     mFinalResultBufferRef = CloseableReference.of(mock(PooledByteBuffer.class));
@@ -80,7 +80,7 @@ public class AddImageTransformMetaDataProducerTest {
                 (Consumer<EncodedImage>) invocation.getArguments()[0];
             return null;
           }
-        }).when(mNextProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+        }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
     mAddMetaDataProducer.produceResults(mConsumer, mProducerContext);
   }
 

@@ -41,17 +41,17 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public DiskCacheProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
-    mNextProducer = nextProducer;
+    mInputProducer = inputProducer;
   }
 
   public void produceResults(
@@ -59,7 +59,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
       final ProducerContext producerContext) {
     ImageRequest imageRequest = producerContext.getImageRequest();
     if (!imageRequest.isDiskCacheEnabled()) {
-      maybeStartNextProducer(consumer, consumer, producerContext);
+      maybeStartInputProducer(consumer, consumer, producerContext);
       return;
     }
 
@@ -82,7 +82,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
               consumer.onCancellation();
             } else if (task.isFaulted()) {
               listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
-              maybeStartNextProducer(
+              maybeStartInputProducer(
                   consumer,
                   new DiskCacheConsumer(consumer, cache, cacheKey),
                   producerContext);
@@ -101,7 +101,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
                     requestId,
                     PRODUCER_NAME,
                     getExtraMap(listener, requestId, false));
-                maybeStartNextProducer(
+                maybeStartInputProducer(
                     consumer,
                     new DiskCacheConsumer(consumer, cache, cacheKey),
                     producerContext);
@@ -118,9 +118,9 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     subscribeTaskForRequestCancellation(isCancelled, producerContext);
   }
 
-  private void maybeStartNextProducer(
+  private void maybeStartInputProducer(
       Consumer<EncodedImage> consumerOfDiskCacheProducer,
-      Consumer<EncodedImage> consumerOfNextProducer,
+      Consumer<EncodedImage> consumerOfInputProducer,
       ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue() >=
         ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
@@ -128,7 +128,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
       return;
     }
 
-    mNextProducer.produceResults(consumerOfNextProducer, producerContext);
+    mInputProducer.produceResults(consumerOfInputProducer, producerContext);
   }
 
   @VisibleForTesting

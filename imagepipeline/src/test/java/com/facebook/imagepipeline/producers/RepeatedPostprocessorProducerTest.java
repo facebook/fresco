@@ -54,7 +54,7 @@ public class RepeatedPostprocessorProducerTest {
 
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
   @Mock public ProducerListener mProducerListener;
-  @Mock public Producer<CloseableReference<CloseableImage>> mNextProducer;
+  @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public RepeatedPostprocessor mPostprocessor;
   @Mock public ResourceReleaser<Bitmap> mBitmapResourceReleaser;
@@ -80,7 +80,7 @@ public class RepeatedPostprocessorProducerTest {
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mPostprocessorProducer =
         new PostprocessorProducer(
-            mNextProducer,
+            mInputProducer,
             mPlatformBitmapFactory,
             mTestExecutorService);
     mProducerContext =
@@ -277,7 +277,7 @@ public class RepeatedPostprocessorProducerTest {
   private RepeatedPostprocessorConsumer produceResults() {
     mPostprocessorProducer.produceResults(mConsumer, mProducerContext);
     ArgumentCaptor<Consumer> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-    verify(mNextProducer).produceResults(consumerCaptor.capture(), eq(mProducerContext));
+    verify(mInputProducer).produceResults(consumerCaptor.capture(), eq(mProducerContext));
     return (RepeatedPostprocessorConsumer) consumerCaptor.getValue();
   }
 

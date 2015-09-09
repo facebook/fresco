@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
 public class RemoveImageTransformMetaDataProducerTest {
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
   @Mock public Consumer<CloseableReference<PooledByteBuffer>> mConsumer;
   @Mock public EncodedImage mEncodedImage;
   @Mock public ProducerContext mProducerContext;
@@ -45,7 +45,7 @@ public class RemoveImageTransformMetaDataProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mRemoveMetaDataProducer = new RemoveImageTransformMetaDataProducer(mNextProducer);
+    mRemoveMetaDataProducer = new RemoveImageTransformMetaDataProducer(mInputProducer);
 
     mIntermediateByteBuffer = mock(PooledByteBuffer.class);
     mFinalByteBuffer = mock(PooledByteBuffer.class);
@@ -61,7 +61,7 @@ public class RemoveImageTransformMetaDataProducerTest {
             mRemoveMetaDataConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
             return null;
           }
-        }).when(mNextProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+        }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
     mRemoveMetaDataProducer.produceResults(mConsumer, mProducerContext);
   }
 

@@ -53,7 +53,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final Executor mExecutor;
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
   private final boolean mDownsampleEnabled;
   private final boolean mDownsampleEnabledForNetwork;
 
@@ -64,14 +64,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final ProgressiveJpegConfig progressiveJpegConfig,
       final boolean downsampleEnabled,
       final boolean downsampleEnabledForNetwork,
-      final Producer<EncodedImage> nextProducer) {
+      final Producer<EncodedImage> inputProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
     mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
     mDownsampleEnabled = downsampleEnabled;
     mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
   }
 
   @Override
@@ -90,7 +90,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           jpegParser,
           mProgressiveJpegConfig);
     }
-    mNextProducer.produceResults(progressiveDecoder, producerContext);
+    mInputProducer.produceResults(progressiveDecoder, producerContext);
   }
 
   private abstract class ProgressiveDecoder extends DelegatingConsumer<

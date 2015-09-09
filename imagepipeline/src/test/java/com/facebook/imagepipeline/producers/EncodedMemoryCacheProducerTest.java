@@ -51,7 +51,7 @@ public class EncodedMemoryCacheProducerTest {
   private static final String PRODUCER_NAME = EncodedMemoryCacheProducer.PRODUCER_NAME;
   @Mock public MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   @Mock public CacheKeyFactory mCacheKeyFactory;
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
   @Mock public ProducerContext mProducerContext;
   @Mock public ImageRequest mImageRequest;
@@ -73,7 +73,7 @@ public class EncodedMemoryCacheProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mEncodedMemoryCacheProducer =
-        new EncodedMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mNextProducer);
+        new EncodedMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mInputProducer);
     mCacheKey = new SimpleCacheKey("http://dummy.uri");
     mPooledByteBuffer1 = mock(PooledByteBuffer.class);
     mPooledByteBuffer2 = mock(PooledByteBuffer.class);
@@ -113,9 +113,9 @@ public class EncodedMemoryCacheProducerTest {
   }
 
   @Test
-  public void testEncodedMemoryCacheGetNotFoundNextProducerSuccess() {
+  public void testEncodedMemoryCacheGetNotFoundInputProducerSuccess() {
     setupEncodedMemoryCacheGetNotFound();
-    setupNextProducerStreamingSuccess();
+    setupInputProducerStreamingSuccess();
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mMemoryCache, never()).cache(mCacheKey, mIntermediateImageReference);
     ArgumentCaptor<CloseableReference> argumentCaptor =
@@ -135,9 +135,9 @@ public class EncodedMemoryCacheProducerTest {
   }
 
   @Test
-  public void testEncodedMemoryCacheGetNotFoundNextProducerNotFound() {
+  public void testEncodedMemoryCacheGetNotFoundInputProducerNotFound() {
     setupEncodedMemoryCacheGetNotFound();
-    setupNextProducerNotFound();
+    setupInputProducerNotFound();
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -146,9 +146,9 @@ public class EncodedMemoryCacheProducerTest {
   }
 
   @Test
-  public void testEncodedMemoryCacheGetNotFoundNextProducerFailure() {
+  public void testEncodedMemoryCacheGetNotFoundInputProducerFailure() {
     setupEncodedMemoryCacheGetNotFound();
-    setupNextProducerFailure();
+    setupInputProducerFailure();
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onFailure(mException);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -166,7 +166,7 @@ public class EncodedMemoryCacheProducerTest {
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap = ImmutableMap.of(EncodedMemoryCacheProducer.VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
-    verifyNoMoreInteractions(mNextProducer);
+    verifyNoMoreInteractions(mInputProducer);
   }
 
   private void setupEncodedMemoryCacheGetSuccess() {
@@ -177,22 +177,22 @@ public class EncodedMemoryCacheProducerTest {
     when(mMemoryCache.get(eq(mCacheKey))).thenReturn(null);
   }
 
-  private void setupNextProducerStreamingSuccess() {
+  private void setupInputProducerStreamingSuccess() {
     doAnswer(new ProduceResultsNewResultAnswer(
             Arrays.asList(mIntermediateEncodedImage, mFinalEncodedImage)))
-        .when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerNotFound() {
+  private void setupInputProducerNotFound() {
     final List<EncodedImage> nullArray = new ArrayList<EncodedImage>(1);
     nullArray.add(null);
     doAnswer(new ProduceResultsNewResultAnswer(nullArray))
-        .when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void setupNextProducerFailure() {
+  private void setupInputProducerFailure() {
     doAnswer(new ProduceResultsFailureAnswer()).
-        when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+        when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {

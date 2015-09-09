@@ -28,7 +28,7 @@ public class ThrottlingProducerTest {
   private static final String PRODUCER_NAME = ThrottlingProducer.PRODUCER_NAME;
   private static final int MAX_SIMULTANEOUS_REQUESTS = 2;
 
-  @Mock public Producer<Object> mNextProducer;
+  @Mock public Producer<Object> mInputProducer;
   @Mock public Exception mException;
 
   private final Consumer<Object>[] mConsumers = new Consumer[5];
@@ -45,7 +45,7 @@ public class ThrottlingProducerTest {
     mThrottlingProducer = new ThrottlingProducer<Object>(
         MAX_SIMULTANEOUS_REQUESTS,
         CallerThreadExecutor.getInstance(),
-        mNextProducer);
+        mInputProducer);
     for (int i = 0; i < 5; i++) {
       mConsumers[i] = mock(Consumer.class);
       mProducerContexts[i] = mock(ProducerContext.class);
@@ -63,7 +63,7 @@ public class ThrottlingProducerTest {
                   (Consumer<Object>) invocation.getArguments()[0];
               return null;
             }
-          }).when(mNextProducer).produceResults(any(Consumer.class), eq(mProducerContexts[i]));
+          }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContexts[i]));
     }
   }
 

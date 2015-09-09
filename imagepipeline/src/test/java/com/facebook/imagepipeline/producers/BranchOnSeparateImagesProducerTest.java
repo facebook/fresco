@@ -39,8 +39,8 @@ public class BranchOnSeparateImagesProducerTest {
   @Mock public ImageRequest mImageRequest;
   @Mock public Exception mException;
 
-  private Producer<EncodedImage> mNextProducer1;
-  private Producer<EncodedImage> mNextProducer2;
+  private Producer<EncodedImage> mInputProducer1;
+  private Producer<EncodedImage> mInputProducer2;
   private Consumer<EncodedImage> mFirstProducerConsumer;
   private Consumer<EncodedImage> mSecondProducerConsumer;
   private EncodedImage mIntermediateResult;
@@ -50,10 +50,10 @@ public class BranchOnSeparateImagesProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mNextProducer1 = mock(Producer.class);
-    mNextProducer2 = mock(Producer.class);
+    mInputProducer1 = mock(Producer.class);
+    mInputProducer2 = mock(Producer.class);
     BranchOnSeparateImagesProducer branchOnSeparateImagesProducer =
-        new BranchOnSeparateImagesProducer(mNextProducer1, mNextProducer2);
+        new BranchOnSeparateImagesProducer(mInputProducer1, mInputProducer2);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
     when(mImageRequest.getPreferredWidth()).thenReturn(WIDTH);
@@ -78,7 +78,7 @@ public class BranchOnSeparateImagesProducerTest {
             mFirstProducerConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
             return null;
           }
-        }).when(mNextProducer1).produceResults(any(Consumer.class), any(ProducerContext.class));
+        }).when(mInputProducer1).produceResults(any(Consumer.class), any(ProducerContext.class));
     doAnswer(
         new Answer() {
           @Override
@@ -86,7 +86,7 @@ public class BranchOnSeparateImagesProducerTest {
             mSecondProducerConsumer = (Consumer<EncodedImage>) invocation.getArguments()[0];
             return null;
           }
-        }).when(mNextProducer2).produceResults(any(Consumer.class), any(ProducerContext.class));
+        }).when(mInputProducer2).produceResults(any(Consumer.class), any(ProducerContext.class));
     branchOnSeparateImagesProducer.produceResults(mConsumer, mProducerContext);
   }
 
@@ -108,7 +108,7 @@ public class BranchOnSeparateImagesProducerTest {
     finalEncodedImage.setHeight(HEIGHT);
     mFirstProducerConsumer.onNewResult(finalEncodedImage, true);
     verify(mConsumer).onNewResult(finalEncodedImage, true);
-    verify(mNextProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
+    verify(mInputProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   @Test
@@ -160,7 +160,7 @@ public class BranchOnSeparateImagesProducerTest {
   public void testFirstProducerCancellation() {
     mFirstProducerConsumer.onCancellation();
     verify(mConsumer).onCancellation();
-    verify(mNextProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
+    verify(mInputProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   @Test
@@ -182,7 +182,7 @@ public class BranchOnSeparateImagesProducerTest {
     finalEncodedImage.setHeight(HEIGHT);
     mFirstProducerConsumer.onNewResult(finalEncodedImage, true);
     verify(mConsumer).onNewResult(finalEncodedImage, true);
-    verify(mNextProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
+    verify(mInputProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   @Test

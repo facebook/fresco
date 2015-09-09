@@ -51,22 +51,22 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public ResizeAndRotateProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
   }
 
   @Override
   public void produceResults(
       final Consumer<EncodedImage> consumer,
       final ProducerContext context) {
-    mNextProducer.produceResults(new TransformingConsumer(consumer, context), context);
+    mInputProducer.produceResults(new TransformingConsumer(consumer, context), context);
   }
 
   private class TransformingConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {

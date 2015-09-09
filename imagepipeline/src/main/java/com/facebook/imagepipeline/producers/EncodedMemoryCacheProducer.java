@@ -29,15 +29,15 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public EncodedMemoryCacheProducer(
       MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
       CacheKeyFactory cacheKeyFactory,
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     mMemoryCache = memoryCache;
     mCacheKeyFactory = cacheKeyFactory;
-    mNextProducer = nextProducer;
+    mInputProducer = inputProducer;
   }
 
   @Override
@@ -78,7 +78,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         return;
       }
 
-      Consumer<EncodedImage> consumerOfNextProducer = new DelegatingConsumer<
+      Consumer<EncodedImage> consumerOfInputProducer = new DelegatingConsumer<
           EncodedImage,
           EncodedImage>(consumer) {
         @Override
@@ -122,7 +122,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           requestId,
           PRODUCER_NAME,
           listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
-      mNextProducer.produceResults(consumerOfNextProducer, producerContext);
+      mInputProducer.produceResults(consumerOfInputProducer, producerContext);
     } finally {
       CloseableReference.closeSafely(cachedReference);
     }

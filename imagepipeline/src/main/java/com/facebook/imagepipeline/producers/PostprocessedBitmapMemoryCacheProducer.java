@@ -34,15 +34,15 @@ public class PostprocessedBitmapMemoryCacheProducer
 
   private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final Producer<CloseableReference<CloseableImage>> mNextProducer;
+  private final Producer<CloseableReference<CloseableImage>> mInputProducer;
 
   public PostprocessedBitmapMemoryCacheProducer(
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       CacheKeyFactory cacheKeyFactory,
-      Producer<CloseableReference<CloseableImage>> nextProducer) {
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
     mMemoryCache = memoryCache;
     mCacheKeyFactory = cacheKeyFactory;
-    mNextProducer = nextProducer;
+    mInputProducer = inputProducer;
   }
 
   @Override
@@ -57,7 +57,7 @@ public class PostprocessedBitmapMemoryCacheProducer
     // No point continuing if there's no postprocessor attached to this request.
     final Postprocessor postprocessor = imageRequest.getPostprocessor();
     if (postprocessor == null) {
-      mNextProducer.produceResults(consumer, producerContext);
+      mInputProducer.produceResults(consumer, producerContext);
       return;
     }
     listener.onProducerStart(requestId, getProducerName());
@@ -92,7 +92,7 @@ public class PostprocessedBitmapMemoryCacheProducer
           requestId,
           getProducerName(),
           listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
-      mNextProducer.produceResults(cachedConsumer, producerContext);
+      mInputProducer.produceResults(cachedConsumer, producerContext);
     }
   }
 

@@ -50,7 +50,7 @@ public class SingleUsePostprocessorProducerTest {
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
   @Mock public ProducerContext mProducerContext;
   @Mock public ProducerListener mProducerListener;
-  @Mock public Producer<CloseableReference<CloseableImage>> mNextProducer;
+  @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public Postprocessor mPostprocessor;
   @Mock public ResourceReleaser<Bitmap> mBitmapResourceReleaser;
@@ -75,7 +75,7 @@ public class SingleUsePostprocessorProducerTest {
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mPostprocessorProducer =
         new PostprocessorProducer(
-            mNextProducer,
+            mInputProducer,
             mPlatformBitmapFactory,
             mTestExecutorService);
 
@@ -199,7 +199,7 @@ public class SingleUsePostprocessorProducerTest {
   private SingleUsePostprocessorConsumer produceResults() {
     mPostprocessorProducer.produceResults(mConsumer, mProducerContext);
     ArgumentCaptor<Consumer> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-    verify(mNextProducer).produceResults(consumerCaptor.capture(), eq(mProducerContext));
+    verify(mInputProducer).produceResults(consumerCaptor.capture(), eq(mProducerContext));
     return (SingleUsePostprocessorConsumer) consumerCaptor.getValue();
   }
 }

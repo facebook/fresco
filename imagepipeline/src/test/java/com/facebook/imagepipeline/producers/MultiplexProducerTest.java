@@ -46,7 +46,7 @@ import static org.mockito.Mockito.*;
 public class MultiplexProducerTest {
 
   @Mock public CacheKeyFactory mCacheKeyFactory;
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
   @Mock public Exception mException;
   @Mock public ProducerListener mProducerListener;
   @Mock public Object mCallerContext;
@@ -77,7 +77,8 @@ public class MultiplexProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mMultiplexProducer = new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, mNextProducer);
+    mMultiplexProducer =
+        new BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, mInputProducer);
     mImageRequest1 = mock(ImageRequest.class);
     mImageRequest2 = mock(ImageRequest.class);
     mProducerContext1 = new SettableProducerContext(
@@ -139,7 +140,7 @@ public class MultiplexProducerTest {
             }
             return null;
           }
-        }).when(mNextProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+        }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
   }
 
   @Test
@@ -287,14 +288,14 @@ public class MultiplexProducerTest {
   @Test
   public void testRestartProducerOnLateCancellationCallback() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    verify(mNextProducer).produceResults(mForwardingConsumer1, mMultiplexedContext1);
+    verify(mInputProducer).produceResults(mForwardingConsumer1, mMultiplexedContext1);
     mProducerContext1.cancel();
     verify(mConsumer1).onCancellation();
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
-    verify(mNextProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+    verify(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
     mForwardingConsumer1.onCancellation();
     assertEquals(1, mMultiplexProducer.mMultiplexers.size());
-    verify(mNextProducer).produceResults(mForwardingConsumer2, mMultiplexedContext2);
+    verify(mInputProducer).produceResults(mForwardingConsumer2, mMultiplexedContext2);
     mForwardingConsumer2.onNewResult(mFinalImageReference1, true);
     verify(mConsumer2).onNewResult(mFinalImageReference1, true);
     assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());

@@ -62,7 +62,7 @@ public class DecodeProducerTest {
   @Mock public Executor mExecutor;
   @Mock public ImageDecoder mImageDecoder;
   private ProgressiveJpegConfig mProgressiveJpegConfig;
-  @Mock public Producer mNextProducer;
+  @Mock public Producer mInputProducer;
 
   private ImageRequest mImageRequest;
   private String mRequestId;
@@ -108,7 +108,7 @@ public class DecodeProducerTest {
         mProgressiveJpegConfig,
         false, /* Set downsampleEnabled to false */
         false, /* Set resizeAndRotateForNetwork to false */
-        mNextProducer);
+        mInputProducer);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);
@@ -398,7 +398,7 @@ public class DecodeProducerTest {
   private Consumer<EncodedImage> produceResults() {
     mDecodeProducer.produceResults(mConsumer, mProducerContext);
     ArgumentCaptor<Consumer> consumerCaptor = ArgumentCaptor.forClass(Consumer.class);
-    verify(mNextProducer).produceResults(consumerCaptor.capture(), eq(mProducerContext));
+    verify(mInputProducer).produceResults(consumerCaptor.capture(), eq(mProducerContext));
     return consumerCaptor.getValue();
   }
 
