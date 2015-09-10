@@ -3,6 +3,8 @@ id: troubleshooting
 title: Troubleshooting
 layout: docs
 permalink: /docs/troubleshooting.html
+prev: closeable-references.html
+next: gotchas.html
 ---
 
 ###  Troubleshooting

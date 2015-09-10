@@ -3,7 +3,7 @@ id: intro-image-pipeline
 title: Introduction to the Image Pipeline
 layout: docs
 permalink: /docs/intro-image-pipeline.html
-prev: gotchas.html
+prev: writing-custom-views.html
 next: configure-image-pipeline.html
 ---
 

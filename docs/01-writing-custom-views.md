@@ -4,7 +4,7 @@ title: Writing Custom Views
 layout: docs
 permalink: /docs/writing-custom-views.html
 prev: image-requests.html
-next: gotchas.html
+next: intro-image-pipeline.html
 ---
 
 ### DraweeHolders

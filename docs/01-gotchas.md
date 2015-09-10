@@ -3,8 +3,8 @@ id: gotchas
 title: Gotchas
 layout: docs
 permalink: /docs/gotchas.html
-prev: writing-custom-views.html
-next: intro-image-pipeline.html
+prev: troubleshooting.html
+next: using-other-network-layers.html
 ---
 
 #### Don't use ScrollViews

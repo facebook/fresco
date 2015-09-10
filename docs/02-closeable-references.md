@@ -4,7 +4,7 @@ title: Closeable References
 layout: docs
 permalink: /docs/closeable-references.html
 prev: datasources-datasubscribers.html
-next: using-other-network-layers.html
+next: troubleshooting.html
 ---
 
 **This page is intended for advanced usage only.** 

@@ -40,9 +40,7 @@
     title: Image Requests
   - id: writing-custom-views    
     title: Writing Custom Views
-  - id: gotchas
-    title: Gotchas
-- title: Image Pipeline Guide
+- title: Image Pipeline Guide    
   items:
   - id: intro-image-pipeline
     title: Introduction to the Image Pipeline
@@ -56,6 +54,12 @@
     title: DataSources and DataSubscribers
   - id: closeable-references
     title: Closeable References
+- title: Solving Problems
+  items:
+  - id: troubleshooting
+    title: Troubleshooting
+  - id: gotchas
+    title: Gotchas
 - title: Third Party Libraries
   items:
   - id: using-other-network-layers
