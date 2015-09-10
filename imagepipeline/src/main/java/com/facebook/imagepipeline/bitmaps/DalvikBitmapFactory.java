@@ -34,58 +34,12 @@ import java.util.List;
 /**
  * Bitmap factory for Dalvik VM (Honeycomb to KitKat).
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class DalvikBitmapFactory {
+abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
 
-  private final EmptyJpegGenerator mJpegGenerator;
-  private final BitmapCounter mUnpooledBitmapsCounter;
-  private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
   private final FlexByteArrayPool mFlexByteArrayPool;
 
-  public DalvikBitmapFactory(
-      EmptyJpegGenerator jpegGenerator,
-      FlexByteArrayPool flexByteArrayPool) {
-    mJpegGenerator = jpegGenerator;
+  DalvikBitmapFactory(FlexByteArrayPool flexByteArrayPool) {
     mFlexByteArrayPool = flexByteArrayPool;
-
-    mUnpooledBitmapsCounter = BitmapCounterProvider.get();
-    mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
-      @Override
-      public void release(Bitmap value) {
-        try {
-          mUnpooledBitmapsCounter.decrease(value);
-        } finally {
-          value.recycle();
-        }
-      }
-    };
-  }
-
-  /**
-   * Creates a bitmap of the specified width and height.
-   *
-   * @param width the width of the bitmap
-   * @param height the height of the bitmap
-   * @return a reference to the bitmap
-   * @throws TooManyBitmapsException if the pool is full
-   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
-   */
-  CloseableReference<Bitmap> createBitmap(short width, short height) {
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(width, height);
-    try {
-      EncodedImage encodedImage = new EncodedImage(jpgRef);
-      encodedImage.setImageFormat(ImageFormat.JPEG);
-      try {
-        CloseableReference<Bitmap> bitmapRef =
-            decodeJPEGFromEncodedImage(encodedImage, jpgRef.get().size());
-        bitmapRef.get().eraseColor(Color.TRANSPARENT);
-        return bitmapRef;
-      } finally {
-        EncodedImage.closeSafely(encodedImage);
-      }
-    } finally {
-      jpgRef.close();
-    }
   }
 
   /**
@@ -96,7 +50,8 @@ public class DalvikBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
+  @Override
+  public CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
         encodedImage.getSampleSize());
     CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
@@ -118,7 +73,8 @@ public class DalvikBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+  @Override
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       final EncodedImage encodedImage,
       int length) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
@@ -241,43 +197,4 @@ public class DalvikBitmapFactory {
         imageBytes[length - 1] == (byte) JfifUtil.MARKER_EOI;
   }
 
-  /**
-   * Associates bitmaps with the current bitmap pool.
-   *
-   * <p> If this method throws TooManyBitmapsException, the code will have called
-   * {@link Bitmap#recycle} on the bitmaps.
-   *
-   * @param bitmaps the bitmaps to associate
-   * @return the references to the bitmaps that are now tied to the bitmap pool
-   * @throws TooManyBitmapsException if the pool is full
-   */
-  List<CloseableReference<Bitmap>> associateBitmapsWithBitmapCounter(
-      final List<Bitmap> bitmaps) {
-    int countedBitmaps = 0;
-    try {
-      for (; countedBitmaps < bitmaps.size(); ++countedBitmaps) {
-        final Bitmap bitmap = bitmaps.get(countedBitmaps);
-        // 'Pin' the bytes of the purgeable bitmap, so it is now not purgeable
-        Bitmaps.pinBitmap(bitmap);
-        if (!mUnpooledBitmapsCounter.increase(bitmap)) {
-          throw new TooManyBitmapsException();
-        }
-      }
-      List<CloseableReference<Bitmap>> ret = new ArrayList<>();
-      for (Bitmap bitmap : bitmaps) {
-        ret.add(CloseableReference.of(bitmap, mUnpooledBitmapsReleaser));
-      }
-      return ret;
-    } catch (Exception exception) {
-      if (bitmaps != null) {
-        for (Bitmap bitmap : bitmaps) {
-          if (countedBitmaps-- > 0) {
-            mUnpooledBitmapsCounter.decrease(bitmap);
-          }
-          bitmap.recycle();
-        }
-      }
-      throw Throwables.propagate(exception);
-    }
-  }
 }

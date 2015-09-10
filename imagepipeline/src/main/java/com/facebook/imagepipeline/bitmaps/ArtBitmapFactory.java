@@ -35,7 +35,7 @@ import java.nio.ByteBuffer;
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 @ThreadSafe
-public class ArtBitmapFactory {
+class ArtBitmapFactory extends PlatformBitmapFactory {
 
   /**
    * Size of temporary array. Value recommended by Android docs for decoding Bitmaps.
@@ -56,7 +56,7 @@ public class ArtBitmapFactory {
       (byte) JfifUtil.MARKER_FIRST_BYTE,
       (byte) JfifUtil.MARKER_EOI};
 
-  public ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads) {
+  ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads) {
     mBitmapPool = bitmapPool;
     mDecodeBuffers = new SynchronizedPool<>(maxNumThreads);
     for (int i = 0; i < maxNumThreads; i++) {
@@ -72,7 +72,8 @@ public class ArtBitmapFactory {
    * @return a reference to the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> createBitmap(int width, int height) {
+  @Override
+  public CloseableReference<Bitmap> createBitmap(int width, int height) {
     Bitmap bitmap = mBitmapPool.get(width * height);
     Bitmaps.reconfigureBitmap(bitmap, width, height);
     return CloseableReference.of(bitmap, mBitmapPool);
@@ -85,7 +86,8 @@ public class ArtBitmapFactory {
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
+  @Override
+  public CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
     return decodeStaticImageFromStream(encodedImage.getInputStream(), options);
   }
@@ -98,7 +100,10 @@ public class ArtBitmapFactory {
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(EncodedImage encodedImage, int length) {
+  @Override
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      EncodedImage encodedImage,
+      int length) {
     boolean isJpegComplete = encodedImage.isCompleteAt(length);
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
 
@@ -114,6 +119,11 @@ public class ArtBitmapFactory {
       jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
     }
     return decodeStaticImageFromStream(jpegDataStream, options);
+  }
+
+  @Override
+  protected boolean isPinBitmapEnabled() {
+    return false;
   }
 
   private CloseableReference<Bitmap> decodeStaticImageFromStream(

@@ -14,7 +14,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheFactory;
@@ -36,10 +35,6 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
-import com.facebook.imagepipeline.bitmaps.ArtBitmapFactory;
-import com.facebook.imagepipeline.bitmaps.DalvikBitmapFactory;
-import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
-import com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
@@ -50,7 +45,6 @@ import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
@@ -240,28 +234,8 @@ public class ImagePipelineFactory {
     return mImagePipeline;
   }
 
-  public static PlatformBitmapFactory buildPlatformBitmapFactory(
-      PoolFactory poolFactory) {
-    GingerbreadBitmapFactory factoryGingerbread =
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ?
-            new GingerbreadBitmapFactory() : null;
-    DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
-        new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
-        poolFactory.getFlexByteArrayPool());
-    ArtBitmapFactory factoryLollipop = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
-        new ArtBitmapFactory(
-            poolFactory.getBitmapPool(),
-            poolFactory.getFlexByteArrayPoolMaxNumThreads()) :
-        null;
-    return new PlatformBitmapFactory(factoryGingerbread, factoryICS, factoryLollipop);
-  }
-
   private PlatformBitmapFactory getPlatformBitmapFactory() {
-    if (mPlatformBitmapFactory == null) {
-      mPlatformBitmapFactory = buildPlatformBitmapFactory(
-          mConfig.getPoolFactory());
-    }
-    return mPlatformBitmapFactory;
+    return PlatformBitmapFactory.getInstance(mConfig.getPoolFactory());
   }
 
   private ProducerFactory getProducerFactory() {

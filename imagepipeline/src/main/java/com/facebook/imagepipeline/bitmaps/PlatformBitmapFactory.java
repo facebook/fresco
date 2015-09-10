@@ -9,31 +9,77 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
 
+import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.memory.BitmapCounter;
+import com.facebook.imagepipeline.memory.BitmapCounterProvider;
+import com.facebook.imagepipeline.memory.PoolFactory;
+import com.facebook.imagepipeline.nativecode.Bitmaps;
 
 /**
  * Bitmap factory optimized for the platform.
  */
-public class PlatformBitmapFactory {
+public abstract class PlatformBitmapFactory {
 
-  private final GingerbreadBitmapFactory mGingerbreadBitmapFactory;
-  private final DalvikBitmapFactory mDalvikBitmapFactory;
-  private final ArtBitmapFactory mArtBitmapFactory;
+  private static GingerbreadBitmapFactory sGingerbreadBitmapFactory;
+  private static ArtBitmapFactory sArtBitmapFactory;
+  private static HoneycombBitmapFactory sHoneycombBitmapFactory;
 
-  public PlatformBitmapFactory(
-      GingerbreadBitmapFactory gingerbreadBitmapFactory,
-      DalvikBitmapFactory dalvikBitmapFactory,
-      ArtBitmapFactory artBitmapFactory) {
-    mGingerbreadBitmapFactory = gingerbreadBitmapFactory;
-    mDalvikBitmapFactory = dalvikBitmapFactory;
-    mArtBitmapFactory = artBitmapFactory;
+  protected final BitmapCounter mUnpooledBitmapsCounter;
+  protected final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
+
+  PlatformBitmapFactory() {
+    mUnpooledBitmapsCounter = BitmapCounterProvider.get();
+    mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
+      @Override
+      public void release(Bitmap value) {
+        try {
+          mUnpooledBitmapsCounter.decrease(value);
+        } finally {
+          value.recycle();
+        }
+      }
+    };
+  }
+
+  /**
+   * Provide the implementation of the PlatformBitmapFactory for the current platform using the
+   * provided PoolFactory
+   *
+   * @param poolFactory The PoolFactory
+   * @return The PlatformBitmapFactory implementation
+   */
+  public synchronized static PlatformBitmapFactory getInstance(final PoolFactory poolFactory) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (sArtBitmapFactory == null) {
+        sArtBitmapFactory = new ArtBitmapFactory(
+            poolFactory.getBitmapPool(),
+            poolFactory.getFlexByteArrayPoolMaxNumThreads());
+      }
+      return sArtBitmapFactory;
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      if (sHoneycombBitmapFactory == null) {
+        sHoneycombBitmapFactory = new HoneycombBitmapFactory(
+            new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
+            poolFactory.getFlexByteArrayPool());
+      }
+      return sHoneycombBitmapFactory;
+    } else {
+      if (sGingerbreadBitmapFactory == null) {
+        sGingerbreadBitmapFactory = new GingerbreadBitmapFactory(
+            poolFactory.getFlexByteArrayPool()
+        );
+      }
+      return sGingerbreadBitmapFactory;
+    }
   }
 
   /**
@@ -45,16 +91,7 @@ public class PlatformBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  @SuppressLint("NewApi")
-  public CloseableReference<Bitmap> createBitmap(int width, int height) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return mArtBitmapFactory.createBitmap(width, height);
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      return mDalvikBitmapFactory.createBitmap((short) width, (short) height);
-    } else {
-      return mGingerbreadBitmapFactory.createBitmap(width, height);
-    }
-  }
+  public abstract CloseableReference<Bitmap> createBitmap(int width, int height);
 
   /**
    * Associates bitmaps with the bitmap counter.
@@ -66,10 +103,36 @@ public class PlatformBitmapFactory {
    * @return the references to the bitmaps that are now tied to the bitmap pool
    * @throws TooManyBitmapsException if the pool is full
    */
-  public synchronized List<CloseableReference<Bitmap>> associateBitmapsWithBitmapCounter(
+  public List<CloseableReference<Bitmap>> associateBitmapsWithBitmapCounter(
       final List<Bitmap> bitmaps) {
-    // Refactoring note, this code path always used ICS pool. Should this be a no-op on Lollipop?
-    return mDalvikBitmapFactory.associateBitmapsWithBitmapCounter(bitmaps);
+    int countedBitmaps = 0;
+    try {
+      for (; countedBitmaps < bitmaps.size(); ++countedBitmaps) {
+        final Bitmap bitmap = bitmaps.get(countedBitmaps);
+        // 'Pin' the bytes of the purgeable bitmap, so it is now not purgeable
+        if (isPinBitmapEnabled()) {
+          Bitmaps.pinBitmap(bitmap);
+        }
+        if (!mUnpooledBitmapsCounter.increase(bitmap)) {
+          throw new TooManyBitmapsException();
+        }
+      }
+      List<CloseableReference<Bitmap>> ret = new ArrayList<>();
+      for (Bitmap bitmap : bitmaps) {
+        ret.add(CloseableReference.of(bitmap, mUnpooledBitmapsReleaser));
+      }
+      return ret;
+    } catch (Exception exception) {
+      if (bitmaps != null) {
+        for (Bitmap bitmap : bitmaps) {
+          if (countedBitmaps-- > 0) {
+            mUnpooledBitmapsCounter.decrease(bitmap);
+          }
+          bitmap.recycle();
+        }
+      }
+      throw Throwables.propagate(exception);
+    }
   }
 
   /**
@@ -81,14 +144,8 @@ public class PlatformBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  public CloseableReference<Bitmap> decodeFromEncodedImage(
-      final EncodedImage encodedImage) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return mArtBitmapFactory.decodeFromEncodedImage(encodedImage);
-    } else {
-      return mDalvikBitmapFactory.decodeFromEncodedImage(encodedImage);
-    }
-  }
+  public abstract CloseableReference<Bitmap> decodeFromEncodedImage(
+      final EncodedImage encodedImage);
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
@@ -99,13 +156,15 @@ public class PlatformBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+  public abstract CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       EncodedImage encodedImage,
-      int length) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return mArtBitmapFactory.decodeJPEGFromEncodedImage(encodedImage, length);
-    } else {
-      return mDalvikBitmapFactory.decodeJPEGFromEncodedImage(encodedImage, length);
-    }
-  }
+      int length);
+
+  /**
+   * We shoukd override this operation in case we want enable the pin for the Bitmap.
+   *
+   * @return True if the pin is enabled for Bitmap.
+   */
+  protected abstract boolean isPinBitmapEnabled();
+
 }

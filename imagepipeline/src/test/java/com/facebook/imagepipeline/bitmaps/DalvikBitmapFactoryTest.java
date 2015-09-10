@@ -11,46 +11,50 @@ package com.facebook.imagepipeline.bitmaps;
 
 import java.util.ConcurrentModificationException;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
-import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 
-import org.junit.Rule;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
-
 /**
- * Tests for {@link DalvikBitmapFactory}.
+ * Base class for Tests about {@link DalvikBitmapFactory} implementations.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
     BitmapCounterProvider.class,
@@ -112,11 +116,23 @@ public class DalvikBitmapFactoryTest {
     when(mFlexByteArrayPool.get(Integer.valueOf(LENGTH))).thenReturn(mDecodeBufRef);
 
     mockStatic(Bitmaps.class);
-    mDalvikBitmapFactory = new DalvikBitmapFactory(null, mFlexByteArrayPool);
+    mDalvikBitmapFactory = createDalvikBitmapFactoryImpl(mFlexByteArrayPool);
   }
+
+  /**
+   * Specialization provides the specific DalvikBitmapFactory implementation to test
+   * @param flexByteArrayPool The ByteArraypool
+   * @return The DalvikBitmapFactory implementation to test
+   */
+  protected DalvikBitmapFactory createDalvikBitmapFactoryImpl(
+      FlexByteArrayPool flexByteArrayPool) {
+    return null;
+  }
+
 
   @Test
   public void testDecode_Jpeg_Detailed() {
+    assumeNotNull(mDalvikBitmapFactory);
     setUpJpegDecode();
     CloseableReference<Bitmap> result = mDalvikBitmapFactory.decodeJPEGFromEncodedImage(
         mEncodedImage,
@@ -126,6 +142,7 @@ public class DalvikBitmapFactoryTest {
 
   @Test
   public void testDecodeJpeg_incomplete() {
+    assumeNotNull(mDalvikBitmapFactory);
     when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
     CloseableReference<Bitmap> result =
         mDalvikBitmapFactory.decodeJPEGFromEncodedImage(mEncodedImage, IMAGE_SIZE);
@@ -148,6 +165,7 @@ public class DalvikBitmapFactoryTest {
 
   @Test(expected = TooManyBitmapsException.class)
   public void testHitBitmapLimit_static() {
+    assumeNotNull(mDalvikBitmapFactory);
     mBitmapCounter.increase(MockBitmapFactory.createForSize(MAX_BITMAP_SIZE));
     try {
       mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage);
@@ -160,6 +178,7 @@ public class DalvikBitmapFactoryTest {
 
   @Test(expected = ConcurrentModificationException.class)
   public void testPinBitmapFailure_static() {
+    assumeNotNull(mDalvikBitmapFactory);
     PowerMockito.doThrow(new ConcurrentModificationException()).when(Bitmaps.class);
     Bitmaps.pinBitmap(any(Bitmap.class));
     try {
@@ -216,4 +235,6 @@ public class DalvikBitmapFactoryTest {
           options.inPurgeable;
     }
   }
+
+
 }
