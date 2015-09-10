@@ -46,6 +46,7 @@ public class CountingMemoryCacheTest {
   @Mock public ResourceReleaser<Integer> mReleaser;
   @Mock public CountingMemoryCache.CacheTrimStrategy mCacheTrimStrategy;
   @Mock public Supplier<MemoryCacheParams> mParamsSupplier;
+  @Mock public CountingMemoryCache.EntryStateObserver<String> mEntryStateObserver;
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
@@ -111,6 +112,42 @@ public class CountingMemoryCacheTest {
     assertExclusivelyOwnedSize(1, 100);
     assertExclusivelyOwned(KEY, 100);
     verify(mReleaser, never()).release(anyInt());
+  }
+
+  @Test
+  public void testNotExclusiveAtFirst() {
+    mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    verify(mEntryStateObserver, never()).onExclusivityChanged(anyString(), anyBoolean());
+  }
+
+  @Test
+  public void testToggleExclusive() {
+    CloseableReference<Integer> cachedRef =
+        mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    cachedRef.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    mCache.get(KEY);
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, false);
+  }
+
+  @Test
+  public void testCantReuseNonExclusive() {
+    mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    assertNull(mCache.reuse(KEY));
+    verify(mEntryStateObserver, never()).onExclusivityChanged(anyString(), anyBoolean());
+  }
+
+  @Test
+  public void testCanReuseExclusive() {
+    CloseableReference<Integer> cachedRef =
+        mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    cachedRef.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    cachedRef = mCache.reuse(KEY);
+    assertNotNull(cachedRef);
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, false);
+    cachedRef.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
   }
 
   @Test
