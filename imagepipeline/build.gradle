@@ -163,7 +163,7 @@ def makeNdkTasks(String name, Object[] deps) {
             'NDK_OUT=' + temporaryDir,
             "NDK_LIBS_OUT=$buildDir/$name",
             '-C', file("src/main/jni/$name").absolutePath,
-            '--jobs', '8'
+            '--jobs', Runtime.getRuntime().availableProcessors()
     }
 
     task "ndk_clean_$name"(type: Exec) {
