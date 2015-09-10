@@ -9,13 +9,13 @@ permalink: /docs/troubleshooting.html
 
 #### Read the logcat
 
-There are various issues one might encounter when it comes to image handling. With Fresco, most of them can be diagnosed by simply looking at the `VERBOSE` logcat. This should be your starting point when investigating an issue with Fresco:
+There are various issues one might encounter when it comes to image handling. With Fresco, most of them can be diagnosed by simply looking at the `VERBOSE` logcat. This should be your starting point when investigating an issue with Fresco.
 
 ```
 adb logcat -v threadtime | grep -iE 'LoggingListener|AbstractDraweeController|BufferedDiskCache'
 ```
 
-The output shows what is happening with the image requests within the image pipeline and it looks like this:
+The output shows what is happening with the image requests within the image pipeline. It looks something like this:
 
 ```
 08-12 09:11:14.791 6690 6690 V unknown:AbstractDraweeController: controller 28ebe0eb 0 -> 1: initialize
@@ -49,22 +49,30 @@ The output shows what is happening with the image requests within the image pipe
 08-12 09:11:15.184 6690 6690 V unknown:AbstractDraweeController: controller 28ebe0eb 1: set_final_result @ onNewResult: image: CloseableReference 2fd41bb0
 ```
 
-We see that the controller `28ebe0eb` associated with a DraweeView started the datasource `36e95857` which issued the image request `1`. We can now see that the image was not found in the bitmap cache, nor in the encoded memory cache, nor in the disk cache, and so the network fetch had to be performed. The fetch was successful, the image was decoded and the request finished successfully. Finally, the datasource notifies the controller which then sets the resulting image to the hierarchy (`set_final_result`). 
+In this case, we see that the controller `28ebe0eb` associated with a DraweeView started datasource `36e95857` which issued image request `1`. We can now see that the image was not found in the bitmap cache, nor in the encoded memory cache, nor in the disk cache, and so the network fetch had to be performed. The fetch was successful, the image was decoded and the request finished successfully. Finally, the datasource notified the controller which then set the resulting image to the hierarchy (`set_final_result`). 
 
 #### Image doesn't load
 
 Here are some common reasons why image loads fail.
 
-##### The file is not available.
+##### File not available
 
-For example, an incorrect path for local files or an unavailable network uri. In case of a network uri, try opening it in a mobile browser. If it doesn't work in a browser, the issue is likely not in Fresco nor your app. In case of a local file, try opening a file input stream directly from your app:
+For example, an incorrect path for local files or an unavailable network URI is given. 
+
+Try opening a network URI in a mobile browser. If it doesn't work, the issue is likely neither in Fresco nor your app. 
+
+For a local file, try opening a file input stream directly from your app:
 
 ```
 FileInputStream fis = new FileInputStream(new File(localUri.getPath()));
 ```
 
-If that throws an exception, the issue is likely not in Fresco, **but** it may be in your app. One possibility is a permission issue (e.g. trying to access SD card without correctly requiring the necessary permission in your application manifest). Another possibility is that the uri is not correct (e.g. you forgot to properly escape the uri). Finally, the file may simply not exist.
+If that throws an exception, the issue is likely not in Fresco, **but** it may be in your app. One possibility is a permission issue, such as trying to access the SD card without requiring the necessary permission in your application manifest. Another possibility is that the pathy is not correct - perhaps you forgot to properly escape it. Finally, the file may simply not exist.
 
 #### OOMs and failing to allocate a bitmap
 
-The most common reason for this happening is loading the too big images. If the image to be loaded is of considerably bigger size than the view hoisting it, it should be [resized] (http://frescolib.org/docs/resizing-rotating.html#_).
+The most common reason for this happening is loading too big images. If the image to be loaded is of considerably bigger size than the view hosting it, it should be [resized] (http://frescolib.org/docs/resizing-rotating.html#_).
+
+#### Bitmap too large to be uploaded to a texture
+
+Android cannot display images more than 2048 pixels long in either dimension. This is beyond the capability of the OpenGL rendering system. Fresco will resize your image if it exceeds this limit.
