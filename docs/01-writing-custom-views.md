@@ -9,9 +9,9 @@ next: intro-image-pipeline.html
 
 ### DraweeHolders
 
-There will always be times when `DraweeViews` won't fit your needs. You may need to show additional content inside the same view as your image. You might to show multiple images inside a single view.
+There will always be times when `DraweeViews` won't fit your needs. You may need to show additional content inside the same view as your image. You might need to show multiple images inside a single view.
 
-We provide two alternate classes you can use to host your Drawee:
+We provide two alternative classes you can use to host your Drawee:
 
 * `DraweeHolder` for a single image
 * `MultiDraweeHolder` for multiple images
@@ -21,7 +21,7 @@ We provide two alternate classes you can use to host your Drawee:
 
 ### Responsibilities of custom views
 
-Android lays out View objects, and only they get told of system events. `DraweeViews` handle these events and use them to manage memory effectively. When using the holders, you must implement some of this functionality yourself.
+Android lays out View objects, and only they get notified of system events. `DraweeViews` handle these events and use them to manage memory effectively. When using the holders, you must implement some of this functionality yourself.
 
 #### Handling attach/detach events
 
@@ -77,11 +77,14 @@ You must call
 ```java
 Drawable drawable = mDraweeHolder.getTopLevelDrawable();
 drawable.setBounds(...);
+...
+drawable.draw(canvas);
 ```
 or the Drawee won't appear at all.
 
-* Do not downcast this Drawable.
-* Do not translate it.
+* Do not downcast this Drawable. The underlying implementation may change without any notice.
+* Do not translate it. Just set the proper bounds.
+* If you need to apply some canvas transformations, then make sure that you properly invalidate the area that the drawable occupies in the view. See below on how to do that.
 
 #### Other responsibilities
 
@@ -111,12 +114,12 @@ protected boolean verifyDrawable(Drawable who) {
 }
 ```
 
-* Make sure `invalidateDrawable` invalidates the region occupied by your Drawee.
+* Make sure `invalidateDrawable` invalidates the region occupied by your Drawee. If you apply some canvas transformations on the drawable before it gets drawn, then those transformations needs to be taken into account in invalidation. The simplest thing to do is what Android ImageView does in its [invalidateDrawable] (http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/4.4.4_r1/android/widget/ImageView.java#192) method. That is, to just invalidate the whole view when the drawable gets invalidated.
 
 
 ### Constructing a DraweeHolder
 
-This should be done carefully.
+This should be done carefully. Se below.
 
 #### Arranging your Constructors
  
@@ -126,7 +129,7 @@ We recommend the following pattern for constructors:
 * Each constructor calls its superclass counterpart and then a private `init` method.
 * All of your initialization happens in `init.`
  
-That is, do not use the `this` operator to call one constructor from another. 
+That is, do not use the `this` to call one constructor from another. This is because Android View already calls one constructor from another, and it does so in an unintuitive way.
 
 This approach guarantees that the correct initialization is called no matter what constructor is used. It is in the `init` method that your holder is created.
 
@@ -164,7 +167,7 @@ mDraweeHolder.setController(controller);
 
 ### MultiDraweeHolder
 
-Instead of using a `DraweeHolder`, use a `MultiDraweeHolder`. There are `add`, `remove`, and `clear` methods for dealing with Drawees:
+If you are dealing with multiple drawees in your custom view, `MultiDraweeHolder` might come handy. There are `add`, `remove`, and `clear` methods for dealing with DraweeHalders:
 
 ```java
 MultiDraweeHolder<GenericDraweeHierarchy> mMultiDraweeHolder;
