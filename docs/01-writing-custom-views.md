@@ -117,7 +117,7 @@ protected boolean verifyDrawable(Drawable who) {
 * Make sure `invalidateDrawable` invalidates the region occupied by your Drawee. If you apply some canvas transformations on the drawable before it gets drawn, then those transformations needs to be taken into account in invalidation. The simplest thing to do is what Android ImageView does in its [invalidateDrawable] (http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/4.4.4_r1/android/widget/ImageView.java#192) method. That is, to just invalidate the whole view when the drawable gets invalidated.
 
 
-### Constructing a DraweeHolder
+### Constructing the View and DraweeHolder
 
 This should be done carefully. Se below.
 
