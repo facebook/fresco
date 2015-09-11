@@ -67,6 +67,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
 * [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
+* [Moments](https://play.google.com/store/apps/details?id=com.facebook.moments)
 * [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
