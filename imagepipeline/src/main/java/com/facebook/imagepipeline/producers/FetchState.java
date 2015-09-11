@@ -11,8 +11,7 @@ package com.facebook.imagepipeline.producers;
 
 import android.net.Uri;
 
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
  * Used by {@link NetworkFetcher} to encapsulate the state of one network fetch.
@@ -21,19 +20,19 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
  */
 public class FetchState {
 
-  private final Consumer<CloseableReference<PooledByteBuffer>> mConsumer;
+  private final Consumer<EncodedImage> mConsumer;
   private final ProducerContext mContext;
   private long mLastIntermediateResultTimeMs;
 
   public FetchState(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
+      Consumer<EncodedImage> consumer,
       ProducerContext context) {
     mConsumer = consumer;
     mContext = context;
     mLastIntermediateResultTimeMs = 0;
   }
 
-  public Consumer<CloseableReference<PooledByteBuffer>> getConsumer() {
+  public Consumer<EncodedImage> getConsumer() {
     return mConsumer;
   }
 

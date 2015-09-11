@@ -9,7 +9,6 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,10 +19,12 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.SharedByteArray;
+import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
@@ -39,13 +40,14 @@ public class DalvikBitmapFactory {
   private final EmptyJpegGenerator mJpegGenerator;
   private final BitmapCounter mUnpooledBitmapsCounter;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
-  private final SharedByteArray mSharedByteArray;
+  private final FlexByteArrayPool mFlexByteArrayPool;
 
   public DalvikBitmapFactory(
       EmptyJpegGenerator jpegGenerator,
-      SharedByteArray sharedByteArray) {
+      FlexByteArrayPool flexByteArrayPool) {
     mJpegGenerator = jpegGenerator;
-    mSharedByteArray = sharedByteArray;
+    mFlexByteArrayPool = flexByteArrayPool;
+
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
     mUnpooledBitmapsReleaser = new ResourceReleaser<Bitmap>() {
       @Override
@@ -71,10 +73,16 @@ public class DalvikBitmapFactory {
   CloseableReference<Bitmap> createBitmap(short width, short height) {
     CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(width, height);
     try {
-      CloseableReference<Bitmap> bitmapRef =
-          decodeJPEGFromPooledByteBuffer(jpgRef, jpgRef.get().size());
-      bitmapRef.get().eraseColor(Color.TRANSPARENT);
-      return bitmapRef;
+      EncodedImage encodedImage = new EncodedImage(jpgRef);
+      encodedImage.setImageFormat(ImageFormat.JPEG);
+      try {
+        CloseableReference<Bitmap> bitmapRef =
+            decodeJPEGFromEncodedImage(encodedImage, jpgRef.get().size());
+        bitmapRef.get().eraseColor(Color.TRANSPARENT);
+        return bitmapRef;
+      } finally {
+        EncodedImage.closeSafely(encodedImage);
+      }
     } finally {
       jpgRef.close();
     }
@@ -83,62 +91,52 @@ public class DalvikBitmapFactory {
   /**
    * Creates a bitmap from encoded bytes.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with reference to the encoded bytes
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeFromPooledByteBuffer(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
-    final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
-    final int length = pooledByteBuffer.size();
-    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length);
+  CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
+    BitmapFactory.Options options = getBitmapFactoryOptions(
+        encodedImage.getSampleSize());
+    CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
     try {
-      final byte[] encodedBytesArray = encodedBytesArrayRef.get();
-      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      return doDecodeBitmap(encodedBytesArray, length);
+      Bitmap bitmap = decodeByteArrayAsPurgeable(bytesRef, options);
+      return pinBitmap(bitmap);
     } finally {
-      encodedBytesArrayRef.close();
+      CloseableReference.closeSafely(bytesRef);
     }
   }
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with reference to the encoded bytes
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
+  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      final EncodedImage encodedImage,
       int length) {
-    final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
-    Preconditions.checkArgument(length <= pooledByteBuffer.size());
-    // allocate bigger array in case EOI needs to be added
-    final CloseableReference<byte[]> encodedBytesArrayRef = mSharedByteArray.get(length + 2);
+    BitmapFactory.Options options = getBitmapFactoryOptions(
+        encodedImage.getSampleSize());
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
     try {
-      byte[] encodedBytesArray = encodedBytesArrayRef.get();
-      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      if (!endsWithEOI(encodedBytesArray, length)) {
-        putEOI(encodedBytesArray, length);
-        length += 2;
-      }
-      return doDecodeBitmap(encodedBytesArray, length);
+      Bitmap bitmap = decodeJPEGByteArrayAsPurgeable(bytesRef, length, options);
+      return pinBitmap(bitmap);
     } finally {
-      encodedBytesArrayRef.close();
+      CloseableReference.closeSafely(bytesRef);
     }
   }
 
   /**
-   * Performs the actual decoding.
+   * Pins the bitmap
    */
-  private CloseableReference<Bitmap> doDecodeBitmap(
-      final byte[] encodedBytes,
-      final int length) {
-    final Bitmap bitmap = decodeAsPurgeableBitmap(encodedBytes, length);
-
+  private CloseableReference<Bitmap> pinBitmap(Bitmap bitmap) {
     try {
       // Real decoding happens here - if the image was corrupted, this will throw an exception
       Bitmaps.pinBitmap(bitmap);
@@ -156,27 +154,78 @@ public class DalvikBitmapFactory {
   }
 
   /**
-   * Decode the input into a purgeable bitmap
+   * Decodes a byteArray into a purgeable bitmap
    *
-   * @param encodedBytes the input encoded image
-   * @return a purgeable bitmap
+   * @param bytesRef the byte buffer that contains the encoded bytes
+   * @return
    */
-  @SuppressLint("NewApi")
-  private static Bitmap decodeAsPurgeableBitmap(byte[] encodedBytes, int size) {
+  private Bitmap decodeByteArrayAsPurgeable(
+      CloseableReference<PooledByteBuffer> bytesRef,
+      BitmapFactory.Options options) {
+    final PooledByteBuffer pooledByteBuffer = bytesRef.get();
+    final int length = pooledByteBuffer.size();
+    final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length);
+    try {
+      final byte[] encodedBytesArray = encodedBytesArrayRef.get();
+      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+      Bitmap bitmap = BitmapFactory.decodeByteArray(
+          encodedBytesArray,
+          0,
+          length,
+          options);
+      return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
+    } finally {
+      CloseableReference.closeSafely(encodedBytesArrayRef);
+    }
+  }
+
+  /**
+   * Decodes a byteArray containing jpeg encoded bytes into a purgeable bitmap
+   *
+   * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
+   *
+   * @param bytesRef the byte buffer that contains the encoded bytes
+   * @return
+   */
+  private Bitmap decodeJPEGByteArrayAsPurgeable(
+      CloseableReference<PooledByteBuffer> bytesRef,
+      int length,
+      BitmapFactory.Options options) {
+    final PooledByteBuffer pooledByteBuffer = bytesRef.get();
+    Preconditions.checkArgument(length <= pooledByteBuffer.size());
+    // allocate bigger array in case EOI needs to be added
+    final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length + 2);
+    try {
+      byte[] encodedBytesArray = encodedBytesArrayRef.get();
+      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+      if (!endsWithEOI(encodedBytesArray, length)) {
+        putEOI(encodedBytesArray, length);
+        length += 2;
+      }
+      Bitmap bitmap = BitmapFactory.decodeByteArray(
+          encodedBytesArray,
+          0,
+          length,
+          options);
+      return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
+    } finally {
+      CloseableReference.closeSafely(encodedBytesArrayRef);
+    }
+  }
+
+  private static BitmapFactory.Options getBitmapFactoryOptions(
+      int sampleSize) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
     // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
     options.inPurgeable = true;
+    // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
+    options.inSampleSize = sampleSize;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       options.inMutable = true;  // no known perf difference; allows postprocessing to work
     }
-    Bitmap bitmap = BitmapFactory.decodeByteArray(
-        encodedBytes,
-        0,
-        size,
-        options);
-    return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
+    return options;
   }
 
   private static void putEOI(byte[] imageBytes, int offset) {

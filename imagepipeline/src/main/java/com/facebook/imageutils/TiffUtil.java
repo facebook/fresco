@@ -9,6 +9,8 @@
 
 package com.facebook.imageutils;
 
+import android.media.ExifInterface;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -33,13 +35,13 @@ class TiffUtil {
    */
   public static int getAutoRotateAngleFromOrientation(int orientation) {
     switch (orientation) {
-      case 1:
+      case ExifInterface.ORIENTATION_NORMAL:
         return 0;
-      case 3:
+      case ExifInterface.ORIENTATION_ROTATE_180:
         return 180;
-      case 6:
+      case ExifInterface.ORIENTATION_ROTATE_90:
         return 90;
-      case 8:
+      case ExifInterface.ORIENTATION_ROTATE_270:
         return 270;
     }
     FLog.i(TAG, "Unsupported orientation");

@@ -291,8 +291,8 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       TypedArray attrs,
       int attrId,
       ScalingUtils.ScaleType defaultScaleType) {
-    String xmlType = attrs.getString(attrId);
-    return (xmlType != null) ? ScalingUtils.ScaleType.fromString(xmlType) : defaultScaleType;
+    int index = attrs.getInt(attrId, -1);
+    return index < 0 ? defaultScaleType : ScalingUtils.ScaleType.values()[index];
   }
 
  /**

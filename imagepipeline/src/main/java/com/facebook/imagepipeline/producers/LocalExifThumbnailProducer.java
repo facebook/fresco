@@ -13,18 +13,19 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.util.Pair;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
-import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 
 /**
@@ -33,8 +34,7 @@ import com.facebook.imageutils.JfifUtil;
  * <p>At present, these thumbnails are retrieved on the java heap before being put into native
  * memory.
  */
-public class LocalExifThumbnailProducer implements
-    Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
+public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
 
   @VisibleForTesting static final String PRODUCER_NAME = "LocalExifThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
@@ -51,7 +51,7 @@ public class LocalExifThumbnailProducer implements
 
   @Override
   public void produceResults(
-      final Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer,
+      final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
 
     final ProducerListener listener = producerContext.getListener();
@@ -59,14 +59,13 @@ public class LocalExifThumbnailProducer implements
     final ImageRequest imageRequest = producerContext.getImageRequest();
 
     final StatefulProducerRunnable cancellableProducerRunnable =
-        new StatefulProducerRunnable<
-            Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>>(
+        new StatefulProducerRunnable<EncodedImage>(
             consumer,
             listener,
             PRODUCER_NAME,
             requestId) {
           @Override
-          protected Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> getResult()
+          protected EncodedImage getResult()
               throws Exception {
             final ExifInterface exifInterface =
                 getExifInterface(imageRequest.getSourceFile().getPath());
@@ -76,22 +75,16 @@ public class LocalExifThumbnailProducer implements
 
             byte[] bytes = exifInterface.getThumbnail();
             PooledByteBuffer pooledByteBuffer = mPooledByteBufferFactory.newByteBuffer(bytes);
-            ImageTransformMetaData imageTransformMetaData =
-                getImageTransformMetaData(pooledByteBuffer, exifInterface);
-            return Pair.create(CloseableReference.of(pooledByteBuffer), imageTransformMetaData);
+            return buildEncodedImage(pooledByteBuffer, exifInterface);
           }
 
           @Override
-          protected void disposeResult(
-              Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> result) {
-            if (result != null) {
-              CloseableReference.closeSafely(result.first);
-            }
+          protected void disposeResult(EncodedImage result) {
+            EncodedImage.closeSafely(result);
           }
 
           @Override
-          protected Map<String, String> getExtraMapOnSuccess(
-              final Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> result) {
+          protected Map<String, String> getExtraMapOnSuccess(final EncodedImage result) {
             return ImmutableMap.of(CREATED_THUMBNAIL, Boolean.toString(result != null));
           }
         };
@@ -109,18 +102,20 @@ public class LocalExifThumbnailProducer implements
     return new ExifInterface(path);
   }
 
-  private ImageTransformMetaData getImageTransformMetaData(
+  private EncodedImage buildEncodedImage(
       PooledByteBuffer imageBytes,
       ExifInterface exifInterface) {
-    ImageTransformMetaData.Builder builder = ImageTransformMetaData.newBuilder()
-        .setImageFormat(ImageFormat.JPEG);
-    builder.setRotationAngle(getRotationAngle(exifInterface));
-    Rect dimensions = JfifUtil.getDimensions(new PooledByteBufferInputStream(imageBytes));
-    if (dimensions != null) {
-      builder.setWidth(dimensions.width());
-      builder.setHeight(dimensions.height());
-    }
-    return builder.build();
+    Pair<Integer, Integer> dimensions =
+        BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
+    int rotationAngle = getRotationAngle(exifInterface);
+    int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
+    int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
+    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(imageBytes));
+    encodedImage.setImageFormat(ImageFormat.JPEG);
+    encodedImage.setRotationAngle(rotationAngle);
+    encodedImage.setWidth(width);
+    encodedImage.setHeight(height);
+    return encodedImage;
   }
 
   // Gets the correction angle based on the image's orientation

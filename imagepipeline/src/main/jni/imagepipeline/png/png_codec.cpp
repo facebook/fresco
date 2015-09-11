@@ -72,7 +72,7 @@ void encodePngIntoOutputStream(
   const int row_stride = decoded_image.getStride();
   png_bytep row_pointer = decoded_image.getPixelsPtr();
   png_write_info(png_ptr, info_ptr);
-  for (int i=0; i<decoded_image.getHeight(); ++i) {
+  for (unsigned i = 0; i < decoded_image.getHeight(); ++i) {
     png_write_row(png_ptr, row_pointer);
     std::advance(row_pointer, row_stride);
   }

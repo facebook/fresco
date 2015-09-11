@@ -19,6 +19,7 @@ import android.os.SystemClock;
 
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.ByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -33,7 +34,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
  * <p>Clients should provide an instance of {@link NetworkFetcher} to make use of their networking
  * stack. Use {@link HttpUrlConnectionNetworkFetcher} as a model.
  */
-public class NetworkFetchProducer implements Producer<CloseableReference<PooledByteBuffer>> {
+public class NetworkFetchProducer implements Producer<EncodedImage> {
 
   @VisibleForTesting static final String PRODUCER_NAME = "NetworkFetchProducer";
   public static final String INTERMEDIATE_RESULT_PRODUCER_EVENT = "intermediate_result";
@@ -60,9 +61,7 @@ public class NetworkFetchProducer implements Producer<CloseableReference<PooledB
   }
 
   @Override
-  public void produceResults(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
-      ProducerContext context) {
+  public void produceResults(Consumer<EncodedImage> consumer, ProducerContext context) {
     context.getListener()
         .onProducerStart(context.getId(), PRODUCER_NAME);
     final FetchState fetchState = mNetworkFetcher.createFetchState(consumer, context);
@@ -159,11 +158,18 @@ public class NetworkFetchProducer implements Producer<CloseableReference<PooledB
   private void notifyConsumer(
       PooledByteBufferOutputStream pooledOutputStream,
       boolean isFinal,
-      Consumer<CloseableReference<PooledByteBuffer>> consumer) {
+      Consumer<EncodedImage> consumer) {
     CloseableReference<PooledByteBuffer> result =
         CloseableReference.of(pooledOutputStream.toByteBuffer());
-    consumer.onNewResult(result, isFinal);
-    CloseableReference.closeSafely(result);
+    EncodedImage encodedImage = null;
+    try {
+      encodedImage = new EncodedImage(result);
+      encodedImage.parseMetaData();
+      consumer.onNewResult(encodedImage, isFinal);
+    } finally {
+      EncodedImage.closeSafely(encodedImage);
+      CloseableReference.closeSafely(result);
+    }
   }
 
   private void onFailure(FetchState fetchState, Throwable e) {

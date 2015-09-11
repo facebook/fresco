@@ -111,6 +111,7 @@ public abstract class ForwardingDrawable extends Drawable
 
   @Override
   public boolean setVisible(boolean visible, boolean restart) {
+    super.setVisible(visible, restart);
     return mCurrentDelegate.setVisible(visible, restart);
   }
 

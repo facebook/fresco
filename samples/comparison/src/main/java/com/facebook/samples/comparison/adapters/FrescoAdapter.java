@@ -13,68 +13,47 @@
 package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
-import android.net.Uri;
+import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
-import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.samples.comparison.Drawables;
+import com.facebook.samples.comparison.holders.FrescoHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-/** Populate the list view with images using the Fresco image pipeline. */
-public class FrescoAdapter extends ImageListAdapter<InstrumentedDraweeView> {
+/**
+ * RecyclerView Adapter for Fresco
+ */
+public class FrescoAdapter extends ImageListAdapter {
 
   public FrescoAdapter(
       Context context,
-      int resourceId,
       PerfListener perfListener,
       ImagePipelineConfig imagePipelineConfig) {
-    super(context, resourceId, perfListener);
+    super(context, perfListener);
     Fresco.initialize(context, imagePipelineConfig);
   }
 
   @Override
-  protected Class<InstrumentedDraweeView> getViewClass() {
-    return InstrumentedDraweeView.class;
-  }
-
-  protected InstrumentedDraweeView createView() {
+  public FrescoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(getContext().getResources())
         .setPlaceholderImage(Drawables.sPlaceholderDrawable)
         .setFailureImage(Drawables.sErrorDrawable)
-        .setRoundingParams(RoundingParams.asCircle())
         .setProgressBarImage(new ProgressBarDrawable())
+        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
         .build();
-    return new InstrumentedDraweeView(getContext(), gdh);
-  }
+    final InstrumentedDraweeView instrView = new InstrumentedDraweeView(getContext(), gdh);
 
-  protected void bind(final InstrumentedDraweeView view, String uri) {
-    ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
-            .setResizeOptions(
-                new ResizeOptions(view.getLayoutParams().width, view.getLayoutParams().height))
-            .setProgressiveRenderingEnabled(true)
-            .build();
-    DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(imageRequest)
-        .setOldController(view.getController())
-        .setControllerListener(view.getListener())
-        .setAutoPlayAnimations(true)
-        .build();
-    view.setController(draweeController);
+    return new FrescoHolder(getContext(), parent, instrView, getPerfListener());
   }
 
   @Override
   public void shutDown() {
-    super.clear();
     Fresco.shutDown();
   }
 }

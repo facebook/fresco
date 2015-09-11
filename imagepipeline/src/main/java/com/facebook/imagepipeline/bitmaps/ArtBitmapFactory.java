@@ -9,29 +9,32 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import javax.annotation.concurrent.GuardedBy;
-
-import java.io.IOException;
-import java.io.InputStream;
+import javax.annotation.concurrent.ThreadSafe;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v4.util.Pools.SynchronizedPool;
 
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
+
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Bitmap factory for ART VM (Lollipop and up).
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+@ThreadSafe
 public class ArtBitmapFactory {
 
   /**
@@ -45,8 +48,7 @@ public class ArtBitmapFactory {
    * ArtPlatformImageDecoder decodes images from InputStream - to do so we need to provide
    * temporary buffer, otherwise framework will allocate one for us for each decode request
    */
-  @GuardedBy("this")
-  private final byte[] mDecodeBuffer = new byte[DECODE_BUFFER_SIZE];
+  @VisibleForTesting final SynchronizedPool<ByteBuffer> mDecodeBuffers;
 
 
   // TODO (5884402) - remove dependency on JfifUtil
@@ -54,8 +56,12 @@ public class ArtBitmapFactory {
       (byte) JfifUtil.MARKER_FIRST_BYTE,
       (byte) JfifUtil.MARKER_EOI};
 
-  public ArtBitmapFactory(BitmapPool bitmapPool) {
+  public ArtBitmapFactory(BitmapPool bitmapPool, int maxNumThreads) {
     mBitmapPool = bitmapPool;
+    mDecodeBuffers = new SynchronizedPool<>(maxNumThreads);
+    for (int i = 0; i < maxNumThreads; i++) {
+      mDecodeBuffers.release(ByteBuffer.allocate(DECODE_BUFFER_SIZE));
+    }
   }
 
   /**
@@ -75,58 +81,45 @@ public class ArtBitmapFactory {
   /**
    * Creates a bitmap from encoded bytes.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with a reference to the encoded bytes
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeFromPooledByteBuffer(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
-    return doDecodeStaticImage(new PooledByteBufferInputStream(pooledByteBufferRef.get()));
+  CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
+    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
+    return decodeStaticImageFromStream(encodedImage.getInputStream(), options);
   }
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
    *
-   * @param pooledByteBufferRef the reference to the encoded bytes
+   * @param encodedImage the encoded image with reference to the encoded bytes
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  CloseableReference<Bitmap> decodeJPEGFromPooledByteBuffer(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      int length) {
-    final PooledByteBuffer pooledByteBuffer = pooledByteBufferRef.get();
-    final InputStream jpegBufferInputStream = new PooledByteBufferInputStream(pooledByteBuffer);
-    jpegBufferInputStream.mark(Integer.MAX_VALUE);
+  CloseableReference<Bitmap> decodeJPEGFromEncodedImage(EncodedImage encodedImage, int length) {
+    boolean isJpegComplete = encodedImage.isCompleteAt(length);
+    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
 
-    boolean isJpegComplete;
-    try {
-      jpegBufferInputStream.skip(length - 2);
-      isJpegComplete = (jpegBufferInputStream.read() == JfifUtil.MARKER_FIRST_BYTE) &&
-          (jpegBufferInputStream.read() == JfifUtil.MARKER_EOI);
-      jpegBufferInputStream.reset();
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
-
-    InputStream jpegDataStream = jpegBufferInputStream;
-    if (pooledByteBuffer.size() > length) {
+    InputStream jpegDataStream = encodedImage.getInputStream();
+    // At this point the InputStream from the encoded image should not be null since in the
+    // pipeline,this comes from a call stack where this was checked before. Also this method needs
+    // the InputStream to decode the image so this can't be null.
+    Preconditions.checkNotNull(jpegDataStream);
+    if (encodedImage.getSize() > length) {
       jpegDataStream = new LimitedInputStream(jpegDataStream, length);
     }
     if (!isJpegComplete) {
       jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
     }
-    return doDecodeStaticImage(jpegDataStream);
+    return decodeStaticImageFromStream(jpegDataStream, options);
   }
 
-  private CloseableReference<Bitmap> doDecodeStaticImage(InputStream inputStream) {
-    inputStream.mark(Integer.MAX_VALUE);
-    final BitmapFactory.Options options = getDecodeOptionsForStream(inputStream);
-    try {
-      inputStream.reset();
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
+  private CloseableReference<Bitmap> decodeStaticImageFromStream(
+      InputStream inputStream,
+      BitmapFactory.Options options) {
+    Preconditions.checkNotNull(inputStream);
 
     final Bitmap bitmapToReuse = mBitmapPool.get(options.outHeight * options.outWidth);
     if (bitmapToReuse == null) {
@@ -135,11 +128,18 @@ public class ArtBitmapFactory {
     options.inBitmap = bitmapToReuse;
 
     Bitmap decodedBitmap;
+    ByteBuffer byteBuffer = mDecodeBuffers.acquire();
+    if (byteBuffer == null) {
+      byteBuffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
+    }
     try {
+      options.inTempStorage = byteBuffer.array();
       decodedBitmap = BitmapFactory.decodeStream(inputStream, null, options);
     } catch (RuntimeException re) {
       mBitmapPool.release(bitmapToReuse);
       throw re;
+    } finally {
+      mDecodeBuffers.release(byteBuffer);
     }
 
     if (bitmapToReuse != decodedBitmap) {
@@ -154,13 +154,13 @@ public class ArtBitmapFactory {
   /**
    * Options returned by this method are configured with mDecodeBuffer which is GuardedBy("this")
    */
-  private BitmapFactory.Options getDecodeOptionsForStream(InputStream inputStream) {
+  private BitmapFactory.Options getDecodeOptionsForStream(EncodedImage encodedImage) {
     final BitmapFactory.Options options = new BitmapFactory.Options();
-    options.inTempStorage = mDecodeBuffer;
-
+    // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
+    options.inSampleSize = encodedImage.getSampleSize();
     options.inJustDecodeBounds = true;
     // fill outWidth and outHeight
-    BitmapFactory.decodeStream(inputStream, null, options);
+    BitmapFactory.decodeStream(encodedImage.getInputStream(), null, options);
     if (options.outWidth == -1 || options.outHeight == -1) {
       throw new IllegalArgumentException();
     }

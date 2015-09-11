@@ -106,12 +106,7 @@ public class AnimatedImageCompositor {
       mAnimatedDrawableBackend.renderFrame(index, canvas);
       mCallback.onIntermediateResult(index, bitmap);
       if (disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
-        canvas.drawRect(
-            frameInfo.xOffset,
-            frameInfo.yOffset,
-            frameInfo.width,
-            frameInfo.height,
-            mTransparentFillPaint);
+        disposeToBackground(canvas, frameInfo);
       }
     }
 
@@ -157,12 +152,7 @@ public class AnimatedImageCompositor {
             try {
               canvas.drawBitmap(startBitmap.get(), 0, 0, null);
               if (frameInfo.disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
-                canvas.drawRect(
-                    frameInfo.xOffset,
-                    frameInfo.yOffset,
-                    frameInfo.width,
-                    frameInfo.height,
-                    mTransparentFillPaint);
+                disposeToBackground(canvas, frameInfo);
               }
               return index + 1;
             } finally {
@@ -186,6 +176,15 @@ public class AnimatedImageCompositor {
       }
     }
     return 0;
+  }
+
+  private void disposeToBackground(Canvas canvas, AnimatedDrawableFrameInfo frameInfo) {
+    canvas.drawRect(
+        frameInfo.xOffset,
+        frameInfo.yOffset,
+        frameInfo.xOffset + frameInfo.width,
+        frameInfo.yOffset + frameInfo.height,
+        mTransparentFillPaint);
   }
 
   /**

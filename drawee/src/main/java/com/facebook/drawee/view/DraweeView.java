@@ -177,7 +177,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   public String toString() {
     return Objects.toStringHelper(this)
-        .add("holder", mDraweeHolder.toString())
+        .add("holder", mDraweeHolder != null ? mDraweeHolder.toString(): "<no holder set>")
         .toString();
   }
 }

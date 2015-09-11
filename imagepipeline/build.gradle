@@ -192,12 +192,20 @@ android {
         ['memchunk', []],
         ['webpimage', [copyLibwebp]]]
 
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
     sourceSets {
         main {
             jni.srcDirs = []
             jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
+        }
+        test {
+            java {
+                exclude '**/LocalVideoThumbnailProducerTest.java'
+                exclude '**/DecodeProducerTest.java'
+                exclude '**/ProgressiveJpegParserTest.java'
+            }
         }
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }

@@ -25,7 +25,7 @@ import com.facebook.cache.common.WriterCallback;
  */
 public interface DiskStorage {
 
-  public static class DiskDumpInfoEntry {
+  class DiskDumpInfoEntry {
     public final String path;
     public final String type;
     public final float size;
@@ -38,7 +38,7 @@ public interface DiskStorage {
     }
   }
 
-  public static class DiskDumpInfo {
+  class DiskDumpInfo {
     public List<DiskDumpInfoEntry> entries;
     public Map<String, Integer> typeCounts;
     public DiskDumpInfo() {
@@ -51,7 +51,7 @@ public interface DiskStorage {
    * is this storage enabled?
    * @return true, if enabled
    */
-  public boolean isEnabled();
+  boolean isEnabled();
 
   /**
    * Get the resource with the specified name
@@ -108,7 +108,7 @@ public interface DiskStorage {
    * @param debugInfo helper object for debugging
    * @throws IOException
    */
-  public void updateResource(
+  void updateResource(
       String resourceId,
       BinaryResource resource,
       WriterCallback callback,
@@ -159,13 +159,13 @@ public interface DiskStorage {
    */
   void clearAll() throws IOException;
 
-  public DiskDumpInfo getDumpInfo() throws IOException;
+  DiskDumpInfo getDumpInfo() throws IOException;
 
-  public interface Entry {
+  interface Entry {
     /** calculated on first time and never changes so it can be used as immutable **/
-    public long getTimestamp();
+    long getTimestamp();
     /** calculated on first time and never changes so it can be used as immutable **/
-    public long getSize();
-    public BinaryResource getResource();
+    long getSize();
+    BinaryResource getResource();
   }
 }

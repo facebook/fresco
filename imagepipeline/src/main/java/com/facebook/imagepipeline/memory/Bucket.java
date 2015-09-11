@@ -12,12 +12,11 @@ package com.facebook.imagepipeline.memory;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.logging.FLog;
-
 
 /**
  * The Bucket is a constituent class of {@link BasePool}. The pool maintains its free values
@@ -48,7 +47,7 @@ class Bucket<V> {
 
   public final int mItemSize; // size in bytes of items in this bucket
   public final int mMaxLength; // 'max' length for this bucket
-  public final ConcurrentLinkedQueue<V> mFreeList; // the free list for this bucket
+  final Queue mFreeList; // the free list for this bucket, subclasses can vary type
 
   private int mInUseLength; // current number of entries 'in use' (i.e.) not in the free list
 
@@ -65,7 +64,7 @@ class Bucket<V> {
 
     mItemSize = itemSize;
     mMaxLength = maxLength;
-    mFreeList = new ConcurrentLinkedQueue<V>();
+    mFreeList = new LinkedList();
     mInUseLength = inUseLength;
   }
 
@@ -74,7 +73,11 @@ class Bucket<V> {
    * specified
    */
   public boolean isMaxLengthExceeded() {
-    return (mInUseLength + mFreeList.size() > mMaxLength);
+    return (mInUseLength + getFreeListSize() > mMaxLength);
+  }
+
+  int getFreeListSize() {
+    return mFreeList.size();
   }
 
   /**
@@ -98,7 +101,7 @@ class Bucket<V> {
    */
   @Nullable
   public V pop() {
-    return mFreeList.poll();
+    return (V) mFreeList.poll();
   }
 
   /**
@@ -118,6 +121,10 @@ class Bucket<V> {
     Preconditions.checkNotNull(value);
     Preconditions.checkState(mInUseLength > 0);
     mInUseLength--;
+    addToFreeList(value);
+  }
+
+  void addToFreeList(V value) {
     mFreeList.add(value);
   }
 

@@ -19,5 +19,5 @@ public interface VisibilityAwareDrawable {
    *
    * @param visibilityCallback the visibility callback to be set
    */
-  public void setVisibilityCallback(VisibilityCallback visibilityCallback);
+  void setVisibilityCallback(VisibilityCallback visibilityCallback);
 }

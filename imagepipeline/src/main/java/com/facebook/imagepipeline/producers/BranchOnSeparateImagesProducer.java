@@ -9,10 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import android.util.Pair;
-
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
@@ -22,45 +19,37 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * producer is kicked off if necessary.
  */
 public class BranchOnSeparateImagesProducer
-    implements Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
-  private final Producer<
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> mNextProducer1;
-  private final Producer<
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> mNextProducer2;
+    implements Producer<EncodedImage> {
+  private final Producer<EncodedImage> mNextProducer1;
+  private final Producer<EncodedImage> mNextProducer2;
 
   public BranchOnSeparateImagesProducer(
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer1,
-      Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> nextProducer2) {
+      Producer<EncodedImage> nextProducer1, Producer<EncodedImage> nextProducer2) {
     mNextProducer1 = nextProducer1;
     mNextProducer2 = nextProducer2;
   }
 
   @Override
   public void produceResults(
-      Consumer<Pair<CloseableReference<PooledByteBuffer>,
-          ImageTransformMetaData>> consumer,
+      Consumer<EncodedImage> consumer,
       ProducerContext context) {
     OnFirstImageConsumer onFirstImageConsumer = new OnFirstImageConsumer(consumer, context);
     mNextProducer1.produceResults(onFirstImageConsumer, context);
   }
 
-  private class OnFirstImageConsumer extends DelegatingConsumer<
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>,
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
+  private class OnFirstImageConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
     private ProducerContext mProducerContext;
 
     private OnFirstImageConsumer(
-        Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer,
+        Consumer<EncodedImage> consumer,
         ProducerContext producerContext) {
       super(consumer);
       mProducerContext = producerContext;
     }
 
     @Override
-    protected void onNewResultImpl(
-        Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> newResult,
-        boolean isLast) {
+    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       ImageRequest request = mProducerContext.getImageRequest();
       boolean isGoodEnough = isResultGoodEnough(newResult, request);
       if (newResult != null && (isGoodEnough || request.getLocalThumbnailPreviewsEnabled())) {
@@ -76,16 +65,13 @@ public class BranchOnSeparateImagesProducer
       mNextProducer2.produceResults(getConsumer(), mProducerContext);
     }
 
-    private boolean isResultGoodEnough(
-        Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> newResult,
-        ImageRequest imageRequest) {
-      if (newResult == null) {
+    private boolean isResultGoodEnough(EncodedImage encodedImage, ImageRequest imageRequest) {
+      if (encodedImage == null) {
         return false;
       }
 
-      ImageTransformMetaData metaData = newResult.second;
-      return metaData.getWidth() >= imageRequest.getPreferredWidth() &&
-          metaData.getHeight() >= imageRequest.getPreferredHeight();
+      return encodedImage.getWidth() >= imageRequest.getPreferredWidth() &&
+          encodedImage.getHeight() >= imageRequest.getPreferredHeight();
     }
   }
 }

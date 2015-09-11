@@ -247,11 +247,13 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     }
 
     private CloseableReference<CloseableImage> postprocessInternal(CloseableImage sourceImage) {
-      Bitmap sourceBitmap = ((CloseableStaticBitmap) sourceImage).getUnderlyingBitmap();
+      CloseableStaticBitmap staticBitmap = (CloseableStaticBitmap) sourceImage;
+      Bitmap sourceBitmap = staticBitmap.getUnderlyingBitmap();
       CloseableReference<Bitmap> bitmapRef = mPostprocessor.process(sourceBitmap, mBitmapFactory);
+      int rotationAngle = staticBitmap.getRotationAngle();
       try {
         return CloseableReference.<CloseableImage>of(
-            new CloseableStaticBitmap(bitmapRef, sourceImage.getQualityInfo()));
+            new CloseableStaticBitmap(bitmapRef, sourceImage.getQualityInfo(), rotationAngle));
       } finally {
         CloseableReference.closeSafely(bitmapRef);
       }

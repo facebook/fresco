@@ -256,6 +256,17 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     maybeUpdateCacheParams();
   }
 
+  /**
+   * Check if any items from the cache whose key matches the specified predicate.
+   *
+   * @param predicate returns true if an item with the given key matches
+   * @return true is any items matches from the cache
+   */
+  @Override
+  public synchronized boolean contains(Predicate<K> predicate) {
+    return !mCachedEntries.getMatchingEntries(predicate).isEmpty();
+  }
+
   /** Trims the cache according to the specified trimming strategy and the given trim type. */
   @Override
   public void trim(MemoryTrimType trimType) {

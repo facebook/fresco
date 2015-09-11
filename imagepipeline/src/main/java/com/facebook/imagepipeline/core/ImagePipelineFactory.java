@@ -14,6 +14,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheFactory;
@@ -29,11 +30,17 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
+import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+import com.facebook.imagepipeline.bitmaps.ArtBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.DalvikBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
+import com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
@@ -41,7 +48,9 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
@@ -84,7 +93,9 @@ public class ImagePipelineFactory {
 
   private final ImagePipelineConfig mConfig;
 
+  private AnimatedDrawableUtil mAnimatedDrawableUtil;
   private AnimatedDrawableFactory mAnimatedDrawableFactory;
+  private AnimatedImageFactory mAnimatedImageFactory;
   private CountingMemoryCache<CacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
@@ -92,7 +103,9 @@ public class ImagePipelineFactory {
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainBufferedDiskCache;
   private DiskStorageCache mMainDiskStorageCache;
+  private ImageDecoder mImageDecoder;
   private ImagePipeline mImagePipeline;
+  private PlatformBitmapFactory mPlatformBitmapFactory;
   private ProducerFactory mProducerFactory;
   private ProducerSequenceFactory mProducerSequenceFactory;
   private BufferedDiskCache mSmallImageBufferedDiskCache;
@@ -103,6 +116,39 @@ public class ImagePipelineFactory {
   }
 
   // We need some of these methods public for now so internal code can use them.
+
+  private AnimatedDrawableUtil getAnimatedDrawableUtil() {
+    if (mAnimatedDrawableUtil == null) {
+      mAnimatedDrawableUtil = new AnimatedDrawableUtil();
+    }
+    return mAnimatedDrawableUtil;
+  }
+
+  public static AnimatedImageFactory buildAnimatedImageFactory(
+      final AnimatedDrawableUtil animatedDrawableUtil,
+      PlatformBitmapFactory platformBitmapFactory) {
+    AnimatedDrawableBackendProvider animatedDrawableBackendProvider =
+        new AnimatedDrawableBackendProvider() {
+          @Override
+          public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
+            return new AnimatedDrawableBackendImpl(animatedDrawableUtil, imageResult, bounds);
+          }
+        };
+   return new AnimatedImageFactory(animatedDrawableBackendProvider, platformBitmapFactory);
+  }
+
+  private AnimatedImageFactory getAnimatedImageFactory() {
+    if (mAnimatedImageFactory == null) {
+      if (mConfig.getAnimatedImageFactory() != null) {
+        mAnimatedImageFactory = mConfig.getAnimatedImageFactory();
+      } else {
+        mAnimatedImageFactory = buildAnimatedImageFactory(
+            getAnimatedDrawableUtil(),
+            getPlatformBitmapFactory());
+      }
+    }
+    return mAnimatedImageFactory;
+  }
 
   public CountingMemoryCache<CacheKey, CloseableImage>
       getBitmapCountingMemoryCache() {
@@ -145,6 +191,17 @@ public class ImagePipelineFactory {
     return mEncodedMemoryCache;
   }
 
+  private ImageDecoder getImageDecoder() {
+    if (mImageDecoder == null) {
+      if (mConfig.getImageDecoder() != null) {
+        mImageDecoder = mConfig.getImageDecoder();
+      } else {
+        mImageDecoder = new ImageDecoder(getAnimatedImageFactory(), getPlatformBitmapFactory());
+      }
+    }
+    return mImageDecoder;
+  }
+
   private BufferedDiskCache getMainBufferedDiskCache() {
     if (mMainBufferedDiskCache == null) {
       mMainBufferedDiskCache =
@@ -176,9 +233,35 @@ public class ImagePipelineFactory {
               mConfig.getIsPrefetchEnabledSupplier(),
               getBitmapMemoryCache(),
               getEncodedMemoryCache(),
+              getMainBufferedDiskCache(),
+              getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory());
     }
     return mImagePipeline;
+  }
+
+  public static PlatformBitmapFactory buildPlatformBitmapFactory(
+      PoolFactory poolFactory) {
+    GingerbreadBitmapFactory factoryGingerbread =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ?
+            new GingerbreadBitmapFactory() : null;
+    DalvikBitmapFactory factoryICS = new DalvikBitmapFactory(
+        new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
+        poolFactory.getFlexByteArrayPool());
+    ArtBitmapFactory factoryLollipop = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+        new ArtBitmapFactory(
+            poolFactory.getBitmapPool(),
+            poolFactory.getFlexByteArrayPoolMaxNumThreads()) :
+        null;
+    return new PlatformBitmapFactory(factoryGingerbread, factoryICS, factoryLollipop);
+  }
+
+  private PlatformBitmapFactory getPlatformBitmapFactory() {
+    if (mPlatformBitmapFactory == null) {
+      mPlatformBitmapFactory = buildPlatformBitmapFactory(
+          mConfig.getPoolFactory());
+    }
+    return mPlatformBitmapFactory;
   }
 
   private ProducerFactory getProducerFactory() {
@@ -186,9 +269,11 @@ public class ImagePipelineFactory {
       mProducerFactory =
           new ProducerFactory(
               mConfig.getContext(),
-              mConfig.getPoolFactory().getCommonByteArrayPool(),
-              mConfig.getImageDecoder(),
+              mConfig.getPoolFactory().getSmallByteArrayPool(),
+              getImageDecoder(),
               mConfig.getProgressiveJpegConfig(),
+              mConfig.isDownsampleEnabled(),
+              mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExecutorSupplier(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
               getBitmapMemoryCache(),
@@ -196,7 +281,7 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
-              mConfig.getPlatformBitmapFactory());
+              getPlatformBitmapFactory());
     }
     return mProducerFactory;
   }
@@ -207,7 +292,8 @@ public class ImagePipelineFactory {
           new ProducerSequenceFactory(
               getProducerFactory(),
               mConfig.getNetworkFetcher(),
-              mConfig.isResizeAndRotateEnabledForNetwork());
+              mConfig.isResizeAndRotateEnabledForNetwork(),
+              mConfig.isDownsampleEnabled());
     }
     return mProducerSequenceFactory;
   }
@@ -236,7 +322,7 @@ public class ImagePipelineFactory {
 
   public AnimatedDrawableFactory getAnimatedDrawableFactory() {
     if (mAnimatedDrawableFactory == null) {
-      final AnimatedDrawableUtil animatedDrawableUtil = new AnimatedDrawableUtil();
+      final AnimatedDrawableUtil animatedDrawableUtil = getAnimatedDrawableUtil();
       final MonotonicClock monotonicClock = RealtimeSinceBootClock.get();
       final SerialExecutorService serialExecutorService =
           new DefaultSerialExecutorService(mConfig.getExecutorSupplier().forDecode());

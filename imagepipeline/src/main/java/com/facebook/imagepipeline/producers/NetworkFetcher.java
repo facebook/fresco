@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
  * Interface that specifies network fetcher used by the image pipeline.
@@ -35,7 +34,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
   /**
    * Callback used to inform the network fetch producer.
    */
-  public interface Callback {
+  interface Callback {
 
     /**
      * Called upon a response from the network stack.
@@ -43,19 +42,19 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
      * @param response the InputStream for the data
      * @param responseLength the length of the data if known, -1 otherwise
      */
-    public void onResponse(InputStream response, int responseLength) throws IOException;
+    void onResponse(InputStream response, int responseLength) throws IOException;
 
     /**
      * Called upon a failure in the network stack.
      *
      * @param throwable the cause of failure
      */
-    public void onFailure(Throwable throwable);
+    void onFailure(Throwable throwable);
 
     /**
      * Called upon a cancellation of the request.
      */
-    public void onCancellation();
+    void onCancellation();
   }
 
   /**
@@ -65,8 +64,8 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @param producerContext the producer's context
    * @return a new fetch state instance
    */
-  public FETCH_STATE createFetchState(
-      Consumer<CloseableReference<PooledByteBuffer>> consumer,
+  FETCH_STATE createFetchState(
+      Consumer<EncodedImage> consumer,
       ProducerContext producerContext);
 
   /**
@@ -76,7 +75,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @param fetchState the fetch-specific state
    * @param callback the callback used to inform the network fetch producer
    */
-  public void fetch(FETCH_STATE fetchState, Callback callback);
+  void fetch(FETCH_STATE fetchState, Callback callback);
 
   /**
    * Gets whether the intermediate results should be propagated.
@@ -89,7 +88,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @param fetchState the fetch-specific state
    * @return whether the intermediate results should be propagated
    */
-  public boolean shouldPropagate(FETCH_STATE fetchState);
+  boolean shouldPropagate(FETCH_STATE fetchState);
 
   /**
    * Called after the fetch completes.
@@ -99,7 +98,7 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @param fetchState the fetch-specific state
    * @param byteSize size of the data in bytes
    */
-  public void onFetchCompletion(FETCH_STATE fetchState, int byteSize);
+  void onFetchCompletion(FETCH_STATE fetchState, int byteSize);
 
   /**
    * Gets a map containing extra parameters to pass to the listeners.
@@ -113,5 +112,5 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @return a map with extra parameters
    */
   @Nullable
-  public Map<String, String> getExtraMap(FETCH_STATE fetchState, int byteSize);
+  Map<String, String> getExtraMap(FETCH_STATE fetchState, int byteSize);
 }

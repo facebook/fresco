@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,6 @@ import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.internal.Files;
-import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.SystemClock;
 
@@ -151,7 +151,7 @@ public class DefaultDiskStorageTest {
     value1[80] = 101;
     File file1 = writeFileToStorage(storage, resourceId1, value1);
 
-    Set<File> files = Sets.newHashSet();
+    Set<File> files = new HashSet<>();
     Assert.assertTrue(mDirectory.exists());
     List<File> founds1 = findNewFiles(mDirectory, files, /*recurse*/true);
     Assert.assertNotNull(file1);

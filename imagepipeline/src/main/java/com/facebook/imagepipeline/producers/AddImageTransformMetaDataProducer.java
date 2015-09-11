@@ -9,17 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
-import android.graphics.Rect;
-import android.util.Pair;
-
-import com.facebook.imageformat.ImageFormat;
-import com.facebook.imageformat.ImageFormatChecker;
-import com.facebook.imageutils.JfifUtil;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
  * Add image transform meta data producer
@@ -27,74 +17,35 @@ import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
  * <p>Extracts meta data from the results passed down from the next producer, and adds it to the
  * result that it returns to the consumer.
  */
-public class AddImageTransformMetaDataProducer
-    implements Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
-  private final Producer<CloseableReference<PooledByteBuffer>> mNextProducer;
+public class AddImageTransformMetaDataProducer implements Producer<EncodedImage> {
+  private final Producer<EncodedImage> mNextProducer;
 
-  public AddImageTransformMetaDataProducer(
-      Producer<CloseableReference<PooledByteBuffer>> nextProducer) {
+  public AddImageTransformMetaDataProducer(Producer<EncodedImage> nextProducer) {
     mNextProducer = nextProducer;
   }
 
   @Override
-  public void produceResults(
-      Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer,
-      ProducerContext context) {
+  public void produceResults(Consumer<EncodedImage> consumer, ProducerContext context) {
     mNextProducer.produceResults(new AddImageTransformMetaDataConsumer(consumer), context);
   }
 
-  private class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
-      CloseableReference<PooledByteBuffer>,
-      Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
-    @Nullable private ImageTransformMetaData mMetaData = null;
+  private static class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
+      EncodedImage, EncodedImage> {
 
-    private AddImageTransformMetaDataConsumer(
-        Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer) {
+    private AddImageTransformMetaDataConsumer(Consumer<EncodedImage> consumer) {
       super(consumer);
     }
 
     @Override
-    protected void onNewResultImpl(
-        CloseableReference<PooledByteBuffer> newResult, boolean isLast) {
+    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       if (newResult == null) {
-        getConsumer().onNewResult(
-            Pair.create(newResult, new ImageTransformMetaData.Builder().build()),
-            isLast);
+        getConsumer().onNewResult(null, isLast);
         return;
       }
-
-      if (mMetaData == null || mMetaData.getImageFormat() == ImageFormat.UNKNOWN) {
-        final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-            new PooledByteBufferInputStream(newResult.get()));
-        ImageTransformMetaData.Builder builder = new ImageTransformMetaData.Builder();
-        builder.setImageFormat(imageFormat);
-        boolean metaDataComplete = false;
-        if (imageFormat != ImageFormat.JPEG) {
-          metaDataComplete = true;
-        } else {
-          Rect dimensions =
-              JfifUtil.getDimensions(new PooledByteBufferInputStream(newResult.get()));
-          if (dimensions != null) {
-            metaDataComplete = true;
-            builder.setWidth(dimensions.width());
-            builder.setHeight(dimensions.height());
-            // We don't know for sure that the rotation angle is set at this point. But it might
-            // never get set, so let's assume that if we've got the dimensions then we've got the
-            // rotation angle, else we'll never propagate intermediate results.
-            builder.setRotationAngle(getRotationAngle(newResult));
-          }
-        }
-        if (metaDataComplete) {
-          mMetaData = builder.build();
-        }
+      if (!EncodedImage.isMetaDataAvailable(newResult)) {
+        newResult.parseMetaData();
       }
-      getConsumer().onNewResult(Pair.create(newResult, mMetaData), isLast);
+      getConsumer().onNewResult(newResult, isLast);
     }
-  }
-
-  // Gets the correction angle based on the image's orientation
-  private static int getRotationAngle(final CloseableReference<PooledByteBuffer> inputRef) {
-    return JfifUtil.getAutoRotateAngleFromOrientation(
-        JfifUtil.getOrientation(new PooledByteBufferInputStream(inputRef.get())));
   }
 }

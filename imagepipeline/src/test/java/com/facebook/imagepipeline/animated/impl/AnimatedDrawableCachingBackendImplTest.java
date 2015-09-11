@@ -16,14 +16,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.testing.FakeClock;
 import org.robolectric.RobolectricTestRunner;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
+import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+
 import com.facebook.imagepipeline.animated.testing.MyShadowBitmap;
 import com.facebook.imagepipeline.animated.testing.MyShadowCanvas;
+import com.facebook.imagepipeline.testing.FakeClock;
+import com.facebook.imagepipeline.testing.TestExecutorService;
 import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
-import com.facebook.imagepipeline.animated.testing.TestExecutorService;
-import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 
 import bolts.Task;
 import org.junit.Before;

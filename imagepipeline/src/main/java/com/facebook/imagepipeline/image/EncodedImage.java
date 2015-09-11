@@ -9,53 +9,51 @@
 
 package com.facebook.imagepipeline.image;
 
+import android.util.Pair;
+
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.SharedReference;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.JfifUtil;
 
 import java.io.Closeable;
 import java.io.InputStream;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Class that contains all the information for an encoded image, both the ByteBuffer representing it
- * and the extracted meta data that is useful for image transforms.
+ * Class that contains all the information for an encoded image, both the image bytes (held on
+ * a byte buffer) and the extracted meta data that is useful for image transforms.
  *
  * <p>Currently the data is useful for rotation and resize.
  */
 @Immutable
 public class EncodedImage implements Closeable {
-  private static final int UNKNOWN_ROTATION_ANGLE = -1;
-  private static final int UNKNOWN_WIDTH = -1;
-  private static final int UNKNOWN_HEIGHT = -1;
+  public static final int UNKNOWN_ROTATION_ANGLE = -1;
+  public static final int UNKNOWN_WIDTH = -1;
+  public static final int UNKNOWN_HEIGHT = -1;
+  public static final int UNKNOWN_STREAM_SIZE = -1;
+
+  public static final int DEFAULT_SAMPLE_SIZE = 1;
 
   private final CloseableReference<PooledByteBuffer> mPooledByteBufferRef;
-  private final ImageFormat mImageFormat;
-  private final int mRotationAngle;
-  private final int mWidth;
-  private final int mHeight;
 
-  public EncodedImage(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      ImageFormat imageFormat) {
-    this(pooledByteBufferRef, imageFormat, UNKNOWN_ROTATION_ANGLE, UNKNOWN_WIDTH, UNKNOWN_HEIGHT);
-  }
+  private ImageFormat mImageFormat = ImageFormat.UNKNOWN;
+  private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
+  private int mWidth = UNKNOWN_WIDTH;
+  private int mHeight = UNKNOWN_HEIGHT;
+  private int mSampleSize = DEFAULT_SAMPLE_SIZE;
 
-  public EncodedImage(
-      CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      ImageFormat imageFormat,
-      int rotationAngle,
-      int width,
-      int height) {
-    Preconditions.checkNotNull(pooledByteBufferRef);
-    this.mPooledByteBufferRef = CloseableReference.cloneOrNull(pooledByteBufferRef);
-    this.mImageFormat = imageFormat;
-    this.mRotationAngle = rotationAngle;
-    this.mWidth = width;
-    this.mHeight = height;
+  public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
+    Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
+    this.mPooledByteBufferRef = pooledByteBufferRef.clone();
   }
 
   /**
@@ -68,13 +66,19 @@ public class EncodedImage implements Closeable {
   }
 
   public EncodedImage cloneOrNull() {
-    CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
-    return (pooledByteBufferRef == null) ? null : new EncodedImage(
-        mPooledByteBufferRef.cloneOrNull(),
-        mImageFormat,
-        mRotationAngle,
-        mWidth,
-        mHeight);
+    EncodedImage encodedImage;
+    CloseableReference<PooledByteBuffer> pooledByteBufferRef =
+        CloseableReference.cloneOrNull(mPooledByteBufferRef);
+    try {
+      encodedImage = (pooledByteBufferRef == null) ? null : new EncodedImage(pooledByteBufferRef);
+    } finally {
+      // Close the recently created reference since it will be cloned again in the constructor.
+      CloseableReference.closeSafely(pooledByteBufferRef);
+    }
+    if (encodedImage != null) {
+      encodedImage.copyMetaDataFrom(this);
+    }
+    return encodedImage;
   }
 
   /**
@@ -102,10 +106,13 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Returns an InputStream for the internal buffer reference if valid, null otherwise.
+   * Returns an InputStream for the internal buffer reference if valid and null otherwise.
+   *
+   * <p>The caller has to close the InputStream after using it.
    */
   public InputStream getInputStream() {
-    CloseableReference<PooledByteBuffer> pooledByteBufferRef = mPooledByteBufferRef.cloneOrNull();
+    CloseableReference<PooledByteBuffer> pooledByteBufferRef =
+        CloseableReference.cloneOrNull(mPooledByteBufferRef);
     if (pooledByteBufferRef != null) {
       try {
         return new PooledByteBufferInputStream(pooledByteBufferRef.get());
@@ -114,6 +121,41 @@ public class EncodedImage implements Closeable {
       }
     }
     return null;
+  }
+
+  /**
+   * Sets the image format
+   */
+  public void setImageFormat(ImageFormat imageFormat) {
+    this.mImageFormat = imageFormat;
+  }
+
+  /**
+   * Sets the image height
+   */
+  public void setHeight(int height) {
+    this.mHeight = height;
+  }
+
+  /**
+   * Sets the image width
+   */
+  public void setWidth(int width) {
+    this.mWidth = width;
+  }
+
+  /**
+   * Sets the image rotation angle
+   */
+  public void setRotationAngle(int rotationAngle) {
+    this.mRotationAngle = rotationAngle;
+  }
+
+  /**
+   * Sets the image sample size
+   */
+  public void setSampleSize(int sampleSize) {
+    this.mSampleSize = sampleSize;
   }
 
   /**
@@ -149,13 +191,118 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Only valid the image format is JPEG.
-   * @return true if all the image information has loaded, false otherwise.
+   * Only valid if the image format is JPEG.
+   * @return sample size of the image.
    */
-  public static boolean isJpegMetaDataAvailable(EncodedImage encodedImage) {
-    Preconditions.checkArgument(encodedImage.getImageFormat() == ImageFormat.JPEG);
+  public int getSampleSize() {
+    return mSampleSize;
+  }
+
+  /**
+   * Returns true if the image is a JPEG and its data is already complete at the specified length,
+   * false otherwise.
+   */
+  public boolean isCompleteAt(int length) {
+    if (mImageFormat != ImageFormat.JPEG) {
+      return true;
+    }
+    Preconditions.checkNotNull(mPooledByteBufferRef);
+    PooledByteBuffer buf = mPooledByteBufferRef.get();
+    return (buf.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE)
+        && (buf.read(length - 1) == (byte) JfifUtil.MARKER_EOI);
+  }
+
+  /**
+   * Returns the size of the backing structure.
+   *
+   * <p> If it's a PooledByteBuffer returns its size if its not null, -1 otherwise. If it's an
+   * InputStream, return the size if it was set, -1 otherwise.
+   */
+  public int getSize() {
+    if (mPooledByteBufferRef != null && mPooledByteBufferRef.get() != null) {
+      return mPooledByteBufferRef.get().size();
+    }
+    return UNKNOWN_STREAM_SIZE;
+  }
+
+  /**
+   * Sets the encoded image meta data.
+   */
+  public void parseMetaData() {
+    final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+        getInputStream());
+    mImageFormat = imageFormat;
+    // Dimensions decoding is not yet supported for WebP since BitmapUtil.decodeDimensions has a
+    // bug where it will return 100x100 for some WebPs even though those are not its actual
+    // dimensions
+    if (!ImageFormat.isWebpFormat(imageFormat)) {
+      Pair<Integer, Integer> dimensions = BitmapUtil.decodeDimensions(getInputStream());
+      if (dimensions != null) {
+        mWidth = dimensions.first;
+        mHeight = dimensions.second;
+
+        // Load the rotation angle only if we have the dimensions
+        if (imageFormat == ImageFormat.JPEG) {
+          if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
+            mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
+                JfifUtil.getOrientation(getInputStream()));
+          }
+        } else {
+          mRotationAngle = 0;
+        }
+      }
+    }
+  }
+
+  /**
+   * Copy the meta data from another EncodedImage.
+   *
+   * @param encodedImage the EncodedImage to copy the meta data from.
+   */
+  public void copyMetaDataFrom(EncodedImage encodedImage) {
+    mImageFormat = encodedImage.getImageFormat();
+    mWidth = encodedImage.getWidth();
+    mHeight = encodedImage.getHeight();
+    mRotationAngle = encodedImage.getRotationAngle();
+    mSampleSize = encodedImage.getSampleSize();
+  }
+
+  /**
+   * Returns true if all the image information has loaded, false otherwise.
+   */
+  public static boolean isMetaDataAvailable(EncodedImage encodedImage) {
     return encodedImage.mRotationAngle >= 0
         && encodedImage.mWidth >= 0
         && encodedImage.mHeight >= 0;
+  }
+
+  /**
+   * Closes the encoded image handling null.
+   *
+   * @param encodedImage the encoded image to close.
+   */
+  public static void closeSafely(@Nullable EncodedImage encodedImage) {
+    if (encodedImage != null) {
+      encodedImage.close();
+    }
+  }
+
+  /**
+   * Checks if the encoded image is valid i.e. is not null, and is not closed.
+   * @return true if the encoded image is valid
+   */
+  public static boolean isValid(@Nullable EncodedImage encodedImage) {
+    return encodedImage != null && encodedImage.isValid();
+  }
+
+  /**
+   * A test-only method to get the underlying references.
+   *
+   * <p><b>DO NOT USE in application code.</b>
+   */
+  @VisibleForTesting
+  public synchronized SharedReference<PooledByteBuffer> getUnderlyingReferenceTestOnly() {
+    return (mPooledByteBufferRef != null) ?
+        mPooledByteBufferRef.getUnderlyingReferenceTestOnly() : null;
   }
 }

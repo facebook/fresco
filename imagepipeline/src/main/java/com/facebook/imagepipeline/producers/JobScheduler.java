@@ -8,33 +8,45 @@
  */
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
-import com.facebook.common.executors.UiThreadExecutorService;
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
  * Manages jobs so that only one can be executed at a time and no more often than once in
  * <code>mMinimumJobIntervalMs</code> milliseconds.
- *
- * @param <T> The type of the input to the job.
- * @param <E> The type of any extra information that the job should receive.
  */
-public class JobScheduler<T, E> {
+public class JobScheduler {
 
-  public static interface JobRunnable<T, E> {
-    void run(CloseableReference<T> inputRef, @Nullable E extra, boolean isLast);
+  static final String QUEUE_TIME_KEY = "queueTime";
+
+  @VisibleForTesting
+  static class JobStartExecutorSupplier {
+
+    private static ScheduledExecutorService sJobStarterExecutor;
+
+    static ScheduledExecutorService get() {
+      if (sJobStarterExecutor == null) {
+        sJobStarterExecutor = Executors.newSingleThreadScheduledExecutor();
+      }
+      return sJobStarterExecutor;
+    }
+  }
+
+  public interface JobRunnable {
+    void run(EncodedImage encodedImage, boolean isLast);
   }
 
   private final Executor mExecutor;
-  private final JobRunnable<T, E> mJobRunnable;
+  private final JobRunnable mJobRunnable;
   private final Runnable mDoJobRunnable;
   private final Runnable mSubmitJobRunnable;
   private final int mMinimumJobIntervalMs;
@@ -44,9 +56,7 @@ public class JobScheduler<T, E> {
 
   // job data
   @GuardedBy("this")
-  @VisibleForTesting CloseableReference<T> mInputRef;
-  @GuardedBy("this")
-  @VisibleForTesting @Nullable E mExtra;
+  @VisibleForTesting EncodedImage mEncodedImage;
   @GuardedBy("this")
   @VisibleForTesting boolean mIsLast;
 
@@ -58,7 +68,7 @@ public class JobScheduler<T, E> {
   @GuardedBy("this")
   @VisibleForTesting long mJobStartTime;
 
-  public JobScheduler(Executor executor, JobRunnable<T, E> jobRunnable, int minimumJobIntervalMs) {
+  public JobScheduler(Executor executor, JobRunnable jobRunnable, int minimumJobIntervalMs) {
     mExecutor = executor;
     mJobRunnable = jobRunnable;
     mMinimumJobIntervalMs = minimumJobIntervalMs;
@@ -74,7 +84,7 @@ public class JobScheduler<T, E> {
         submitJob();
       }
     };
-    mInputRef = null;
+    mEncodedImage = null;
     mIsLast = false;
     mJobState = JobState.IDLE;
     mJobSubmitTime = 0;
@@ -88,25 +98,13 @@ public class JobScheduler<T, E> {
    * executed.
    */
   public void clearJob() {
-    CloseableReference<T> oldRef;
+    EncodedImage oldEncodedImage;
     synchronized (this) {
-      oldRef = mInputRef;
-      mInputRef = null;
-      mExtra = null;
+      oldEncodedImage = mEncodedImage;
+      mEncodedImage = null;
       mIsLast = false;
     }
-    CloseableReference.closeSafely(oldRef);
-  }
-
-  /**
-   * Updates the job.
-   *
-   * <p> Calls {@link JobScheduler#updateJob(CloseableReference, E extra, boolean)} with null extra.
-   *
-   * @return whether the job was successfully updated.
-   */
-  public boolean updateJob(CloseableReference<T> inputRef, boolean isLast) {
-    return updateJob(inputRef, null, isLast);
+    EncodedImage.closeSafely(oldEncodedImage);
   }
 
   /**
@@ -118,18 +116,17 @@ public class JobScheduler<T, E> {
    *
    * @return whether the job was successfully updated.
    */
-  public boolean updateJob(CloseableReference<T> inputRef, @Nullable E extra, boolean isLast) {
-    if (!shouldProcess(inputRef, isLast)) {
+  public boolean updateJob(EncodedImage encodedImage, boolean isLast) {
+    if (!shouldProcess(encodedImage, isLast)) {
       return false;
     }
-    CloseableReference<T> oldRef;
+    EncodedImage oldEncodedImage;
     synchronized (this) {
-      oldRef = mInputRef;
-      mInputRef = CloseableReference.cloneOrNull(inputRef);
-      mExtra = extra;
+      oldEncodedImage = mEncodedImage;
+      mEncodedImage = EncodedImage.cloneOrNull(encodedImage);
       mIsLast = isLast;
     }
-    CloseableReference.closeSafely(oldRef);
+    EncodedImage.closeSafely(oldEncodedImage);
     return true;
   }
 
@@ -149,7 +146,7 @@ public class JobScheduler<T, E> {
     long when = 0;
     boolean shouldEnqueue = false;
     synchronized (this) {
-      if (!shouldProcess(mInputRef, mIsLast)) {
+      if (!shouldProcess(mEncodedImage, mIsLast)) {
         return false;
       }
       switch (mJobState) {
@@ -179,10 +176,9 @@ public class JobScheduler<T, E> {
   private void enqueueJob(long delay) {
     // If we make mExecutor be a {@link ScheduledexecutorService}, we could just have
     // `mExecutor.schedule(mDoJobRunnable, delay)` and avoid mSubmitJobRunnable and
-    // UiThreadExecutorService altogether. That would require some refactoring though.
+    // JobStartExecutorSupplier altogether. That would require some refactoring though.
     if (delay > 0) {
-      UiThreadExecutorService.getInstance()
-          .schedule(mSubmitJobRunnable, delay, TimeUnit.MILLISECONDS);
+      JobStartExecutorSupplier.get().schedule(mSubmitJobRunnable, delay, TimeUnit.MILLISECONDS);
     } else {
       mSubmitJobRunnable.run();
     }
@@ -194,15 +190,12 @@ public class JobScheduler<T, E> {
 
   private void doJob() {
     long now = SystemClock.uptimeMillis();
-    CloseableReference<T> inputRef;
-    E extra;
+    EncodedImage input;
     boolean isLast;
     synchronized (this) {
-      inputRef = mInputRef;
-      extra = mExtra;
+      input = mEncodedImage;
       isLast = mIsLast;
-      mInputRef = null;
-      mExtra = null;
+      mEncodedImage = null;
       mIsLast = false;
       mJobState = JobState.RUNNING;
       mJobStartTime = now;
@@ -210,11 +203,11 @@ public class JobScheduler<T, E> {
 
     try {
       // we need to do a check in case the job got cleared in the meantime
-      if (shouldProcess(inputRef, isLast)) {
-        mJobRunnable.run(inputRef, extra, isLast);
+      if (shouldProcess(input, isLast)) {
+        mJobRunnable.run(input, isLast);
       }
     } finally {
-      CloseableReference.closeSafely(inputRef);
+      EncodedImage.closeSafely(input);
       onJobFinished();
     }
   }
@@ -238,10 +231,10 @@ public class JobScheduler<T, E> {
     }
   }
 
-  private static <T> boolean shouldProcess(CloseableReference<T> inputRef, boolean isLast) {
+  private static boolean shouldProcess(EncodedImage encodedImage, boolean isLast) {
     // the last result should always be processed, whereas
     // an intermediate result should be processed only if valid
-    return isLast || CloseableReference.isValid(inputRef);
+    return  isLast || EncodedImage.isValid(encodedImage);
   }
 
   /**
