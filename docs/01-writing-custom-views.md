@@ -16,6 +16,9 @@ We provide two alternate classes you can use to host your Drawee:
 * `DraweeHolder` for a single image
 * `MultiDraweeHolder` for multiple images
 
+`DraweeHolder` is a class that holds one DraweeHierarchy and the associated DraweeController. It allows you to make use of all the functionality Drawee provides in your custom views and other places where you need a drawable instead of a view. To get the drawable, you just do `mDraweeHolder.getTopLevelDrawable()`. Keep in mind that Android drawables require a bit of housekeeping which we covered below.
+`MultiDraweeHolder` is basically just an array of `DraweeHolder`s with some syntactic sugar added on top of it.
+
 ### Responsibilities of custom views
 
 Android lays out View objects, and only they get told of system events. `DraweeViews` handle these events and use them to manage memory effectively. When using the holders, you must implement some of this functionality yourself.
