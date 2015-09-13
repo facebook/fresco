@@ -195,7 +195,7 @@ public class RoundingParams {
   }
 
   /**
-   * Sets the padding on rounded drawable
+   * Sets the padding on rounded drawable. Works only with {@code RoundingMethod.BITMAP_ONLY}
    * @param padding the padding in pixels
    */
   public RoundingParams setPadding(float padding){

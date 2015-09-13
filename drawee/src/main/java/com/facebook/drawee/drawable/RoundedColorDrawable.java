@@ -239,16 +239,12 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
 
     mTempRect.inset(mBorderWidth/2, mBorderWidth/2);
     if (mIsCircle) {
-      mBorderPath.addCircle(mTempRect.centerX(), mTempRect.centerY(), Math.min(mTempRect.width(), mTempRect.height())/2, Path.Direction.CW);
+      float radius = Math.min(mTempRect.width(), mTempRect.height())/2;
+      mBorderPath.addCircle(mTempRect.centerX(), mTempRect.centerY(), radius, Path.Direction.CW);
     } else {
-      mBorderRadii[0] = mRadii[0] + mPadding - mBorderWidth/2;
-      mBorderRadii[1] = mRadii[1] + mPadding - mBorderWidth/2;
-      mBorderRadii[2] = mRadii[2] + mPadding - mBorderWidth/2;
-      mBorderRadii[3] = mRadii[3] + mPadding - mBorderWidth/2;
-      mBorderRadii[4] = mRadii[4] + mPadding - mBorderWidth/2;
-      mBorderRadii[5] = mRadii[5] + mPadding - mBorderWidth/2;
-      mBorderRadii[6] = mRadii[6] + mPadding - mBorderWidth/2;
-      mBorderRadii[7] = mRadii[7] + mPadding - mBorderWidth/2;
+      for (int i = 0; i < mBorderRadii.length; i++) {
+        mBorderRadii[i] = mRadii[i] + mPadding - mBorderWidth/2;
+      }
       mBorderPath.addRoundRect(mTempRect, mBorderRadii, Path.Direction.CW);
     }
     mTempRect.inset(-mBorderWidth/2, -mBorderWidth/2);

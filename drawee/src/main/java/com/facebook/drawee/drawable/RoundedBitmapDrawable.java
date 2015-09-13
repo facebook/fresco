@@ -233,20 +233,12 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       mBorderPath.reset();
       mRootBounds.inset(mBorderWidth/2, mBorderWidth/2);
       if (mIsCircle) {
-        mBorderPath.addCircle(
-                mRootBounds.centerX(),
-                mRootBounds.centerY(),
-                Math.min(mRootBounds.width(), mRootBounds.height())/2,
-                Path.Direction.CW);
+        float radius = Math.min(mRootBounds.width(), mRootBounds.height())/2;
+        mBorderPath.addCircle(mRootBounds.centerX(), mRootBounds.centerY(), radius, Path.Direction.CW);
       } else {
-        mBorderRadii[0] = mCornerRadii[0] + mPadding - mBorderWidth/2;
-        mBorderRadii[1] = mCornerRadii[1] + mPadding - mBorderWidth/2;
-        mBorderRadii[2] = mCornerRadii[2] + mPadding - mBorderWidth/2;
-        mBorderRadii[3] = mCornerRadii[3] + mPadding - mBorderWidth/2;
-        mBorderRadii[4] = mCornerRadii[4] + mPadding - mBorderWidth/2;
-        mBorderRadii[5] = mCornerRadii[5] + mPadding - mBorderWidth/2;
-        mBorderRadii[6] = mCornerRadii[6] + mPadding - mBorderWidth/2;
-        mBorderRadii[7] = mCornerRadii[7] + mPadding - mBorderWidth/2;
+        for (int i = 0; i < mBorderRadii.length; i++) {
+          mBorderRadii[i] = mCornerRadii[i] + mPadding - mBorderWidth/2;
+        }
         mBorderPath.addRoundRect(mRootBounds, mBorderRadii, Path.Direction.CW);
       }
       mRootBounds.inset(-mBorderWidth/2, -mBorderWidth/2);
