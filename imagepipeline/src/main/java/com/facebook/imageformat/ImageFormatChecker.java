@@ -19,6 +19,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Ints;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
+import com.facebook.imagepipeline.webp.WebpSupportStatus;
 
 /**
  * Detects the format of an encoded image.
@@ -39,7 +40,7 @@ public class ImageFormatChecker {
       final int headerSize) {
     Preconditions.checkNotNull(imageHeaderBytes);
 
-    if (isWebpHeader(imageHeaderBytes, headerSize)) {
+    if (WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize)) {
       return getWebpFormat(imageHeaderBytes, headerSize);
     }
 
@@ -201,85 +202,24 @@ public class ImageFormatChecker {
    */
   private static final int EXTENDED_WEBP_HEADER_LENGTH = 21;
 
-  private static final byte[] WEBP_RIFF_BYTES = asciiBytes("RIFF");
-  private static final byte[] WEBP_NAME_BYTES = asciiBytes("WEBP");
-
-  /**
-   * This is a constant used to detect different WebP's formats: vp8, vp8l and vp8x.
-   */
-  private static final byte[] WEBP_VP8_BYTES = asciiBytes("VP8 ");
-  private static final byte[] WEBP_VP8L_BYTES = asciiBytes("VP8L");
-  private static final byte[] WEBP_VP8X_BYTES = asciiBytes("VP8X");
-
-  /**
-   * Checks if a WebP image is animated one
-   * @param imageHeaderBytes - byte array containing valid WebP header
-   * @return true if imageHeaderBytes is a header of animated webp
-   */
-  private static boolean isAnimatedWebpHeader(final byte[] imageHeaderBytes) {
-    boolean isVp8x = matchBytePattern(imageHeaderBytes, 12, WEBP_VP8X_BYTES);
-    // ANIM is 2nd bit (00000010 == 2) on 21st byte (imageHeaderBytes[20])
-    boolean hasAnimationBit = (imageHeaderBytes[20] & 2) == 2;
-    return isVp8x && hasAnimationBit;
-  }
-
-  private static boolean isSimpleWebpHeader(final byte[] imageHeaderBytes) {
-    return matchBytePattern(imageHeaderBytes, 12, WEBP_VP8_BYTES);
-  }
-
-  private static boolean isLosslessWebpHeader(final byte[] imageHeaderBytes) {
-    return matchBytePattern(imageHeaderBytes, 12, WEBP_VP8L_BYTES);
-  }
-
-  private static boolean isExtendedWebpHeaderWithAlpha(final byte[] imageHeaderBytes) {
-    boolean isVp8x = matchBytePattern(imageHeaderBytes, 12, WEBP_VP8X_BYTES);
-    // Has ALPHA is 5th bit (00010000 == 16) on 21st byte (imageHeaderBytes[20])
-    boolean hasAlphaBit = (imageHeaderBytes[20] & 16) == 16;
-    return isVp8x && hasAlphaBit;
-  }
-
-
-
-
-  private static boolean isExtendedWebpHeader(final byte[] imageHeaderBytes, final int headerSize) {
-    return headerSize >= EXTENDED_WEBP_HEADER_LENGTH &&
-        matchBytePattern(imageHeaderBytes, 12, WEBP_VP8X_BYTES);
-  }
-
-  /**
-   * Checks if imageHeaderBytes contains WEBP_RIFF_BYTES and WEBP_NAME_BYTES and if the
-   * header is long enough to be WebP's header.
-   * WebP file format can be found here:
-   * <a href="https://developers.google.com/speed/webp/docs/riff_container">
-   *   https://developers.google.com/speed/webp/docs/riff_container</a>
-   * @param imageHeaderBytes
-   * @return true if imageHeaderBytes contains a valid webp header
-   */
-  private static boolean isWebpHeader(final byte[] imageHeaderBytes, final int headerSize) {
-    Preconditions.checkNotNull(imageHeaderBytes);
-    return headerSize >= SIMPLE_WEBP_HEADER_LENGTH &&
-        matchBytePattern(imageHeaderBytes, 0, WEBP_RIFF_BYTES) &&
-        matchBytePattern(imageHeaderBytes, 8, WEBP_NAME_BYTES);
-  }
-
   /**
    * Determines type of WebP image. imageHeaderBytes has to be header of a WebP image
    */
   private static ImageFormat getWebpFormat(final byte[] imageHeaderBytes, final int headerSize) {
-    Preconditions.checkArgument(isWebpHeader(imageHeaderBytes, headerSize));
-    if (isSimpleWebpHeader(imageHeaderBytes)) {
+    Preconditions.checkArgument(WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize));
+    if (WebpSupportStatus.isSimpleWebpHeader(imageHeaderBytes, 0)) {
       return ImageFormat.WEBP_SIMPLE;
     }
 
-    if (isLosslessWebpHeader(imageHeaderBytes)) {
+    if (WebpSupportStatus.isLosslessWebpHeader(imageHeaderBytes, 0)) {
       return ImageFormat.WEBP_LOSSLESS;
     }
 
-    if (isExtendedWebpHeader(imageHeaderBytes, headerSize)) {
-      if (isAnimatedWebpHeader(imageHeaderBytes)) {
+    if (WebpSupportStatus.isExtendedWebpHeader(imageHeaderBytes, 0, headerSize)) {
+      if (WebpSupportStatus.isAnimatedWebpHeader(imageHeaderBytes, 0)) {
         return ImageFormat.WEBP_ANIMATED;
       }
-      if (isExtendedWebpHeaderWithAlpha(imageHeaderBytes)) {
+      if (WebpSupportStatus.isExtendedWebpHeaderWithAlpha(imageHeaderBytes, 0)) {
         return ImageFormat.WEBP_EXTENDED_WITH_ALPHA;
       }
       return ImageFormat.WEBP_EXTENDED;
