@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
 
-import com.facebook.common.executors.UiThreadExecutorService;
+import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageformat.ImageFormat;
@@ -50,7 +50,9 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @Config(manifest= Config.NONE)
-@PrepareOnlyThisForTest({JpegTranscoder.class, SystemClock.class, UiThreadExecutorService.class})
+@PrepareOnlyThisForTest({JpegTranscoder.class, SystemClock.class,
+                          UiThreadImmediateExecutorService.class})
+
 public class ResizeAndRotateProducerTest {
   static {
     SoLoaderShim.setInTestMode();
@@ -79,7 +81,7 @@ public class ResizeAndRotateProducerTest {
   private FakeClock mFakeClockForWorker;
   private FakeClock mFakeClockForScheduled;
   private TestScheduledExecutorService mTestScheduledExecutorService;
-  private UiThreadExecutorService mUiThreadExecutorService;
+  private UiThreadImmediateExecutorService mUiThreadImmediateExecutorService;
   private EncodedImage mIntermediateEncodedImage;
   private EncodedImage mFinalEncodedImage;
 
@@ -101,8 +103,11 @@ public class ResizeAndRotateProducerTest {
 
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
     mTestScheduledExecutorService = new TestScheduledExecutorService(mFakeClockForScheduled);
-    mUiThreadExecutorService = mock(UiThreadExecutorService.class);
-    when(mUiThreadExecutorService.schedule(any(Runnable.class), anyLong(), any(TimeUnit.class)))
+    mUiThreadImmediateExecutorService = mock(UiThreadImmediateExecutorService.class);
+    when(mUiThreadImmediateExecutorService.schedule(
+        any(Runnable.class),
+        anyLong(),
+        any(TimeUnit.class)))
         .thenAnswer(
             new Answer<Object>() {
               @Override
@@ -113,8 +118,9 @@ public class ResizeAndRotateProducerTest {
                     (TimeUnit) invocation.getArguments()[2]);
               }
             });
-    PowerMockito.mockStatic(UiThreadExecutorService.class);
-    when(UiThreadExecutorService.getInstance()).thenReturn(mUiThreadExecutorService);
+    PowerMockito.mockStatic(UiThreadImmediateExecutorService.class);
+    when(UiThreadImmediateExecutorService.getInstance()).thenReturn(
+        mUiThreadImmediateExecutorService);
 
     PowerMockito.mockStatic(JpegTranscoder.class);
     PowerMockito.when(JpegTranscoder.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
