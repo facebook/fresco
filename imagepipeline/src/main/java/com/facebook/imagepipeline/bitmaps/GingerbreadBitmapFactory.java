@@ -12,7 +12,6 @@ package com.facebook.imagepipeline.bitmaps;
 import android.graphics.Bitmap;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 
 /**
@@ -20,16 +19,8 @@ import com.facebook.imagepipeline.memory.FlexByteArrayPool;
  */
 class GingerbreadBitmapFactory extends DalvikBitmapFactory {
 
-  private final ResourceReleaser<Bitmap> mBitmapResourceReleaser;
-
   GingerbreadBitmapFactory(FlexByteArrayPool flexByteArrayPool) {
     super(flexByteArrayPool);
-    mBitmapResourceReleaser = new ResourceReleaser<Bitmap>() {
-      @Override
-      public void release(Bitmap value) {
-        value.recycle();
-      }
-    };
   }
 
   /**
@@ -43,7 +34,7 @@ class GingerbreadBitmapFactory extends DalvikBitmapFactory {
   @Override
   public CloseableReference<Bitmap> createBitmap(int width, int height) {
     Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-    return CloseableReference.of(bitmap, mBitmapResourceReleaser);
+    return CloseableReference.of(bitmap, SimpleBitmapReleaser.getInstance());
   }
 
   @Override
