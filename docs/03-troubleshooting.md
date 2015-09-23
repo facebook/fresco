@@ -7,11 +7,30 @@ prev: closeable-references.html
 next: gotchas.html
 ---
 
-###  Troubleshooting
+##  Troubleshooting
 
-#### Read the logcat
+### Using the logcat
 
 There are various issues one might encounter when it comes to image handling. With Fresco, most of them can be diagnosed by simply looking at the `VERBOSE` logcat. This should be your starting point when investigating an issue with Fresco.
+
+#### Setting up logcat
+
+By default, Fresco does not write out all its logs. You need to [configure the image pipeline](configure-image-pipeline.html#_) to do so. 
+
+```java
+Set<RequestListener> requestListeners = new HashSet<>();
+requestListeners.add(new RequestLoggingListener());
+ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
+   . // other setters
+   .setRequestListeners(requestListeners)
+   .build();
+Fresco.initialize(context, config);
+FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+```
+
+#### Examining logcat
+
+All of Fresco's logs can be examined by this command:
 
 ```
 adb logcat -v threadtime | grep -iE 'LoggingListener|AbstractDraweeController|BufferedDiskCache'
@@ -53,11 +72,11 @@ The output shows what is happening with the image requests within the image pipe
 
 In this case, we see that the controller `28ebe0eb` associated with a DraweeView started datasource `36e95857` which issued image request `1`. We can now see that the image was not found in the bitmap cache, nor in the encoded memory cache, nor in the disk cache, and so the network fetch had to be performed. The fetch was successful, the image was decoded and the request finished successfully. Finally, the datasource notified the controller which then set the resulting image to the hierarchy (`set_final_result`). 
 
-#### Image doesn't load
+### Image doesn't load
 
 Here are some common reasons why image loads fail.
 
-##### File not available
+#### File not available
 
 For example, an incorrect path for local files or an unavailable network URI is given. 
 
