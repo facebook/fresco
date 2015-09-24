@@ -140,7 +140,7 @@ public class ArrayDrawable extends Drawable
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
-        mLayers[i].setBounds(bounds);
+        drawable.setBounds(bounds);
       }
     }
   }
@@ -233,9 +233,12 @@ public class ArrayDrawable extends Drawable
     if (mLayers.length == 0) {
       return PixelFormat.TRANSPARENT;
     }
-    int opacity = mLayers[0].getOpacity();
+    int opacity = PixelFormat.OPAQUE;
     for (int i = 1; i < mLayers.length; i++) {
-      opacity = Drawable.resolveOpacity(opacity, mLayers[i].getOpacity());
+      Drawable drawable = mLayers[i];
+      if (drawable != null) {
+        opacity = Drawable.resolveOpacity(opacity, drawable.getOpacity());
+      }
     }
     return opacity;
   }
@@ -246,7 +249,7 @@ public class ArrayDrawable extends Drawable
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
-        mLayers[i].setAlpha(alpha);
+        drawable.setAlpha(alpha);
       }
     }
   }
@@ -257,7 +260,7 @@ public class ArrayDrawable extends Drawable
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
-        mLayers[i].setColorFilter(colorFilter);
+        drawable.setColorFilter(colorFilter);
       }
     }
   }
@@ -268,7 +271,7 @@ public class ArrayDrawable extends Drawable
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
-        mLayers[i].setDither(dither);
+        drawable.setDither(dither);
       }
     }
   }
@@ -279,7 +282,7 @@ public class ArrayDrawable extends Drawable
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
-        mLayers[i].setFilterBitmap(filterBitmap);
+        drawable.setFilterBitmap(filterBitmap);
       }
     }
   }
@@ -292,7 +295,7 @@ public class ArrayDrawable extends Drawable
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
-        mLayers[i].setVisible(visible, restart);
+        drawable.setVisible(visible, restart);
       }
     }
     return changed;
