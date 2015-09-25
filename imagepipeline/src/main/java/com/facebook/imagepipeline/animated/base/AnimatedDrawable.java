@@ -52,6 +52,7 @@ public class AnimatedDrawable extends Drawable implements AnimatableDrawable, Dr
   private final MonotonicClock mMonotonicClock;
   private final int mDurationMs;
   private final int mFrameCount;
+  private final int mTotalLoops;
 
   // Paint used to draw on a Canvas
   private final Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
@@ -141,6 +142,7 @@ public class AnimatedDrawable extends Drawable implements AnimatableDrawable, Dr
     mDurationMs = mAnimatedDrawableBackend.getDurationMs();
     mFrameCount = mAnimatedDrawableBackend.getFrameCount();
     mAnimatedDrawableDiagnostics.setBackend(mAnimatedDrawableBackend);
+    mTotalLoops = mAnimatedDrawableBackend.getLoopCount();
     mTransparentPaint = new Paint();
     mTransparentPaint.setColor(Color.TRANSPARENT);
     mTransparentPaint.setStyle(Paint.Style.FILL);
@@ -254,6 +256,10 @@ public class AnimatedDrawable extends Drawable implements AnimatableDrawable, Dr
     }
     long nowMs = mMonotonicClock.now();
     int loops = (int) ((nowMs - mStartTimeMs) / mDurationMs);
+    if (mTotalLoops > 0 && loops >= mTotalLoops) {
+      //we stop the animation if we have exceeded the total loop count
+      return;
+    }
     int timestampMs = (int) ((nowMs - mStartTimeMs) % mDurationMs);
     int newCurrentFrameNumber = mAnimatedDrawableBackend.getFrameForTimestampMs(timestampMs);
     boolean changed = mScheduledFrameNumber != newCurrentFrameNumber;
