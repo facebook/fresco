@@ -9,15 +9,15 @@
 
 package com.facebook.imagepipeline.image;
 
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;
+
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * CloseableImage that contains one Bitmap.
@@ -75,16 +75,29 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   @Override
   public void close() {
-    CloseableReference<Bitmap> reference;
-    synchronized (this) {
-      if (mBitmapReference == null) {
-        return;
-      }
-      reference = mBitmapReference;
-      mBitmapReference = null;
-      mBitmap = null;
+    CloseableReference<Bitmap> reference = detachBitmapReference();
+    if (reference != null) {
+      reference.close();
     }
-    reference.close();
+  }
+
+  private synchronized CloseableReference<Bitmap> detachBitmapReference() {
+    CloseableReference<Bitmap> reference = mBitmapReference;
+    mBitmapReference = null;
+    mBitmap = null;
+    return reference;
+  }
+
+  /**
+   * Convert this object to a CloseableReference&lt;Bitmap&gt;.
+   * <p>You cannot call this method on an object that has already been closed.
+   * <p>The reference count of the bitmap is preserved. After calling this method, this object
+   * can no longer be used and no longer points to the bitmap.
+   * @throws IllegalArgumentException if this object has already been closed.
+   */
+  public synchronized CloseableReference<Bitmap> convertToBitmapReference() {
+    Preconditions.checkNotNull(mBitmapReference, "Cannot convert a closed static bitmap");
+    return detachBitmapReference();
   }
 
   /**
