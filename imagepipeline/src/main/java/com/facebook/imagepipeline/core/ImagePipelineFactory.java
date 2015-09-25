@@ -11,8 +11,11 @@ package com.facebook.imagepipeline.core;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
 
 import com.facebook.cache.common.CacheKey;
@@ -87,6 +90,7 @@ public class ImagePipelineFactory {
 
   private final ImagePipelineConfig mConfig;
 
+  private AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private AnimatedDrawableUtil mAnimatedDrawableUtil;
   private AnimatedDrawableFactory mAnimatedDrawableFactory;
   private AnimatedImageFactory mAnimatedImageFactory;
@@ -107,6 +111,72 @@ public class ImagePipelineFactory {
 
   public ImagePipelineFactory(ImagePipelineConfig config) {
     mConfig = Preconditions.checkNotNull(config);
+  }
+
+  public static AnimatedDrawableFactory buildAnimatedDrawableFactory(
+      final SerialExecutorService serialExecutorService,
+      final ActivityManager activityManager,
+      final AnimatedDrawableUtil animatedDrawableUtil,
+      AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
+      ScheduledExecutorService scheduledExecutorService,
+      final MonotonicClock monotonicClock,
+      Resources resources) {
+    AnimatedDrawableCachingBackendImplProvider animatedDrawableCachingBackendImplProvider =
+        new AnimatedDrawableCachingBackendImplProvider() {
+          @Override
+          public AnimatedDrawableCachingBackendImpl get(
+              AnimatedDrawableBackend animatedDrawableBackend,
+              AnimatedDrawableOptions options) {
+            return new AnimatedDrawableCachingBackendImpl(
+                serialExecutorService,
+                activityManager,
+                animatedDrawableUtil,
+                monotonicClock,
+                animatedDrawableBackend,
+                options);
+          }
+        };
+
+
+    return new AnimatedDrawableFactory(
+        animatedDrawableBackendProvider,
+        animatedDrawableCachingBackendImplProvider,
+        animatedDrawableUtil,
+        scheduledExecutorService,
+        resources);
+  }
+
+  public AnimatedDrawableBackendProvider getAnimatedDrawableBackendProvider() {
+    if (mAnimatedDrawableBackendProvider == null) {
+      mAnimatedDrawableBackendProvider = new AnimatedDrawableBackendProvider() {
+        @Override
+        public AnimatedDrawableBackend get(AnimatedImageResult animatedImageResult, Rect bounds) {
+          return new AnimatedDrawableBackendImpl(
+              getAnimatedDrawableUtil(),
+              animatedImageResult,
+              bounds);
+        }
+      };
+    }
+    return mAnimatedDrawableBackendProvider;
+  }
+
+  public AnimatedDrawableFactory getAnimatedDrawableFactory() {
+    if (mAnimatedDrawableFactory == null) {
+      SerialExecutorService serialExecutorService =
+          new DefaultSerialExecutorService(mConfig.getExecutorSupplier().forDecode());
+      ActivityManager activityManager =
+          (ActivityManager) mConfig.getContext().getSystemService(Context.ACTIVITY_SERVICE);
+      mAnimatedDrawableFactory = buildAnimatedDrawableFactory(
+          serialExecutorService,
+          activityManager,
+          getAnimatedDrawableUtil(),
+          getAnimatedDrawableBackendProvider(),
+          UiThreadImmediateExecutorService.getInstance(),
+          RealtimeSinceBootClock.get(),
+          mConfig.getContext().getResources());
+    }
+    return mAnimatedDrawableFactory;
   }
 
   // We need some of these methods public for now so internal code can use them.
@@ -292,47 +362,5 @@ public class ImagePipelineFactory {
               mConfig.getImageCacheStatsTracker());
     }
     return mSmallImageBufferedDiskCache;
-  }
-
-  public AnimatedDrawableFactory getAnimatedDrawableFactory() {
-    if (mAnimatedDrawableFactory == null) {
-      final AnimatedDrawableUtil animatedDrawableUtil = getAnimatedDrawableUtil();
-      final MonotonicClock monotonicClock = RealtimeSinceBootClock.get();
-      final SerialExecutorService serialExecutorService =
-          new DefaultSerialExecutorService(mConfig.getExecutorSupplier().forDecode());
-      final ActivityManager activityManager =
-          (ActivityManager) mConfig.getContext().getSystemService(Context.ACTIVITY_SERVICE);
-
-      AnimatedDrawableCachingBackendImplProvider animatedDrawableCachingBackendImplProvider =
-          new AnimatedDrawableCachingBackendImplProvider() {
-            @Override
-            public AnimatedDrawableCachingBackendImpl get(
-                AnimatedDrawableBackend animatedDrawableBackend,
-                AnimatedDrawableOptions options) {
-              return new AnimatedDrawableCachingBackendImpl(
-                  serialExecutorService,
-                  activityManager,
-                  animatedDrawableUtil,
-                  monotonicClock,
-                  animatedDrawableBackend,
-                  options);
-            }
-          };
-
-      AnimatedDrawableBackendProvider backendProvider = new AnimatedDrawableBackendProvider() {
-        @Override
-        public AnimatedDrawableBackend get(AnimatedImageResult animatedImageResult, Rect bounds) {
-          return new AnimatedDrawableBackendImpl(animatedDrawableUtil, animatedImageResult, bounds);
-        }
-      };
-
-      mAnimatedDrawableFactory = new AnimatedDrawableFactory(
-          backendProvider,
-          animatedDrawableCachingBackendImplProvider,
-          animatedDrawableUtil,
-          UiThreadImmediateExecutorService.getInstance(),
-          mConfig.getContext().getResources());
-    }
-    return mAnimatedDrawableFactory;
   }
 }
