@@ -621,7 +621,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * <p>The placeholder scale type will not be changed.
    */
   public void setPlaceholderImage(Drawable drawable) {
-    setPlaceholderImage(drawable, ScaleType.CENTER_INSIDE);
+    setPlaceholderImage(drawable, null);
   }
 
   public void setPlaceholderImage(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
@@ -655,7 +655,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * Sets a new failure drawable.
    */
   public void setFailureImage(Drawable drawable) {
-    setFailureImage(drawable, ScaleType.CENTER_INSIDE);
+    setFailureImage(drawable, null);
   }
 
   /**
@@ -669,7 +669,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * Sets a new retry drawable.
    */
   public void setRetryImage(Drawable drawable) {
-    setRetryImage(drawable, ScaleType.CENTER_INSIDE);
+    setRetryImage(drawable, null);
   }
 
   /**
@@ -683,7 +683,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * Sets a new progress bar drawable.
    */
   public void setProgressBarImage(Drawable drawable) {
-    setProgressBarImage(drawable, ScaleType.CENTER_INSIDE);
+    setProgressBarImage(drawable, null);
   }
 
   /**
@@ -704,16 +704,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
 
     drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
-    if (scaleType == null) {
-      mFadeDrawable.setDrawable(index, drawable);
-      return;
-    }
-
-    ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(index);
-    if (scaleTypeDrawable != null) {
-      scaleTypeDrawable.setScaleType(scaleType);
-    } else {
-      drawable = maybeWrapWithScaleType(drawable, scaleType);
+    if (scaleType != null) {
+      ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(index);
+      if (scaleTypeDrawable != null) {
+        scaleTypeDrawable.setScaleType(scaleType);
+      } else {
+        drawable = maybeWrapWithScaleType(drawable, scaleType);
+      }
     }
 
     setLayerChildDrawable(index, drawable);

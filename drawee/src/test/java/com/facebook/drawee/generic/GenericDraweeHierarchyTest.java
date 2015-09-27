@@ -1001,10 +1001,11 @@ public class GenericDraweeHierarchyTest {
     assertEquals(ScaleType.FIT_CENTER, failureBranch.getScaleType());
 
     Drawable failureImage3 = new ColorDrawable(0);
-    when(mFailureImage.mutate()).thenReturn(mFailureImage);
-    dh.setFailureImage(failureImage3, null);
-
-    assertSame(failureImage3, fadeDrawable.getDrawable(4));
+    when(failureImage2.getBounds()).thenReturn(new Rect());
+    dh.setFailureImage(failureImage3);
+    assertSame(failureBranch, fadeDrawable.getDrawable(4));
+    assertSame(failureImage3, failureBranch.getCurrent());
+    assertEquals(ScaleType.FIT_CENTER, failureBranch.getScaleType());
   }
 
   @Test
@@ -1030,10 +1031,11 @@ public class GenericDraweeHierarchyTest {
     assertEquals(ScaleType.FIT_CENTER, retryBranch.getScaleType());
 
     Drawable retryImage3 = new ColorDrawable(0);
-    when(mRetryImage.mutate()).thenReturn(mRetryImage);
+    when(retryImage2.getBounds()).thenReturn(new Rect());
     dh.setRetryImage(retryImage3, null);
-
-    assertSame(retryImage3, fadeDrawable.getDrawable(3));
+    assertSame(retryBranch, fadeDrawable.getDrawable(3));
+    assertSame(retryImage3, retryBranch.getCurrent());
+    assertEquals(ScaleType.FIT_CENTER, retryBranch.getScaleType());
   }
 
   @Test
@@ -1059,10 +1061,11 @@ public class GenericDraweeHierarchyTest {
     assertEquals(ScaleType.FIT_CENTER, progressBarBranch.getScaleType());
 
     Drawable progressBarImage3 = new ColorDrawable(0);
-    when(mProgressBarImage.mutate()).thenReturn(mProgressBarImage);
+    when(progressBarImage2.getBounds()).thenReturn(new Rect());
     dh.setProgressBarImage(progressBarImage3, null);
-
-    assertSame(progressBarImage3, fadeDrawable.getDrawable(2));
+    assertSame(progressBarBranch, fadeDrawable.getDrawable(2));
+    assertSame(progressBarImage3, progressBarBranch.getCurrent());
+    assertEquals(ScaleType.FIT_CENTER, progressBarBranch.getScaleType());
   }
 
   @Test
