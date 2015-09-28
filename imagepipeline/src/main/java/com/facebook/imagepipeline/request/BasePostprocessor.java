@@ -48,7 +48,10 @@ public abstract class BasePostprocessor implements Postprocessor {
       Bitmap sourceBitmap,
       PlatformBitmapFactory bitmapFactory) {
     CloseableReference<Bitmap> destBitmapRef =
-        bitmapFactory.createBitmap(sourceBitmap.getWidth(), sourceBitmap.getHeight());
+        bitmapFactory.createBitmap(
+            sourceBitmap.getWidth(),
+            sourceBitmap.getHeight(),
+            sourceBitmap.getConfig());
     try {
       process(destBitmapRef.get(), sourceBitmap);
       return CloseableReference.cloneOrNull(destBitmapRef);

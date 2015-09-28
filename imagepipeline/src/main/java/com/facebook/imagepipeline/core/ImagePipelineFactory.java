@@ -260,7 +260,10 @@ public class ImagePipelineFactory {
       if (mConfig.getImageDecoder() != null) {
         mImageDecoder = mConfig.getImageDecoder();
       } else {
-        mImageDecoder = new ImageDecoder(getAnimatedImageFactory(), getPlatformBitmapFactory());
+        mImageDecoder = new ImageDecoder(
+            getAnimatedImageFactory(),
+            getPlatformBitmapFactory(),
+            mConfig.getBitmapConfig());
       }
     }
     return mImageDecoder;

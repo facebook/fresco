@@ -28,12 +28,17 @@ class GingerbreadBitmapFactory extends DalvikBitmapFactory {
    *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @return a reference to the bitmap
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> createBitmap(int width, int height) {
-    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+  public CloseableReference<Bitmap> createBitmap(
+      int width,
+      int height,
+      Bitmap.Config bitmapConfig) {
+    Bitmap bitmap = Bitmap.createBitmap(width, height, bitmapConfig);
     return CloseableReference.of(bitmap, SimpleBitmapReleaser.getInstance());
   }
 

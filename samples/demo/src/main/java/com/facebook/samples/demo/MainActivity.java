@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -50,6 +51,7 @@ public class MainActivity extends Activity {
     listeners.add(new RequestLoggingListener());
     ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
         .setRequestListeners(listeners)
+        .setBitmapsConfig(Bitmap.Config.ARGB_8888)
         .build();
     Fresco.initialize(this, config);
     setContentView(R.layout.activity_main);

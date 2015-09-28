@@ -25,6 +25,7 @@ import com.facebook.common.streams.TailAppendingInputStream;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 
 import java.io.InputStream;
@@ -66,46 +67,64 @@ class ArtBitmapFactory extends PlatformBitmapFactory {
 
   /**
    * Creates a bitmap of the specified width and height.
-   *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @return a reference to the bitmap
-   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> createBitmap(int width, int height) {
-    Bitmap bitmap = mBitmapPool.get(width * height);
-    Bitmaps.reconfigureBitmap(bitmap, width, height);
+  public CloseableReference<Bitmap> createBitmap(
+      int width,
+      int height,
+      Bitmap.Config bitmapConfig) {
+    int sizeInBytes = BitmapUtil.getSizeInByteForBitmap(width, height, bitmapConfig);
+    Bitmap bitmap = mBitmapPool.get(sizeInBytes);
+    Bitmaps.reconfigureBitmap(bitmap, width, height, bitmapConfig);
     return CloseableReference.of(bitmap, mBitmapPool);
   }
 
   /**
    * Creates a bitmap from encoded bytes.
-   *
    * @param encodedImage the encoded image with a reference to the encoded bytes
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @return the bitmap
-   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeFromEncodedImage(EncodedImage encodedImage) {
-    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
-    return decodeStaticImageFromStream(encodedImage.getInputStream(), options);
+  public CloseableReference<Bitmap> decodeFromEncodedImage(
+      EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig) {
+    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
+    boolean retryOnFail=options.inPreferredConfig != Bitmap.Config.ARGB_8888;
+    try {
+      return decodeStaticImageFromStream(encodedImage.getInputStream(), options);
+    } catch (RuntimeException re) {
+      if (retryOnFail) {
+        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888);
+      }
+      throw re;
+    }
   }
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
-   *
    * @param encodedImage the encoded image with reference to the encoded bytes
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
-   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
   public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
       int length) {
     boolean isJpegComplete = encodedImage.isCompleteAt(length);
-    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage);
+    final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
 
     InputStream jpegDataStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
@@ -118,7 +137,15 @@ class ArtBitmapFactory extends PlatformBitmapFactory {
     if (!isJpegComplete) {
       jpegDataStream = new TailAppendingInputStream(jpegDataStream, EOI_TAIL);
     }
-    return decodeStaticImageFromStream(jpegDataStream, options);
+    boolean retryOnFail=options.inPreferredConfig != Bitmap.Config.ARGB_8888;
+    try {
+      return decodeStaticImageFromStream(jpegDataStream, options);
+    } catch (RuntimeException re) {
+      if (retryOnFail) {
+        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888);
+      }
+      throw re;
+    }
   }
 
   @Override
@@ -130,8 +157,11 @@ class ArtBitmapFactory extends PlatformBitmapFactory {
       InputStream inputStream,
       BitmapFactory.Options options) {
     Preconditions.checkNotNull(inputStream);
-
-    final Bitmap bitmapToReuse = mBitmapPool.get(options.outHeight * options.outWidth);
+    int sizeInBytes = BitmapUtil.getSizeInByteForBitmap(
+        options.outWidth,
+        options.outHeight,
+        options.inPreferredConfig);
+    final Bitmap bitmapToReuse = mBitmapPool.get(sizeInBytes);
     if (bitmapToReuse == null) {
       throw new NullPointerException("BitmapPool.get returned null");
     }
@@ -164,7 +194,9 @@ class ArtBitmapFactory extends PlatformBitmapFactory {
   /**
    * Options returned by this method are configured with mDecodeBuffer which is GuardedBy("this")
    */
-  private BitmapFactory.Options getDecodeOptionsForStream(EncodedImage encodedImage) {
+  private static BitmapFactory.Options getDecodeOptionsForStream(
+      EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig) {
     final BitmapFactory.Options options = new BitmapFactory.Options();
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = encodedImage.getSampleSize();
@@ -177,7 +209,7 @@ class ArtBitmapFactory extends PlatformBitmapFactory {
 
     options.inJustDecodeBounds = false;
     options.inDither = true;
-    options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
+    options.inPreferredConfig = bitmapConfig;
     options.inMutable = true;
 
     return options;

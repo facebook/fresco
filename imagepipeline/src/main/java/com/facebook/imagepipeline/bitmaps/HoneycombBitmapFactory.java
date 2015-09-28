@@ -42,12 +42,17 @@ public class HoneycombBitmapFactory extends DalvikBitmapFactory {
    *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @return a reference to the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> createBitmap(int width, int height) {
+  public CloseableReference<Bitmap> createBitmap(
+      int width,
+      int height,
+      Bitmap.Config bitmapConfig) {
     CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
         (short) width,
         (short) height);
@@ -56,7 +61,7 @@ public class HoneycombBitmapFactory extends DalvikBitmapFactory {
       encodedImage.setImageFormat(ImageFormat.JPEG);
       try {
         CloseableReference<Bitmap> bitmapRef =
-            decodeJPEGFromEncodedImage(encodedImage, jpgRef.get().size());
+            decodeJPEGFromEncodedImage(encodedImage, bitmapConfig, jpgRef.get().size());
         bitmapRef.get().eraseColor(Color.TRANSPARENT);
         return bitmapRef;
       } finally {

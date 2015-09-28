@@ -9,27 +9,19 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
-import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
-import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Bitmap factory for Dalvik VM (Honeycomb to KitKat).
@@ -46,14 +38,19 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
    * Creates a bitmap from encoded bytes.
    *
    * @param encodedImage the encoded image with reference to the encoded bytes
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeFromEncodedImage(final EncodedImage encodedImage) {
+  public CloseableReference<Bitmap> decodeFromEncodedImage(
+      final EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
-        encodedImage.getSampleSize());
+        encodedImage.getSampleSize(),
+        bitmapConfig);
     CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
@@ -69,6 +66,8 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
    *
    * @param encodedImage the encoded image with reference to the encoded bytes
    * @param length the number of encoded bytes in the buffer
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
+   * used to create the decoded Bitmap
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -76,9 +75,11 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
   @Override
   public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       final EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
       int length) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
-        encodedImage.getSampleSize());
+        encodedImage.getSampleSize(),
+        bitmapConfig);
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
@@ -113,6 +114,7 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
    * Decodes a byteArray into a purgeable bitmap
    *
    * @param bytesRef the byte buffer that contains the encoded bytes
+   * @param options the options passed to the BitmapFactory
    * @return
    */
   private Bitmap decodeByteArrayAsPurgeable(
@@ -141,6 +143,7 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
    * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
    *
    * @param bytesRef the byte buffer that contains the encoded bytes
+   * @param options the options passed to the BitmapFactory
    * @return
    */
   private Bitmap decodeJPEGByteArrayAsPurgeable(
@@ -170,10 +173,11 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
   }
 
   private static BitmapFactory.Options getBitmapFactoryOptions(
-      int sampleSize) {
+      int sampleSize,
+      Bitmap.Config bitmapConfig) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
-    options.inPreferredConfig = Bitmaps.BITMAP_CONFIG;
+    options.inPreferredConfig = bitmapConfig;
     // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
     options.inPurgeable = true;
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline

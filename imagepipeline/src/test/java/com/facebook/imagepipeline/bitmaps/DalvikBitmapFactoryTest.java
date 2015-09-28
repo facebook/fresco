@@ -63,6 +63,8 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 public class DalvikBitmapFactoryTest {
 
+  private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
@@ -136,6 +138,7 @@ public class DalvikBitmapFactoryTest {
     setUpJpegDecode();
     CloseableReference<Bitmap> result = mDalvikBitmapFactory.decodeJPEGFromEncodedImage(
         mEncodedImage,
+        DEFAULT_BITMAP_CONFIG,
         IMAGE_SIZE);
     verifyDecodesJpeg(result);
   }
@@ -145,7 +148,10 @@ public class DalvikBitmapFactoryTest {
     assumeNotNull(mDalvikBitmapFactory);
     when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
     CloseableReference<Bitmap> result =
-        mDalvikBitmapFactory.decodeJPEGFromEncodedImage(mEncodedImage, IMAGE_SIZE);
+        mDalvikBitmapFactory.decodeJPEGFromEncodedImage(
+            mEncodedImage,
+            DEFAULT_BITMAP_CONFIG,
+            IMAGE_SIZE);
     verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
     verifyStatic();
     BitmapFactory.decodeByteArray(
@@ -166,9 +172,10 @@ public class DalvikBitmapFactoryTest {
   @Test(expected = TooManyBitmapsException.class)
   public void testHitBitmapLimit_static() {
     assumeNotNull(mDalvikBitmapFactory);
-    mBitmapCounter.increase(MockBitmapFactory.createForSize(MAX_BITMAP_SIZE));
+    mBitmapCounter.increase(
+        MockBitmapFactory.createForSize(MAX_BITMAP_SIZE, DEFAULT_BITMAP_CONFIG));
     try {
-      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     } finally {
       verify(mBitmap).recycle();
       assertEquals(1, mBitmapCounter.getCount());
@@ -182,7 +189,7 @@ public class DalvikBitmapFactoryTest {
     PowerMockito.doThrow(new ConcurrentModificationException()).when(Bitmaps.class);
     Bitmaps.pinBitmap(any(Bitmap.class));
     try {
-      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     } finally {
       verify(mBitmap).recycle();
       assertEquals(0, mBitmapCounter.getCount());
@@ -231,7 +238,6 @@ public class DalvikBitmapFactoryTest {
       }
       BitmapFactory.Options options = (BitmapFactory.Options) argument;
       return options.inDither &&
-          options.inPreferredConfig == Bitmaps.BITMAP_CONFIG &&
           options.inPurgeable;
     }
   }

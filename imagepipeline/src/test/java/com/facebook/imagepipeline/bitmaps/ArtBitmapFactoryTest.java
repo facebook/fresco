@@ -65,6 +65,8 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 public class ArtBitmapFactoryTest {
 
+  private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
@@ -102,7 +104,7 @@ public class ArtBitmapFactoryTest {
     mEncodedImage = new EncodedImage(mByteBufferRef);
     mEncodedImage.setImageFormat(ImageFormat.JPEG);
     mBitmap = MockBitmapFactory.create();
-    doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_PIXELS);
+    doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_SIZE);
 
     mBitmapFactoryDefaultAnswer = new Answer<Bitmap>() {
       @Override
@@ -124,27 +126,27 @@ public class ArtBitmapFactoryTest {
 
   @Test
   public void testDecodeStaticDecodesFromStream() {
-    mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+    mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     verifyDecodedFromStream();
   }
 
   @Test
   public void testDecodeStaticDoesNotLeak() {
-    mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+    mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     verifyNoLeaks();
   }
 
   @Test
   public void testStaticImageUsesPooledByteBufferWithPixels() {
     CloseableReference<Bitmap> decodedImage =
-        mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+        mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     closeAndVerifyClosed(decodedImage);
   }
 
   @Test(expected = NullPointerException.class)
   public void testPoolsReturnsNull() {
     doReturn(null).when(mBitmapPool).get(anyInt());
-    mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+    mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -153,7 +155,7 @@ public class ArtBitmapFactoryTest {
         .thenAnswer(mBitmapFactoryDefaultAnswer)
         .thenReturn(MockBitmapFactory.create());
     try {
-      mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+      mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     } finally {
       verify(mBitmapPool).release(mBitmap);
     }
@@ -165,7 +167,7 @@ public class ArtBitmapFactoryTest {
         .thenAnswer(mBitmapFactoryDefaultAnswer)
         .thenThrow(new ConcurrentModificationException());
     try {
-      mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage);
+      mArtBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
     } finally {
       verify(mBitmapPool).release(mBitmap);
     }
@@ -197,7 +199,10 @@ public class ArtBitmapFactoryTest {
       mEncodedBytes[dataLength - 1] = (byte) JfifUtil.MARKER_EOI;
     }
     CloseableReference<Bitmap> result =
-        mArtBitmapFactory.decodeJPEGFromEncodedImage(mEncodedImage, dataLength);
+        mArtBitmapFactory.decodeJPEGFromEncodedImage(
+            mEncodedImage,
+            DEFAULT_BITMAP_CONFIG,
+            dataLength);
     verifyDecodedFromStream();
     verifyNoLeaks();
     verifyDecodedBytes(complete, dataLength);
@@ -226,7 +231,6 @@ public class ArtBitmapFactoryTest {
     if (!options.inJustDecodeBounds) {
       assertTrue(options.inDither);
       assertTrue(options.inMutable);
-      assertSame(Bitmaps.BITMAP_CONFIG, options.inPreferredConfig);
       assertNotNull(options.inBitmap);
       assertSame(mTempStorage, options.inTempStorage);
       final int inBitmapWidth = options.inBitmap.getWidth();

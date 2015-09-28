@@ -26,6 +26,14 @@ import javax.annotation.Nullable;
 public final class BitmapUtil {
 
   /**
+   * Bytes per pixel definitions
+   */
+  public static final int ALPHA_8_BYTES_PER_PIXEL = 1;
+  public static final int ARGB_4444_BYTES_PER_PIXEL = 2;
+  public static final int ARGB_8888_BYTES_PER_PIXEL = 4;
+  public static final int RGB_565_BYTES_PER_PIXEL = 2;
+
+  /**
    * @return size in bytes of the underlying bitmap
    */
   @SuppressLint("NewApi")
@@ -79,4 +87,38 @@ public final class BitmapUtil {
         null : new Pair(options.outWidth, options.outHeight);
   }
 
+  /**
+   * Returns the amount of bytes used by a pixel in a specific
+   * {@link android.graphics.Bitmap.Config}
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} for which the size in byte
+   * will be returned
+   * @return
+   */
+  public static int getPixelSizeForBitmapConfig(Bitmap.Config bitmapConfig) {
+
+    switch (bitmapConfig) {
+      case ARGB_8888:
+        return ARGB_8888_BYTES_PER_PIXEL;
+      case ALPHA_8:
+        return ALPHA_8_BYTES_PER_PIXEL;
+      case ARGB_4444:
+        return ARGB_4444_BYTES_PER_PIXEL;
+      case RGB_565:
+        return RGB_565_BYTES_PER_PIXEL;
+    }
+    throw new UnsupportedOperationException("The provided Bitmap.Config is not supported");
+  }
+
+  /**
+   * Returns the size in byte of an image with specific size
+   * and {@link android.graphics.Bitmap.Config}
+   * @param width the width of the image
+   * @param height the height of the image
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} for which the size in byte
+   * will be returned
+   * @return
+   */
+  public static int getSizeInByteForBitmap(int width, int height, Bitmap.Config bitmapConfig) {
+    return width * height * getPixelSizeForBitmapConfig(bitmapConfig);
+  }
 }

@@ -45,12 +45,15 @@ import java.io.InputStream;
 public class ImageDecoder {
 
   private final AnimatedImageFactory mAnimatedImageFactory;
+  private final Bitmap.Config mBitmapConfig;
   private final PlatformBitmapFactory mBitmapFactoryWithPool;
 
   public ImageDecoder(
       final AnimatedImageFactory animatedImageFactory,
-      final PlatformBitmapFactory bitmapFactoryWithPool) {
+      final PlatformBitmapFactory bitmapFactoryWithPool,
+      final Bitmap.Config bitmapConfig) {
     mAnimatedImageFactory = animatedImageFactory;
+    mBitmapConfig = bitmapConfig;
     mBitmapFactoryWithPool = bitmapFactoryWithPool;
   }
 
@@ -107,7 +110,7 @@ public class ImageDecoder {
     }
     try {
       if (GifFormatChecker.isAnimated(is)) {
-        return mAnimatedImageFactory.decodeGif(encodedImage, options);
+        return mAnimatedImageFactory.decodeGif(encodedImage, options, mBitmapConfig);
       }
       return decodeStaticImage(encodedImage);
     } finally {
@@ -122,7 +125,7 @@ public class ImageDecoder {
   public CloseableStaticBitmap decodeStaticImage(
       final EncodedImage encodedImage) {
     CloseableReference<Bitmap> bitmapReference =
-        mBitmapFactoryWithPool.decodeFromEncodedImage(encodedImage);
+        mBitmapFactoryWithPool.decodeFromEncodedImage(encodedImage, mBitmapConfig);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,
@@ -146,7 +149,7 @@ public class ImageDecoder {
       int length,
       QualityInfo qualityInfo) {
     CloseableReference<Bitmap> bitmapReference =
-        mBitmapFactoryWithPool.decodeJPEGFromEncodedImage(encodedImage, length);
+        mBitmapFactoryWithPool.decodeJPEGFromEncodedImage(encodedImage, mBitmapConfig, length);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,
@@ -169,7 +172,7 @@ public class ImageDecoder {
   public CloseableImage decodeAnimatedWebp(
       final EncodedImage encodedImage,
       final ImageDecodeOptions options) {
-    return mAnimatedImageFactory.decodeWebP(encodedImage, options);
+    return mAnimatedImageFactory.decodeWebP(encodedImage, options, mBitmapConfig);
   }
 
 }

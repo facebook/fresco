@@ -18,6 +18,7 @@ import java.util.Set;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
@@ -65,6 +66,7 @@ public class ImagePipelineConfig {
 
   // There are a lot of parameters in this class. Please follow strict alphabetical order.
   @Nullable private final AnimatedImageFactory mAnimatedImageFactory;
+  private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
@@ -91,6 +93,10 @@ public class ImagePipelineConfig {
             new DefaultBitmapMemoryCacheParamsSupplier(
                 (ActivityManager) builder.mContext.getSystemService(Context.ACTIVITY_SERVICE)) :
             builder.mBitmapMemoryCacheParamsSupplier;
+    mBitmapConfig =
+        builder.mBitmapConfig == null ?
+            Bitmap.Config.ARGB_8888 :
+            builder.mBitmapConfig;
     mCacheKeyFactory =
         builder.mCacheKeyFactory == null ?
             DefaultCacheKeyFactory.getInstance() :
@@ -175,6 +181,10 @@ public class ImagePipelineConfig {
     return mAnimatedImageFactory;
   }
 
+  public Bitmap.Config getBitmapConfig() {
+    return mBitmapConfig;
+  }
+
   public Supplier<MemoryCacheParams> getBitmapMemoryCacheParamsSupplier() {
     return mBitmapMemoryCacheParamsSupplier;
   }
@@ -256,6 +266,7 @@ public class ImagePipelineConfig {
   public static class Builder {
 
     private AnimatedImageFactory mAnimatedImageFactory;
+    private Bitmap.Config mBitmapConfig;
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
@@ -282,6 +293,11 @@ public class ImagePipelineConfig {
 
     public Builder setAnimatedImageFactory(AnimatedImageFactory animatedImageFactory) {
       mAnimatedImageFactory = animatedImageFactory;
+      return this;
+    }
+
+    public Builder setBitmapsConfig(Bitmap.Config config) {
+      mBitmapConfig = config;
       return this;
     }
 

@@ -57,7 +57,8 @@ public abstract class PlatformBitmapFactory {
    * @param poolFactory The PoolFactory
    * @return The PlatformBitmapFactory implementation
    */
-  public synchronized static PlatformBitmapFactory getInstance(final PoolFactory poolFactory) {
+  public synchronized static PlatformBitmapFactory getInstance(
+      final PoolFactory poolFactory) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       if (sArtBitmapFactory == null) {
         sArtBitmapFactory = new ArtBitmapFactory(
@@ -87,17 +88,34 @@ public abstract class PlatformBitmapFactory {
    *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
+   * @param bitmapConfig the Bitmap.Config used to create the Bitmap
    * @return a reference to the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
-  public abstract CloseableReference<Bitmap> createBitmap(int width, int height);
+  public abstract CloseableReference<Bitmap> createBitmap(
+      int width,
+      int height,
+      Bitmap.Config bitmapConfig);
+
 
   /**
-   * Associates bitmaps with the bitmap counter.
+   * Creates a bitmap of the specified width and height.
+   * The bitmap will be created with the default ARGB_8888 configuration
    *
-   * <p>If this method throws TooManyBitmapsException, the code will have called
-   * {@link Bitmap#recycle} on the bitmaps.</p>
+   * @param width the width of the bitmap
+   * @param height the height of the bitmap
+   * @return a reference to the bitmap
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(int width, int height) {
+    return createBitmap(width, height, Bitmap.Config.ARGB_8888);
+  }
+
+  /**
+   * Associates bitmaps with the bitmap counter. <p/> <p>If this method throws
+   * TooManyBitmapsException, the code will have called {@link Bitmap#recycle} on the bitmaps.</p>
    *
    * @param bitmaps the bitmaps to associate
    * @return the references to the bitmaps that are now tied to the bitmap pool
@@ -136,21 +154,26 @@ public abstract class PlatformBitmapFactory {
   }
 
   /**
-   * Creates a bitmap from encoded bytes. Supports JPEG but callers should use
-   * {@link #decodeJPEGFromEncodedImage} for partial JPEGs.
+   * Creates a bitmap from encoded bytes. Supports JPEG but callers should use {@link
+   * #decodeJPEGFromEncodedImage} for partial JPEGs.
    *
    * @param encodedImage the reference to the encoded image with the reference to the encoded bytes
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   * Bitmap
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   public abstract CloseableReference<Bitmap> decodeFromEncodedImage(
-      final EncodedImage encodedImage);
+      final EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig);
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
    *
    * @param encodedImage the reference to the encoded image with the reference to the encoded bytes
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   * Bitmap
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
@@ -158,6 +181,7 @@ public abstract class PlatformBitmapFactory {
    */
   public abstract CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
       int length);
 
   /**

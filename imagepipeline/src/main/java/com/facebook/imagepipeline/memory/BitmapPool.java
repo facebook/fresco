@@ -16,7 +16,7 @@ import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Manages a pool of bitmaps. This allows us to reuse bitmaps instead of constantly allocating
@@ -45,14 +45,17 @@ public class BitmapPool extends BasePool<Bitmap> {
   }
 
   /**
-   * Allocate a bitmap with the specified width and height.
-   * The bitmap's config is controlled by the BITMAP_CONFIG we've defined above.
-   * @param size the 'size' of the bitmap
-   * @return a new bitmap with the specified dimensions
+   * Allocate a bitmap that has a backing memory allocacation of 'size' bytes.
+   * This is configuration agnostic so the size is the actual size in bytes of the bitmap.
+   * @param size the 'size' in bytes of the bitmap
+   * @return a new bitmap with the specified size in memory
    */
   @Override
   protected Bitmap alloc(int size) {
-    return Bitmap.createBitmap(1, size, Bitmaps.BITMAP_CONFIG);
+    return Bitmap.createBitmap(
+        1,
+        (int) Math.ceil(size / (double) BitmapUtil.RGB_565_BYTES_PER_PIXEL),
+        Bitmap.Config.RGB_565);
   }
 
   /**
@@ -85,20 +88,17 @@ public class BitmapPool extends BasePool<Bitmap> {
   @Override
   protected int getBucketedSizeForValue(Bitmap value) {
     Preconditions.checkNotNull(value);
-    final int allocationByteCount = value.getAllocationByteCount();
-    return allocationByteCount / Bitmaps.BYTES_PER_PIXEL;
+    return value.getAllocationByteCount();
   }
 
   /**
    * Gets the size in bytes for the given bucketed size
-   * This will use the BYTES_PER_PIXEL constant defined above (which is dependent on the specific
-   * BITMAP_CONFIG above)
    * @param bucketedSize the bucketed size
    * @return size in bytes
    */
   @Override
   protected int getSizeInBytes(int bucketedSize) {
-    return Bitmaps.BYTES_PER_PIXEL * bucketedSize;
+    return  bucketedSize;
   }
 
   /**
@@ -106,8 +106,7 @@ public class BitmapPool extends BasePool<Bitmap> {
    * use this value.
    * The bitmap is reusable if
    *  - it has not already been recycled AND
-   *  - it is mutable AND
-   *  - it has the desired bitmap-config
+   *  - it is mutable
    * @param value the value to test for reusability
    * @return true, if the bitmap can be reused
    */
@@ -115,7 +114,6 @@ public class BitmapPool extends BasePool<Bitmap> {
   protected boolean isReusable(Bitmap value) {
     Preconditions.checkNotNull(value);
     return !value.isRecycled() &&
-        value.isMutable() &&
-        Bitmaps.BITMAP_CONFIG.equals(value.getConfig());
+        value.isMutable();
   }
 }
