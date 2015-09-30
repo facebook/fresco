@@ -13,10 +13,14 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v4.util.Pools;
 import android.util.Pair;
+
+import com.facebook.common.internal.Preconditions;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import javax.annotation.Nullable;
 
@@ -24,6 +28,10 @@ import javax.annotation.Nullable;
  * This class contains utility method for Bitmap
  */
 public final class BitmapUtil {
+  private static final int DECODE_BUFFER_SIZE = 16 * 1024;
+  private static final int POOL_SIZE = 12;
+  private static final Pools.SynchronizedPool<ByteBuffer> DECODE_BUFFERS
+      = new Pools.SynchronizedPool<>(POOL_SIZE);
 
   /**
    * Bytes per pixel definitions
@@ -79,12 +87,21 @@ public final class BitmapUtil {
    * @return dimensions of the image
    */
   public static @Nullable Pair<Integer, Integer> decodeDimensions(InputStream is) {
+    Preconditions.checkNotNull(is);
+    ByteBuffer byteBuffer = DECODE_BUFFERS.acquire();
+    if (byteBuffer == null) {
+      byteBuffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
+    }
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
-
-    BitmapFactory.decodeStream(is, null, options);
-    return (options.outWidth == -1 || options.outHeight == -1) ?
-        null : new Pair(options.outWidth, options.outHeight);
+    try {
+      options.inTempStorage = byteBuffer.array();
+      BitmapFactory.decodeStream(is, null, options);
+      return (options.outWidth == -1 || options.outHeight == -1) ?
+          null : new Pair(options.outWidth, options.outHeight);
+    } finally {
+      DECODE_BUFFERS.release(byteBuffer);
+    }
   }
 
   /**
