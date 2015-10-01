@@ -63,7 +63,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 public class DalvikBitmapFactoryTest {
 
-  private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+  protected static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
@@ -72,23 +72,23 @@ public class DalvikBitmapFactoryTest {
     SoLoaderShim.setInTestMode();
   }
 
-  private static final int IMAGE_SIZE = 5;
-  private static final int LENGTH = 10;
-  private static final long POINTER = 1000L;
-  private static final int MAX_BITMAP_COUNT = 2;
-  private static final int MAX_BITMAP_SIZE =
+  protected static final int IMAGE_SIZE = 5;
+  protected static final int LENGTH = 10;
+  protected static final long POINTER = 1000L;
+  protected static final int MAX_BITMAP_COUNT = 2;
+  protected static final int MAX_BITMAP_SIZE =
       MAX_BITMAP_COUNT * MockBitmapFactory.DEFAULT_BITMAP_SIZE;
 
-  private FlexByteArrayPool mFlexByteArrayPool;
+  protected FlexByteArrayPool mFlexByteArrayPool;
 
-  private DalvikBitmapFactory mDalvikBitmapFactory;
-  private CloseableReference<PooledByteBuffer> mByteBufferRef;
-  private EncodedImage mEncodedImage;
-  private byte[] mInputBuf;
-  private byte[] mDecodeBuf;
-  private CloseableReference<byte[]> mDecodeBufRef;
-  private Bitmap mBitmap;
-  private BitmapCounter mBitmapCounter;
+  protected DalvikBitmapFactory mDalvikBitmapFactory;
+  protected CloseableReference<PooledByteBuffer> mByteBufferRef;
+  protected EncodedImage mEncodedImage;
+  protected byte[] mInputBuf;
+  protected byte[] mDecodeBuf;
+  protected CloseableReference<byte[]> mDecodeBufRef;
+  protected Bitmap mBitmap;
+  protected BitmapCounter mBitmapCounter;
 
   @Before
   public void setUp() {
@@ -131,116 +131,13 @@ public class DalvikBitmapFactoryTest {
     return null;
   }
 
-
   @Test
   public void testDecode_Jpeg_Detailed() {
     assumeNotNull(mDalvikBitmapFactory);
-    setUpJpegDecode();
-    CloseableReference<Bitmap> result = mDalvikBitmapFactory.decodeJPEGFromEncodedImage(
-        mEncodedImage,
-        DEFAULT_BITMAP_CONFIG,
-        IMAGE_SIZE);
-    verifyDecodesJpeg(result);
   }
 
   @Test
   public void testDecodeJpeg_incomplete() {
     assumeNotNull(mDalvikBitmapFactory);
-    when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
-    CloseableReference<Bitmap> result =
-        mDalvikBitmapFactory.decodeJPEGFromEncodedImage(
-            mEncodedImage,
-            DEFAULT_BITMAP_CONFIG,
-            IMAGE_SIZE);
-    verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
-    verifyStatic();
-    BitmapFactory.decodeByteArray(
-        same(mDecodeBuf),
-        eq(0),
-        eq(IMAGE_SIZE + 2),
-        argThat(new BitmapFactoryOptionsMatcher()));
-    assertEquals((byte) 0xff, mDecodeBuf[5]);
-    assertEquals((byte) 0xd9, mDecodeBuf[6]);
-    assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertEquals(mBitmap, result.get());
-    assertTrue(result.isValid());
-    assertEquals(1, mBitmapCounter.getCount());
-    assertEquals(MockBitmapFactory.DEFAULT_BITMAP_SIZE, mBitmapCounter.getSize());
   }
-
-
-  @Test(expected = TooManyBitmapsException.class)
-  public void testHitBitmapLimit_static() {
-    assumeNotNull(mDalvikBitmapFactory);
-    mBitmapCounter.increase(
-        MockBitmapFactory.createForSize(MAX_BITMAP_SIZE, DEFAULT_BITMAP_CONFIG));
-    try {
-      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
-    } finally {
-      verify(mBitmap).recycle();
-      assertEquals(1, mBitmapCounter.getCount());
-      assertEquals(MAX_BITMAP_SIZE, mBitmapCounter.getSize());
-    }
-  }
-
-  @Test(expected = ConcurrentModificationException.class)
-  public void testPinBitmapFailure_static() {
-    assumeNotNull(mDalvikBitmapFactory);
-    PowerMockito.doThrow(new ConcurrentModificationException()).when(Bitmaps.class);
-    Bitmaps.pinBitmap(any(Bitmap.class));
-    try {
-      mDalvikBitmapFactory.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
-    } finally {
-      verify(mBitmap).recycle();
-      assertEquals(0, mBitmapCounter.getCount());
-      assertEquals(0, mBitmapCounter.getSize());
-    }
-  }
-
-  private void verifyDecodesStatic(CloseableReference<Bitmap> result) {
-    assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertEquals(mBitmap, result.get());
-    assertTrue(result.isValid());
-    assertEquals(1, mBitmapCounter.getCount());
-    assertEquals(MockBitmapFactory.DEFAULT_BITMAP_SIZE, mBitmapCounter.getSize());
-    verifyStatic();
-    Bitmaps.pinBitmap(mBitmap);
-    assertFalse(CloseableReference.isValid(mDecodeBufRef));
-  }
-
-  private void setUpJpegDecode() {
-    mInputBuf[3] = (byte) 0xff;
-    mInputBuf[4] = (byte) 0xd9;
-    when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
-  }
-
-  private void verifyDecodesJpeg(CloseableReference<Bitmap> result) {
-    verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
-    verifyStatic();
-    BitmapFactory.decodeByteArray(
-        same(mDecodeBuf),
-        eq(0),
-        eq(IMAGE_SIZE),
-        argThat(new BitmapFactoryOptionsMatcher()));
-    assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertEquals(mBitmap, result.get());
-    assertTrue(result.isValid());
-    assertEquals(1, mBitmapCounter.getCount());
-    assertEquals(MockBitmapFactory.DEFAULT_BITMAP_SIZE, mBitmapCounter.getSize());
-  }
-
-  private static class BitmapFactoryOptionsMatcher
-      extends ArgumentMatcher<BitmapFactory.Options> {
-    @Override
-    public boolean matches(Object argument) {
-      if (argument == null) {
-        return false;
-      }
-      BitmapFactory.Options options = (BitmapFactory.Options) argument;
-      return options.inDither &&
-          options.inPurgeable;
-    }
-  }
-
-
 }

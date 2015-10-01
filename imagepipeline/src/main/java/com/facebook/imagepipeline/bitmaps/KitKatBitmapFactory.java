@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -24,15 +25,15 @@ import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
- * Factory implementation for Honeycomb
+ * Factory implementation for KitKat
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@TargetApi(Build.VERSION_CODES.KITKAT)
 @ThreadSafe
-public class HoneycombBitmapFactory extends DalvikBitmapFactory {
+public class KitKatBitmapFactory extends DalvikBitmapFactory {
 
   private final EmptyJpegGenerator mJpegGenerator;
 
-  HoneycombBitmapFactory(EmptyJpegGenerator jpegGenerator,
+  KitKatBitmapFactory(EmptyJpegGenerator jpegGenerator,
       FlexByteArrayPool flexByteArrayPool) {
     super(flexByteArrayPool);
     this.mJpegGenerator = jpegGenerator;
@@ -43,8 +44,6 @@ public class HoneycombBitmapFactory extends DalvikBitmapFactory {
    *
    * @param width the width of the bitmap
    * @param height the height of the bitmap
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   * used to create the decoded Bitmap
    * @return a reference to the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -88,7 +87,21 @@ public class HoneycombBitmapFactory extends DalvikBitmapFactory {
   protected Bitmap decodeByteArrayAsPurgeable(
       CloseableReference<PooledByteBuffer> bytesRef,
       BitmapFactory.Options options) {
-    return decodeFileDescriptorAsPurgeable(bytesRef, bytesRef.get().size(), null, options);
+    final PooledByteBuffer pooledByteBuffer = bytesRef.get();
+    final int length = pooledByteBuffer.size();
+    final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length);
+    try {
+      final byte[] encodedBytesArray = encodedBytesArrayRef.get();
+      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+      Bitmap bitmap = BitmapFactory.decodeByteArray(
+          encodedBytesArray,
+          0,
+          length,
+          options);
+      return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
+    } finally {
+      CloseableReference.closeSafely(encodedBytesArrayRef);
+    }
   }
 
   /**
@@ -105,7 +118,26 @@ public class HoneycombBitmapFactory extends DalvikBitmapFactory {
       int length,
       BitmapFactory.Options options) {
     byte[] suffix = endsWithEOI(bytesRef, length) ? null : EOI;
-    return decodeFileDescriptorAsPurgeable(bytesRef, length, suffix, options);
+    final PooledByteBuffer pooledByteBuffer = bytesRef.get();
+    Preconditions.checkArgument(length <= pooledByteBuffer.size());
+    // allocate bigger array in case EOI needs to be added
+    final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length + 2);
+    try {
+      byte[] encodedBytesArray = encodedBytesArrayRef.get();
+      pooledByteBuffer.read(0, encodedBytesArray, 0, length);
+      if (suffix != null) {
+        putEOI(encodedBytesArray, length);
+        length += 2;
+      }
+      Bitmap bitmap = BitmapFactory.decodeByteArray(
+          encodedBytesArray,
+          0,
+          length,
+          options);
+      return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
+    } finally {
+      CloseableReference.closeSafely(encodedBytesArrayRef);
+    }
   }
 
 }

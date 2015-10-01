@@ -10,9 +10,11 @@
 package com.facebook.imagepipeline.bitmaps;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
  * Bitmap factory for Gingerbread.
@@ -45,6 +47,36 @@ class GingerbreadBitmapFactory extends DalvikBitmapFactory {
   @Override
   protected boolean isPinBitmapEnabled() {
     return false;
+  }
+
+  /**
+   * Decodes a byteArray into a purgeable bitmap
+   *
+   * @param bytesRef the byte buffer that contains the encoded bytes
+   * @return
+   */
+  @Override
+  protected Bitmap decodeByteArrayAsPurgeable(
+      CloseableReference<PooledByteBuffer> bytesRef,
+      BitmapFactory.Options options) {
+    return decodeFileDescriptorAsPurgeable(bytesRef, bytesRef.get().size(), null, options);
+  }
+
+  /**
+   * Decodes a byteArray containing jpeg encoded bytes into a purgeable bitmap
+   *
+   * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
+   *
+   * @param bytesRef the byte buffer that contains the encoded bytes
+   * @return
+   */
+  @Override
+  protected Bitmap decodeJPEGByteArrayAsPurgeable(
+      CloseableReference<PooledByteBuffer> bytesRef,
+      int length,
+      BitmapFactory.Options options) {
+    byte[] suffix = endsWithEOI(bytesRef, length) ? null : EOI;
+    return decodeFileDescriptorAsPurgeable(bytesRef, length, suffix, options);
   }
 
 }

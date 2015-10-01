@@ -32,6 +32,7 @@ public abstract class PlatformBitmapFactory {
   private static GingerbreadBitmapFactory sGingerbreadBitmapFactory;
   private static ArtBitmapFactory sArtBitmapFactory;
   private static HoneycombBitmapFactory sHoneycombBitmapFactory;
+  private static KitKatBitmapFactory sKitKatBitmapFactory;
 
   protected final BitmapCounter mUnpooledBitmapsCounter;
   protected final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
@@ -66,6 +67,13 @@ public abstract class PlatformBitmapFactory {
             poolFactory.getFlexByteArrayPoolMaxNumThreads());
       }
       return sArtBitmapFactory;
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      if (sKitKatBitmapFactory == null) {
+        sKitKatBitmapFactory = new KitKatBitmapFactory(
+            new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
+            poolFactory.getFlexByteArrayPool());
+      }
+      return sKitKatBitmapFactory;
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       if (sHoneycombBitmapFactory == null) {
         sHoneycombBitmapFactory = new HoneycombBitmapFactory(
@@ -76,8 +84,7 @@ public abstract class PlatformBitmapFactory {
     } else {
       if (sGingerbreadBitmapFactory == null) {
         sGingerbreadBitmapFactory = new GingerbreadBitmapFactory(
-            poolFactory.getFlexByteArrayPool()
-        );
+            poolFactory.getFlexByteArrayPool());
       }
       return sGingerbreadBitmapFactory;
     }
