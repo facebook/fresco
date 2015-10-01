@@ -53,6 +53,11 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   }
 
   @Override
+  public PipelineDraweeControllerBuilder setUri(String uriString) {
+    return super.setImageRequest(ImageRequest.fromUri(Uri.parse(uriString)));
+  }
+
+  @Override
   protected PipelineDraweeController obtainController() {
     DraweeController oldController = getOldController();
     PipelineDraweeController controller;
