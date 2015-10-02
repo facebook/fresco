@@ -25,7 +25,7 @@ public interface SimpleDraweeControllerBuilder {
   SimpleDraweeControllerBuilder setUri(Uri uri);
 
   /** Sets the uri from a string. */
-  SimpleDraweeControllerBuilder setUri(String uriString);
+  SimpleDraweeControllerBuilder setUri(@Nullable String uriString);
 
   /** Sets the old controller to be reused if possible. */
   SimpleDraweeControllerBuilder setOldController(@Nullable DraweeController oldController);
