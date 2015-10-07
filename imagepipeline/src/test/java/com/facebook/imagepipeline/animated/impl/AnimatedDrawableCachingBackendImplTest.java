@@ -30,7 +30,7 @@ import bolts.Task;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend.pixelValue;
@@ -57,7 +57,7 @@ public class AnimatedDrawableCachingBackendImplTest {
   @Before
   public void setup() {
     mActivityManager =
-        (ActivityManager) Robolectric.application.getSystemService(Context.ACTIVITY_SERVICE);
+        (ActivityManager) RuntimeEnvironment.application.getSystemService(Context.ACTIVITY_SERVICE);
     mFakeClock = new FakeClock();
     mExecutorService = new TestExecutorService(mFakeClock);
     mAnimatedDrawableUtil = new AnimatedDrawableUtil();

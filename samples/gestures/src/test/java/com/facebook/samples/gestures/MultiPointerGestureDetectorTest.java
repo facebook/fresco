@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import robolectric2.shadows.ShadowMotionEvent;
+import robolectric3.shadows.ShadowMotionEvent;
 
 import static com.facebook.samples.gestures.MotionEventTestUtils.obtainMotionEvent;
 import static org.junit.Assert.assertEquals;

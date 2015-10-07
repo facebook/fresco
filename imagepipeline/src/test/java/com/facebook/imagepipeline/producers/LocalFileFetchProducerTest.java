@@ -60,7 +60,7 @@ public class LocalFileFetchProducerTest {
     mExecutor = new TestExecutorService(new FakeClock());
     mLocalFileFetchProducer =
         new LocalFileFetchProducer(mExecutor, mPooledByteBufferFactory);
-    mFile = new File(Robolectric.application.getExternalFilesDir(null), TEST_FILENAME);
+    mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(mFile));
     bos.write(new byte[INPUT_STREAM_LENGTH], 0 , INPUT_STREAM_LENGTH);
     bos.close();

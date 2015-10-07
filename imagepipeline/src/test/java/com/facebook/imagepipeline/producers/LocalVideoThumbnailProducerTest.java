@@ -79,7 +79,7 @@ public class LocalVideoThumbnailProducerTest {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
     mLocalVideoThumbnailProducer = new LocalVideoThumbnailProducer(mExecutor);
-    mFile = new File(Robolectric.application.getExternalFilesDir(null), TEST_FILENAME);
+    mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
 
     mockStatic(ThumbnailUtils.class);
     mProducerContext = new SettableProducerContext(

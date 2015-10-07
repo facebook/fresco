@@ -21,9 +21,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.mockito.Mockito.mock;
 
@@ -40,7 +39,7 @@ public class DefaultDiskStorageSupplierTest {
 
   @Before
   public void setUp() {
-    mContext = Robolectric.application.getApplicationContext();
+    mContext = RuntimeEnvironment.application.getApplicationContext();
     mVersion = 1;
     mBaseDirectoryName = "base";
     mCacheErrorLogger = mock(CacheErrorLogger.class);

@@ -40,9 +40,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import org.robolectric.*;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -69,7 +68,9 @@ public class DefaultDiskStorageTest {
     mClock = mock(SystemClock.class);
     PowerMockito.mockStatic(SystemClock.class);
     PowerMockito.when(SystemClock.get()).thenReturn(mClock);
-    mDirectory = new File(Robolectric.application.getCacheDir(), "sharded-disk-storage-test");
+    mDirectory = new File(
+        RuntimeEnvironment.application.getCacheDir(),
+        "sharded-disk-storage-test");
     Assert.assertTrue(mDirectory.mkdirs());
     FileTree.deleteContents(mDirectory);
   }

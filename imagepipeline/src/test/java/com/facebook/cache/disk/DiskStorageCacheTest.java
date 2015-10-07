@@ -38,9 +38,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -88,7 +87,7 @@ public class DiskStorageCacheTest {
     mCacheEventListener = mock(CacheEventListener.class);
 
     // we know the directory will be this
-    mCacheDirectory = new File(Robolectric.application.getCacheDir(), CACHE_TYPE);
+    mCacheDirectory = new File(RuntimeEnvironment.application.getCacheDir(), CACHE_TYPE);
     mCacheDirectory.mkdirs();
     if (!mCacheDirectory.exists()) {
       throw new RuntimeException(
@@ -110,7 +109,7 @@ public class DiskStorageCacheTest {
   private DiskStorageSupplier createDiskStorageSupplier(int version) {
     return new DefaultDiskStorageSupplier(
         version,
-        Suppliers.of(Robolectric.application.getApplicationContext().getCacheDir()),
+        Suppliers.of(RuntimeEnvironment.application.getApplicationContext().getCacheDir()),
         CACHE_TYPE,
         mock(CacheErrorLogger.class));
   }

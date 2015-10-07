@@ -255,7 +255,7 @@ public class ProducerSequenceFactoryTest {
 
     public MockProducerFactory() {
       super(
-          Robolectric.application,
+          RuntimeEnvironment.application,
           null,
           null,
           null,
