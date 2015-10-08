@@ -61,11 +61,6 @@ jboolean getInJustDecodeBounds(alias_ref<jobject> options) {
   return options->getFieldValue(inJustDecodeBounds);
 }
 
-jobject getInBitmap(alias_ref<jobject> options) {
-  static auto inBitmap = getOptionClass()->getField<jobject>("inBitmap", "Landroid/graphics/Bitmap;");
-  return options->getFieldValue(inBitmap).release();
-}
-
 jint getInSampleSize(alias_ref<jobject> options) {
   static auto inSampleSize = getOptionClass()->getField<jint>("inSampleSize");
   return options->getFieldValue(inSampleSize);
@@ -145,7 +140,8 @@ jobject doDecode(
     uint8_t* encoded_image,
     unsigned encoded_image_length,
     jobject padding,
-    jobject bitmapOptions) {
+    jobject bitmapOptions,
+    jobject inBitmap) {
 
   // Options manipulation is taken from https://github.com/android/platform_frameworks_base/blob/master/core/jni/android/graphics/BitmapFactory.cpp
   int image_width = 0;
@@ -162,17 +158,15 @@ jobject doDecode(
 
   WebPDecoderConfig config;
   WebPInitDecoderConfig(&config);
-
   if (bitmapOptions != nullptr) {
     if (getInJustDecodeBounds(bitmapOptions)) {
       setOutDimensions(bitmapOptions, image_width, image_height);
       return {};
     }
-
-    bitmap = getInBitmap(bitmapOptions);
-
+    if (inBitmap != nullptr) {
+      bitmap = inBitmap;
+    }
     int sampleSize = getInSampleSize(bitmapOptions);
-
     if (sampleSize > 1) {
       scale = 1.0f / (float) sampleSize;
     }
@@ -233,15 +227,15 @@ static jobject nativeDecodeStream(
     jclass clazz,
     jobject is,
     jobject padding,
-    jobject bitmapOptions) {
+    jobject bitmapOptions,
+    jobject inBitmap) {
 
   jbyteArray inTempStorage = nullptr;
   if (bitmapOptions != nullptr) {
     inTempStorage = getInTempStorage(bitmapOptions);
   }
-
   auto encoded_image = readStreamFully(env, is, inTempStorage);
-  return doDecode(env, encoded_image.data(), encoded_image.size(), padding, bitmapOptions);
+  return doDecode(env, encoded_image.data(), encoded_image.size(), padding, bitmapOptions, inBitmap);
 }
 
 static jobject nativeDecodeByteArray(
@@ -250,7 +244,8 @@ static jobject nativeDecodeByteArray(
     jbyteArray array,
     jint offset,
     jint length,
-    jobject bitmapOptions) {
+    jobject bitmapOptions,
+    jobject inBitmap) {
 
   auto array_ref = alias_ref<jbyteArray>(array);
   if ((unsigned)offset + (unsigned)length > array_ref->size()) {
@@ -259,7 +254,7 @@ static jobject nativeDecodeByteArray(
 
   auto data = array_ref->pin();
 
-  jobject bitmap = doDecode(env, reinterpret_cast<uint8_t*>(data.get()) + offset, length, NULL, bitmapOptions);
+  jobject bitmap = doDecode(env, reinterpret_cast<uint8_t*>(data.get()) + offset, length, NULL, bitmapOptions, inBitmap);
 
   return bitmap;
 }
@@ -272,8 +267,8 @@ static jlong nativeSeek(JNIEnv* env, jobject, jobject fileDescriptor, jlong offs
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   return initialize(vm, [] {
     registerNatives(kWebpBitmapFactoryName, {
-      makeNativeMethod("nativeDecodeStream", "(Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;", nativeDecodeStream),
-      makeNativeMethod("nativeDecodeByteArray", "([BIILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;", nativeDecodeByteArray),
+      makeNativeMethod("nativeDecodeStream", "(Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;", nativeDecodeStream),
+      makeNativeMethod("nativeDecodeByteArray", "([BIILandroid/graphics/BitmapFactory$Options;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;", nativeDecodeByteArray),
       makeNativeMethod("nativeSeek", "(Ljava/io/FileDescriptor;JZ)J", nativeSeek),
     });
   });

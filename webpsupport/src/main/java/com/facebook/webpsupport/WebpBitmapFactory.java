@@ -34,6 +34,9 @@ public class WebpBitmapFactory {
 
   private static final int HEADER_SIZE = 20;
 
+  public static final boolean IN_BITMAP_SUPPORTED =
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+
   static {
     SoLoaderShim.loadLibrary("webp");
     SoLoaderShim.loadLibrary("webpsupport");
@@ -81,7 +84,7 @@ public class WebpBitmapFactory {
       if (opts.inScaled) {
         outputBitmap.setDensity(targetDensity);
       }
-    } else if (opts.inBitmap != null) {
+    } else if (IN_BITMAP_SUPPORTED && opts.inBitmap != null) {
       // bitmap was reused, ensure density is reset
       outputBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
     }
@@ -95,7 +98,7 @@ public class WebpBitmapFactory {
       BitmapFactory.Options opts) {
     Bitmap bitmap;
     if (isWebpHeader(array, offset, length) && !isWebpPlatformSupported(array, offset, length)) {
-      bitmap = nativeDecodeByteArray(array, offset, length, opts);
+      bitmap = nativeDecodeByteArray(array, offset, length, opts, getInBitmapFromOptions(opts));
       setWebpBitmapOptions(bitmap, opts);
     } else {
       bitmap = originalDecodeByteArray(array, offset, length, opts);
@@ -117,14 +120,13 @@ public class WebpBitmapFactory {
       InputStream inputStream,
       Rect outPadding,
       BitmapFactory.Options opts) {
-
     inputStream = wrapToMarkSupportedStream(inputStream);
 
     Bitmap bitmap;
 
     byte[] header = getWebpHeader(inputStream, opts);
     if (isWebpHeader(header, 0, HEADER_SIZE) && !isWebpPlatformSupported(header, 0, HEADER_SIZE)) {
-      bitmap = nativeDecodeStream(inputStream, outPadding, opts);
+      bitmap = nativeDecodeStream(inputStream, outPadding, opts, getInBitmapFromOptions(opts));
       setWebpBitmapOptions(bitmap, opts);
     } else {
       bitmap = originalDecodeStream(inputStream, outPadding, opts);
@@ -176,7 +178,7 @@ public class WebpBitmapFactory {
         byte[] header = getWebpHeader(inputStream, opts);
         if (isWebpHeader(header, 0, HEADER_SIZE)
             && !isWebpPlatformSupported(header, 0, HEADER_SIZE)) {
-          bitmap = nativeDecodeStream(inputStream, outPadding, opts);
+          bitmap = nativeDecodeStream(inputStream, outPadding, opts, getInBitmapFromOptions(opts));
           setWebpBitmapOptions(bitmap, opts);
         } else {
           nativeSeek(fd, originalSeekPosition, true);
@@ -228,15 +230,25 @@ public class WebpBitmapFactory {
   private static native Bitmap nativeDecodeStream(
       InputStream is,
       Rect padding,
-      BitmapFactory.Options options);
+      BitmapFactory.Options options,
+      Bitmap inBitmap);
 
   @DoNotStrip
   private static native Bitmap nativeDecodeByteArray(
       byte[] data,
       int offset,
       int length,
-      BitmapFactory.Options opts);
+      BitmapFactory.Options opts,
+      Bitmap inBitmap);
 
   @DoNotStrip
   private static native long nativeSeek(FileDescriptor fd, long offset, boolean absolute);
+
+  private static Bitmap getInBitmapFromOptions(final BitmapFactory.Options options) {
+    if (IN_BITMAP_SUPPORTED && options != null) {
+      return options.inBitmap;
+    } else {
+      return null;
+    }
+  }
 }
