@@ -22,6 +22,8 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "com.facebook.samples.comparison"
         minSdkVersion 9

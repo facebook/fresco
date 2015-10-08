@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import org.junit.Before;
 import org.junit.Test;

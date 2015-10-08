@@ -4,7 +4,6 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'org.robolectric'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
 
