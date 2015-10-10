@@ -17,13 +17,13 @@ import com.facebook.imageformat.GifFormatChecker;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.facebook.imagepipeline.platform.PlatformDecoder;
 
 import java.io.InputStream;
 
@@ -46,15 +46,15 @@ public class ImageDecoder {
 
   private final AnimatedImageFactory mAnimatedImageFactory;
   private final Bitmap.Config mBitmapConfig;
-  private final PlatformBitmapFactory mBitmapFactoryWithPool;
+  private final PlatformDecoder mPlatformDecoder;
 
   public ImageDecoder(
       final AnimatedImageFactory animatedImageFactory,
-      final PlatformBitmapFactory bitmapFactoryWithPool,
+      final PlatformDecoder platformDecoder,
       final Bitmap.Config bitmapConfig) {
     mAnimatedImageFactory = animatedImageFactory;
     mBitmapConfig = bitmapConfig;
-    mBitmapFactoryWithPool = bitmapFactoryWithPool;
+    mPlatformDecoder = platformDecoder;
   }
 
   /**
@@ -125,7 +125,7 @@ public class ImageDecoder {
   public CloseableStaticBitmap decodeStaticImage(
       final EncodedImage encodedImage) {
     CloseableReference<Bitmap> bitmapReference =
-        mBitmapFactoryWithPool.decodeFromEncodedImage(encodedImage, mBitmapConfig);
+        mPlatformDecoder.decodeFromEncodedImage(encodedImage, mBitmapConfig);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,
@@ -149,7 +149,7 @@ public class ImageDecoder {
       int length,
       QualityInfo qualityInfo) {
     CloseableReference<Bitmap> bitmapReference =
-        mBitmapFactoryWithPool.decodeJPEGFromEncodedImage(encodedImage, mBitmapConfig, length);
+        mPlatformDecoder.decodeJPEGFromEncodedImage(encodedImage, mBitmapConfig, length);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,

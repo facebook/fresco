@@ -7,74 +7,35 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.bitmaps;
+package com.facebook.imagepipeline.platform;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imageformat.ImageFormat;
-import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imageutils.JfifUtil;
 
 /**
- * Factory implementation for KitKat
+ * Bitmap Decoder implementation for KitKat
+ *
+ * <p>The MemoryFile trick used in GingerbreadPurgeableDecoder does not work in KitKat. Here, we
+ * instead use Java memory to store the encoded images, but make use of a pool to minimize
+ * allocations. We cannot decode from a stream, as that does not support purgeable decodes.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 @ThreadSafe
-public class KitKatBitmapFactory extends DalvikBitmapFactory {
+public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
+  private final FlexByteArrayPool mFlexByteArrayPool;
 
-  private final EmptyJpegGenerator mJpegGenerator;
-
-  KitKatBitmapFactory(EmptyJpegGenerator jpegGenerator,
-      FlexByteArrayPool flexByteArrayPool) {
-    super(flexByteArrayPool);
-    this.mJpegGenerator = jpegGenerator;
-  }
-
-  /**
-   * Creates a bitmap of the specified width and height.
-   *
-   * @param width the width of the bitmap
-   * @param height the height of the bitmap
-   * @return a reference to the bitmap
-   * @throws TooManyBitmapsException if the pool is full
-   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
-   */
-  @Override
-  public CloseableReference<Bitmap> createBitmap(
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig) {
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
-        (short) width,
-        (short) height);
-    try {
-      EncodedImage encodedImage = new EncodedImage(jpgRef);
-      encodedImage.setImageFormat(ImageFormat.JPEG);
-      try {
-        CloseableReference<Bitmap> bitmapRef =
-            decodeJPEGFromEncodedImage(encodedImage, bitmapConfig, jpgRef.get().size());
-        bitmapRef.get().eraseColor(Color.TRANSPARENT);
-        return bitmapRef;
-      } finally {
-        EncodedImage.closeSafely(encodedImage);
-      }
-    } finally {
-      jpgRef.close();
-    }
-  }
-
-  @Override
-  protected boolean isPinBitmapEnabled() {
-    return true;
+  public KitKatPurgeableDecoder(FlexByteArrayPool flexByteArrayPool) {
+    mFlexByteArrayPool = flexByteArrayPool;
   }
 
   /**
@@ -140,4 +101,9 @@ public class KitKatBitmapFactory extends DalvikBitmapFactory {
     }
   }
 
+  private static void putEOI(byte[] imageBytes, int offset) {
+    // TODO 5884402: remove dependency on JfifUtil
+    imageBytes[offset] = (byte) JfifUtil.MARKER_FIRST_BYTE;
+    imageBytes[offset + 1] = (byte) JfifUtil.MARKER_EOI;
+  }
 }

@@ -7,12 +7,14 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.bitmaps;
+package com.facebook.imagepipeline.platform;
 
-import java.util.ConcurrentModificationException;
+import java.io.FileDescriptor;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.os.Build;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
@@ -20,7 +22,6 @@ import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
-import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
@@ -29,31 +30,22 @@ import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.robolectric.annotation.Config;
+
 import static org.junit.Assume.assumeNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
- * Base class for Tests about {@link DalvikBitmapFactory} implementations.
+ * Tests for {@link GingerbreadPurgeableDecoder}.
  */
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
@@ -61,9 +53,10 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
     BitmapFactory.class,
     Bitmaps.class})
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-public class DalvikBitmapFactoryTest {
+public class GingerbreadPurgeableDecoderTest {
 
   protected static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+//  protected FlexByteArrayPool mFlexByteArrayPool;
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
@@ -79,9 +72,7 @@ public class DalvikBitmapFactoryTest {
   protected static final int MAX_BITMAP_SIZE =
       MAX_BITMAP_COUNT * MockBitmapFactory.DEFAULT_BITMAP_SIZE;
 
-  protected FlexByteArrayPool mFlexByteArrayPool;
-
-  protected DalvikBitmapFactory mDalvikBitmapFactory;
+  protected GingerbreadPurgeableDecoder mGingerbreadPurgeableDecoder;
   protected CloseableReference<PooledByteBuffer> mByteBufferRef;
   protected EncodedImage mEncodedImage;
   protected byte[] mInputBuf;
@@ -92,7 +83,6 @@ public class DalvikBitmapFactoryTest {
 
   @Before
   public void setUp() {
-    mFlexByteArrayPool = mock(FlexByteArrayPool.class);
 
     mBitmap = MockBitmapFactory.create();
     mBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_SIZE);
@@ -101,10 +91,9 @@ public class DalvikBitmapFactoryTest {
     when(BitmapCounterProvider.get()).thenReturn(mBitmapCounter);
 
     mockStatic(BitmapFactory.class);
-    when(BitmapFactory.decodeByteArray(
-            any(byte[].class),
-            anyInt(),
-            anyInt(),
+    when(BitmapFactory.decodeFileDescriptor(
+            any(FileDescriptor.class),
+            any(Rect.class),
             any(BitmapFactory.Options.class)))
         .thenReturn(mBitmap);
 
@@ -115,29 +104,18 @@ public class DalvikBitmapFactoryTest {
 
     mDecodeBuf = new byte[LENGTH + 2];
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));
-    when(mFlexByteArrayPool.get(Integer.valueOf(LENGTH))).thenReturn(mDecodeBufRef);
 
     mockStatic(Bitmaps.class);
-    mDalvikBitmapFactory = createDalvikBitmapFactoryImpl(mFlexByteArrayPool);
-  }
-
-  /**
-   * Specialization provides the specific DalvikBitmapFactory implementation to test
-   * @param flexByteArrayPool The ByteArraypool
-   * @return The DalvikBitmapFactory implementation to test
-   */
-  protected DalvikBitmapFactory createDalvikBitmapFactoryImpl(
-      FlexByteArrayPool flexByteArrayPool) {
-    return null;
+    mGingerbreadPurgeableDecoder = new GingerbreadPurgeableDecoder();
   }
 
   @Test
   public void testDecode_Jpeg_Detailed() {
-    assumeNotNull(mDalvikBitmapFactory);
+    assumeNotNull(mGingerbreadPurgeableDecoder);
   }
 
   @Test
   public void testDecodeJpeg_incomplete() {
-    assumeNotNull(mDalvikBitmapFactory);
+    assumeNotNull(mGingerbreadPurgeableDecoder);
   }
 }

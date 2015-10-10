@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.bitmaps;
+package com.facebook.imagepipeline.common;
 
 /**
  * Thrown if a bitmap pool cap or other limit on the number of bitmaps is exceeded.

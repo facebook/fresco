@@ -7,46 +7,34 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.bitmaps;
+package com.facebook.imagepipeline.platform;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.os.MemoryFile;
 
-import javax.annotation.Nullable;
-
-import com.facebook.common.internal.ByteStreams;
-import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.streams.LimitedInputStream;
+import com.facebook.imagepipeline.common.TooManyBitmapsException;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.FlexByteArrayPool;
+import com.facebook.imagepipeline.memory.BitmapCounter;
+import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.JfifUtil;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-
 /**
- * Bitmap factory for Dalvik VM (Honeycomb to KitKat).
+ * Base class for bitmap decodes for Dalvik VM (Gingerbread to KitKat).
  */
-abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
-  private static Method sGetFileDescriptorMethod;
-
+abstract class DalvikPurgeableDecoder implements PlatformDecoder {
   protected static final byte[] EOI = new byte[] {
       (byte) JfifUtil.MARKER_FIRST_BYTE, (byte) JfifUtil.MARKER_EOI };
 
-  protected FlexByteArrayPool mFlexByteArrayPool;
+  private final BitmapCounter mUnpooledBitmapsCounter;
 
-  public DalvikBitmapFactory(FlexByteArrayPool flexByteArrayPool) {
-    mFlexByteArrayPool = flexByteArrayPool;
+  DalvikPurgeableDecoder() {
+    mUnpooledBitmapsCounter = BitmapCounterProvider.get();
   }
 
   /**
@@ -105,25 +93,7 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
     }
   }
 
-  /**
-   * Pins the bitmap
-   */
-  private CloseableReference<Bitmap> pinBitmap(Bitmap bitmap) {
-    try {
-      // Real decoding happens here - if the image was corrupted, this will throw an exception
-      Bitmaps.pinBitmap(bitmap);
-    } catch (Exception e) {
-      bitmap.recycle();
-      throw Throwables.propagate(e);
-    }
 
-    if (!mUnpooledBitmapsCounter.increase(bitmap)) {
-      bitmap.recycle();
-      throw new TooManyBitmapsException();
-    }
-
-    return CloseableReference.of(bitmap, mUnpooledBitmapsReleaser);
-  }
 
   /**
    * Decodes a byteArray into a purgeable bitmap
@@ -132,7 +102,7 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
    * @param options the options passed to the BitmapFactory
    * @return
    */
-  protected abstract Bitmap decodeByteArrayAsPurgeable(
+  abstract Bitmap decodeByteArrayAsPurgeable(
       CloseableReference<PooledByteBuffer> bytesRef,
       BitmapFactory.Options options);
 
@@ -142,10 +112,11 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
    * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
    *
    * @param bytesRef the byte buffer that contains the encoded bytes
+   * @param length the number of encoded bytes in the buffer
    * @param options the options passed to the BitmapFactory
    * @return
    */
-  protected abstract Bitmap decodeJPEGByteArrayAsPurgeable(
+  abstract Bitmap decodeJPEGByteArrayAsPurgeable(
       CloseableReference<PooledByteBuffer> bytesRef,
       int length,
       BitmapFactory.Options options);
@@ -168,12 +139,6 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
     return options;
   }
 
-  protected static void putEOI(byte[] imageBytes, int offset) {
-    // TODO 5884402: remove dependency on JfifUtil
-    imageBytes[offset] = (byte) JfifUtil.MARKER_FIRST_BYTE;
-    imageBytes[offset + 1] = (byte) JfifUtil.MARKER_EOI;
-  }
-
   protected static boolean endsWithEOI(CloseableReference<PooledByteBuffer> bytesRef, int length) {
     PooledByteBuffer buffer = bytesRef.get();
     return length >= 2 &&
@@ -181,70 +146,22 @@ abstract class DalvikBitmapFactory extends PlatformBitmapFactory {
         buffer.read(length - 1) == (byte) JfifUtil.MARKER_EOI;
   }
 
-  private static MemoryFile copyToMemoryFile(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      int inputLength,
-      @Nullable byte[] suffix) throws IOException {
-    int outputLength = inputLength + (suffix == null ? 0 : suffix.length);
-    MemoryFile memoryFile = new MemoryFile(null, outputLength);
-    memoryFile.allowPurging(false);
-    PooledByteBufferInputStream pbbIs = null;
-    LimitedInputStream is = null;
-    OutputStream os = null;
+  /**
+   * Pins the bitmap
+   */
+  public CloseableReference<Bitmap> pinBitmap(Bitmap bitmap) {
     try {
-      pbbIs = new PooledByteBufferInputStream(bytesRef.get());
-      is = new LimitedInputStream(pbbIs, inputLength);
-      os = memoryFile.getOutputStream();
-      ByteStreams.copy(is, os);
-      if (suffix != null) {
-        memoryFile.writeBytes(suffix, 0, inputLength, suffix.length);
-      }
-      return memoryFile;
-    } finally {
-      CloseableReference.closeSafely(bytesRef);
-      Closeables.closeQuietly(pbbIs);
-      Closeables.closeQuietly(is);
-      Closeables.close(os, true);
-    }
-  }
-
-  private synchronized Method getFileDescriptorMethod() {
-    if (sGetFileDescriptorMethod == null) {
-      try {
-        sGetFileDescriptorMethod = MemoryFile.class.getDeclaredMethod("getFileDescriptor");
-      } catch (Exception e) {
-        throw Throwables.propagate(e);
-      }
-    }
-    return sGetFileDescriptorMethod;
-  }
-
-  private FileDescriptor getMemoryFileDescriptor(MemoryFile memoryFile) {
-    try {
-      Object rawFD = getFileDescriptorMethod().invoke(memoryFile);
-      return (FileDescriptor) rawFD;
+      // Real decoding happens here - if the image was corrupted, this will throw an exception
+      Bitmaps.pinBitmap(bitmap);
     } catch (Exception e) {
+      bitmap.recycle();
       throw Throwables.propagate(e);
     }
+    if (!mUnpooledBitmapsCounter.increase(bitmap)) {
+      bitmap.recycle();
+      throw new TooManyBitmapsException();
+    }
+    return CloseableReference.of(bitmap, mUnpooledBitmapsCounter.getReleaser());
   }
 
-  protected Bitmap decodeFileDescriptorAsPurgeable(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      int inputLength,
-      byte[] suffix,
-      BitmapFactory.Options options) {
-    MemoryFile memoryFile = null;
-    try {
-      memoryFile = copyToMemoryFile(bytesRef, inputLength, suffix);
-      FileDescriptor fd = getMemoryFileDescriptor(memoryFile);
-      Bitmap bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
-      return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
-    } finally {
-      if (memoryFile != null) {
-        memoryFile.close();
-      }
-    }
-  }
 }

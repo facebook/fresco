@@ -17,6 +17,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.Build;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheFactory;
@@ -38,6 +39,10 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+import com.facebook.imagepipeline.bitmaps.ArtBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
+import com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.HoneycombBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
@@ -48,7 +53,12 @@ import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.platform.ArtDecoder;
+import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
+import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
+import com.facebook.imagepipeline.platform.PlatformDecoder;
 
 /**
  * Factory class for the image pipeline.
@@ -103,11 +113,13 @@ public class ImagePipelineFactory {
   private DiskStorageCache mMainDiskStorageCache;
   private ImageDecoder mImageDecoder;
   private ImagePipeline mImagePipeline;
-  private PlatformBitmapFactory mPlatformBitmapFactory;
   private ProducerFactory mProducerFactory;
   private ProducerSequenceFactory mProducerSequenceFactory;
   private BufferedDiskCache mSmallImageBufferedDiskCache;
   private DiskStorageCache mSmallImageDiskStorageCache;
+
+  private PlatformBitmapFactory mPlatformBitmapFactory;
+  private PlatformDecoder mPlatformDecoder;
 
   public ImagePipelineFactory(ImagePipelineConfig config) {
     mConfig = Preconditions.checkNotNull(config);
@@ -262,7 +274,7 @@ public class ImagePipelineFactory {
       } else {
         mImageDecoder = new ImageDecoder(
             getAnimatedImageFactory(),
-            getPlatformBitmapFactory(),
+            getPlatformDecoder(),
             mConfig.getBitmapConfig());
       }
     }
@@ -307,8 +319,61 @@ public class ImagePipelineFactory {
     return mImagePipeline;
   }
 
-  private PlatformBitmapFactory getPlatformBitmapFactory() {
-    return PlatformBitmapFactory.getInstance(mConfig.getPoolFactory());
+  /**
+   * Provide the implementation of the PlatformBitmapFactory for the current platform
+   * using the provided PoolFactory
+   *
+   * @param poolFactory The PoolFactory
+   * @param platformDecoder The PlatformDecoder
+   * @return The PlatformBitmapFactory implementation
+   */
+  public static PlatformBitmapFactory buildPlatformBitmapFactory(
+      PoolFactory poolFactory,
+      PlatformDecoder platformDecoder) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      return new ArtBitmapFactory(poolFactory.getBitmapPool());
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      return new HoneycombBitmapFactory(
+          new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
+          platformDecoder);
+    } else {
+      return new GingerbreadBitmapFactory();
+    }
+  }
+
+  public PlatformBitmapFactory getPlatformBitmapFactory() {
+    if (mPlatformBitmapFactory == null) {
+      mPlatformBitmapFactory = buildPlatformBitmapFactory(
+          mConfig.getPoolFactory(),
+          getPlatformDecoder());
+    }
+    return mPlatformBitmapFactory;
+  }
+
+  /**
+   * Provide the implementation of the PlatformDecoder for the current platform using the
+   * provided PoolFactory
+   *
+   * @param poolFactory The PoolFactory
+   * @return The PlatformDecoder implementation
+   */
+  public static PlatformDecoder buildPlatformDecoder(PoolFactory poolFactory) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      return new ArtDecoder(
+          poolFactory.getBitmapPool(),
+          poolFactory.getFlexByteArrayPoolMaxNumThreads());
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
+    } else {
+      return new GingerbreadPurgeableDecoder();
+    }
+  }
+
+  public PlatformDecoder getPlatformDecoder() {
+    if (mPlatformDecoder == null) {
+      mPlatformDecoder = buildPlatformDecoder(mConfig.getPoolFactory());
+    }
+    return mPlatformDecoder;
   }
 
   private ProducerFactory getProducerFactory() {
