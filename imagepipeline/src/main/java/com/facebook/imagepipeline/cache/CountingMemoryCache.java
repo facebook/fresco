@@ -202,8 +202,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   private synchronized boolean canCacheNewValue(V value) {
     int newValueSize = mValueDescriptor.getSizeInBytes(value);
     return (newValueSize <= mMemoryCacheParams.maxCacheEntrySize) &&
-        (getInUseCount() + 1 <= mMemoryCacheParams.maxCacheEntries) &&
-        (getInUseSizeInBytes() + newValueSize <= mMemoryCacheParams.maxCacheSize);
+        (getInUseCount() <= mMemoryCacheParams.maxCacheEntries - 1) &&
+        (getInUseSizeInBytes() <= mMemoryCacheParams.maxCacheSize - newValueSize);
   }
 
   /**

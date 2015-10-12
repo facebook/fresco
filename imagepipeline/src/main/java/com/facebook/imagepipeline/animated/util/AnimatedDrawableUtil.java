@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
 
+import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawable;
 
 /**
@@ -26,14 +27,13 @@ public class AnimatedDrawableUtil {
   private static final int MIN_FRAME_DURATION_MS = 11;
   private static final int FRAME_DURATION_MS_FOR_MIN = 100;
 
-  public void appendMemoryString(StringBuilder sb, int bytes) {
-    int kbUsed = bytes / 1024;
-    if (kbUsed < 1024) {
-      sb.append(kbUsed);
+  public void appendMemoryString(StringBuilder sb, int kiloBytes) {
+    if (kiloBytes < ByteConstants.KB) {
+      sb.append(kiloBytes);
       sb.append("KB");
     } else {
-      int mbUsed = kbUsed / 1024;
-      int mbUsedDecimal = (kbUsed % 1024) / 100;
+      int mbUsed = kiloBytes / ByteConstants.KB;
+      int mbUsedDecimal = (kiloBytes % ByteConstants.KB) / 100;
       sb.append(mbUsed);
       sb.append(".");
       sb.append(mbUsedDecimal);
