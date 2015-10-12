@@ -71,6 +71,7 @@ public class ImagePipelineConfig {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
+  private final boolean mDecodeFileDescriptorEnabled;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -151,7 +152,8 @@ public class ImagePipelineConfig {
         builder.mSmallImageDiskCacheConfig == null ?
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
-
+    mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
+        builder.mDecodeFileDescriptorEnabled;
     // Below this comment can't be built in alphabetical order, because of dependencies
 
     int numCpuBoundThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
@@ -234,6 +236,10 @@ public class ImagePipelineConfig {
     return mDownsampleEnabled;
   }
 
+  public boolean isDecodeFileDescriptorEnabled() {
+    return mDecodeFileDescriptorEnabled;
+  }
+
   @Nullable
   public PlatformBitmapFactory getPlatformBitmapFactory() {
     return mPlatformBitmapFactory;
@@ -285,6 +291,7 @@ public class ImagePipelineConfig {
     private Set<RequestListener> mRequestListeners;
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
+    private boolean mDecodeFileDescriptorEnabled = mDownsampleEnabled;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -326,7 +333,7 @@ public class ImagePipelineConfig {
     }
 
     public Builder setDownsampleEnabled(boolean downsampleEnabled) {
-      this.mDownsampleEnabled = downsampleEnabled;
+      mDownsampleEnabled = downsampleEnabled;
       return this;
     }
 
@@ -387,6 +394,11 @@ public class ImagePipelineConfig {
 
     public Builder setSmallImageDiskCacheConfig(DiskCacheConfig smallImageDiskCacheConfig) {
       mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
+      return this;
+    }
+
+    public Builder setDecodeFileDescriptorEnabled(boolean decodeFileDescriptorEnabled) {
+      mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
       return this;
     }
 

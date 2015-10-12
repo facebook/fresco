@@ -63,7 +63,8 @@ public class LocalContentUriFetchProducerTest {
     mLocalContentUriFetchProducer = new LocalContentUriFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mContentResolver);
+        mContentResolver,
+        false);
     mContentUri = Uri.fromFile(mock(File.class));
 
     mProducerContext = new SettableProducerContext(
@@ -108,14 +109,8 @@ public class LocalContentUriFetchProducerTest {
 
     when(mContentResolver.openInputStream(mContentUri)).thenReturn(mock(InputStream.class));
     mLocalContentUriFetchProducer.produceResults(mConsumer, mProducerContext);
+
     mExecutor.runUntilIdle();
-    assertEquals(
-        2,
-        mCapturedEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
   }
 
   @Test(expected = RuntimeException.class)

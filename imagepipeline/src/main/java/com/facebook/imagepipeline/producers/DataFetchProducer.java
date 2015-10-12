@@ -39,8 +39,9 @@ public class DataFetchProducer extends LocalFetchProducer {
   private static final String PRODUCER_NAME = "DataFetchProducer";
 
   public DataFetchProducer(
-      PooledByteBufferFactory pooledByteBufferFactory) {
-    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory);
+      PooledByteBufferFactory pooledByteBufferFactory,
+      boolean fileDescriptorEnabled) {
+    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory, fileDescriptorEnabled);
   }
 
   @Override

@@ -268,7 +268,8 @@ public class ProducerSequenceFactoryTest {
           null,
           null,
           null,
-          null);
+          null,
+          false);
     }
 
     @Override

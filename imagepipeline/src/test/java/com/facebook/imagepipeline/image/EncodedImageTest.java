@@ -9,9 +9,12 @@
 
 package com.facebook.imagepipeline.image;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.Override;
 
 import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -34,10 +37,19 @@ public class EncodedImageTest {
   private static final int ENCODED_BYTES_LENGTH = 100;
 
   private CloseableReference<PooledByteBuffer> mByteBufferRef;
+  private FileInputStream mInputStream;
+  private Supplier<FileInputStream> mInputStreamSupplier;
 
   @Before
   public void setup() {
     mByteBufferRef = CloseableReference.of(mock(PooledByteBuffer.class));
+    mInputStream = mock(FileInputStream.class);
+    mInputStreamSupplier = new Supplier<FileInputStream>() {
+      @Override
+      public FileInputStream get() {
+        return mInputStream;
+      }
+    };
   }
 
   @Test
@@ -47,6 +59,12 @@ public class EncodedImageTest {
     assertSame(
         encodedImage.getByteBufferRef().getUnderlyingReferenceTestOnly(),
         mByteBufferRef.getUnderlyingReferenceTestOnly());
+  }
+
+  @Test
+  public void testInputStream() {
+    EncodedImage encodedImage = new EncodedImage(mInputStreamSupplier);
+    assertSame(encodedImage.getInputStream(), mInputStreamSupplier.get());
   }
 
   @Test
@@ -67,6 +85,15 @@ public class EncodedImageTest {
     assertEquals(encodedImage.getHeight(), encodedImage2.getHeight());
     assertEquals(encodedImage.getWidth(), encodedImage2.getWidth());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
+
+    encodedImage = new EncodedImage(mInputStreamSupplier, 100);
+    encodedImage.setImageFormat(ImageFormat.JPEG);
+    encodedImage.setRotationAngle(0);
+    encodedImage.setWidth(1);
+    encodedImage.setHeight(2);
+    encodedImage2 = EncodedImage.cloneOrNull(encodedImage);
+    assertSame(encodedImage.getInputStream(), encodedImage2.getInputStream());
+    assertEquals(encodedImage2.getSize(), encodedImage.getSize());
   }
 
   @Test
@@ -91,7 +118,8 @@ public class EncodedImageTest {
     assertTrue(encodedImage.isValid());
     encodedImage.close();
     assertFalse(encodedImage.isValid());
-
+    encodedImage = new EncodedImage(mInputStreamSupplier);
+    assertTrue(encodedImage.isValid());
     // Test the static method
     assertFalse(EncodedImage.isValid(null));
   }
@@ -112,6 +140,12 @@ public class EncodedImageTest {
     EncodedImage encodedImage = new EncodedImage(mByteBufferRef);
     EncodedImage.closeSafely(encodedImage);
     assertEquals(1, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+  }
+
+  @Test
+  public void testGetInputStream() {
+    EncodedImage encodedImage = new EncodedImage(mInputStreamSupplier);
+    assertSame(mInputStream, encodedImage.getInputStream());
   }
 
   @Test
@@ -173,5 +207,20 @@ public class EncodedImageTest {
     assertEquals(encodedImage.getHeight(), encodedImage2.getHeight());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
     assertEquals(encodedImage.getSize(), encodedImage2.getSize());
+
+    EncodedImage encodedImage3 = new EncodedImage(mInputStreamSupplier);
+    encodedImage3.setImageFormat(ImageFormat.JPEG);
+    encodedImage3.setRotationAngle(0);
+    encodedImage3.setWidth(1);
+    encodedImage3.setHeight(2);
+    encodedImage3.setSampleSize(3);
+    encodedImage3.setStreamSize(4);
+    EncodedImage encodedImage4 = new EncodedImage(mInputStreamSupplier);
+    encodedImage4.copyMetaDataFrom(encodedImage3);
+    assertEquals(encodedImage3.getImageFormat(), encodedImage4.getImageFormat());
+    assertEquals(encodedImage3.getWidth(), encodedImage4.getWidth());
+    assertEquals(encodedImage3.getHeight(), encodedImage4.getHeight());
+    assertEquals(encodedImage3.getSampleSize(), encodedImage4.getSampleSize());
+    assertEquals(encodedImage3.getSize(), encodedImage4.getSize());
   }
 }

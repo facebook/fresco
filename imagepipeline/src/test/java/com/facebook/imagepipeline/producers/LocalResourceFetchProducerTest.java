@@ -31,6 +31,7 @@ import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -70,7 +71,8 @@ public class LocalResourceFetchProducerTest {
     mLocalResourceFetchProducer = new LocalResourceFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mResources);
+        mResources,
+        false);
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,
@@ -111,14 +113,6 @@ public class LocalResourceFetchProducerTest {
 
     mLocalResourceFetchProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
-    assertNotNull(mCapturedEncodedImage);
-    assertEquals(
-        2,
-        mCapturedEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
   }
 
   @Test(expected = RuntimeException.class)
@@ -132,5 +126,4 @@ public class LocalResourceFetchProducerTest {
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
   }
-
 }

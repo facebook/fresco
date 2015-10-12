@@ -9,17 +9,23 @@
 
 package com.facebook.imagepipeline.producers;
 
+import android.os.Build;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.internal.Closeables;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
+
 
 /**
  * Represents a local fetch producer.
@@ -28,12 +34,16 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
+  private final boolean mDecodeFileDescriptorEnabledForKitKat;
 
   protected LocalFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
+      PooledByteBufferFactory pooledByteBufferFactory,
+      boolean fileDescriptorEnabled) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
+    mDecodeFileDescriptorEnabledForKitKat = fileDescriptorEnabled &&
+        Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT;
   }
 
   @Override
@@ -95,13 +105,34 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  protected EncodedImage getByteBufferBackedEncodedImage(
+  protected EncodedImage getEncodedImage(
       String pathname,
       int length) throws IOException {
-    FileInputStream fis = new FileInputStream(pathname);
-    return getByteBufferBackedEncodedImage(fis, length);
+    Runtime runTime = Runtime.getRuntime();
+    long javaMax = runTime.maxMemory();
+    long javaUsed = runTime.totalMemory() - runTime.freeMemory();
+    long javaFree = Math.min(javaMax - javaUsed, 8 * ByteConstants.MB);
+    if (mDecodeFileDescriptorEnabledForKitKat && javaMax >= 64 * javaFree) {
+      return getInputStreamBackedEncodedImage(new File(pathname), length);
+    } else {
+      return getByteBufferBackedEncodedImage(new FileInputStream(pathname), length);
+    }
   }
 
+  protected EncodedImage getInputStreamBackedEncodedImage(
+      final File file,
+      int length) throws IOException {
+    Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
+      @Override public FileInputStream get() {
+        try {
+          return new FileInputStream(file);
+        } catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
+      }
+    };
+    return new EncodedImage(sup, length);
+  }
   /**
    * Gets an encoded image from the local resource. It can be either backed by a FileInputStream or
    * a PooledByteBuffer

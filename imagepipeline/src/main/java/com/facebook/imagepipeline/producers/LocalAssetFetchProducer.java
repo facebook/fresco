@@ -31,15 +31,16 @@ public class LocalAssetFetchProducer extends LocalFetchProducer {
   public LocalAssetFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      AssetManager assetManager) {
-    super(executor, pooledByteBufferFactory);
+      AssetManager assetManager,
+      boolean decodeFileDescriptorEnabled) {
+    super(executor, pooledByteBufferFactory, decodeFileDescriptorEnabled);
     mAssetManager = assetManager;
   }
 
   @Override
   protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
-    return getByteBufferBackedEncodedImage(
-        mAssetManager.open(getAssetName(imageRequest), AssetManager.ACCESS_STREAMING),
+    return getEncodedImage(
+        mAssetManager.open(getAssetName(imageRequest), AssetManager.ACCESS_STREAMING).toString(),
         getLength(imageRequest));
   }
 

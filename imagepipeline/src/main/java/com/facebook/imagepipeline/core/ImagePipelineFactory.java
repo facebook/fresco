@@ -393,7 +393,8 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
-              getPlatformBitmapFactory());
+              getPlatformBitmapFactory(),
+              mConfig.isDecodeFileDescriptorEnabled());
     }
     return mProducerFactory;
   }

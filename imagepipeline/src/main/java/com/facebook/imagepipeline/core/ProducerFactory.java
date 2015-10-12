@@ -67,6 +67,7 @@ public class ProducerFactory {
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final boolean mDownsampleEnabled;
   private final boolean mResizeAndRotateEnabledForNetwork;
+  private final boolean mDecodeFileDescriptorEnabled;
 
   // Dependencies used by multiple steps
   private final ExecutorSupplier mExecutorSupplier;
@@ -96,7 +97,8 @@ public class ProducerFactory {
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
-      PlatformBitmapFactory platformBitmapFactory) {
+      PlatformBitmapFactory platformBitmapFactory,
+      boolean decodeFileDescriptorEnabled) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -117,6 +119,8 @@ public class ProducerFactory {
     mCacheKeyFactory = cacheKeyFactory;
 
     mPlatformBitmapFactory = platformBitmapFactory;
+
+    mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -146,7 +150,7 @@ public class ProducerFactory {
   }
 
   public DataFetchProducer newDataFetchProducer() {
-    return new DataFetchProducer(mPooledByteBufferFactory);
+    return new DataFetchProducer(mPooledByteBufferFactory, mDecodeFileDescriptorEnabled);
   }
 
   public DecodeProducer newDecodeProducer(Producer<EncodedImage> inputProducer) {
@@ -183,14 +187,16 @@ public class ProducerFactory {
     return new LocalAssetFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mAssetManager);
+        mAssetManager,
+        mDecodeFileDescriptorEnabled);
   }
 
   public LocalContentUriFetchProducer newContentUriFetchProducer() {
     return new LocalContentUriFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mContentResolver);
+        mContentResolver,
+        mDecodeFileDescriptorEnabled);
   }
 
   public LocalExifThumbnailProducer newLocalExifThumbnailProducer() {
@@ -202,14 +208,16 @@ public class ProducerFactory {
   public LocalFileFetchProducer newLocalFileFetchProducer() {
     return new LocalFileFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
-        mPooledByteBufferFactory);
+        mPooledByteBufferFactory,
+        mDecodeFileDescriptorEnabled);
   }
 
   public LocalResourceFetchProducer newLocalResourceFetchProducer() {
     return new LocalResourceFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mResources);
+        mResources,
+        mDecodeFileDescriptorEnabled);
   }
 
   public LocalVideoThumbnailProducer newLocalVideoThumbnailProducer() {

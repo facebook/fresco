@@ -60,8 +60,9 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   public LocalContentUriFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      ContentResolver contentResolver) {
-    super(executor, pooledByteBufferFactory);
+      ContentResolver contentResolver,
+      boolean decodeFileDescriptorEnabled) {
+    super(executor, pooledByteBufferFactory,decodeFileDescriptorEnabled);
     mContentResolver = contentResolver;
   }
 
@@ -70,8 +71,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     Uri uri = imageRequest.getSourceUri();
     if (isContactUri(uri)) {
       // If a Contact URI is provided, use the special helper to open that contact's photo.
-      return getByteBufferBackedEncodedImage(
-          ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri),
+      return getEncodedImage(
+          ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri).toString(),
           EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
@@ -82,8 +83,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
     }
 
-    return getByteBufferBackedEncodedImage(
-        mContentResolver.openInputStream(uri),
+    return getEncodedImage(
+        mContentResolver.openInputStream(uri).toString(),
         EncodedImage.UNKNOWN_STREAM_SIZE);
   }
 
@@ -126,7 +127,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         }
       }
       if (pathname != null) {
-        return getByteBufferBackedEncodedImage(pathname, getLength(pathname));
+        return getEncodedImage(pathname, getLength(pathname));
       }
     } finally {
       cursor.close();
@@ -157,7 +158,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         final String thumbnailUri = thumbnailCursor.getString(
             thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
         if (new File(thumbnailUri).exists()) {
-          return getByteBufferBackedEncodedImage(thumbnailUri, getLength(thumbnailUri));
+          return getEncodedImage(thumbnailUri, getLength(thumbnailUri));
         }
       }
     } finally {

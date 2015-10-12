@@ -25,13 +25,14 @@ public class LocalFileFetchProducer extends LocalFetchProducer {
 
   public LocalFileFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
-    super(executor, pooledByteBufferFactory);
+      PooledByteBufferFactory pooledByteBufferFactory,
+      boolean decodeFileDescriptorEnabled) {
+    super(executor, pooledByteBufferFactory, decodeFileDescriptorEnabled);
   }
 
   @Override
   protected EncodedImage getEncodedImage(final ImageRequest imageRequest) throws IOException {
-    return getByteBufferBackedEncodedImage(
+    return getEncodedImage(
         imageRequest.getSourceFile().toString(),
         (int) imageRequest.getSourceFile().length());
   }

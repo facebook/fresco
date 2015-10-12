@@ -73,7 +73,8 @@ public class LocalAssetFetchProducerTest {
     mLocalAssetFetchProducer = new LocalAssetFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mAssetManager);
+        mAssetManager,
+        false);
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,
@@ -114,14 +115,6 @@ public class LocalAssetFetchProducerTest {
 
     mLocalAssetFetchProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
-    assertEquals(
-        2,
-        mCapturedEncodedImage.getByteBufferRef()
-        .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
   }
 
   @Test(expected = RuntimeException.class)
