@@ -22,7 +22,7 @@ You must [build an image request](image-requests.html). Having done that, you ca
 ```java
 ImagePipeline imagePipeline = Fresco.getImagePipeline();
 DataSource<CloseableReference<CloseableImage>> 
-    dataSource = imagePipeline.fetchDecodedImage(imageRequest);
+    dataSource = imagePipeline.fetchDecodedImage(imageRequest, callerContext);
 ```
 
 See the page on [DataSources](datasources-datasubscribers.html) for information on how to receive data from them.
@@ -33,7 +33,7 @@ If you don't want to decode the image, but want to keep it in its original compr
 
 ```java
 DataSource<CloseableReference<PooledByteBuffer>> 
-    dataSource = imagePipeline.fetchEncodedImage(imageRequest);
+    dataSource = imagePipeline.fetchEncodedImage(imageRequest, callerContext);
 ```
 
 #### Instant results from the bitmap cache
@@ -42,7 +42,7 @@ Lookups to the bitmap cache, unlike the others, are done in the UI thread. If a 
 
 ```java
 DataSource<CloseableReference<CloseableImage>> dataSource =
-    imagePipeline.fetchImageFromBitmapCache(imageRequest);
+    imagePipeline.fetchImageFromBitmapCache(imageRequest, callerContext);
 try {
   CloseableReference<CloseableImage> imageReference = dataSource.getResult();
   if (imageReference != null) {
@@ -69,12 +69,16 @@ Nonetheless, the image pipeline allows you to prefetch to either disk or bitmap 
 Prefetch to disk:
 
 ```java
-imagePipeline.prefetchToDiskCache(imageRequest);
+imagePipeline.prefetchToDiskCache(imageRequest, callerContext);
 ```
 
 Prefetch to bitmap cache:
 
 ```java
-imagePipeline.prefetchToBitmapCache(imageRequest);
+imagePipeline.prefetchToBitmapCache(imageRequest, callerContext);
 ```
+#### The caller Context 
+
+As we can see, most of the `ImagePipeline` fetch methods contains a second parameter named `callerContext` of type `Object`. We can see it as an implementation of the [Context Object Design Pattern](https://www.dre.vanderbilt.edu/~schmidt/PDF/Context-Object-Pattern.pdf). It's basically an object we bind to a specific `ImageRequest` that can be used for different porposes (es: Log). The same object can also be accessed by all the `Producer` implementations into the `ImagePipeline`.  
+
 
