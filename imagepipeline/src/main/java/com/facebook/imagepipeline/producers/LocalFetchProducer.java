@@ -106,16 +106,17 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
   }
 
   protected EncodedImage getEncodedImage(
-      String pathname,
+      InputStream inputStream,
       int length) throws IOException {
     Runtime runTime = Runtime.getRuntime();
     long javaMax = runTime.maxMemory();
     long javaUsed = runTime.totalMemory() - runTime.freeMemory();
     long javaFree = Math.min(javaMax - javaUsed, 8 * ByteConstants.MB);
-    if (mDecodeFileDescriptorEnabledForKitKat && javaMax >= 64 * javaFree) {
-      return getInputStreamBackedEncodedImage(new File(pathname), length);
+    if (mDecodeFileDescriptorEnabledForKitKat && inputStream instanceof FileInputStream &&
+        javaMax >= 64 * javaFree) {
+      return getInputStreamBackedEncodedImage(new File(inputStream.toString()), length);
     } else {
-      return getByteBufferBackedEncodedImage(new FileInputStream(pathname), length);
+      return getByteBufferBackedEncodedImage(inputStream, length);
     }
   }
 
@@ -133,6 +134,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     };
     return new EncodedImage(sup, length);
   }
+
   /**
    * Gets an encoded image from the local resource. It can be either backed by a FileInputStream or
    * a PooledByteBuffer

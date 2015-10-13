@@ -40,7 +40,7 @@ public class LocalAssetFetchProducer extends LocalFetchProducer {
   @Override
   protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
     return getEncodedImage(
-        mAssetManager.open(getAssetName(imageRequest), AssetManager.ACCESS_STREAMING).toString(),
+        mAssetManager.open(getAssetName(imageRequest), AssetManager.ACCESS_STREAMING),
         getLength(imageRequest));
   }
 

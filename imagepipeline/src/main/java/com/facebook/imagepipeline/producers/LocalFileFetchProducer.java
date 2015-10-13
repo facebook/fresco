@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
@@ -33,7 +34,7 @@ public class LocalFileFetchProducer extends LocalFetchProducer {
   @Override
   protected EncodedImage getEncodedImage(final ImageRequest imageRequest) throws IOException {
     return getEncodedImage(
-        imageRequest.getSourceFile().toString(),
+        new FileInputStream(imageRequest.getSourceFile().toString()),
         (int) imageRequest.getSourceFile().length());
   }
 

@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.JfifUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
@@ -72,7 +73,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     if (isContactUri(uri)) {
       // If a Contact URI is provided, use the special helper to open that contact's photo.
       return getEncodedImage(
-          ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri).toString(),
+          ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri),
           EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
@@ -84,7 +85,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     }
 
     return getEncodedImage(
-        mContentResolver.openInputStream(uri).toString(),
+        mContentResolver.openInputStream(uri),
         EncodedImage.UNKNOWN_STREAM_SIZE);
   }
 
@@ -127,7 +128,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         }
       }
       if (pathname != null) {
-        return getEncodedImage(pathname, getLength(pathname));
+        return getEncodedImage(new FileInputStream(pathname), getLength(pathname));
       }
     } finally {
       cursor.close();
@@ -158,7 +159,7 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         final String thumbnailUri = thumbnailCursor.getString(
             thumbnailCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
         if (new File(thumbnailUri).exists()) {
-          return getEncodedImage(thumbnailUri, getLength(thumbnailUri));
+          return getEncodedImage(new FileInputStream(thumbnailUri), getLength(thumbnailUri));
         }
       }
     } finally {

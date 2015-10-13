@@ -40,7 +40,7 @@ public class LocalResourceFetchProducer extends LocalFetchProducer {
   @Override
   protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
     return getEncodedImage(
-        mResources.openRawResource(getResourceId(imageRequest)).toString(),
+        mResources.openRawResource(getResourceId(imageRequest)),
         getLength(imageRequest));
   }
 
