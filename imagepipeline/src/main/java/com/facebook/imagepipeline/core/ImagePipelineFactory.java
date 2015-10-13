@@ -362,10 +362,9 @@ public class ImagePipelineFactory {
       return new ArtDecoder(
           poolFactory.getBitmapPool(),
           poolFactory.getFlexByteArrayPoolMaxNumThreads());
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
     } else {
-      return new GingerbreadPurgeableDecoder();
+      // Fix for purgeable failure in GingerbreadPurgeableDecoder
+      return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
     }
   }
 
