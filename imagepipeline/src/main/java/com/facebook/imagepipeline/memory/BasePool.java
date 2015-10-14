@@ -656,19 +656,19 @@ public abstract class BasePool<V> implements Pool<V> {
 
     // even with our best effort we cannot ensure hard cap limit.
     // Return immediately - no point in trimming any space
-    if ((mUsed.mNumBytes + sizeInBytes) > hardCap) {
+    if (sizeInBytes > hardCap - mUsed.mNumBytes) {
       mPoolStatsTracker.onHardCapReached();
       return false;
     }
 
     // trim if we need to
     int softCap = mPoolParams.maxSizeSoftCap;
-    if ((mUsed.mNumBytes + mFree.mNumBytes + sizeInBytes) > softCap) {
+    if (sizeInBytes > softCap - (mUsed.mNumBytes + mFree.mNumBytes)) {
       trimToSize(softCap - sizeInBytes);
     }
 
     // check again to see if we're below the hard cap
-    if (mUsed.mNumBytes + mFree.mNumBytes + sizeInBytes > hardCap) {
+    if (sizeInBytes > hardCap - (mUsed.mNumBytes + mFree.mNumBytes)) {
       mPoolStatsTracker.onHardCapReached();
       return false;
     }
