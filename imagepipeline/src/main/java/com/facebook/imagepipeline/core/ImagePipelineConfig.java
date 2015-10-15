@@ -103,6 +103,8 @@ public class ImagePipelineConfig {
             DefaultCacheKeyFactory.getInstance() :
             builder.mCacheKeyFactory;
     mContext = Preconditions.checkNotNull(builder.mContext);
+    mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
+        builder.mDecodeFileDescriptorEnabled;
     mDownsampleEnabled = builder.mDownsampleEnabled;
     mEncodedMemoryCacheParamsSupplier =
         builder.mEncodedMemoryCacheParamsSupplier == null ?
@@ -152,10 +154,8 @@ public class ImagePipelineConfig {
         builder.mSmallImageDiskCacheConfig == null ?
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
-    mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
-        builder.mDecodeFileDescriptorEnabled;
-    // Below this comment can't be built in alphabetical order, because of dependencies
 
+    // Below this comment can't be built in alphabetical order, because of dependencies
     int numCpuBoundThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
     mExecutorSupplier =
         builder.mExecutorSupplier == null ?
@@ -232,12 +232,12 @@ public class ImagePipelineConfig {
     return mNetworkFetcher;
   }
 
-  public boolean isDownsampleEnabled() {
-    return mDownsampleEnabled;
-  }
-
   public boolean isDecodeFileDescriptorEnabled() {
     return mDecodeFileDescriptorEnabled;
+  }
+
+  public boolean isDownsampleEnabled() {
+    return mDownsampleEnabled;
   }
 
   @Nullable
@@ -277,6 +277,7 @@ public class ImagePipelineConfig {
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
+    private boolean mDecodeFileDescriptorEnabled = mDownsampleEnabled;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
     private ExecutorSupplier mExecutorSupplier;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -291,7 +292,6 @@ public class ImagePipelineConfig {
     private Set<RequestListener> mRequestListeners;
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
-    private boolean mDecodeFileDescriptorEnabled = mDownsampleEnabled;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
