@@ -28,6 +28,7 @@ import com.facebook.imageutils.JfifUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import javax.annotation.Nullable;
@@ -71,9 +72,15 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   protected EncodedImage getEncodedImage(ImageRequest imageRequest) throws IOException {
     Uri uri = imageRequest.getSourceUri();
     if (isContactUri(uri)) {
+      final InputStream inputStream;
+      if (uri.toString().endsWith("/photo")) {
+        inputStream =  mContentResolver.openInputStream(uri);
+      } else {
+        inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri);
+      }
       // If a Contact URI is provided, use the special helper to open that contact's photo.
       return getEncodedImage(
-          ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri),
+          inputStream,
           EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
