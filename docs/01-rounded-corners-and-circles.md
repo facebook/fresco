@@ -22,7 +22,7 @@ Rectangles support having each of the four corners have a different radius, but 
 
 Images can be rounded with two different methods:
 
-1. `BITMAP_ONLY` - Uses a shader to draw the bitmap with rounded corners. This is the default rounding method. This works only on the actual image and the [placeholder](drawee-components.html). Other branches, like failure and retry images, are not rounded. Furthermore, this rounding method doesn't support animations. It does **not** support any scale types other than `center`, `centerCrop` (the default) and `focusCrop`.
+1. `BITMAP_ONLY` - Uses a shader to draw the bitmap with rounded corners. This is the default rounding method. This works only on the actual image and the [placeholder](drawee-components.html). Other branches, like failure and retry images, are not rounded. Furthermore, this rounding method doesn't support animations, and it does **not** support any scale types other than `center`, `centerCrop` (the default) and `focusCrop`. 
 2. `OVERLAY_COLOR` - Draws rounded corners by overlaying a solid color, specified by the caller. The Drawee's background should be static and of the same solid color. Use `roundWithOverlayColor` in XML, or `setOverlayColor` in code, for this effect.
 
 ### In XML
