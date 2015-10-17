@@ -199,6 +199,14 @@ public class ImagePipelineConfig {
     return mContext;
   }
 
+  public boolean isDecodeFileDescriptorEnabled() {
+    return mDecodeFileDescriptorEnabled;
+  }
+
+  public boolean isDownsampleEnabled() {
+    return mDownsampleEnabled;
+  }
+
   public Supplier<MemoryCacheParams> getEncodedMemoryCacheParamsSupplier() {
     return mEncodedMemoryCacheParamsSupplier;
   }
@@ -230,14 +238,6 @@ public class ImagePipelineConfig {
 
   public NetworkFetcher getNetworkFetcher() {
     return mNetworkFetcher;
-  }
-
-  public boolean isDecodeFileDescriptorEnabled() {
-    return mDecodeFileDescriptorEnabled;
-  }
-
-  public boolean isDownsampleEnabled() {
-    return mDownsampleEnabled;
   }
 
   @Nullable
@@ -320,6 +320,16 @@ public class ImagePipelineConfig {
       return this;
     }
 
+    public Builder setDecodeFileDescriptorEnabled(boolean decodeFileDescriptorEnabled) {
+      mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
+      return this;
+    }
+
+    public Builder setDownsampleEnabled(boolean downsampleEnabled) {
+      mDownsampleEnabled = downsampleEnabled;
+      return this;
+    }
+
     public Builder setEncodedMemoryCacheParamsSupplier(
         Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier) {
       mEncodedMemoryCacheParamsSupplier =
@@ -329,11 +339,6 @@ public class ImagePipelineConfig {
 
     public Builder setExecutorSupplier(ExecutorSupplier executorSupplier) {
       mExecutorSupplier = executorSupplier;
-      return this;
-    }
-
-    public Builder setDownsampleEnabled(boolean downsampleEnabled) {
-      mDownsampleEnabled = downsampleEnabled;
       return this;
     }
 
@@ -394,11 +399,6 @@ public class ImagePipelineConfig {
 
     public Builder setSmallImageDiskCacheConfig(DiskCacheConfig smallImageDiskCacheConfig) {
       mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
-      return this;
-    }
-
-    public Builder setDecodeFileDescriptorEnabled(boolean decodeFileDescriptorEnabled) {
-      mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
       return this;
     }
 
