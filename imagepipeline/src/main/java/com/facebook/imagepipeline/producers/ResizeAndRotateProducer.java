@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.JpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Resizes and rotates JPEG image according to the EXIF orientation data.
@@ -46,7 +47,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
 
-  private static final float MAX_BITMAP_SIZE = 2048f;
   private static final float ROUNDUP_FRACTION = 2.0f/3;
 
   private final Executor mExecutor;
@@ -239,11 +239,11 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
     // TODO: The limit is larger than this on newer devices. The problem is to get the real limit,
     // you have to call Canvas.getMaximumBitmapWidth/Height on a real HW-accelerated Canvas.
-    if (width * ratio > MAX_BITMAP_SIZE) {
-      ratio = MAX_BITMAP_SIZE / width;
+    if (width * ratio > BitmapUtil.MAX_BITMAP_SIZE) {
+      ratio = BitmapUtil.MAX_BITMAP_SIZE / width;
     }
-    if (height * ratio > MAX_BITMAP_SIZE) {
-      ratio = MAX_BITMAP_SIZE / height;
+    if (height * ratio > BitmapUtil.MAX_BITMAP_SIZE) {
+      ratio = BitmapUtil.MAX_BITMAP_SIZE / height;
     }
     return ratio;
   }

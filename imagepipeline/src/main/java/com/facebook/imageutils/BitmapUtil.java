@@ -41,6 +41,8 @@ public final class BitmapUtil {
   public static final int ARGB_8888_BYTES_PER_PIXEL = 4;
   public static final int RGB_565_BYTES_PER_PIXEL = 2;
 
+  public static final float MAX_BITMAP_SIZE = 2048f;
+
   /**
    * @return size in bytes of the underlying bitmap
    */
