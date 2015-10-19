@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.facebook.samples.transitions"
