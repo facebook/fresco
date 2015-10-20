@@ -1,8 +1,8 @@
 ---
-id: drawee-components
-title: Drawee Components
+id: drawee-branches
+title: Drawee Branches
 layout: docs
-permalink: /docs/drawee-components.html
+permalink: /docs/drawee-branches.html
 prev: using-drawees-code.html
 next: progress-bars.html
 ---
@@ -19,9 +19,11 @@ next: progress-bars.html
 * [Overlays](#Overlays)
 * [Pressed State Overlay](#PressedStateOverlay)
 
-## Definitions
+## What are Branches?
 
-This page outlines the different components ("image branches" in the source) that can be displayed in a Drawee, and how they are set.
+Drawees are made up of different image "branches", one or more of which may be actually displayed at a time.
+
+This page outlines the different branches that can be displayed in a Drawee, and how they are set.
 
 Except for the actual image, all of them can be set by an XML attribute. The value in XML must be either an Android drawable or color resource.
 
@@ -35,7 +37,7 @@ Several of the drawables can be [scaled](scaling.html).
 
 The _actual_ image is the target; everything else is either an alternative or a decoration. This is specified using a URI, which can point to an image over the Internet, a local file, a resource, or a content provider.
 
-This is a property of the controller, not the hierarchy. It therefore is not set by any of the methods used by the other Drawee components.
+This is a property of the controller, not the hierarchy. It therefore is not set by any of the methods used by the other Drawee branches.
 
 Instead, use the `setImageURI` method or [set a controller](using-controllerbuilder.html) programmatically.
 

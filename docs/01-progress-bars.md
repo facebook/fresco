@@ -3,7 +3,7 @@ id: progress-bars
 title: Progress Bars
 layout: docs
 permalink: /docs/progress-bars.html
-prev: drawee-components.html
+prev: drawee-branches.html
 next: scaling.html
 ---
 

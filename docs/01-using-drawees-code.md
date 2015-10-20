@@ -4,7 +4,7 @@ title: Using Drawees in Code
 layout: docs
 permalink: /docs/using-drawees-code.html
 prev: using-drawees-xml.html
-next: drawee-components.html
+next: drawee-branches.html
 ---
 
 ### Change the image
