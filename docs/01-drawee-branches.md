@@ -9,7 +9,7 @@ next: progress-bars.html
 
 ## Contents
 
-* [Definitions](#Definitions)
+* [What are Branches?](#what-are-branches)
 * [Actual](#Actual)
 * [Placeholder](#Placeholder)
 * [Failure](#Failure)
