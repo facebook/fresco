@@ -48,9 +48,11 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
     Preconditions.checkState(dataSources.length > 0);
     ListDataSource<T> listDataSource = new ListDataSource<T>(dataSources);
     for (DataSource<CloseableReference<T>> dataSource : dataSources) {
-      dataSource.subscribe(
-          listDataSource.new InternalDataSubscriber(),
-          CallerThreadExecutor.getInstance());
+      if (dataSource != null) {
+        dataSource.subscribe(
+            listDataSource.new InternalDataSubscriber(),
+            CallerThreadExecutor.getInstance());
+      }
     }
     return listDataSource;
   }
