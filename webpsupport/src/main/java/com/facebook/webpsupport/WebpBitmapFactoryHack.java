@@ -15,7 +15,7 @@ import java.io.InputStream;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import com.facebook.dalvikdistract.DalvikDistract;
-import com.facebook.proguard.annotations.DoNotStrip;
+import com.facebook.common.internal.DoNotStrip;
 
 import static com.facebook.imagepipeline.webp.WebpSupportStatus.sIsWebpSupportRequired;
 

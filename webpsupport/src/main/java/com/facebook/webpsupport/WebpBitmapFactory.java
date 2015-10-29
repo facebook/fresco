@@ -24,7 +24,7 @@ import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 
 import com.facebook.common.soloader.SoLoaderShim;
-import com.facebook.proguard.annotations.DoNotStrip;
+import com.facebook.common.internal.DoNotStrip;
 
 import static com.facebook.imagepipeline.webp.WebpSupportStatus.isWebpPlatformSupported;
 import static com.facebook.imagepipeline.webp.WebpSupportStatus.isWebpHeader;
