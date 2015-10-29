@@ -9,146 +9,96 @@
 
 #include <android/bitmap.h>
 #include <jni.h>
-#include <jni/ALog.h>
 #include <webp/demux.h>
 #include <webp/decode.h>
 
 #include <memory>
 #include <vector>
 
-#include <jni/fbjni.h>
-#include <jni/Environment.h>
-
 #include <sys/types.h>
 #include <unistd.h>
 
-using namespace facebook::jni;
+#define RETURN_NULL_IF_EXCEPTION(env) \
+  if (env->ExceptionOccurred()) {\
+    return {};\
+  }
 
-static constexpr const char* kWebpBitmapFactoryName = "com/facebook/webpsupport/WebpBitmapFactory";
+#define RETURN_IF_ERROR\
+  if (env->ExceptionCheck() == JNI_TRUE) {\
+    return JNI_ERR;   \
+  }
 
-static const unsigned int kDefaultBufferSize = 8 * 1024;
+#define CREATE_AS_GLOBAL(destClass, className)   destClass = env->FindClass(className); \
+                           destClass = (jclass)env->NewGlobalRef(destClass); \
+                           RETURN_IF_ERROR
 
-static alias_ref<jclass> getOptionClass() {
-  static auto optionClass = findClassStatic("android/graphics/BitmapFactory$Options");
-  return optionClass;
-}
+static constexpr const char* kHandlerClassName = "com/facebook/webpsupport/WebpBitmapFactory";
 
-static alias_ref<jclass> getWebpBitmapFactoryClass() {
-  static auto webpBitmapFactoryClass = findClassStatic(kWebpBitmapFactoryName);
-  return webpBitmapFactoryClass;
-}
+static jclass bitmapOptionsClass;
+static jclass webpBitmapFactoryClass;
+static jclass bitmapClass;
+static jclass bitmapConfigClass;
+static jclass fileDescriptorClass;
+static jclass runtimeExceptionClass;
+static jmethodID createBitmapFunction;
+static jmethodID valueOfBitmapConfigFunction;
+static jstring configName;
 
-jobject createBitmap(jint width, jint height) {
-  static auto javaCreateBitmap = getWebpBitmapFactoryClass()->getStaticMethod<jobject(jint, jint)>("createBitmap", "(II)Landroid/graphics/Bitmap;");
-  return javaCreateBitmap(getWebpBitmapFactoryClass(), width, height).release();
-}
-
-void setPaddingDefaultValues(alias_ref<jobject> padding) {
-  static auto javaRect = findClassStatic("android/graphics/Rect");
-  static auto top = javaRect->getField<jint>("top");
-  static auto left = javaRect->getField<jint>("left");
-  static auto bottom = javaRect->getField<jint>("bottom");
-  static auto right = javaRect->getField<jint>("right");
-
-  padding->setFieldValue(top, -1);
-  padding->setFieldValue(left, -1);
-  padding->setFieldValue(bottom, -1);
-  padding->setFieldValue(right, -1);
-}
-
-jboolean getInJustDecodeBounds(alias_ref<jobject> options) {
-  static auto inJustDecodeBounds = getOptionClass()->getField<jboolean>("inJustDecodeBounds");
-  return options->getFieldValue(inJustDecodeBounds);
-}
-
-jint getInSampleSize(alias_ref<jobject> options) {
-  static auto inSampleSize = getOptionClass()->getField<jint>("inSampleSize");
-  return options->getFieldValue(inSampleSize);
-}
-
-jbyteArray getInTempStorage(alias_ref<jobject> options) {
-  static auto inTempStorage = getOptionClass()->getField<jbyteArray>("inTempStorage");
-  return options->getFieldValue(inTempStorage).release();
-}
-
-jboolean getInScaled(alias_ref<jobject> options) {
-  static auto inScaled = getOptionClass()->getField<jboolean>("inScaled");
-  return options->getFieldValue(inScaled);
-}
-
-jint getInDensity(alias_ref<jobject> options) {
-  static auto inDensity = getOptionClass()->getField<jint>("inDensity");
-  return options->getFieldValue(inDensity);
-}
-
-jint getInScreenDensity(alias_ref<jobject> options) {
-  static auto inScreenDensity = getOptionClass()->getField<jint>("inScreenDensity");
-  return options->getFieldValue(inScreenDensity);
-}
-
-jint getInTargetDensity(alias_ref<jobject> options) {
-  static auto inTargetDensity = getOptionClass()->getField<jint>("inTargetDensity");
-  return options->getFieldValue(inTargetDensity);
-}
-
-void setOutDimensions(alias_ref<jobject> options, jint outWidthValue, jint outHeightValue) {
-  static auto outWidth = getOptionClass()->getField<jint>("outWidth");
-  static auto outHeight = getOptionClass()->getField<jint>("outHeight");
-
-  options->setFieldValue(outWidth, outWidthValue);
-  options->setFieldValue(outHeight, outHeightValue);
-}
-
-jint getDescriptor(alias_ref<jobject> fileDescriptor) {
-  static auto fileDescriptorClass = findClassStatic("java/io/FileDescriptor");
-  static auto descriptorField = fileDescriptorClass->getField<jint>("descriptor");
-  return fileDescriptor->getFieldValue(descriptorField);
-}
-
-bool shouldPremultiply(alias_ref<jobject> options) {
-  static auto javaShouldPremultiply = getWebpBitmapFactoryClass()->getStaticMethod<jboolean(jobject)>("shouldPremultiply", "(Landroid/graphics/BitmapFactory$Options;)Z");
-  return javaShouldPremultiply(getWebpBitmapFactoryClass(), options.get()) == JNI_TRUE;
-}
-
-std::vector<uint8_t> readStreamFully(JNIEnv* env, jobject is, alias_ref<jbyteArray> inTempStorage) {
-  static auto inputStreamReadMethod = findClassStatic("java/io/InputStream")->getMethod<jint(jbyteArray)>("read");
-
+std::vector<uint8_t> readStreamFully(JNIEnv* env, jobject is, jbyteArray inTempStorage) {
   // read start
   std::vector<uint8_t> read_buffer;
 
-  if (inTempStorage.get() == nullptr) {
-    inTempStorage = make_byte_array(kDefaultBufferSize).release();
-  }
+  jclass inputStreamJClass = env->FindClass("java/io/InputStream");
+  jmethodID readMethodId = env->GetMethodID(inputStreamJClass, "read", "([B)I");
 
   while (true) {
-    const int chunk_size = inputStreamReadMethod(is, inTempStorage.get());
+
+    const int chunk_size = env->CallIntMethod(is, readMethodId, inTempStorage);
 
     if (chunk_size < 0) {
       return read_buffer;
     }
 
     if (chunk_size > 0) {
-      auto data = inTempStorage->pin();
+      jbyte* data = env->GetByteArrayElements(inTempStorage, nullptr);
+      RETURN_NULL_IF_EXCEPTION(env);
 
-      read_buffer.insert(read_buffer.end(), data.get(), data.get() + chunk_size);
+      read_buffer.insert(read_buffer.end(), data, data + chunk_size);
+      env->ReleaseByteArrayElements(inTempStorage, data, JNI_ABORT);
+      RETURN_NULL_IF_EXCEPTION(env);
     }
   }
+}
+
+static jboolean setOutDimensions(JNIEnv* env, jobject bitmapOptions, int image_width, int image_height) {
+  jmethodID decodeBoundsMethodID = env->GetStaticMethodID(webpBitmapFactoryClass, "setOutDimensions", "(Landroid/graphics/BitmapFactory$Options;II)Z");
+  jboolean hadDecodeBounds = env->CallStaticBooleanMethod(webpBitmapFactoryClass, decodeBoundsMethodID, bitmapOptions, image_width, image_height);
+  return hadDecodeBounds;
+}
+
+static void setBitmapSize(JNIEnv* env, jobject bitmapOptions, int image_width, int image_height) {
+  jmethodID setBitmapSizeMethodID = env->GetStaticMethodID(webpBitmapFactoryClass, "setBitmapSize", "(Landroid/graphics/BitmapFactory$Options;II)V");
+  env->CallStaticVoidMethod(webpBitmapFactoryClass, setBitmapSizeMethodID, bitmapOptions, image_width, image_height);
+}
+
+static jobject createBitmap(JNIEnv* env, int image_width, int image_height, jobject bitmapOptions) {
+  jobject bitmap = env->CallStaticObjectMethod(bitmapClass, createBitmapFunction, image_width, image_height, bitmapOptions);
+  return bitmap;
 }
 
 jobject doDecode(
     JNIEnv* env,
     uint8_t* encoded_image,
     unsigned encoded_image_length,
-    jobject padding,
     jobject bitmapOptions,
+    jfloat scale,
     jobject inBitmap) {
 
   // Options manipulation is taken from https://github.com/android/platform_frameworks_base/blob/master/core/jni/android/graphics/BitmapFactory.cpp
   int image_width = 0;
   int image_height = 0;
-  float scale = 1.0f;
 
-  alias_ref<jobject> bitmap = nullptr;
+  jobject bitmap = nullptr;
 
   WebPGetInfo(
       encoded_image,
@@ -158,53 +108,32 @@ jobject doDecode(
 
   WebPDecoderConfig config;
   WebPInitDecoderConfig(&config);
-  if (bitmapOptions != nullptr) {
-    if (getInJustDecodeBounds(bitmapOptions)) {
-      setOutDimensions(bitmapOptions, image_width, image_height);
-      return {};
-    }
-    if (inBitmap != nullptr) {
-      bitmap = inBitmap;
-    }
-    int sampleSize = getInSampleSize(bitmapOptions);
-    if (sampleSize > 1) {
-      scale = 1.0f / (float) sampleSize;
-    }
 
-    if (getInScaled(bitmapOptions)) {
-      const int density = getInDensity(bitmapOptions);
-      const int targetDensity = getInTargetDensity(bitmapOptions);
-      const int screenDensity = getInScreenDensity(bitmapOptions);
-
-      if (density != 0 && targetDensity != 0 && density != screenDensity) {
-        scale = (float) targetDensity / (float) density;
-      }
-    }
+  if ((bitmapOptions != nullptr) &&
+      (setOutDimensions(env, bitmapOptions, image_width, image_height))) {
+    return {};
   }
 
   if (scale != 1.0f) {
     image_width = int(image_width * scale + 0.5f);
     image_height = int(image_height  * scale + 0.5f);
-
     config.options.use_scaling = 1;
     config.options.scaled_width = image_width;
     config.options.scaled_height = image_height;
   }
 
-  if (padding != nullptr) {
-    setPaddingDefaultValues(padding);
-  }
-
-  if (bitmap.get() == nullptr) {
-    bitmap = createBitmap(image_width, image_height);
-  }
+  bitmap = createBitmap(env, image_width, image_height, bitmapOptions);
+  RETURN_NULL_IF_EXCEPTION(env);
 
   void* raw_pixels = nullptr;
 
-  AndroidBitmap_lockPixels(env, bitmap.get(), (void**) &raw_pixels);
-  FACEBOOK_JNI_THROW_PENDING_EXCEPTION();
+  int rc = AndroidBitmap_lockPixels(env, bitmap, (void**) &raw_pixels);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    env->ThrowNew(runtimeExceptionClass, "Decode error locking pixels");
+    return JNI_FALSE;
+  }
 
-  config.output.colorspace = shouldPremultiply(bitmapOptions) ? MODE_rgbA : MODE_RGBA;
+  config.output.colorspace = MODE_RGBA;
   config.output.u.RGBA.rgba = (uint8_t*) raw_pixels;
   config.output.u.RGBA.stride = image_width * 4;
   config.output.u.RGBA.size = image_width * image_height * 4;
@@ -212,64 +141,155 @@ jobject doDecode(
 
   WebPDecode(encoded_image, encoded_image_length, &config);
 
-  AndroidBitmap_unlockPixels(env, bitmap.get());
-  FACEBOOK_JNI_THROW_PENDING_EXCEPTION();
+  rc = AndroidBitmap_unlockPixels(env, bitmap);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    env->ThrowNew(runtimeExceptionClass, "Decode error unlocking pixels");
+    return {};
+  }
 
   if (bitmapOptions != nullptr) {
-    setOutDimensions(bitmapOptions, image_width, image_height);
+    setBitmapSize(env, bitmapOptions, image_width, image_height);
   }
-
-  return bitmap.get();
-}
-
-static jobject nativeDecodeStream(
-    JNIEnv* env,
-    jclass clazz,
-    jobject is,
-    jobject padding,
-    jobject bitmapOptions,
-    jobject inBitmap) {
-
-  jbyteArray inTempStorage = nullptr;
-  if (bitmapOptions != nullptr) {
-    inTempStorage = getInTempStorage(bitmapOptions);
-  }
-  auto encoded_image = readStreamFully(env, is, inTempStorage);
-  return doDecode(env, encoded_image.data(), encoded_image.size(), padding, bitmapOptions, inBitmap);
-}
-
-static jobject nativeDecodeByteArray(
-    JNIEnv* env,
-    jclass clazz,
-    jbyteArray array,
-    jint offset,
-    jint length,
-    jobject bitmapOptions,
-    jobject inBitmap) {
-
-  auto array_ref = alias_ref<jbyteArray>(array);
-  if ((unsigned)offset + (unsigned)length > array_ref->size()) {
-    return nullptr;
-  }
-
-  auto data = array_ref->pin();
-
-  jobject bitmap = doDecode(env, reinterpret_cast<uint8_t*>(data.get()) + offset, length, NULL, bitmapOptions, inBitmap);
 
   return bitmap;
 }
 
-static jlong nativeSeek(JNIEnv* env, jobject, jobject fileDescriptor, jlong offset, jboolean absolute) {
-  jint descriptor = getDescriptor(fileDescriptor);
-  return lseek64(descriptor, offset, absolute ? SEEK_SET : SEEK_CUR);
+static jobject nativeDecodeStream(
+  JNIEnv* env,
+  jclass clazz,
+  jobject is,
+  jobject bitmapOptions,
+  jfloat scale,
+  jobject inBitmap,
+  jbyteArray inTempStorage) {
+  auto encoded_image = readStreamFully(env, is, inTempStorage);
+  if (!encoded_image.empty()) {
+    return doDecode(env, encoded_image.data(), encoded_image.size(), bitmapOptions, scale, inBitmap);
+  }
+  return {};
+
 }
 
+static jobject nativeDecodeByteArray(
+  JNIEnv* env,
+  jclass clazz,
+  jbyteArray array,
+  jint offset,
+  jint length,
+  jobject bitmapOptions,
+  jfloat scale,
+  jobject inBitmap,
+  jbyteArray inTempStorage) {
+
+    // get image into decoded heap
+    jbyte* data = env->GetByteArrayElements(array, nullptr);
+    if (env->ExceptionCheck() == JNI_TRUE) {
+      env->ReleaseByteArrayElements(inTempStorage, data, JNI_ABORT);
+      RETURN_NULL_IF_EXCEPTION(env);
+    }
+    if (data == nullptr || offset + length > env->GetArrayLength(array)) {
+      env->ReleaseByteArrayElements(array, data, JNI_ABORT);
+      RETURN_NULL_IF_EXCEPTION(env);
+    }
+    jobject bitmap = doDecode(env, reinterpret_cast<uint8_t*>(data) + offset, length, bitmapOptions, scale, inBitmap);
+    env->ReleaseByteArrayElements(array, data, JNI_ABORT);
+    RETURN_NULL_IF_EXCEPTION(env);
+
+    return bitmap;
+}
+
+static jlong nativeSeek(JNIEnv* env, jclass clazz, jobject fileDescriptor, jlong offset, jboolean absolute) {
+  jint descriptor = -1;
+  if (fileDescriptorClass != nullptr) {
+    jfieldID descriptorFieldID = env->GetFieldID(fileDescriptorClass, "descriptor", "I");
+    if (descriptorFieldID != nullptr && fileDescriptor != nullptr) {
+      descriptor = env->GetIntField(fileDescriptor, descriptorFieldID);
+      if (descriptor != -1) {
+        return lseek64(descriptor, offset, absolute ? SEEK_SET : SEEK_CUR);
+      }
+    }
+  }
+  return descriptor;
+}
+
+static JNINativeMethod methods[] = {
+    {"nativeDecodeStream",    "(Ljava/io/InputStream;Landroid/graphics/BitmapFactory$Options;FLandroid/graphics/Bitmap;[B)Landroid/graphics/Bitmap;", (void *)&nativeDecodeStream},
+    {"nativeDecodeByteArray", "([BIILandroid/graphics/BitmapFactory$Options;FLandroid/graphics/Bitmap;[B)Landroid/graphics/Bitmap;", (void *)&nativeDecodeByteArray},
+    {"nativeSeek",            "(Ljava/io/FileDescriptor;JZ)J",                    (void *)&nativeSeek},
+};
+
+
+static int registerNativeMethods(
+    JNIEnv* env,
+    const char* className,
+    JNINativeMethod* gMethods,
+    int numMethods) {
+  jclass clazz;
+  clazz = env->FindClass(className);
+  if (clazz == NULL) {
+    return JNI_FALSE;
+  }
+  if (env->RegisterNatives(clazz, gMethods, numMethods) < 0) {
+    return JNI_FALSE;
+  }
+  return JNI_TRUE;
+}
+
+static int registerNatives(JNIEnv* env) {
+  if (!registerNativeMethods(
+    env,
+    kHandlerClassName,
+    methods,
+    sizeof(methods) / sizeof(methods[0]))) {
+      return JNI_FALSE;
+  }
+  return JNI_TRUE;
+}
+
+typedef union {
+  JNIEnv* env;
+  void* venv;
+} UnionJNIEnvToVoid;
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-  return initialize(vm, [] {
-    registerNatives(kWebpBitmapFactoryName, {
-      makeNativeMethod("nativeDecodeStream", "(Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;", nativeDecodeStream),
-      makeNativeMethod("nativeDecodeByteArray", "([BIILandroid/graphics/BitmapFactory$Options;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;", nativeDecodeByteArray),
-      makeNativeMethod("nativeSeek", "(Ljava/io/FileDescriptor;JZ)J", nativeSeek),
-    });
-  });
+  JNIEnv* env;
+
+  vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
+  bitmapOptionsClass = (jclass)env->NewGlobalRef(env->FindClass("android/graphics/BitmapFactory$Options"));
+  RETURN_IF_ERROR
+
+  webpBitmapFactoryClass = (jclass)env->NewGlobalRef(env->FindClass("com/facebook/webpsupport/WebpBitmapFactory"));
+  RETURN_IF_ERROR
+
+  CREATE_AS_GLOBAL(runtimeExceptionClass, "java/lang/RuntimeException");
+
+  CREATE_AS_GLOBAL(bitmapClass, "android/graphics/Bitmap");
+
+  CREATE_AS_GLOBAL(fileDescriptorClass, "java/io/FileDescriptor");
+
+  createBitmapFunction = env->GetStaticMethodID(webpBitmapFactoryClass, "createBitmap", "(IILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;");
+  RETURN_IF_ERROR
+
+  configName = env->NewStringUTF("ARGB_8888");
+  RETURN_IF_ERROR
+
+  configName = (jstring)env->NewGlobalRef(configName);
+  RETURN_IF_ERROR
+
+  CREATE_AS_GLOBAL(bitmapConfigClass, "android/graphics/Bitmap$Config");
+
+  valueOfBitmapConfigFunction = env->GetStaticMethodID(bitmapConfigClass, "valueOf", "(Ljava/lang/String;)Landroid/graphics/Bitmap$Config;");
+  RETURN_IF_ERROR
+
+  UnionJNIEnvToVoid uenv;
+  uenv.venv = NULL;
+
+  if (vm->GetEnv(&uenv.venv, JNI_VERSION_1_4) != JNI_OK) {
+    return -1;
+  }
+  env = uenv.env;
+  if (registerNatives(env) != JNI_TRUE) {
+    return -1;
+  }
+  return JNI_VERSION_1_4;
 }

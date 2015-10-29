@@ -14,6 +14,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.annotation.Nullable;
 
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
@@ -33,6 +34,8 @@ public class WebpBitmapFactory {
   private static final String TAG = "WebpBitmapFactory";
 
   private static final int HEADER_SIZE = 20;
+
+  private static final int IN_TEMP_BUFFER_SIZE = 8*1024;
 
   public static final boolean IN_BITMAP_SUPPORTED =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
@@ -98,7 +101,14 @@ public class WebpBitmapFactory {
       BitmapFactory.Options opts) {
     Bitmap bitmap;
     if (isWebpHeader(array, offset, length) && !isWebpPlatformSupported(array, offset, length)) {
-      bitmap = nativeDecodeByteArray(array, offset, length, opts, getInBitmapFromOptions(opts));
+      bitmap = nativeDecodeByteArray(
+          array,
+          offset,
+          length,
+          opts,
+          getScaleFromOptions(opts),
+          getInBitmapFromOptions(opts),
+          getInTempStorageFromOptions(opts));
       setWebpBitmapOptions(bitmap, opts);
     } else {
       bitmap = originalDecodeByteArray(array, offset, length, opts);
@@ -126,8 +136,14 @@ public class WebpBitmapFactory {
 
     byte[] header = getWebpHeader(inputStream, opts);
     if (isWebpHeader(header, 0, HEADER_SIZE) && !isWebpPlatformSupported(header, 0, HEADER_SIZE)) {
-      bitmap = nativeDecodeStream(inputStream, outPadding, opts, getInBitmapFromOptions(opts));
+      bitmap = nativeDecodeStream(
+          inputStream,
+          opts,
+          getScaleFromOptions(opts),
+          getInBitmapFromOptions(opts),
+          getInTempStorageFromOptions(opts));
       setWebpBitmapOptions(bitmap, opts);
+      setPaddingDefaultValues(outPadding);
     } else {
       bitmap = originalDecodeStream(inputStream, outPadding, opts);
     }
@@ -157,6 +173,40 @@ public class WebpBitmapFactory {
   }
 
   @DoNotStrip
+  private static boolean setOutDimensions(
+      BitmapFactory.Options options,
+      int imageWidth,
+      int imageHeight) {
+    if (options != null && options.inJustDecodeBounds) {
+      options.outWidth = imageWidth;
+      options.outHeight = imageHeight;
+      return true;
+    }
+    return false;
+  }
+
+  @DoNotStrip
+  private static void setPaddingDefaultValues(@Nullable Rect padding) {
+    if (padding != null) {
+      padding.top = -1;
+      padding.left = -1;
+      padding.bottom = -1;
+      padding.right = -1;
+    }
+  }
+
+  @DoNotStrip
+  private static void setBitmapSize(
+      @Nullable BitmapFactory.Options options,
+      int width,
+      int height) {
+    if (options != null) {
+      options.outWidth = width;
+      options.outHeight = height;
+    }
+  }
+
+  @DoNotStrip
   private static Bitmap originalDecodeFile(
       String pathName,
       BitmapFactory.Options opts) {
@@ -178,7 +228,13 @@ public class WebpBitmapFactory {
         byte[] header = getWebpHeader(inputStream, opts);
         if (isWebpHeader(header, 0, HEADER_SIZE)
             && !isWebpPlatformSupported(header, 0, HEADER_SIZE)) {
-          bitmap = nativeDecodeStream(inputStream, outPadding, opts, getInBitmapFromOptions(opts));
+          bitmap = nativeDecodeStream(
+              inputStream,
+              opts,
+              getScaleFromOptions(opts),
+              getInBitmapFromOptions(opts),
+              getInTempStorageFromOptions(opts));
+          setPaddingDefaultValues(outPadding);
           setWebpBitmapOptions(bitmap, opts);
         } else {
           nativeSeek(fd, originalSeekPosition, true);
@@ -193,6 +249,7 @@ public class WebpBitmapFactory {
       }
     } else {
       bitmap = hookDecodeStream(new FileInputStream(fd), outPadding, opts);
+      setPaddingDefaultValues(outPadding);
     }
     return bitmap;
   }
@@ -222,16 +279,17 @@ public class WebpBitmapFactory {
   }
 
   @DoNotStrip
-  private static Bitmap createBitmap(int width, int height) {
+  private static Bitmap createBitmap(int width, int height, BitmapFactory.Options options) {
     return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
   }
 
   @DoNotStrip
   private static native Bitmap nativeDecodeStream(
       InputStream is,
-      Rect padding,
       BitmapFactory.Options options,
-      Bitmap inBitmap);
+      float scale,
+      Bitmap inBitmap,
+      byte[] inTempStorage);
 
   @DoNotStrip
   private static native Bitmap nativeDecodeByteArray(
@@ -239,16 +297,49 @@ public class WebpBitmapFactory {
       int offset,
       int length,
       BitmapFactory.Options opts,
-      Bitmap inBitmap);
+      float scale,
+      Bitmap inBitmap,
+      byte[] inTempStorage);
+
 
   @DoNotStrip
   private static native long nativeSeek(FileDescriptor fd, long offset, boolean absolute);
 
+  @DoNotStrip
   private static Bitmap getInBitmapFromOptions(final BitmapFactory.Options options) {
     if (IN_BITMAP_SUPPORTED && options != null) {
       return options.inBitmap;
     } else {
       return null;
     }
+  }
+
+  @DoNotStrip
+  private static byte[] getInTempStorageFromOptions(@Nullable final BitmapFactory.Options options) {
+    if (options != null && options.inTempStorage != null) {
+      return options.inTempStorage;
+    } else {
+      return new byte[IN_TEMP_BUFFER_SIZE];
+    }
+  }
+
+  @DoNotStrip
+  private static float getScaleFromOptions(BitmapFactory.Options options) {
+    float scale = 1.0f;
+    if (options != null) {
+      int sampleSize = options.inSampleSize;
+      if (sampleSize > 1) {
+        scale = 1.0f / (float) sampleSize;
+      }
+      if (options.inScaled) {
+        int density = options.inDensity;
+        int targetDensity = options.inTargetDensity;
+        int screenDensity = options.inScreenDensity;
+        if (density != 0 && targetDensity != 0 && density != screenDensity) {
+          scale = targetDensity / (float) density;
+        }
+      }
+    }
+    return scale;
   }
 }
