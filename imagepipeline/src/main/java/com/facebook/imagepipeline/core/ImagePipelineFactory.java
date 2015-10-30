@@ -357,20 +357,27 @@ public class ImagePipelineFactory {
    * @param poolFactory The PoolFactory
    * @return The PlatformDecoder implementation
    */
-  public static PlatformDecoder buildPlatformDecoder(PoolFactory poolFactory) {
+  public static PlatformDecoder buildPlatformDecoder(
+      PoolFactory poolFactory,
+      boolean decodeMemoryFileEnabled) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       return new ArtDecoder(
           poolFactory.getBitmapPool(),
           poolFactory.getFlexByteArrayPoolMaxNumThreads());
     } else {
-      // Fix for purgeable failure in GingerbreadPurgeableDecoder
-      return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
+      if (decodeMemoryFileEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        return new GingerbreadPurgeableDecoder();
+      } else {
+        return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
+      }
     }
   }
 
   public PlatformDecoder getPlatformDecoder() {
     if (mPlatformDecoder == null) {
-      mPlatformDecoder = buildPlatformDecoder(mConfig.getPoolFactory());
+      mPlatformDecoder = buildPlatformDecoder(
+          mConfig.getPoolFactory(),
+          mConfig.isDecodeMemoryFileEnabled());
     }
     return mPlatformDecoder;
   }

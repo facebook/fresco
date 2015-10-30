@@ -129,8 +129,8 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     options.inPreferredConfig = bitmapConfig;
     // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
     options.inPurgeable = true;
-    // Prevent deep copy of bitmap which may cause OOM
-    options.inInputShareable = false;
+    // Enable copy of of bitmap to enable purgeable decoding by filedescriptor
+    options.inInputShareable = true;
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = sampleSize;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

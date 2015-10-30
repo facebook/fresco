@@ -464,6 +464,6 @@ public class ProducerSequenceFactory {
           mProducerFactory.newSwallowResultProducer(inputProducer);
       mCloseableImagePrefetchSequences.put(inputProducer, swallowResultProducer);
     }
-    return mCloseableImagePrefetchSequences.get(inputProducer);
+      return mCloseableImagePrefetchSequences.get(inputProducer);
   }
 }

@@ -72,6 +72,7 @@ public class ImagePipelineConfig {
   private final Context mContext;
   private final boolean mDownsampleEnabled;
   private final boolean mDecodeFileDescriptorEnabled;
+  private final boolean mDecodeMemoryFileEnabled;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -105,6 +106,7 @@ public class ImagePipelineConfig {
     mContext = Preconditions.checkNotNull(builder.mContext);
     mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
         builder.mDecodeFileDescriptorEnabled;
+    mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
     mDownsampleEnabled = builder.mDownsampleEnabled;
     mEncodedMemoryCacheParamsSupplier =
         builder.mEncodedMemoryCacheParamsSupplier == null ?
@@ -203,6 +205,10 @@ public class ImagePipelineConfig {
     return mDecodeFileDescriptorEnabled;
   }
 
+  public boolean isDecodeMemoryFileEnabled() {
+    return mDecodeMemoryFileEnabled;
+  }
+
   public boolean isDownsampleEnabled() {
     return mDownsampleEnabled;
   }
@@ -278,6 +284,7 @@ public class ImagePipelineConfig {
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
     private boolean mDecodeFileDescriptorEnabled = mDownsampleEnabled;
+    private boolean mDecodeMemoryFileEnabled;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
     private ExecutorSupplier mExecutorSupplier;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -322,6 +329,11 @@ public class ImagePipelineConfig {
 
     public Builder setDecodeFileDescriptorEnabled(boolean decodeFileDescriptorEnabled) {
       mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
+      return this;
+    }
+
+    public Builder setDecodeMemoryFileEnabled(boolean decodeMemoryFileEnabled) {
+      mDecodeMemoryFileEnabled = decodeMemoryFileEnabled;
       return this;
     }
 
