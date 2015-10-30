@@ -54,7 +54,6 @@ import bolts.Task;
  */
 @ThreadSafe
 public class ImagePipeline {
-
   private static final CancellationException PREFETCH_EXCEPTION =
       new CancellationException("Prefetching is not enabled");
 
