@@ -10,6 +10,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -49,8 +50,8 @@ public class ThreadHandoffProducerTest {
         Priority.MEDIUM);
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mThreadHandoffProducer = new ThreadHandoffProducer(
-        mTestExecutorService,
-        mInputProducer);
+        mInputProducer,
+        new ThreadHandoffProducerQueue(mTestExecutorService));
   }
 
   @Test

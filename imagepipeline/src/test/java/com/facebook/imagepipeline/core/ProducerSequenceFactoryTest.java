@@ -34,6 +34,7 @@ import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.Mock;
@@ -72,7 +73,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.mockStatic(UriUtil.class, MediaUtils.class);
 
     mProducerSequenceFactory =
-        new ProducerSequenceFactory(new MockProducerFactory(), null, true, true);
+        new ProducerSequenceFactory(new MockProducerFactory(), null, true, true, null);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -279,7 +280,8 @@ public class ProducerSequenceFactoryTest {
 
     @Override
     public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(
-        Producer<T> inputProducer) {
+        Producer<T> inputProducer,
+        ThreadHandoffProducerQueue inputThreadHandoffProducerQueue) {
       return mock(ThreadHandoffProducer.class);
     }
 

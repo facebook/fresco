@@ -48,6 +48,7 @@ import com.android.internal.util.Predicate;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import bolts.Task;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 /**
  * The entry point for the image pipeline.
@@ -65,7 +66,7 @@ public class ImagePipeline {
   private final BufferedDiskCache mMainBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
-
+  private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private AtomicLong mIdCounter;
 
   public ImagePipeline(
@@ -76,7 +77,8 @@ public class ImagePipeline {
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache mainBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
-      CacheKeyFactory cacheKeyFactory) {
+      CacheKeyFactory cacheKeyFactory,
+      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
@@ -86,6 +88,7 @@ public class ImagePipeline {
     mMainBufferedDiskCache = mainBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
+    mThreadHandoffProducerQueue = threadHandoffProducerQueue;
   }
 
   /**
@@ -509,5 +512,17 @@ public class ImagePipeline {
             return false;
           }
         };
+  }
+
+  public void pause() {
+    mThreadHandoffProducerQueue.startQueueing();
+  }
+
+  public void resume() {
+    mThreadHandoffProducerQueue.stopQueuing();
+  }
+
+  public boolean isPaused() {
+    return mThreadHandoffProducerQueue.isQueueing();
   }
 }

@@ -59,6 +59,7 @@ import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 /**
  * Factory class for the image pipeline.
@@ -73,6 +74,7 @@ import com.facebook.imagepipeline.platform.PlatformDecoder;
 public class ImagePipelineFactory {
 
   private static ImagePipelineFactory sInstance = null;
+  private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
   /** Gets the instance of {@link ImagePipelineFactory}. */
   public static ImagePipelineFactory getInstance() {
@@ -123,6 +125,8 @@ public class ImagePipelineFactory {
 
   public ImagePipelineFactory(ImagePipelineConfig config) {
     mConfig = Preconditions.checkNotNull(config);
+    mThreadHandoffProducerQueue = new ThreadHandoffProducerQueue(
+        config.getExecutorSupplier().forLightweightBackgroundTasks());
   }
 
   public static AnimatedDrawableFactory buildAnimatedDrawableFactory(
@@ -314,7 +318,8 @@ public class ImagePipelineFactory {
               getEncodedMemoryCache(),
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
-              mConfig.getCacheKeyFactory());
+              mConfig.getCacheKeyFactory(),
+              mThreadHandoffProducerQueue);
     }
     return mImagePipeline;
   }
@@ -412,7 +417,8 @@ public class ImagePipelineFactory {
               getProducerFactory(),
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
-              mConfig.isDownsampleEnabled());
+              mConfig.isDownsampleEnabled(),
+              mThreadHandoffProducerQueue);
     }
     return mProducerSequenceFactory;
   }

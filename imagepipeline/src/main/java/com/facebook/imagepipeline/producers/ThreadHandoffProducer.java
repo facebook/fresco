@@ -22,12 +22,13 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
   @VisibleForTesting
   protected static final String PRODUCER_NAME = "BackgroundThreadHandoffProducer";
 
-  private final Executor mExecutor;
   private final Producer<T> mInputProducer;
+  private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
-  public ThreadHandoffProducer(final Executor executorService, final Producer<T> inputProducer) {
-    mExecutor = Preconditions.checkNotNull(executorService);
+  public ThreadHandoffProducer(final Producer<T> inputProducer,
+                               final  ThreadHandoffProducerQueue inputThreadHandoffProducerQueue) {
     mInputProducer = Preconditions.checkNotNull(inputProducer);
+    mThreadHandoffProducerQueue = inputThreadHandoffProducerQueue;
   }
 
   @Override
@@ -58,8 +59,9 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
           @Override
           public void onCancellationRequested() {
             statefulRunnable.cancel();
+            mThreadHandoffProducerQueue.remove(statefulRunnable);
           }
         });
-    mExecutor.execute(statefulRunnable);
+    mThreadHandoffProducerQueue.addToQueueOrExecute(statefulRunnable);
   }
 }

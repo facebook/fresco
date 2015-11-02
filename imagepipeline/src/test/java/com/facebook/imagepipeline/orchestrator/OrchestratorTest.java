@@ -13,7 +13,6 @@ import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -34,6 +33,7 @@ import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 import com.android.internal.util.Predicate;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -62,6 +62,7 @@ public class OrchestratorTest {
   private BufferedDiskCache mSmallImageDiskStorageCache;
   private RequestListener mRequestListener1;
   private RequestListener mRequestListener2;
+  private ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
   @Before
   public void setUp() throws Exception {
@@ -74,6 +75,7 @@ public class OrchestratorTest {
     mEncodedMemoryCache = mock(MemoryCache.class);
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
+    mThreadHandoffProducerQueue= mock(ThreadHandoffProducerQueue.class);
     mImagePipeline = new ImagePipeline(
         mProducerSequenceFactory,
         Sets.newHashSet(mRequestListener1, mRequestListener2),
@@ -82,7 +84,8 @@ public class OrchestratorTest {
         mEncodedMemoryCache,
         mMainDiskStorageCache,
         mSmallImageDiskStorageCache,
-        mCacheKeyFactory);
+        mCacheKeyFactory,
+        mThreadHandoffProducerQueue);
 
     when(mImageRequest.getProgressiveRenderingEnabled()).thenReturn(true);
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);

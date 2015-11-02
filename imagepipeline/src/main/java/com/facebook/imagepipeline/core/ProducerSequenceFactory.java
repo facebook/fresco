@@ -41,6 +41,7 @@ import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 public class ProducerSequenceFactory {
   private static final int MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
@@ -49,6 +50,7 @@ public class ProducerSequenceFactory {
   private final NetworkFetcher mNetworkFetcher;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final boolean mDownsampleEnabled;
+  private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -73,13 +75,15 @@ public class ProducerSequenceFactory {
       ProducerFactory producerFactory,
       NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork,
-      boolean downsampleEnabled) {
+      boolean downsampleEnabled,
+      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDownsampleEnabled = downsampleEnabled;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
+    mThreadHandoffProducerQueue = threadHandoffProducerQueue;
   }
 
   /**
@@ -204,7 +208,8 @@ public class ProducerSequenceFactory {
       // Use hand-off producer to ensure that we don't do any unnecessary work on the UI thread.
       mBackgroundNetworkFetchToEncodedMemorySequence =
           mProducerFactory.newBackgroundThreadHandoffProducer(
-                  getCommonNetworkFetchToEncodedMemorySequence());
+                  getCommonNetworkFetchToEncodedMemorySequence(),
+                  mThreadHandoffProducerQueue);
     }
     return mBackgroundNetworkFetchToEncodedMemorySequence;
   }
@@ -404,7 +409,9 @@ public class ProducerSequenceFactory {
     BitmapMemoryCacheKeyMultiplexProducer bitmapKeyMultiplexProducer =
         mProducerFactory.newBitmapMemoryCacheKeyMultiplexProducer(bitmapMemoryCacheProducer);
     ThreadHandoffProducer<CloseableReference<CloseableImage>> threadHandoffProducer =
-        mProducerFactory.newBackgroundThreadHandoffProducer(bitmapKeyMultiplexProducer);
+        mProducerFactory.newBackgroundThreadHandoffProducer(
+            bitmapKeyMultiplexProducer,
+            mThreadHandoffProducerQueue);
     return mProducerFactory.newBitmapMemoryCacheGetProducer(threadHandoffProducer);
   }
 

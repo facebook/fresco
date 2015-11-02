@@ -54,6 +54,7 @@ import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 public class ProducerFactory {
   // Local dependencies
@@ -260,10 +261,10 @@ public class ProducerFactory {
   }
 
   public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(
-      Producer<T> inputProducer) {
+      Producer<T> inputProducer, ThreadHandoffProducerQueue inputThreadHandoffProducerQueue) {
     return new ThreadHandoffProducer<T>(
-        mExecutorSupplier.forLightweightBackgroundTasks(),
-        inputProducer);
+        inputProducer,
+        inputThreadHandoffProducerQueue);
   }
 
   public <T> ThrottlingProducer<T> newThrottlingProducer(
