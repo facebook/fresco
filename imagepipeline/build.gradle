@@ -75,22 +75,22 @@ task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
 
 task unpackGiflib(dependsOn: downloadGiflib, type: Copy) {
     from tarTree(resources.gzip("${downloadGiflib.dest}/giflib-5.1.1.tar.gz"))
-    into "${downloadsDir}"
+    into "${downloadsDir}/giflib"
 }
 
 task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
     from tarTree(resources.gzip("${downloadLibjpeg.dest}/libjpeg-turbo-1.3.1.tar.gz"))
-    into "${downloadsDir}"
+    into "${downloadsDir}/libjpeg"
 }
 
 task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
     from tarTree(resources.gzip("${downloadLibpng.dest}/libpng-1.6.10.tar.gz"))
-    into "${downloadsDir}"
+    into "${downloadsDir}/libpng"
 }
 
 task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
     from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.3.tar.gz"))
-    into "${downloadsDir}"
+    into "${downloadsDir}/libwebp"
 }
 
 task copyGiflib(dependsOn: unpackGiflib, type: Copy) {
