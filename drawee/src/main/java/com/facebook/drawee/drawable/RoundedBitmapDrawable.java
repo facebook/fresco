@@ -37,6 +37,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     implements TransformAwareDrawable, Rounded {
   @VisibleForTesting boolean mIsCircle = false;
   @VisibleForTesting float[] mCornerRadii = new float[8];
+  @VisibleForTesting float[] mBorderRadii = new float[8];
   @VisibleForTesting RectF mRootBounds = new RectF();
   @VisibleForTesting final RectF mLastRootBounds = new RectF();
   @VisibleForTesting final Matrix mTransform = new Matrix();
@@ -44,9 +45,11 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @VisibleForTesting final Matrix mLastTransform = new Matrix();
   @VisibleForTesting float mBorderWidth = 0;
   @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
+  @VisibleForTesting float mPadding = 0;
   @VisibleForTesting boolean mIsNonzero = true;
 
   private final Path mPath = new Path();
+  private final Path mBorderPath = new Path();
   private boolean mIsPathDirty = true;
   /** True if this rounded bitmap drawable will actually do anything. */
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -131,6 +134,15 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     }
   }
 
+  @Override
+  public void setPadding(float padding) {
+    if (mPadding != padding) {
+      mPadding = padding;
+      mIsPathDirty = true;
+      invalidateSelf();
+    }
+  }
+
   /**
    * TransformAwareDrawable method
    */
@@ -169,7 +181,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     if (mBorderWidth != 0) {
       mBorderPaint.setStrokeWidth(mBorderWidth);
       mBorderPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mPaint.getAlpha()));
-      canvas.drawPath(mPath, mBorderPaint);
+      canvas.drawPath(mBorderPath, mBorderPaint);
     }
     canvas.restoreToCount(saveCount);
   }
@@ -218,8 +230,22 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   private void updatePath() {
     if (mIsPathDirty) {
-      mPath.reset();
+      mBorderPath.reset();
       mRootBounds.inset(mBorderWidth/2, mBorderWidth/2);
+      if (mIsCircle) {
+        float radius = Math.min(mRootBounds.width(), mRootBounds.height())/2;
+        mBorderPath.addCircle(
+            mRootBounds.centerX(), mRootBounds.centerY(), radius, Path.Direction.CW);
+      } else {
+        for (int i = 0; i < mBorderRadii.length; i++) {
+          mBorderRadii[i] = mCornerRadii[i] + mPadding - mBorderWidth/2;
+        }
+        mBorderPath.addRoundRect(mRootBounds, mBorderRadii, Path.Direction.CW);
+      }
+      mRootBounds.inset(-mBorderWidth/2, -mBorderWidth/2);
+
+      mPath.reset();
+      mRootBounds.inset(mPadding, mPadding);
       if (mIsCircle) {
         mPath.addCircle(
             mRootBounds.centerX(),
@@ -229,7 +255,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       } else {
         mPath.addRoundRect(mRootBounds, mCornerRadii, Path.Direction.CW);
       }
-      mRootBounds.inset(-(mBorderWidth/2), -(mBorderWidth/2));
+      mRootBounds.inset(-(mPadding), -(mPadding));
       mPath.setFillType(Path.FillType.WINDING);
       mIsPathDirty = false;
     }

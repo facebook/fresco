@@ -20,4 +20,6 @@ public interface Rounded {
   void setRadii(float[] radii);
 
   void setBorder(int color, float width);
+
+  void setPadding(float padding);
 }

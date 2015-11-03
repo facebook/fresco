@@ -90,4 +90,12 @@ public class RoundedCornersDrawableTest {
     assertEquals(borderColor, mRoundedCornersDrawable.mBorderColor);
     assertEquals(borderWidth, mRoundedCornersDrawable.mBorderWidth, 0);
   }
+
+  @Test
+  public void testSetPadding() {
+    float padding = 10;
+    mRoundedCornersDrawable.setPadding(padding);
+    verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
+    assertEquals(padding, mRoundedCornersDrawable.mPadding, 0);
+  }
 }
