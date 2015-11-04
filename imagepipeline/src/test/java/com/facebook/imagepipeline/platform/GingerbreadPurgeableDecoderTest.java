@@ -106,7 +106,7 @@ public class GingerbreadPurgeableDecoderTest {
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));
 
     mockStatic(Bitmaps.class);
-    mGingerbreadPurgeableDecoder = new GingerbreadPurgeableDecoder();
+    mGingerbreadPurgeableDecoder = new GingerbreadPurgeableDecoder(false);
   }
 
   @Test

@@ -364,14 +364,15 @@ public class ImagePipelineFactory {
    */
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
-      boolean decodeMemoryFileEnabled) {
+      boolean decodeMemoryFileEnabled,
+      boolean webpSupportEnabled) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       return new ArtDecoder(
           poolFactory.getBitmapPool(),
           poolFactory.getFlexByteArrayPoolMaxNumThreads());
     } else {
       if (decodeMemoryFileEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-        return new GingerbreadPurgeableDecoder();
+        return new GingerbreadPurgeableDecoder(webpSupportEnabled);
       } else {
         return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
       }
@@ -382,7 +383,8 @@ public class ImagePipelineFactory {
     if (mPlatformDecoder == null) {
       mPlatformDecoder = buildPlatformDecoder(
           mConfig.getPoolFactory(),
-          mConfig.isDecodeMemoryFileEnabled());
+          mConfig.isDecodeMemoryFileEnabled(),
+          mConfig.isWebpSupportEnabled());
     }
     return mPlatformDecoder;
   }
@@ -418,6 +420,7 @@ public class ImagePipelineFactory {
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.isDownsampleEnabled(),
+              mConfig.isWebpSupportEnabled(),
               mThreadHandoffProducerQueue);
     }
     return mProducerSequenceFactory;

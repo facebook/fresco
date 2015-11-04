@@ -71,6 +71,7 @@ public class ImagePipelineConfig {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
+  private final boolean mWebpSupportEnabled;
   private final boolean mDecodeFileDescriptorEnabled;
   private final boolean mDecodeMemoryFileEnabled;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
@@ -108,6 +109,7 @@ public class ImagePipelineConfig {
         builder.mDecodeFileDescriptorEnabled;
     mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
     mDownsampleEnabled = builder.mDownsampleEnabled;
+    mWebpSupportEnabled = builder.mWebpSupportEnabled;
     mEncodedMemoryCacheParamsSupplier =
         builder.mEncodedMemoryCacheParamsSupplier == null ?
             new DefaultEncodedMemoryCacheParamsSupplier() :
@@ -213,6 +215,10 @@ public class ImagePipelineConfig {
     return mDownsampleEnabled;
   }
 
+  public boolean isWebpSupportEnabled() {
+    return mWebpSupportEnabled;
+  }
+
   public Supplier<MemoryCacheParams> getEncodedMemoryCacheParamsSupplier() {
     return mEncodedMemoryCacheParamsSupplier;
   }
@@ -283,6 +289,7 @@ public class ImagePipelineConfig {
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
+    private boolean mWebpSupportEnabled = false;
     private boolean mDecodeFileDescriptorEnabled = mDownsampleEnabled;
     private boolean mDecodeMemoryFileEnabled;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
@@ -339,6 +346,11 @@ public class ImagePipelineConfig {
 
     public Builder setDownsampleEnabled(boolean downsampleEnabled) {
       mDownsampleEnabled = downsampleEnabled;
+      return this;
+    }
+
+    public Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
+      mWebpSupportEnabled = webpSupportEnabled;
       return this;
     }
 

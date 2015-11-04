@@ -49,6 +49,7 @@ public class ProducerSequenceFactory {
   private final ProducerFactory mProducerFactory;
   private final NetworkFetcher mNetworkFetcher;
   private final boolean mResizeAndRotateEnabledForNetwork;
+  private final boolean mWebpSupportEnabled;
   private final boolean mDownsampleEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
@@ -76,11 +77,13 @@ public class ProducerSequenceFactory {
       NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork,
       boolean downsampleEnabled,
+      boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDownsampleEnabled = downsampleEnabled;
+    mWebpSupportEnabled = webpSupportEnabled;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
@@ -345,7 +348,7 @@ public class ProducerSequenceFactory {
   private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
     if (mDataFetchSequence == null) {
       Producer<EncodedImage> inputProducer = mProducerFactory.newDataFetchProducer();
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && !mWebpSupportEnabled) {
         inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
@@ -388,7 +391,7 @@ public class ProducerSequenceFactory {
    */
   private Producer<EncodedImage> newEncodedCacheMultiplexToTranscodeSequence(
           Producer<EncodedImage> inputProducer) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && !mWebpSupportEnabled) {
       inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
     }
     inputProducer = mProducerFactory.newDiskCacheProducer(inputProducer);

@@ -26,8 +26,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
-import com.facebook.imageutils.JfifUtil;
+import com.facebook.webpsupport.WebpBitmapFactory;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -36,13 +35,23 @@ import java.lang.reflect.Method;
 
 /**
  * Bitmap decoder (Gingerbread to Jelly Bean).
- *
+ * <p/>
  * <p>This copies incoming encoded bytes into a MemoryFile, and then decodes them using a file
  * descriptor, thus avoiding using any Java memory at all. This technique only works in JellyBean
  * and below.
  */
 public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
+
   private static Method sGetFileDescriptorMethod;
+  private final boolean mWebpSupportEnabled;
+
+  /**
+   * Creates a GingerbreadPurgeableDecoder with optional support for webp
+   * @param webpSupportEnabled If true the webpsupport library is enabled
+   */
+  public GingerbreadPurgeableDecoder(boolean webpSupportEnabled) {
+    this.mWebpSupportEnabled = webpSupportEnabled;
+  }
 
   /**
    * Decodes a byteArray into a purgeable bitmap
@@ -60,7 +69,7 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   /**
    * Decodes a byteArray containing jpeg encoded bytes into a purgeable bitmap
-   *
+   * <p/>
    * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
    *
    * @param bytesRef the byte buffer that contains the encoded bytes
@@ -133,7 +142,12 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
     try {
       memoryFile = copyToMemoryFile(bytesRef, inputLength, suffix);
       FileDescriptor fd = getMemoryFileDescriptor(memoryFile);
-      Bitmap bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
+      Bitmap bitmap;
+      if (mWebpSupportEnabled) {
+        bitmap = WebpBitmapFactory.hookDecodeFileDescriptor(fd, null, options);
+      } else {
+        bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
+      }
       return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
     } catch (IOException e) {
       throw Throwables.propagate(e);

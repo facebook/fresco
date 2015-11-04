@@ -73,7 +73,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.mockStatic(UriUtil.class, MediaUtils.class);
 
     mProducerSequenceFactory =
-        new ProducerSequenceFactory(new MockProducerFactory(), null, true, true, null);
+        new ProducerSequenceFactory(new MockProducerFactory(), null, true, true, false, null);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
