@@ -124,7 +124,7 @@ public class WebpBitmapFactory {
       int offset,
       int length,
       BitmapFactory.Options opts) {
-    return BitmapFactory.decodeByteArray(array, offset, length);
+    return BitmapFactory.decodeByteArray(array, offset, length, opts);
   }
 
   @DoNotStrip
