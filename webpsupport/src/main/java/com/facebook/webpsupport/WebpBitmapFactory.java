@@ -17,11 +17,13 @@ import java.io.InputStream;
 import javax.annotation.Nullable;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.common.internal.DoNotStrip;
@@ -126,6 +128,22 @@ public class WebpBitmapFactory {
   }
 
   @DoNotStrip
+  public static Bitmap hookDecodeByteArray(
+      byte[] array,
+      int offset,
+      int length) {
+    return hookDecodeByteArray(array, offset, length, null);
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeByteArray(
+      byte[] array,
+      int offset,
+      int length) {
+    return BitmapFactory.decodeByteArray(array, offset, length);
+  }
+
+  @DoNotStrip
   public static Bitmap hookDecodeStream(
       InputStream inputStream,
       Rect outPadding,
@@ -160,6 +178,18 @@ public class WebpBitmapFactory {
   }
 
   @DoNotStrip
+  public static Bitmap hookDecodeStream(
+      InputStream inputStream) {
+    return hookDecodeStream(inputStream, null, null);
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeStream(
+      InputStream inputStream) {
+    return BitmapFactory.decodeStream(inputStream);
+  }
+
+  @DoNotStrip
   public static Bitmap hookDecodeFile(
       String pathName,
       BitmapFactory.Options opts) {
@@ -170,6 +200,91 @@ public class WebpBitmapFactory {
       // Ignore, will just return null
     }
     return bitmap;
+  }
+
+  @DoNotStrip
+  public static Bitmap hookDecodeFile(String pathName) {
+    return hookDecodeFile(pathName, null);
+  }
+
+  @DoNotStrip
+  public static Bitmap hookDecodeResourceStream(
+      Resources res,
+      TypedValue value,
+      InputStream is,
+      Rect pad,
+      BitmapFactory.Options opts) {
+    if (opts == null) {
+      opts = new BitmapFactory.Options();
+    }
+
+    if (opts.inDensity == 0 && value != null) {
+      final int density = value.density;
+      if (density == TypedValue.DENSITY_DEFAULT) {
+        opts.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+      } else if (density != TypedValue.DENSITY_NONE) {
+        opts.inDensity = density;
+      }
+    }
+
+    if (opts.inTargetDensity == 0 && res != null) {
+      opts.inTargetDensity = res.getDisplayMetrics().densityDpi;
+    }
+
+    return hookDecodeStream(is, pad, opts);
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeResourceStream(
+      Resources res,
+      TypedValue value,
+      InputStream is,
+      Rect pad,
+      BitmapFactory.Options opts) {
+    return BitmapFactory.decodeResourceStream(res, value, is, pad, opts);
+  }
+
+  @DoNotStrip
+  public static Bitmap hookDecodeResource(
+      Resources res,
+      int id,
+      BitmapFactory.Options opts) {
+    Bitmap bm = null;
+    TypedValue value = new TypedValue();
+
+    try (InputStream is = res.openRawResource(id, value)) {
+      bm = hookDecodeResourceStream(res, value, is, null, opts);
+    } catch (Exception e) {
+      // Keep resulting bitmap as null
+    }
+
+    if (bm == null && opts != null && opts.inBitmap != null) {
+      throw new IllegalArgumentException("Problem decoding into existing bitmap");
+    }
+
+    return bm;
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeResource(
+      Resources res,
+      int id,
+      BitmapFactory.Options opts) {
+    return BitmapFactory.decodeResource(res, id, opts);
+  }
+
+  @DoNotStrip
+  public static Bitmap hookDecodeResource(
+      Resources res,
+      int id) {
+    return hookDecodeResource(res, id, null);
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeResource(
+      Resources res,
+      int id) {
+    return BitmapFactory.decodeResource(res, id);
   }
 
   @DoNotStrip
@@ -211,6 +326,11 @@ public class WebpBitmapFactory {
       String pathName,
       BitmapFactory.Options opts) {
     return BitmapFactory.decodeFile(pathName, opts);
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeFile(String pathName) {
+    return BitmapFactory.decodeFile(pathName);
   }
 
   @DoNotStrip
@@ -260,6 +380,16 @@ public class WebpBitmapFactory {
       Rect outPadding,
       BitmapFactory.Options opts) {
     return BitmapFactory.decodeFileDescriptor(fd, outPadding, opts);
+  }
+
+  @DoNotStrip
+  public static Bitmap hookDecodeFileDescriptor(FileDescriptor fd) {
+    return hookDecodeFileDescriptor(fd, null, null);
+  }
+
+  @DoNotStrip
+  private static Bitmap originalDecodeFileDescriptor(FileDescriptor fd) {
+    return BitmapFactory.decodeFileDescriptor(fd);
   }
 
   private static void setWebpBitmapOptions(Bitmap bitmap, BitmapFactory.Options opts) {
