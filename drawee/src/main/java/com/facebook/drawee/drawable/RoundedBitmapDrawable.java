@@ -49,7 +49,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   private final Path mPath = new Path();
   private boolean mIsPathDirty = true;
   /** True if this rounded bitmap drawable will actually do anything. */
-  private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final Paint mPaint;
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean mIsShaderTransformDirty = true;
   private WeakReference<Bitmap> mLastBitmap;
@@ -57,7 +57,17 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   private @Nullable TransformCallback mTransformCallback;
 
   public RoundedBitmapDrawable(Resources res, Bitmap bitmap) {
+    this(res, bitmap, null);
+  }
+
+  public RoundedBitmapDrawable(Resources res, Bitmap bitmap, Paint paint){
     super(res, bitmap);
+    if (paint == null){
+      mPaint = new Paint();
+    }else{
+      mPaint = new Paint(paint);
+    }
+    mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
     mBorderPaint.setStyle(Paint.Style.STROKE);
   }
 
@@ -70,7 +80,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   public static RoundedBitmapDrawable fromBitmapDrawable(
       Resources res,
       BitmapDrawable bitmapDrawable) {
-    return new RoundedBitmapDrawable(res, bitmapDrawable.getBitmap());
+    return new RoundedBitmapDrawable(res, bitmapDrawable.getBitmap(), bitmapDrawable.getPaint());
   }
 
   /**
