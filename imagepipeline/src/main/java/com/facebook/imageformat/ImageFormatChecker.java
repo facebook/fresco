@@ -19,7 +19,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Ints;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
-import com.facebook.imagepipeline.webp.WebpSupportStatus;
+import com.facebook.common.webp.WebpSupportStatus;
 
 /**
  * Detects the format of an encoded image.

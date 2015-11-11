@@ -28,8 +28,8 @@ import android.util.TypedValue;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.common.internal.DoNotStrip;
 
-import static com.facebook.imagepipeline.webp.WebpSupportStatus.isWebpPlatformSupported;
-import static com.facebook.imagepipeline.webp.WebpSupportStatus.isWebpHeader;
+import static com.facebook.common.webp.WebpSupportStatus.isWebpPlatformSupported;
+import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
 
 @DoNotStrip
 public class WebpBitmapFactory {

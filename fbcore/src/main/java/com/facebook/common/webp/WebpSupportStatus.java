@@ -8,7 +8,7 @@
  */
 
 
-package com.facebook.imagepipeline.webp;
+package com.facebook.common.webp;
 
 import java.io.UnsupportedEncodingException;
 
