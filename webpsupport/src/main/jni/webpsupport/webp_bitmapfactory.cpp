@@ -9,8 +9,9 @@
 
 #include <android/bitmap.h>
 #include <jni.h>
-#include <webp/demux.h>
-#include <webp/decode.h>
+
+#include "webp/demux.h"
+#include "webp/decode.h"
 
 #include <memory>
 #include <vector>

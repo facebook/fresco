@@ -11,25 +11,10 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
-    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compile project(':fbcore')
-    compile project(':webpsupport')
-
-    testCompile "com.google.guava:guava:${GUAVA_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
-        exclude group: 'org.mockito', module: 'mockito-all'
-    }
-    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    compile project(':fbcore')
 }
 apply from: rootProject.file('release.gradle')
 
@@ -46,27 +31,6 @@ task createNativeDepsDirectories {
     mergeDir.mkdirs()
 }
 
-task downloadGiflib(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz'
-    onlyIfNewer true
-    overwrite false
-    dest downloadsDir
-}
-
-task downloadLibjpeg(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/libjpeg-turbo/1.3.1/libjpeg-turbo-1.3.1.tar.gz'
-    onlyIfNewer true
-    overwrite false
-    dest downloadsDir
-}
-
-task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/libpng/libpng16/older-releases/1.6.10/libpng-1.6.10.tar.gz'
-    onlyIfNewer true
-    overwrite false
-    dest downloadsDir
-}
-
 task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
     src 'https://github.com/webmproject/libwebp/archive/v0.4.3.tar.gz'
     onlyIfNewer true
@@ -74,45 +38,9 @@ task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
     dest downloadsDir
 }
 
-task unpackGiflib(dependsOn: downloadGiflib, type: Copy) {
-    from tarTree(resources.gzip("${downloadGiflib.dest}/giflib-5.1.1.tar.gz"))
-    into "${downloadsDir}/giflib"
-}
-
-task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibjpeg.dest}/libjpeg-turbo-1.3.1.tar.gz"))
-    into "${downloadsDir}/libjpeg"
-}
-
-task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibpng.dest}/libpng-1.6.10.tar.gz"))
-    into "${downloadsDir}/libpng"
-}
-
 task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
     from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.3.tar.gz"))
     into "${downloadsDir}/libwebp"
-}
-
-task copyGiflib(dependsOn: unpackGiflib, type: Copy) {
-    from "${unpackGiflib.destinationDir}/giflib-5.1.1/lib"
-    from 'src/main/jni/third-party/giflib'
-    include('*.c', '*.h', '*.mk')
-    into "${mergeDir}/giflib"
-}
-
-task copyLibjpeg(dependsOn: unpackLibjpeg, type: Copy) {
-    from "${unpackLibjpeg.destinationDir}/libjpeg-turbo-1.3.1"
-    from 'src/main/jni/third-party/libjpeg-turbo-1.3.x'
-    include('**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk')
-    into "${mergeDir}/libjpeg-turbo-1.3.x"
-}
-
-task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
-    from "${unpackLibpng.destinationDir}/libpng-1.6.10"
-    from 'src/main/jni/third-party/libpng-1.6.10'
-    include('**/*.c', '**/*.h', '**/*.S', '*.mk')
-    into "${mergeDir}/libpng-1.6.10"
 }
 
 task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
@@ -122,7 +50,7 @@ task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
     into "${mergeDir}/libwebp-0.4.3"
 }
 
-task fetchNativeDeps(dependsOn: [copyGiflib, copyLibjpeg, copyLibpng, copyLibwebp]) {
+task fetchNativeDeps(dependsOn: [copyLibwebp]) {
 }
 
 task removeNativeDeps(type: Delete) {
@@ -130,6 +58,7 @@ task removeNativeDeps(type: Delete) {
 }
 allclean.dependsOn removeNativeDeps
 
+// TODO(9023267) Remove repeated code in gradle files
 def getNdkBuildName() {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         return "ndk-build.cmd"
@@ -185,32 +114,21 @@ def makeNdkTasks(String name, Object[] deps) {
     clean.dependsOn "ndk_clean_$name"
 }
 
-
 android {
-    def ndkLibs = [
-        ['bitmaps', []],
-        ['gifimage', [copyGiflib]],
-        ['imagepipeline', [copyLibjpeg, copyLibpng, copyLibwebp]],
-        ['memchunk', []],
-        ['webpimage', [copyLibwebp]]]
-
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     sourceSets {
         main {
             jni.srcDirs = []
-            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
-        }
-        test {
-            java {
-                exclude '**/LocalVideoThumbnailProducerTest.java'
-                exclude '**/DecodeProducerTest.java'
-                exclude '**/ProgressiveJpegParserTest.java'
-            }
+            jniLibs.srcDirs = ['webpsupport']
         }
     }
-    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+    makeNdkTasks 'webpsupport', [copyLibwebp]
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 task sourcesJar(type: Jar) {
