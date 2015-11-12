@@ -28,6 +28,8 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.webpsupport.WebpBitmapFactoryImpl;
 
+import static com.facebook.common.webp.WebpSupportStatus.sWebpBitmapFactory;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -144,7 +146,7 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
       FileDescriptor fd = getMemoryFileDescriptor(memoryFile);
       Bitmap bitmap;
       if (mWebpSupportEnabled) {
-        bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(fd, null, options);
+        bitmap = sWebpBitmapFactory.decodeFileDescriptor(fd, null, options);
       } else {
         bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
       }

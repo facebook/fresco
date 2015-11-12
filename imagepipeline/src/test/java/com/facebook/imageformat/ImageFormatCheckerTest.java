@@ -18,6 +18,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import com.facebook.common.soloader.SoLoaderShim;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -27,6 +28,10 @@ import static org.junit.Assert.assertSame;
  */
 @RunWith(RobolectricTestRunner.class)
 public class ImageFormatCheckerTest {
+
+  static {
+    SoLoaderShim.setInTestMode();
+  }
 
   @Test
   public void testSimpleWebps() throws Exception {

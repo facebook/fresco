@@ -43,6 +43,7 @@ import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
+import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
 
 /**
  * Master configuration class for the image pipeline library.
@@ -109,7 +110,7 @@ public class ImagePipelineConfig {
         builder.mDecodeFileDescriptorEnabled;
     mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
     mDownsampleEnabled = builder.mDownsampleEnabled;
-    mWebpSupportEnabled = builder.mWebpSupportEnabled;
+    mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
     mEncodedMemoryCacheParamsSupplier =
         builder.mEncodedMemoryCacheParamsSupplier == null ?
             new DefaultEncodedMemoryCacheParamsSupplier() :
