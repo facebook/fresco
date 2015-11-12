@@ -27,8 +27,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 import android.os.Build;
 
-import com.facebook.soloader.SoLoader;
-import com.facebook.webpsupport.WebpBitmapFactory;
+import com.facebook.webpsupport.WebpBitmapFactoryImpl;
 
 import com.google.common.base.Throwables;
 
@@ -86,7 +85,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
 
   @Test
   public void testJpegFallback() throws Throwable {
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestJpegInputStream(),
         null,
         null);
@@ -103,7 +102,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
 
   @Test
   public void testWebpDecodeStream() throws Throwable {
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         null);
@@ -126,7 +125,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inJustDecodeBounds = true;
 
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -138,7 +137,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
 
   @Test
   public void testInBitmap() throws Throwable {
-    if (!WebpBitmapFactory.IN_BITMAP_SUPPORTED) {
+    if (!WebpBitmapFactoryImpl.IN_BITMAP_SUPPORTED) {
       return;
     }
     Bitmap inBitmap = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
@@ -146,7 +145,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inBitmap = inBitmap;
 
-    final Bitmap outBitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap outBitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -159,7 +158,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
   @Test
   public void testByteArrayDecode() throws Throwable {
     byte[] data = ByteStreams.toByteArray(getTestWebpInputStream());
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeByteArray(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeByteArray(
         data,
         0,
         data.length,
@@ -177,7 +176,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
       assertEquals("Mime type should be detected properly", "image/webp", options.outMimeType);
     }
 
-    WebpBitmapFactory.hookDecodeStream(getTestJpegInputStream(), null, options);
+    WebpBitmapFactoryImpl.hookDecodeStream(getTestJpegInputStream(), null, options);
     assertEquals("Mime type should be detected properly", "image/jpeg", options.outMimeType);
   }
 
@@ -186,7 +185,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inTempStorage = new byte[128 * 1024];
 
-    Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -198,7 +197,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inSampleSize = 2;
 
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -210,7 +209,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
   public void testOutWidthHeight() throws Throwable {
     BitmapFactory.Options options = new BitmapFactory.Options();
 
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -224,7 +223,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
   public void testOutPadding() throws Throwable {
     Rect outPadding = new Rect();
 
-    WebpBitmapFactory.hookDecodeStream(
+    WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         outPadding,
         null);
@@ -239,7 +238,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
   @Test
   public void testWebpFileDescriptorDecode() throws Throwable {
     FileDescriptor fd = getImageFileDescriptor("redsquare.webp");
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeFileDescriptor(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(
         fd,
         null,
         null);
@@ -250,7 +249,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
   @Test
   public void testJpegFileDescriptorDecode() throws Throwable {
     FileDescriptor fd = getImageFileDescriptor("redsquare.jpg");
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeFileDescriptor(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(
         fd,
         null,
         null);
@@ -266,7 +265,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     options.inDensity = 480;
     options.inTargetDensity = 240;
 
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -282,7 +281,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     options.inDensity = 480;
     options.inTargetDensity = 240;
 
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);
@@ -298,7 +297,7 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     options.inDensity = 0;
     options.inTargetDensity = 240;
 
-    final Bitmap bitmap = WebpBitmapFactory.hookDecodeStream(
+    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
         getTestWebpInputStream(),
         null,
         options);

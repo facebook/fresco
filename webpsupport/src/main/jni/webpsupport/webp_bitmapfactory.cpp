@@ -33,7 +33,7 @@
                            destClass = (jclass)env->NewGlobalRef(destClass); \
                            RETURN_IF_ERROR
 
-static constexpr const char* kHandlerClassName = "com/facebook/webpsupport/WebpBitmapFactory";
+static constexpr const char* kHandlerClassName = "com/facebook/webpsupport/WebpBitmapFactoryImpl";
 
 static jclass bitmapOptionsClass;
 static jclass webpBitmapFactoryClass;
@@ -259,7 +259,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   bitmapOptionsClass = (jclass)env->NewGlobalRef(env->FindClass("android/graphics/BitmapFactory$Options"));
   RETURN_IF_ERROR
 
-  webpBitmapFactoryClass = (jclass)env->NewGlobalRef(env->FindClass("com/facebook/webpsupport/WebpBitmapFactory"));
+  webpBitmapFactoryClass = (jclass)env->NewGlobalRef(env->FindClass("com/facebook/webpsupport/WebpBitmapFactoryImpl"));
   RETURN_IF_ERROR
 
   CREATE_AS_GLOBAL(runtimeExceptionClass, "java/lang/RuntimeException");

@@ -27,14 +27,13 @@ import android.util.TypedValue;
 
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.common.webp.WebpBitmapFactory;
 
 import static com.facebook.common.webp.WebpSupportStatus.isWebpPlatformSupported;
 import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
 
 @DoNotStrip
-public class WebpBitmapFactory {
-  private static final String TAG = "WebpBitmapFactory";
-
+public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   private static final int HEADER_SIZE = 20;
 
   private static final int IN_TEMP_BUFFER_SIZE = 8*1024;
@@ -93,6 +92,38 @@ public class WebpBitmapFactory {
       // bitmap was reused, ensure density is reset
       outputBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
     }
+  }
+
+  @Override
+  public Bitmap decodeFileDescriptor(
+      FileDescriptor fd,
+      Rect outPadding,
+      BitmapFactory.Options opts) {
+    return hookDecodeFileDescriptor(fd, outPadding, opts);
+  }
+
+  @Override
+  public Bitmap decodeStream(
+      InputStream inputStream,
+      Rect outPadding,
+      BitmapFactory.Options opts) {
+    return hookDecodeStream(inputStream, outPadding, opts);
+  }
+
+  @Override
+  public Bitmap decodeFile(
+      String pathName,
+      BitmapFactory.Options opts) {
+    return hookDecodeFile(pathName, opts);
+  }
+
+  @Override
+  public Bitmap decodeByteArray(
+      byte[] array,
+      int offset,
+      int length,
+      BitmapFactory.Options opts) {
+    return hookDecodeByteArray(array, offset, length, opts);
   }
 
   @DoNotStrip

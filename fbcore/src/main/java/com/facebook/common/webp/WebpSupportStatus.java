@@ -7,7 +7,6 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-
 package com.facebook.common.webp;
 
 import java.io.UnsupportedEncodingException;
@@ -24,6 +23,21 @@ public class WebpSupportStatus {
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
   public static final boolean sIsExtendedWebpSupported = isExtendedWebpSupported();
+
+  public static WebpBitmapFactory sWebpBitmapFactory = null;
+
+  public static boolean sWebpLibraryPresent = false;
+
+  static {
+    try {
+      sWebpBitmapFactory = (WebpBitmapFactory) Class
+          .forName("com.facebook.webpsupport.WebpBitmapFactoryImpl")
+          .newInstance();
+      sWebpLibraryPresent = true;
+    } catch (Throwable e) {
+      sWebpLibraryPresent = false;
+    }
+  }
 
   /**
    * BASE64 encoded extended WebP image.
