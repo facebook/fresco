@@ -11,6 +11,8 @@ package com.facebook.imagepipeline.common;
 
 import javax.annotation.concurrent.Immutable;
 
+import java.util.Locale;
+
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
  */
@@ -99,5 +101,18 @@ public class ImageDecodeOptions {
     int result = backgroundColor;
     result = 31 * result + (forceOldAnimationCode ? 1 : 0);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return String.format(
+        (Locale) null,
+        "%d-%d-%b-%b-%b-%b",
+        minDecodeIntervalMs,
+        backgroundColor,
+        forceOldAnimationCode,
+        decodePreviewFrame,
+        useLastFrameForPreview,
+        decodeAllFrames);
   }
 }
