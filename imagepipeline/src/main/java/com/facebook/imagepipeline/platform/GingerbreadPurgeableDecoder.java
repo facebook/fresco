@@ -26,7 +26,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
-import com.facebook.webpsupport.WebpBitmapFactoryImpl;
 
 import static com.facebook.common.webp.WebpSupportStatus.sWebpBitmapFactory;
 
