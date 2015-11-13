@@ -16,7 +16,6 @@ import java.io.File;
 
 import android.net.Uri;
 
-import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -148,26 +147,6 @@ public class ImageRequest {
 
   public @Nullable Postprocessor getPostprocessor() {
     return mPostprocessor;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof ImageRequest)) {
-      return false;
-    }
-    ImageRequest request = (ImageRequest) o;
-    return Objects.equal(mSourceUri, request.mSourceUri) &&
-        Objects.equal(mImageType, request.mImageType) &&
-        Objects.equal(mSourceFile, request.mSourceFile);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = mImageType != null ? mImageType.hashCode() : 0;
-    result =
-        31 * result + (mSourceUri != null ? mSourceUri.hashCode() : 0) +
-        31 * result + (mSourceFile != null ? mSourceFile.hashCode() : 0);
-    return result;
   }
 
   /**
