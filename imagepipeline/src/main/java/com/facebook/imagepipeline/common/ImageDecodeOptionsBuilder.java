@@ -9,13 +9,15 @@
 
 package com.facebook.imagepipeline.common;
 
+import android.graphics.Color;
+
 /**
  * Builder for {@link ImageDecodeOptions}.
  */
 public class ImageDecodeOptionsBuilder {
 
   private int mMinDecodeIntervalMs = 100;
-  private int mBackgroundColor = 0xFFFFFF;
+  private int mBackgroundColor = Color.WHITE;
   private boolean mForceOldAnimationCode;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
