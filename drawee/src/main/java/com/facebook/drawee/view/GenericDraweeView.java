@@ -56,6 +56,7 @@ import com.facebook.drawee.generic.RoundingParams;
  * @attr ref com.facebook.R.styleable#GenericDraweeView_roundWithOverlayColor
  * @attr ref com.facebook.R.styleable#GenericDraweeView_roundingBorderWidth
  * @attr ref com.facebook.R.styleable#GenericDraweeView_roundingBorderColor
+ * @attr ref com.facebook.R.styleable#GenericDraweeView_roundingBorderPadding
  */
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
@@ -121,6 +122,7 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
     int roundWithOverlayColor = 0;
     int roundingBorderWidth = 0;
     int roundingBorderColor = 0;
+    int roundingBorderPadding = 0;
     int progressBarAutoRotateInterval = 0;
 
 
@@ -232,6 +234,9 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
         roundingBorderColor = gdhAttrs.getColor(
             R.styleable.GenericDraweeView_roundingBorderColor,
             roundingBorderColor);
+        roundingBorderPadding = gdhAttrs.getDimensionPixelSize(
+            R.styleable.GenericDraweeView_roundingBorderPadding,
+            roundingBorderPadding);
       }
       finally {
         gdhAttrs.recycle();
@@ -286,6 +291,9 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       }
       if (roundingBorderColor != 0 && roundingBorderWidth > 0) {
         roundingParams.setBorder(roundingBorderColor, roundingBorderWidth);
+      }
+      if (roundingBorderPadding != 0) {
+        roundingParams.setPadding(roundingBorderPadding);
       }
       builder.setRoundingParams(roundingParams);
     }
