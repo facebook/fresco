@@ -192,6 +192,9 @@ public class WebpSupportStatus {
       final byte[] byteArray,
       final int offset,
       final byte[] pattern) {
+    if (pattern == null || byteArray == null) {
+      return false;
+    }
     if (pattern.length + offset > byteArray.length) {
       return false;
     }
