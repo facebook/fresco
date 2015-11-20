@@ -77,6 +77,9 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
         inputStream =  mContentResolver.openInputStream(uri);
       } else {
         inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri);
+        if (inputStream == null) {
+          throw new IOException("Contact photo does not exist: " + uri);
+        }
       }
       // If a Contact URI is provided, use the special helper to open that contact's photo.
       return getEncodedImage(
