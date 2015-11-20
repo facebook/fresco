@@ -37,6 +37,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   private static final int HEADER_SIZE = 20;
 
   private static final int IN_TEMP_BUFFER_SIZE = 8*1024;
+  private static final byte[] DEFAULT_TEMP_STORAGE = new byte[IN_TEMP_BUFFER_SIZE];
 
   public static final boolean IN_BITMAP_SUPPORTED =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
@@ -480,7 +481,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     if (options != null && options.inTempStorage != null) {
       return options.inTempStorage;
     } else {
-      return new byte[IN_TEMP_BUFFER_SIZE];
+      return DEFAULT_TEMP_STORAGE;
     }
   }
 
