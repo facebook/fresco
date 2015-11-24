@@ -38,11 +38,20 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @VisibleForTesting boolean mIsCircle = false;
   @VisibleForTesting float[] mCornerRadii = new float[8];
   @VisibleForTesting float[] mBorderRadii = new float[8];
+
   @VisibleForTesting RectF mRootBounds = new RectF();
-  @VisibleForTesting final RectF mLastRootBounds = new RectF();
+  @VisibleForTesting final RectF mPrevRootBounds = new RectF();
+  @VisibleForTesting final RectF mBitmapBounds = new RectF();
+  @VisibleForTesting final RectF mDrawableBounds = new RectF();
+
+  @VisibleForTesting final Matrix mBoundsTransform = new Matrix();
+  @VisibleForTesting final Matrix mPrevBoundsTransform = new Matrix();
+
+  @VisibleForTesting final Matrix mParentTransform = new Matrix();
+  @VisibleForTesting final Matrix mPrevParentTransform = new Matrix();
+  @VisibleForTesting final Matrix mInverseParentTransform = new Matrix();
+
   @VisibleForTesting final Matrix mTransform = new Matrix();
-  @VisibleForTesting final Matrix mInverseTransform = new Matrix();
-  @VisibleForTesting final Matrix mLastTransform = new Matrix();
   @VisibleForTesting float mBorderWidth = 0;
   @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
   @VisibleForTesting float mPadding = 0;
@@ -176,7 +185,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     updatePath();
     updatePaint();
     int saveCount = canvas.save();
-    canvas.concat(mInverseTransform);
+    canvas.concat(mInverseParentTransform);
     canvas.drawPath(mPath, mPaint);
     if (mBorderWidth != 0) {
       mBorderPaint.setStrokeWidth(mBorderWidth);
@@ -206,25 +215,30 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   private void updateTransform() {
     if (mTransformCallback != null) {
-      mTransformCallback.getTransform(mTransform);
+      mTransformCallback.getTransform(mParentTransform);
       mTransformCallback.getRootBounds(mRootBounds);
     } else {
-      mTransform.reset();
+      mParentTransform.reset();
       mRootBounds.set(getBounds());
     }
 
-    if (!mTransform.equals(mLastTransform)) {
+    mBitmapBounds.set(0, 0, getBitmap().getWidth(), getBitmap().getHeight());
+    mDrawableBounds.set(getBounds());
+    mBoundsTransform.setRectToRect(mBitmapBounds, mDrawableBounds, Matrix.ScaleToFit.FILL);
+
+    if (!mParentTransform.equals(mPrevParentTransform) ||
+        !mBoundsTransform.equals(mPrevBoundsTransform)) {
       mIsShaderTransformDirty = true;
-      if (!mTransform.invert(mInverseTransform)) {
-        mInverseTransform.reset();
-        mTransform.reset();
-      }
-      mLastTransform.set(mTransform);
+      mParentTransform.invert(mInverseParentTransform);
+      mTransform.set(mParentTransform);
+      mTransform.preConcat(mBoundsTransform);
+      mPrevParentTransform.set(mParentTransform);
+      mPrevBoundsTransform.set(mBoundsTransform);
     }
 
-    if (!mRootBounds.equals(mLastRootBounds)) {
+    if (!mRootBounds.equals(mPrevRootBounds)) {
       mIsPathDirty = true;
-      mLastRootBounds.set(mRootBounds);
+      mPrevRootBounds.set(mRootBounds);
     }
   }
 
