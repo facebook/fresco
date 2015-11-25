@@ -25,8 +25,6 @@ This cache stores images in their original compressed form. Images retrieved fro
 
 If other transformations, such as [resizing, rotating](resizing-rotating.html) or [transcoding](#webp) were requested, that happens before decode.
 
-This cache is also emptied when your app is backgrounded.
-
 #### 3. Disk cache
 
 (Yes, we know phones don't have disks, but it's too tedious to keep saying *local storage cache*...)
