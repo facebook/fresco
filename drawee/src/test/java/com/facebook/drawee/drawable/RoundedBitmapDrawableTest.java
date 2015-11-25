@@ -46,12 +46,6 @@ public class RoundedBitmapDrawableTest {
   }
 
   @Test
-  public void testDefaults() {
-    assertArrayEquals(new float[]{0, 0, 0, 0, 0, 0, 0, 0}, mRoundedBitmapDrawable.mCornerRadii, 0);
-    AndroidGraphicsTestUtils.assertEquals(new Matrix(), mRoundedBitmapDrawable.mInverseTransform);
-  }
-
-  @Test
   public void testSetCircle() {
     mRoundedBitmapDrawable.setCircle(true);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
