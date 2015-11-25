@@ -31,7 +31,7 @@ If other transformations, such as [resizing, rotating](resizing-rotating.html) o
 
 Like the encoded memory cache, this cache stores compressed image, which must be decoded and sometimes transformed before display.
 
-Unlike the others, this cache is not cleared when your app is backgrounded, or if it exits, or even if the device is turned off. The user can, of course, always clear it from Android's Settings menu.
+Unlike the others, this cache is not cleared when your app exits, or even if the device is turned off. The user can, of course, always clear it from Android's Settings menu.
 
 ### Checking to see if an item is in cache
 
