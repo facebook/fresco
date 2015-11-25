@@ -17,7 +17,7 @@ On Android 4.x and lower, the bitmap cache's data lives in the *ashmem* heap, no
 
 Android 5.0 has much improved memory management than earlier versions, so it is safer to leave the bitmap cache on the Java heap.
 
-When your app is backgrounded, the bitmap cache is emptied.
+Your app should [clear this cache](#clearing-the-cache) when it is backgrounded.
 
 #### 2. Encoded memory cache
 
