@@ -12,7 +12,10 @@ package com.facebook.drawee.drawable;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
@@ -108,5 +111,23 @@ public class RoundedBitmapDrawableTest {
     mRoundedBitmapDrawable.setCircle(false);
     mRoundedBitmapDrawable.draw(mCanvas);
     assertFalse(mRoundedBitmapDrawable.mIsNonzero);
+  }
+
+  @Test
+  public void testPreservePaintOnDrawableCopy() {
+    ColorFilter colorFilter = mock(ColorFilter.class);
+    Paint originalPaint = mock(Paint.class);
+    BitmapDrawable originalVersion = mock(BitmapDrawable.class);
+
+    originalPaint.setColorFilter(colorFilter);
+    when(originalVersion.getPaint()).thenReturn(originalPaint);
+
+    RoundedBitmapDrawable roundedVersion = RoundedBitmapDrawable.fromBitmapDrawable(
+        mResources,
+        originalVersion);
+
+    assertEquals(
+        originalVersion.getPaint().getColorFilter(),
+        roundedVersion.getPaint().getColorFilter());
   }
 }
