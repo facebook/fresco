@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.orchestrator;
+package com.facebook.imagepipeline.core;
 
 import android.net.Uri;
 
@@ -22,8 +22,6 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.facebook.imagepipeline.core.ProducerSequenceFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -45,10 +43,10 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for Orchestrator
+ * Tests for ImagePipeline
  */
 @RunWith(RobolectricTestRunner.class)
-public class OrchestratorTest {
+public class ImagePipelineTest {
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerSequenceFactory mProducerSequenceFactory;
   @Mock public CacheKeyFactory mCacheKeyFactory;
