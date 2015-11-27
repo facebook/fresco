@@ -20,6 +20,7 @@ ImageDecodeOptions decodeOptions = ImageDecodeOptions.newBuilder()
 
 ImageRequest request = ImageRequestBuilder
     .newBuilderWithSource(uri)
+    .setImageDecodeOptions(decodeOptions)
     .setAutoRotateEnabled(true)
     .setLocalThumbnailPreviewsEnabled(true)
     .setLowestPermittedRequestLevel(RequestLevel.FULL_FETCH)
