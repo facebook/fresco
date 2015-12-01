@@ -26,8 +26,8 @@ public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
   public BitmapMemoryCacheGetProducer(
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       CacheKeyFactory cacheKeyFactory,
-      Producer<CloseableReference<CloseableImage>> nextProducer) {
-    super(memoryCache, cacheKeyFactory, nextProducer);
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    super(memoryCache, cacheKeyFactory, inputProducer);
   }
 
   @Override

@@ -500,10 +500,6 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
     new GifWrapper(std::move(spGifFileIn), spDataWrapper));
 
   GifFileType* pGifFile = spNativeContext->spGifWrapper->get();
-  if (spNativeContext->spGifWrapper->getData()->getPosition() < 0) {
-    throwIllegalStateException(pEnv, "Error %d", D_GIF_ERR_NOT_READABLE);
-    return nullptr;
-  }
 
   spNativeContext->pixelWidth = width;
   spNativeContext->pixelHeight = height;

@@ -28,8 +28,8 @@ public class BitmapMemoryCacheKeyMultiplexProducer extends
 
   public BitmapMemoryCacheKeyMultiplexProducer(
       CacheKeyFactory cacheKeyFactory,
-      Producer nextProducer) {
-    super(nextProducer);
+      Producer inputProducer) {
+    super(inputProducer);
     mCacheKeyFactory = cacheKeyFactory;
   }
 

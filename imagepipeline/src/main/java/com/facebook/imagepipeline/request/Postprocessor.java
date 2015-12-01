@@ -9,8 +9,11 @@
 
 package com.facebook.imagepipeline.request;
 
+import javax.annotation.Nullable;
+
 import android.graphics.Bitmap;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 
@@ -37,4 +40,17 @@ public interface Postprocessor {
    * <p>Used for logging and analytics.
    */
   String getName();
+
+  /**
+   * Implement this method in order to cache the result of a postprocessor in the bitmap cache
+   * along with the unmodified image.
+   * <p>When reading from memory cache, there will be a hit only if the cache's value for this key
+   * matches that of the request.
+   * <p>Each postprocessor class is only allowed one entry in the cache. When <i>writing</i> to
+   * memory cache, this key is not considered and any image for this request with the same
+   * postprocessor class will be overwritten.
+   * @return The CacheKey to use for the result of this postprocessor
+   */
+  @Nullable
+  CacheKey getPostprocessorCacheKey();
 }

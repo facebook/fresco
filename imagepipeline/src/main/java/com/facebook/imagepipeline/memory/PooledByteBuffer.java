@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.memory;
 
 import java.io.Closeable;
-import java.io.InputStream;
 
 /**
  * A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the
@@ -62,7 +61,7 @@ public interface PooledByteBuffer extends Closeable {
   /**
    * Exception indicating that the PooledByteBuffer is closed
    */
-  public static class ClosedException extends RuntimeException {
+  class ClosedException extends RuntimeException {
     public ClosedException() {
       super("Invalid bytebuf. Already closed");
     }

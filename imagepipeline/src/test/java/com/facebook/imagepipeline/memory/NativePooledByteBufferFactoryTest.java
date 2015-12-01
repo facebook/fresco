@@ -13,7 +13,7 @@ import java.io.ByteArrayInputStream;
 
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
 
-import com.google.common.collect.ImmutableMap;
+import com.facebook.common.internal.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

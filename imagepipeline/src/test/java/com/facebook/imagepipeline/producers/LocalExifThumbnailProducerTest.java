@@ -1,0 +1,158 @@
+/*
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+package com.facebook.imagepipeline.producers;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.Executor;
+
+import android.content.ContentResolver;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.util.Pair;
+
+import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.JfifUtil;
+import com.facebook.imagepipeline.testing.FakeClock;
+import com.facebook.imagepipeline.testing.TestExecutorService;
+
+import org.junit.*;
+import org.junit.runner.*;
+import org.mockito.Mock;
+import org.mockito.*;
+import org.mockito.invocation.*;
+import org.mockito.stubbing.*;
+import org.powermock.api.mockito.*;
+import org.powermock.core.classloader.annotations.*;
+import org.powermock.modules.junit4.rule.*;
+import org.robolectric.*;
+import org.robolectric.annotation.*;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+@RunWith(RobolectricTestRunner.class)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@Config(manifest = Config.NONE)
+@PrepareForTest({JfifUtil.class, BitmapUtil.class})
+public class LocalExifThumbnailProducerTest {
+
+  private static final int WIDTH = 10;
+  private static final int HEIGHT = 20;
+  private static final int ORIENTATION = 8;
+  private static final int ANGLE = 270;
+  @Mock public ExifInterface mExifInterface;
+  @Mock public ImageRequest mImageRequest;
+  @Mock public ProducerListener mProducerListener;
+  @Mock public Consumer<EncodedImage> mConsumer;
+  @Mock public ProducerContext mProducerContext;
+  @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
+  @Mock public PooledByteBuffer mThumbnailByteBuffer;
+  @Mock public File mFile;
+  @Mock public ContentResolver mContentResolver;
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
+  private final Uri mUri = Uri.parse("/dummy/path");
+  private byte[] mThumbnailBytes;
+  private TestExecutorService mTestExecutorService;
+  private TestLocalExifThumbnailProducer mTestLocalExifThumbnailProducer;
+  private EncodedImage mCapturedEncodedImage;
+
+  @Before
+  public void setUp() throws IOException {
+    MockitoAnnotations.initMocks(this);
+    PowerMockito.mockStatic(JfifUtil.class, BitmapUtil.class);
+    mTestExecutorService = new TestExecutorService(new FakeClock());
+
+    mTestLocalExifThumbnailProducer = new TestLocalExifThumbnailProducer(
+        mTestExecutorService,
+        mPooledByteBufferFactory,
+        mContentResolver);
+
+    when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
+    when(mImageRequest.getSourceUri()).thenReturn(mUri);
+    when(mProducerContext.getListener()).thenReturn(mProducerListener);
+
+    mThumbnailBytes = new byte[100];
+    when(mExifInterface.hasThumbnail()).thenReturn(true);
+    when(mExifInterface.getThumbnail()).thenReturn(mThumbnailBytes);
+    when(mPooledByteBufferFactory.newByteBuffer(mThumbnailBytes))
+        .thenReturn(mThumbnailByteBuffer);
+
+    when(mExifInterface.getAttribute(ExifInterface.TAG_ORIENTATION))
+        .thenReturn(Integer.toString(ORIENTATION));
+    when(JfifUtil.getAutoRotateAngleFromOrientation(ORIENTATION)).thenReturn(ANGLE);
+    when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(new Pair(WIDTH, HEIGHT));
+
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) throws Throwable {
+            mCapturedEncodedImage = EncodedImage.cloneOrNull(
+                (EncodedImage) invocation.getArguments()[0]);
+            return null;
+          }
+        })
+        .when(mConsumer)
+        .onNewResult(notNull(EncodedImage.class), anyBoolean());
+  }
+
+  @Test
+  public void testFindExifThumbnail() {
+    mTestLocalExifThumbnailProducer.produceResults(mConsumer, mProducerContext);
+    mTestExecutorService.runUntilIdle();
+    // Should have 3 references open: The reference that is used in the producer, the cloned
+    // reference when the argument is captured and one more that is created when getByteBufferRef is
+    // called on EncodedImage
+    assertEquals(
+        3,
+        mCapturedEncodedImage.
+            getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertSame(mThumbnailByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
+    assertEquals(ImageFormat.JPEG, mCapturedEncodedImage.getImageFormat());
+    assertEquals(WIDTH, mCapturedEncodedImage.getWidth());
+    assertEquals(HEIGHT, mCapturedEncodedImage.getHeight());
+    assertEquals(ANGLE, mCapturedEncodedImage.getRotationAngle());
+  }
+
+  @Test
+  public void testNoExifThumbnail() {
+    when(mExifInterface.hasThumbnail()).thenReturn(false);
+    mTestLocalExifThumbnailProducer.produceResults(mConsumer, mProducerContext);
+    mTestExecutorService.runUntilIdle();
+    verify(mConsumer).onNewResult(null, true);
+  }
+
+  private class TestLocalExifThumbnailProducer extends LocalExifThumbnailProducer {
+
+    private TestLocalExifThumbnailProducer(
+        Executor executor,
+        PooledByteBufferFactory pooledByteBufferFactory,
+        ContentResolver contentResolver) {
+      super(executor, pooledByteBufferFactory, contentResolver);
+    }
+
+    @Override
+    ExifInterface getExifInterface(Uri uri) throws IOException {
+      if (uri.equals(mUri)) {
+        return mExifInterface;
+      }
+      return null;
+    }
+  }
+}

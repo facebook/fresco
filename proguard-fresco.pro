@@ -15,3 +15,4 @@
 
 -dontwarn okio.**
 -dontwarn javax.annotation.**
+-dontwarn com.android.volley.toolbox.**

@@ -65,5 +65,5 @@ public interface FileCache extends DiskTrimmable {
   long clearOldEntries(long cacheExpirationMs);
   void clearAll();
 
-  public DiskStorage.DiskDumpInfo getDumpInfo() throws IOException;
+  DiskStorage.DiskDumpInfo getDumpInfo() throws IOException;
 }

@@ -21,5 +21,5 @@ public interface DiskStorageSupplier {
    * @return an instance of DiskStorage
    * @throws IOException
    */
-  public DiskStorage get() throws IOException;
+  DiskStorage get() throws IOException;
 }

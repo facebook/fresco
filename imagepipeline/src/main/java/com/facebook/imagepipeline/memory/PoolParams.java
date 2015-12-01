@@ -48,11 +48,20 @@ import com.facebook.common.internal.Preconditions;
  * thrown.
  */
 public class PoolParams {
+  /** If maxNumThreads is set to this level, the pool doesn't actually care what it is */
+  public static final int IGNORE_THREADS = -1;
+
   public final int maxSizeHardCap;
   public final int maxSizeSoftCap;
   public final SparseIntArray bucketSizes;
   public final int minBucketSize;
   public final int maxBucketSize;
+
+  /** The maximum number of threads that may be accessing this pool.
+   *
+   * <p>Pool implementations may or may not need this to be set.
+   */
+  public final int maxNumThreads;
 
   /**
    * Set up pool params
@@ -60,7 +69,7 @@ public class PoolParams {
    * @param bucketSizes (optional) bucket sizes and lengths for the pool
    */
   public PoolParams(int maxSize, @Nullable SparseIntArray bucketSizes) {
-    this(maxSize, maxSize, bucketSizes, 0, Integer.MAX_VALUE);
+    this(maxSize, maxSize, bucketSizes, 0, Integer.MAX_VALUE, IGNORE_THREADS);
   }
 
   /**
@@ -70,7 +79,7 @@ public class PoolParams {
    * @param bucketSizes (optional) bucket sizes and lengths for the pool
    */
   public PoolParams(int maxSizeSoftCap, int maxSizeHardCap, @Nullable SparseIntArray bucketSizes) {
-    this(maxSizeSoftCap, maxSizeHardCap, bucketSizes, 0, Integer.MAX_VALUE);
+    this(maxSizeSoftCap, maxSizeHardCap, bucketSizes, 0, Integer.MAX_VALUE, IGNORE_THREADS);
   }
 
   /**
@@ -80,18 +89,21 @@ public class PoolParams {
    * @param bucketSizes (optional) bucket sizes and lengths for the pool
    * @param minBucketSize min bucket size for the pool
    * @param maxBucketSize max bucket size for the pool
+   * @param maxNumThreads the maximum number of threads in th epool, or -1 if the pool doesn't care
    */
   public PoolParams(
       int maxSizeSoftCap,
       int maxSizeHardCap,
       @Nullable SparseIntArray bucketSizes,
       int minBucketSize,
-      int maxBucketSize) {
+      int maxBucketSize,
+      int maxNumThreads) {
     Preconditions.checkState(maxSizeSoftCap >= 0 && maxSizeHardCap >= maxSizeSoftCap);
     this.maxSizeSoftCap = maxSizeSoftCap;
     this.maxSizeHardCap = maxSizeHardCap;
     this.bucketSizes = bucketSizes;
     this.minBucketSize = minBucketSize;
     this.maxBucketSize = maxBucketSize;
+    this.maxNumThreads = maxNumThreads;
   }
 }

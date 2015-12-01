@@ -12,7 +12,7 @@ package com.facebook.imagepipeline.testing;
 import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imageutils.BitmapUtil;
 
 import static org.mockito.Mockito.*;
 
@@ -23,19 +23,18 @@ public class MockBitmapFactory {
   public static int DEFAULT_BITMAP_WIDTH = 3;
   public static int DEFAULT_BITMAP_HEIGHT = 4;
   public static int DEFAULT_BITMAP_PIXELS = DEFAULT_BITMAP_WIDTH * DEFAULT_BITMAP_HEIGHT;
-  public static int DEFAULT_BITMAP_SIZE = bitmapSize(DEFAULT_BITMAP_WIDTH, DEFAULT_BITMAP_HEIGHT);
+  public static int DEFAULT_BITMAP_SIZE = bitmapSize(
+      DEFAULT_BITMAP_WIDTH,
+      DEFAULT_BITMAP_HEIGHT,
+      Bitmap.Config.ARGB_8888);
 
   public static Bitmap create() {
-    return create(DEFAULT_BITMAP_WIDTH, DEFAULT_BITMAP_HEIGHT);
+    return create(DEFAULT_BITMAP_WIDTH, DEFAULT_BITMAP_HEIGHT, Bitmap.Config.ARGB_8888);
   }
 
-  public static Bitmap create(int width, int height) {
-    return create(width, height, Bitmaps.BITMAP_CONFIG);
-  }
-
-  public static Bitmap createForSize(int size) {
-    Preconditions.checkArgument(size % Bitmaps.BYTES_PER_PIXEL == 0);
-    return create(1, size / Bitmaps.BYTES_PER_PIXEL, Bitmaps.BITMAP_CONFIG);
+  public static Bitmap createForSize(int size, Bitmap.Config config) {
+    Preconditions.checkArgument(size % BitmapUtil.getPixelSizeForBitmapConfig(config) == 0);
+    return create(1, size / BitmapUtil.getPixelSizeForBitmapConfig(config), config);
   }
 
   public static Bitmap create(int width, int height, Bitmap.Config config) {
@@ -47,12 +46,12 @@ public class MockBitmapFactory {
     when(bitmap.getHeight()).thenReturn(height);
     when(bitmap.getConfig()).thenReturn(config);
     when(bitmap.isMutable()).thenReturn(true);
-    when(bitmap.getRowBytes()).thenReturn(width * Bitmaps.BYTES_PER_PIXEL);
-    when(bitmap.getByteCount()).thenReturn(bitmapSize(width, height));
+    when(bitmap.getRowBytes()).thenReturn(width * BitmapUtil.getPixelSizeForBitmapConfig(config));
+    when(bitmap.getByteCount()).thenReturn(bitmapSize(width, height, config));
     return bitmap;
   }
 
-  public static int bitmapSize(int width, int height) {
-    return width * height * Bitmaps.BYTES_PER_PIXEL;
+  public static int bitmapSize(int width, int height, Bitmap.Config config) {
+    return BitmapUtil.getSizeInByteForBitmap(width, height, config);
   }
 }

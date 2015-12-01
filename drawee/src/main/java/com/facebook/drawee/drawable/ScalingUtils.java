@@ -23,6 +23,8 @@ public class ScalingUtils {
    * Similar to {@link android.widget.ImageView.ScaleType}, but ScaleType.MATRIX is not supported.
    * To use matrix scaling, use a {@link MatrixDrawable}. An additional scale type (FOCUS_CROP) is
    * provided.
+   * <p>
+   * Note: The enum values should be in sync with the scaleType attribute values in attrs.xml
    */
   public enum ScaleType {
 
@@ -81,43 +83,7 @@ public class ScalingUtils {
      * It is guaranteed that the focus point will be visible and centered as much as possible.
      * If the focus point is set to (0.5f, 0.5f), result will be equivalent to CENTER_CROP.
      */
-    FOCUS_CROP;
-
-    /**
-     * Gets the scale type out of string.
-     *
-     * <p> Used by GenericDraweeView styleable in
-     * android_res/com/facebook/custom/res/values/attrs.xml
-     *
-     * @param value string value to parse
-     * @return scale type if recognized
-     * @throws IllegalArgumentException if scale type is not recognized
-     */
-    public static ScaleType fromString(String value) {
-      if (value.equals("none")) {
-        return null;
-      } else if (value.equals("fitXY")) {
-        return ScaleType.FIT_XY;
-      } else if (value.equals("fitStart")) {
-        return ScaleType.FIT_START;
-      } else if (value.equals("fitCenter")) {
-        return FIT_CENTER;
-      } else if (value.equals("fitEnd")) {
-        return FIT_END;
-      } else if (value.equals("center")) {
-        return CENTER;
-      } else if (value.equals("centerInside")) {
-        return CENTER_INSIDE;
-      } else if (value.equals("centerCrop")) {
-        return CENTER_CROP;
-      } else if (value.equals("focusCrop")) {
-        return FOCUS_CROP;
-      } else {
-        throw new IllegalArgumentException(
-            "Unrecognized scale type: " + value +
-                "; use a value defined in the ScalingUtils.fromString method");
-      }
-    }
+    FOCUS_CROP
   }
 
   /**

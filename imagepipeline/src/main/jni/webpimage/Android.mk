@@ -21,4 +21,4 @@ LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
 LOCAL_SHARED_LIBRARIES += webp
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module, libwebp-0.4.2)
+$(call import-module, libwebp-0.4.3)

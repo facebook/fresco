@@ -15,10 +15,10 @@ package com.facebook.imagepipeline.producers;
  * <p>This producer just inserts a consumer that swallows results into the stack of consumers.
  */
 public class SwallowResultProducer<T> implements Producer<Void> {
-  private final Producer<T> mNextProducer;
+  private final Producer<T> mInputProducer;
 
-  public SwallowResultProducer(Producer<T> nextProducer) {
-    mNextProducer = nextProducer;
+  public SwallowResultProducer(Producer<T> inputProducer) {
+    mInputProducer = inputProducer;
   }
 
   @Override
@@ -31,6 +31,6 @@ public class SwallowResultProducer<T> implements Producer<Void> {
         }
       }
     };
-    mNextProducer.produceResults(swallowResultConsumer, producerContext);
+    mInputProducer.produceResults(swallowResultConsumer, producerContext);
   }
 }

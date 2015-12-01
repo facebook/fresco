@@ -4,7 +4,6 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'org.robolectric'
 apply plugin: 'de.undercouch.download'
 import de.undercouch.gradle.tasks.download.Download
 
@@ -21,7 +20,9 @@ dependencies {
     testCompile "com.google.guava:guava:${GUAVA_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testCompile "org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}"
+    testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
     testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
     testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
     testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
@@ -66,7 +67,7 @@ task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
 }
 
 task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'https://github.com/webmproject/libwebp/archive/v0.4.2.tar.gz'
+    src 'https://github.com/webmproject/libwebp/archive/v0.4.3.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir
@@ -88,7 +89,7 @@ task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
 }
 
 task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.2.tar.gz"))
+    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.3.tar.gz"))
     into "${downloadsDir}"
 }
 
@@ -114,10 +115,10 @@ task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
 }
 
 task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
-    from "${unpackLibwebp.destinationDir}/libwebp-0.4.2"
-    from 'src/main/jni/third-party/libwebp-0.4.2'
+    from "${unpackLibwebp.destinationDir}/libwebp-0.4.3"
+    from 'src/main/jni/third-party/libwebp-0.4.3'
     include('src/**/*.c', 'src/**/*.h', '*.mk')
-    into "${mergeDir}/libwebp-0.4.2"
+    into "${mergeDir}/libwebp-0.4.3"
 }
 
 task fetchNativeDeps(dependsOn: [copyGiflib, copyLibjpeg, copyLibpng, copyLibwebp]) {
@@ -163,7 +164,7 @@ def makeNdkTasks(String name, Object[] deps) {
             'NDK_OUT=' + temporaryDir,
             "NDK_LIBS_OUT=$buildDir/$name",
             '-C', file("src/main/jni/$name").absolutePath,
-            '--jobs', '8'
+            '--jobs', Runtime.getRuntime().availableProcessors()
     }
 
     task "ndk_clean_$name"(type: Exec) {
@@ -192,12 +193,20 @@ android {
         ['memchunk', []],
         ['webpimage', [copyLibwebp]]]
 
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
     sourceSets {
         main {
             jni.srcDirs = []
             jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
+        }
+        test {
+            java {
+                exclude '**/LocalVideoThumbnailProducerTest.java'
+                exclude '**/DecodeProducerTest.java'
+                exclude '**/ProgressiveJpegParserTest.java'
+            }
         }
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }

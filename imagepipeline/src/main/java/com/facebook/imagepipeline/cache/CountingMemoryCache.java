@@ -46,8 +46,21 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /**
    * Interface used to specify the trimming strategy for the cache.
    */
-  public static interface CacheTrimStrategy {
+  public interface CacheTrimStrategy {
     double getTrimRatio(MemoryTrimType trimType);
+  }
+
+  /**
+   * Interface used to observe the state changes of an entry.
+   */
+  public interface EntryStateObserver<K> {
+
+    /**
+     * Called when the exclusivity status of the entry changes.
+     *
+     * <p> The item can be reused if it is exclusively owned by the cache.
+     */
+    void onExclusivityChanged(K key, boolean isExclusive);
   }
 
   /**
@@ -63,18 +76,23 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     // as soon as the last client of an orphaned entry closes their reference, the entry's copy is
     // closed too.
     public boolean isOrphan;
+    @Nullable public final EntryStateObserver<K> observer;
 
-    private Entry(K key, CloseableReference<V> valueRef) {
+    private Entry(K key, CloseableReference<V> valueRef, @Nullable EntryStateObserver<K> observer) {
       this.key = Preconditions.checkNotNull(key);
       this.valueRef = Preconditions.checkNotNull(CloseableReference.cloneOrNull(valueRef));
       this.clientCount = 0;
       this.isOrphan = false;
+      this.observer = observer;
     }
 
     /** Creates a new entry with the usage count of 0. */
     @VisibleForTesting
-    static <K, V> Entry<K, V> of(final K key, final CloseableReference<V> valueRef) {
-      return new Entry<>(key, valueRef);
+    static <K, V> Entry<K, V> of(
+        final K key,
+        final CloseableReference<V> valueRef,
+        final @Nullable EntryStateObserver<K> observer) {
+      return new Entry<>(key, valueRef, observer);
     }
   }
 
@@ -135,16 +153,32 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    * @return the new reference to be used, null if the value cannot be cached
    */
   public CloseableReference<V> cache(final K key, final CloseableReference<V> valueRef) {
+    return cache(key, valueRef, null);
+  }
+
+  /**
+   * Caches the given key-value pair.
+   *
+   * <p> Important: the client should use the returned reference instead of the original one.
+   * It is the caller's responsibility to close the returned reference once not needed anymore.
+   *
+   * @return the new reference to be used, null if the value cannot be cached
+   */
+  public CloseableReference<V> cache(
+      final K key,
+      final CloseableReference<V> valueRef,
+      final EntryStateObserver<K> observer) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(valueRef);
 
     maybeUpdateCacheParams();
 
+    Entry<K, V> oldExclusive;
     CloseableReference<V> oldRefToClose = null;
     CloseableReference<V> clientRef = null;
     synchronized (this) {
       // remove the old item (if any) as it is stale now
-      mExclusiveEntries.remove(key);
+      oldExclusive = mExclusiveEntries.remove(key);
       Entry<K, V> oldEntry = mCachedEntries.remove(key);
       if (oldEntry != null) {
         makeOrphan(oldEntry);
@@ -152,12 +186,13 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
       }
 
       if (canCacheNewValue(valueRef.get())) {
-        Entry<K, V> newEntry = Entry.of(key, valueRef);
+        Entry<K, V> newEntry = Entry.of(key, valueRef, observer);
         mCachedEntries.put(key, newEntry);
         clientRef = newClientReference(newEntry);
       }
     }
     CloseableReference.closeSafely(oldRefToClose);
+    maybeNotifyExclusiveEntryRemoval(oldExclusive);
 
     maybeEvictEntries();
     return clientRef;
@@ -167,8 +202,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   private synchronized boolean canCacheNewValue(V value) {
     int newValueSize = mValueDescriptor.getSizeInBytes(value);
     return (newValueSize <= mMemoryCacheParams.maxCacheEntrySize) &&
-        (getInUseCount() + 1 <= mMemoryCacheParams.maxCacheEntries) &&
-        (getInUseSizeInBytes() + newValueSize <= mMemoryCacheParams.maxCacheSize);
+        (getInUseCount() <= mMemoryCacheParams.maxCacheEntries - 1) &&
+        (getInUseSizeInBytes() <= mMemoryCacheParams.maxCacheSize - newValueSize);
   }
 
   /**
@@ -178,14 +213,17 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    */
   @Nullable
   public CloseableReference<V> get(final K key) {
+    Preconditions.checkNotNull(key);
+    Entry<K, V> oldExclusive;
     CloseableReference<V> clientRef = null;
     synchronized (this) {
-      mExclusiveEntries.remove(key);
+      oldExclusive = mExclusiveEntries.remove(key);
       Entry<K, V> entry = mCachedEntries.get(key);
       if (entry != null) {
         clientRef = newClientReference(entry);
       }
     }
+    maybeNotifyExclusiveEntryRemoval(oldExclusive);
     maybeUpdateCacheParams();
     maybeEvictEntries();
     return clientRef;
@@ -207,22 +245,55 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /** Called when the client closes its reference. */
   private void releaseClientReference(final Entry<K, V> entry) {
     Preconditions.checkNotNull(entry);
+    boolean isExclusiveAdded;
     CloseableReference<V> oldRefToClose;
     synchronized (this) {
       decreaseClientCount(entry);
-      maybeAddToExclusives(entry);
+      isExclusiveAdded = maybeAddToExclusives(entry);
       oldRefToClose = referenceToClose(entry);
     }
     CloseableReference.closeSafely(oldRefToClose);
+    maybeNotifyExclusiveEntryInsertion(isExclusiveAdded ? entry : null);
     maybeUpdateCacheParams();
     maybeEvictEntries();
   }
 
   /** Adds the entry to the exclusively owned queue if it is viable for eviction. */
-  private synchronized void maybeAddToExclusives(Entry<K, V> entry) {
+  private synchronized boolean maybeAddToExclusives(Entry<K, V> entry) {
     if (!entry.isOrphan && entry.clientCount == 0) {
       mExclusiveEntries.put(entry.key, entry);
+      return true;
     }
+    return false;
+  }
+
+  /**
+   * Gets the value with the given key to be reused, or null if there is no such value.
+   *
+   * <p> The item can be reused only if it is exclusively owned by the cache.
+   */
+  @Nullable
+  public CloseableReference<V> reuse(K key) {
+    Preconditions.checkNotNull(key);
+    CloseableReference<V> clientRef = null;
+    boolean removed = false;
+    Entry<K, V> oldExclusive = null;
+    synchronized (this) {
+      oldExclusive = mExclusiveEntries.remove(key);
+      if (oldExclusive != null) {
+        Entry<K, V> entry = mCachedEntries.remove(key);
+        Preconditions.checkNotNull(entry);
+        Preconditions.checkState(entry.clientCount == 0);
+        // optimization: instead of cloning and then closing the original reference,
+        // we just do a move
+        clientRef = entry.valueRef;
+        removed = true;
+      }
+    }
+    if (removed) {
+      maybeNotifyExclusiveEntryRemoval(oldExclusive);
+    }
+    return clientRef;
   }
 
   /**
@@ -232,13 +303,15 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    * @return number of the items removed from the cache
    */
   public int removeAll(Predicate<K> predicate) {
+    ArrayList<Entry<K, V>> oldExclusives;
     ArrayList<Entry<K, V>> oldEntries;
     synchronized (this) {
-      mExclusiveEntries.removeAll(predicate);
+      oldExclusives = mExclusiveEntries.removeAll(predicate);
       oldEntries = mCachedEntries.removeAll(predicate);
       makeOrphans(oldEntries);
     }
     maybeClose(oldEntries);
+    maybeNotifyExclusiveEntryRemoval(oldExclusives);
     maybeUpdateCacheParams();
     maybeEvictEntries();
     return oldEntries.size();
@@ -246,14 +319,27 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
 
   /** Removes all the items from the cache. */
   public void clear() {
+    ArrayList<Entry<K, V>> oldExclusives;
     ArrayList<Entry<K, V>> oldEntries;
     synchronized (this) {
-      mExclusiveEntries.clear();
+      oldExclusives = mExclusiveEntries.clear();
       oldEntries = mCachedEntries.clear();
       makeOrphans(oldEntries);
     }
     maybeClose(oldEntries);
+    maybeNotifyExclusiveEntryRemoval(oldExclusives);
     maybeUpdateCacheParams();
+  }
+
+  /**
+   * Check if any items from the cache whose key matches the specified predicate.
+   *
+   * @param predicate returns true if an item with the given key matches
+   * @return true is any items matches from the cache
+   */
+  @Override
+  public synchronized boolean contains(Predicate<K> predicate) {
+    return !mCachedEntries.getMatchingEntries(predicate).isEmpty();
   }
 
   /** Trims the cache according to the specified trimming strategy and the given trim type. */
@@ -268,6 +354,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
       makeOrphans(oldEntries);
     }
     maybeClose(oldEntries);
+    maybeNotifyExclusiveEntryRemoval(oldEntries);
     maybeUpdateCacheParams();
     maybeEvictEntries();
   }
@@ -302,6 +389,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
       makeOrphans(oldEntries);
     }
     maybeClose(oldEntries);
+    maybeNotifyExclusiveEntryRemoval(oldEntries);
   }
 
   /**
@@ -339,6 +427,26 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
       for (Entry<K, V> oldEntry : oldEntries) {
         CloseableReference.closeSafely(referenceToClose(oldEntry));
       }
+    }
+  }
+
+  private void maybeNotifyExclusiveEntryRemoval(@Nullable ArrayList<Entry<K, V>> entries) {
+    if (entries != null) {
+      for (Entry<K, V> entry : entries) {
+        maybeNotifyExclusiveEntryRemoval(entry);
+      }
+    }
+  }
+
+  private static <K, V> void maybeNotifyExclusiveEntryRemoval(@Nullable Entry<K, V> entry) {
+    if (entry != null && entry.observer != null) {
+      entry.observer.onExclusivityChanged(entry.key, false);
+    }
+  }
+
+  private static <K, V> void maybeNotifyExclusiveEntryInsertion(@Nullable Entry<K, V> entry) {
+    if (entry != null && entry.observer != null) {
+      entry.observer.onExclusivityChanged(entry.key, true);
     }
   }
 

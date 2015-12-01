@@ -35,6 +35,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
@@ -66,9 +67,9 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
   private final AnimatedDrawableOptions mAnimatedDrawableOptions;
   private final AnimatedImageCompositor mAnimatedImageCompositor;
   private final ResourceReleaser<Bitmap> mResourceReleaserForBitmaps;
-  private final int mMaximumBytes;
+  private final double mMaximumKiloBytes;
 
-  private final int mApproxBytesToHoldAllFrames;
+  private final double mApproxKiloBytesToHoldAllFrames;
 
   @GuardedBy("this")
   private final List<Bitmap> mFreeBitmaps;
@@ -99,8 +100,9 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     mMonotonicClock = monotonicClock;
     mAnimatedDrawableBackend = animatedDrawableBackend;
     mAnimatedDrawableOptions = options;
-    mMaximumBytes = options.maximumBytes >= 0 ?
-        options.maximumBytes : getDefaultMaxBytes(activityManager);
+    mMaximumKiloBytes = options.maximumBytes >= 0 ?
+        options.maximumBytes / ByteConstants.KB:
+        getDefaultMaxBytes(activityManager)/ ByteConstants.KB;
     mAnimatedImageCompositor = new AnimatedImageCompositor(
         animatedDrawableBackend,
         new AnimatedImageCompositor.Callback() {
@@ -124,10 +126,10 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     mDecodesInFlight = new SparseArrayCompat<Task<Object>>(10);
     mCachedBitmaps = new SparseArrayCompat<CloseableReference<Bitmap>>(10);
     mBitmapsToKeepCached = new WhatToKeepCachedArray(mAnimatedDrawableBackend.getFrameCount());
-    mApproxBytesToHoldAllFrames =
-        mAnimatedDrawableBackend.getFrameCount() *
-            mAnimatedDrawableBackend.getRenderedWidth() *
-            mAnimatedDrawableBackend.getRenderedHeight() * 4;
+    mApproxKiloBytesToHoldAllFrames =
+        mAnimatedDrawableBackend.getRenderedWidth() *
+        mAnimatedDrawableBackend.getRenderedHeight() / ByteConstants.KB *
+        mAnimatedDrawableBackend.getFrameCount() * 4;
   }
 
   @Override
@@ -226,12 +228,12 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     if (mAnimatedDrawableOptions.forceKeepAllFramesInMemory) {
       sb.append("Pinned To Memory");
     } else {
-      if (mApproxBytesToHoldAllFrames < mMaximumBytes) {
+      if (mApproxKiloBytesToHoldAllFrames < mMaximumKiloBytes) {
         sb.append("within ");
       } else {
         sb.append("exceeds ");
       }
-      mAnimatedDrawableUtil.appendMemoryString(sb, mMaximumBytes);
+      mAnimatedDrawableUtil.appendMemoryString(sb, (int) mMaximumKiloBytes);
     }
     if (shouldKeepAllFramesInMemory() && mAnimatedDrawableOptions.allowPrefetching) {
       sb.append(" MT");
@@ -394,7 +396,7 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
       // This overrides everything.
       return true;
     }
-    return mApproxBytesToHoldAllFrames < mMaximumBytes;
+    return mApproxKiloBytesToHoldAllFrames < mMaximumKiloBytes;
   }
 
   private synchronized void doPrefetch(int startFrame, int count) {

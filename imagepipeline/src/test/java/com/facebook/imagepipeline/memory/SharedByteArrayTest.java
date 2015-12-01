@@ -38,7 +38,8 @@ public class SharedByteArrayTest {
             Integer.MAX_VALUE,
             null,
             4,
-            16));
+            16,
+            1));
   }
 
   @Test

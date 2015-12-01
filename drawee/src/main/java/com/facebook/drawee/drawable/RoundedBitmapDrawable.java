@@ -150,17 +150,17 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @Override
   public void setColorFilter(ColorFilter colorFilter) {
     mPaint.setColorFilter(colorFilter);
-    invalidateSelf();
+    super.setColorFilter(colorFilter);
   }
 
   @Override
   public void draw(Canvas canvas) {
+    updateTransform();
     updateNonzero();
     if (!mIsNonzero) {
       super.draw(canvas);
       return;
     }
-    updateTransform();
     updatePath();
     updatePaint();
     int saveCount = canvas.save();

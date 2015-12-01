@@ -9,8 +9,11 @@
 
 package com.facebook.imagepipeline.request;
 
+import javax.annotation.Nullable;
+
 import android.graphics.Bitmap;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
@@ -45,7 +48,10 @@ public abstract class BasePostprocessor implements Postprocessor {
       Bitmap sourceBitmap,
       PlatformBitmapFactory bitmapFactory) {
     CloseableReference<Bitmap> destBitmapRef =
-        bitmapFactory.createBitmap(sourceBitmap.getWidth(), sourceBitmap.getHeight());
+        bitmapFactory.createBitmap(
+            sourceBitmap.getWidth(),
+            sourceBitmap.getHeight(),
+            sourceBitmap.getConfig());
     try {
       process(destBitmapRef.get(), sourceBitmap);
       return CloseableReference.cloneOrNull(destBitmapRef);
@@ -83,5 +89,15 @@ public abstract class BasePostprocessor implements Postprocessor {
    * @param bitmap the bitmap to be used both as input and as output
    */
   public void process(Bitmap bitmap) {
+  }
+
+  /**
+   * The default implementation of the CacheKey for a Postprocessor is null
+   * @return The CacheKey to use for caching. Not used if null
+   */
+  @Override
+  @Nullable
+  public CacheKey getPostprocessorCacheKey() {
+    return null;
   }
 }

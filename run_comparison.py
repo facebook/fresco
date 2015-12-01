@@ -11,13 +11,27 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
-This script runs a comparative test with the sample app.
+This script builds and runs the comparison app, switching from one library to the next,
+taking measurements as it goes, and outputs the results neatly.
 
-It builds and runs the sample app, switching from one library to the next,
-taking measurements as it goes.
+Due to a bug, you must specify the CPU when running the script.
+Use -c armeabi-v7a for most phones. Use -c armeabi for ARM v5-6 phones, or
+-c arm64 for 64-bit ARM devices. Some emulators and tablets will need -c x86.
 
 To select a subset of the libraries, use the -s option with a
-space-separated list.
+space-separated list. Available options are fresco, fresco-okhttp,
+glide, volley, drawee-volley, uil, and picasso.
+
+To see the comparison for only network or local images, use -d network or -d local.
+
+Note that Volley does not support local images, and fresco and fresco-okhttp
+are identical for local images.
+
+Results will vary based on the the device, the network conditions and the mix of images available.
+
+Example: to run a local-only comparison of fresco and picasso on an ARM v7 device:
+./run_comparison.py -s fresco picasso -d local -c armeabi-v7a
+
 """
 
 from __future__ import absolute_import
@@ -26,6 +40,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import glob
+import os
 import re
 import tempfile
 
@@ -55,6 +71,7 @@ ABIS = (
     'x86',
     'x86_64'
 )
+
 
 """ Appends test class name to method name """
 TEST_PATTERN = 'test{}{}'
@@ -106,6 +123,8 @@ def install_apks(abi):
     print("Installing comparison app...")
     gradle(':samples:comparison:assembleDebug',
            ':samples:comparison:assembleDebugAndroidTest')
+    adb('uninstall com.facebook.samples.comparison')
+    adb('uninstall com.facebook.samples.comparison.test')
     cmd = ('install -r samples/comparison/build/outputs/apk/comparison-'
            '{}-debug.apk'.format(abi))
     adb(cmd)
@@ -143,6 +162,16 @@ class ComparisonTest:
 
             logcat_file.seek(0)
             self.logcat = logcat_file.readlines()
+
+
+def get_float_from_logs(regex, logs):
+    pattern = re.compile(regex)
+    return [float(match.group(1)) for match in map(pattern.search, logs) if match]
+
+
+def get_int_from_logs(regex, logs):
+    pattern = re.compile(regex)
+    return [int(match.group(1)) for match in map(pattern.search, logs) if match]
 
 
 def get_stats(logs):
@@ -185,6 +214,10 @@ def print_stats(stats):
     failures = len(stats.failure_wait_times)
     total_count = successes + cancellations + failures
 
+    if total_count == 0:
+        print("Unable to read logs.")
+        return
+
     total_wait_time = (
         sum(stats.success_wait_times) +
         sum(stats.cancellation_wait_times) +
@@ -213,6 +246,33 @@ def get_test_name(option_name, source_name):
 def valid_scenario(scenario_name, source_name):
     return source_name != 'local' or (scenario_name != 'volley' and scenario_name != 'drawee-volley')
 
+
+def list_producers():
+    sdir = os.path.dirname(os.path.abspath(__file__))
+    producer_path = '%s/imagepipeline/src/main/java/com/facebook/imagepipeline/producers/*Producer.java' % sdir
+    files = glob.glob(producer_path)
+    return [f.split('.')[0].split('/')[-1] for f in files]
+
+
+def print_fresco_perf_line(margin, name, times):
+    length = len(times)
+    if length == 0:
+        return
+    print("%s: %d requests, avg %d" % (name.rjust(margin), length, float(sum(times)) / length))
+
+
+def print_fresco_perf(logs):
+    producers = list_producers()
+    margin = max([len(p) for p in producers])
+    requests = get_int_from_logs(""".*RequestLoggingListener.*onRequestSuccess.*elapsedTime:\s(\d+).*""", logs)
+    print_fresco_perf_line(margin, 'Total', requests)
+    for producer in producers:
+        queue = get_int_from_logs(".*onProducerFinishWithSuccess.*producer:\s%s.*queueTime=(\d+).*" % producer, logs)
+        print_fresco_perf_line(margin, '%s queue' % producer, queue)
+        times = get_int_from_logs(".*onProducerFinishWithSuccess.*producer:\s%s.*elapsedTime:\s(\d+).*" % producer, logs)
+        print_fresco_perf_line(margin, producer, times)
+
+
 def main():
     args = parse_args()
     scenarios = []
@@ -229,8 +289,8 @@ def main():
 
     install_apks(args.cpu)
 
-    for scenario_name in scenarios:
-        for source_name in sources:
+    for source_name in sources:
+        for scenario_name in scenarios:
             if valid_scenario(scenario_name, source_name):
                 print()
                 print('Testing {} {}'.format(scenario_name, source_name))
@@ -239,6 +299,9 @@ def main():
                 test()
                 stats = get_stats(test.logcat)
                 print_stats(stats)
+                if scenario_name[:6] == 'fresco':
+                    print()
+                    print_fresco_perf(test.logcat)
 
 if __name__ == "__main__":
     main()

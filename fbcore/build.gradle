@@ -4,8 +4,6 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'org.robolectric'
-
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
@@ -28,8 +26,10 @@ apply from: rootProject.file('release.gradle')
 
 
 android {
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    useLibrary 'org.apache.http.legacy'
 
     packagingOptions {
       exclude 'LICENSE'

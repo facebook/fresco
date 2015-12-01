@@ -39,20 +39,20 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public WebpTranscodeProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
   }
 
   @Override
   public void produceResults(final Consumer<EncodedImage> consumer, final ProducerContext context) {
-    mNextProducer.produceResults(new WebpTranscodeConsumer(consumer, context), context);
+    mInputProducer.produceResults(new WebpTranscodeConsumer(consumer, context), context);
   }
 
   private class WebpTranscodeConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
@@ -110,7 +110,9 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
               CloseableReference<PooledByteBuffer> ref =
                   CloseableReference.of(outputStream.toByteBuffer());
               try {
-                return new EncodedImage(ref);
+                EncodedImage encodedImage = new EncodedImage(ref);
+                encodedImage.copyMetaDataFrom(encodedImageCopy);
+                return encodedImage;
               } finally {
                 CloseableReference.closeSafely(ref);
               }

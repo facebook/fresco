@@ -33,7 +33,7 @@ public interface Pool<V> extends ResourceReleaser<V>, MemoryTrimmable {
    * @param size the logical size to allocate
    * @return a new value
    */
-  public V get(int size);
+  V get(int size);
 
   /**
    * Releases the given value to the pool.
@@ -42,5 +42,5 @@ public interface Pool<V> extends ResourceReleaser<V>, MemoryTrimmable {
    *  - 'free' the value
    * @param value the value to release to the pool
    */
-  public void release(V value);
+  void release(V value);
 }

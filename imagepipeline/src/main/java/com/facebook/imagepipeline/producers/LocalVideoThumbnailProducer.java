@@ -19,7 +19,7 @@ import android.provider.MediaStore;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
@@ -69,13 +69,9 @@ public class LocalVideoThumbnailProducer implements
             return CloseableReference.<CloseableImage>of(
                 new CloseableStaticBitmap(
                     thumbnailBitmap,
-                    new ResourceReleaser<Bitmap>() {
-                      @Override
-                      public void release(Bitmap value) {
-                        value.recycle();
-                      }
-                    },
-                    ImmutableQualityInfo.FULL_QUALITY));
+                    SimpleBitmapReleaser.getInstance(),
+                    ImmutableQualityInfo.FULL_QUALITY,
+                    0));
           }
 
           @Override

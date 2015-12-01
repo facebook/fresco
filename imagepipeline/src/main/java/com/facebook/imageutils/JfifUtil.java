@@ -13,17 +13,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.graphics.Rect;
-
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.logging.FLog;
 
 /**
  * Util for obtaining information from JPEG file.
  */
 public class JfifUtil {
-
-  private static final Class<?> TAG = JfifUtil.class;
 
   /**
    * Definitions of jpeg markers as well as overall description of jpeg file format can be found
@@ -78,42 +73,6 @@ public class JfifUtil {
     } catch (IOException ioe) {
       return 0;
     }
-  }
-
-  /**
-   * Get image width and height from jpeg header
-   * @param jpeg the input byte array of jpeg image
-   * @return dimensions of the image in form of Rect.
-   */
-  public static Rect getDimensions(byte[] jpeg) {
-    // wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
-    return getDimensions(new ByteArrayInputStream(jpeg));
-  }
-
-  /**
-   * Get image width and height from jpeg header
-   * @param is the input stream of jpeg image
-   * @return dimensions of the image in form of Rect
-   */
-  public static Rect getDimensions(InputStream is) {
-    try {
-      if (moveToMarker(is, MARKER_SOFn)) {
-        // read block length
-        // subtract 2 as length contain SIZE field we just read
-        int length = StreamProcessor.readPackedInt(is, 2, false) - 2;
-        if (length > 6) {
-          // SOFn structure: 0xFFCn|length(2)|bitDepth(1)|height(2)|width(2)|...
-          int bitDepth = StreamProcessor.readPackedInt(is, 1, false);
-          int height = StreamProcessor.readPackedInt(is, 2, false);
-          int width = StreamProcessor.readPackedInt(is, 2, false);
-          return new Rect(0, 0, width, height);
-        }
-      }
-    } catch (IOException ioe) {
-      FLog.e(TAG, ioe, "%x: getDimensions", is.hashCode());
-      // log and return null.
-    }
-    return null;
   }
 
   /**

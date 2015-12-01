@@ -11,10 +11,12 @@ package com.facebook.drawee.view;
 
 import javax.annotation.Nullable;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 
 import com.facebook.drawee.R;
@@ -77,6 +79,12 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   public GenericDraweeView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+    inflateHierarchy(context, attrs);
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public GenericDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
     inflateHierarchy(context, attrs);
   }
 
@@ -291,8 +299,8 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       TypedArray attrs,
       int attrId,
       ScalingUtils.ScaleType defaultScaleType) {
-    String xmlType = attrs.getString(attrId);
-    return (xmlType != null) ? ScalingUtils.ScaleType.fromString(xmlType) : defaultScaleType;
+    int index = attrs.getInt(attrId, -1);
+    return index < 0 ? defaultScaleType : ScalingUtils.ScaleType.values()[index];
   }
 
  /**

@@ -19,10 +19,10 @@ public interface ProgressiveJpegConfig {
   /**
    * Gets the next scan-number that should be decoded after the given scan-number.
    */
-  public int getNextScanNumberToDecode(int scanNumber);
+  int getNextScanNumberToDecode(int scanNumber);
 
   /**
    * Gets the quality information for the given scan-number.
    */
-  public QualityInfo getQualityInfo(int scanNumber);
+  QualityInfo getQualityInfo(int scanNumber);
 }

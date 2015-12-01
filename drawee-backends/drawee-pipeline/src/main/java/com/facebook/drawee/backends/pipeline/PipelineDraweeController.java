@@ -22,10 +22,12 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.util.concurrent.Executor;
@@ -102,7 +104,15 @@ public class PipelineDraweeController
     CloseableImage closeableImage = image.get();
     if (closeableImage instanceof CloseableStaticBitmap) {
       CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-      return new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+      BitmapDrawable bitmapDrawable = new BitmapDrawable(
+          mResources,
+          closeableStaticBitmap.getUnderlyingBitmap());
+      if (closeableStaticBitmap.getRotationAngle() == 0 ||
+          closeableStaticBitmap.getRotationAngle() == EncodedImage.UNKNOWN_ROTATION_ANGLE) {
+        return bitmapDrawable;
+      } else {
+        return new OrientedDrawable(bitmapDrawable, closeableStaticBitmap.getRotationAngle());
+      }
     } else if (closeableImage instanceof CloseableAnimatedImage) {
       return mAnimatedDrawableFactory.create(
           ((CloseableAnimatedImage) closeableImage).getImageResult());

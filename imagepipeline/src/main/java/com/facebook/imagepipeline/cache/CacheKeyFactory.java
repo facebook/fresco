@@ -22,15 +22,20 @@ public interface CacheKeyFactory {
   /**
    * @return {@link CacheKey} for doing bitmap cache lookups in the pipeline.
    */
-  public CacheKey getBitmapCacheKey(ImageRequest request);
+  CacheKey getBitmapCacheKey(ImageRequest request);
+
+  /**
+   * @return {@link CacheKey} for doing post-processed bitmap cache lookups in the pipeline.
+   */
+  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request);
 
   /**
    * @return {@link CacheKey} for doing encoded image lookups in the pipeline.
    */
-  public CacheKey getEncodedCacheKey(ImageRequest request);
+  CacheKey getEncodedCacheKey(ImageRequest request);
 
   /**
    * @return a {@link String} that unambiguously indicates the source of the image.
    */
-  public Uri getCacheKeySourceUri(Uri sourceUri);
+  Uri getCacheKeySourceUri(Uri sourceUri);
 }

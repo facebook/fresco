@@ -46,7 +46,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
   // keys for extra map
   private static final String BITMAP_SIZE_KEY = "bitmapSize";
-  private static final String QUEUE_TIME_KEY = "queueTime";
   private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
   private static final String IS_FINAL_KEY = "isFinal";
 
@@ -54,8 +53,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final Executor mExecutor;
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
   private final boolean mDownsampleEnabled;
+  private final boolean mDownsampleEnabledForNetwork;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -63,13 +63,15 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final ImageDecoder imageDecoder,
       final ProgressiveJpegConfig progressiveJpegConfig,
       final boolean downsampleEnabled,
-      final Producer<EncodedImage> nextProducer) {
+      final boolean downsampleEnabledForNetwork,
+      final Producer<EncodedImage> inputProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
     mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
     mDownsampleEnabled = downsampleEnabled;
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
   }
 
   @Override
@@ -88,7 +90,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           jpegParser,
           mProgressiveJpegConfig);
     }
-    mNextProducer.produceResults(progressiveDecoder, producerContext);
+    mInputProducer.produceResults(progressiveDecoder, producerContext);
   }
 
   private abstract class ProgressiveDecoder extends DelegatingConsumer<
@@ -116,8 +118,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         public void run(EncodedImage encodedImage, boolean isLast) {
           if (encodedImage != null) {
             if (mDownsampleEnabled) {
-              encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
-                  producerContext.getImageRequest(), encodedImage));
+              ImageRequest request = producerContext.getImageRequest();
+              if (mDownsampleEnabledForNetwork ||
+                  !UriUtil.isNetworkUri(request.getSourceUri())) {
+                encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
+                    request, encodedImage));
+              }
             }
             doDecode(encodedImage, isLast);
           }
@@ -137,6 +143,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+      if (isLast && !EncodedImage.isValid(newResult)) {
+        handleError(new NullPointerException("Encoded image is not valid."));
+        return;
+      }
       if (!updateDecodeJob(newResult, isLast)) {
         return;
       }
@@ -209,7 +219,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         return ImmutableMap.of(
             BITMAP_SIZE_KEY,
             sizeStr,
-            QUEUE_TIME_KEY,
+            JobScheduler.QUEUE_TIME_KEY,
             queueStr,
             HAS_GOOD_QUALITY_KEY,
             qualityStr,
@@ -217,7 +227,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             finalStr);
       } else {
         return ImmutableMap.of(
-            QUEUE_TIME_KEY,
+            JobScheduler.QUEUE_TIME_KEY,
             queueStr,
             HAS_GOOD_QUALITY_KEY,
             qualityStr,
