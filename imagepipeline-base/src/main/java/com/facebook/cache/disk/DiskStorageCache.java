@@ -294,7 +294,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
     } catch (IOException ioe) {
       mCacheEventListener.onWriteException();
-      FLog.d(TAG, "Failed inserting a file into the cache", ioe);
+      FLog.e(TAG, "Failed inserting a file into the cache", ioe);
       throw ioe;
     }
   }
