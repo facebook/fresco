@@ -35,4 +35,33 @@ public enum ImageFormat {
         imageFormat == WEBP_EXTENDED_WITH_ALPHA ||
         imageFormat == WEBP_ANIMATED;
   }
+
+  /**
+   * Maps an image format to the file extension
+   * @param imageFormat image format
+   * @return  file extension for the image format
+   * @throws UnsupportedOperationException
+   */
+  public static String getFileExtension(ImageFormat imageFormat)
+      throws UnsupportedOperationException {
+
+    switch (imageFormat) {
+      case WEBP_SIMPLE:
+      case WEBP_LOSSLESS:
+      case WEBP_EXTENDED:
+      case WEBP_EXTENDED_WITH_ALPHA:
+      case WEBP_ANIMATED:
+        return "webp";
+      case JPEG:
+        return "jpeg";
+      case PNG:
+        return "png";
+      case GIF:
+        return "gif";
+      case BMP:
+        return "bmp";
+      default:
+        throw new UnsupportedOperationException("Unknown image format " + imageFormat.name());
+    }
+  }
 }
