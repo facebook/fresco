@@ -9,6 +9,38 @@ next: gotchas.html
 
 ##  Troubleshooting
 
+### Image is displayed with repeated edges
+
+This is a known limitation when rounding is used. See [Rounding](http://frescolib.org/docs/rounded-corners-and-circles.html#_) for more information and how to workaround.
+
+
+### Image doesn't load
+
+You can get more information from the image pipeline by examining the verbose logcat as explained later in this section. Here are some common reasons why image loads might fail:
+
+#### File not available
+
+For example, an incorrect path for local files or an unavailable network URI is given. 
+
+Try opening a network URI in a mobile browser. If it doesn't work, the issue is likely neither in Fresco nor your app. 
+
+For a local file, try opening a file input stream directly from your app:
+
+```
+FileInputStream fis = new FileInputStream(new File(localUri.getPath()));
+```
+
+If that throws an exception, the issue is likely not in Fresco, **but** it may be in your app. One possibility is a permission issue, such as trying to access the SD card without requiring the necessary permission in your application manifest. Another possibility is that the pathy is not correct - perhaps you forgot to properly escape it. Finally, the file may simply not exist.
+
+#### OOMs and failing to allocate a bitmap
+
+The most common reason for this happening is loading too big images. If the image to be loaded is of considerably bigger size than the view hosting it, it should be [resized] (http://frescolib.org/docs/resizing-rotating.html#_).
+
+#### Bitmap too large to be uploaded to a texture
+
+Android cannot display images more than 2048 pixels long in either dimension. This is beyond the capability of the OpenGL rendering system. Fresco will resize your image if it exceeds this limit.
+
+
 ### Using the logcat
 
 There are various issues one might encounter when it comes to image handling. With Fresco, most of them can be diagnosed by simply looking at the `VERBOSE` logcat. This should be your starting point when investigating an issue with Fresco.
@@ -71,29 +103,3 @@ The output shows what is happening with the image requests within the image pipe
 ```
 
 In this case, we see that the controller `28ebe0eb` associated with a DraweeView started datasource `36e95857` which issued image request `1`. We can now see that the image was not found in the bitmap cache, nor in the encoded memory cache, nor in the disk cache, and so the network fetch had to be performed. The fetch was successful, the image was decoded and the request finished successfully. Finally, the datasource notified the controller which then set the resulting image to the hierarchy (`set_final_result`). 
-
-### Image doesn't load
-
-Here are some common reasons why image loads fail.
-
-#### File not available
-
-For example, an incorrect path for local files or an unavailable network URI is given. 
-
-Try opening a network URI in a mobile browser. If it doesn't work, the issue is likely neither in Fresco nor your app. 
-
-For a local file, try opening a file input stream directly from your app:
-
-```
-FileInputStream fis = new FileInputStream(new File(localUri.getPath()));
-```
-
-If that throws an exception, the issue is likely not in Fresco, **but** it may be in your app. One possibility is a permission issue, such as trying to access the SD card without requiring the necessary permission in your application manifest. Another possibility is that the pathy is not correct - perhaps you forgot to properly escape it. Finally, the file may simply not exist.
-
-#### OOMs and failing to allocate a bitmap
-
-The most common reason for this happening is loading too big images. If the image to be loaded is of considerably bigger size than the view hosting it, it should be [resized] (http://frescolib.org/docs/resizing-rotating.html#_).
-
-#### Bitmap too large to be uploaded to a texture
-
-Android cannot display images more than 2048 pixels long in either dimension. This is beyond the capability of the OpenGL rendering system. Fresco will resize your image if it exceeds this limit.
