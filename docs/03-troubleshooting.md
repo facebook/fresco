@@ -41,7 +41,7 @@ The most common reason for this happening is loading too big images. If the imag
 Android cannot display images more than 2048 pixels long in either dimension. This is beyond the capability of the OpenGL rendering system. Fresco will resize your image if it exceeds this limit.
 
 
-### Using the logcat
+### Investigating issues with logcat
 
 There are various issues one might encounter when it comes to image handling. With Fresco, most of them can be diagnosed by simply looking at the `VERBOSE` logcat. This should be your starting point when investigating an issue with Fresco.
 
