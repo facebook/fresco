@@ -35,7 +35,7 @@ You are completely free, of course, to use the same resourceID in multiple hiera
 
 #### Do not control hierarchy directly
 
-Do not interact with `SettableDraweeHierarchy` methods (`reset`, `setImage`, ...). Those are to be used by controller only.
+Do not interact with `SettableDraweeHierarchy` methods (`reset`, `setImage`, ...). Those are to be used by controller only. Do NOT be tempted to use `setControllerOverlay` in order to set an overlay. This method is to be called by controller only, and it refers to a very special controller overaly. If you just need to display an overlay see [Drawee branches] (http://frescolib.org/docs/drawee-branches.html#Overlays).
 
 #### Don't set images directly on a DraweeView
 
