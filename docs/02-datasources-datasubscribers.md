@@ -124,5 +124,16 @@ DataSubscriber dataSubscriber =
 dataSource.subscribe(dataSubscriber, executor);
 ```
 
+### For executor
+
+```java
+    Executor executor = new Executor() {
+        @Override
+        public void execute(Runnable command) {
+            command.run();
+        }
+    }
+```
+
 If you want to deviate from the example above and assign the `CloseableReference` to another variable somewhere else, you can. Just be sure to [follow the rules](closeable-references.html).
 
