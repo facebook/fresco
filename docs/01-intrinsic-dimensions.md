@@ -33,9 +33,9 @@ Returning actual intrinsic dimensions to the view just puts as on risk of having
 #### We do not support `wrap_content` for `android:layout_width/height`.
 
 Rationale: In cases where we actually do want to size view based on the image size,
-we can do so in advance (before the actual image arrives) by sending image dimensions
-along with its uri in GraphQL response and then programmatically setting LayoutParams
-to the view. We do that in photos attachments in feed for example. We can see that
+we can do so in advance (before the actual image arrives) by storing image dimensions 
+elsewhere (possibly getting it from the server) then programmatically setting LayoutParams
+to the view. We can see that
 `wrap_content` is not relevant (it gets overridden) in this case.
 
 Another reason is that having a "jumpy" behavior (views get resized and re-laid out
