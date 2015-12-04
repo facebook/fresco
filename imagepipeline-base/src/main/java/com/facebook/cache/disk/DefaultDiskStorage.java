@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
@@ -153,12 +152,10 @@ public class DefaultDiskStorage implements DiskStorage {
   @Override
   public void updateResource(
       final String resourceId,
-      final BinaryResource resource,
+      final FileBinaryResource fileBinaryResource,
       final WriterCallback callback,
       final Object debugInfo)
     throws IOException {
-    // Class-cast exception if this isn't the case
-    FileBinaryResource fileBinaryResource = (FileBinaryResource)resource;
     File file = fileBinaryResource.getFile();
     FileOutputStream fileStream = null;
     try {
@@ -366,10 +363,11 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public FileBinaryResource commit(String resourceId, BinaryResource temporary, Object debugInfo)
+  public FileBinaryResource commit(
+      String resourceId,
+      FileBinaryResource tempFileResource,
+      Object debugInfo)
       throws IOException {
-    // will cause a class-cast exception
-    FileBinaryResource tempFileResource = (FileBinaryResource) temporary;
 
     File tempFile = tempFileResource.getFile();
     File targetFile = getContentFileFor(resourceId);

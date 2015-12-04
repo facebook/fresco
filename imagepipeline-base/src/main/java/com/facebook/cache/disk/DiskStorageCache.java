@@ -194,7 +194,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public BinaryResource getResource(final CacheKey key) {
     try {
       synchronized (mLock) {
-        BinaryResource resource = mStorageSupplier.get().getResource(getResourceId(key), key);
+        FileBinaryResource resource = mStorageSupplier.get().getResource(getResourceId(key), key);
         if (resource == null) {
           mCacheEventListener.onMiss();
         } else {
@@ -238,7 +238,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   /**
    * Creates a temp file for writing outside the session lock
    */
-  private BinaryResource createTemporaryResource(
+  private FileBinaryResource createTemporaryResource(
       final String resourceId,
       final CacheKey key)
       throws IOException {
@@ -246,11 +246,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     return mStorageSupplier.get().createTemporary(resourceId, key);
   }
 
-  private void deleteTemporaryResource(BinaryResource temporaryResource) {
-    if (!(temporaryResource instanceof FileBinaryResource)) {
-      return;
-    }
-    FileBinaryResource fileResource = (FileBinaryResource)temporaryResource;
+  private void deleteTemporaryResource(FileBinaryResource fileResource) {
     File tempFile = fileResource.getFile();
 
     if (tempFile.exists()) {
@@ -265,12 +261,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    * Commits the provided temp file to the cache, renaming it to match
    * the cache's hashing convention.
    */
-  private BinaryResource commitResource(
+  private FileBinaryResource commitResource(
       final String resourceId,
       final CacheKey key,
-      final BinaryResource temporary) throws IOException {
+      final FileBinaryResource temporary) throws IOException {
     synchronized (mLock) {
-      BinaryResource resource = mStorageSupplier.get().commit(resourceId, temporary, key);
+      FileBinaryResource resource = mStorageSupplier.get().commit(resourceId, temporary, key);
       mCacheStats.increment(resource.size(), 1);
       return resource;
     }
@@ -284,7 +280,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     final String resourceId = getResourceId(key);
     try {
       // getting the file is synchronized
-      BinaryResource temporary = createTemporaryResource(resourceId, key);
+      FileBinaryResource temporary = createTemporaryResource(resourceId, key);
       try {
         mStorageSupplier.get().updateResource(resourceId, temporary, callback, key);
         // Committing the file is synchronized

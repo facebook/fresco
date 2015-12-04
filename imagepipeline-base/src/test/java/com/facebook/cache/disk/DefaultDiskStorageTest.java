@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
@@ -419,7 +418,7 @@ public class DefaultDiskStorageTest {
     final byte[] CONTENT = "content".getBytes("UTF-8");
 
     // create a file so we know version directory really exists
-    BinaryResource temporary = storage.createTemporary(resourceId, null);
+    FileBinaryResource temporary = storage.createTemporary(resourceId, null);
     writeToResource(storage, resourceId, temporary, CONTENT);
     storage.commit(resourceId, temporary, null);
 
@@ -490,10 +489,10 @@ public class DefaultDiskStorageTest {
       final DiskStorage storage,
       final String resourceId,
       final byte[] value) throws IOException {
-    BinaryResource temporary = storage.createTemporary(resourceId, null);
+    FileBinaryResource temporary = storage.createTemporary(resourceId, null);
     writeToResource(storage, resourceId, temporary, value);
-    BinaryResource resource = storage.commit(resourceId, temporary, null);
-    return (FileBinaryResource)resource;
+    FileBinaryResource resource = storage.commit(resourceId, temporary, null);
+    return resource;
   }
 
   private static File writeFileToStorage(
@@ -507,21 +506,21 @@ public class DefaultDiskStorageTest {
       DiskStorage storage,
       String resourceId,
       byte[] content) throws IOException {
-    BinaryResource temporary = storage.createTemporary(resourceId, null);
-    File file = ((FileBinaryResource)temporary).getFile();
+    FileBinaryResource temporary = storage.createTemporary(resourceId, null);
+    File file = temporary.getFile();
     FileOutputStream fos = new FileOutputStream(file);
     try {
       fos.write(content);
     } finally {
       fos.close();
     }
-    return ((FileBinaryResource)storage.commit(resourceId, temporary, null)).getFile();
+    return storage.commit(resourceId, temporary, null).getFile();
   }
 
   private static void writeToResource(
       DiskStorage storage,
       String resourceId,
-      BinaryResource resource,
+      FileBinaryResource resource,
       final byte[] content) throws IOException {
     storage.updateResource(resourceId, resource, new WriterCallback() {
       @Override

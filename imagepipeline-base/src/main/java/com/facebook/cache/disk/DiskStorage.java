@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.facebook.binaryresource.BinaryResource;
+import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.WriterCallback;
 
 /**
@@ -60,7 +60,7 @@ public interface DiskStorage {
    * @return the resource with the specified name. NULL if not found
    * @throws IOException for unexpected behavior.
    */
-  BinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
+  FileBinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
 
   /**
    * Does a resource with this name exist?
@@ -94,7 +94,7 @@ public interface DiskStorage {
    * @return the temporary resource created
    * @exception IOException on errors during this operation
    */
-  BinaryResource createTemporary(String resourceId, Object debugInfo) throws IOException;
+  FileBinaryResource createTemporary(String resourceId, Object debugInfo) throws IOException;
 
   /**
    * Update the contents of the resource. Executes outside the session lock.
@@ -110,7 +110,7 @@ public interface DiskStorage {
    */
   void updateResource(
       String resourceId,
-      BinaryResource resource,
+      FileBinaryResource resource,
       WriterCallback callback,
       Object debugInfo)
       throws IOException;
@@ -124,9 +124,9 @@ public interface DiskStorage {
    * @return the permanent resource created
    * @exception IOException on errors during the commit
    */
-  BinaryResource commit(
+  FileBinaryResource commit(
       String resourceId,
-      BinaryResource temporary,
+      FileBinaryResource temporary,
       Object debugInfo)
       throws IOException;
 
@@ -166,6 +166,6 @@ public interface DiskStorage {
     long getTimestamp();
     /** calculated on first time and never changes so it can be used as immutable **/
     long getSize();
-    BinaryResource getResource();
+    FileBinaryResource getResource();
   }
 }
