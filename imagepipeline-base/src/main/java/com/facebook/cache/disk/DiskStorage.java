@@ -63,6 +63,13 @@ public interface DiskStorage {
   FileBinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
 
   /**
+   * Get the filename of the resource with the specified name
+   * @param resourceId id of the resource
+   * @return the name of the resource
+   */
+  String getFilename(String resourceId);
+
+  /**
    * Does a resource with this name exist?
    * @param resourceId id of the resource
    * @param debugInfo helper object for debugging

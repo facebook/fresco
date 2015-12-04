@@ -206,9 +206,17 @@ public class DefaultDiskStorage implements DiskStorage {
    */
   @VisibleForTesting
   File getContentFileFor(String resourceId) {
-    FileInfo fileInfo = new FileInfo(FileType.CONTENT, resourceId);
-    File parent = getSubdirectory(fileInfo.resourceId);
-    return fileInfo.toFile(parent);
+    return new File(getFilename(resourceId));
+  }
+
+  /**
+   * Gets the directory to use to store the given key
+   * @param resourceId the id of the file we're going to store
+   * @return the directory to store the file in
+   */
+  private String getSubdirectoryPath(String resourceId) {
+    String subdirectory = String.valueOf(Math.abs(resourceId.hashCode() % SHARDING_BUCKET_COUNT));
+    return mVersionDirectory + File.separator + subdirectory;
   }
 
   /**
@@ -217,8 +225,7 @@ public class DefaultDiskStorage implements DiskStorage {
    * @return the directory to store the file in
    */
   private File getSubdirectory(String resourceId) {
-    String subdirectory = String.valueOf(Math.abs(resourceId.hashCode() % SHARDING_BUCKET_COUNT));
-    return new File(mVersionDirectory, subdirectory);
+    return new File(getSubdirectoryPath(resourceId));
   }
 
   /**
@@ -408,6 +415,13 @@ public class DefaultDiskStorage implements DiskStorage {
       return FileBinaryResource.createOrNull(file);
     }
     return null;
+  }
+
+  @Override
+  public String getFilename(String resourceId) {
+    FileInfo fileInfo = new FileInfo(FileType.CONTENT, resourceId);
+    String path = getSubdirectoryPath(fileInfo.resourceId);
+    return fileInfo.toPath(path);
   }
 
   @Override
@@ -616,8 +630,8 @@ public class DefaultDiskStorage implements DiskStorage {
       return type + "(" + resourceId + ")";
     }
 
-    public File toFile(File parentDir) {
-      return new File(parentDir, resourceId + type.extension);
+    public String toPath(String parentPath) {
+      return parentPath + File.separator + resourceId + type.extension;
     }
 
     public File createTempFile(File parent) throws IOException {
