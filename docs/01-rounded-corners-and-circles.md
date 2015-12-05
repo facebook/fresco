@@ -66,10 +66,10 @@ mSimpleDraweeView.getHierarchy().setRoundingParams(roundingParams);
 There are some limitations when `BITMAP_ONLY` (the default) mode is used:
 
 - Only images that resolve to `BitmapDrawable` or `ColorDrawable` can be rounded. Rounding `NinePatchDrawable`, `ShapeDrawable` and other such drawables is not supported (regardless whether they are specified in XML or programmatically).
-- Animations are not rounded.
+- Animations are not rounded. 
 - Due to a limitation of Android's `BitmapShader`, if the image doesn't fully cover the view, instead of drawing nothing, edges are repeated. One workaround is to use a different scale type (e.g. centerCrop) that ensures that the whole view is covered. Another workaround is to make the image file contain a 1px transparent border so that the transparent pixels get repeated. This is the easiest solution for PNG resource images.
 
-The `OVERLAY_COLOR` mode doesn't have the aforementioned limitations, but since it simulates rounded corners by overlying a solid color over the image, this only looks good if the background under the view is static and of the same color.
+If the limitations of the `BITMAP_ONLY` mode affect your images, see if the `OVERLAY_COLOR` mode works for you. The `OVERLAY_COLOR` mode doesn't have the aforementioned limitations, but since it simulates rounded corners by overlying a solid color over the image, this only looks good if the background under the view is static and of the same color.
 
 Drawee internally has an implementation for `CLIPPING` mode, but this mode has been disabled and not exposed as some `Canvas` implementation do not support path clipping. Furthermore, canvas clipping doesn't support antialiasing which makes the rounded edges very pixelated.
 
