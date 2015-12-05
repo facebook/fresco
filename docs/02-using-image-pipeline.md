@@ -77,6 +77,19 @@ Prefetch to bitmap cache:
 ```java
 imagePipeline.prefetchToBitmapCache(imageRequest, callerContext);
 ```
+
+Cancelling prefetch:
+
+```java
+// keep the reference to the returned data source.
+DataSource<Void> prefetchDataSource = imagePipeline.prefetchTo...;
+
+// later on, if/when you need to cancel the prefetch:
+prefetchDataSource.close();
+```
+
+Closing a prefetch data source after the prefetch has already completed is a no-op and completely safe to do.
+
 #### The caller Context 
 
 As we can see, most of the `ImagePipeline` fetch methods contains a second parameter named `callerContext` of type `Object`. We can see it as an implementation of the [Context Object Design Pattern](https://www.dre.vanderbilt.edu/~schmidt/PDF/Context-Object-Pattern.pdf). It's basically an object we bind to a specific `ImageRequest` that can be used for different purposes (e.g. Log). The same object can also be accessed by all the `Producer` implementations into the `ImagePipeline`.  
