@@ -60,6 +60,8 @@
     title: Troubleshooting
   - id: gotchas
     title: Gotchas
+  - id: wrap-content
+    title: Wrap_content
 - title: Third Party Libraries
   items:
   - id: using-other-network-layers

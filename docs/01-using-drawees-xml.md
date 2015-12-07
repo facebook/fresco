@@ -53,7 +53,7 @@ Drawees do not support the `wrap_content` value for the `layout_width` and `layo
 
 The reason for this is that the content's size changes. The size of your downloaded image can be different from your placeholder - and the failure and retry images, if any, can be still different. 
 
-Use of `wrap_content` would force Android to do another layout pass when your image comes in - and for the layout to change before users' eyes, creating a jarring effect. More information can be found [here] (intrinsic-dimensions.html#_).
+Use of `wrap_content` would force Android to do another layout pass when your image comes in - and for the layout to change before users' eyes, creating a jarring effect. More information can be found [here] (wrap-content.html#_).
 
 #### Fixing the aspect ratio
 
