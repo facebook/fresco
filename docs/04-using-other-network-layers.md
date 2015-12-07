@@ -3,7 +3,7 @@ id: using-other-network-layers
 title: Using Other Network Layers
 layout: docs
 permalink: /docs/using-other-network-layers.html
-prev: gotchas.html
+prev: wrap-content.html
 next: using-other-image-loaders.html
 ---
 

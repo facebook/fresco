@@ -4,7 +4,7 @@ title: Gotchas
 layout: docs
 permalink: /docs/gotchas.html
 prev: troubleshooting.html
-next: using-other-network-layers.html
+next: wrap-content.html
 ---
 
 #### Don't use ScrollViews
