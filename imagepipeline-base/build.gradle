@@ -12,7 +12,6 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
 
-    testCompile "com.google.guava:guava:${GUAVA_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {

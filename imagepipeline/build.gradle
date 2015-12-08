@@ -19,7 +19,6 @@ dependencies {
     compile project(':imagepipeline-base')
     compile project(':static-webp')
 
-    testCompile "com.google.guava:guava:${GUAVA_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {

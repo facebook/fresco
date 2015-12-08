@@ -27,12 +27,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 import android.os.Build;
 
+import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.internal.Throwables;
 import com.facebook.webpsupport.WebpBitmapFactoryImpl;
 
-import com.google.common.base.Throwables;
-
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +50,9 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     try {
       File file = File.createTempFile("reqsquare", "tmp");
       byte[] data = ByteStreams.toByteArray(getTestImageInputStream(path));
-      Files.write(data, file);
+      FileOutputStream fos = new FileOutputStream(file);
+      fos.write(data);
+      fos.close();
       return new FileInputStream(file).getFD();
     } catch (IOException e) {
       throw Throwables.propagate(e);
