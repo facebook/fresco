@@ -4,7 +4,7 @@ title: Wrap_content
 layout: docs
 permalink: /docs/wrap-content.html
 prev: gotchas.html
-next: using-other-network-layers.html
+next: shared-transitions.html
 ---
 
 ### Why `wrap_content` is not supported
