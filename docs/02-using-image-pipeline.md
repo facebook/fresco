@@ -11,9 +11,11 @@ This page is intended for advanced usage only. Most apps should be using [Drawee
 
 Using the image pipeline directly is challenging because of the memory usage. Drawees automatically keep track of whether or not your images need to be in memory. They will swap them out and load them back as soon as they need to be displayed. If you are using the image pipeline directly, your app must repeat this logic.
 
-The image pipeline returns objects wrapped in a [CloseableReference](closeable-references.html). Drawees call the `.close()` method on these objects when they are finished with them. If your app is not using Drawees, it must do the same.
+The image pipeline returns objects wrapped in a [CloseableReference](closeable-references.html). Drawees keep these references alive for as long as they need their image, and then call the `.close()` method on these references when they are finished with them. If your app is not using Drawees, it **must** do the same.
 
-The Java garbage collector will free image memory when Bitmap objects go out of scope, but this may be too late. Garbage collection is expensive, and relying on it for large objects leads to performance issues. This is especially true on Android 4.x and lower, when Android did not maintain a separate memory space for Bitmaps.
+If you do not keep a Java reference to a `CloseableReference` returned by the pipleine, the `CloseableReference` will get garbage collected and the underlying `Bitmap` may get recycled while still being used. If you do not close the `CloseableReference` once you are done with it, you risk memory leaks.
+
+To be precise, the Java garbage collector will free image memory when Bitmap objects go out of scope, but this may be too late. Garbage collection is expensive, and relying on it for large objects leads to performance issues. This is especially true on Android 4.x and lower, when Android did not maintain a separate memory space for Bitmaps.
 
 #### Calling the pipeline
 
@@ -29,7 +31,7 @@ See the page on [DataSources](datasources-datasubscribers.html) for information 
 
 #### Skipping the decode
 
-If you don't want to decode the image, but want to keep it in its original compressed format, just use `fetchEncodedImage` instead:
+If you don't want to decode the image, but want to get the image bytes in their original compressed format, just use `fetchEncodedImage` instead:
 
 ```java
 DataSource<CloseableReference<PooledByteBuffer>> 
@@ -48,7 +50,11 @@ try {
   if (imageReference != null) {
     try {
       CloseableImage image = imageReference.get();
-      // do something with the image
+      // Do something with the image...
+      //
+      // IMPORTANT: Do not keep the the reference to the image!
+      // The image may get recycled as soon as the reference gets closed below.
+      // If you need to keep a reference to the image, read the following sections.
     } finally {
       CloseableReference.closeSafely(imageReference);
     }
@@ -58,7 +64,7 @@ try {
 }
 ```
 
-Do **not** skip this `finally` blocks!
+Do **not** skip these `finally` blocks!
 
 #### Prefetching 
 
