@@ -26,6 +26,9 @@ Here, we create a reference, but since we're passing it to a caller, the caller 
 ```java
 CloseableReference<Val> foo() {
   Val val;
+  // We are returning the reference from this method,
+  // so whoever is calling this method is the owner
+  // of the reference and is in charge of closing it.
   return CloseableReference.of(val);
 }
 ```
@@ -38,8 +41,14 @@ Here we create a reference, but are not passing it to a caller. So we must close
 void gee() {
   CloseableReference<Val> ref = foo();
   try {
+    // `haa` is a callee and not a caller, and so
+    // it is NOT the owner of this reference, and
+    // it must NOT close it.
     haa(ref);
   } finally {
+    // We are not returning the reference to the
+    // caller of this method, so we are still the owner,
+    // and must close it before leaving the scope.
     ref.close();
   }
 }
@@ -53,13 +62,17 @@ Here, we are receiving the reference via argument. The caller is still the owner
 
 ```java
 void haa(CloseableReference<?> ref) {
+  // We are callee, and not a caller, and so
+  // we must NOT close the reference.
+  // We are guaranteed that the reference won't
+  // become invalid for the duration of this call.
   Log.println("Haa: " + ref.get());
 }
 ```
 
 If we called `.close()` here by mistake, then if the caller tried to call `.get()`, an `IllegalStateException` would be thrown.
 
-#### 4. Always clone the reference before assigning.
+#### 4. Callee should always clone the reference before assigning.
 
 If we need to hold onto the reference, we need to clone it. 
 
@@ -70,11 +83,14 @@ class MyClass {
   CloseableReference<Val> myValRef;
 
   void mmm(CloseableReference<Val> ref) {
+    // Some caller called this method. Caller owns the original
+    // reference and if we want to have our own copy, we must clone it.
     myValRef = ref.clone();
   };
   // caller can now safely close its copy as we made our own clone.
   
   void close() {
+    // We are in charge of closing our copy, of course.
     CloseableReference.closeSafely(myValRef);
   }
 }
@@ -85,12 +101,16 @@ If using it in an inner class:
 
 ```java
 void haa(CloseableReference<?> ref) {
+  // Here we make our own copy of the original reference,
+  // so that we can guarantee its validity when the executor
+  // executes our runnable.
   final CloseableReference<?> refClone = ref.clone();
   executor.submit(new Runnable() {
     public void run() {
       try {
         Log.println("Haa Async: " + refClone.get());
       } finally {
+        // We need to close our copy once we are done with it.
         refClone.close();
       }
     }
