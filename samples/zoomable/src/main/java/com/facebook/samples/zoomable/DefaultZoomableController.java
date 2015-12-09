@@ -25,6 +25,8 @@ import com.facebook.samples.gestures.TransformGestureDetector;
 public class DefaultZoomableController
     implements ZoomableController, TransformGestureDetector.Listener {
 
+  private static final RectF IDENTITY_RECT = new RectF(0, 0, 1, 1);
+
   private TransformGestureDetector mGestureDetector;
 
   private Listener mListener = null;
@@ -44,6 +46,7 @@ public class DefaultZoomableController
   private final Matrix mActiveTransform = new Matrix();
   private final Matrix mActiveTransformInverse = new Matrix();
   private final float[] mTempValues = new float[9];
+  private final RectF mTempRect = new RectF();
 
   public DefaultZoomableController(TransformGestureDetector gestureDetector) {
     mGestureDetector = gestureDetector;
@@ -64,6 +67,7 @@ public class DefaultZoomableController
     mGestureDetector.reset();
     mPreviousTransform.reset();
     mActiveTransform.reset();
+    onTransformChanged();
   }
 
   /** Sets whether the controller is enabled or not. */
@@ -116,10 +120,17 @@ public class DefaultZoomableController
     return mImageBounds;
   }
 
+  protected RectF getTransformedImageBounds() {
+    return mTransformedImageBounds;
+  }
+
   /** Sets the image bounds before zoomable transformation is applied. */
   @Override
   public void setImageBounds(RectF imageBounds) {
-    mImageBounds.set(imageBounds);
+    if (!imageBounds.equals(mImageBounds)) {
+      mImageBounds.set(imageBounds);
+      onTransformChanged();
+    }
   }
 
   /** Gets the view bounds. */
@@ -202,7 +213,7 @@ public class DefaultZoomableController
   private void mapAbsoluteToRelative(float[] destPoints, float[] srcPoints, int numPoints) {
     for (int i = 0; i < numPoints; i++) {
       destPoints[i * 2 + 0] = (srcPoints[i * 2 + 0] - mImageBounds.left) / mImageBounds.width();
-      destPoints[i * 2 + 1] = (srcPoints[i * 2 + 1] - mImageBounds.top) / mImageBounds.height();
+      destPoints[i * 2 + 1] = (srcPoints[i * 2 + 1] - mImageBounds.top)  / mImageBounds.height();
     }
   }
 
@@ -232,6 +243,15 @@ public class DefaultZoomableController
   }
 
   /**
+   * Returns the matrix that fully transforms the image from image-relative coordinates
+   * to scaled view-absolute coordinates.
+   */
+  public void getImageRelativeToViewAbsoluteTransform(Matrix outMatrix) {
+    mActiveTransform.mapRect(mTempRect, mImageBounds);
+    outMatrix.setRectToRect(IDENTITY_RECT, mTempRect, Matrix.ScaleToFit.FILL);
+  }
+
+  /**
    * Sets the zoomable transformation. Cancels the current gesture if one is happening.
    */
   public void setTransform(Matrix activeTransform) {
@@ -239,6 +259,7 @@ public class DefaultZoomableController
       mGestureDetector.reset();
     }
     mActiveTransform.set(activeTransform);
+    onTransformChanged();
   }
 
   /** Notifies controller of the received touch event.  */
@@ -276,6 +297,13 @@ public class DefaultZoomableController
     limitTranslation();
   }
 
+  protected void onTransformChanged() {
+    mActiveTransform.mapRect(mTransformedImageBounds, mImageBounds);
+    if (mListener != null && isEnabled()) {
+      mListener.onTransformChanged(mActiveTransform);
+    }
+  }
+
   /* TransformGestureDetector.Listener methods  */
 
   @Override
@@ -301,9 +329,7 @@ public class DefaultZoomableController
     if (limitTranslation()) {
       mGestureDetector.restartGesture();
     }
-    if (mListener != null) {
-      mListener.onTransformChanged(mActiveTransform);
-    }
+    onTransformChanged();
   }
 
   @Override
