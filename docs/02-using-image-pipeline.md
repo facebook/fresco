@@ -13,7 +13,7 @@ Using the image pipeline directly is challenging because of the memory usage. Dr
 
 The image pipeline returns objects wrapped in a [CloseableReference](closeable-references.html). Drawees keep these references alive for as long as they need their image, and then call the `.close()` method on these references when they are finished with them. If your app is not using Drawees, it **must** do the same.
 
-If you do not keep a Java reference to a `CloseableReference` returned by the pipleine, the `CloseableReference` will get garbage collected and the underlying `Bitmap` may get recycled while still being used. If you do not close the `CloseableReference` once you are done with it, you risk memory leaks.
+If you do not keep a Java reference to a `CloseableReference` returned by the pipleine, the `CloseableReference` will get garbage collected and the underlying `Bitmap` may get recycled while still being used. If you do not close the `CloseableReference` once you are done with it, you risk memory leaks and OOMs.
 
 To be precise, the Java garbage collector will free image memory when Bitmap objects go out of scope, but this may be too late. Garbage collection is expensive, and relying on it for large objects leads to performance issues. This is especially true on Android 4.x and lower, when Android did not maintain a separate memory space for Bitmaps.
 
@@ -49,15 +49,15 @@ try {
   CloseableReference<CloseableImage> imageReference = dataSource.getResult();
   if (imageReference != null) {
     try {
-      CloseableImage image = imageReference.get();
-      // Do something with the image...
-      //
-      // IMPORTANT: Do not keep the the reference to the image!
+      // Do something with the image, but do not keep the reference to it!
       // The image may get recycled as soon as the reference gets closed below.
       // If you need to keep a reference to the image, read the following sections.
     } finally {
       CloseableReference.closeSafely(imageReference);
     }
+  } else {
+    // cache miss
+    ...
   }
 } finally {
   dataSource.close();
