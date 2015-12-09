@@ -21,7 +21,7 @@ Fresco's solution is found in the [CloseableReference](../javadoc/reference/com/
 
 #### 1. The caller owns the reference.
 
-Here, we create a reference, but since we're passing it to a caller, the caller takes it:
+Here, we create a reference, but since we're passing it to the caller, the caller takes the ownership:
 
 ```java
 CloseableReference<Val> foo() {
@@ -39,6 +39,8 @@ Here we create a reference, but are not passing it to a caller. So we must close
 
 ```java
 void gee() {
+  // We are the caller of `foo` and so
+  // we own the returned reference.
   CloseableReference<Val> ref = foo();
   try {
     // `haa` is a callee and not a caller, and so
@@ -103,7 +105,7 @@ If using it in an inner class:
 void haa(CloseableReference<?> ref) {
   // Here we make our own copy of the original reference,
   // so that we can guarantee its validity when the executor
-  // executes our runnable.
+  // executes our runnable in the future.
   final CloseableReference<?> refClone = ref.clone();
   executor.submit(new Runnable() {
     public void run() {
