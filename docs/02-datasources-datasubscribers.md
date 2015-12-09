@@ -20,56 +20,138 @@ Fresco provides several [executors] (https://github.com/facebook/fresco/tree/0f3
 * If the callback is lightweight, and does not do any UI related stuff, you can simply use `CallerThreadExecutor.getInstance()`. This executor executes runnables on the caller's thread. Depending on what is the calling thread, callback may be executed either on the UI or a background thread. There are no guarantees which thread it is going to be and because of that this executor should be used with great caution. And again, only for lightweight non-UI related stuff. 
 * If you need to do some expensive non-UI related work (database access, disk read/write, or any other slow operation), this should NOT be done either with `CallerThreadExecutor` nor with the `UiThreadExecutorService`, but with one of the background thread executors. See [DefaultExecutorSupplier.forBackgroundTasks] (https://github.com/facebook/fresco/blob/0f3d52318631f2125e080d2a19f6fa13a31efb31/imagepipeline/src/main/java/com/facebook/imagepipeline/core/DefaultExecutorSupplier.java) for an example implementation.
 
-### To get encoded image...
+### Getting result from a data source
+
+This is a generic example of how to get a result from a data source of `CloseableReference<T>` for arbitrary type `T`. The result is valid only in the scope of the `onNewResultImpl` callback. As soon as the callback gets executed, the result is no longer valid. See the next example if the result needs to be kept around.
 
 ```java
-    DataSource<CloseableReference<PooledByteBuffer>> dataSource =
-        mImagePipeline.fetchEncodedImage(imageRequest, CALLER_CONTEXT);
+    DataSource<CloseableReference<T>> dataSource = ...;
 
-    DataSubscriber<CloseableReference<PooledByteBuffer>> dataSubscriber =
-        new BaseDataSubscriber<CloseableReference<PooledByteBuffer>>() {
+    DataSubscriber<CloseableReference<T>> dataSubscriber =
+        new BaseDataSubscriber<CloseableReference<T>>() {
           @Override
           protected void onNewResultImpl(
-              DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
+              DataSource<CloseableReference<T>> dataSource) {
             if (!dataSource.isFinished()) {
+              // if we are not interested in the intermediate images,
+              // we can just return here.
               return;
             }
-            CloseableReference<PooledByteBuffer> buffRef = dataSource.getResult();
-            if (buffRef != null) {
-              PooledByteBufferInputStream is = new PooledByteBufferInputStream(buffRef.get());
+            CloseableReference<T> ref = dataSource.getResult();
+            if (ref != null) {
               try {
-                ImageFormat imageFormat = ImageFormatChecker.getImageFormat(is);
-                // TODO: write input stream to file
-                ...
-              } catch (...) {
+                // do somethign with the result
+                T result = ref.get();
                 ...
               } finally {
-                Closeables.closeQuietly(is);
-                CloseableReference.closeSafely(buffRef);
+                CloseableReference.closeSafely(ref);
               }
             }
           }
 
           @Override
-          protected void onFailureImpl(
-              DataSource<CloseableReference<PooledByteBuffer>> dataSource) {
-            ...
+          protected void onFailureImpl(DataSource<CloseableReference<T>> dataSource) {
+            Throwable t = dataSource.getFailureCause();
+            // handle failure
           }
         };
 
     dataSource.subscribe(dataSubscriber, executor);
 ```
 
+### Keeping result from a data source
+
+The above example closes the reference as soon as the callback gets executed. If the result needs to be kept around, you must keep the corresponding `CloseableReference` for as long as the result is needed. This can be done as follows:
+
+```java
+    DataSource<CloseableReference<T>> dataSource = ...;
+
+    DataSubscriber<CloseableReference<T>> dataSubscriber =
+        new BaseDataSubscriber<CloseableReference<T>>() {
+          @Override
+          protected void onNewResultImpl(
+              DataSource<CloseableReference<T>> dataSource) {
+            if (!dataSource.isFinished()) {
+              // if we are not interested in the intermediate images,
+              // we can just return here.
+              return;
+            }
+            // keep the closeable reference
+            mRef = dataSource.getResult();
+            // do something with the result
+            T result = mRef.get();
+            ...
+          }
+
+          @Override
+          protected void onFailureImpl(DataSource<CloseableReference<T>> dataSource) {
+            Throwable t = dataSource.getFailureCause();
+            // handle failure
+          }
+        };
+
+    dataSource.subscribe(dataSubscriber, executor);
+```
+
+IMPORTANT: once you don't need the result anymore, you must close the reference. Not doing so may cause memory leaks.
+See [closeable references](closeable-references.html) for more details.
+
+```java
+    CloseableReference.closeSafely(mRef);
+    mRef = null;
+```
+
+### To get encoded image...
+
+```java
+    DataSource<CloseableReference<PooledByteBuffer>> dataSource =
+        mImagePipeline.fetchEncodedImage(imageRequest, CALLER_CONTEXT);
+```
+
+Image pipeline uses `PooledByteBuffer` for encoded images. This is our `T` in the above examples. Here is an example of creating an `InputStream` out of `PooledByteBuffer` so that we can read the image bytes:
+
+```java
+      InputStream is = new PooledByteBufferInputStream(result);
+      try {
+        // Example: get the image format
+        ImageFormat imageFormat = ImageFormatChecker.getImageFormat(is);
+        // Example: write input stream to a file
+        Files.copy(is, path);
+      } catch (...) {
+        ...
+      } finally {
+        Closeables.closeQuietly(is);
+      }
+```
+
+### To get decoded image...
+
+```java
+DataSource<CloseableReference<CloseableImage>> 
+    dataSource = imagePipeline.fetchDecodedImage(imageRequest, callerContext);
+```
+
+Image pipeline uses `CloseableImage` for decoded images. This is our `T` in the above examples. Here is an example of getting a `Bitmap` out of `CloseableImage`:
+
+```java
+	CloseableImage image = ref.get();
+	if (image instanceof CloseableBitmap) {
+	  // do something with the bitmap
+	  Bitmap bitmap = (CloseableBitmap image).getUnderlyingBitmap();
+	  ...
+	}
+```
+
 
 ### I just want a bitmap...
 
-If your request to the pipeline is for a decoded image - an Android [Bitmap](http://developer.android.com/reference/android/graphics/Bitmap.html), you can take advantage of our easier-to-use [BaseBitmapDataSubscriber](../javadoc/reference/com/facebook/imagepipeline/datasource/BaseBitmapDataSubscriber):
+If your request to the pipeline is for a single [Bitmap](http://developer.android.com/reference/android/graphics/Bitmap.html), you can take advantage of our easier-to-use [BaseBitmapDataSubscriber](../javadoc/reference/com/facebook/imagepipeline/datasource/BaseBitmapDataSubscriber):
 
 ```java
 dataSource.subscribe(new BaseBitmapDataSubscriber() {
     @Override
     public void onNewResultImpl(@Nullable Bitmap bitmap) {
-	   // You can use the bitmap in only limited ways
+      // You can use the bitmap here, but in limited ways.
       // No need to do any cleanup.
     }
  
@@ -83,46 +165,10 @@ dataSource.subscribe(new BaseBitmapDataSubscriber() {
 
 A snap to use, right? There are caveats.
 
-You can not use this subscriber for animated images.
+This subscriber doesn't work for animated images as those can not be represented as a single bitmap.
 
-You can **not** assign the bitmap to any variable not in the scope of the `onNewResultImpl` method. The reason is that, after the subscriber has finished executing, the image pipeline will recycle the bitmap and free its memory. If you try to draw the bitmap after that, your app will crash with an `IllegalStateException.`
+You can **not** assign the bitmap to any variable not in the scope of the `onNewResultImpl` method. The reason is, as already explained in the above examples that, after the subscriber has finished executing, the image pipeline will recycle the bitmap and free its memory. If you try to draw the bitmap after that, your app will crash with an `IllegalStateException.`
 
 You can still safely pass the Bitmap to an Android [notification](https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#setLargeIcon\(android.graphics.Bitmap\)) or [remote view](http://developer.android.com/reference/android/widget/RemoteViews.html#setImageViewBitmap\(int, android.graphics.Bitmap\)). If Android needs your Bitmap in order to pass it to a system process, it makes a copy of the Bitmap data in ashmem - the same heap used by Fresco. So Fresco's automatic cleanup will work without issue.
 
-### General-purpose solution
-
-If you want to keep the bitmap around, you can't use raw Bitmaps at all. You must make use of [closeable references](closeable-references.html) and the [BaseDataSubscriber](../javadoc/reference/com/facebook/datasource/BaseDataSubscriber.html):
-
-```java
-DataSubscriber dataSubscriber =
-    new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
-  @Override
-  public void onNewResultImpl(
-      DataSource<CloseableReference<CloseableImage>> dataSource) {
-      
-    if (!dataSource.isFinished()) {
-      FLog.v("Not yet finished - this is just another progressive scan.");
-    }  
-      
-    CloseableReference<CloseableImage> imageReference = dataSource.getResult();
-    if (imageReference != null) {
-      try {
-        CloseableImage image = imageReference.get();
-        // do something with the image
-      } finally {
-        imageReference.close();
-      }
-    }
-  }
-  @Override
-  public void onFailureImpl(DataSource dataSource) {
-    Throwable throwable = dataSource.getFailureCause();
-    // handle failure
-  }
-};
-
-dataSource.subscribe(dataSubscriber, executor);
-```
-
-If you want to deviate from the example above and assign the `CloseableReference` to another variable somewhere else, you can. Just be sure to [follow the rules](closeable-references.html).
-
+If those requirements prevent you from using `BaseBitmapDataSubscriber`, you can go with a more generic approach as explained above.
