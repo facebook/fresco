@@ -47,8 +47,9 @@ If you don't need to dynamically change the params, use a Supplier that returns 
 
 ```java
 Supplier<X> xSupplier = new Supplier<X>() {
+  private X mX = new X(xparam1, xparam2...);
   public X get() {
-    return new X(xparam1, xparam2...);
+    return mX;
   }
 );
 // when creating image pipeline
