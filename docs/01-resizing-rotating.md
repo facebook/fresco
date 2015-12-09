@@ -12,36 +12,26 @@ These features require you to [construct an image request](using-controllerbuild
 ### Terminology
 
 - **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn upscaled or downscaled.
-- **Resizing** is a pipeline operation executed in software. It returns a completely new bitmap, of a different size.
-- **Downsampling** is also a pipeline operation implemented in software. Rather than create a new bitmap, it simply changes the size of the image while it is being decoded.
+- **Resizing** is a pipeline operation executed in software. This changes the encoded image in memory before it is being decoded.
+- **Downsampling** is also a pipeline operation implemented in software. Rather than create a new encoded image, it simply decodes only a subset of the pixels, resulting in a smaller output bitmap.
 
-### Should you resize or scale?
+### Which should you use?
 
-Resizing is rarely necessary. Scaling is almost always preferred, even with resizing.
+Usually scaling. It's faster, easier to code, and results in a higher quality output.
 
-There are several limitations with resizing:
+To scale, simply specify the `layout_width` and `layout_height` of your `SimpleDraweeView`, as you would for any Android view. Then specify a [scale type](scaling.html).
 
-  - Resize is restricted so that it never returns a bigger image. It can only make the image smaller.
-  - At the moment, only JPEG images can be resized.
-  - There is only a rough control over the resulting image dimensions. Image cannot be resized to the exact size, but will be reduced by one of the supported resize factors. That means that even resized images need to be scaled before displaying.
-  - Only the following resize factors are supported: `N/8` with `1 <= N <= 8`.
-  - Resize is performed in software, which is much slower than hardware-accelerated scaling.
+Scaling uses Android's own built-in facilities to match the image to the view size. On Android 4.0 and later, this is *hardware-accelerated*, on devices with a GPU. 
 
-Scaling, on the other hand, doesn't suffer any of these limitations. Scaling uses Android's own built-in facilities to match the image to the view size. On Android 4.0 and later, this is hardware-accelerated on devices with a GPU. Most of the time, it is the fastest and most effective way to display the image in the size you want. The only downside is if the image is much bigger than the view, then the memory gets wasted.
-
-Why should you ever use resizing then? It's a trade-off. You should only ever use resize if you need to display an image that is much bigger than the view in order to save memory. One valid example is when you want to display an 8MP photo taken by the camera in a 1280x720 (roughly 1MP) view. An 8MP image would occupy 32MB of memory when decoded to 4 bytes-per-pixel ARGB bitmap. If resized to the view dimensions, it would occupy less than 4 MB.
-
-When it comes to network images, before thinking about resizing, try requesting the image of the proper size first. Don't request an 8MP high-resolution photo from a server if it can return a smaller version. Your users pay for their data plans and you should be considerate of that. Besides, fetching a smaller image saves internal storage and CPU time in your app.
-
-Only if the server doesn't provide an alternate URI with the smaller image, or if you are using local photos, should you resort to resizing. In all other cases, including upscaling the image, scaling should be used. To scale, simply specify the `layout_width` and `layout_height` of your `SimpleDraweeView`, as you would for any Android view. Then specify a [scale type](scaling.html).
+The only downside of scaling is that if the image is much bigger than the view, then the memory gets wasted.
 
 ### Resizing
 
 Resizing does not modify the original file. Resizing just resizes an encoded image in memory, prior to being decoded.
 
-This can carry out a much greater range of resizing than is possible with Android's facilities. Images taken with the device's camera, in particular, are often much too large to scale and need to be resized before display on the device.
+We recommend using resizing only for local camera images, which on most devices are much larger than the size of a the device's screen.
 
-We currently only support resizing for images in the JPEG format, but this is the most widely used image format anyway and most Android devices with cameras store files in the JPEG format.
+For network images, try to download an image as close as possible to the size you will be displaying, and then scale it.
 
 To resize pass a [ResizeOptions](../javadoc/reference/com/facebook/imagepipeline/common/ResizeOptions.html) object when constructing an `ImageRequest`:
 
@@ -58,6 +48,12 @@ PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
 mSimpleDraweeView.setController(controller);
 ```
 
+Resizing has a number of limitations:
+* it only supports JPEG files
+* the actual resize is carried out to the nearest 1/8 of the original size
+* it cannot make your image bigger, only smaller
+* it will slow down your decodes and possibly the rest of your app, as it's CPU-intensive
+
 ### Downsampling
 
 Downsampling is an experimental feature added recently to Fresco. To use it, you must explicitly enable it when [configuring the image pipeline](configure-image-pipeline.html#_):
@@ -68,9 +64,9 @@ Downsampling is an experimental feature added recently to Fresco. To use it, you
 
 If this option is on, the image pipeline will downsample your images instead of resizing them. You must still call `setResizeOptions` for each image request as above.
 
-Downsampling is generally faster than resizing. It also supports PNG and WebP (except animated) images as well as JPEG.
+Downsampling is generally faster than resizing, since it is part of the decode step, rather than a separate step of its own. It also supports PNG and WebP (except animated) images as well as JPEG.
 
-We hope to turn this on by default in a future release.
+The trade-off right now is that, on Android 4.4 (KitKat) it uses more memory than resizing, while the decode is taking place. This should only be an issue for apps decoding a large number of images simultaneously. We hope to find a solution for this and make it the default in a future release.
 
 ### <a name="rotate"></a>Auto-rotation
 
