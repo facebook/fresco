@@ -27,11 +27,11 @@ The sole exception is [custom views](writing-custom-views.html). Even there, the
 
 Never call ```DraweeView.setHierarchy``` with the same argument on two different views. Hierarchies are made up of Drawables, and Drawables on Android cannot be shared among multiple views.
 
-#### Don't use Drawables in more than one DraweeHierarchy
+#### Re-use Drawable resource IDs, not Java Drawable objects
 
 This is for the same reason as the above. Drawables cannot be shared in multiple views.
 
-You are completely free, of course, to use the same resourceID in multiple hierarchies and views. Android will create a separate instance of each Drawable for each view.
+You can freely use the same `@drawable` resource ID as a placeholder, error, or retry in multiple `SimpleDraweeViews` in XML. If you are using `GenericDraweeHierarchyBuilder`, you must call [Resources.getDrawable](http://developer.android.com/reference/android/content/res/Resources.html#getDrawable(int)) separate for *each* hierarchy. Do not call it just once and pass it to multiple hierarchies!
 
 #### Do not control hierarchy directly
 
