@@ -34,7 +34,6 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.drawee.drawable.SettableDrawable;
 import com.facebook.drawee.drawable.VisibilityAwareDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
@@ -142,7 +141,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private final RootDrawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
-  private final SettableDrawable mActualImageSettableDrawable;
+  private final ForwardingDrawable mActualImageSettableDrawable;
 
   private final int mPlaceholderImageIndex;
   private final int mProgressBarImageIndex;
@@ -180,7 +179,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
     // actual image branch
     Drawable actualImageBranch;
-    mActualImageSettableDrawable = new SettableDrawable(mEmptyActualImageDrawable);
+    mActualImageSettableDrawable = new ForwardingDrawable(mEmptyActualImageDrawable);
     actualImageBranch = mActualImageSettableDrawable;
     actualImageBranch = maybeWrapWithScaleType(
         actualImageBranch,
