@@ -44,6 +44,9 @@ ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
 Fresco.initialize(context, config);
 ```    
 
+#### Handling sessions and cookies correctly
+
+The `OkHttpClient` you pass to Fresco in the above step should be set up with interceptors needed to handle authentications to your servers. See [this bug](https://github.com/facebook/fresco/issues/385) and the solutions outlined there for some problems that have occurred with cookies.
 
 ### Using your own network fetcher (optional)
 
