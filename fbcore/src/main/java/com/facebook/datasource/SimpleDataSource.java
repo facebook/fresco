@@ -14,16 +14,16 @@ import com.facebook.common.internal.Preconditions;
 /**
  * Settable {@link DataSource}.
  */
-public class SettableDataSource<T> extends AbstractDataSource<T> {
+public class SimpleDataSource<T> extends AbstractDataSource<T> {
 
-  private SettableDataSource() {
+  private SimpleDataSource() {
   }
 
   /**
-   * Creates a new {@link SettableDataSource}.
+   * Creates a new {@link SimpleDataSource}.
    */
-  public static <T> SettableDataSource<T> create() {
-    return new SettableDataSource<T>();
+  public static <T> SimpleDataSource<T> create() {
+    return new SimpleDataSource<T>();
   }
 
   /**

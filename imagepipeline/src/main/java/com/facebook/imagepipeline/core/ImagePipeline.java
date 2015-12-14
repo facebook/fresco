@@ -26,7 +26,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
-import com.facebook.datasource.SettableDataSource;
+import com.facebook.datasource.SimpleDataSource;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.MemoryCache;
@@ -421,7 +421,7 @@ public class ImagePipeline {
    */
   public DataSource<Boolean> isInDiskCache(final ImageRequest imageRequest) {
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
-    final SettableDataSource<Boolean> dataSource = SettableDataSource.create();
+    final SimpleDataSource<Boolean> dataSource = SimpleDataSource.create();
     mMainBufferedDiskCache.contains(cacheKey)
         .continueWithTask(
             new Continuation<Boolean, Task<Boolean>>() {
