@@ -195,6 +195,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     Drawable actualImageBranch;
     mActualImageSettableDrawable = new ForwardingDrawable(mEmptyActualImageDrawable);
     actualImageBranch = mActualImageSettableDrawable;
+    actualImageBranch.setColorFilter(builder.getActualImageColorFilter());
     actualImageBranch = maybeWrapWithScaleType(
         actualImageBranch,
         builder.getActualImageScaleType(),
@@ -202,7 +203,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     actualImageBranch = maybeWrapWithMatrix(
         actualImageBranch,
         builder.getActualImageMatrix());
-    actualImageBranch.setColorFilter(builder.getActualImageColorFilter());
     mActualImageIndex = numLayers++;
 
     // progressBar image branch
