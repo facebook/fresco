@@ -58,6 +58,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * Decode WebP images, even on older versions of Android that don't fully support them
 
 # Who Uses Fresco?
+* [Best Apps Market](https://play.google.com/store/apps/details?id=com.bestappsmarket.android.bestapps)
 * [ShareTheMeal](https://play.google.com/store/apps/details?id=org.sharethemeal.app)
 * [JokeEssay](https://play.google.com/store/apps/details?id=com.ss.android.essay.joke)
 * [SamePinch](https://play.google.com/store/apps/details?id=co.samepinch.android.app)
@@ -68,7 +69,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Bakar](https://play.google.com/store/apps/details?id=com.bakar)
 * [nice](https://play.google.com/store/apps/details?id=com.nice.main)
 * [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
-* [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android)
+* [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android) [See their blog post about Fresco!](https://www.redfin.com/devblog/2015/10/using-fresco-to-load-images-efficiently-on-android.html)
 * [Memrise](https://play.google.com/store/apps/details?id=com.memrise.android.memrisecompanion)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
 * [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
