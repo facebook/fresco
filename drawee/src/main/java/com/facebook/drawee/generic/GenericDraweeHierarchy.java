@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
@@ -134,6 +135,22 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
+
+  // Empty drawable to be temporarily used for hierarchy manipulations.
+  //
+  // Since drawables are allowed to have at most one parent, and this is a static instance, this
+  // drawable may only be used temporarily while carrying some hierarchy manipulations. After those
+  // manipulations are done, the drawable must not be owned by any parent anymore.
+  //
+  // The reason why we need this drawable at all is as follows:
+  // Consider Drawable A and its child X. Suppose we want to put X under a new parent B. If we just
+  // do B.setCurrent(X), the old parent A still considers X to be its child. If at some later point
+  // we do A.setChild(Y), drawable A will clear Drawable.Callback from its old child X, and will set
+  // callback to its new child Y. But X is no longer a child of A, and so will A incorrectly remove
+  // the callback that B set on X. To avoid that, before setting X as a child of B, we must first
+  // remove it from A like so: A.setCurrent(empty); B.setCurrent(X);. In cases where we can't set a
+  // null child, we use an empty drawable.
+  private static final Drawable sEmptyDrawable = new ColorDrawable(Color.TRANSPARENT);
 
   private final Resources mResources;
 
@@ -267,18 +284,19 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     resetFade();
   }
 
+  @Nullable
   private static Drawable maybeWrapWithScaleType(
-      Drawable drawable,
+      @Nullable Drawable drawable,
       @Nullable ScaleType scaleType) {
     return maybeWrapWithScaleType(drawable, scaleType, null);
   }
 
+  @Nullable
   private static Drawable maybeWrapWithScaleType(
-      Drawable drawable,
+      @Nullable Drawable drawable,
       @Nullable ScaleType scaleType,
       @Nullable PointF focusPoint) {
-    Preconditions.checkNotNull(drawable);
-    if (scaleType == null) {
+    if (drawable == null || scaleType == null) {
       return drawable;
     }
     ScaleTypeDrawable scaleTypeDrawable = new ScaleTypeDrawable(drawable, scaleType);
@@ -288,11 +306,12 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return scaleTypeDrawable;
   }
 
+  @Nullable
   private static Drawable maybeWrapWithMatrix(
-      Drawable drawable,
+      @Nullable Drawable drawable,
       @Nullable Matrix matrix) {
     Preconditions.checkNotNull(drawable);
-    if (matrix == null) {
+    if (drawable == null || matrix == null) {
       return drawable;
     }
     return new MatrixDrawable(drawable, matrix);
@@ -411,7 +430,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   private void setProgress(float progress) {
-    Drawable progressBarDrawable = getLayerChildDrawable(mProgressBarImageIndex);
+    Drawable progressBarDrawable = getLayerParentDrawable(mProgressBarImageIndex).getDrawable();
     if (progressBarDrawable == null) {
       return;
     }
@@ -506,61 +525,54 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   // Helper methods for accessing layers
 
   /**
-   * Gets the drawable at the specified index while skipping MatrixDrawable and ScaleTypeDrawable.
+   * Gets the lowest parent drawable for the layer at the specified index.
    *
-   * <p> If <code>returnParent</code> is set, parent drawable will be returned instead. If
-   * MatrixDrawable or ScaleTypeDrawable is found at that index, it will be returned as a parent.
-   * Otherwise, the FadeDrawable will be returned as a parent.
+   * Following drawables are considered as parents: FadeDrawable, MatrixDrawable, ScaleTypeDrawable.
+   * This is because those drawables are added automatically by the hierarchy (if specified),
+   * whereas their children are created externally by the client code. When we need to change the
+   * previously set drawable this is the parent whose child needs to be replaced.
    */
-  private Drawable getLayerDrawable(int index, boolean returnParent) {
-    Drawable parent = mFadeDrawable;
-    Drawable child = mFadeDrawable.getDrawable(index);
-    if (child instanceof MatrixDrawable) {
-      parent = child;
-      child = parent.getCurrent();
+  private DrawableParent getLayerParentDrawable(int index) {
+    DrawableParent parent = mFadeDrawable.getDrawableParentForIndex(index);
+    if (parent.getDrawable() instanceof MatrixDrawable) {
+      parent = (MatrixDrawable) parent.getDrawable();
     }
-    if (child instanceof ScaleTypeDrawable) {
-      parent = child;
-      child = parent.getCurrent();
+    if (parent.getDrawable() instanceof ScaleTypeDrawable) {
+      parent = (ScaleTypeDrawable) parent.getDrawable();
     }
-    return returnParent ? parent : child;
+    return parent;
   }
 
   /**
-   * Returns the ScaleTypeDrawable at the specified index, or null if not found.
+   * Sets the drawable at the specified index and keeps the old scale type.
+   * In case the given drawable is null, scale type gets cleared too.
    */
-  private @Nullable ScaleTypeDrawable findLayerScaleTypeDrawable(int index) {
-    Drawable drawable = mFadeDrawable.getDrawable(index);
-    if (drawable instanceof MatrixDrawable) {
-      drawable = drawable.getCurrent();
+  private void setLayerChildDrawable(int index, @Nullable Drawable drawable) {
+    if (drawable == null) {
+      mFadeDrawable.setDrawable(index, null);
+      return;
     }
-    if (drawable instanceof ScaleTypeDrawable) {
-      return (ScaleTypeDrawable) drawable;
+    drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
+    getLayerParentDrawable(index).setDrawable(drawable);
+  }
+
+  /**
+   * Gets the ScaleTypeDrawable at the specified index.
+   * In case there is no child at the specified index, a NullPointerException is thrown.
+   * In case there is a child, but the ScaleTypeDrawable does not exist,
+   * the child will be wrapped with a new ScaleTypeDrawable.
+   */
+  private ScaleTypeDrawable getLayerScaleTypeDrawable(int index) {
+    DrawableParent parent = getLayerParentDrawable(index);
+    if (parent instanceof ScaleTypeDrawable) {
+      return (ScaleTypeDrawable) parent;
     } else {
-      return null;
+      Drawable child = parent.setDrawable(sEmptyDrawable);
+      child = maybeWrapWithScaleType(child, ScaleType.FIT_XY);
+      parent.setDrawable(child);
+      Preconditions.checkNotNull(child, "No drawable at the specified index!");
+      return (ScaleTypeDrawable) child;
     }
-  }
-
-  /**
-   * Sets a child drawable at the specified index.
-   *
-   * <p> Note: This uses {@link #getLayerDrawable} to find the parent drawable. Given drawable is
-   * then set as its child.
-   */
-  private void setLayerChildDrawable(int index, Drawable drawable) {
-    Drawable parent = getLayerDrawable(index, true /* returnParent */);
-    if (parent == mFadeDrawable) {
-      mFadeDrawable.setDrawable(index, drawable);
-    } else {
-      ((ForwardingDrawable) parent).setCurrent(drawable);
-    }
-  }
-
-  /**
-   * Gets the child drawable at the specified index.
-   */
-  private Drawable getLayerChildDrawable(int index) {
-    return getLayerDrawable(index, false /* returnParent */);
   }
 
   // Mutability
@@ -568,138 +580,86 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /** Sets the actual image focus point. */
   public void setActualImageFocusPoint(PointF focusPoint) {
     Preconditions.checkNotNull(focusPoint);
-    ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(mActualImageIndex);
-    if (scaleTypeDrawable == null) {
-      throw new UnsupportedOperationException("ScaleTypeDrawable not found!");
-    }
-    scaleTypeDrawable.setFocusPoint(focusPoint);
+    getLayerScaleTypeDrawable(mActualImageIndex).setFocusPoint(focusPoint);
   }
 
   /** Sets the actual image scale type. */
   public void setActualImageScaleType(ScaleType scaleType) {
     Preconditions.checkNotNull(scaleType);
-    ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(mActualImageIndex);
-    if (scaleTypeDrawable == null) {
-      throw new UnsupportedOperationException("ScaleTypeDrawable not found!");
-    }
-    scaleTypeDrawable.setScaleType(scaleType);
+    getLayerScaleTypeDrawable(mActualImageIndex).setScaleType(scaleType);
   }
 
   /** Sets the color filter to be applied on the actual image. */
   public void setActualImageColorFilter(ColorFilter colorfilter) {
-    mFadeDrawable.getDrawable(mActualImageIndex).setColorFilter(colorfilter);
+    mActualImageSettableDrawable.setColorFilter(colorfilter);
   }
 
-  /**
-   * Gets the post-scaling bounds of the actual image.
-   *
-   * <p> Note: the returned bounds are not cropped.
-   * @param outBounds rect to fill with bounds
-   */
+  /** Gets the non-cropped post-scaling bounds of the actual image. */
   public void getActualImageBounds(RectF outBounds) {
     mActualImageSettableDrawable.getTransformedBounds(outBounds);
   }
 
-  /**
-   * Sets a new placeholder drawable.
-   *
-   * <p>The placeholder scale type will not be changed.
-   */
-  public void setPlaceholderImage(Drawable drawable) {
-    setPlaceholderImage(drawable, null);
+  /** Sets a new placeholder drawable with old scale type. */
+  public void setPlaceholderImage(@Nullable Drawable drawable) {
+    setLayerChildDrawable(mPlaceholderImageIndex, drawable);
   }
 
-  public void setPlaceholderImage(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
-    setDrawableAndScaleType(drawable, scaleType, mPlaceholderImageIndex);
+  /** Sets a new placeholder drawable with scale type. */
+  public void setPlaceholderImage(Drawable drawable, ScaleType scaleType) {
+    setLayerChildDrawable(mPlaceholderImageIndex, drawable);
+    getLayerScaleTypeDrawable(mPlaceholderImageIndex).setScaleType(scaleType);
+
   }
 
+  /** Sets the placeholder image focus point. */
   public void setPlaceholderImageFocusPoint(PointF focusPoint) {
     Preconditions.checkNotNull(focusPoint);
-    ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(mPlaceholderImageIndex);
-    if (scaleTypeDrawable == null) {
-      throw new UnsupportedOperationException("ScaleTypeDrawable not found!");
-    }
-    scaleTypeDrawable.setFocusPoint(focusPoint);
+    getLayerScaleTypeDrawable(mPlaceholderImageIndex).setFocusPoint(focusPoint);
   }
 
   /**
-   * Sets a new placeholder drawable using the supplied resource ID.
+   * Sets a new placeholder drawable with old scale type.
    *
-   * <p>The placeholder scale type will not be changed.
    * @param resourceId an identifier of an Android drawable or color resource.
    */
   public void setPlaceholderImage(int resourceId) {
     setPlaceholderImage(mResources.getDrawable(resourceId));
   }
 
-  /**
-   * Sets a new failure drawable.
-   */
-  public void setFailureImage(Drawable drawable) {
-    setFailureImage(drawable, null);
+  /** Sets a new failure drawable with old scale type. */
+  public void setFailureImage(@Nullable Drawable drawable) {
+    setLayerChildDrawable(mFailureImageIndex, drawable);
   }
 
-  /**
-   * Sets a new failure drawable and scale type.
-   */
-  public void setFailureImage(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
-    setDrawableAndScaleType(drawable, scaleType, mFailureImageIndex);
+  /** Sets a new failure drawable with scale type. */
+  public void setFailureImage(Drawable drawable, ScaleType scaleType) {
+    setLayerChildDrawable(mFailureImageIndex, drawable);
+    getLayerScaleTypeDrawable(mFailureImageIndex).setScaleType(scaleType);
   }
 
-  /**
-   * Sets a new retry drawable.
-   */
-  public void setRetryImage(Drawable drawable) {
-    setRetryImage(drawable, null);
+  /** Sets a new retry drawable with old scale type. */
+  public void setRetryImage(@Nullable Drawable drawable) {
+    setLayerChildDrawable(mRetryImageIndex, drawable);
   }
 
-  /**
-   * Sets a new retry drawable and scale type.
-   */
-  public void setRetryImage(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
-    setDrawableAndScaleType(drawable, scaleType, mRetryImageIndex);
+  /** Sets a new retry drawable with scale type. */
+  public void setRetryImage(Drawable drawable, ScaleType scaleType) {
+    setLayerChildDrawable(mRetryImageIndex, drawable);
+    getLayerScaleTypeDrawable(mRetryImageIndex).setScaleType(scaleType);
   }
 
-  /**
-   * Sets a new progress bar drawable.
-   */
-  public void setProgressBarImage(Drawable drawable) {
-    setProgressBarImage(drawable, null);
+  /** Sets a new progress bar drawable with old scale type. */
+  public void setProgressBarImage(@Nullable Drawable drawable) {
+    setLayerChildDrawable(mProgressBarImageIndex, drawable);
   }
 
-  /**
-   * Sets a new progress bar drawable and scale type.
-   */
-  public void setProgressBarImage(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
-    setDrawableAndScaleType(drawable, scaleType, mProgressBarImageIndex);
+  /** Sets a new progress bar drawable with scale type. */
+  public void setProgressBarImage(Drawable drawable, ScaleType scaleType) {
+    setLayerChildDrawable(mProgressBarImageIndex, drawable);
+    getLayerScaleTypeDrawable(mProgressBarImageIndex).setScaleType(scaleType);
   }
 
-  private void setDrawableAndScaleType(
-      @Nullable Drawable drawable,
-      @Nullable ScaleType scaleType,
-      int index) {
-
-    if (drawable == null) {
-      mFadeDrawable.setDrawable(index, null);
-      return;
-    }
-
-    drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
-    if (scaleType != null) {
-      ScaleTypeDrawable scaleTypeDrawable = findLayerScaleTypeDrawable(index);
-      if (scaleTypeDrawable != null) {
-        scaleTypeDrawable.setScaleType(scaleType);
-      } else {
-        drawable = maybeWrapWithScaleType(drawable, scaleType);
-      }
-    }
-
-    setLayerChildDrawable(index, drawable);
-  }
-
-  /**
-   * Sets the rounding params.
-   */
+  /** Sets the rounding params. */
   public void setRoundingParams(RoundingParams roundingParams) {
     mRoundingParams = roundingParams;
     updateOverlayColorRounding();
@@ -718,7 +678,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         roundedCornersDrawable.setOverlayColor(mRoundingParams.getOverlayColor());
       } else {
         // important: remove the child before wrapping it with a new parent!
-        topDrawableChild = mTopLevelDrawable.setCurrent(mEmptyActualImageDrawable);
+        topDrawableChild = mTopLevelDrawable.setCurrent(sEmptyDrawable);
         topDrawableChild = maybeWrapWithRoundedOverlayColor(mRoundingParams, topDrawableChild);
         mTopLevelDrawable.setCurrent(topDrawableChild);
       }
@@ -726,34 +686,34 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       // Overlay rounding no longer required so remove drawable that was doing the rounding.
       RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) topDrawableChild;
       // Extract the drawable out of roundedCornersDrawable before setting it to a new parent.
-      topDrawableChild = roundedCornersDrawable.setCurrent(mEmptyActualImageDrawable);
+      topDrawableChild = roundedCornersDrawable.setCurrent(sEmptyDrawable);
       mTopLevelDrawable.setCurrent(topDrawableChild);
+      // roundedCornersDrawable is removed and will get garbage collected, clear the child callback
+      sEmptyDrawable.setCallback(null);
     }
   }
 
   private void updateBitmapOnlyRounding() {
-    if (mRoundingParams != null &&
-        mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
-      // Bitmap rounding - either update the params or wrap the current drawable in a drawable
-      // that will round it.
-      for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
-        Drawable layer = getLayerChildDrawable(i);
-        if (layer instanceof Rounded) {
-          Rounded rounded = (Rounded) layer;
+    for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
+      DrawableParent parent = getLayerParentDrawable(i);
+      Drawable child = parent.getDrawable();
+      if (mRoundingParams != null &&
+          mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
+        // Bitmap rounding - either update the params or wrap the current drawable in a drawable
+        // that will round it.
+        if (child instanceof Rounded) {
+          Rounded rounded = (Rounded) child;
           applyRoundingParams(rounded, mRoundingParams);
-        } else if (layer != null) {
+        } else if (child != null) {
           // important: remove the child before wrapping it with a new parent!
-          setLayerChildDrawable(i, mEmptyActualImageDrawable);
-          Drawable roundedLayer = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, layer);
-          setLayerChildDrawable(i, roundedLayer);
+          parent.setDrawable(sEmptyDrawable);
+          Drawable rounded = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, child);
+          parent.setDrawable(rounded);
         }
-      }
-    } else {
-      // No bitmap rounding requested - reset all layers so no rounding occurs.
-      for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
-        final Drawable layer = getLayerChildDrawable(i);
-        if (layer instanceof Rounded) {
-          resetRoundedDrawable((Rounded) layer);
+      } else {
+        // No bitmap rounding requested - reset all layers so no rounding occurs.
+        if (child instanceof Rounded) {
+          resetRoundedDrawable((Rounded) child);
         }
       }
     }
@@ -766,10 +726,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     rounded.setPadding(0);
   }
 
-  /**
-   * Gets the rounding params.
-   * @return rounding params
-   */
+  /** Gets the rounding params. */
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
   }

@@ -53,10 +53,10 @@ public class GenericDraweeHierarchyTest {
   private final BitmapDrawable mActualImage2 = mock(BitmapDrawable.class);
   private final Matrix mActualImageMatrix = mock(Matrix.class);
   private final PointF mFocusPoint = new PointF(0.1f, 0.4f);
-  private final Drawable mBackground1 = mock(BitmapDrawable.class);
-  private final Drawable mBackground2 = mock(BitmapDrawable.class);
-  private final Drawable mOverlay1 = mock(BitmapDrawable.class);
-  private final Drawable mOverlay2 = mock(BitmapDrawable.class);
+  private final Drawable mBackground1 = DrawableTestUtils.mockDrawable();
+  private final Drawable mBackground2 = DrawableTestUtils.mockDrawable();
+  private final Drawable mOverlay1 = DrawableTestUtils.mockDrawable();
+  private final Drawable mOverlay2 = DrawableTestUtils.mockDrawable();
 
   private GenericDraweeHierarchyBuilder mBuilder;
 
@@ -955,117 +955,126 @@ public class GenericDraweeHierarchyTest {
 
   @Test
   public void testSetPlaceholderImage() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
+    final GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage, ScaleType.FIT_XY)
         .build();
-
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    Drawable placeholderBranch = fadeDrawable.getDrawable(0);
-    assertNotNull(placeholderBranch);
-    assertEquals(ScaleTypeDrawable.class, placeholderBranch.getClass());
-    assertEquals(mPlaceholderImage, placeholderBranch.getCurrent());
-    assertEquals(ScaleType.FIT_XY, ((ScaleTypeDrawable) placeholderBranch).getScaleType());
-
-    dh.setPlaceholderImage(null);
-    assertNull(fadeDrawable.getDrawable(0));
-
-    Drawable newPlaceholder = mock(Drawable.class);
-    dh.setPlaceholderImage(newPlaceholder, ScaleType.FOCUS_CROP);
-    Drawable newPlaceholderBranch = fadeDrawable.getDrawable(0);
-    assertNotNull(newPlaceholderBranch);
-    assertEquals(ScaleTypeDrawable.class, newPlaceholderBranch.getClass());
-    assertEquals(newPlaceholder, newPlaceholderBranch.getCurrent());
-    assertEquals(ScaleType.FOCUS_CROP, ((ScaleTypeDrawable) newPlaceholderBranch).getScaleType());
+    testSetDrawable(dh, 0, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setPlaceholderImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setPlaceholderImage(drawable, scaleType);
+      }
+    });
   }
 
   @Test
   public void testSetFailureImage() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
+    final GenericDraweeHierarchy dh = mBuilder
         .setFailureImage(mFailureImage, null)
         .build();
-
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    assertEquals(mFailureImage, fadeDrawable.getDrawable(4));
-
-    Drawable failureImage1 = mock(Drawable.class);
-    dh.setFailureImage(failureImage1, ScaleType.CENTER);
-
-    ScaleTypeDrawable failureBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(4);
-    assertSame(failureImage1, failureBranch.getCurrent());
-    assertEquals(ScaleType.CENTER, failureBranch.getScaleType());
-
-    Drawable failureImage2 = mock(Drawable.class);
-    dh.setFailureImage(failureImage2, ScaleType.FIT_CENTER);
-    assertSame(failureBranch, fadeDrawable.getDrawable(4));
-    assertSame(failureImage2, failureBranch.getCurrent());
-    assertEquals(ScaleType.FIT_CENTER, failureBranch.getScaleType());
-
-    Drawable failureImage3 = new ColorDrawable(0);
-    when(failureImage2.getBounds()).thenReturn(new Rect());
-    dh.setFailureImage(failureImage3);
-    assertSame(failureBranch, fadeDrawable.getDrawable(4));
-    assertSame(failureImage3, failureBranch.getCurrent());
-    assertEquals(ScaleType.FIT_CENTER, failureBranch.getScaleType());
+    testSetDrawable(dh, 4, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setFailureImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setFailureImage(drawable, scaleType);
+      }
+    });
   }
 
   @Test
   public void testSetRetryImage() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
+    final GenericDraweeHierarchy dh = mBuilder
         .setRetryImage(mRetryImage, null)
         .build();
-
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    assertEquals(mRetryImage, fadeDrawable.getDrawable(3));
-
-    Drawable retryImage1 = mock(Drawable.class);
-    dh.setRetryImage(retryImage1, ScaleType.CENTER);
-
-    ScaleTypeDrawable retryBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(3);
-    assertSame(retryImage1, retryBranch.getCurrent());
-    assertEquals(ScaleType.CENTER, retryBranch.getScaleType());
-
-    Drawable retryImage2 = mock(Drawable.class);
-    dh.setRetryImage(retryImage2, ScaleType.FIT_CENTER);
-    assertSame(retryBranch, fadeDrawable.getDrawable(3));
-    assertSame(retryImage2, retryBranch.getCurrent());
-    assertEquals(ScaleType.FIT_CENTER, retryBranch.getScaleType());
-
-    Drawable retryImage3 = new ColorDrawable(0);
-    when(retryImage2.getBounds()).thenReturn(new Rect());
-    dh.setRetryImage(retryImage3, null);
-    assertSame(retryBranch, fadeDrawable.getDrawable(3));
-    assertSame(retryImage3, retryBranch.getCurrent());
-    assertEquals(ScaleType.FIT_CENTER, retryBranch.getScaleType());
+    testSetDrawable(dh, 3, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setRetryImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setRetryImage(drawable, scaleType);
+      }
+    });
   }
 
   @Test
   public void testSetProgressBarImage() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
+    final GenericDraweeHierarchy dh = mBuilder
         .setProgressBarImage(mProgressBarImage, null)
         .build();
+    testSetDrawable(dh, 2, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setProgressBarImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setProgressBarImage(drawable, scaleType);
+      }
+    });
+  }
 
+  private interface SetDrawableCallback {
+    void setDrawable(Drawable drawable);
+    void setDrawable(Drawable drawable, ScaleType scaleType);
+  }
+
+  private void testSetDrawable(GenericDraweeHierarchy dh, int index, SetDrawableCallback callback) {
     FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    assertEquals(mProgressBarImage, fadeDrawable.getDrawable(2));
+    // null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // null -> null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // null -> drawable
+    Drawable drawable1 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable1);
+    assertSame(drawable1, fadeDrawable.getDrawable(index));
+    // drawable -> drawable
+    Drawable drawable2 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable2);
+    assertSame(drawable2, fadeDrawable.getDrawable(index));
+    // drawable -> null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // null -> scaletype + drawable
+    Drawable drawable3 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable3, ScaleType.FOCUS_CROP);
+    assertScaleTypeAndDrawable(drawable3, ScaleType.FOCUS_CROP, fadeDrawable.getDrawable(index));
+    // scaletype + drawable -> scaletype + drawable
+    Drawable drawable4 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable4, ScaleType.CENTER);
+    assertScaleTypeAndDrawable(drawable4, ScaleType.CENTER, fadeDrawable.getDrawable(index));
+    // scaletype + drawable -> null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // drawable -> scaletype + drawable
+    callback.setDrawable(drawable1);
+    Drawable drawable5 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable5, ScaleType.FIT_CENTER);
+    assertScaleTypeAndDrawable(drawable5, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(index));
+    // scaletype + drawable -> drawable (kep the old scaletype)
+    Drawable drawable6 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable6);
+    assertScaleTypeAndDrawable(drawable6, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(index));
+  }
 
-    Drawable progressBarImage1 = mock(Drawable.class);
-    dh.setProgressBarImage(progressBarImage1, ScaleType.CENTER);
-
-    ScaleTypeDrawable progressBarBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(2);
-    assertSame(progressBarImage1, progressBarBranch.getCurrent());
-    assertEquals(ScaleType.CENTER, progressBarBranch.getScaleType());
-
-    Drawable progressBarImage2 = mock(Drawable.class);
-    dh.setProgressBarImage(progressBarImage2, ScaleType.FIT_CENTER);
-    assertSame(progressBarBranch, fadeDrawable.getDrawable(2));
-    assertSame(progressBarImage2, progressBarBranch.getCurrent());
-    assertEquals(ScaleType.FIT_CENTER, progressBarBranch.getScaleType());
-
-    Drawable progressBarImage3 = new ColorDrawable(0);
-    when(progressBarImage2.getBounds()).thenReturn(new Rect());
-    dh.setProgressBarImage(progressBarImage3, null);
-    assertSame(progressBarBranch, fadeDrawable.getDrawable(2));
-    assertSame(progressBarImage3, progressBarBranch.getCurrent());
-    assertEquals(ScaleType.FIT_CENTER, progressBarBranch.getScaleType());
+  private void assertScaleTypeAndDrawable(
+      Drawable expectedChild,
+      ScaleType expectedScaleType,
+      Drawable actualBranch) {
+    assertNotNull(actualBranch);
+    assertSame(ScaleTypeDrawable.class, actualBranch.getClass());
+    assertSame(expectedChild, actualBranch.getCurrent());
+    assertSame(expectedScaleType, ((ScaleTypeDrawable) actualBranch).getScaleType());
   }
 
   @Test
