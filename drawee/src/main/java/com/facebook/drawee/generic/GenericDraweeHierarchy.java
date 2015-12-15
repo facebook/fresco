@@ -133,9 +133,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
   }
 
-  private Drawable mEmptyPlaceholderDrawable;
   private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
-  private final Drawable mEmptyControllerOverlayDrawable = new ColorDrawable(Color.TRANSPARENT);
 
   private final Resources mResources;
 
@@ -165,16 +163,15 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
     // placeholder image branch
     Drawable placeholderImageBranch = builder.getPlaceholderImage();
-    if (placeholderImageBranch == null) {
-      placeholderImageBranch = getEmptyPlaceholderDrawable();
+    if (placeholderImageBranch != null) {
+      placeholderImageBranch = maybeApplyRoundingBitmapOnly(
+          mRoundingParams,
+          mResources,
+          placeholderImageBranch);
+      placeholderImageBranch = maybeWrapWithScaleType(
+          placeholderImageBranch,
+          builder.getPlaceholderImageScaleType());
     }
-    placeholderImageBranch = maybeApplyRoundingBitmapOnly(
-        mRoundingParams,
-        mResources,
-        placeholderImageBranch);
-    placeholderImageBranch = maybeWrapWithScaleType(
-        placeholderImageBranch,
-        builder.getPlaceholderImageScaleType());
     mPlaceholderImageIndex = numLayers++;
 
     // actual image branch
@@ -253,9 +250,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         layers[overlaysIndex + index++] = builder.getPressedStateOverlay();
       }
     }
-    if (mControllerOverlayIndex >= 0) {
-      layers[mControllerOverlayIndex] = mEmptyControllerOverlayDrawable;
-    }
+    layers[mControllerOverlayIndex] = null;
 
     // fade drawable composed of branches
     mFadeDrawable = new FadeDrawable(layers);
@@ -501,9 +496,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   @Override
   public void setControllerOverlay(@Nullable Drawable drawable) {
-    if (drawable == null) {
-      drawable = mEmptyControllerOverlayDrawable;
-    }
     mFadeDrawable.setDrawable(mControllerOverlayIndex, drawable);
   }
 
@@ -571,13 +563,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     return getLayerDrawable(index, false /* returnParent */);
   }
 
-  private Drawable getEmptyPlaceholderDrawable() {
-    if (mEmptyPlaceholderDrawable == null) {
-      mEmptyPlaceholderDrawable = new ColorDrawable(Color.TRANSPARENT);
-    }
-    return mEmptyPlaceholderDrawable;
-  }
-
   // Mutability
 
   /** Sets the actual image focus point. */
@@ -625,10 +610,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   public void setPlaceholderImage(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
-    if (drawable == null) {
-      drawable = getEmptyPlaceholderDrawable();
-    }
-
     setDrawableAndScaleType(drawable, scaleType, mPlaceholderImageIndex);
   }
 
