@@ -9,6 +9,7 @@ dependencies {
     compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
     compile 'com.android.support:recyclerview-v7:21.+'
     compile "com.googlecode.android-query:android-query:${AQUERY_VERSION}"
+    compile "com.facebook.stetho:stetho-okhttp:${STETHO_VERSION}"
 
     compile project(':drawee')
     compile project(':drawee-backends:drawee-pipeline')
@@ -16,6 +17,7 @@ dependencies {
     compile project(':fbcore')
     compile project(':imagepipeline')
     compile project(':imagepipeline-backends:imagepipeline-okhttp')
+    compile project(':tools:stetho')
 }
 
 android {
