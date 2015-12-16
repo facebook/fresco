@@ -3,6 +3,7 @@ apply plugin: 'com.android.library'
 dependencies {
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':samples:gestures')
+    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 }
 
