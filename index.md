@@ -59,6 +59,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 
 # Who Uses Fresco?
 * [Best Apps Market](https://play.google.com/store/apps/details?id=com.bestappsmarket.android.bestapps)
+* [Phonotto](https://play.google.com/store/apps/details?id=com.duckma.phonotto)
 * [ShareTheMeal](https://play.google.com/store/apps/details?id=org.sharethemeal.app)
 * [JokeEssay](https://play.google.com/store/apps/details?id=com.ss.android.essay.joke)
 * [SamePinch](https://play.google.com/store/apps/details?id=co.samepinch.android.app)
