@@ -11,32 +11,21 @@ package com.facebook.drawee.generic;
 
 import javax.annotation.Nullable;
 
-import android.annotation.SuppressLint;
 import android.content.res.Resources;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
-import com.facebook.drawee.drawable.Rounded;
-import com.facebook.drawee.drawable.RoundedBitmapDrawable;
-import com.facebook.drawee.drawable.RoundedColorDrawable;
-import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.drawee.drawable.VisibilityAwareDrawable;
-import com.facebook.drawee.drawable.VisibilityCallback;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -90,67 +79,7 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
  */
 public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
-  public static class RootDrawable extends ForwardingDrawable implements VisibilityAwareDrawable {
-    @Nullable
-    private VisibilityCallback mVisibilityCallback;
-
-    public RootDrawable(Drawable drawable) {
-      super(drawable);
-    }
-
-    @Override
-    public int getIntrinsicWidth() {
-      return -1;
-    }
-
-    @Override
-    public int getIntrinsicHeight() {
-      return -1;
-    }
-
-    @Override
-    public void setVisibilityCallback(@Nullable VisibilityCallback visibilityCallback) {
-      mVisibilityCallback = visibilityCallback;
-    }
-
-    @Override
-    public boolean setVisible(boolean visible, boolean restart) {
-      if (mVisibilityCallback != null) {
-        mVisibilityCallback.onVisibilityChange(visible);
-      }
-      return super.setVisible(visible, restart);
-    }
-
-    @SuppressLint("WrongCall")
-    @Override
-    public void draw(Canvas canvas) {
-      if (!isVisible()) {
-        return;
-      }
-      if (mVisibilityCallback != null) {
-        mVisibilityCallback.onDraw();
-      }
-      super.draw(canvas);
-    }
-  }
-
   private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
-
-  // Empty drawable to be temporarily used for hierarchy manipulations.
-  //
-  // Since drawables are allowed to have at most one parent, and this is a static instance, this
-  // drawable may only be used temporarily while carrying some hierarchy manipulations. After those
-  // manipulations are done, the drawable must not be owned by any parent anymore.
-  //
-  // The reason why we need this drawable at all is as follows:
-  // Consider Drawable A and its child X. Suppose we want to put X under a new parent B. If we just
-  // do B.setCurrent(X), the old parent A still considers X to be its child. If at some later point
-  // we do A.setChild(Y), drawable A will clear Drawable.Callback from its old child X, and will set
-  // callback to its new child Y. But X is no longer a child of A, and so will A incorrectly remove
-  // the callback that B set on X. To avoid that, before setting X as a child of B, we must first
-  // remove it from A like so: A.setCurrent(empty); B.setCurrent(X);. In cases where we can't set a
-  // null child, we use an empty drawable.
-  private static final Drawable sEmptyDrawable = new ColorDrawable(Color.TRANSPARENT);
 
   private final Resources mResources;
 
@@ -181,11 +110,11 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     // placeholder image branch
     Drawable placeholderImageBranch = builder.getPlaceholderImage();
     if (placeholderImageBranch != null) {
-      placeholderImageBranch = maybeApplyRoundingBitmapOnly(
+      placeholderImageBranch = WrappingUtils.maybeApplyLeafRounding(
+          placeholderImageBranch,
           mRoundingParams,
-          mResources,
-          placeholderImageBranch);
-      placeholderImageBranch = maybeWrapWithScaleType(
+          mResources);
+      placeholderImageBranch = WrappingUtils.maybeWrapWithScaleType(
           placeholderImageBranch,
           builder.getPlaceholderImageScaleType());
     }
@@ -196,11 +125,11 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mActualImageSettableDrawable = new ForwardingDrawable(mEmptyActualImageDrawable);
     actualImageBranch = mActualImageSettableDrawable;
     actualImageBranch.setColorFilter(builder.getActualImageColorFilter());
-    actualImageBranch = maybeWrapWithScaleType(
+    actualImageBranch = WrappingUtils.maybeWrapWithScaleType(
         actualImageBranch,
         builder.getActualImageScaleType(),
         builder.getActualImageFocusPoint());
-    actualImageBranch = maybeWrapWithMatrix(
+    actualImageBranch = WrappingUtils.maybeWrapWithMatrix(
         actualImageBranch,
         builder.getActualImageMatrix());
     mActualImageIndex = numLayers++;
@@ -209,7 +138,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     Drawable progressBarImageBranch = builder.getProgressBarImage();
     mProgressBarImageIndex = numLayers++;
     if (progressBarImageBranch != null) {
-      progressBarImageBranch = maybeWrapWithScaleType(
+      progressBarImageBranch = WrappingUtils.maybeWrapWithScaleType(
           progressBarImageBranch,
           builder.getProgressBarImageScaleType());
     }
@@ -218,7 +147,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     Drawable retryImageBranch = builder.getRetryImage();
     mRetryImageIndex = numLayers++;
     if (retryImageBranch != null) {
-      retryImageBranch = maybeWrapWithScaleType(
+      retryImageBranch = WrappingUtils.maybeWrapWithScaleType(
           retryImageBranch,
           builder.getRetryImageScaleType());
     }
@@ -227,7 +156,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     Drawable failureImageBranch = builder.getFailureImage();
     mFailureImageIndex = numLayers++;
     if (failureImageBranch != null) {
-      failureImageBranch = maybeWrapWithScaleType(
+      failureImageBranch = WrappingUtils.maybeWrapWithScaleType(
           failureImageBranch,
           builder.getFailureImageScaleType());
     }
@@ -248,7 +177,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       int index = 0;
       for (Drawable background : builder.getBackgrounds()) {
         layers[backgroundsIndex + index++] =
-            maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, background);
+            WrappingUtils.maybeApplyLeafRounding(background, mRoundingParams, mResources);
       }
     }
     layers[mPlaceholderImageIndex] = placeholderImageBranch;
@@ -275,118 +204,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
     // rounded corners drawable (optional)
     Drawable maybeRoundedDrawable =
-        maybeWrapWithRoundedOverlayColor(mRoundingParams, mFadeDrawable);
+        WrappingUtils.maybeWrapWithRoundedOverlayColor(mFadeDrawable, mRoundingParams);
 
     // top-level drawable
     mTopLevelDrawable = new RootDrawable(maybeRoundedDrawable);
     mTopLevelDrawable.mutate();
 
     resetFade();
-  }
-
-  @Nullable
-  private static Drawable maybeWrapWithScaleType(
-      @Nullable Drawable drawable,
-      @Nullable ScaleType scaleType) {
-    return maybeWrapWithScaleType(drawable, scaleType, null);
-  }
-
-  @Nullable
-  private static Drawable maybeWrapWithScaleType(
-      @Nullable Drawable drawable,
-      @Nullable ScaleType scaleType,
-      @Nullable PointF focusPoint) {
-    if (drawable == null || scaleType == null) {
-      return drawable;
-    }
-    ScaleTypeDrawable scaleTypeDrawable = new ScaleTypeDrawable(drawable, scaleType);
-    if (focusPoint != null) {
-      scaleTypeDrawable.setFocusPoint(focusPoint);
-    }
-    return scaleTypeDrawable;
-  }
-
-  @Nullable
-  private static Drawable maybeWrapWithMatrix(
-      @Nullable Drawable drawable,
-      @Nullable Matrix matrix) {
-    Preconditions.checkNotNull(drawable);
-    if (drawable == null || matrix == null) {
-      return drawable;
-    }
-    return new MatrixDrawable(drawable, matrix);
-  }
-
-
-  private static void applyRoundingParams(Rounded rounded, RoundingParams roundingParams) {
-    rounded.setCircle(roundingParams.getRoundAsCircle());
-    rounded.setRadii(roundingParams.getCornersRadii());
-    rounded.setPadding(roundingParams.getPadding());
-    rounded.setBorder(
-        roundingParams.getBorderColor(),
-        roundingParams.getBorderWidth());
-  }
-
-  private static Drawable maybeWrapWithRoundedOverlayColor(
-      @Nullable RoundingParams roundingParams,
-      Drawable drawable) {
-    if (roundingParams != null &&
-        roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
-      RoundedCornersDrawable roundedCornersDrawable = new RoundedCornersDrawable(drawable);
-      applyRoundingParams(roundedCornersDrawable, roundingParams);
-      roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
-      return roundedCornersDrawable;
-    } else {
-      return drawable;
-    }
-  }
-
-  private static Drawable maybeApplyRoundingBitmapOnly(
-      @Nullable RoundingParams roundingParams,
-      Resources resources,
-      Drawable drawable) {
-    if (roundingParams == null ||
-        roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
-      return drawable;
-    }
-
-    if (drawable instanceof BitmapDrawable || drawable instanceof ColorDrawable) {
-      return applyRounding(roundingParams, resources, drawable);
-    } else {
-      Drawable parent = drawable;
-      Drawable child = parent.getCurrent();
-      while (child != null && parent != child) {
-        if (parent instanceof ForwardingDrawable &&
-            (child instanceof BitmapDrawable || child instanceof ColorDrawable)) {
-          ((ForwardingDrawable) parent).setCurrent(
-              applyRounding(roundingParams, resources, child));
-        }
-        parent = child;
-        child = parent.getCurrent();
-      }
-    }
-
-    return drawable;
-  }
-
-  private static Drawable applyRounding(
-      @Nullable RoundingParams roundingParams,
-      Resources resources,
-      Drawable drawable) {
-    if (drawable instanceof BitmapDrawable) {
-      RoundedBitmapDrawable roundedBitmapDrawable =
-          RoundedBitmapDrawable.fromBitmapDrawable(resources, (BitmapDrawable) drawable);
-      applyRoundingParams(roundedBitmapDrawable, roundingParams);
-      return roundedBitmapDrawable;
-    }
-    if (drawable instanceof ColorDrawable &&
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      RoundedColorDrawable roundedColorDrawable =
-          RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
-      applyRoundingParams(roundedColorDrawable, roundingParams);
-      return roundedColorDrawable;
-    }
-    return drawable;
   }
 
   private void resetActualImages() {
@@ -466,7 +290,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   @Override
   public void setImage(Drawable drawable, float progress, boolean immediate) {
-    drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
+    drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
     drawable.mutate();
     mActualImageSettableDrawable.setDrawable(drawable);
     mFadeDrawable.beginBatchMode();
@@ -518,10 +342,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mFadeDrawable.setDrawable(mControllerOverlayIndex, drawable);
   }
 
-  public void setFadeDuration(int durationMs) {
-    mFadeDrawable.setTransitionDuration(durationMs);
-  }
-
   // Helper methods for accessing layers
 
   /**
@@ -552,7 +372,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       mFadeDrawable.setDrawable(index, null);
       return;
     }
-    drawable = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, drawable);
+    drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
     getLayerParentDrawable(index).setDrawable(drawable);
   }
 
@@ -567,15 +387,16 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     if (parent instanceof ScaleTypeDrawable) {
       return (ScaleTypeDrawable) parent;
     } else {
-      Drawable child = parent.setDrawable(sEmptyDrawable);
-      child = maybeWrapWithScaleType(child, ScaleType.FIT_XY);
-      parent.setDrawable(child);
-      Preconditions.checkNotNull(child, "No drawable at the specified index!");
-      return (ScaleTypeDrawable) child;
+      return WrappingUtils.wrapChildWithScaleType(parent, ScaleType.FIT_XY);
     }
   }
 
   // Mutability
+
+  /** Sets the fade duration. */
+  public void setFadeDuration(int durationMs) {
+    mFadeDrawable.setTransitionDuration(durationMs);
+  }
 
   /** Sets the actual image focus point. */
   public void setActualImageFocusPoint(PointF focusPoint) {
@@ -662,68 +483,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /** Sets the rounding params. */
   public void setRoundingParams(RoundingParams roundingParams) {
     mRoundingParams = roundingParams;
-    updateOverlayColorRounding();
-    updateBitmapOnlyRounding();
-  }
-
-  private void updateOverlayColorRounding() {
-    Drawable topDrawableChild = mTopLevelDrawable.getCurrent();
-    if (mRoundingParams != null &&
-        mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
-      // Overlay rounding requested - either update the overlay params or add a new
-      // drawable that will do the requested rounding.
-      if (topDrawableChild instanceof RoundedCornersDrawable) {
-        RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) topDrawableChild;
-        applyRoundingParams(roundedCornersDrawable, mRoundingParams);
-        roundedCornersDrawable.setOverlayColor(mRoundingParams.getOverlayColor());
-      } else {
-        // important: remove the child before wrapping it with a new parent!
-        topDrawableChild = mTopLevelDrawable.setCurrent(sEmptyDrawable);
-        topDrawableChild = maybeWrapWithRoundedOverlayColor(mRoundingParams, topDrawableChild);
-        mTopLevelDrawable.setCurrent(topDrawableChild);
-      }
-    } else if (topDrawableChild instanceof RoundedCornersDrawable) {
-      // Overlay rounding no longer required so remove drawable that was doing the rounding.
-      RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) topDrawableChild;
-      // Extract the drawable out of roundedCornersDrawable before setting it to a new parent.
-      topDrawableChild = roundedCornersDrawable.setCurrent(sEmptyDrawable);
-      mTopLevelDrawable.setCurrent(topDrawableChild);
-      // roundedCornersDrawable is removed and will get garbage collected, clear the child callback
-      sEmptyDrawable.setCallback(null);
-    }
-  }
-
-  private void updateBitmapOnlyRounding() {
+    WrappingUtils.updateOverlayColorRounding(mTopLevelDrawable, mRoundingParams);
     for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
-      DrawableParent parent = getLayerParentDrawable(i);
-      Drawable child = parent.getDrawable();
-      if (mRoundingParams != null &&
-          mRoundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
-        // Bitmap rounding - either update the params or wrap the current drawable in a drawable
-        // that will round it.
-        if (child instanceof Rounded) {
-          Rounded rounded = (Rounded) child;
-          applyRoundingParams(rounded, mRoundingParams);
-        } else if (child != null) {
-          // important: remove the child before wrapping it with a new parent!
-          parent.setDrawable(sEmptyDrawable);
-          Drawable rounded = maybeApplyRoundingBitmapOnly(mRoundingParams, mResources, child);
-          parent.setDrawable(rounded);
-        }
-      } else {
-        // No bitmap rounding requested - reset all layers so no rounding occurs.
-        if (child instanceof Rounded) {
-          resetRoundedDrawable((Rounded) child);
-        }
-      }
+      WrappingUtils.updateLeafRounding(getLayerParentDrawable(i), mRoundingParams, mResources);
     }
-  }
-
-  private static void resetRoundedDrawable(Rounded rounded) {
-    rounded.setCircle(false);
-    rounded.setRadius(0);
-    rounded.setBorder(Color.TRANSPARENT, 0);
-    rounded.setPadding(0);
   }
 
   /** Gets the rounding params. */
