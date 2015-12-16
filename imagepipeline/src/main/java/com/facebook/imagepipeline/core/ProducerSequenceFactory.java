@@ -43,6 +43,8 @@ import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
+import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
+
 public class ProducerSequenceFactory {
   private static final int MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
 

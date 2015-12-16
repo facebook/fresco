@@ -13,7 +13,6 @@ LOCAL_SRC_FILES := \
 	jpeg/jpeg_memory_io.cpp \
 	jpeg/jpeg_stream_wrappers.cpp \
 	transformations.cpp \
-	webp/webp_codec.cpp \
 	JpegTranscoder.cpp
 
 

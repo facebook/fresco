@@ -30,7 +30,6 @@ import com.facebook.common.soloader.SoLoaderShim;
 public class WebpTranscoderImpl implements WebpTranscoder {
 
   static {
-    SoLoaderShim.loadLibrary("imagepipeline");
     SoLoaderShim.loadLibrary("static-webp");
   }
 

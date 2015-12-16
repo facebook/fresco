@@ -103,6 +103,6 @@ LOCAL_STATIC_LIBRARIES := cpufeatures
 LOCAL_MODULE := webp
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/src
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)
 
 $(call import-module,android/cpufeatures)

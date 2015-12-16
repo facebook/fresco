@@ -16,7 +16,7 @@ import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
  */
 public class WebpTranscoderFactory {
 
-  public static WebpTranscoder sWebpTranscoder;
+  private static WebpTranscoder sWebpTranscoder;
 
   public static boolean sWebpTranscoderPresent = false;
 
@@ -29,6 +29,10 @@ public class WebpTranscoderFactory {
     } catch (Throwable e) {
       sWebpTranscoderPresent = false;
     }
+  }
+
+  public static WebpTranscoder getWebpTranscoder() {
+    return sWebpTranscoder;
   }
 
 }

@@ -3,11 +3,11 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := imagepipeline
+LOCAL_MODULE := static-webp
 LOCAL_SRC_FILES := \
+	webp_bitmapfactory.cpp \
 	decoded_image.cpp \
 	exceptions.cpp \
-	init.cpp \
 	jpeg/jpeg_codec.cpp \
 	jpeg/jpeg_error_handler.cpp \
 	jpeg/jpeg_memory_io.cpp \
@@ -17,18 +17,17 @@ LOCAL_SRC_FILES := \
 	streams.cpp \
 	transformations.cpp \
 	webp/webp_codec.cpp \
-	JpegTranscoder.cpp \
 	WebpTranscoder.cpp
 
 
 CXX11_FLAGS := -std=c++11
 LOCAL_CFLAGS += $(CXX11_FLAGS)
-LOCAL_CFLAGS += -DLOG_TAG=\"libimagepipeline\"
+LOCAL_CFLAGS += -DLOG_TAG=\"libstatic-webp\"
 LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_CFLAGS += $(FRESCO_CPP_CFLAGS)
 LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-LOCAL_LDLIBS := -llog
+LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
 LOCAL_SHARED_LIBRARIES += webp
