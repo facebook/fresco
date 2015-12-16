@@ -19,17 +19,16 @@ import java.util.List;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.facebook.cache.common.CacheKey;
-import com.facebook.imagepipeline.cache.CountingMemoryCache;
+import com.facebook.cache.disk.DiskStorage;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.cache.disk.DiskStorage;
-import com.facebook.cache.disk.FileCache;
 import com.facebook.stetho.dumpapp.DumpException;
 import com.facebook.stetho.dumpapp.DumpUsageException;
 import com.facebook.stetho.dumpapp.DumperContext;
@@ -43,6 +42,7 @@ import com.facebook.stetho.dumpapp.DumperPlugin;
 public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
 
   private static final String NAME = "image";
+  private static final float KB = 1024f;
 
   protected boolean mInitialized;
   private CountingMemoryCacheInspector<CacheKey, CloseableImage>
@@ -113,6 +113,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     if (!args.isEmpty() && args.get(0).equals("-s")) {
       writeDiskDumpInfoScriptReadable(writer, intDiskDumpInfo);
     } else {
+      writer.println();
       writer.println(title + " disk cache contents:");
       writeDiskDumpInfo(writer, intDiskDumpInfo);
     }
@@ -124,16 +125,66 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       return;
     }
 
+    SparseArray<Integer> histogram  = emptyHistogram();
+    float total = 0f;
     for (DiskStorage.DiskDumpInfoEntry entry : dumpInfo.entries) {
       writeDiskDumpEntry(writer, entry);
+      addToHistogram(histogram, entry);
+      total += entry.size;
     }
+    writer.println();
+    writer.println(formatStrLocaleSafe("Total size: %.1f MB", total / 1024 / KB));
+    printFileTypes(writer, dumpInfo);
+    printHistogram(writer, histogram);
+  }
 
+  private static SparseArray<Integer> emptyHistogram() {
+    SparseArray<Integer> histogram = new SparseArray<>();
+    histogram.put(0, 0);
+    histogram.put(5, 0);
+    histogram.put(10, 0);
+    histogram.put(20, 0);
+    histogram.put(50, 0);
+    histogram.put(100, 0);
+    histogram.put(200, 0);
+    histogram.put(512, 0);
+    histogram.put(1024, 0);
+    return histogram;
+  }
+
+  private void printFileTypes(PrintStream writer, DiskStorage.DiskDumpInfo dumpInfo) {
+    writer.println();
     writer.println("File Type Counts:");
     for (String type : dumpInfo.typeCounts.keySet()) {
       writer.println(formatStrLocaleSafe(
           "%4s: %5d",
           type,
           dumpInfo.typeCounts.get(type)));
+    }
+
+  }
+
+  private void addToHistogram(
+      SparseArray<Integer> histogram,
+      DiskStorage.DiskDumpInfoEntry entry) {
+    for (int i = 0; i < histogram.size(); i++) {
+      int key = histogram.keyAt(i);
+      if (entry.size / KB < key) {
+        histogram.put(key, histogram.get(key) + 1);
+        return;
+      }
+    }
+    // big
+    histogram.put((int) (entry.size / KB), 1);
+  }
+
+  private void printHistogram(PrintStream writer, SparseArray<Integer> histogram) {
+    writer.println();
+    writer.println("File Size Counts:");
+    for (int i = 1; i < histogram.size(); i++) {
+      int lb = histogram.keyAt(i - 1);
+      int ub = histogram.keyAt(i);
+      writer.println(formatStrLocaleSafe("%4d-%4dK: %3d", lb, ub, histogram.get(ub)));
     }
   }
 
@@ -144,7 +195,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     writer.println(formatStrLocaleSafe(
         "type: %5s size: %7.2fkB path: %9s",
         entry.type,
-        entry.size / 1024.0f,
+        entry.size / KB,
         entry.path));
   }
 
@@ -165,7 +216,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       CountingMemoryCacheInspector.DumpInfoEntry<CacheKey, CloseableImage> entry) {
     writer.println(formatStrLocaleSafe(
         "size: %7.2fkB (%4d x %4d) key: %s",
-        entry.value.get().getSizeInBytes() / 1024.0f,
+        entry.value.get().getSizeInBytes() / KB,
         entry.value.get().getWidth(),
         entry.value.get().getHeight(),
         entry.key));
@@ -181,27 +232,27 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       writer.println();
       writer.println("Params:");
       writer.println(formatStrLocaleSafe(
-          "Max size:          %7.2fMB", dumpInfo.maxSize / (1024.0f * 1024.0f)));
+          "Max size:          %7.2fMB", dumpInfo.maxSize / (1024.0 * KB)));
       writer.println(formatStrLocaleSafe(
           "Max entries count: %9d", dumpInfo.maxEntriesCount));
       writer.println(formatStrLocaleSafe(
-          "Max entry size:    %7.2fMB", dumpInfo.maxEntrySize / (1024.0f * 1024.0f)));
+          "Max entry size:    %7.2fMB", dumpInfo.maxEntrySize / (1024.0 * KB)));
       writer.println();
 
       writer.println("Summary of current content:");
       writer.println(formatStrLocaleSafe(
           "Total size:        %7.2fMB (includes in-use content)",
-          dumpInfo.size / (1024.0f * 1024.0f)));
+          dumpInfo.size / (1024.0 * KB)));
       writer.println(formatStrLocaleSafe(
           "Entries count:     %9d",
           dumpInfo.lruEntries.size() + dumpInfo.sharedEntries.size()));
       writer.println(formatStrLocaleSafe(
-          "LRU size:          %7.2fMB", dumpInfo.lruSize / (1024.0f * 1024.0f)));
+          "LRU size:          %7.2fMB", dumpInfo.lruSize / (1024.0 * KB)));
       writer.println(formatStrLocaleSafe(
           "LRU count:         %9d", dumpInfo.lruEntries.size()));
       writer.println(formatStrLocaleSafe(
           "Shared size:       %7.2fMB",
-          (dumpInfo.size - dumpInfo.lruSize) / (1024.0f * 1024.0f)));
+          (dumpInfo.size - dumpInfo.lruSize) / (1024.0 * KB)));
       writer.println(formatStrLocaleSafe(
           "Shared count:      %9d", dumpInfo.sharedEntries.size()));
       writer.println();
