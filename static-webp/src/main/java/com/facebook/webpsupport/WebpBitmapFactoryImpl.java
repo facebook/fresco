@@ -42,7 +42,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
   static {
-    SoLoaderShim.loadLibrary("webpsupport");
+    SoLoaderShim.loadLibrary("static-webp");
   }
 
   private static InputStream wrapToMarkSupportedStream(InputStream inputStream) {

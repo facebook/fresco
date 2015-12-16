@@ -57,9 +57,9 @@ static JNINativeMethod gWebpTranscoderMethods[] = {
 
 bool registerWebpTranscoderMethods(JNIEnv* env){
   auto webPTranscoderClass = env->FindClass(
-      "com/facebook/imagepipeline/nativecode/WebpTranscoder");
+      "com/facebook/imagepipeline/nativecode/WebpTranscoderImpl");
   if (webPTranscoderClass == nullptr) {
-    LOGE("could not find WebpTranscoder class");
+    LOGE("could not find WebpTranscoderImpl class");
     return false;
   }
 

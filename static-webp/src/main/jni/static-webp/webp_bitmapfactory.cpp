@@ -12,6 +12,10 @@
 
 #include "webp/demux.h"
 #include "webp/decode.h"
+#include "exceptions.h"
+#include "java_globals.h"
+#include "logging.h"
+#include "WebpTranscoder.h"
 
 #include <memory>
 #include <vector>
@@ -37,13 +41,20 @@ static constexpr const char* kHandlerClassName = "com/facebook/webpsupport/WebpB
 
 static jclass bitmapOptionsClass;
 static jclass webpBitmapFactoryClass;
+static jclass runtimeExceptionClass;
 static jclass bitmapClass;
 static jclass bitmapConfigClass;
 static jclass fileDescriptorClass;
-static jclass runtimeExceptionClass;
 static jmethodID createBitmapFunction;
 static jmethodID valueOfBitmapConfigFunction;
 static jstring configName;
+
+jmethodID midInputStreamRead;
+jmethodID midInputStreamSkip;
+jmethodID midOutputStreamWrite;
+jmethodID midOutputStreamWriteWithBounds;
+
+jclass jRuntimeException_class;
 
 std::vector<uint8_t> readStreamFully(JNIEnv* env, jobject is, jbyteArray inTempStorage) {
   // read start
@@ -252,17 +263,63 @@ typedef union {
   void* venv;
 } UnionJNIEnvToVoid;
 
+__attribute__((visibility("default")))
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   JNIEnv* env;
 
-  vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
+  if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
+    return -1;
+  }
+
+
+  // find java classes
+  jclass runtimeException = env->FindClass("java/lang/RuntimeException");
+  if (runtimeException == nullptr) {
+    LOGE("could not find RuntimeException class");
+    return -1;
+  }
+  jRuntimeException_class =
+    reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
+
+  CREATE_AS_GLOBAL(runtimeExceptionClass, "java/lang/RuntimeException");
+
+  jclass isClass = env->FindClass("java/io/InputStream");
+  THROW_AND_RETURNVAL_IF(isClass == nullptr, "could not find InputStream", -1);
+
+  jclass osClass = env->FindClass("java/io/OutputStream");
+  THROW_AND_RETURNVAL_IF(osClass == nullptr, "could not find OutputStream", -1);
+
+  // find java methods
+  midInputStreamRead = env->GetMethodID(isClass, "read", "([B)I");
+  THROW_AND_RETURNVAL_IF(
+      midInputStreamRead == nullptr,
+      "failed to register InputStream.read",
+      -1);
+
+  midInputStreamSkip = env->GetMethodID(isClass, "skip", "(J)J");
+  THROW_AND_RETURNVAL_IF(
+      midInputStreamSkip == nullptr,
+      "failed to register InputStream.skip",
+      -1);
+
+  midOutputStreamWrite = env->GetMethodID(osClass, "write", "([B)V");
+  THROW_AND_RETURNVAL_IF(
+      midOutputStreamWrite == nullptr,
+      "failed to register OutputStream.write",
+      -1);
+
+  midOutputStreamWriteWithBounds = env->GetMethodID(osClass, "write", "([BII)V");
+  THROW_AND_RETURNVAL_IF(
+      midOutputStreamWriteWithBounds == nullptr,
+      "failed to register OutputStream.write",
+      -1);
+
+
   bitmapOptionsClass = (jclass)env->NewGlobalRef(env->FindClass("android/graphics/BitmapFactory$Options"));
   RETURN_IF_ERROR
 
   webpBitmapFactoryClass = (jclass)env->NewGlobalRef(env->FindClass("com/facebook/webpsupport/WebpBitmapFactoryImpl"));
   RETURN_IF_ERROR
-
-  CREATE_AS_GLOBAL(runtimeExceptionClass, "java/lang/RuntimeException");
 
   CREATE_AS_GLOBAL(bitmapClass, "android/graphics/Bitmap");
 
@@ -285,12 +342,16 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   UnionJNIEnvToVoid uenv;
   uenv.venv = NULL;
 
-  if (vm->GetEnv(&uenv.venv, JNI_VERSION_1_4) != JNI_OK) {
+  if (vm->GetEnv(&uenv.venv, JNI_VERSION_1_6) != JNI_OK) {
     return -1;
   }
   env = uenv.env;
+
   if (registerNatives(env) != JNI_TRUE) {
     return -1;
   }
-  return JNI_VERSION_1_4;
+  if (registerWebpTranscoderMethods(env) != JNI_TRUE) {
+    return -1;
+  }
+  return JNI_VERSION_1_6;
 }

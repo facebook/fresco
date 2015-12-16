@@ -39,6 +39,7 @@ public class WebPImage implements AnimatedImage {
     if (!sInitialized) {
       sInitialized = true;
       SoLoaderShim.loadLibrary("webpimage");
+      SoLoaderShim.loadLibrary("imagepipeline");
     }
   }
 

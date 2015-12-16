@@ -40,9 +40,6 @@ public class ImagePipelineNativeLoader {
   }
 
   public static void load() {
-    for (int i = 0; i < DEPENDENCIES.size(); ++i) {
-      SoLoaderShim.loadLibrary(DEPENDENCIES.get(i));
-    }
-    SoLoaderShim.loadLibrary(DSO_NAME);
+    SoLoaderShim.loadLibrary("imagepipeline");
   }
 }

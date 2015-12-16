@@ -23,7 +23,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
-import com.facebook.imagepipeline.nativecode.WebpTranscoder;
+
+import static com.facebook.imagepipeline.nativecode.WebpTranscoderFactory.sWebpTranscoder;
 
 /**
  * Transcodes WebP to JPEG / PNG.
@@ -156,7 +157,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
       case WEBP_LOSSLESS:
       case WEBP_EXTENDED:
       case WEBP_EXTENDED_WITH_ALPHA:
-        return TriState.valueOf(!WebpTranscoder.isWebpNativelySupported(imageFormat));
+        return TriState.valueOf(!sWebpTranscoder.isWebpNativelySupported(imageFormat));
       case UNKNOWN:
         // the image format might be unknown because we haven't fetched the whole header yet,
         // in which case the decision whether to transcode or not cannot be made yet
@@ -175,12 +176,12 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     switch (imageFormat) {
       case WEBP_SIMPLE:
       case WEBP_EXTENDED:
-        WebpTranscoder.transcodeWebpToJpeg(imageInputStream, outputStream, DEFAULT_JPEG_QUALITY);
+        sWebpTranscoder.transcodeWebpToJpeg(imageInputStream, outputStream, DEFAULT_JPEG_QUALITY);
         break;
 
       case WEBP_LOSSLESS:
       case WEBP_EXTENDED_WITH_ALPHA:
-        WebpTranscoder.transcodeWebpToPng(imageInputStream, outputStream);
+        sWebpTranscoder.transcodeWebpToPng(imageInputStream, outputStream);
         break;
 
       default:

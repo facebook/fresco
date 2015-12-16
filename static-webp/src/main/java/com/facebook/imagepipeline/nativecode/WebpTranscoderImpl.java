@@ -21,21 +21,24 @@ import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.common.webp.WebpSupportStatus;
+import com.facebook.common.soloader.SoLoaderShim;
 
 /**
  * Helper methods for modifying webp static images.
  */
 @DoNotStrip
-public class WebpTranscoder {
+public class WebpTranscoderImpl implements WebpTranscoder {
 
   static {
-    ImagePipelineNativeLoader.load();
+    SoLoaderShim.loadLibrary("imagepipeline");
+    SoLoaderShim.loadLibrary("static-webp");
   }
 
   /**
    * @return true if given type of WebP is supported natively by the framework
    */
-  public static boolean isWebpNativelySupported(ImageFormat webpFormat) {
+  @Override
+  public boolean isWebpNativelySupported(ImageFormat webpFormat) {
     switch (webpFormat) {
       case WEBP_SIMPLE: // Simple WebPs are supported on Android 4.0+
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
@@ -54,7 +57,8 @@ public class WebpTranscoder {
   /**
    * Transcodes webp image given by input stream into jpeg.
    */
-  public static void transcodeWebpToJpeg(
+  @Override
+  public void transcodeWebpToJpeg(
       InputStream inputStream,
       OutputStream outputStream,
       int quality) throws IOException {
@@ -67,7 +71,8 @@ public class WebpTranscoder {
   /**
    * Transcodes Webp image given by input stream into png.
    */
-  public static void transcodeWebpToPng(
+  @Override
+  public void transcodeWebpToPng(
       InputStream inputStream,
       OutputStream outputStream) throws IOException {
     nativeTranscodeWebpToPng(
