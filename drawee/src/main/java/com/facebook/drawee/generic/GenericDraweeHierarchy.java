@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
@@ -36,56 +37,62 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
  * If provided, retry image will be used in case of failure when retrying is enabled.
  * If provided, progressbar will be displayed until fully loaded.
  * Each image can be displayed with a different scale type (or no scaling at all).
- * Fading between the layers is supported.
+ * Fading between the layers is supported. Rounding is supported.
  *
  * <p>
- * Example hierarchy with placeholder, retry, failure and one actual image:
+ * Example hierarchy with a placeholder, retry, failure and the actual image:
  *  <pre>
- *     o FadeDrawable (top level drawable)
+ *  o RootDrawable (top level drawable)
+ *  |
+ *  +--o FadeDrawable
  *     |
- *     +--o ScaleTypeDrawable
+ *     +--o ScaleTypeDrawable (placeholder branch, optional)
  *     |  |
  *     |  +--o Drawable (placeholder image)
  *     |
- *     +--o ScaleTypeDrawable
+ *     +--o ScaleTypeDrawable (actual image branch)
  *     |  |
- *     |  +--o SettableDrawable
+ *     |  +--o ForwardingDrawable (actual image wrapper)
  *     |     |
  *     |     +--o Drawable (actual image)
  *     |
- *     +--o ScaleTypeDrawable
- *     |  |
- *     |  +--o Drawable (retry image)
+ *     +--o null (progress bar branch, optional)
  *     |
- *     +--o ScaleTypeDrawable
+ *     +--o Drawable (retry image branch, optional)
+ *     |
+ *     +--o ScaleTypeDrawable (failure image branch, optional)
  *        |
  *        +--o Drawable (failure image)
  *  </pre>
  *
  * <p>
  * Note:
- * - ScaleType and Matrix transformations will be added only if specified. If both are unspecified,
- * then the branch for that image will be attached directly.
- * - It is not permitted to set both ScaleType transformation and Matrix transformation for the
- * same image.
- * - A Matrix transformation is only supported for actual image.
- * - All branches (placeholder, failure, retry, actual image, progressBar) are optional.
- * If some branch is not specified it won't be created. The exception is placeholder branch,
- * which will, if not specified, be created with a transparent drawable.
- * - If overlays and/or backgrounds are specified, they are added to the same fade drawable, and
- * are always displayed.
- * - Instance of some drawable should be used by only one DH. If more than one DH is being built
- * with the same builder, different drawable instances must be specified for each DH.
+ * <ul>
+ * <li> RootDrawable and FadeDrawable are always created.
+ * <li> All branches except the actual image branch are optional (placeholder, failure, retry,
+ * progress bar). If some branch is not specified it won't be created. Index in FadeDrawable will
+ * still be reserved though.
+ * <li> If overlays and/or backgrounds are specified, they are added to the same fade drawable, and
+ * are always being displayed.
+ * <li> ScaleType and Matrix transformations will be added only if specified. If both are
+ * unspecified, then the branch for that image is attached to FadeDrawable directly. Matrix
+ * transformation is only supported for the actual image, and it is not recommended to be used.
+ * <li> Rounding, if specified, is applied to all layers. Rounded drawable can either wrap
+ * FadeDrawable, or if leaf rounding is specified, each leaf drawable will be rounded separately.
+ * <li> A particular drawable instance should be used by only one DH. If more than one DH is being
+ * built with the same builder, different drawable instances must be specified for each DH.
+ * </ul>
  */
 public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
 
   private final Resources mResources;
+  private RoundingParams mRoundingParams;
 
   private final RootDrawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
-  private final ForwardingDrawable mActualImageSettableDrawable;
+  private final ForwardingDrawable mActualImageWrapper;
 
   private final int mPlaceholderImageIndex;
   private final int mProgressBarImageIndex;
@@ -94,81 +101,27 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final int mFailureImageIndex;
   private final int mControllerOverlayIndex;
 
-  private RoundingParams mRoundingParams;
-
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
     mResources = builder.getResources();
     mRoundingParams = builder.getRoundingParams();
 
-    int numLayers = 0;
+    mActualImageWrapper = new ForwardingDrawable(mEmptyActualImageDrawable);
 
-    // backgrounds
     int numBackgrounds = (builder.getBackgrounds() != null) ? builder.getBackgrounds().size() : 0;
+    int numOverlays = (builder.getOverlays() != null) ? builder.getOverlays().size() : 0;
+    numOverlays += (builder.getPressedStateOverlay() != null) ? 1 : 0;
+
+    // layer indices and count
+    int numLayers = 0;
     int backgroundsIndex = numLayers;
     numLayers += numBackgrounds;
-
-    // placeholder image branch
-    Drawable placeholderImageBranch = builder.getPlaceholderImage();
-    if (placeholderImageBranch != null) {
-      placeholderImageBranch = WrappingUtils.maybeApplyLeafRounding(
-          placeholderImageBranch,
-          mRoundingParams,
-          mResources);
-      placeholderImageBranch = WrappingUtils.maybeWrapWithScaleType(
-          placeholderImageBranch,
-          builder.getPlaceholderImageScaleType());
-    }
     mPlaceholderImageIndex = numLayers++;
-
-    // actual image branch
-    Drawable actualImageBranch;
-    mActualImageSettableDrawable = new ForwardingDrawable(mEmptyActualImageDrawable);
-    actualImageBranch = mActualImageSettableDrawable;
-    actualImageBranch.setColorFilter(builder.getActualImageColorFilter());
-    actualImageBranch = WrappingUtils.maybeWrapWithScaleType(
-        actualImageBranch,
-        builder.getActualImageScaleType(),
-        builder.getActualImageFocusPoint());
-    actualImageBranch = WrappingUtils.maybeWrapWithMatrix(
-        actualImageBranch,
-        builder.getActualImageMatrix());
     mActualImageIndex = numLayers++;
-
-    // progressBar image branch
-    Drawable progressBarImageBranch = builder.getProgressBarImage();
     mProgressBarImageIndex = numLayers++;
-    if (progressBarImageBranch != null) {
-      progressBarImageBranch = WrappingUtils.maybeWrapWithScaleType(
-          progressBarImageBranch,
-          builder.getProgressBarImageScaleType());
-    }
-
-    // retry image branch
-    Drawable retryImageBranch = builder.getRetryImage();
     mRetryImageIndex = numLayers++;
-    if (retryImageBranch != null) {
-      retryImageBranch = WrappingUtils.maybeWrapWithScaleType(
-          retryImageBranch,
-          builder.getRetryImageScaleType());
-    }
-
-    // failure image branch
-    Drawable failureImageBranch = builder.getFailureImage();
     mFailureImageIndex = numLayers++;
-    if (failureImageBranch != null) {
-      failureImageBranch = WrappingUtils.maybeWrapWithScaleType(
-          failureImageBranch,
-          builder.getFailureImageScaleType());
-    }
-
-    // overlays
     int overlaysIndex = numLayers;
-    int numOverlays =
-        ((builder.getOverlays() != null) ? builder.getOverlays().size() : 0) +
-            ((builder.getPressedStateOverlay() != null) ? 1 : 0);
     numLayers += numOverlays;
-
-    // controller overlay
     mControllerOverlayIndex = numLayers++;
 
     // array of layers
@@ -176,29 +129,41 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     if (numBackgrounds > 0) {
       int index = 0;
       for (Drawable background : builder.getBackgrounds()) {
-        layers[backgroundsIndex + index++] =
-            WrappingUtils.maybeApplyLeafRounding(background, mRoundingParams, mResources);
+        layers[backgroundsIndex + index++] = buildBranch(background, null);
       }
     }
-    layers[mPlaceholderImageIndex] = placeholderImageBranch;
-    layers[mActualImageIndex] = actualImageBranch;
-    layers[mProgressBarImageIndex] = progressBarImageBranch;
-    layers[mRetryImageIndex] = retryImageBranch;
-    layers[mFailureImageIndex] = failureImageBranch;
+    layers[mPlaceholderImageIndex] = buildBranch(
+        builder.getPlaceholderImage(),
+        builder.getPlaceholderImageScaleType());
+    layers[mActualImageIndex] = buildActualImageBranch(
+        mActualImageWrapper,
+        builder.getActualImageScaleType(),
+        builder.getActualImageFocusPoint(),
+        builder.getActualImageMatrix(),
+        builder.getActualImageColorFilter());
+    layers[mProgressBarImageIndex] = buildBranch(
+        builder.getProgressBarImage(),
+        builder.getProgressBarImageScaleType());
+    layers[mRetryImageIndex] = buildBranch(
+        builder.getRetryImage(),
+        builder.getRetryImageScaleType());
+    layers[mFailureImageIndex] = buildBranch(
+        builder.getFailureImage(),
+        builder.getFailureImageScaleType());
     if (numOverlays > 0) {
       int index = 0;
       if (builder.getOverlays() != null) {
         for (Drawable overlay : builder.getOverlays()) {
-          layers[overlaysIndex + index++] = overlay;
+          layers[overlaysIndex + index++] = buildBranch(overlay, null);
         }
       }
       if (builder.getPressedStateOverlay() != null) {
-        layers[overlaysIndex + index++] = builder.getPressedStateOverlay();
+        layers[overlaysIndex + index] = buildBranch(builder.getPressedStateOverlay(), null);
       }
     }
     layers[mControllerOverlayIndex] = null;
 
-    // fade drawable composed of branches
+    // fade drawable composed of layers
     mFadeDrawable = new FadeDrawable(layers);
     mFadeDrawable.setTransitionDuration(builder.getFadeDuration());
 
@@ -213,10 +178,29 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     resetFade();
   }
 
+  @Nullable
+  private Drawable buildActualImageBranch(
+      Drawable drawable,
+      @Nullable ScaleType scaleType,
+      @Nullable PointF focusPoint,
+      @Nullable Matrix matrix,
+      @Nullable ColorFilter colorFilter) {
+    drawable.setColorFilter(colorFilter);
+    drawable = WrappingUtils.maybeWrapWithScaleType(drawable, scaleType, focusPoint);
+    drawable = WrappingUtils.maybeWrapWithMatrix(drawable, matrix);
+    return drawable;
+  }
+
+  /** Applies scale type and rounding (both if specified). */
+  @Nullable
+  private Drawable buildBranch(@Nullable Drawable drawable, @Nullable ScaleType scaleType) {
+    drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
+    drawable = WrappingUtils.maybeWrapWithScaleType(drawable, scaleType);
+    return drawable;
+  }
+
   private void resetActualImages() {
-    if (mActualImageSettableDrawable != null) {
-      mActualImageSettableDrawable.setDrawable(mEmptyActualImageDrawable);
-    }
+    mActualImageWrapper.setDrawable(mEmptyActualImageDrawable);
   }
 
   private void resetFade() {
@@ -292,7 +276,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setImage(Drawable drawable, float progress, boolean immediate) {
     drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
     drawable.mutate();
-    mActualImageSettableDrawable.setDrawable(drawable);
+    mActualImageWrapper.setDrawable(drawable);
     mFadeDrawable.beginBatchMode();
     fadeOutBranches();
     fadeInLayer(mActualImageIndex);
@@ -412,12 +396,12 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets the color filter to be applied on the actual image. */
   public void setActualImageColorFilter(ColorFilter colorfilter) {
-    mActualImageSettableDrawable.setColorFilter(colorfilter);
+    mActualImageWrapper.setColorFilter(colorfilter);
   }
 
   /** Gets the non-cropped post-scaling bounds of the actual image. */
   public void getActualImageBounds(RectF outBounds) {
-    mActualImageSettableDrawable.getTransformedBounds(outBounds);
+    mActualImageWrapper.getTransformedBounds(outBounds);
   }
 
   /** Sets a new placeholder drawable with old scale type. */
