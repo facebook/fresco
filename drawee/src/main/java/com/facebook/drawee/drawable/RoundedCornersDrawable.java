@@ -43,14 +43,14 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   @VisibleForTesting Type mType = Type.OVERLAY_COLOR;
-  @VisibleForTesting final float[] mRadii = new float[8];
+  private final float[] mRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-  @VisibleForTesting boolean mIsCircle = false;
-  @VisibleForTesting float mBorderWidth = 0;
-  @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
-  @VisibleForTesting int mOverlayColor = Color.TRANSPARENT;
-  @VisibleForTesting float mPadding = 0;
+  private boolean mIsCircle = false;
+  private float mBorderWidth = 0;
+  private int mBorderColor = Color.TRANSPARENT;
+  private int mOverlayColor = Color.TRANSPARENT;
+  private float mPadding = 0;
   private final Path mPath = new Path();
   private final Path mBorderPath = new Path();
   private final RectF mTempRectangle = new RectF();
@@ -86,6 +86,12 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     invalidateSelf();
   }
 
+  /** Returns whether or not this drawable rounds as circle. */
+  @Override
+  public boolean isCircle() {
+    return mIsCircle;
+  }
+
   /**
    * Sets radius to be used for rounding
    *
@@ -117,6 +123,12 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     invalidateSelf();
   }
 
+  /** Gets the radii. */
+  @Override
+  public float[] getRadii() {
+    return mRadii;
+  }
+
   /**
    * Sets the overlay color.
    *
@@ -125,6 +137,11 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   public void setOverlayColor(int overlayColor) {
     mOverlayColor = overlayColor;
     invalidateSelf();
+  }
+
+  /** Gets the overlay color. */
+  public int getOverlayColor() {
+    return mOverlayColor;
   }
 
   /**
@@ -140,11 +157,29 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
     invalidateSelf();
   }
 
+  /** Gets the border color. */
+  @Override
+  public int getBorderColor() {
+    return mBorderColor;
+  }
+
+  /** Gets the border width. */
+  @Override
+  public float getBorderWidth() {
+    return mBorderWidth;
+  }
+
   @Override
   public void setPadding(float padding) {
     mPadding = padding;
     updatePath();
     invalidateSelf();
+  }
+
+  /** Gets the padding. */
+  @Override
+  public float getPadding() {
+    return mPadding;
   }
 
   @Override

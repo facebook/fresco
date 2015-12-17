@@ -25,13 +25,13 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 
 public class RoundedColorDrawable extends Drawable implements Rounded {
-  @VisibleForTesting final float[] mRadii = new float[8];
+  private final float[] mRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-  @VisibleForTesting boolean mIsCircle = false;
-  @VisibleForTesting float mBorderWidth = 0;
-  @VisibleForTesting float mPadding = 0;
-  @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
+  private boolean mIsCircle = false;
+  private float mBorderWidth = 0;
+  private float mPadding = 0;
+  private int mBorderColor = Color.TRANSPARENT;
   @VisibleForTesting final Path mPath = new Path();
   @VisibleForTesting final Path mBorderPath = new Path();
   private int mColor = Color.TRANSPARENT;
@@ -110,6 +110,12 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
     invalidateSelf();
   }
 
+  /** Returns whether or not this drawable rounds as circle. */
+  @Override
+  public boolean isCircle() {
+    return mIsCircle;
+  }
+
   /**
    * Sets the rounding radii.
    *
@@ -126,6 +132,12 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
     }
     updatePath();
     invalidateSelf();
+  }
+
+  /** Gets the radii. */
+  @Override
+  public float[] getRadii() {
+    return mRadii;
   }
 
   /**
@@ -179,6 +191,18 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
     }
   }
 
+  /** Gets the border color. */
+  @Override
+  public int getBorderColor() {
+    return mBorderColor;
+  }
+
+  /** Gets the border width. */
+  @Override
+  public float getBorderWidth() {
+    return mBorderWidth;
+  }
+
   @Override
   public void setPadding(float padding) {
     if (mPadding != padding) {
@@ -186,6 +210,12 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
       updatePath();
       invalidateSelf();
     }
+  }
+
+  /** Gets the padding. */
+  @Override
+  public float getPadding() {
+    return mPadding;
   }
 
   /**

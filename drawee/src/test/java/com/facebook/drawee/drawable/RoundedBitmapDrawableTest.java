@@ -52,21 +52,21 @@ public class RoundedBitmapDrawableTest {
   public void testSetCircle() {
     mRoundedBitmapDrawable.setCircle(true);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertTrue(mRoundedBitmapDrawable.mIsCircle);
+    assertTrue(mRoundedBitmapDrawable.isCircle());
   }
 
   @Test
   public void testSetRadii() {
     mRoundedBitmapDrawable.setRadii(new float[]{1, 2, 3, 4, 5, 6, 7, 8});
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, mRoundedBitmapDrawable.mCornerRadii, 0);
+    assertArrayEquals(new float[]{1, 2, 3, 4, 5, 6, 7, 8}, mRoundedBitmapDrawable.getRadii(), 0);
   }
 
   @Test
   public void testSetRadius() {
     mRoundedBitmapDrawable.setRadius(9);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundedBitmapDrawable.mCornerRadii, 0);
+    assertArrayEquals(new float[]{9, 9, 9, 9, 9, 9, 9, 9}, mRoundedBitmapDrawable.getRadii(), 0);
   }
 
   @Test
@@ -75,8 +75,8 @@ public class RoundedBitmapDrawableTest {
     float width = 5;
     mRoundedBitmapDrawable.setBorder(color, width);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertEquals(color, mRoundedBitmapDrawable.mBorderColor);
-    assertEquals(width, mRoundedBitmapDrawable.mBorderWidth, 0);
+    assertEquals(color, mRoundedBitmapDrawable.getBorderColor());
+    assertEquals(width, mRoundedBitmapDrawable.getBorderWidth(), 0);
   }
 
   @Test
@@ -84,7 +84,7 @@ public class RoundedBitmapDrawableTest {
     float padding = 10;
     mRoundedBitmapDrawable.setPadding(padding);
     verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
-    assertEquals(padding, mRoundedBitmapDrawable.mPadding, 0);
+    assertEquals(padding, mRoundedBitmapDrawable.getPadding(), 0);
   }
 
   @Test

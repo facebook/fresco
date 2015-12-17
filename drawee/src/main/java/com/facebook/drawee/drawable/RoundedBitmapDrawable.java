@@ -35,11 +35,11 @@ import com.facebook.common.internal.VisibleForTesting;
 */
 public class RoundedBitmapDrawable extends BitmapDrawable
     implements TransformAwareDrawable, Rounded {
-  @VisibleForTesting boolean mIsCircle = false;
-  @VisibleForTesting float[] mCornerRadii = new float[8];
-  @VisibleForTesting float[] mBorderRadii = new float[8];
+  private boolean mIsCircle = false;
+  private final float[] mCornerRadii = new float[8];
+  @VisibleForTesting final float[] mBorderRadii = new float[8];
 
-  @VisibleForTesting RectF mRootBounds = new RectF();
+  @VisibleForTesting final RectF mRootBounds = new RectF();
   @VisibleForTesting final RectF mPrevRootBounds = new RectF();
   @VisibleForTesting final RectF mBitmapBounds = new RectF();
   @VisibleForTesting final RectF mDrawableBounds = new RectF();
@@ -52,9 +52,9 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @VisibleForTesting final Matrix mInverseParentTransform = new Matrix();
 
   @VisibleForTesting final Matrix mTransform = new Matrix();
-  @VisibleForTesting float mBorderWidth = 0;
-  @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
-  @VisibleForTesting float mPadding = 0;
+  private float mBorderWidth = 0;
+  private int mBorderColor = Color.TRANSPARENT;
+  private float mPadding = 0;
   @VisibleForTesting boolean mIsNonzero = true;
 
   private final Path mPath = new Path();
@@ -106,6 +106,12 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     invalidateSelf();
   }
 
+  /** Returns whether or not this drawable rounds as circle. */
+  @Override
+  public boolean isCircle() {
+    return mIsCircle;
+  }
+
   /**
    * Specify radius for the corners of the rectangle. If this is > 0, then the
    * drawable is drawn in a round-rectangle, rather than a rectangle.
@@ -137,6 +143,12 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     invalidateSelf();
   }
 
+  /** Gets the radii. */
+  @Override
+  public float[] getRadii() {
+    return mCornerRadii;
+  }
+
   /**
    * Sets the border
    * @param color of the border
@@ -152,6 +164,18 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     }
   }
 
+  /** Gets the border color. */
+  @Override
+  public int getBorderColor() {
+    return mBorderColor;
+  }
+
+  /** Gets the border width. */
+  @Override
+  public float getBorderWidth() {
+    return mBorderWidth;
+  }
+
   @Override
   public void setPadding(float padding) {
     if (mPadding != padding) {
@@ -159,6 +183,12 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       mIsPathDirty = true;
       invalidateSelf();
     }
+  }
+
+  /** Gets the padding. */
+  @Override
+  public float getPadding() {
+    return mPadding;
   }
 
   /**
