@@ -99,7 +99,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final int mActualImageIndex;
   private final int mRetryImageIndex;
   private final int mFailureImageIndex;
-  private final int mControllerOverlayIndex;
 
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
     mResources = builder.getResources();
@@ -122,7 +121,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mFailureImageIndex = numLayers++;
     int overlaysIndex = numLayers;
     numLayers += numOverlays;
-    mControllerOverlayIndex = numLayers++;
 
     // array of layers
     Drawable[] layers = new Drawable[numLayers];
@@ -161,7 +159,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         layers[overlaysIndex + index] = buildBranch(builder.getPressedStateOverlay(), null);
       }
     }
-    layers[mControllerOverlayIndex] = null;
 
     // fade drawable composed of layers
     mFadeDrawable = new FadeDrawable(layers);
@@ -323,7 +320,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   @Override
   public void setControllerOverlay(@Nullable Drawable drawable) {
-    mFadeDrawable.setDrawable(mControllerOverlayIndex, drawable);
+    mTopLevelDrawable.setControllerOverlay(drawable);
   }
 
   // Helper methods for accessing layers

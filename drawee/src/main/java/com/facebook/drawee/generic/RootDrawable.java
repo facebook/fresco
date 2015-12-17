@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.VisibilityAwareDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
@@ -32,9 +33,15 @@ import com.facebook.drawee.drawable.VisibilityCallback;
  * (if not already attached) when the hierarchy needs to be drawn. This prevents photo-not-loading
  * issues in case attach event has not been called (for whatever reason). It also helps with
  * memory management as the controller will get detached if the drawable is not visible.
+ * <li> Root drawable supports controller overlay, a special overlay set by the controller. Typical
+ * usages are debugging, diagnostics and other cases where controller-specific overlay is required.
  * </ul>
  */
 public class RootDrawable extends ForwardingDrawable implements VisibilityAwareDrawable {
+
+  @VisibleForTesting
+  @Nullable
+  Drawable mControllerOverlay = null;
 
   @Nullable
   private VisibilityCallback mVisibilityCallback;
@@ -76,5 +83,14 @@ public class RootDrawable extends ForwardingDrawable implements VisibilityAwareD
       mVisibilityCallback.onDraw();
     }
     super.draw(canvas);
+    if (mControllerOverlay != null) {
+      mControllerOverlay.setBounds(getBounds());
+      mControllerOverlay.draw(canvas);
+    }
+  }
+
+  public void setControllerOverlay(@Nullable Drawable controllerOverlay) {
+    mControllerOverlay = controllerOverlay;
+    invalidateSelf();
   }
 }
