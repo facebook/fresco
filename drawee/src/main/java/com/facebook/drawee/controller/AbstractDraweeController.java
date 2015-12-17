@@ -100,7 +100,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
       Object callerContext) {
     mDeferredReleaser = deferredReleaser;
     mUiThreadImmediateExecutor = uiThreadImmediateExecutor;
-    init(id, callerContext);
+    init(id, callerContext, true);
   }
 
   /**
@@ -111,13 +111,13 @@ public abstract class AbstractDraweeController<T, INFO> implements
    * @param callerContext tag and context for this controller
    */
   protected void initialize(String id, Object callerContext) {
-    init(id, callerContext);
+    init(id, callerContext, false);
   }
 
-  private void init(String id, Object callerContext) {
+  private void init(String id, Object callerContext, boolean justConstructed) {
     mEventTracker.recordEvent(Event.ON_INIT_CONTROLLER);
     // cancel deferred release
-    if (mDeferredReleaser != null) {
+    if (!justConstructed && mDeferredReleaser != null) {
       mDeferredReleaser.cancelDeferredRelease(this);
     }
     // reinitialize mutable state (fetch state)
