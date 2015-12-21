@@ -49,10 +49,11 @@ mSimpleDraweeView.setController(controller);
 ```
 
 Resizing has some limitations:
-* it only supports JPEG files
-* the actual resize is carried out to the nearest 1/8 of the original size
-* it cannot make your image bigger, only smaller
-* it will slow down your decodes and possibly the rest of your app, as it's CPU-intensive
+
+- it only supports JPEG files
+- the actual resize is carried out to the nearest 1/8 of the original size
+- it cannot make your image bigger, only smaller
+- it will slow down your decodes and possibly the rest of your app, as it's CPU-intensive
 
 ### Downsampling
 
