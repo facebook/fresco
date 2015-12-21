@@ -23,7 +23,7 @@ To scale, simply specify the `layout_width` and `layout_height` of your `SimpleD
 
 Scaling uses Android's own built-in facilities to match the image to the view size. On Android 4.0 and later, this is *hardware-accelerated*, on devices with a GPU. 
 
-The only downside of scaling is that if the image is much bigger than the view, then the memory gets wasted.
+The downside of scaling is that if the image is much bigger than the view, then the memory gets wasted. This will also affect the performance because more bytes needs to be copied to GPU and the images will get evicted from the bitmao cache more often.
 
 ### Resizing
 
@@ -31,7 +31,7 @@ Resizing does not modify the original file. Resizing just resizes an encoded ima
 
 We recommend using resizing only for local camera images, which on most devices are much larger than the size of a the device's screen.
 
-For network images, try to download an image as close as possible to the size you will be displaying, and then scale it.
+For network images, try to download an image as close as possible to the size you will be displaying, and then scale it. By downloading images of inappropriate size you are wasting the user's data.
 
 To resize pass a [ResizeOptions](../javadoc/reference/com/facebook/imagepipeline/common/ResizeOptions.html) object when constructing an `ImageRequest`:
 
@@ -48,7 +48,7 @@ PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
 mSimpleDraweeView.setController(controller);
 ```
 
-Resizing has a number of limitations:
+Resizing has some limitations:
 * it only supports JPEG files
 * the actual resize is carried out to the nearest 1/8 of the original size
 * it cannot make your image bigger, only smaller
