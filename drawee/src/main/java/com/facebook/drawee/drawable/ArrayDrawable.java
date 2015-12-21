@@ -94,7 +94,7 @@ public class ArrayDrawable extends Drawable
     final Drawable oldDrawable = mLayers[index];
     if (drawable != oldDrawable) {
       if (drawable != null && mIsMutated) {
-        drawable = drawable.mutate();
+        drawable.mutate();
       }
 
       DrawableUtils.setCallbacks(mLayers[index], null, null);

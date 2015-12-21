@@ -168,18 +168,19 @@ public class WrappingUtils {
    * Updates the leaf rounding of the parent's child drawable.
    *
    * <ul>
-   * <li>If rounding mode is BITMAP_ONLY and the child is not a RoundedBitmapDrawable,
-   * a new RoundedBitmapDrawable is created and the child gets wrapped with it.
-   * <li>If rounding mode is BITMAP_ONLY and the child is already wrapped with a
-   * RoundedBitmapDrawable, its rounding parameters are updated.
-   * If rounding mode is not BITMAP_ONLY and the child is wrapped with a
-   * RoundedBitmapDrawable, rounding params get reset so that no rounding occurs.
+   * <li>If rounding mode is BITMAP_ONLY and the child is not a rounded drawable,
+   * it gets rounded with a new rounded drawable.
+   * <li>If rounding mode is BITMAP_ONLY and the child is already rounded,
+   * its rounding parameters are updated.
+   * <li>If rounding mode is not BITMAP_ONLY and the child is rounded,
+   * its rounding parameters are reset so that no rounding occurs.
    * </ul>
    */
   static void updateLeafRounding(
       DrawableParent parent,
       @Nullable RoundingParams roundingParams,
       Resources resources) {
+    parent = findDrawableParentForLeaf(parent);
     Drawable child = parent.getDrawable();
     if (roundingParams != null &&
         roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
@@ -191,7 +192,7 @@ public class WrappingUtils {
       } else if (child != null) {
         // Important: remove the child before wrapping it with a new parent!
         parent.setDrawable(sEmptyDrawable);
-        Drawable rounded = maybeApplyLeafRounding(child, roundingParams, resources);
+        Drawable rounded = applyLeafRounding(child, roundingParams, resources);
         parent.setDrawable(rounded);
       }
     } else if (child instanceof Rounded) {
@@ -223,16 +224,18 @@ public class WrappingUtils {
   }
 
   /**
-   * Wraps the given drawable with a new {@link RoundedBitmapDrawable} or
-   * {@link RoundedColorDrawable}.
+   * Applies rounding on the drawable's leaf.
    *
-   * <p> If the given drawable is not a {@link BitmapDrawable} or a {@link ColorDrawable},
-   * but a {@link ForwardingDrawable}, its children get examined recursively.
-   * <p> If no {@link BitmapDrawable} or {@link ColorDrawable} is found, or if the rounding params
-   * do not specify BITMAP_ONLY mode, the given drawable is returned without being wrapped.
+   * <p> Currently only {@link BitmapDrawable} or {@link ColorDrawable} leafs can be rounded.
+   * <p> If the leaf cannot be rounded, or the rounding params do not specify BITMAP_ONLY mode,
+   * the given drawable is returned without being rounded.
+   * <p> If the given drawable is a leaf itself, and it can be rounded, then the rounded drawable
+   * is returned.
+   * <p> If the given drawable is not a leaf, and its leaf can be rounded, the leaf gets rounded,
+   * and the original drawable is returned.
    *
-   * @return the wrapping rounded drawable, or the original drawable if the wrapping didn't
-   * take place or it took place on a drawable's child
+   * @return the rounded drawable, or the original drawable if the rounding didn't take place
+   * or it took place on a drawable's child
    */
   static Drawable maybeApplyLeafRounding(
       @Nullable Drawable drawable,
@@ -242,35 +245,24 @@ public class WrappingUtils {
         roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
       return drawable;
     }
-    if (drawable instanceof BitmapDrawable || drawable instanceof ColorDrawable) {
-      return applyLeafRounding(drawable, roundingParams, resources);
+    if (drawable instanceof ForwardingDrawable) {
+      DrawableParent parent = findDrawableParentForLeaf((ForwardingDrawable) drawable);
+      Drawable child = parent.setDrawable(sEmptyDrawable);
+      child = applyLeafRounding(child, roundingParams, resources);
+      parent.setDrawable(child);
+      return drawable;
     } else {
-      Drawable parent = drawable;
-      Drawable child = parent.getCurrent();
-      while (child != null && parent != child) {
-        if (parent instanceof ForwardingDrawable &&
-            (child instanceof BitmapDrawable || child instanceof ColorDrawable)) {
-          ((ForwardingDrawable) parent).setDrawable(sEmptyDrawable);
-          child = applyLeafRounding(child, roundingParams, resources);
-          ((ForwardingDrawable) parent).setDrawable(child);
-          break;
-        }
-        parent = child;
-        child = parent.getCurrent();
-      }
+      return applyLeafRounding(drawable, roundingParams, resources);
     }
-    return drawable;
   }
 
   /**
-   * Wraps the given drawable with a new {@link RoundedBitmapDrawable} or
-   * {@link RoundedColorDrawable}.
+   * Rounds the given drawable with a {@link RoundedBitmapDrawable} or {@link RoundedColorDrawable}.
    *
-   * <p> If the given drawable is not a {@link BitmapDrawable} or a {@link ColorDrawable},
-   * the given drawable is returned without being wrapped.
+   * <p> If the given drawable is not a {@link BitmapDrawable} or a {@link ColorDrawable}, it is
+   * returned without being rounded.
    *
-   * @return the wrapping rounded drawable, or the original drawable if the wrapping didn't
-   * take place
+   * @return the rounded drawable, or the original drawable if rounding didn't take place
    */
   private static Drawable applyLeafRounding(
       Drawable drawable,
@@ -310,5 +302,19 @@ public class WrappingUtils {
     rounded.setRadius(0);
     rounded.setBorder(Color.TRANSPARENT, 0);
     rounded.setPadding(0);
+  }
+
+  /**
+   * Finds the immediate parent of a leaf drawable.
+   */
+  static DrawableParent findDrawableParentForLeaf(DrawableParent parent) {
+    while (true) {
+      Drawable child = parent.getDrawable();
+      if (child == parent || !(child instanceof DrawableParent)) {
+        break;
+      }
+      parent = (DrawableParent) child;
+    }
+    return parent;
   }
 }

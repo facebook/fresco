@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -66,6 +67,7 @@ public class DrawableTestUtils {
     stubSetVisibilityCallback(drawable);
     stubSetAlpha(drawable);
     stubGetPaint(drawable);
+    stubGetBitmap(drawable);
     return drawable;
   }
 
@@ -206,5 +208,18 @@ public class DrawableTestUtils {
             return null;
           }
         }).when(bitmapDrawable).setColorFilter(any(ColorFilter.class));
+  }
+
+  /**
+   * Stubs getBitmap for BitmapDrawables.
+   * @param drawable drawable to stub methods of
+   */
+  public static void stubGetBitmap(Drawable drawable) {
+    if (!(drawable instanceof BitmapDrawable)) {
+      return;
+    }
+    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+    final Bitmap bitmap = mock(Bitmap.class);
+    when(bitmapDrawable.getBitmap()).thenReturn(bitmap);
   }
 }
