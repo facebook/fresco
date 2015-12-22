@@ -36,6 +36,7 @@ import com.facebook.common.internal.VisibleForTesting;
 public class RoundedBitmapDrawable extends BitmapDrawable
     implements TransformAwareDrawable, Rounded {
   private boolean mIsCircle = false;
+  private boolean mRadiiNonZero = false;
   private final float[] mCornerRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
 
@@ -55,12 +56,10 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   private float mBorderWidth = 0;
   private int mBorderColor = Color.TRANSPARENT;
   private float mPadding = 0;
-  @VisibleForTesting boolean mIsNonzero = true;
 
   private final Path mPath = new Path();
   private final Path mBorderPath = new Path();
   private boolean mIsPathDirty = true;
-  /** True if this rounded bitmap drawable will actually do anything. */
   private final Paint mPaint = new Paint();
   private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean mIsShaderTransformDirty = true;
@@ -121,6 +120,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   public void setRadius(float radius) {
     Preconditions.checkState(radius >= 0);
     Arrays.fill(mCornerRadii, radius);
+    mRadiiNonZero = (radius != 0);
     mIsPathDirty = true;
     invalidateSelf();
   }
@@ -135,9 +135,14 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   public void setRadii(float[] radii) {
     if (radii == null) {
       Arrays.fill(mCornerRadii, 0);
+      mRadiiNonZero = false;
     } else {
       Preconditions.checkArgument(radii.length == 8, "radii should have exactly 8 values");
       System.arraycopy(radii, 0, mCornerRadii, 0, 8);
+      mRadiiNonZero = false;
+      for (int i = 0; i < 8; i++) {
+        mRadiiNonZero |= (radii[i] > 0);
+      }
     }
     mIsPathDirty = true;
     invalidateSelf();
@@ -176,6 +181,10 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     return mBorderWidth;
   }
 
+  /**
+   * Sets the padding for the bitmap.
+   * @param padding
+   */
   @Override
   public void setPadding(float padding) {
     if (mPadding != padding) {
@@ -215,18 +224,18 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   @Override
   public void draw(Canvas canvas) {
-    updateTransform();
-    updateNonzero();
-    if (!mIsNonzero) {
+    if (!shouldRound()) {
       super.draw(canvas);
       return;
     }
+
+    updateTransform();
     updatePath();
     updatePaint();
     int saveCount = canvas.save();
     canvas.concat(mInverseParentTransform);
     canvas.drawPath(mPath, mPaint);
-    if (mBorderWidth != 0) {
+    if (mBorderWidth > 0) {
       mBorderPaint.setStrokeWidth(mBorderWidth);
       mBorderPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mPaint.getAlpha()));
       canvas.drawPath(mBorderPath, mBorderPaint);
@@ -236,20 +245,10 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   /**
    * If both the radii and border width are zero, there is nothing to round.
-   * If so, we set internal state to delegate drawing to the superclass.
    */
-  private void updateNonzero() {
-    if (mIsPathDirty) {
-      mIsNonzero = false;
-      if (mIsCircle || mBorderWidth > 0) {
-        mIsNonzero = true;
-      }
-      for (int i = 0; i < mCornerRadii.length; i++) {
-        if (mCornerRadii[i] > 0) {
-          mIsNonzero = true;
-        }
-      }
-    }
+  @VisibleForTesting
+  boolean shouldRound() {
+    return mIsCircle || mRadiiNonZero || mBorderWidth > 0;
   }
 
   private void updateTransform() {

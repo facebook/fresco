@@ -13,7 +13,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,7 +35,6 @@ public class RoundedBitmapDrawableTest {
 
   RoundedBitmapDrawable mRoundedBitmapDrawable;
   private final Drawable.Callback mCallback = mock(Drawable.Callback.class);
-  private final Canvas mCanvas = mock(Canvas.class);
 
   @Before
   public void setUp() {
@@ -88,29 +86,40 @@ public class RoundedBitmapDrawableTest {
   }
 
   @Test
-  public void testNonzeroDefaultFalse() {
-    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+  public void testShouldRoundDefault() {
+    assertFalse(mRoundedBitmapDrawable.shouldRound());
   }
 
   @Test
-  public void testNonZeroOnSet() {
-    mRoundedBitmapDrawable.setRadius(0);
-    mRoundedBitmapDrawable.draw(mCanvas);
-    assertFalse(mRoundedBitmapDrawable.mIsNonzero);
+  public void testShouldRoundRadius() {
     mRoundedBitmapDrawable.setRadius(5);
-    mRoundedBitmapDrawable.draw(mCanvas);
-    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+    assertTrue(mRoundedBitmapDrawable.shouldRound());
+    mRoundedBitmapDrawable.setRadius(0);
+    assertFalse(mRoundedBitmapDrawable.shouldRound());
   }
 
   @Test
-  public void testNonZeroCircle() {
+  public void testShouldRoundRadii() {
+    mRoundedBitmapDrawable.setRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 1});
+    assertTrue(mRoundedBitmapDrawable.shouldRound());
+    mRoundedBitmapDrawable.setRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 0});
+    assertFalse(mRoundedBitmapDrawable.shouldRound());
+  }
+
+  @Test
+  public void testShouldRoundCircle() {
     mRoundedBitmapDrawable.setCircle(true);
-    mRoundedBitmapDrawable.setRadius(0);
-    mRoundedBitmapDrawable.draw(mCanvas);
-    assertTrue(mRoundedBitmapDrawable.mIsNonzero);
+    assertTrue(mRoundedBitmapDrawable.shouldRound());
     mRoundedBitmapDrawable.setCircle(false);
-    mRoundedBitmapDrawable.draw(mCanvas);
-    assertFalse(mRoundedBitmapDrawable.mIsNonzero);
+    assertFalse(mRoundedBitmapDrawable.shouldRound());
+  }
+
+  @Test
+  public void testShouldRoundBorder() {
+    mRoundedBitmapDrawable.setBorder(0xFFFFFFFF, 1);
+    assertTrue(mRoundedBitmapDrawable.shouldRound());
+    mRoundedBitmapDrawable.setBorder(0x00000000, 0);
+    assertFalse(mRoundedBitmapDrawable.shouldRound());
   }
 
   @Test
