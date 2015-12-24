@@ -23,7 +23,7 @@ class StreamProcessor {
    *  @param is the input stream to read bytes from
    *  @param numBytes the number of bytes to read
    *  @param isLittleEndian whether the bytes should be interpreted in little or big endian format
-   *  @return packed int read from input stream and constructed according to endianess
+   *  @return packed int read from input stream and constructed according to endianness
    */
   public static int readPackedInt(InputStream is, int numBytes, boolean isLittleEndian)
       throws IOException {
