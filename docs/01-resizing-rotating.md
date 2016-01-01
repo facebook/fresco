@@ -15,23 +15,28 @@ These features require you to [construct an image request](using-controllerbuild
 - **Resizing** is a pipeline operation executed in software. This changes the encoded image in memory before it is being decoded.
 - **Downsampling** is also a pipeline operation implemented in software. Rather than create a new encoded image, it simply decodes only a subset of the pixels, resulting in a smaller output bitmap.
 
-### Which should you use?
+### Which should you use and when?
 
-Usually scaling. It's faster, easier to code, and results in a higher quality output.
+If the image is not much bigger than the view, then just scaling should be done. It's faster, easier to code, and results in a higher quality output.
+However, for images much bigger than the view, such as **local camera images**, resizing in addition to scaling is higly recommended.
+
+As for what exactly "much bigger" means, as a rule of thumb if the image is more than 2 times biger than the view (in total number of pixels, i.e. width*height), you should resize it. This almost always applies for local images taken by camera. For example, a device with the screen size of 1080 x 1920 pixels (roughly 2MP) and a camera of 16MP produces images 8 times bigger than the display. Without any doubt resizing in such cases is always best to be done.
+
+For network images, try to download an image as close as possible to the size you will be displaying. By downloading images of inappropriate size you are wasting the user's time and data.
+
+If the image is bigger than the view, by not resizing it the memory gets wasted. However, there is also a peformance trade-off to be considered.
+Clearly, resizing imposes additional CPU cost on its own. But, by not resizing images bigger than the view, more bytes needs to be transfered to GPU, and images get evicted from the bitmao cache more often resulting in more decodes. In other words, not resizing when you should also imposes additional CPU cost.
+Therefore, there is no silver bullet and depending on the device characteristics there is a threshold point after which it becomes more performant to go with resize than without it.
+
+### Scaling
 
 To scale, simply specify the `layout_width` and `layout_height` of your `SimpleDraweeView`, as you would for any Android view. Then specify a [scale type](scaling.html).
 
 Scaling uses Android's own built-in facilities to match the image to the view size. On Android 4.0 and later, this is *hardware-accelerated*, on devices with a GPU. 
 
-The downside of scaling is that if the image is much bigger than the view, then the memory gets wasted. This will also affect the performance because more bytes needs to be copied to GPU and the images will get evicted from the bitmao cache more often.
-
 ### Resizing
 
 Resizing does not modify the original file. Resizing just resizes an encoded image in memory, prior to being decoded.
-
-We recommend using resizing only for local camera images, which on most devices are much larger than the size of a the device's screen.
-
-For network images, try to download an image as close as possible to the size you will be displaying, and then scale it. By downloading images of inappropriate size you are wasting the user's data.
 
 To resize pass a [ResizeOptions](../javadoc/reference/com/facebook/imagepipeline/common/ResizeOptions.html) object when constructing an `ImageRequest`:
 
@@ -52,8 +57,7 @@ Resizing has some limitations:
 
 - it only supports JPEG files
 - the actual resize is carried out to the nearest 1/8 of the original size
-- it cannot make your image bigger, only smaller
-- it will slow down your decodes and possibly the rest of your app, as it's CPU-intensive
+- it cannot make your image bigger, only smaller (not a real limitation though)
 
 ### Downsampling
 
