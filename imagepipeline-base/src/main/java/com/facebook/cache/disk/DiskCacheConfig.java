@@ -33,6 +33,7 @@ public class DiskCacheConfig {
   private final long mDefaultSizeLimit;
   private final long mLowDiskSpaceSizeLimit;
   private final long mMinimumSizeLimit;
+  private final EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
   private final CacheErrorLogger mCacheErrorLogger;
   private final CacheEventListener mCacheEventListener;
   private final DiskTrimmableRegistry mDiskTrimmableRegistry;
@@ -44,6 +45,8 @@ public class DiskCacheConfig {
     mDefaultSizeLimit = builder.mMaxCacheSize;
     mLowDiskSpaceSizeLimit = builder.mMaxCacheSizeOnLowDiskSpace;
     mMinimumSizeLimit = builder.mMaxCacheSizeOnVeryLowDiskSpace;
+    mEntryEvictionComparatorSupplier =
+        Preconditions.checkNotNull(builder.mEntryEvictionComparatorSupplier);
     mCacheErrorLogger =
         builder.mCacheErrorLogger == null ?
             NoOpCacheErrorLogger.getInstance() :
@@ -82,6 +85,10 @@ public class DiskCacheConfig {
     return mMinimumSizeLimit;
   }
 
+  public EntryEvictionComparatorSupplier getEntryEvictionComparatorSupplier() {
+    return mEntryEvictionComparatorSupplier;
+  }
+
   public CacheErrorLogger getCacheErrorLogger() {
     return mCacheErrorLogger;
   }
@@ -106,6 +113,7 @@ public class DiskCacheConfig {
     public long mMaxCacheSize;
     public long mMaxCacheSizeOnLowDiskSpace;
     public long mMaxCacheSizeOnVeryLowDiskSpace;
+    public EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
     public CacheErrorLogger mCacheErrorLogger;
     public CacheEventListener mCacheEventListener;
     public DiskTrimmableRegistry mDiskTrimmableRegistry;
@@ -172,6 +180,14 @@ public class DiskCacheConfig {
      */
     public Builder setMaxCacheSizeOnVeryLowDiskSpace(long maxCacheSizeOnVeryLowDiskSpace) {
       mMaxCacheSizeOnVeryLowDiskSpace = maxCacheSizeOnVeryLowDiskSpace;
+      return this;
+    }
+
+    /**
+     * Provides the logic to determine the eviction order based on entry's access time and size
+     */
+    public Builder setEntryEvictionComparatorSupplier(EntryEvictionComparatorSupplier supplier) {
+      mEntryEvictionComparatorSupplier = supplier;
       return this;
     }
 

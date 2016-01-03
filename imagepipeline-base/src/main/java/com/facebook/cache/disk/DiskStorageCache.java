@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 
 import android.os.SystemClock;
@@ -71,6 +70,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   private final StatFsHelper mStatFsHelper;
 
   private final DiskStorageSupplier mStorageSupplier;
+  private final EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
   private final CacheErrorLogger mCacheErrorLogger;
 
   private final CacheStats mCacheStats;
@@ -140,6 +140,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   public DiskStorageCache(
       DiskStorageSupplier diskStorageSupplier,
+      EntryEvictionComparatorSupplier entryEvictionComparatorSupplier,
       Params params,
       CacheEventListener cacheEventListener,
       CacheErrorLogger cacheErrorLogger,
@@ -150,6 +151,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     this.mStatFsHelper = StatFsHelper.getInstance();
 
     this.mStorageSupplier = diskStorageSupplier;
+    this.mEntryEvictionComparatorSupplier = entryEvictionComparatorSupplier;
 
     this.mCacheSizeLastUpdateTime = UNINITIALIZED;
 
@@ -438,32 +440,20 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    * We are adding a small delta (this constant) to account for network time changes, timezone
    * changes, etc.
    */
-  private Collection<DiskStorage.Entry> getSortedEntries(
-     Collection<DiskStorage.Entry> allEntries) {
-    final ArrayList<DiskStorage.Entry> entriesList = new ArrayList<>(allEntries);
-    final long threshold =
-        mClock.now() + DiskStorageCache.FUTURE_TIMESTAMP_THRESHOLD_MS;
-    Collections.sort(entriesList, new TimestampComparator(threshold));
-    return entriesList;
-  }
-
-  /**
-   * Compares file timestamps, but files with timestamps more than some future threshold are
-   * considered to have a timestamp of zero so they are sent to the head of the queue for eviction.
-   */
-  private static class TimestampComparator implements Comparator<DiskStorage.Entry> {
-    private final long threshold;
-
-    public TimestampComparator(long threshold) {
-      this.threshold = threshold;
+  private Collection<DiskStorage.Entry> getSortedEntries(Collection<DiskStorage.Entry> allEntries) {
+    final long threshold = mClock.now() + DiskStorageCache.FUTURE_TIMESTAMP_THRESHOLD_MS;
+    ArrayList<DiskStorage.Entry> sortedList = new ArrayList<>(allEntries.size());
+    ArrayList<DiskStorage.Entry> listToSort = new ArrayList<>(allEntries.size());
+    for (DiskStorage.Entry entry : allEntries) {
+      if (entry.getTimestamp() > threshold) {
+        sortedList.add(entry);
+      } else {
+        listToSort.add(entry);
+      }
     }
-
-    @Override
-    public int compare(DiskStorage.Entry e1, DiskStorage.Entry e2) {
-      long time1 = e1.getTimestamp() <= threshold ? e1.getTimestamp() : 0;
-      long time2 = e2.getTimestamp() <= threshold ? e2.getTimestamp() : 0;
-      return time1 < time2 ? -1 : ((time2 > time1) ? 1 : 0);
-    }
+    Collections.sort(listToSort, mEntryEvictionComparatorSupplier.get());
+    sortedList.addAll(listToSort);
+    return sortedList;
   }
 
   /**

@@ -25,6 +25,7 @@ public class DiskCacheFactory {
         diskCacheConfig.getDefaultSizeLimit());
     return new DiskStorageCache(
         diskStorageSupplier,
+        diskCacheConfig.getEntryEvictionComparatorSupplier(),
         params,
         diskCacheConfig.getCacheEventListener(),
         diskCacheConfig.getCacheErrorLogger(),

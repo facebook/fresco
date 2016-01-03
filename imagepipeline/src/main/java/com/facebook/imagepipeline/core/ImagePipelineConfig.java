@@ -20,6 +20,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.facebook.cache.disk.DefaultEntryEvictionComparatorSupplier;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -180,6 +181,7 @@ public class ImagePipelineConfig {
         .setMaxCacheSize(40 * ByteConstants.MB)
         .setMaxCacheSizeOnLowDiskSpace(10 * ByteConstants.MB)
         .setMaxCacheSizeOnVeryLowDiskSpace(2 * ByteConstants.MB)
+        .setEntryEvictionComparatorSupplier(new DefaultEntryEvictionComparatorSupplier())
         .build();
   }
 

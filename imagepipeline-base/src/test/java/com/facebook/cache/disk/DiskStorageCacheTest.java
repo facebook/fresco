@@ -124,6 +124,7 @@ public class DiskStorageCacheTest {
 
     return new DiskStorageCache(
         diskStorageSupplier,
+        new DefaultEntryEvictionComparatorSupplier(),
         diskStorageCacheParams,
         mCacheEventListener,
         mock(CacheErrorLogger.class),
