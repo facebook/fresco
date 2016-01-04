@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * A dummy representation of an immutable set. This can be used temporarily as a type until we have
- * an actual non-gauva implementation.
+ * an actual non-guava implementation.
  */
 public class ImmutableList<E> extends ArrayList<E> {
 
