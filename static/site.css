@@ -553,3 +553,28 @@ div.CodeMirror-lines {
     }
 
 }
+
+/* Google CSE */
+
+.cse {
+    margin-top: 10px;
+}
+
+/* Fix search icon not appearing */
+.gsc-control-cse .gsc-table-result {
+    font-family : inherit;
+}
+
+.gsc-control-cse .gsc-input-box {
+    height : inherit;
+}
+
+input.gsc-input,
+.gsc-input-box,
+.gsc-input-box-hover,
+.gsc-input-box-focus,
+.gsc-search-button, input.gsc-search-button-v2 {
+    box-sizing  : content-box;
+    line-height : normal;
+    margin-top  : 0px;
+}
