@@ -47,6 +47,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   // keys for extra map
   private static final String BITMAP_SIZE_KEY = "bitmapSize";
   private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
+  private static final String IMAGE_TYPE_KEY = "imageType";
   private static final String IS_FINAL_KEY = "isFinal";
 
   private final ByteArrayPool mByteArrayPool;
@@ -213,6 +214,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       String queueStr = String.valueOf(queueTime);
       String qualityStr = String.valueOf(quality.isOfGoodEnoughQuality());
       String finalStr = String.valueOf(isFinal);
+      String imageTypeStr = String.valueOf(mProducerContext.getImageRequest().getImageType());
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
         String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
@@ -224,7 +226,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             HAS_GOOD_QUALITY_KEY,
             qualityStr,
             IS_FINAL_KEY,
-            finalStr);
+            finalStr,
+            IMAGE_TYPE_KEY,
+            imageTypeStr);
       } else {
         return ImmutableMap.of(
             JobScheduler.QUEUE_TIME_KEY,
@@ -232,7 +236,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             HAS_GOOD_QUALITY_KEY,
             qualityStr,
             IS_FINAL_KEY,
-            finalStr);
+            finalStr,
+            IMAGE_TYPE_KEY,
+            imageTypeStr);
       }
     }
 
