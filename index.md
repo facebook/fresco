@@ -79,6 +79,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
 * [React Native](https://facebook.github.io/react-native/)
+* [Mappy](https://play.google.com/store/apps/details?id=com.mappy.app)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
