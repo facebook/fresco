@@ -48,11 +48,6 @@ public class ArrayDrawable extends Drawable
 
   private boolean mIsMutated = false;
 
-  private final Rect mBounds = new Rect();
-  private int mLevel;
-  private int[] mState;
-  private boolean mIsVisible;
-
   /**
    * Constructs a new layer drawable.
    * @param layers the layers that this drawable displays
@@ -102,10 +97,10 @@ public class ArrayDrawable extends Drawable
       DrawableUtils.setDrawableProperties(drawable, mDrawableProperties);
 
       if (drawable != null) {
-        drawable.setBounds(mBounds);
-        drawable.setLevel(mLevel);
-        drawable.setState(mState);
-        drawable.setVisible(mIsVisible, /* restart */ false);
+        drawable.setBounds(getBounds());
+        drawable.setLevel(getLevel());
+        drawable.setState(getState());
+        drawable.setVisible(isVisible(), /* restart */ false);
       }
 
       DrawableUtils.setCallbacks(drawable, this, this);
@@ -143,8 +138,6 @@ public class ArrayDrawable extends Drawable
 
   @Override
   protected void onBoundsChange(Rect bounds) {
-    mBounds.set(bounds);
-
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
       if (drawable != null) {
@@ -168,8 +161,6 @@ public class ArrayDrawable extends Drawable
 
   @Override
   protected boolean onStateChange(int[] state) {
-    mState = state;
-
     boolean stateChanged = false;
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
@@ -182,8 +173,6 @@ public class ArrayDrawable extends Drawable
 
   @Override
   protected boolean onLevelChange(int level) {
-    mLevel = level;
-
     boolean levelChanged = false;
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
@@ -297,8 +286,6 @@ public class ArrayDrawable extends Drawable
 
   @Override
   public boolean setVisible(boolean visible, boolean restart) {
-    mIsVisible = visible;
-
     boolean changed = super.setVisible(visible, restart);
     for (int i = 0; i < mLayers.length; i++) {
       Drawable drawable = mLayers[i];
