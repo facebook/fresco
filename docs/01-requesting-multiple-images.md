@@ -25,6 +25,8 @@ DraweeController controller = Fresco.newDraweeControllerBuilder()
 mSimpleDraweeView.setController(controller);
 ```
 
+Animated images are not supported for the low-res request.
+
 ### Using thumbnail previews
 
 *This option is supported only for local URIs, and only for images in the JPEG format.*
