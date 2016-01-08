@@ -26,11 +26,14 @@ import com.facebook.common.internal.VisibleForTesting;
 
 public class RoundedColorDrawable extends Drawable implements Rounded {
   @VisibleForTesting final float[] mRadii = new float[8];
+  @VisibleForTesting final float[] mBorderRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   @VisibleForTesting boolean mIsCircle = false;
   @VisibleForTesting float mBorderWidth = 0;
+  @VisibleForTesting float mPadding = 0;
   @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
   @VisibleForTesting final Path mPath = new Path();
+  @VisibleForTesting final Path mBorderPath = new Path();
   private int mColor = Color.TRANSPARENT;
   private final RectF mTempRect = new RectF();
   private int mAlpha = 255;
@@ -91,7 +94,7 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
       mPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mAlpha));
       mPaint.setStyle(Paint.Style.STROKE);
       mPaint.setStrokeWidth(mBorderWidth);
-      canvas.drawPath(mPath, mPaint);
+      canvas.drawPath(mBorderPath, mPaint);
     }
   }
 
@@ -176,6 +179,15 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
     }
   }
 
+  @Override
+  public void setPadding(float padding) {
+    if (mPadding != padding) {
+      mPadding = padding;
+      updatePath();
+      invalidateSelf();
+    }
+  }
+
   /**
    * Sets the drawable's alpha value.
    *
@@ -222,14 +234,28 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
 
   private void updatePath() {
     mPath.reset();
+    mBorderPath.reset();
     mTempRect.set(getBounds());
+
     mTempRect.inset(mBorderWidth/2, mBorderWidth/2);
     if (mIsCircle) {
-      float radius = Math.min(mTempRect.width(), mTempRect.height()) / 2;
+      float radius = Math.min(mTempRect.width(), mTempRect.height())/2;
+      mBorderPath.addCircle(mTempRect.centerX(), mTempRect.centerY(), radius, Path.Direction.CW);
+    } else {
+      for (int i = 0; i < mBorderRadii.length; i++) {
+        mBorderRadii[i] = mRadii[i] + mPadding - mBorderWidth/2;
+      }
+      mBorderPath.addRoundRect(mTempRect, mBorderRadii, Path.Direction.CW);
+    }
+    mTempRect.inset(-mBorderWidth/2, -mBorderWidth/2);
+
+    mTempRect.inset(mPadding, mPadding);
+    if (mIsCircle) {
+      float radius = Math.min(mTempRect.width(), mTempRect.height())/2;
       mPath.addCircle(mTempRect.centerX(), mTempRect.centerY(), radius, Path.Direction.CW);
     } else {
       mPath.addRoundRect(mTempRect, mRadii, Path.Direction.CW);
     }
-    mTempRect.inset(-mBorderWidth/2, -mBorderWidth/2);
+    mTempRect.inset(-mPadding, -mPadding);
   }
 }

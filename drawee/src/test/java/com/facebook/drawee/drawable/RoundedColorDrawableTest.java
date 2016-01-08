@@ -102,6 +102,14 @@ public class RoundedColorDrawableTest {
   }
 
   @Test
+  public void testSetPadding(){
+    float padding = 10;
+    mRoundedColorDrawable.setPadding(padding);
+    verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
+    assertEquals(padding, mRoundedColorDrawable.mPadding, 0);
+  }
+
+  @Test
   public void testDrawWithoutBorder() {
     int internalColor = 0xC0223456;
     int alpha = 10;

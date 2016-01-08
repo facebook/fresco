@@ -83,6 +83,14 @@ public class RoundedBitmapDrawableTest {
   }
 
   @Test
+  public void testSetPadding() {
+    float padding = 10;
+    mRoundedBitmapDrawable.setPadding(padding);
+    verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
+    assertEquals(padding, mRoundedBitmapDrawable.mPadding, 0);
+  }
+
+  @Test
   public void testNonzeroDefaultFalse() {
     assertTrue(mRoundedBitmapDrawable.mIsNonzero);
   }
