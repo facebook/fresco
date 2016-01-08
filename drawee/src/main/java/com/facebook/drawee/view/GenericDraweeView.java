@@ -60,9 +60,6 @@ import com.facebook.drawee.generic.RoundingParams;
  */
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
-  private float mAspectRatio = 0;
-  private final AspectRatioMeasure.Spec mMeasureSpec = new AspectRatioMeasure.Spec();
-
   public GenericDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context);
     setHierarchy(hierarchy);
@@ -172,9 +169,9 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
           } else if (idx == R.styleable.GenericDraweeView_viewAspectRatio) {
             // aspect ratio
-            mAspectRatio = gdhAttrs.getFloat(
+            setAspectRatio(gdhAttrs.getFloat(
                 R.styleable.GenericDraweeView_viewAspectRatio,
-                mAspectRatio);
+                getAspectRatio()));
 
           } else if (idx == R.styleable.GenericDraweeView_placeholderImageScaleType) {
             // placeholder image scale type
@@ -358,36 +355,5 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       ScalingUtils.ScaleType defaultScaleType) {
     int index = attrs.getInt(attrId, -1);
     return index < 0 ? defaultScaleType : ScalingUtils.ScaleType.values()[index];
-  }
-
- /**
-  * Sets the desired aspect ratio (w/h).
-  */
-  public void setAspectRatio(float aspectRatio) {
-    if (aspectRatio == mAspectRatio) {
-      return;
-    }
-    mAspectRatio = aspectRatio;
-    requestLayout();
-  }
-
-  /**
-   * Gets the desired aspect ratio (w/h).
-   */
-  public float getAspectRatio() {
-    return mAspectRatio;
-  }
-
-  @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    mMeasureSpec.width = widthMeasureSpec;
-    mMeasureSpec.height = heightMeasureSpec;
-    AspectRatioMeasure.updateMeasureSpec(
-        mMeasureSpec,
-        mAspectRatio,
-        getLayoutParams(),
-        getPaddingLeft() + getPaddingRight(),
-        getPaddingTop() + getPaddingBottom());
-    super.onMeasure(mMeasureSpec.width, mMeasureSpec.height);
   }
 }
