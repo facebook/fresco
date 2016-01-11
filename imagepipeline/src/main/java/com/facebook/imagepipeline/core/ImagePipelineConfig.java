@@ -169,20 +169,7 @@ public class ImagePipelineConfig {
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
-    return DiskCacheConfig.newBuilder()
-        .setBaseDirectoryPathSupplier(
-            new Supplier<File>() {
-              @Override
-              public File get() {
-                return context.getApplicationContext().getCacheDir();
-              }
-            })
-        .setBaseDirectoryName("image_cache")
-        .setMaxCacheSize(40 * ByteConstants.MB)
-        .setMaxCacheSizeOnLowDiskSpace(10 * ByteConstants.MB)
-        .setMaxCacheSizeOnVeryLowDiskSpace(2 * ByteConstants.MB)
-        .setEntryEvictionComparatorSupplier(new DefaultEntryEvictionComparatorSupplier())
-        .build();
+    return DiskCacheConfig.newBuilder(context).build();
   }
 
   @Nullable

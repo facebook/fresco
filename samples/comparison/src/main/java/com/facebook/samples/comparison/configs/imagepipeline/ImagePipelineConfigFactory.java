@@ -89,7 +89,7 @@ public class ImagePipelineConfigFactory {
               }
             })
         .setMainDiskCacheConfig(
-            DiskCacheConfig.newBuilder()
+            DiskCacheConfig.newBuilder(context)
                 .setBaseDirectoryPath(context.getApplicationContext().getCacheDir())
                 .setBaseDirectoryName(IMAGE_PIPELINE_CACHE_DIR)
                 .setMaxCacheSize(ConfigConstants.MAX_DISK_CACHE_SIZE)

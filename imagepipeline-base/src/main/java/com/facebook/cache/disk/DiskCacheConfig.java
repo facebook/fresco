@@ -9,7 +9,11 @@
 
 package com.facebook.cache.disk;
 
+import javax.annotation.Nullable;
+
 import java.io.File;
+
+import android.content.Context;
 
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
@@ -21,6 +25,7 @@ import com.facebook.common.disk.NoOpDiskTrimmableRegistry;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
+import com.facebook.common.util.ByteConstants;
 
 /**
  * Configuration class for a {@link DiskStorageCache}.
@@ -101,24 +106,37 @@ public class DiskCacheConfig {
     return mDiskTrimmableRegistry;
   }
 
-  public static Builder newBuilder() {
-    return new Builder();
+  /**
+   * Create a new builder.
+   *
+   * @param context If this is null, you must explicitly call
+   *   {@link Builder#setBaseDirectoryPath(File)} or
+   *   {@link Builder#setBaseDirectoryPathSupplier(Supplier)}
+   *   or the config won't know where to physically locate the cache.
+   * @return
+   */
+  public static Builder newBuilder(@Nullable Context context) {
+    return new Builder(context);
   }
 
   public static class Builder {
 
-    public int mVersion = 1;
-    public String mBaseDirectoryName;
-    public Supplier<File> mBaseDirectoryPathSupplier;
-    public long mMaxCacheSize;
-    public long mMaxCacheSizeOnLowDiskSpace;
-    public long mMaxCacheSizeOnVeryLowDiskSpace;
-    public EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
-    public CacheErrorLogger mCacheErrorLogger;
-    public CacheEventListener mCacheEventListener;
-    public DiskTrimmableRegistry mDiskTrimmableRegistry;
+    private int mVersion = 1;
+    private String mBaseDirectoryName = "image_cache";
+    private Supplier<File> mBaseDirectoryPathSupplier;
+    private long mMaxCacheSize = 40 * ByteConstants.MB;
+    private long mMaxCacheSizeOnLowDiskSpace = 10 * ByteConstants.MB;
+    private long mMaxCacheSizeOnVeryLowDiskSpace = 2 * ByteConstants.MB;
+    private EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier
+        = new DefaultEntryEvictionComparatorSupplier();
+    private CacheErrorLogger mCacheErrorLogger;
+    private CacheEventListener mCacheEventListener;
+    private DiskTrimmableRegistry mDiskTrimmableRegistry;
 
-    private Builder() {
+    private final @Nullable Context mContext;
+
+    private Builder(@Nullable Context context) {
+      mContext = context;
     }
 
     /**
@@ -218,6 +236,17 @@ public class DiskCacheConfig {
     }
 
     public DiskCacheConfig build() {
+      Preconditions.checkState(
+          mBaseDirectoryPathSupplier != null || mContext != null,
+          "Either a non-null context or a base directory path or supplier must be provided.");
+      if (mBaseDirectoryPathSupplier == null && mContext != null) {
+        mBaseDirectoryPathSupplier = new Supplier<File>() {
+          @Override
+          public File get() {
+            return mContext.getApplicationContext().getCacheDir();
+          }
+        };
+      }
       return new DiskCacheConfig(this);
     }
   }
