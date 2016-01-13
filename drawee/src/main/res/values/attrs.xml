@@ -26,6 +26,7 @@
       <enum name="centerInside" value="5" />
       <enum name="centerCrop" value="6" />
       <enum name="focusCrop" value="7" />
+      <enum name="fixY" value="8" />
     </attr>
 
     <!-- A drawable to be be used as a retry image. -->
@@ -41,6 +42,7 @@
       <enum name="centerInside" value="5" />
       <enum name="centerCrop" value="6" />
       <enum name="focusCrop" value="7" />
+      <enum name="fixY" value="8" />
     </attr>
 
     <!-- A drawable to be be used as a failure image. -->
@@ -56,6 +58,7 @@
       <enum name="centerInside" value="5" />
       <enum name="centerCrop" value="6" />
       <enum name="focusCrop" value="7" />
+      <enum name="fixY" value="8" />
     </attr>
 
     <!-- A drawable to be be used as a progress bar. -->
@@ -71,6 +74,7 @@
       <enum name="centerInside" value="5" />
       <enum name="centerCrop" value="6" />
       <enum name="focusCrop" value="7" />
+      <enum name="fixY" value="8" />
     </attr>
     <!-- Progress bar Auto Rotate interval in milliseconds -->
     <attr name="progressBarAutoRotateInterval" format="integer"/>
@@ -86,6 +90,7 @@
       <enum name="centerInside" value="5" />
       <enum name="centerCrop" value="6" />
       <enum name="focusCrop" value="7" />
+      <enum name="fixY" value="8" />
     </attr>
 
     <!-- A drawable or color to be used as a background. -->

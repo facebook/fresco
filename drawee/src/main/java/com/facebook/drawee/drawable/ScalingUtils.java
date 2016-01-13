@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
- *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
@@ -83,11 +82,18 @@ public class ScalingUtils {
      * It is guaranteed that the focus point will be visible and centered as much as possible.
      * If the focus point is set to (0.5f, 0.5f), result will be equivalent to CENTER_CROP.
      */
-    FOCUS_CROP
+    FOCUS_CROP,
+
+    /**
+     * keep height dimension fix exactly and aspect ratio is preserved.
+     * It maybe only show center part of width.
+     */
+    FIT_Y
   }
 
   /**
    * Gets transformation based on the scale type.
+   * 
    * @param transform out matrix to store result
    * @param parentBounds parent bounds
    * @param childWidth child width
@@ -191,6 +197,19 @@ public class ScalingUtils {
         }
         transform.setScale(scale, scale);
         transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FIT_Y:
+        scale = scaleY;
+
+        float localScaleX = scaleY;
+        if (childWidth * scale < parentWidth) {
+          localScaleX = scaleX;
+        }
+
+        dx = parentBounds.left + (parentWidth - childWidth * localScaleX) * 0.5f;
+        transform.setScale(localScaleX, scale);
+        transform.postTranslate((int) (dx + 0.5f), 0);
         break;
 
       default:
