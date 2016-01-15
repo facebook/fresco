@@ -218,4 +218,56 @@ public class RoundingParams {
   public float getPadding() {
     return mPadding;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RoundingParams that = (RoundingParams) o;
+
+    if (mRoundAsCircle != that.mRoundAsCircle) {
+      return false;
+    }
+
+    if (mOverlayColor != that.mOverlayColor) {
+      return false;
+    }
+
+    if (Float.compare(that.mBorderWidth, mBorderWidth) != 0) {
+      return false;
+    }
+
+    if (mBorderColor != that.mBorderColor) {
+      return false;
+    }
+
+    if (Float.compare(that.mPadding, mPadding) != 0) {
+      return false;
+    }
+
+    if (mRoundingMethod != that.mRoundingMethod) {
+      return false;
+    }
+
+    return Arrays.equals(mCornersRadii, that.mCornersRadii);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = mRoundingMethod != null ? mRoundingMethod.hashCode() : 0;
+    result = 31 * result + (mRoundAsCircle ? 1 : 0);
+    result = 31 * result + (mCornersRadii != null ? Arrays.hashCode(mCornersRadii) : 0);
+    result = 31 * result + mOverlayColor;
+    result = 31 * result + (mBorderWidth != +0.0f ? Float.floatToIntBits(mBorderWidth) : 0);
+    result = 31 * result + mBorderColor;
+    result = 31 * result + (mPadding != +0.0f ? Float.floatToIntBits(mPadding) : 0);
+
+    return result;
+  }
 }
