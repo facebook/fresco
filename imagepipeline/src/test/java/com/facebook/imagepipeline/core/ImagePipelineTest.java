@@ -9,6 +9,9 @@
 
 package com.facebook.imagepipeline.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
@@ -318,7 +321,9 @@ public class ImagePipelineTest {
     String uriString = "http://dummy/string";
     Uri uri = Uri.parse(uriString);
     CacheKey dummyCacheKey = mock(CacheKey.class);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class))).thenReturn(dummyCacheKey);
+    List<CacheKey> list = new ArrayList<>();
+    list.add(dummyCacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKeys(any(ImageRequest.class))).thenReturn(list);
     mImagePipeline.evictFromDiskCache(uri);
     verify(mMainDiskStorageCache).remove(dummyCacheKey);
     verify(mSmallImageDiskStorageCache).remove(dummyCacheKey);

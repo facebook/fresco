@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.core;
 import javax.annotation.concurrent.ThreadSafe;
 
 import java.lang.Exception;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -315,9 +316,11 @@ public class ImagePipeline {
    * @param imageRequest The imageRequest for the image to evict from disk cache
    */
   public void evictFromDiskCache(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
-    mMainBufferedDiskCache.remove(cacheKey);
-    mSmallImageBufferedDiskCache.remove(cacheKey);
+    List<CacheKey> cacheKeys = mCacheKeyFactory.getEncodedCacheKeys(imageRequest);
+    for (CacheKey cacheKey : cacheKeys) {
+      mMainBufferedDiskCache.remove(cacheKey);
+      mSmallImageBufferedDiskCache.remove(cacheKey);
+    }
   }
 
   /**
@@ -411,9 +414,9 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public DataSource<Boolean> isInDiskCache(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final List<CacheKey> cacheKeys = mCacheKeyFactory.getEncodedCacheKeys(imageRequest);
     final SimpleDataSource<Boolean> dataSource = SimpleDataSource.create();
-    mMainBufferedDiskCache.contains(cacheKey)
+    mMainBufferedDiskCache.contains(cacheKeys)
         .continueWithTask(
             new Continuation<Boolean, Task<Boolean>>() {
               @Override
@@ -421,7 +424,7 @@ public class ImagePipeline {
                 if (!task.isCancelled() && !task.isFaulted() && task.getResult()) {
                   return Task.forResult(true);
                 }
-                return mSmallImageBufferedDiskCache.contains(cacheKey);
+                return mSmallImageBufferedDiskCache.contains(cacheKeys);
               }
             })
         .continueWith(

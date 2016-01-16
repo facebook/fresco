@@ -73,7 +73,7 @@ public class EncodedMemoryCacheProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mEncodedMemoryCacheProducer =
-        new EncodedMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mInputProducer);
+        new EncodedMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mInputProducer, true);
     mCacheKey = new SimpleCacheKey("http://dummy.uri");
     mPooledByteBuffer1 = mock(PooledByteBuffer.class);
     mPooledByteBuffer2 = mock(PooledByteBuffer.class);
@@ -91,7 +91,10 @@ public class EncodedMemoryCacheProducerTest {
     when(mProducerContext.getId()).thenReturn(mRequestId);
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
-    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest)).thenReturn(mCacheKey);
+    List<CacheKey> list = new ArrayList<>();
+    list.add(mCacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKeys(mImageRequest)).thenReturn(list);
+
   }
 
   @Test

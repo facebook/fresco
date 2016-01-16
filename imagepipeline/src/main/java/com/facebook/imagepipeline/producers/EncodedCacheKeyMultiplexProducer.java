@@ -23,15 +23,24 @@ public class EncodedCacheKeyMultiplexProducer extends
     MultiplexProducer<Pair<CacheKey, ImageRequest.RequestLevel>, EncodedImage> {
 
   private final CacheKeyFactory mCacheKeyFactory;
+  private final boolean mUseNewInterface;
 
-  public EncodedCacheKeyMultiplexProducer(CacheKeyFactory cacheKeyFactory, Producer inputProducer) {
+  public EncodedCacheKeyMultiplexProducer(
+      CacheKeyFactory cacheKeyFactory,
+      Producer inputProducer,
+      boolean useNewInterface) {
     super(inputProducer);
     mCacheKeyFactory = cacheKeyFactory;
+    mUseNewInterface = useNewInterface;
   }
 
   protected Pair<CacheKey, ImageRequest.RequestLevel> getKey(ProducerContext producerContext) {
+    CacheKey cacheKey = mUseNewInterface ?
+        mCacheKeyFactory.getEncodedCacheKeys(producerContext.getImageRequest()).get(0) :
+        mCacheKeyFactory.getEncodedCacheKey(producerContext.getImageRequest());
+
     return Pair.create(
-        mCacheKeyFactory.getEncodedCacheKey(producerContext.getImageRequest()),
+        cacheKey,
         producerContext.getLowestPermittedRequestLevel());
   }
 

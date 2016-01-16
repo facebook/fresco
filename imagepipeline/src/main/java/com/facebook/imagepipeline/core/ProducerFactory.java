@@ -171,17 +171,22 @@ public class ProducerFactory {
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
-        inputProducer);
+        inputProducer,
+        /* multiple read keys */ false);
   }
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer);
+    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer, false);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedMemoryCacheProducer(mEncodedMemoryCache, mCacheKeyFactory, inputProducer);
+    return new EncodedMemoryCacheProducer(
+        mEncodedMemoryCache,
+        mCacheKeyFactory,
+        inputProducer,
+        false);
   }
 
   public LocalAssetFetchProducer newLocalAssetFetchProducer() {

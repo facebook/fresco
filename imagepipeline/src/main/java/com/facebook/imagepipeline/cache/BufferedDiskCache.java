@@ -12,6 +12,8 @@ package com.facebook.imagepipeline.cache;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Executor;
@@ -29,6 +31,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.disk.FileCache;
 
+import bolts.Continuation;
 import bolts.Task;
 
 /**
@@ -69,17 +72,51 @@ public class BufferedDiskCache {
    * @param key
    * @return Task that resolves to true if the element is found, or false otherwise
    */
-  public Task<Boolean> contains(final CacheKey key) {
-    Preconditions.checkNotNull(key);
+  public Task<Boolean> contains(CacheKey key) {
+    return contains(keyToList(key));
+  }
 
-    final EncodedImage pinnedImage = mStagingArea.get(key);
-    if (pinnedImage != null) {
-      pinnedImage.close();
-      FLog.v(TAG, "Found image for %s in staging area", key.toString());
-      mImageCacheStatsTracker.onStagingAreaHit();
-      return Task.forResult(true);
+  /**
+   * Performs a key-value look up in the disk cache. If no value is found in the staging area,
+   * then disk cache checks are scheduled on a background thread. Any error manifests itself as a
+   * cache miss, i.e. the returned Task resolves to false.
+   * @param keys
+   * @return Task that resolves to true if an element is found, or false otherwise
+   */
+  public Task<Boolean> contains(final List<CacheKey> keys) {
+    if (keys.isEmpty()) {
+      return Task.forResult(false);
     }
+    for (CacheKey key : keys) {
+      EncodedImage pinnedImage = mStagingArea.get(key);
+      if (pinnedImage != null) {
+        pinnedImage.close();
+        FLog.v(TAG, "Found image for %s in staging area", key.toString());
+        mImageCacheStatsTracker.onStagingAreaHit();
+        return Task.forResult(true);
+      }
+    }
+    Task<Boolean> masterTask = containsAsync(keys.get(0));
+    if (keys.size() == 1) {
+      return masterTask;
+    }
+    for (final CacheKey key : keys.subList(1, keys.size())) {
+      masterTask = masterTask.continueWithTask(
+          new Continuation<Boolean, Task<Boolean>>() {
+            @Override
+            public Task<Boolean> then(Task<Boolean> previousTask) throws Exception {
+              if (previousTask.isCancelled() || previousTask.getResult()) {
+                return previousTask;
+              }
+              return containsAsync(key);
+            }
+          },
+          mReadExecutor);
+    }
+    return masterTask;
+  }
 
+  private Task<Boolean> containsAsync(final CacheKey key) {
     try {
       return Task.call(
           new Callable<Boolean>() {
@@ -118,22 +155,58 @@ public class BufferedDiskCache {
   /**
    * Performs key-value look up in disk cache. If value is not found in disk cache staging area
    * then disk cache read is scheduled on background thread. Any error manifests itself as
-   * cache miss, i.e. the returned future resolves to null.
+   * cache miss, i.e. the returned task resolves to null.
    * @param key
-   * @return ListenableFuture that resolves to cached element or null if one cannot be retrieved;
-   *   returned future never rethrows any exception
+   * @return Task that resolves to cached element or null if one cannot be retrieved;
+   *   returned task never rethrows any exception
    */
-  public Task<EncodedImage> get(final CacheKey key, final AtomicBoolean isCancelled) {
-    Preconditions.checkNotNull(key);
-    Preconditions.checkNotNull(isCancelled);
-
+  public Task<EncodedImage> get(CacheKey key, AtomicBoolean isCancelled) {
     final EncodedImage pinnedImage = mStagingArea.get(key);
     if (pinnedImage != null) {
-      FLog.v(TAG, "Found image for %s in staging area", key.toString());
-      mImageCacheStatsTracker.onStagingAreaHit();
-      return Task.forResult(pinnedImage);
+      return foundPinnedImage(key, pinnedImage);
+    }
+    return getAsync(key, isCancelled);
+  }
+
+  /**
+   * Performs lookup of a series of disk cache keys in a single thread.
+   *
+   * @param keys the keys to look up. Lookups are done in this order.
+   * @param isCancelled
+   * @return
+   */
+  public Task<EncodedImage> get(List<CacheKey> keys, final AtomicBoolean isCancelled) {
+    Preconditions.checkArgument(!keys.isEmpty());
+
+    for (CacheKey key : keys) {
+      final EncodedImage pinnedImage = mStagingArea.get(key);
+      if (pinnedImage != null) {
+        return foundPinnedImage(key, pinnedImage);
+      }
     }
 
+    Task<EncodedImage> masterTask = getAsync(keys.get(0), isCancelled);
+    if (keys.size() == 1) {
+      return masterTask;
+    }
+    for (final CacheKey key : keys.subList(1, keys.size())) {
+      masterTask = masterTask.continueWithTask(
+          new Continuation<EncodedImage, Task<EncodedImage>>() {
+            @Override
+            public Task<EncodedImage> then(Task<EncodedImage> previousTask) throws Exception {
+              // If we've got a hit, stop. If this is cancelled, stop. Otherwise, keep going.
+              if (previousTask.isCancelled() || previousTask.getResult() != null) {
+                return previousTask;
+              }
+              return getAsync(key, isCancelled);
+            }
+          },
+          mReadExecutor);
+    }
+    return masterTask;
+  }
+
+  private Task<EncodedImage> getAsync(final CacheKey key, final AtomicBoolean isCancelled) {
     try {
       return Task.call(
           new Callable<EncodedImage>() {
@@ -280,6 +353,12 @@ public class BufferedDiskCache {
     }
   }
 
+  private Task<EncodedImage> foundPinnedImage(CacheKey key, EncodedImage pinnedImage) {
+    FLog.v(TAG, "Found image for %s in staging area", key.toString());
+    mImageCacheStatsTracker.onStagingAreaHit();
+    return Task.forResult(pinnedImage);
+  }
+
   /**
    * Performs disk cache read. In case of any exception null is returned.
    */
@@ -341,4 +420,11 @@ public class BufferedDiskCache {
       FLog.w(TAG, ioe, "Failed to write to disk-cache for key %s", key.toString());
     }
   }
+
+  private static List<CacheKey> keyToList(CacheKey key) {
+    List<CacheKey> list = new ArrayList<>(1);
+    list.add(key);
+    return list;
+  }
+
 }
