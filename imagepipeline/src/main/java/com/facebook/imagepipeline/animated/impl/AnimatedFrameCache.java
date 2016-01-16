@@ -15,6 +15,8 @@ import javax.annotation.concurrent.GuardedBy;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+import android.net.Uri;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.VisibleForTesting;
@@ -64,6 +66,11 @@ public class AnimatedFrameCache {
     @Override
     public int hashCode() {
       return mImageCacheKey.hashCode() * 1013 + mFrameIndex;
+    }
+
+    @Override
+    public boolean containsUri(Uri uri) {
+      return mImageCacheKey.containsUri(uri);
     }
   }
 
