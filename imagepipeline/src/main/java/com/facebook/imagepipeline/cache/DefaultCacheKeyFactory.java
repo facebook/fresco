@@ -70,8 +70,10 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
     return new SimpleCacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
   }
 
-  @Override
-  public Uri getCacheKeySourceUri(Uri sourceUri) {
+  /**
+   * @return a {@link String} that unambiguously indicates the source of the image.
+   */
+  protected Uri getCacheKeySourceUri(Uri sourceUri) {
     return sourceUri;
   }
 }
