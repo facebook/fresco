@@ -80,6 +80,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
+  private final boolean mUseMultipleReadKeys;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -99,7 +100,8 @@ public class ProducerFactory {
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
-      boolean decodeFileDescriptorEnabled) {
+      boolean decodeFileDescriptorEnabled,
+      boolean useMultipleReadKeys) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -122,6 +124,7 @@ public class ProducerFactory {
     mPlatformBitmapFactory = platformBitmapFactory;
 
     mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
+    mUseMultipleReadKeys = useMultipleReadKeys;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -172,12 +175,15 @@ public class ProducerFactory {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         inputProducer,
-        /* multiple read keys */ false);
+        mUseMultipleReadKeys);
   }
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer, false);
+    return new EncodedCacheKeyMultiplexProducer(
+        mCacheKeyFactory,
+        inputProducer,
+        mUseMultipleReadKeys);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(
@@ -186,7 +192,7 @@ public class ProducerFactory {
         mEncodedMemoryCache,
         mCacheKeyFactory,
         inputProducer,
-        false);
+        mUseMultipleReadKeys);
   }
 
   public LocalAssetFetchProducer newLocalAssetFetchProducer() {

@@ -90,6 +90,7 @@ public class ImagePipelineConfig {
   private final Set<RequestListener> mRequestListeners;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
+  private final boolean mUseMultipleReadKeys;
 
   private ImagePipelineConfig(Builder builder) {
     mAnimatedImageFactory = builder.mAnimatedImageFactory;
@@ -160,6 +161,7 @@ public class ImagePipelineConfig {
         builder.mSmallImageDiskCacheConfig == null ?
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
+    mUseMultipleReadKeys = builder.mUseMultipleReadKeys;
 
     // Below this comment can't be built in alphabetical order, because of dependencies
     int numCpuBoundThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
@@ -267,6 +269,10 @@ public class ImagePipelineConfig {
     return mSmallImageDiskCacheConfig;
   }
 
+  public boolean useMultipleReadKeys() {
+    return mUseMultipleReadKeys;
+  }
+
   public static Builder newBuilder(Context context) {
     return new Builder(context);
   }
@@ -296,6 +302,7 @@ public class ImagePipelineConfig {
     private Set<RequestListener> mRequestListeners;
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
+    public boolean mUseMultipleReadKeys = false;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -413,6 +420,11 @@ public class ImagePipelineConfig {
 
     public Builder setSmallImageDiskCacheConfig(DiskCacheConfig smallImageDiskCacheConfig) {
       mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
+      return this;
+    }
+
+    public Builder setUseMultipleReadKeys(boolean useMultipleReadKeys) {
+      mUseMultipleReadKeys = useMultipleReadKeys;
       return this;
     }
 

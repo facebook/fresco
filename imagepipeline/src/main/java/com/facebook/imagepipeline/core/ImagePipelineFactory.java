@@ -407,7 +407,8 @@ public class ImagePipelineFactory {
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory(),
-              mConfig.isDecodeFileDescriptorEnabled());
+              mConfig.isDecodeFileDescriptorEnabled(),
+              mConfig.useMultipleReadKeys());
     }
     return mProducerFactory;
   }
