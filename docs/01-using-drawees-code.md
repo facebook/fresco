@@ -7,7 +7,7 @@ prev: using-drawees-xml.html
 next: drawee-branches.html
 ---
 
-### Change the image
+### Setting the actual image
 
 The easy to way is to call 
 
@@ -37,11 +37,11 @@ GenericDraweeHierarchy hierarchy = builder
 mSimpleDraweeView.setHierarchy(hierarchy);
 ```
 
-Do **not** call `setHierarchy` more than once on the same view, even if the view is recycled. The hierarchy is expensive to create and is intended to be used more than once. Use `setController` or `setImageURI` to change the image shown in it.
+Do **not** call `setHierarchy` more than once on the same view, even if the view is recycled. The hierarchy is expensive to create and in most cases you can just modify the existing hierarchy. Use `setController` or `setImageURI` to change the image shown in it.
 
 ### Modifying the hierarchy in-place
 
-Some attributes of the hierarchy can be changed while the application is running. 
+Some attributes of the hierarchy can be changed without having to build a new hierarchy. 
 
 You would first need to get it from the View:
 
@@ -50,7 +50,7 @@ GenericDraweeHierarchy hierarchy = mSimpleDraweeView.getHierarchy();
 ```
 
 <a name="change_placeholder"></a>
-#### Change the placeholder
+#### Changing the placeholder
 
 Then you could modify the placeholder, either with a resource id:
 
@@ -61,12 +61,18 @@ hierarchy.setPlaceholderImage(R.drawable.placeholderId);
  or a full-fledged [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html):
 
 ```java
-Drawable drawable; 
-// create your drawable
-hierarchy.setPlaceholderImage(drawable);
+Drawable placeholderImage = ...; 
+hierarchy.setPlaceholderImage(placeholderImage);
 ```
 
-#### Change the image display
+The other image branches (failure image, retry image and progress bar) can be modified in a similar way too.
+
+```java
+Drawable failureImage = ...; 
+hierarchy.setFailureImage(failureImage, ScaleType.CENTER);
+```
+
+#### Changing the actual image display
 
 You can change the [scale type](scaling.html):
 
@@ -90,7 +96,7 @@ hierarchy.setActualImageColorFilter(filter);
 
 #### Rounding
 
-All of the [rounding related params](rounded-corners-and-circles.html), except the rounding method, can be modified. You get a `RoundingParams` object from the hierarchy, modify it, and set it back again:
+All of the [rounding related params](rounded-corners-and-circles.html) can be modified dynamically. You get a `RoundingParams` object from the hierarchy, modify it, and set it back again:
 
 ```java
 RoundingParams roundingParams = hierarchy.getRoundingParams();
