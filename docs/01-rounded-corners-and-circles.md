@@ -22,7 +22,7 @@ Rectangles support having each of the four corners have a different radius, but 
 
 Images can be rounded with two different methods:
 
-1. `BITMAP_ONLY` - Uses a bitmap shader to draw the bitmap with rounded corners. This is the default rounding method. This works only on the actual image and the [placeholder](drawee-components.html). Other branches, like failure and retry images, are not rounded. Furthermore, this rounding method doesn't support animations, and it does **not** support any scale types other than `fit_xy`, `centerCrop` (the default) and `focusCrop`. 
+1. `BITMAP_ONLY` - Uses a bitmap shader to draw the bitmap with rounded corners. This is the default rounding method. It doesn't support animations, and it does **not** support any scale types other than `centerCrop` (the default), `focusCrop` and `fit_xy`. 
 2. `OVERLAY_COLOR` - Draws rounded corners by overlaying a solid color, specified by the caller. The Drawee's background should be static and of the same solid color. Use `roundWithOverlayColor` in XML, or `setOverlayColor` in code, for this effect.
 
 ### In XML
@@ -52,7 +52,7 @@ genericDraweeHierarchyBuilder
     .setRoundingParams(roundingParams);
 ```
 
-You can also change most of the rounding parameters on the fly:
+You can also change all of the rounding parameters after the hierarchy has been built:
 
 ```java
 RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
@@ -67,7 +67,7 @@ There are some limitations when `BITMAP_ONLY` (the default) mode is used:
 
 - Only images that resolve to `BitmapDrawable` or `ColorDrawable` can be rounded. Rounding `NinePatchDrawable`, `ShapeDrawable` and other such drawables is not supported (regardless whether they are specified in XML or programmatically).
 - Animations are not rounded. 
-- Due to a limitation of Android's `BitmapShader`, if the image doesn't fully cover the view, instead of drawing nothing, edges are repeated. One workaround is to use a different scale type (e.g. centerCrop) that ensures that the whole view is covered. Another workaround is to make the image file contain a 1px transparent border so that the transparent pixels get repeated. This is the easiest solution for PNG resource images.
+- Due to a limitation of Android's `BitmapShader`, if the image doesn't fully cover the view, instead of drawing nothing, edges are repeated. One workaround is to use a different scale type (e.g. centerCrop) that ensures that the whole view is covered. Another workaround is to make the image file contain a 1px transparent border so that the transparent pixels get repeated. This is the best solution for PNG resource images.
 
 If the limitations of the `BITMAP_ONLY` mode affect your images, see if the `OVERLAY_COLOR` mode works for you. The `OVERLAY_COLOR` mode doesn't have the aforementioned limitations, but since it simulates rounded corners by overlying a solid color over the image, this only looks good if the background under the view is static and of the same color.
 
