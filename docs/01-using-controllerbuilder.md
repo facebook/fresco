@@ -13,7 +13,7 @@ If you want more control over how the Drawee displays your image, you can use a 
 
 ### Building a DraweeController
 
-Then pass the image request to a [PipelineDraweeControllerBuilder](../javadoc/reference/com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html). You then specify additional options for the controller:
+Pass the uri to a [PipelineDraweeControllerBuilder](../javadoc/reference/com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html). Then specify additional options for the controller:
 
 ```java
 ControllerListener listener = new BaseControllerListener() {...}
@@ -28,7 +28,7 @@ DraweeController controller = Fresco.newDraweeControllerBuilder()
 mSimpleDraweeView.setController(controller);
 ```
 
-You should always call `setOldController` when building a new controller. This prevents an unneeded memory allocation.
+You should call `setOldController` when building a new controller. This will allow for the old controller to be reused and a couple of unnecessary memory allocations to be avoided.
 
 More details:
 
@@ -36,7 +36,7 @@ More details:
 
 ### <a name="ImageRequest"></a>Customizing the ImageRequest
 
-For still more advanced usage, you might need to send an [ImageRequest](../javadoc/reference/com/facebook/imagepipeline/request/ImageRequest.html) to the pipeline, instead of merely a URI. An example of this is using a [postprocessor](modifying-image.html).
+For still more advanced usage, you might need to set an [ImageRequest](../javadoc/reference/com/facebook/imagepipeline/request/ImageRequest.html) to the pipeline, instead of merely a URI. An example of this is using a [postprocessor](modifying-image.html).
 
 ```java
 Uri uri;
