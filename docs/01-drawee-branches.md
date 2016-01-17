@@ -57,7 +57,7 @@ In the case of a progressive JPEG, the placeholder only stays until your image h
 XML attribute: `placeholderImage`  
 Hierarchy builder method: `setPlaceholderImage`  
 Hierarchy mutation method: `setPlaceholderImage`  
-Default value: `null` (no placeholder by default)  
+Default value: None  
 Default scale type: `centerInside`  
 
 ## Failure
@@ -67,7 +67,7 @@ The _failure_ image appears if there is an error loading your image. The most co
 XML attribute: `failureImage`  
 Hierarchy builder method: `setFailureImage`  
 Hierarchy mutation method: `setFailureImage`  
-Default value: `null` (no failure imgae by default)  
+Default value: None  
 Default scale type: `centerInside`  
 
 ## Retry
@@ -85,7 +85,7 @@ The image pipeline will then attempt to retry an image if the user taps on it. U
 XML attribute: `retryImage`  
 Hierarchy builder method: `setRetryImage`  
 Hierarchy mutation method: `setRetryImage`  
-Default value: `null` (no retry image by default)  
+Default value: None  
 Default scale type: `centerInside`  
 
 ## <a name="ProgressBar"></a>Progress Bar
@@ -97,7 +97,7 @@ For more details, see the [progress bar](progress-bars.html) page.
 XML attribute: `progressBarImage`  
 Hierarchy builder method: `setProgressBarImage`  
 Hierarchy mutation method: `setProgressBarImage`  
-Default value: `null` (no progress bar by default)  
+Default value: None  
 Default scale type: `centerInside`  
 
 ## Backgrounds
