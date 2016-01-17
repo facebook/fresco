@@ -56,8 +56,8 @@ In the case of a progressive JPEG, the placeholder only stays until your image h
 
 XML attribute: `placeholderImage`  
 Hierarchy builder method: `setPlaceholderImage`  
-Hierarchy method: `setPlaceholderImage`  
-Default value: a transparent [ColorDrawable](http://developer.android.com/reference/android/graphics/drawable/ColorDrawable.html)  
+Hierarchy mutation method: `setPlaceholderImage`  
+Default value: `null` (no placeholder by default)
 Default scale type: `centerInside`  
 
 ## Failure
@@ -65,8 +65,9 @@ Default scale type: `centerInside`
 The _failure_ image appears if there is an error loading your image. The most common cause of this is an invalid URI, or lack of connection to the network.
 
 XML attribute: `failureImage`  
-Hierarchy builder method: `setFailureImage`  
-Default value: The placeholder image  
+Hierarchy builder method: `setFailureImage`
+Hierarchy mutation method: `setFailureImage`  
+Default value: `null` (no failure imgae by default)
 Default scale type: `centerInside`
 
 ## Retry
@@ -82,8 +83,9 @@ You must [build your own Controller](using-controllerbuilder.html) to do this. T
 The image pipeline will then attempt to retry an image if the user taps on it. Up to four attempts are allowed before the failure image is shown instead.
 
 XML attribute: `retryImage`  
-Hierarchy builder method: `setRetryImage`  
-Default value: The placeholder image   
+Hierarchy builder method: `setRetryImage`
+Hierarchy mutation method: `setRetryImage`
+Default value: `null` (no retry image by default)
 Default scale type: `centerInside`
 
 ## <a name="ProgressBar"></a>Progress Bar
@@ -93,8 +95,9 @@ If specified, the _progress bar_ image is shown as an overlay over the Drawee un
 For more details, see the [progress bar](progress-bars.html) page.
 
 XML attribute: `progressBarImage`  
-Hierarchy builder method: `setProgressBarImage`  
-Default value: None   
+Hierarchy builder method: `setProgressBarImage` 
+Hierarchy mutation method: `setProgressBarImage`
+Default value: `null` (no progress bar by default)
 Default scale type: `centerInside`
 
 ## Backgrounds
@@ -107,7 +110,7 @@ Background images don't support scale-types and are scaled to the Drawee size.
 
 XML attribute: `backgroundImage`  
 Hierarchy builder method: `setBackground,` `setBackgrounds`    
-Default value: None   
+Default value: None
 Default scale type: N/A
 
 ## Overlays
@@ -118,9 +121,9 @@ Only one can be specified in XML, but in code more than one can be set. In that 
 
 Overlay images don't support scale-types and are scaled to the Drawee size. 
 
-XML attribute: `overlayImage`  
-Hierarchy builder method: `setOverlay,` `setOverlays`    
-Default value: None   
+XML attribute: `overlayImage`
+Hierarchy builder method: `setOverlay,` `setOverlays`
+Default value: None
 Default scale type: N/A
 
 ## <a name="PressedStateOverlay"></a>Pressed State Overlay
@@ -131,8 +134,5 @@ The pressed state overlay doesn't support scale-types.
 
 XML attribute: `pressedStateOverlayImage`  
 Hierarchy builder method: `setPressedStateOverlay`    
-Default value: None   
+Default value: None
 Default scale type: N/A
-
-
-
