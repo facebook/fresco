@@ -54,6 +54,8 @@
     title: DataSources and DataSubscribers
   - id: closeable-references
     title: Closeable References
+  - id: webp-support
+    title: Webp images
 - title: Solving Problems
   items:
   - id: troubleshooting
