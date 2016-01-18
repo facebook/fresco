@@ -58,6 +58,8 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * Decode WebP images, even on older versions of Android that don't fully support them
 
 # Who Uses Fresco?
+* [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android) - See their [blog post](https://www.redfin.com/devblog/2015/10/using-fresco-to-load-images-efficiently-on-android.html) about Fresco!
+* [Memrise](https://play.google.com/store/apps/details?id=com.memrise.android.memrisecompanion)
 * [Best Apps Market](https://play.google.com/store/apps/details?id=com.bestappsmarket.android.bestapps)
 * [Phonotto](https://play.google.com/store/apps/details?id=com.duckma.phonotto)
 * [ShareTheMeal](https://play.google.com/store/apps/details?id=org.sharethemeal.app)
@@ -70,16 +72,14 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Bakar](https://play.google.com/store/apps/details?id=com.bakar)
 * [nice](https://play.google.com/store/apps/details?id=com.nice.main)
 * [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
-* [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android) - See their [blog post](https://www.redfin.com/devblog/2015/10/using-fresco-to-load-images-efficiently-on-android.html) about Fresco!
-* [Memrise](https://play.google.com/store/apps/details?id=com.memrise.android.memrisecompanion)
+* [Mappy](https://play.google.com/store/apps/details?id=com.mappy.app)
+* [React Native](https://facebook.github.io/react-native/)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
 * [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
 * [Moments](https://play.google.com/store/apps/details?id=com.facebook.moments)
 * [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
-* [React Native](https://facebook.github.io/react-native/)
-* [Mappy](https://play.google.com/store/apps/details?id=com.mappy.app)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
