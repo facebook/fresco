@@ -7,8 +7,6 @@ prev: closeable-references.html
 next: troubleshooting.html
 ---
 
-# Webp images
-
 Android added webp support in version 4.0 and imporved it in 4.2.1:
 
 * 4.0+ (Ice Cream Sandwich): basic webp support
