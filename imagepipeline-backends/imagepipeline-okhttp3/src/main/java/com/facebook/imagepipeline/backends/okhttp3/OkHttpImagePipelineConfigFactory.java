@@ -7,18 +7,15 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.backends.okhttp;
+package com.facebook.imagepipeline.backends.okhttp3;
 
 import android.content.Context;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.OkHttpClient;
 
 /**
  * Factory for getting an {@link com.facebook.imagepipeline.core.ImagePipelineConfig} that uses
  * {@link OkHttpNetworkFetcher}.
- *
- * @deprecated replaced with {@code
- * com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory}.
  */
 public class OkHttpImagePipelineConfigFactory {
 
