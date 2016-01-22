@@ -85,8 +85,14 @@ public class ScalingUtils {
     FOCUS_CROP,
 
     /**
-     * keep height dimension fix exactly and aspect ratio is preserved.
-     * It maybe only show center part of width.
+     * Scales the image so that the x dimension fits exactly and aspect ratio is preserved.
+     * Image is vertically centered in the parent.
+     */
+    FIT_X,
+
+    /**
+     * Scales the image so that the y dimension fits exactly and aspect ratio is preserved.
+     * Image is horizontally centered in the parent.
      */
     FIT_Y
   }
@@ -199,17 +205,20 @@ public class ScalingUtils {
         transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
         break;
 
+      case FIT_X:
+        scale = scaleX;
+        dx = parentBounds.left;
+        dy = parentBounds.top + (parentHeight - childHeight * scale) * 0.5f;
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
       case FIT_Y:
         scale = scaleY;
-
-        float localScaleX = scaleY;
-        if (childWidth * scale < parentWidth) {
-          localScaleX = scaleX;
-        }
-
-        dx = parentBounds.left + (parentWidth - childWidth * localScaleX) * 0.5f;
-        transform.setScale(localScaleX, scale);
-        transform.postTranslate((int) (dx + 0.5f), 0);
+        dx = parentBounds.left + (parentWidth - childWidth * scale) * 0.5f;
+        dy = parentBounds.top;
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
         break;
 
       default:
