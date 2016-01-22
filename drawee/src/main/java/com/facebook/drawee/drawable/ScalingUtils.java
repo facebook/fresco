@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
- *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
@@ -83,11 +82,24 @@ public class ScalingUtils {
      * It is guaranteed that the focus point will be visible and centered as much as possible.
      * If the focus point is set to (0.5f, 0.5f), result will be equivalent to CENTER_CROP.
      */
-    FOCUS_CROP
+    FOCUS_CROP,
+
+    /**
+     * Scales the image so that the x dimension fits exactly and aspect ratio is preserved.
+     * Image is vertically centered in the parent.
+     */
+    FIT_X,
+
+    /**
+     * Scales the image so that the y dimension fits exactly and aspect ratio is preserved.
+     * Image is horizontally centered in the parent.
+     */
+    FIT_Y
   }
 
   /**
    * Gets transformation based on the scale type.
+   * 
    * @param transform out matrix to store result
    * @param parentBounds parent bounds
    * @param childWidth child width
@@ -189,6 +201,22 @@ public class ScalingUtils {
           dy = parentHeight * 0.5f - childHeight * scale * focusY;
           dy = parentBounds.top + Math.max(Math.min(dy, 0), parentHeight - childHeight * scale);
         }
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FIT_X:
+        scale = scaleX;
+        dx = parentBounds.left;
+        dy = parentBounds.top + (parentHeight - childHeight * scale) * 0.5f;
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FIT_Y:
+        scale = scaleY;
+        dx = parentBounds.left + (parentWidth - childWidth * scale) * 0.5f;
+        dy = parentBounds.top;
         transform.setScale(scale, scale);
         transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
         break;
