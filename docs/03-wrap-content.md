@@ -11,12 +11,14 @@ next: shared-transitions.html
 
 *Why can't I use Android's `wrap_content` attribute on a DraweeView?* we are often asked.
 
-The reason is that Drawees can't support the [getIntrinsicHeight](http://developer.android.com/reference/android/graphics/drawable/Drawable.html#getIntrinsicHeight()) and getIntrinsicWidth methods. These always return -1.
+The reason is that Drawee always returns -1 for [getIntrinsicHeight](http://developer.android.com/reference/android/graphics/drawable/Drawable.html#getIntrinsicHeight()) and getIntrinsicWidth methods.
 
-And the reason for that is that a Drawee shows more than one thing. It may show a placeholder, and then fade in to an actual image. It may even have more than one actual images, one low-resolution, the other high-resolution. If these are not the same size, and they usually are not, then the concept of an "intrinsic" size is meaningless.
+And the reason for that is that unlike a simple ImageView, Drawee may show more than one thing at the same time. For example, during the fade transition from the placeholder to the actual image, both images are visible. There may even be more than one actual image, one low-resolution, the other high-resolution. If all these images are not of exactly the same size, and they practically never are, then the concept of an "intrinsic" size cannot be well defined.
 
-We could have returned the size of the placeholder until the image has finished loading, and then swap to the actual image's size. If we did that, though, the image would not appear correctly - it would be scaled or cropped to the placeholder's size. The only way to prevent that would be to force an Android layout pass when the image loads. Not only will that hurt your app's scroll perf, but it will be jarring for your users, who will suddenly see your app change on screen.
+We could have returned the size of the placeholder until the image has finished loading, and then swap to the actual image's size. If we did that, though, the image would not appear correctly - it would be scaled or cropped to the placeholder's size. The only way to prevent that would be to force an Android layout pass when the image loads. Not only will that hurt your app's scroll perf, but it will be jarring for your users, who will suddenly see your app change on screen. Imagine if the user is reading a text article and all of a sudden the text jumps down because the image above it just loaded and caused everything to re-layout.
 
 For this reason, you have to use an actual size or `match_parent` to lay out a DraweeView.
 
-If your images are coming from a server, it may be possible to ask that server for the image's size, before you download it. This should be a faster request. Then use [setLayoutParams](http://developer.android.com/reference/android/view/View.html#setLayoutParams(android.view.ViewGroup.LayoutParams)) to dynamically size your view.
+If your images are coming from a server, it may be possible to ask that server for the image dimensions, before you download it. This should be a faster request. Then use [setLayoutParams](http://developer.android.com/reference/android/view/View.html#setLayoutParams(android.view.ViewGroup.LayoutParams)) to dynamically size your view upfront.
+
+If on the other hand your use case is a legitimate exception, you can actually resize Drawee view dynamically by using a controller listener as explained [here] (http://stackoverflow.com/a/34075281/3027862).
