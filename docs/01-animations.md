@@ -36,9 +36,10 @@ ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() 
         String id,
         @Nullable ImageInfo imageInfo,
         @Nullable Animatable anim) {
-    if (anim != null) {
-      // app-specific logic to enable animation starting
-      anim.start();
+        if (anim != null) {
+          // app-specific logic to enable animation starting
+          anim.start();
+        }
     }
 };
 
