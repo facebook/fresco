@@ -145,9 +145,9 @@ struct WebPFrameNativeContext {
 
 // Class Names.
 static const char* const kWebPImageClassPathName =
-    "com/facebook/imagepipeline/webp/WebPImage";
+    "com/facebook/animated/webp/WebPImage";
 static const char* const kWebPFrameClassPathName =
-    "com/facebook/imagepipeline/webp/WebPFrame";
+    "com/facebook/animated/webp/WebPFrame";
 
 // Cached fields related to WebPImage
 static jclass sClazzWebPImage;
@@ -782,10 +782,10 @@ void WebPFrame_nativeFinalize(JNIEnv* pEnv, jobject thiz) {
 
 static JNINativeMethod sWebPImageMethods[] = {
   { "nativeCreateFromDirectByteBuffer",
-    "(Ljava/nio/ByteBuffer;)Lcom/facebook/imagepipeline/webp/WebPImage;",
+    "(Ljava/nio/ByteBuffer;)Lcom/facebook/animated/webp/WebPImage;",
     (void*)WebPImage_nativeCreateFromDirectByteBuffer },
   { "nativeCreateFromNativeMemory",
-    "(JI)Lcom/facebook/imagepipeline/webp/WebPImage;",
+    "(JI)Lcom/facebook/animated/webp/WebPImage;",
     (void*)WebPImage_nativeCreateFromNativeMemory },
   { "nativeGetWidth",
     "()I",
@@ -809,7 +809,7 @@ static JNINativeMethod sWebPImageMethods[] = {
     "()I",
     (void*)WebPImage_nativeGetLoopCount },
   { "nativeGetFrame",
-    "(I)Lcom/facebook/imagepipeline/webp/WebPFrame;",
+    "(I)Lcom/facebook/animated/webp/WebPFrame;",
     (void*)WebPImage_nativeGetFrame },
   { "nativeGetSizeInBytes",
     "()I",

@@ -28,7 +28,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-import com.facebook.imagepipeline.webp.WebPImage;
+import com.facebook.animated.webp.WebPImage;
 
 import org.junit.Rule;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;

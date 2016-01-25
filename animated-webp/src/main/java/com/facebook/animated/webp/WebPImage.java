@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.webp;
+package com.facebook.animated.webp;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -38,11 +38,6 @@ public class WebPImage implements AnimatedImage {
   private static synchronized void ensure() {
     if (!sInitialized) {
       sInitialized = true;
-      try {
-        SoLoaderShim.loadLibrary("webp");
-      } catch(UnsatisfiedLinkError error) {
-        // Optional library not present
-      }
       SoLoaderShim.loadLibrary("webpimage");
     }
   }

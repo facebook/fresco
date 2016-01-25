@@ -28,7 +28,7 @@ import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.webp.WebPImage;
+import com.facebook.animated.webp.WebPImage;
 
 import java.util.ArrayList;
 import java.util.List;
