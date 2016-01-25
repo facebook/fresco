@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.gif;
+package com.facebook.animated.gif;
 
 import javax.annotation.concurrent.ThreadSafe;
 

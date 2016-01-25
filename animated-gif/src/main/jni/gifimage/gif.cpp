@@ -225,9 +225,9 @@ static const PixelType32 TRANSPARENT {0, 0, 0, 0};
 
 // Class Names.
 static const char* const kGifImageClassPathName =
-    "com/facebook/imagepipeline/gif/GifImage";
+    "com/facebook/animated/gif/GifImage";
 static const char* const kGifFrameClassPathName =
-    "com/facebook/imagepipeline/gif/GifFrame";
+    "com/facebook/animated/gif/GifFrame";
 
 // Cached fields related to GifImage
 static jclass sClazzGifImage;
@@ -1175,10 +1175,10 @@ void GifFrame_nativeFinalize(JNIEnv* pEnv, jobject thiz) {
 
 static JNINativeMethod sGifImageMethods[] = {
   { "nativeCreateFromDirectByteBuffer",
-    "(Ljava/nio/ByteBuffer;)Lcom/facebook/imagepipeline/gif/GifImage;",
+    "(Ljava/nio/ByteBuffer;)Lcom/facebook/animated/gif/GifImage;",
     (void*)GifImage_nativeCreateFromDirectByteBuffer },
   { "nativeCreateFromNativeMemory",
-    "(JI)Lcom/facebook/imagepipeline/gif/GifImage;",
+    "(JI)Lcom/facebook/animated/gif/GifImage;",
     (void*)GifImage_nativeCreateFromNativeMemory },
   { "nativeGetWidth",
     "()I",
@@ -1202,7 +1202,7 @@ static JNINativeMethod sGifImageMethods[] = {
     "()I",
     (void*)GifImage_nativeGetLoopCount },
   { "nativeGetFrame",
-    "(I)Lcom/facebook/imagepipeline/gif/GifFrame;",
+    "(I)Lcom/facebook/animated/gif/GifFrame;",
     (void*)GifImage_nativeGetFrame },
   { "nativeGetSizeInBytes",
     "()I",
