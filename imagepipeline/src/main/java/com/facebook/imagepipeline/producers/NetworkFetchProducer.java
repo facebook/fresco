@@ -136,7 +136,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   private void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream,
       FetchState fetchState) {
-    final long nowMs = SystemClock.elapsedRealtime();
+    final long nowMs = SystemClock.uptimeMillis();
     if (shouldPropagateIntermediateResults(fetchState) &&
         nowMs - fetchState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);

@@ -551,7 +551,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @GuardedBy("mLock")
   private boolean maybeUpdateFileCacheSize() {
     boolean result = false;
-    long now = SystemClock.elapsedRealtime();
+    long now = SystemClock.uptimeMillis();
     if ((!mCacheStats.isInitialized()) ||
         mCacheSizeLastUpdateTime == UNINITIALIZED ||
         (now - mCacheSizeLastUpdateTime) > FILECACHE_SIZE_UPDATE_PERIOD_MS) {

@@ -147,7 +147,7 @@ public class StatFsHelper {
     // with a frequency of once in RESTAT_INTERVAL_MS
     if (lock.tryLock()) {
       try {
-        if ((SystemClock.elapsedRealtime() - mLastRestatTime) > RESTAT_INTERVAL_MS) {
+        if ((SystemClock.uptimeMillis() - mLastRestatTime) > RESTAT_INTERVAL_MS) {
           updateStats();
         }
       } finally {
@@ -184,7 +184,7 @@ public class StatFsHelper {
   private void updateStats() {
     mInternalStatFs = updateStatsHelper(mInternalStatFs, mInternalPath);
     mExternalStatFs = updateStatsHelper(mExternalStatFs, mExternalPath);
-    mLastRestatTime = SystemClock.elapsedRealtime();
+    mLastRestatTime = SystemClock.uptimeMillis();
   }
 
   /**

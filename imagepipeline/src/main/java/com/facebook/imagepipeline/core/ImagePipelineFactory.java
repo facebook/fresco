@@ -28,7 +28,7 @@ import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.common.time.RealtimeSinceBootClock;
+import com.facebook.common.time.AwakeTimeSinceBootClock;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
@@ -189,7 +189,7 @@ public class ImagePipelineFactory {
           getAnimatedDrawableUtil(),
           getAnimatedDrawableBackendProvider(),
           UiThreadImmediateExecutorService.getInstance(),
-          RealtimeSinceBootClock.get(),
+          AwakeTimeSinceBootClock.get(),
           mConfig.getContext().getResources());
     }
     return mAnimatedDrawableFactory;

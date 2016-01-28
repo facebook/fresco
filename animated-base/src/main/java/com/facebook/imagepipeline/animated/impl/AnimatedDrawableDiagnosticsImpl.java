@@ -61,12 +61,12 @@ public class AnimatedDrawableDiagnosticsImpl implements AnimatedDrawableDiagnost
 
   @Override
   public void onStartMethodBegin() {
-    mLastTimeStamp = SystemClock.elapsedRealtime();
+    mLastTimeStamp = SystemClock.uptimeMillis();
   }
 
   @Override
   public void onStartMethodEnd() {
-    long elapsedMs = SystemClock.elapsedRealtime() - mLastTimeStamp;
+    long elapsedMs = SystemClock.uptimeMillis() - mLastTimeStamp;
     if (elapsedMs > 3) {
       FLog.v(TAG, "onStart took %d", elapsedMs);
     }
@@ -74,12 +74,12 @@ public class AnimatedDrawableDiagnosticsImpl implements AnimatedDrawableDiagnost
 
   @Override
   public void onNextFrameMethodBegin() {
-    mLastTimeStamp = SystemClock.elapsedRealtime();
+    mLastTimeStamp = SystemClock.uptimeMillis();
   }
 
   @Override
   public void onNextFrameMethodEnd() {
-    long elapsedMs = SystemClock.elapsedRealtime() - mLastTimeStamp;
+    long elapsedMs = SystemClock.uptimeMillis() - mLastTimeStamp;
     if (elapsedMs > 3) {
       FLog.v(TAG, "onNextFrame took %d", elapsedMs);
     }
@@ -100,12 +100,12 @@ public class AnimatedDrawableDiagnosticsImpl implements AnimatedDrawableDiagnost
 
   @Override
   public void onDrawMethodBegin() {
-    mLastTimeStamp = SystemClock.elapsedRealtime();
+    mLastTimeStamp = SystemClock.uptimeMillis();
   }
 
   @Override
   public void onDrawMethodEnd() {
-    long elapsedMs = SystemClock.elapsedRealtime() - mLastTimeStamp;
+    long elapsedMs = SystemClock.uptimeMillis() - mLastTimeStamp;
     FLog.v(TAG, "draw took %d", elapsedMs);
   }
 

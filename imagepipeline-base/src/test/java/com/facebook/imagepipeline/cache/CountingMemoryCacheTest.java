@@ -63,7 +63,7 @@ public class CountingMemoryCacheTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     PowerMockito.mockStatic(SystemClock.class);
-    PowerMockito.when(SystemClock.elapsedRealtime()).thenReturn(0L);
+    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(0L);
     mValueDescriptor =
         new ValueDescriptor<Integer>() {
           @Override
@@ -402,7 +402,7 @@ public class CountingMemoryCacheTest {
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
-    PowerMockito.when(SystemClock.elapsedRealtime())
+    PowerMockito.when(SystemClock.uptimeMillis())
         .thenReturn(CountingMemoryCache.PARAMS_INTERCHECK_INTERVAL_MS - 1);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier, never()).get();
@@ -420,7 +420,7 @@ public class CountingMemoryCacheTest {
         CACHE_ENTRY_MAX_SIZE);
     when(mParamsSupplier.get()).thenReturn(mParams);
 
-    PowerMockito.when(SystemClock.elapsedRealtime())
+    PowerMockito.when(SystemClock.uptimeMillis())
         .thenReturn(CountingMemoryCache.PARAMS_INTERCHECK_INTERVAL_MS);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
@@ -499,7 +499,7 @@ public class CountingMemoryCacheTest {
     MemoryTrimType memoryTrimType = MemoryTrimType.OnCloseToDalvikHeapLimit;
     mParams = new MemoryCacheParams(1100, 10, 1100, 10, 110);
     when(mParamsSupplier.get()).thenReturn(mParams);
-    PowerMockito.when(SystemClock.elapsedRealtime())
+    PowerMockito.when(SystemClock.uptimeMillis())
         .thenReturn(CountingMemoryCache.PARAMS_INTERCHECK_INTERVAL_MS);
     InOrder inOrder = inOrder(mReleaser);
 

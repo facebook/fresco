@@ -131,7 +131,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
     mCacheTrimStrategy = cacheTrimStrategy;
     mMemoryCacheParamsSupplier = memoryCacheParamsSupplier;
     mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
-    mLastCacheParamsCheck = SystemClock.elapsedRealtime();
+    mLastCacheParamsCheck = SystemClock.uptimeMillis();
   }
 
   private ValueDescriptor<Entry<K, V>> wrapValueDescriptor(
@@ -363,10 +363,10 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    * Updates the cache params (constraints) if enough time has passed since the last update.
    */
   private synchronized void maybeUpdateCacheParams() {
-    if (mLastCacheParamsCheck + PARAMS_INTERCHECK_INTERVAL_MS > SystemClock.elapsedRealtime()) {
+    if (mLastCacheParamsCheck + PARAMS_INTERCHECK_INTERVAL_MS > SystemClock.uptimeMillis()) {
       return;
     }
-    mLastCacheParamsCheck = SystemClock.elapsedRealtime();
+    mLastCacheParamsCheck = SystemClock.uptimeMillis();
     mMemoryCacheParams = mMemoryCacheParamsSupplier.get();
   }
 

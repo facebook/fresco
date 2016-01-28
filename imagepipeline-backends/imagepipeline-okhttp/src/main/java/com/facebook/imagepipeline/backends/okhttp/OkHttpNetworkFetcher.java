@@ -77,7 +77,7 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
-    fetchState.submitTime = SystemClock.elapsedRealtime();
+    fetchState.submitTime = SystemClock.uptimeMillis();
     final Uri uri = fetchState.getUri();
     final Request request = new Request.Builder()
         .cacheControl(new CacheControl.Builder().noStore().build())
@@ -106,7 +106,7 @@ public class OkHttpNetworkFetcher extends
         new com.squareup.okhttp.Callback() {
           @Override
           public void onResponse(Response response) {
-            fetchState.responseTime = SystemClock.elapsedRealtime();
+            fetchState.responseTime = SystemClock.uptimeMillis();
             if (!response.isSuccessful()) {
               handleException(call, new IOException("Unexpected HTTP code " + response), callback);
               return;
@@ -138,7 +138,7 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
-    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
+    fetchState.fetchCompleteTime = SystemClock.uptimeMillis();
   }
 
   @Override
