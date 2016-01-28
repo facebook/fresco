@@ -79,11 +79,20 @@ public class OkHttpNetworkFetcher extends
   public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
     fetchState.submitTime = SystemClock.uptimeMillis();
     final Uri uri = fetchState.getUri();
-    final Request request = new Request.Builder()
+    final Request request;
+
+    try {
+     request = new Request.Builder()
         .cacheControl(new CacheControl.Builder().noStore().build())
         .url(uri.toString())
         .get()
         .build();
+    } catch (Exception e) {
+      // handle malformed Uri
+      callback.onFailure(e);
+      return;
+    }
+
     final Call call = mOkHttpClient.newCall(request);
 
     fetchState.getContext().addCallbacks(
