@@ -349,11 +349,32 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
   /**
    * Returns the scale type indicated in XML, or null if the special 'none' value was found.
    */
+  @Nullable
   private static ScalingUtils.ScaleType getScaleTypeFromXml(
       TypedArray attrs,
       int attrId,
       ScalingUtils.ScaleType defaultScaleType) {
-    int index = attrs.getInt(attrId, -1);
-    return index < 0 ? defaultScaleType : ScalingUtils.ScaleType.values()[index];
+    switch (attrs.getInt(attrId, -2)) {
+      case -1: // none
+        return null;
+      case 0: // fitXY
+        return ScalingUtils.ScaleType.FIT_XY;
+      case 1: // fitStart
+        return ScalingUtils.ScaleType.FIT_START;
+      case 2: // fitCenter
+        return ScalingUtils.ScaleType.FIT_CENTER;
+      case 3: // fitEnd
+        return ScalingUtils.ScaleType.FIT_END;
+      case 4: // center
+        return ScalingUtils.ScaleType.CENTER;
+      case 5: // centerInside
+        return ScalingUtils.ScaleType.CENTER_INSIDE;
+      case 6: // centerCrop
+        return ScalingUtils.ScaleType.CENTER_CROP;
+      case 7: // focusCrop
+        return ScalingUtils.ScaleType.FOCUS_CROP;
+      default:
+        return defaultScaleType;
+    }
   }
 }
