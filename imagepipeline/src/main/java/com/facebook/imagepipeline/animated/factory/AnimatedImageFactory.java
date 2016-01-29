@@ -64,7 +64,7 @@ public class AnimatedImageFactory {
     try {
       Preconditions.checkState(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
-      GifImage gifImage = GifImage.create(input.getNativePtr(), input.size());
+      AnimatedImage gifImage = GifImage.create(input.getNativePtr(), input.size());
 
       return getCloseableImage(options, gifImage, bitmapConfig);
     } finally {
@@ -88,7 +88,7 @@ public class AnimatedImageFactory {
     try {
       Preconditions.checkArgument(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
-      WebPImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
+      AnimatedImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
       return getCloseableImage(options, webPImage, bitmapConfig);
     } finally {
       CloseableReference.closeSafely(bytesRef);
