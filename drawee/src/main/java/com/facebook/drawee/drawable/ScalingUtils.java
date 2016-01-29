@@ -24,55 +24,56 @@ public class ScalingUtils {
    * To use matrix scaling, use a {@link MatrixDrawable}. An additional scale type (FOCUS_CROP) is
    * provided.
    * <p>
+   * Note: The enum values should be in sync with the scaleType attribute values in attrs.xml
    */
-  public interface ScaleType {
+  public enum ScaleType {
 
     /**
      * Scales width and height independently, so that the child matches the parent exactly.
      * This may change the aspect ratio of the child.
      */
-    static final ScaleType FIT_XY = ScaleTypeFitXY.INSTANCE;
+    FIT_XY,
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
      * height) will fit exactly. Aspect ratio is preserved.
      * Child is aligned to the top-left corner of the parent.
      */
-    static final ScaleType FIT_START = ScaleTypeFitStart.INSTANCE;
+    FIT_START,
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
      * height) will fit exactly. Aspect ratio is preserved.
      * Child is centered within the parent's bounds.
      */
-    static final ScaleType FIT_CENTER = ScaleTypeFitCenter.INSTANCE;
+    FIT_CENTER,
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
      * height) will fit exactly. Aspect ratio is preserved.
      * Child is aligned to the bottom-right corner of the parent.
      */
-    static final ScaleType FIT_END = ScaleTypeFitEnd.INSTANCE;
+    FIT_END,
 
     /**
      * Performs no scaling.
      * Child is centered within parent's bounds.
      */
-    static final ScaleType CENTER = ScaleTypeCenter.INSTANCE;
+    CENTER,
 
     /**
      * Scales the child so that it fits entirely inside the parent. Unlike FIT_CENTER, if the child
      * is smaller, no up-scaling will be performed. Aspect ratio is preserved.
      * Child is centered within parent's bounds.
      */
-    static final ScaleType CENTER_INSIDE = ScaleTypeCenterInside.INSTANCE;
+    CENTER_INSIDE,
 
     /**
      * Scales the child so that both dimensions will be greater than or equal to the corresponding
      * dimension of the parent. At least one dimension (width or height) will fit exactly.
      * Child is centered within parent's bounds.
      */
-    static final ScaleType CENTER_CROP = ScaleTypeCenterCrop.INSTANCE;
+    CENTER_CROP,
 
     /**
      * Scales the child so that both dimensions will be greater than or equal to the corresponding
@@ -82,239 +83,120 @@ public class ScalingUtils {
      * It is guaranteed that the focus point will be visible and centered as much as possible.
      * If the focus point is set to (0.5f, 0.5f), result will be equivalent to CENTER_CROP.
      */
-    static final ScaleType FOCUS_CROP = ScaleTypeFocusCrop.INSTANCE;
-
-    /**
-     * Gets transformation matrix based on the scale type.
-     * @param outTransform out matrix to store result
-     * @param parentBounds parent bounds
-     * @param childWidth child width
-     * @param childHeight child height
-     * @param focusX focus point x coordinate, relative [0...1]
-     * @param focusY focus point y coordinate, relative [0...1]
-     * @return same reference to the out matrix for convenience
-     */
-    Matrix getTransform(
-        Matrix outTransform,
-        Rect parentBounds,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY);
+    FOCUS_CROP
   }
 
   /**
-   * A convenience base class that has some common logic.
+   * Gets transformation based on the scale type.
+   * @param transform out matrix to store result
+   * @param parentBounds parent bounds
+   * @param childWidth child width
+   * @param childHeight child height
+   * @param focusX focus point x coordinate, relative [0...1]
+   * @param focusY focus point y coordinate, relative [0...1]
+   * @param scaleType scale type to be used
+   * @return reference to the out matrix
    */
-  public static abstract class AbstractScaleType implements ScaleType {
+  public static Matrix getTransform(
+      final Matrix transform,
+      final Rect parentBounds,
+      final int childWidth,
+      final int childHeight,
+      final float focusX,
+      final float focusY,
+      final ScaleType scaleType) {
 
-    @Override
-    public Matrix getTransform(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY) {
-      final float sX = (float) parentRect.width() / (float) childWidth;
-      final float sY = (float) parentRect.height() / (float) childHeight;
-      getTransformImpl(outTransform, parentRect, childWidth, childHeight, focusX, focusY, sX, sY);
-      return outTransform;
+    final int parentWidth = parentBounds.width();
+    final int parentHeight = parentBounds.height();
+
+    final float scaleX = (float) parentWidth / (float) childWidth;
+    final float scaleY = (float) parentHeight / (float) childHeight;
+
+    float scale = 1.0f;
+    float dx = 0;
+    float dy = 0;
+
+
+    switch (scaleType) {
+      case FIT_XY:
+        dx = parentBounds.left;
+        dy = parentBounds.top;
+        transform.setScale(scaleX, scaleY);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FIT_START:
+        scale = Math.min(scaleX, scaleY);
+        dx = parentBounds.left;
+        dy = parentBounds.top;
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FIT_CENTER:
+        scale = Math.min(scaleX, scaleY);
+        dx = parentBounds.left + (parentWidth - childWidth * scale) * 0.5f;
+        dy = parentBounds.top + (parentHeight - childHeight * scale) * 0.5f;
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FIT_END:
+        scale = Math.min(scaleX, scaleY);
+        dx = parentBounds.left + (parentWidth - childWidth * scale);
+        dy = parentBounds.top + (parentHeight - childHeight * scale);
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case CENTER:
+        dx = parentBounds.left + (parentWidth - childWidth) * 0.5f;
+        dy = parentBounds.top + (parentHeight - childHeight) * 0.5f;
+        transform.setTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case CENTER_INSIDE:
+        scale = Math.min(Math.min(scaleX, scaleY), 1.0f);
+        dx = parentBounds.left + (parentWidth - childWidth * scale) * 0.5f;
+        dy = parentBounds.top + (parentHeight - childHeight * scale) * 0.5f;
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case CENTER_CROP:
+        if (scaleY > scaleX) {
+          scale = scaleY;
+          dx = parentBounds.left + (parentWidth - childWidth * scale) * 0.5f;
+          dy = parentBounds.top;
+        } else {
+          scale = scaleX;
+          dx = parentBounds.left;
+          dy = parentBounds.top + (parentHeight - childHeight * scale) * 0.5f;
+        }
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      case FOCUS_CROP:
+        if (scaleY > scaleX) {
+          scale = scaleY;
+          dx = parentWidth * 0.5f - childWidth * scale * focusX;
+          dx = parentBounds.left + Math.max(Math.min(dx, 0), parentWidth - childWidth * scale);
+          dy = parentBounds.top;
+        } else {
+          scale = scaleX;
+          dx = parentBounds.left;
+          dy = parentHeight * 0.5f - childHeight * scale * focusY;
+          dy = parentBounds.top + Math.max(Math.min(dy, 0), parentHeight - childHeight * scale);
+        }
+        transform.setScale(scale, scale);
+        transform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+        break;
+
+      default:
+        throw new UnsupportedOperationException("Unsupported scale type: " + scaleType);
     }
 
-    public abstract void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY);
-  }
-
-  private static class ScaleTypeFitXY extends AbstractScaleType {
-    public static final ScaleType INSTANCE = new ScaleTypeFitXY();
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float dx = parentRect.left;
-      float dy = parentRect.top;
-      outTransform.setScale(scaleX, scaleY);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeFitStart extends AbstractScaleType {
-    public static final ScaleType INSTANCE = new ScaleTypeFitStart();
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float scale = Math.min(scaleX, scaleY);
-      float dx = parentRect.left;
-      float dy = parentRect.top;
-      outTransform.setScale(scale, scale);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeFitCenter extends AbstractScaleType {
-
-    public static final ScaleType INSTANCE = new ScaleTypeFitCenter();
-
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float scale = Math.min(scaleX, scaleY);
-      float dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
-      float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
-      outTransform.setScale(scale, scale);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeFitEnd extends AbstractScaleType {
-
-    public static final ScaleType INSTANCE = new ScaleTypeFitEnd();
-
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float scale = Math.min(scaleX, scaleY);
-      float dx = parentRect.left + (parentRect.width() - childWidth * scale);
-      float dy = parentRect.top + (parentRect.height() - childHeight * scale);
-      outTransform.setScale(scale, scale);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeCenter extends AbstractScaleType {
-
-    public static final ScaleType INSTANCE = new ScaleTypeCenter();
-
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float dx = parentRect.left + (parentRect.width() - childWidth) * 0.5f;
-      float dy = parentRect.top + (parentRect.height() - childHeight) * 0.5f;
-      outTransform.setTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeCenterInside extends AbstractScaleType {
-
-    public static final ScaleType INSTANCE = new ScaleTypeCenterInside();
-
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float scale = Math.min(Math.min(scaleX, scaleY), 1.0f);
-      float dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
-      float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
-      outTransform.setScale(scale, scale);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeCenterCrop extends AbstractScaleType {
-
-    public static final ScaleType INSTANCE = new ScaleTypeCenterCrop();
-
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float scale, dx, dy;
-      if (scaleY > scaleX) {
-        scale = scaleY;
-        dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
-        dy = parentRect.top;
-      } else {
-        scale = scaleX;
-        dx = parentRect.left;
-        dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
-      }
-      outTransform.setScale(scale, scale);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
-  }
-
-  private static class ScaleTypeFocusCrop extends AbstractScaleType {
-
-    public static final ScaleType INSTANCE = new ScaleTypeFocusCrop();
-
-    @Override
-    public void getTransformImpl(
-        Matrix outTransform,
-        Rect parentRect,
-        int childWidth,
-        int childHeight,
-        float focusX,
-        float focusY,
-        float scaleX,
-        float scaleY) {
-      float scale, dx, dy;
-      if (scaleY > scaleX) {
-        scale = scaleY;
-        dx = parentRect.width() * 0.5f - childWidth * scale * focusX;
-        dx = parentRect.left + Math.max(Math.min(dx, 0), parentRect.width() - childWidth * scale);
-        dy = parentRect.top;
-      } else {
-        scale = scaleX;
-        dx = parentRect.left;
-        dy = parentRect.height() * 0.5f - childHeight * scale * focusY;
-        dy = parentRect.top + Math.max(Math.min(dy, 0), parentRect.height() - childHeight * scale);
-      }
-      outTransform.setScale(scale, scale);
-      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
-    }
+    return transform;
   }
 }
