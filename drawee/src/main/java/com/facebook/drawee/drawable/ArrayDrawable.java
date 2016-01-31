@@ -11,6 +11,7 @@ package com.facebook.drawee.drawable;
 
 import javax.annotation.Nullable;
 
+import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -18,6 +19,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 
@@ -368,6 +370,16 @@ public class ArrayDrawable extends Drawable
       mTransformCallback.getRootBounds(bounds);
     } else {
       bounds.set(getBounds());
+    }
+  }
+
+  @Override
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public void setHotspot(float x, float y) {
+    for (Drawable drawable : mLayers) {
+      if (drawable != null) {
+        drawable.setHotspot(x, y);
+      }
     }
   }
 }

@@ -9,12 +9,14 @@
 
 package com.facebook.drawee.drawable;
 
+import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 /**
  * A forwarding drawable class - the goal is to forward (delegate) drawable functionality to an
@@ -237,5 +239,11 @@ public class ForwardingDrawable extends Drawable
     // because the parent may have to change our bounds.
     outBounds.set(getBounds());
     sTempTransform.mapRect(outBounds);
+  }
+
+  @Override
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public void setHotspot(float x, float y) {
+    mCurrentDelegate.setHotspot(x, y);
   }
 }
