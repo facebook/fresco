@@ -37,7 +37,8 @@ GenericDraweeHierarchy hierarchy = builder
 mSimpleDraweeView.setHierarchy(hierarchy);
 ```
 
-Do **not** call `setHierarchy` more than once on the same view, even if the view is recycled. The hierarchy is expensive to create and in most cases you can just modify the existing hierarchy. Use `setController` or `setImageURI` to change the image shown in it.
+Calling `setHierarchy` more than once on the same view is usually unnecessary, even if the view is recycled. The hierarchy is expensive to create and in most cases you can just modify the existing hierarchy instead of creating a new one. Keep in mind that each instance of a `DraweeView` needs its own instance of a `DraweeHierarchy`. Same instance of a `DraweeHierarchy` is **not** to be used by multiple views.
+To change the actual image displayed by the view, use `setController` or `setImageURI`.
 
 ### Modifying the hierarchy in-place
 
