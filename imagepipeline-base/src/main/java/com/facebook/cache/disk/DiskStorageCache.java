@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 import android.os.SystemClock;
 
 import com.facebook.binaryresource.BinaryResource;
-import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
@@ -196,7 +194,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public BinaryResource getResource(final CacheKey key) {
     try {
       synchronized (mLock) {
-        FileBinaryResource resource = mStorageSupplier.get().getResource(getResourceId(key), key);
+        BinaryResource resource = mStorageSupplier.get().getResource(getResourceId(key), key);
         if (resource == null) {
           mCacheEventListener.onMiss();
         } else {
@@ -240,7 +238,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   /**
    * Creates a temp file for writing outside the session lock
    */
-  private FileBinaryResource createTemporaryResource(
+  private BinaryResource createTemporaryResource(
       final String resourceId,
       final CacheKey key)
       throws IOException {
@@ -248,14 +246,11 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     return mStorageSupplier.get().createTemporary(resourceId, key);
   }
 
-  private void deleteTemporaryResource(FileBinaryResource fileResource) {
-    File tempFile = fileResource.getFile();
-
-    if (tempFile.exists()) {
-      FLog.e(TAG, "Temp file still on disk: %s ", tempFile);
-      if (!tempFile.delete()) {
-        FLog.e(TAG, "Failed to delete temp file: %s", tempFile);
-      }
+  private static void deleteResource(BinaryResource fileResource, CacheKey key) {
+    try {
+      fileResource.delete();
+    } catch (IOException ioe) {
+      FLog.e(TAG, "Failed to delete temp file", ioe);
     }
   }
 
@@ -263,12 +258,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    * Commits the provided temp file to the cache, renaming it to match
    * the cache's hashing convention.
    */
-  private FileBinaryResource commitResource(
+  private BinaryResource commitResource(
       final String resourceId,
       final CacheKey key,
-      final FileBinaryResource temporary) throws IOException {
+      final BinaryResource temporary) throws IOException {
     synchronized (mLock) {
-      FileBinaryResource resource = mStorageSupplier.get().commit(resourceId, temporary, key);
+      BinaryResource resource = mStorageSupplier.get().commit(resourceId, temporary, key);
       mCacheStats.increment(resource.size(), 1);
       return resource;
     }
@@ -282,13 +277,13 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     final String resourceId = getResourceId(key);
     try {
       // getting the file is synchronized
-      FileBinaryResource temporary = createTemporaryResource(resourceId, key);
+      BinaryResource temporary = createTemporaryResource(resourceId, key);
       try {
         mStorageSupplier.get().updateResource(resourceId, temporary, callback, key);
         // Committing the file is synchronized
         return commitResource(resourceId, key, temporary);
       } finally {
-        deleteTemporaryResource(temporary);
+        deleteResource(temporary, key);
       }
     } catch (IOException ioe) {
       mCacheEventListener.onWriteException();

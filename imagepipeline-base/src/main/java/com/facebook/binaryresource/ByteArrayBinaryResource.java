@@ -43,4 +43,9 @@ public class ByteArrayBinaryResource implements BinaryResource {
   public byte[] read() {
     return mBytes;
   }
+
+  @Override
+  public void delete() throws IOException {
+    // do nothing
+  }
 }

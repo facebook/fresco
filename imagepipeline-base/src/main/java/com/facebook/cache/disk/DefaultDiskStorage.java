@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
@@ -152,11 +153,12 @@ public class DefaultDiskStorage implements DiskStorage {
   @Override
   public void updateResource(
       final String resourceId,
-      final FileBinaryResource fileBinaryResource,
+      final BinaryResource fileBinaryResource,
       final WriterCallback callback,
       final Object debugInfo)
     throws IOException {
-    File file = fileBinaryResource.getFile();
+    // resource must be ours!
+    File file = ((FileBinaryResource) fileBinaryResource).getFile();
     FileOutputStream fileStream = null;
     try {
       fileStream = new FileOutputStream(file);
@@ -372,11 +374,12 @@ public class DefaultDiskStorage implements DiskStorage {
   @Override
   public FileBinaryResource commit(
       String resourceId,
-      FileBinaryResource tempFileResource,
+      BinaryResource tempFileResource,
       Object debugInfo)
       throws IOException {
 
-    File tempFile = tempFileResource.getFile();
+    // the temp resource must be ours!
+    File tempFile = ((FileBinaryResource) tempFileResource).getFile();
     File targetFile = getContentFileFor(resourceId);
 
     try {
@@ -408,7 +411,7 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public FileBinaryResource getResource(String resourceId, Object debugInfo) {
+  public BinaryResource getResource(String resourceId, Object debugInfo) {
     final File file = getContentFileFor(resourceId);
     if (file.exists()) {
       file.setLastModified(mClock.now());

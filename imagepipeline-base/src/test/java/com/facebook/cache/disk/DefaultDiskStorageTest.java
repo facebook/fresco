@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
@@ -39,7 +40,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.*;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
@@ -119,7 +120,7 @@ public class DefaultDiskStorageTest {
     final String resourceId2 = "R2";
 
     // no file - get should fail
-    FileBinaryResource resource1 = storage.getResource(resourceId1, null);
+    BinaryResource resource1 = storage.getResource(resourceId1, null);
     Assert.assertNull(resource1);
 
     // write out the file now
@@ -128,13 +129,14 @@ public class DefaultDiskStorageTest {
     // get should succeed now
     resource1 = storage.getResource(resourceId1, null);
     Assert.assertNotNull(resource1);
-    Assert.assertArrayEquals(key1Contents, Files.toByteArray(resource1.getFile()));
+    File underlyingFile = ((FileBinaryResource) resource1).getFile();
+    Assert.assertArrayEquals(key1Contents, Files.toByteArray(underlyingFile));
     // remove the file now - get should fail again
-    Assert.assertTrue(resource1.getFile().delete());
+    Assert.assertTrue(underlyingFile.delete());
     resource1 = storage.getResource(resourceId1, null);
     Assert.assertNull(resource1);
     // no file
-    FileBinaryResource resource2 = storage.getResource(resourceId2, null);
+    BinaryResource resource2 = storage.getResource(resourceId2, null);
     Assert.assertNull(resource2);
   }
 
@@ -330,7 +332,7 @@ public class DefaultDiskStorageTest {
    */
   @Test
   public void testPurgeUnexpectedFiles() throws Exception {
-    final DiskStorage storage = getStorageSupplier(1).get();
+    final DefaultDiskStorage storage = getStorageSupplier(1).get();
 
     final String resourceId = "file1";
     final byte[] CONTENT = "content".getBytes("UTF-8");
@@ -412,7 +414,7 @@ public class DefaultDiskStorageTest {
   public void testDirectoryIsNotNuked() throws Exception {
     Assert.assertEquals(0, mDirectory.listFiles().length);
 
-    final DiskStorage storage = getStorageSupplier(1).get();
+    final DefaultDiskStorage storage = getStorageSupplier(1).get();
     final String resourceId = "file1";
 
     final byte[] CONTENT = "content".getBytes("UTF-8");
@@ -444,7 +446,7 @@ public class DefaultDiskStorageTest {
    */
   @Test
   public void testIterationAndRemoval() throws Exception {
-    DiskStorage storage = getStorageSupplier(1).get();
+    DefaultDiskStorage storage = getStorageSupplier(1).get();
     final String resourceId0 = "file0";
     final String resourceId1 = "file1";
     final String resourceId2 = "file2";
@@ -486,7 +488,7 @@ public class DefaultDiskStorageTest {
   }
 
   private static FileBinaryResource writeToStorage(
-      final DiskStorage storage,
+      final DefaultDiskStorage storage,
       final String resourceId,
       final byte[] value) throws IOException {
     FileBinaryResource temporary = storage.createTemporary(resourceId, null);
@@ -496,14 +498,14 @@ public class DefaultDiskStorageTest {
   }
 
   private static File writeFileToStorage(
-      DiskStorage storage,
+      DefaultDiskStorage storage,
       String resourceId,
       byte[] value) throws IOException {
     return writeToStorage(storage, resourceId, value).getFile();
   }
 
   private static File write(
-      DiskStorage storage,
+      DefaultDiskStorage storage,
       String resourceId,
       byte[] content) throws IOException {
     FileBinaryResource temporary = storage.createTemporary(resourceId, null);
@@ -518,7 +520,7 @@ public class DefaultDiskStorageTest {
   }
 
   private static void writeToResource(
-      DiskStorage storage,
+      DefaultDiskStorage storage,
       String resourceId,
       FileBinaryResource resource,
       final byte[] content) throws IOException {
@@ -564,7 +566,7 @@ public class DefaultDiskStorageTest {
    * @param storage
    */
   private static List<DefaultDiskStorage.EntryImpl> retrieveEntries(
-      DiskStorage storage)
+      DefaultDiskStorage storage)
       throws IOException {
     List<DiskStorage.Entry> entries = new ArrayList<>(storage.getEntries());
 
@@ -578,7 +580,7 @@ public class DefaultDiskStorageTest {
     });
     List<DefaultDiskStorage.EntryImpl> newEntries = new ArrayList<>();
     for (DiskStorage.Entry entry: entries) {
-      newEntries.add((DefaultDiskStorage.EntryImpl)entry);
+      newEntries.add((DefaultDiskStorage.EntryImpl) entry);
     }
     return newEntries;
   }
