@@ -464,19 +464,35 @@ public class DefaultZoomableController
     bounds.set(mImageBounds);
     newTransform.mapRect(bounds);
     float offsetLeft = limitX ?
-        getOffset(bounds.left, bounds.width(), mViewBounds.width()) : bounds.left;
+        getOffset(bounds.left, bounds.right, mViewBounds.left, mViewBounds.right) : 0;
     float offsetTop = limitY ?
-        getOffset(bounds.top, bounds.height(), mViewBounds.height()) : bounds.top;
-    if (offsetLeft != bounds.left || offsetTop != bounds.top) {
-      newTransform.postTranslate(offsetLeft - bounds.left, offsetTop - bounds.top);
+        getOffset(bounds.top, bounds.bottom, mViewBounds.top, mViewBounds.bottom) : 0;
+    if (offsetLeft != 0 || offsetTop != 0) {
+      newTransform.postTranslate(offsetLeft, offsetTop);
       return true;
     }
     return false;
   }
 
-  private float getOffset(float offset, float imageDimension, float viewDimension) {
-    float diff = viewDimension - imageDimension;
-    return (diff > 0) ? diff / 2 : limit(offset, diff, 0);
+  /**
+   * Returns the offset necessary to make sure that:
+   * - the image is centered within the limit if the image is smaller than the limit
+   * - there is no empty space on left/right if the image is bigger than the limit
+   */
+  private float getOffset(float imageLeft, float imageRight, float limitLeft, float limitRight) {
+    float imageWidth = imageRight - imageLeft, limitWidth = limitRight - limitLeft;
+    // center if smaller
+    if (imageWidth < limitWidth) {
+      return (limitLeft + limitRight) / 2 - (imageRight + imageLeft) / 2;
+    }
+    // to the edge if necessary
+    if (imageLeft > limitLeft) {
+      return limitLeft - imageLeft;
+    }
+    if (imageRight < limitRight) {
+      return limitRight - imageRight;
+    }
+    return 0;
   }
 
   private float limit(float value, float min, float max) {
