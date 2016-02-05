@@ -183,6 +183,37 @@ public class RoundingParams {
   }
 
   /**
+   * Sets the border width
+   * @param color of the border
+   * @param width of the width
+   */
+  public RoundingParams setBorderWidth(float width) {
+    Preconditions.checkArgument(width >= 0, "the border width cannot be < 0");
+    mBorderWidth = width;
+    return this;
+  }
+
+  /** Gets the border width */
+  public float getBorderWidth() {
+    return mBorderWidth;
+  }
+
+  /**
+   * Sets the border color
+   * @param color of the border
+   * @param width of the width
+   */
+  public RoundingParams setBorderColor(int color) {
+    mBorderColor = color;
+    return this;
+  }
+
+  /** Gets the border color */
+  public int getBorderColor() {
+    return mBorderColor;
+  }
+
+  /**
    * Sets the border around the rounded drawable
    * @param color of the border
    * @param width of the width
@@ -202,16 +233,6 @@ public class RoundingParams {
     Preconditions.checkArgument(padding >= 0, "the padding cannot be < 0");
     mPadding = padding;
     return this;
-  }
-
-  /** Gets the border width */
-  public float getBorderWidth() {
-    return mBorderWidth;
-  }
-
-  /** Gets the border color */
-  public int getBorderColor() {
-    return mBorderColor;
   }
 
   /** Gets the padding size */
