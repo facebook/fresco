@@ -11,6 +11,7 @@ dependencies {
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
+    compile project(':imagepipeline-base')
 
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
@@ -31,14 +32,6 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    sourceSets {
-        test {
-            java {
-                exclude '**/EncodedImageTest.java'
-            }
-        }
-    }
-
 }
 
 task sourcesJar(type: Jar) {
@@ -46,17 +39,4 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task jarTest (type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    include '**/*.java'
-    classifier = 'test'
-}
-
-configurations {
-    testOutput.extendsFrom (testCompile)
-}
-
 artifacts.add('archives', sourcesJar)
-artifacts.add('testOutput', jarTest)
-
-build.dependsOn jarTest

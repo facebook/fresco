@@ -4,14 +4,18 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
+
 dependencies {
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
-    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
     compile project(':fbcore')
+    compile project(':imagepipeline-base')
 
+    testCompile project(':animated-base-test')
+    testCompile project(':imagepipeline-test')
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
@@ -31,32 +35,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    sourceSets {
-        test {
-            java {
-                exclude '**/EncodedImageTest.java'
-            }
-        }
+    lintOptions {
+        abortOnError false
     }
-
 }
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
-
-task jarTest (type: Jar) {
-    from android.sourceSets.test.java.srcDirs
-    include '**/*.java'
-    classifier = 'test'
-}
-
-configurations {
-    testOutput.extendsFrom (testCompile)
-}
-
 artifacts.add('archives', sourcesJar)
-artifacts.add('testOutput', jarTest)
-
-build.dependsOn jarTest
