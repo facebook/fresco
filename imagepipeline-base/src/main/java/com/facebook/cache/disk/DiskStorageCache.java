@@ -238,32 +238,23 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   /**
    * Creates a temp file for writing outside the session lock
    */
-  private BinaryResource createTemporaryResource(
+  private DiskStorage.Inserter startInsert(
       final String resourceId,
       final CacheKey key)
       throws IOException {
     maybeEvictFilesInCacheDir();
-    return mStorageSupplier.get().createTemporary(resourceId, key);
-  }
-
-  private static void deleteResource(BinaryResource fileResource, CacheKey key) {
-    try {
-      fileResource.delete();
-    } catch (IOException ioe) {
-      FLog.e(TAG, "Failed to delete temp file", ioe);
-    }
+    return mStorageSupplier.get().insert(resourceId, key);
   }
 
   /**
    * Commits the provided temp file to the cache, renaming it to match
    * the cache's hashing convention.
    */
-  private BinaryResource commitResource(
-      final String resourceId,
-      final CacheKey key,
-      final BinaryResource temporary) throws IOException {
+  private BinaryResource endInsert(
+      final DiskStorage.Inserter inserter,
+      final CacheKey key) throws IOException {
     synchronized (mLock) {
-      BinaryResource resource = mStorageSupplier.get().commit(resourceId, temporary, key);
+      BinaryResource resource = inserter.commit(key);
       mCacheStats.increment(resource.size(), 1);
       return resource;
     }
@@ -277,13 +268,15 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     final String resourceId = getResourceId(key);
     try {
       // getting the file is synchronized
-      BinaryResource temporary = createTemporaryResource(resourceId, key);
+      DiskStorage.Inserter inserter = startInsert(resourceId, key);
       try {
-        mStorageSupplier.get().updateResource(resourceId, temporary, callback, key);
+        inserter.writeData(callback, key);
         // Committing the file is synchronized
-        return commitResource(resourceId, key, temporary);
+        return endInsert(inserter, key);
       } finally {
-        deleteResource(temporary, key);
+        if (!inserter.cleanUp()) {
+          FLog.e(TAG, "Failed to delete temp file");
+        }
       }
     } catch (IOException ioe) {
       mCacheEventListener.onWriteException();

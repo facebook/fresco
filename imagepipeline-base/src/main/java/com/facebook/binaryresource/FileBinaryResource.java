@@ -60,15 +60,6 @@ public class FileBinaryResource implements BinaryResource {
     return mFile.hashCode();
   }
 
-  @Override
-  public void delete() throws IOException {
-    if (mFile.exists()) {
-      if (!mFile.delete()) {
-        throw new IOException("Cannot remove file: " + mFile);
-      }
-    }
-  }
-
   /*
      * Factory method to create a wrapping BinaryResource without explicitly taking care of null.
      * If the supplied file is null, instead of BinaryResource, null is returned.

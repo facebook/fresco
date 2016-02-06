@@ -311,7 +311,8 @@ public class DefaultDiskStorageTest {
     DefaultDiskStorage storage = getStorageSupplier(1).get();
 
     final String resourceId1 = "resource1";
-    final File tempFile = storage.createTemporary(resourceId1, null).getFile();
+    DiskStorage.Inserter inserter = storage.insert(resourceId1, null);
+    final File tempFile = ((DefaultDiskStorage.InserterImpl) inserter).mTemporaryFile;
 
     // Make sure that we don't evict a recent temp file
     purgeUnexpectedFiles(storage);
@@ -420,9 +421,9 @@ public class DefaultDiskStorageTest {
     final byte[] CONTENT = "content".getBytes("UTF-8");
 
     // create a file so we know version directory really exists
-    FileBinaryResource temporary = storage.createTemporary(resourceId, null);
-    writeToResource(storage, resourceId, temporary, CONTENT);
-    storage.commit(resourceId, temporary, null);
+    DiskStorage.Inserter inserter = storage.insert(resourceId, null);
+    writeToResource(inserter, CONTENT);
+    inserter.commit(null);
 
     // assign some previous date to the "now" used for file creation
     long lastModified = mDirectory.lastModified() - 1000;
@@ -491,10 +492,9 @@ public class DefaultDiskStorageTest {
       final DefaultDiskStorage storage,
       final String resourceId,
       final byte[] value) throws IOException {
-    FileBinaryResource temporary = storage.createTemporary(resourceId, null);
-    writeToResource(storage, resourceId, temporary, value);
-    FileBinaryResource resource = storage.commit(resourceId, temporary, null);
-    return resource;
+    DiskStorage.Inserter inserter = storage.insert(resourceId, null);
+    writeToResource(inserter, value);
+    return (FileBinaryResource) inserter.commit(null);
   }
 
   private static File writeFileToStorage(
@@ -508,28 +508,28 @@ public class DefaultDiskStorageTest {
       DefaultDiskStorage storage,
       String resourceId,
       byte[] content) throws IOException {
-    FileBinaryResource temporary = storage.createTemporary(resourceId, null);
-    File file = temporary.getFile();
+    DiskStorage.Inserter inserter = storage.insert(resourceId, null);
+    File file = ((DefaultDiskStorage.InserterImpl) inserter).mTemporaryFile;
     FileOutputStream fos = new FileOutputStream(file);
     try {
       fos.write(content);
     } finally {
       fos.close();
     }
-    return storage.commit(resourceId, temporary, null).getFile();
+    return ((FileBinaryResource) inserter.commit(null)).getFile();
   }
 
   private static void writeToResource(
-      DefaultDiskStorage storage,
-      String resourceId,
-      FileBinaryResource resource,
+      DiskStorage.Inserter inserter,
       final byte[] content) throws IOException {
-    storage.updateResource(resourceId, resource, new WriterCallback() {
-      @Override
-      public void write(OutputStream os) throws IOException {
-        os.write(content);
-      }
-    }, null);
+    inserter.writeData(
+        new WriterCallback() {
+            @Override
+            public void write(OutputStream os) throws IOException {
+              os.write(content);
+            }
+        },
+        null);
   }
 
   private void purgeUnexpectedFiles(DefaultDiskStorage storage)

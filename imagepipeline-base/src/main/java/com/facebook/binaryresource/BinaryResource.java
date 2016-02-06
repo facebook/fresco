@@ -56,10 +56,4 @@ public interface BinaryResource {
    * @throws IOException if an I/O error occurs in the process of reading the size of this source
    */
   long size();
-
-  /**
-   * Removes the BinaryResource from wherever its stored/allocated.
-   * @throws IOException if there's an unexpected error removing the resource
-   */
-  void delete() throws IOException;
 }
