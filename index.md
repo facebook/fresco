@@ -73,6 +73,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Bakar](https://play.google.com/store/apps/details?id=com.bakar)
 * [Poke](https://play.google.com/store/apps/details?id=com.netpub.poke)
 * [SamePinch](https://play.google.com/store/apps/details?id=co.samepinch.android.app)
+* [NativeScript](https://www.nativescript.org/)
 * [React Native](https://facebook.github.io/react-native/)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
 * [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
