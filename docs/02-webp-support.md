@@ -7,7 +7,7 @@ prev: closeable-references.html
 next: troubleshooting.html
 ---
 
-Android added webp support in version 4.0 and imporved it in 4.2.1:
+Android added webp support in version 4.0 and improved it in 4.2.1:
 
 * 4.0+ (Ice Cream Sandwich): basic webp support
 * 4.2.1+ (Jelly Beam MR1): support for transparency and losless wepb
