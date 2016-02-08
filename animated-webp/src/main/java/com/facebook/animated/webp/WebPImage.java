@@ -37,8 +37,13 @@ public class WebPImage implements AnimatedImage {
 
   private static synchronized void ensure() {
     if (!sInitialized) {
-      sInitialized = true;
+      try {
+        SoLoaderShim.loadLibrary("webp");
+      } catch(UnsatisfiedLinkError nle) {
+        // Head in the sand
+      }
       SoLoaderShim.loadLibrary("webpimage");
+      sInitialized = true;
     }
   }
 
