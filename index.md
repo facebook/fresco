@@ -75,6 +75,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [JokeEssay](https://play.google.com/store/apps/details?id=com.ss.android.essay.joke)
 * [Phonotto](https://play.google.com/store/apps/details?id=com.duckma.phonotto)
 * [Bakar](https://play.google.com/store/apps/details?id=com.bakar)
+* [LaMaille](https://play.google.com/store/apps/details?id=net.opalesurfcasting.lamaille)
 * [Poke](https://play.google.com/store/apps/details?id=com.netpub.poke)
 * [SamePinch](https://play.google.com/store/apps/details?id=co.samepinch.android.app)
 * [React Native](https://facebook.github.io/react-native/)
