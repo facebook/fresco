@@ -26,8 +26,6 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_LDLIBS := -llog
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
-LOCAL_SHARED_LIBRARIES += webp
-
 LOCAL_STATIC_LIBRARIES += fb_jpegturbo
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
 
@@ -37,5 +35,4 @@ LOCAL_STATIC_LIBRARIES += fb_png
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libwebp-0.4.3)
 $(call import-module,libjpeg-turbo-1.3.x)
