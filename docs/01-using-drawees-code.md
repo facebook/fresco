@@ -9,7 +9,7 @@ next: drawee-branches.html
 
 ### Setting the actual image
 
-The easy to way is to call 
+The easy way is to call 
 
 ```java
 mSimpleDraweeView.setImageURI(uri);
