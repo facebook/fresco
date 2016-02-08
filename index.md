@@ -63,6 +63,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Memrise](https://play.google.com/store/apps/details?id=com.memrise.android.memrisecompanion)
 * [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
 * [Mappy](https://play.google.com/store/apps/details?id=com.mappy.app)
+* [YOP](https://play.google.com/store/apps/details?id=com.yopapp.yop)
 * [ShareTheMeal](https://play.google.com/store/apps/details?id=org.sharethemeal.app)
 * [TouTiao](https://play.google.com/store/apps/details?id=com.ss.android.article.news)
 * [Playbuzz](https://play.google.com/store/apps/details?id=com.playbuzz.android.app)
@@ -73,6 +74,9 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Bakar](https://play.google.com/store/apps/details?id=com.bakar)
 * [Poke](https://play.google.com/store/apps/details?id=com.netpub.poke)
 * [SamePinch](https://play.google.com/store/apps/details?id=co.samepinch.android.app)
+* [ChatGame] (https://play.google.com/store/apps/details?id=me.chatgame.mobilecg)
+* [Bobble - Chat Stickers Stories](https://play.google.com/store/apps/details?id=com.touchtalent.bobbleapp)
+* [Phonotto](https://play.google.com/store/apps/details?id=com.duckma.phonotto)
 * [NativeScript](https://www.nativescript.org/)
 * [React Native](https://facebook.github.io/react-native/)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
@@ -81,8 +85,6 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
-* [ChatGame] (https://play.google.com/store/apps/details?id=me.chatgame.mobilecg)
-* [Bobble - Chat Stickers Stories](https://play.google.com/store/apps/details?id=com.touchtalent.bobbleapp)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
