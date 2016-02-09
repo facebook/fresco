@@ -31,6 +31,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ HttpUrlConnectionNetworkFetcher.class })
+@PrepareForTest({ HttpUrlConnectionNetworkFetcher.class, Uri.class })
 public class HttpUrlConnectionNetworkFetcherTest {
 
   public static final String INITIAL_TEST_URL = "http://localhost/";
@@ -60,9 +61,8 @@ public class HttpUrlConnectionNetworkFetcherTest {
     mFetcher = new HttpUrlConnectionNetworkFetcher();
     mConnectionsQueue = new LinkedList<>();
     mockUrlConnections();
-
-    when(mMockFetchState.getContext()).thenReturn(mMockProducerContext);
-    when(mMockFetchState.getUri()).thenReturn(Uri.parse(INITIAL_TEST_URL));
+    mockUriParse();
+    mockFetchState();
   }
 
   private void mockUrlConnections() throws Exception {
@@ -73,6 +73,38 @@ public class HttpUrlConnectionNetworkFetcherTest {
       @Override
       public URLConnection answer(InvocationOnMock invocation) throws Throwable {
         return mConnectionsQueue.poll();
+      }
+    });
+  }
+
+  private void mockUriParse() {
+    PowerMockito.mockStatic(Uri.class);
+    PowerMockito.when(Uri.parse(anyString())).then(new Answer<Uri>() {
+      @Override
+      public Uri answer(InvocationOnMock invocation) throws Throwable {
+        return mockUri((String) invocation.getArguments()[0]);
+      }
+    });
+  }
+
+  private Uri mockUri(final String url) {
+    Uri mockUri = mock(Uri.class);
+    when(mockUri.toString()).thenReturn(url);
+    when(mockUri.getScheme()).then(new Answer<String>() {
+      @Override
+      public String answer(InvocationOnMock invocation) throws Throwable {
+        return url.substring(0, url.indexOf(':'));
+      }
+    });
+    return mockUri;
+  }
+
+  private void mockFetchState() {
+    when(mMockFetchState.getContext()).thenReturn(mMockProducerContext);
+    when(mMockFetchState.getUri()).then(new Answer<Uri>() {
+      @Override
+      public Uri answer(InvocationOnMock invocation) throws Throwable {
+        return mockUri(INITIAL_TEST_URL);
       }
     });
   }

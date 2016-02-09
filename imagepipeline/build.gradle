@@ -29,7 +29,7 @@ dependencies {
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
     testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
     testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
