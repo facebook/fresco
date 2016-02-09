@@ -64,9 +64,12 @@ public interface DiskStorage {
 
   /**
    * Get the filename of the resource with the specified name
+   * @deprecated a DiskStorage is an abstraction from how you implement storage, so client should
+   *             not get where or how the data is stored
    * @param resourceId id of the resource
    * @return the name of the resource
    */
+  @Deprecated
   String getFilename(String resourceId);
 
   /**
