@@ -122,15 +122,6 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     setControllers(controller, null);
   }
 
-  private void setControllersInternal(
-      @Nullable DraweeController controller,
-      @Nullable DraweeController hugeImageController) {
-    removeControllerListener(getController());
-    addControllerListener(controller);
-    mHugeImageController = hugeImageController;
-    super.setController(controller);
-  }
-
     /**
      * Sets the controllers for the normal and huge image.
      *
@@ -146,6 +137,15 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     setControllersInternal(null, null);
     mZoomableController.setEnabled(false);
     setControllersInternal(controller, hugeImageController);
+  }
+
+  private void setControllersInternal(
+      @Nullable DraweeController controller,
+      @Nullable DraweeController hugeImageController) {
+    removeControllerListener(getController());
+    addControllerListener(controller);
+    mHugeImageController = hugeImageController;
+    super.setController(controller);
   }
 
   private void maybeSetHugeImageController() {
