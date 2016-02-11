@@ -20,15 +20,17 @@ import android.graphics.Rect;
 import android.os.Build;
 
 import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.disk.DiskCacheFactory;
+import com.facebook.cache.disk.DiskCacheConfig;
+import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.DiskStorageCache;
+import com.facebook.cache.disk.DynamicDefaultDiskStorage;
 import com.facebook.common.executors.DefaultSerialExecutorService;
 import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.AwakeTimeSinceBootClock;
+import com.facebook.common.time.MonotonicClock;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
@@ -251,6 +253,32 @@ public class ImagePipelineFactory {
     return mBitmapMemoryCache;
   }
 
+  private static DiskStorage buildDiskStorage(DiskCacheConfig diskCacheConfig) {
+    return new DynamicDefaultDiskStorage(
+        diskCacheConfig.getVersion(),
+        diskCacheConfig.getBaseDirectoryPathSupplier(),
+        diskCacheConfig.getBaseDirectoryName(),
+        diskCacheConfig.getCacheErrorLogger());
+  }
+
+  /**
+   * Creates a new {@link DiskStorageCache} from the given {@link DiskCacheConfig}
+   */
+  public static DiskStorageCache buildDiskStorageCache(DiskCacheConfig diskCacheConfig) {
+    DiskStorage diskStorage = buildDiskStorage(diskCacheConfig);
+    DiskStorageCache.Params params = new DiskStorageCache.Params(
+        diskCacheConfig.getMinimumSizeLimit(),
+        diskCacheConfig.getLowDiskSpaceSizeLimit(),
+        diskCacheConfig.getDefaultSizeLimit());
+    return new DiskStorageCache(
+        diskStorage,
+        diskCacheConfig.getEntryEvictionComparatorSupplier(),
+        params,
+        diskCacheConfig.getCacheEventListener(),
+        diskCacheConfig.getCacheErrorLogger(),
+        diskCacheConfig.getDiskTrimmableRegistry());
+  }
+
   public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
@@ -301,8 +329,7 @@ public class ImagePipelineFactory {
 
   public DiskStorageCache getMainDiskStorageCache() {
     if (mMainDiskStorageCache == null) {
-      mMainDiskStorageCache =
-          DiskCacheFactory.newDiskStorageCache(mConfig.getMainDiskCacheConfig());
+      mMainDiskStorageCache = buildDiskStorageCache(mConfig.getMainDiskCacheConfig());
     }
     return mMainDiskStorageCache;
   }
@@ -429,8 +456,7 @@ public class ImagePipelineFactory {
 
   public DiskStorageCache getSmallImageDiskStorageCache() {
     if (mSmallImageDiskStorageCache == null) {
-      mSmallImageDiskStorageCache =
-          DiskCacheFactory.newDiskStorageCache(mConfig.getSmallImageDiskCacheConfig());
+      mSmallImageDiskStorageCache =   buildDiskStorageCache(mConfig.getSmallImageDiskCacheConfig());
     }
     return mSmallImageDiskStorageCache;
   }

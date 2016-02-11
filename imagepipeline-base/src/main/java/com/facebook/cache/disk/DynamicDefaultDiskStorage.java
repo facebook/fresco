@@ -13,7 +13,9 @@ import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
+import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.common.file.FileTree;
 import com.facebook.common.file.FileUtils;
@@ -25,8 +27,8 @@ import com.facebook.common.logging.FLog;
 /**
  * A supplier of a DiskStorage concrete implementation.
  */
-public class DefaultDiskStorageSupplier implements DiskStorageSupplier {
-  private static final Class<?> TAG = DefaultDiskStorageSupplier.class;
+public class DynamicDefaultDiskStorage implements DiskStorage {
+  private static final Class<?> TAG = DynamicDefaultDiskStorage.class;
 
   private final int mVersion;
   private final Supplier<File> mBaseDirectoryPathSupplier;
@@ -40,16 +42,16 @@ public class DefaultDiskStorageSupplier implements DiskStorageSupplier {
    * Represents the current 'cached' state.
    */
   @VisibleForTesting static class State {
-    public final @Nullable DiskStorage storage;
+    public final @Nullable DiskStorage delegate;
     public final @Nullable File rootDirectory;
 
-    @VisibleForTesting State(@Nullable File rootDirectory, @Nullable DiskStorage storage) {
-      this.storage = storage;
+    @VisibleForTesting State(@Nullable File rootDirectory, @Nullable DiskStorage delegate) {
+      this.delegate = delegate;
       this.rootDirectory = rootDirectory;
     }
   }
 
-  public DefaultDiskStorageSupplier(
+  public DynamicDefaultDiskStorage(
       int version,
       Supplier<File> baseDirectoryPathSupplier,
       String baseDirectoryName,
@@ -61,32 +63,97 @@ public class DefaultDiskStorageSupplier implements DiskStorageSupplier {
     mCurrentState = new State(null, null);
   }
 
+  @Override
+  public boolean isEnabled() {
+    try {
+      return get().isEnabled();
+    } catch (IOException ioe) {
+      return false;
+    }
+  }
+
+  @Override
+  public BinaryResource getResource(String resourceId, Object debugInfo) throws IOException {
+    return get().getResource(resourceId, debugInfo);
+  }
+
+  @Override
+  public boolean contains(String resourceId, Object debugInfo) throws IOException {
+    return get().contains(resourceId, debugInfo);
+  }
+
+  @Override
+  public boolean touch(String resourceId, Object debugInfo) throws IOException {
+    return get().touch(resourceId, debugInfo);
+  }
+
+  @Override
+  public void purgeUnexpectedResources() {
+    try {
+      get().purgeUnexpectedResources();
+    } catch (IOException ioe) {
+      // this method in fact should throu IOException
+      // for now we will swallow the exception as it's done in DefaultDiskStorage
+      FLog.e(TAG, "purgeUnexpectedResources", ioe);
+    }
+  }
+
+  @Override
+  public Inserter insert(String resourceId, Object debugInfo) throws IOException {
+    return get().insert(resourceId, debugInfo);
+  }
+
+  @Override
+  public Collection<Entry> getEntries() throws IOException {
+    return get().getEntries();
+  }
+
+  @Override
+  public long remove(Entry entry) throws IOException {
+    return get().remove(entry);
+  }
+
+  @Override
+  public long remove(String resourceId) throws IOException {
+    return get().remove(resourceId);
+  }
+
+  @Override
+  public void clearAll() throws IOException {
+    get().clearAll();
+  }
+
+  @Override
+  public DiskDumpInfo getDumpInfo() throws IOException {
+    return get().getDumpInfo();
+  }
+
   /**
    * Gets a concrete disk-storage instance. If nothing has changed since the last call, then
    * the last state is returned
    * @return an instance of the appropriate DiskStorage class
    * @throws IOException
    */
-  @Override
-  public synchronized DiskStorage get() throws IOException {
+  @VisibleForTesting
+  /* package protected */ synchronized DiskStorage get() throws IOException {
     if (shouldCreateNewStorage()) {
       // discard anything we created
       deleteOldStorageIfNecessary();
       createStorage();
     }
-    return Preconditions.checkNotNull(mCurrentState.storage);
+    return Preconditions.checkNotNull(mCurrentState.delegate);
   }
 
   private boolean shouldCreateNewStorage() {
     State currentState = mCurrentState;
-    return (currentState.storage == null ||
+    return (currentState.delegate == null ||
         currentState.rootDirectory == null ||
         !currentState.rootDirectory.exists());
   }
 
   @VisibleForTesting
   void deleteOldStorageIfNecessary() {
-    if (mCurrentState.storage != null && mCurrentState.rootDirectory != null) {
+    if (mCurrentState.delegate != null && mCurrentState.rootDirectory != null) {
       // LATER: Actually delegate this call to the storage. We shouldn't be
       // making an end-run around it
       FileTree.deleteRecursively(mCurrentState.rootDirectory);

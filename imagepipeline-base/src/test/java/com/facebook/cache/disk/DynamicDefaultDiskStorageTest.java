@@ -27,10 +27,10 @@ import org.robolectric.RuntimeEnvironment;
 import static org.mockito.Mockito.mock;
 
 /**
- * Test out methods in DefaultDiskStorageSupplier
+ * Test out methods in DynamicDefaultDiskStorage
  */
 @RunWith(RobolectricTestRunner.class)
-public class DefaultDiskStorageSupplierTest {
+public class DynamicDefaultDiskStorageTest {
 
   private int mVersion;
   private String mBaseDirectoryName;
@@ -45,8 +45,8 @@ public class DefaultDiskStorageSupplierTest {
     mCacheErrorLogger = mock(CacheErrorLogger.class);
   }
 
-  private DefaultDiskStorageSupplier createSupplier(boolean useFilesDirInsteadOfCacheDir) {
-    return new DefaultDiskStorageSupplier(
+  private DynamicDefaultDiskStorage createStorage(boolean useFilesDirInsteadOfCacheDir) {
+    return new DynamicDefaultDiskStorage(
         mVersion,
         useFilesDirInsteadOfCacheDir ?
             Suppliers.of(mContext.getFilesDir()) :
@@ -55,15 +55,15 @@ public class DefaultDiskStorageSupplierTest {
         mCacheErrorLogger);
   }
 
-  private DefaultDiskStorageSupplier createInternalCacheDirSupplier() {
-    return createSupplier(false);
+  private DynamicDefaultDiskStorage createInternalCacheDirStorage() {
+    return createStorage(false);
   }
 
-  private DefaultDiskStorageSupplier createInternalFilesDirSupplier() {
-    return createSupplier(true);
+  private DynamicDefaultDiskStorage createInternalFilesDirStorage() {
+    return createStorage(true);
   }
 
-  private File getStorageSubdirectory(File rootDir, int version) {
+  private static File getStorageSubdirectory(File rootDir, int version) {
     return new File(rootDir, DefaultDiskStorage.getVersionSubdirectoryName(version));
   }
 
@@ -71,29 +71,29 @@ public class DefaultDiskStorageSupplierTest {
   public void testGet_InternalCacheDir() throws Exception {
     File cacheDir = mContext.getCacheDir();
 
-    DefaultDiskStorageSupplier supplier = createInternalCacheDirSupplier();
+    DynamicDefaultDiskStorage storage = createInternalCacheDirStorage();
 
     // initial state
-    Assert.assertNull(supplier.mCurrentState.storage);
+    Assert.assertNull(storage.mCurrentState.delegate);
 
     // after first initialization
-    DiskStorage storage = supplier.get();
-    Assert.assertEquals(storage, supplier.mCurrentState.storage);
-    Assert.assertTrue(storage instanceof DefaultDiskStorage);
+    DiskStorage delegate = storage.get();
+    Assert.assertEquals(delegate, storage.mCurrentState.delegate);
+    Assert.assertTrue(delegate instanceof DefaultDiskStorage);
 
     File baseDir = new File(cacheDir, mBaseDirectoryName);
     Assert.assertTrue(baseDir.exists());
     Assert.assertTrue(getStorageSubdirectory(baseDir, 1).exists());
 
     // no change => should get back the same storage instance
-    DiskStorage storage2 = supplier.get();
-    Assert.assertEquals(storage, storage2);
+    DiskStorage storage2 = storage.get();
+    Assert.assertEquals(delegate, storage2);
 
     // root directory has been moved (proxy for delete). So we should get back a different instance
     File baseDirOrig = baseDir.getAbsoluteFile();
     Assert.assertTrue(baseDirOrig.renameTo(new File(cacheDir, "dummydir")));
-    DiskStorage storage3 = supplier.get();
-    Assert.assertNotSame(storage, storage3);
+    DiskStorage storage3 = storage.get();
+    Assert.assertNotSame(delegate, storage3);
     Assert.assertTrue(storage3 instanceof DefaultDiskStorage);
     Assert.assertTrue(baseDir.exists());
     Assert.assertTrue(getStorageSubdirectory(baseDir, 1).exists());
@@ -103,14 +103,14 @@ public class DefaultDiskStorageSupplierTest {
   public void testGet_InternalFilesDir() throws Exception {
     File dir = mContext.getFilesDir();
 
-    DefaultDiskStorageSupplier supplier = createInternalFilesDirSupplier();
+    DynamicDefaultDiskStorage supplier = createInternalFilesDirStorage();
 
     // initial state
-    Assert.assertNull(supplier.mCurrentState.storage);
+    Assert.assertNull(supplier.mCurrentState.delegate);
 
     // after first initialization
     DiskStorage storage = supplier.get();
-    Assert.assertEquals(storage, supplier.mCurrentState.storage);
+    Assert.assertEquals(storage, supplier.mCurrentState.delegate);
     Assert.assertTrue(storage instanceof DefaultDiskStorage);
 
     File baseDir = new File(dir, mBaseDirectoryName);
@@ -133,8 +133,8 @@ public class DefaultDiskStorageSupplierTest {
 
   @Test
   public void testCreateRootDirectoryIfNecessary() throws Exception {
-    DefaultDiskStorageSupplier supplier = createInternalCacheDirSupplier();
-    Assert.assertNull(supplier.mCurrentState.storage);
+    DynamicDefaultDiskStorage supplier = createInternalCacheDirStorage();
+    Assert.assertNull(supplier.mCurrentState.delegate);
     File baseDir = new File(mContext.getCacheDir(), mBaseDirectoryName);
 
     // directory is clean
@@ -168,11 +168,11 @@ public class DefaultDiskStorageSupplierTest {
 
   @Test
   public void testDeleteStorage() throws Exception {
-    DefaultDiskStorageSupplier supplier = createInternalCacheDirSupplier();
-    Assert.assertNull(supplier.mCurrentState.storage);
-    supplier.deleteOldStorageIfNecessary();
+    DynamicDefaultDiskStorage storage = createInternalCacheDirStorage();
+    Assert.assertNull(storage.mCurrentState.delegate);
+    storage.deleteOldStorageIfNecessary();
 
-    DefaultDiskStorage storage = (DefaultDiskStorage)supplier.get();
+    storage.get();
     File versionDir = getStorageSubdirectory(
         new File(mContext.getCacheDir(), mBaseDirectoryName),
         mVersion);
@@ -180,7 +180,7 @@ public class DefaultDiskStorageSupplierTest {
     File dummyFile = new File(versionDir, "dummy");
     Assert.assertTrue(dummyFile.createNewFile());
     Assert.assertTrue(dummyFile.exists());
-    supplier.deleteOldStorageIfNecessary();
+    storage.deleteOldStorageIfNecessary();
     Assert.assertFalse(dummyFile.exists());
     Assert.assertFalse(versionDir.exists());
     Assert.assertFalse(versionDir.getParentFile().exists());
@@ -188,7 +188,7 @@ public class DefaultDiskStorageSupplierTest {
 
   @Test
   public void testCreateStorage() throws Exception {
-    DefaultDiskStorageSupplier supplier = createInternalCacheDirSupplier();
+    DynamicDefaultDiskStorage storage = createInternalCacheDirStorage();
 
     File baseDir = new File(mContext.getCacheDir(), mBaseDirectoryName);
     File versionDir = getStorageSubdirectory(
@@ -197,7 +197,7 @@ public class DefaultDiskStorageSupplierTest {
 
     Assert.assertFalse(versionDir.exists());
     Assert.assertFalse(baseDir.exists());
-    supplier.get();
+    storage.get();
     Assert.assertTrue(baseDir.exists());
     Assert.assertTrue(versionDir.exists());
   }
