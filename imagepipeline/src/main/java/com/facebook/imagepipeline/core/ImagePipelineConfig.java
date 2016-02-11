@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.core;
 
 import javax.annotation.Nullable;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,13 +19,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.facebook.cache.disk.DefaultEntryEvictionComparatorSupplier;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
-import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
@@ -76,6 +73,7 @@ public class ImagePipelineConfig {
   private final boolean mWebpSupportEnabled;
   private final boolean mDecodeFileDescriptorEnabled;
   private final boolean mDecodeMemoryFileEnabled;
+  private final DiskStorageFactory mDiskStorageFactory;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -111,6 +109,9 @@ public class ImagePipelineConfig {
     mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
         builder.mDecodeFileDescriptorEnabled;
     mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
+    mDiskStorageFactory = builder.mDiskStorageFactory == null ?
+        new DynamicDefaultDiskStorageFactory() :
+        builder.mDiskStorageFactory;
     mDownsampleEnabled = builder.mDownsampleEnabled;
     mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
     mEncodedMemoryCacheParamsSupplier =
@@ -201,6 +202,10 @@ public class ImagePipelineConfig {
 
   public boolean isDecodeMemoryFileEnabled() {
     return mDecodeMemoryFileEnabled;
+  }
+
+  public DiskStorageFactory getDiskStorageFactory() {
+    return mDiskStorageFactory;
   }
 
   public boolean isDownsampleEnabled() {
@@ -303,6 +308,7 @@ public class ImagePipelineConfig {
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
     public boolean mUseMultipleReadKeys = false;
+    private DiskStorageFactory mDiskStorageFactory;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -338,6 +344,11 @@ public class ImagePipelineConfig {
 
     public Builder setDecodeMemoryFileEnabled(boolean decodeMemoryFileEnabled) {
       mDecodeMemoryFileEnabled = decodeMemoryFileEnabled;
+      return this;
+    }
+
+    public Builder setDiskStorageFactory(DiskStorageFactory diskStorageFactory) {
+      mDiskStorageFactory = diskStorageFactory;
       return this;
     }
 

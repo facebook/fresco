@@ -264,8 +264,9 @@ public class ImagePipelineFactory {
   /**
    * Creates a new {@link DiskStorageCache} from the given {@link DiskCacheConfig}
    */
-  public static DiskStorageCache buildDiskStorageCache(DiskCacheConfig diskCacheConfig) {
-    DiskStorage diskStorage = buildDiskStorage(diskCacheConfig);
+  public static DiskStorageCache buildDiskStorageCache(
+      DiskCacheConfig diskCacheConfig,
+      DiskStorage diskStorage) {
     DiskStorageCache.Params params = new DiskStorageCache.Params(
         diskCacheConfig.getMinimumSizeLimit(),
         diskCacheConfig.getLowDiskSpaceSizeLimit(),
@@ -329,7 +330,9 @@ public class ImagePipelineFactory {
 
   public DiskStorageCache getMainDiskStorageCache() {
     if (mMainDiskStorageCache == null) {
-      mMainDiskStorageCache = buildDiskStorageCache(mConfig.getMainDiskCacheConfig());
+      DiskCacheConfig diskCacheConfig = mConfig.getMainDiskCacheConfig();
+      DiskStorage diskStorage = mConfig.getDiskStorageFactory().get(diskCacheConfig);
+      mMainDiskStorageCache = buildDiskStorageCache(diskCacheConfig, diskStorage);
     }
     return mMainDiskStorageCache;
   }
@@ -456,7 +459,9 @@ public class ImagePipelineFactory {
 
   public DiskStorageCache getSmallImageDiskStorageCache() {
     if (mSmallImageDiskStorageCache == null) {
-      mSmallImageDiskStorageCache =   buildDiskStorageCache(mConfig.getSmallImageDiskCacheConfig());
+      DiskCacheConfig diskCacheConfig = mConfig.getSmallImageDiskCacheConfig();
+      DiskStorage diskStorage = mConfig.getDiskStorageFactory().get(diskCacheConfig);
+      mSmallImageDiskStorageCache = buildDiskStorageCache(diskCacheConfig, diskStorage);
     }
     return mSmallImageDiskStorageCache;
   }
