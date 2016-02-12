@@ -15,6 +15,7 @@ package com.facebook.samples.zoomable;
 import javax.annotation.Nullable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -27,7 +28,10 @@ import com.facebook.common.logging.FLog;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.GenericDraweeHierarchyInflater;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeView;
 
@@ -64,19 +68,37 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private DraweeController mHugeImageController;
   private ZoomableController mZoomableController = DefaultZoomableController.newInstance();
 
+  public ZoomableDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
+    super(context);
+    setHierarchy(hierarchy);
+    init();
+  }
+
   public ZoomableDraweeView(Context context) {
     super(context);
+    inflateHierarchy(context, null);
     init();
   }
 
   public ZoomableDraweeView(Context context, AttributeSet attrs) {
     super(context, attrs);
+    inflateHierarchy(context, attrs);
     init();
   }
 
   public ZoomableDraweeView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+    inflateHierarchy(context, attrs);
     init();
+  }
+
+  protected void inflateHierarchy(Context context, @Nullable AttributeSet attrs) {
+    Resources resources = context.getResources();
+    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources)
+        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+    GenericDraweeHierarchyInflater.updateBuilder(builder, context, attrs);
+    setAspectRatio(builder.getDesiredAspectRatio());
+    setHierarchy(builder.build());
   }
 
   private void init() {
