@@ -30,20 +30,35 @@ import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 
 import bolts.Task;
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.*;
-import org.robolectric.*;
-import org.robolectric.annotation.*;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.same;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
@@ -213,7 +228,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testServesPinned() throws Exception {
+  public void testFromStagingArea() throws Exception {
     when(mStagingArea.get(mCacheKey)).thenReturn(mEncodedImage);
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
@@ -223,7 +238,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testServesPinned2() throws Exception {
+  public void testFromStagingAreaLater() throws Exception {
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     assertFalse(readTask.isCompleted());
 
@@ -242,7 +257,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testServesPinnedList() throws Exception {
+  public void testListFromStagingAreaLater() throws Exception {
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKeys, mIsCancelled);
     assertFalse(readTask.isCompleted());
 
@@ -273,7 +288,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testPins2() {
+  public void testContainsFromStagingAreaLater() {
     Task<Boolean> readTask = mBufferedDiskCache.contains(mCacheKey);
     assertFalse(readTask.isCompleted());
     when(mStagingArea.get(mCacheKey)).thenReturn(mEncodedImage);
@@ -282,13 +297,13 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testUnpins2() {
+  public void testRemoveFromStagingArea() {
     mBufferedDiskCache.remove(mCacheKey);
     verify(mStagingArea).remove(mCacheKey);
   }
 
   @Test
-  public void testUpins3() {
+  public void testClearFromStagingArea() {
     mBufferedDiskCache.clearAll();
     verify(mStagingArea).clearAll();
   }
