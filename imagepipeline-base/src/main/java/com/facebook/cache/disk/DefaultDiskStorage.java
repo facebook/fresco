@@ -9,6 +9,8 @@
 
 package com.facebook.cache.disk;
 
+import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -204,7 +206,7 @@ public class DefaultDiskStorage implements DiskStorage {
     public void visitFile(File file) {
       FileInfo info = getShardFileInfo(file);
       if (info != null && info.type == FileType.CONTENT) {
-        result.add(new EntryImpl(file));
+        result.add(new EntryImpl(info.resourceId, file));
       }
     }
 
@@ -455,16 +457,23 @@ public class DefaultDiskStorage implements DiskStorage {
    * Implementation of Entry listed by entriesIterator.
    */
   @VisibleForTesting
-  class EntryImpl implements Entry {
+  static class EntryImpl implements Entry {
+    private final String id;
     private final FileBinaryResource resource;
     private long size;
     private long timestamp;
 
-    private EntryImpl(File cachedFile) {
+    private EntryImpl(String id, File cachedFile) {
       Preconditions.checkNotNull(cachedFile);
+      this.id = Preconditions.checkNotNull(id);
       this.resource = FileBinaryResource.createOrNull(cachedFile);
       this.size = -1;
       this.timestamp = -1;
+    }
+
+    @Override
+    public String getId() {
+      return id;
     }
 
     @Override
@@ -560,6 +569,7 @@ public class DefaultDiskStorage implements DiskStorage {
       return f;
     }
 
+    @Nullable
     public static FileInfo fromFile(File file) {
       String name = file.getName();
       int pos = name.lastIndexOf('.');
