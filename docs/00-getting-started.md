@@ -9,19 +9,34 @@ next: concepts.html
 
 If you just want to download an image and display it, showing a placeholder until it comes, use a [SimpleDraweeView](../javadoc/reference/com/facebook/drawee/view/SimpleDraweeView.html). 
 
-For images from the network, you will need to request Internet permission from your users. Add this line to your ```AndroidManifest.xml``` file:
-
-```xml
-  <uses-permission android:name="android.permission.INTERNET"/>
-```
-
-Near your application startup, before your app calls ```setContentView()```, initialize the Fresco class. You should only call `Fresco.initialize` once. Your Application class would be a good place. Doing it in each Activity is wrong.
+But before that, you need to initialize the `Fresco` class. You should only call `Fresco.initialize` once. Your Application class would be a good place. Doing it in each Activity is wrong.
 
 ```java
-Fresco.initialize(context);
+[MyApplication.java]
+public class MyApplication extends Application {
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Fresco.initialize(this);
+	}
+}
 ```
-    
-In your XML, add a custom namespace to the top-level element:
+
+You need to specify your application class in the XML. For images from the network, you will also need to request Internet permission from your users. The `application` tag in your ```AndroidManifest.xml``` should look something like this:
+
+```xml
+  <application
+    ...
+    android:label="@string/app_name"
+    android:name="MyApplication"
+    >
+    <uses-permission android:name="android.permission.INTERNET" />
+    ...
+  </application>
+```
+
+
+In your layout XML, add a custom namespace to the top-level element:
 
 ```xml
 <!-- Any valid element will do here -->
