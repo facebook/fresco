@@ -276,7 +276,8 @@ public class GenericDraweeHierarchyInflater {
       Context context,
       TypedArray gdhAttrs,
       int attrId) {
-    return context.getResources().getDrawable(gdhAttrs.getResourceId(attrId, 0));
+    int resourceId = gdhAttrs.getResourceId(attrId, 0);
+    return (resourceId == 0) ? null : context.getResources().getDrawable(resourceId);
   }
 
   /**
