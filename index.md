@@ -79,7 +79,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [LaMaille](https://play.google.com/store/apps/details?id=net.opalesurfcasting.lamaille)
 * [Poke](https://play.google.com/store/apps/details?id=com.netpub.poke)
 * [SamePinch](https://play.google.com/store/apps/details?id=co.samepinch.android.app)
-* [React Native](https://facebook.github.io/react-native/) and [apps using ReactNative](https://facebook.github.io/react-native/showcase.html)
+* [React Native](https://facebook.github.io/react-native/) and [apps using React Native](https://facebook.github.io/react-native/showcase.html)
 * [Facebook](https://play.google.com/store/apps/details?id=com.facebook.katana)
 * [Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
 * [Moments](https://play.google.com/store/apps/details?id=com.facebook.moments)
