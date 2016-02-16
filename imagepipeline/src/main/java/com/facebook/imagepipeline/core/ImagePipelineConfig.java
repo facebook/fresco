@@ -76,6 +76,7 @@ public class ImagePipelineConfig {
   private final DiskStorageFactory mDiskStorageFactory;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
+  private final int mForceSmallCacheThresholdBytes;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
   @Nullable private final ImageDecoder mImageDecoder;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
@@ -118,6 +119,7 @@ public class ImagePipelineConfig {
         builder.mEncodedMemoryCacheParamsSupplier == null ?
             new DefaultEncodedMemoryCacheParamsSupplier() :
             builder.mEncodedMemoryCacheParamsSupplier;
+    mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mImageCacheStatsTracker =
         builder.mImageCacheStatsTracker == null ?
             NoOpImageCacheStatsTracker.getInstance() :
@@ -224,6 +226,10 @@ public class ImagePipelineConfig {
     return mExecutorSupplier;
   }
 
+  public int getForceSmallCacheThresholdBytes() {
+    return mForceSmallCacheThresholdBytes;
+  }
+
   public ImageCacheStatsTracker getImageCacheStatsTracker() {
     return mImageCacheStatsTracker;
   }
@@ -295,6 +301,7 @@ public class ImagePipelineConfig {
     private boolean mDecodeMemoryFileEnabled;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
     private ExecutorSupplier mExecutorSupplier;
+    private int mForceSmallCacheThresholdBytes = 0;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
     private ImageDecoder mImageDecoder;
     private Supplier<Boolean> mIsPrefetchEnabledSupplier;
@@ -371,6 +378,18 @@ public class ImagePipelineConfig {
 
     public Builder setExecutorSupplier(ExecutorSupplier executorSupplier) {
       mExecutorSupplier = executorSupplier;
+      return this;
+    }
+
+    /**
+     * If this value is nonnegative, then all network-downloaded images below this size
+     * will be written to the small image cache.
+     *
+     * <p>This will require the image pipeline to do up to two disk reads, instead of one, before
+     * going out to network. Use only if this pattern makes sense for your application.
+     */
+    public Builder setForceSmallCacheThresholdBytes(int forceSmallCacheThresholdBytes) {
+      mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
       return this;
     }
 

@@ -40,7 +40,8 @@ import org.junit.runner.*;
 import org.mockito.Mock;
 import org.mockito.*;
 import org.powermock.api.mockito.*;
-import org.powermock.core.classloader.annotations.*;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
@@ -59,7 +60,6 @@ public class ProducerSequenceFactoryTest {
 
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
-  @Mock public NetworkFetcher mNetworkFetcher;
   private final String mDummyMime = "dummy_mime";
   private Uri mUri;
   private ProducerSequenceFactory mProducerSequenceFactory;
@@ -271,7 +271,8 @@ public class ProducerSequenceFactoryTest {
           null,
           null,
           false,
-          true);
+          true,
+          -1);
     }
 
     @Override

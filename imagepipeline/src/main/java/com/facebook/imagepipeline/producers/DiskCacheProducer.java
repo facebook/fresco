@@ -10,10 +10,11 @@
 package com.facebook.imagepipeline.producers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.Map;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -21,7 +22,6 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.cache.common.CacheKey;
 
 import bolts.Continuation;
 import bolts.Task;
@@ -45,18 +45,23 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
   private final boolean mUseMultipleReadKeys;
+  private final boolean mChooseCacheByImageSize;
+  private final int mForceSmallCacheThresholdBytes;
 
   public DiskCacheProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer,
-      boolean useMultipleReadKeys) {
+      boolean useMultipleReadKeys,
+      int forceSmallCacheThresholdBytes) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
     mUseMultipleReadKeys = useMultipleReadKeys;
+    mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
+    mChooseCacheByImageSize = (forceSmallCacheThresholdBytes > 0);
   }
 
   public void produceResults(
@@ -68,9 +73,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
       return;
     }
 
-    final ProducerListener listener = producerContext.getListener();
-    final String requestId = producerContext.getId();
-    listener.onProducerStart(requestId, PRODUCER_NAME);
+    producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
 
     List<CacheKey> cacheKeys = null;
     if (mUseMultipleReadKeys) {
@@ -79,55 +82,103 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     }
     final CacheKey preferredCacheKey = mUseMultipleReadKeys ?
         cacheKeys.get(0) : mCacheKeyFactory.getEncodedCacheKey(imageRequest);
-    final BufferedDiskCache cache =
-        imageRequest.getImageType() == ImageRequest.ImageType.SMALL
-            ? mSmallImageBufferedDiskCache
-            : mDefaultBufferedDiskCache;
-    Continuation<EncodedImage, Void> continuation = new Continuation<EncodedImage, Void>() {
-          @Override
-          public Void then(Task<EncodedImage> task)
-              throws Exception {
-            if (task.isCancelled() ||
-                (task.isFaulted() && task.getError() instanceof CancellationException)) {
-              listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
-              consumer.onCancellation();
-            } else if (task.isFaulted()) {
-              listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
-              maybeStartInputProducer(
-                  consumer,
-                  new DiskCacheConsumer(consumer, cache, preferredCacheKey),
-                  producerContext);
-            } else {
-              EncodedImage cachedReference = task.getResult();
-              if (cachedReference != null) {
-                listener.onProducerFinishWithSuccess(
-                    requestId,
-                    PRODUCER_NAME,
-                    getExtraMap(listener, requestId, true));
-                consumer.onProgressUpdate(1);
-                consumer.onNewResult(cachedReference, true);
-                cachedReference.close();
-              } else {
-                listener.onProducerFinishWithSuccess(
-                    requestId,
-                    PRODUCER_NAME,
-                    getExtraMap(listener, requestId, false));
-                maybeStartInputProducer(
-                    consumer,
-                    new DiskCacheConsumer(consumer, cache, preferredCacheKey),
-                    producerContext);
-              }
-            }
-            return null;
+    boolean isSmallRequest = (imageRequest.getImageType() == ImageRequest.ImageType.SMALL);
+    BufferedDiskCache preferredCache = isSmallRequest ?
+        mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
+    final AtomicBoolean isCancelled = new AtomicBoolean(false);
+    Task<EncodedImage> diskLookupTask;
+    if (mChooseCacheByImageSize) {
+      final List<CacheKey> finalCacheKeys = cacheKeys;
+      boolean alreadyInSmall = mSmallImageBufferedDiskCache.containsSync(cacheKeys);
+      boolean alreadyInMain = mDefaultBufferedDiskCache.containsSync(cacheKeys);
+      BufferedDiskCache firstCache;
+      if (alreadyInSmall || !alreadyInMain) {
+        firstCache = mSmallImageBufferedDiskCache;
+      } else {
+        firstCache = mDefaultBufferedDiskCache;
+      }
+      diskLookupTask = getFromCacheAsync(
+            firstCache, cacheKeys, preferredCacheKey, isCancelled);
+      final BufferedDiskCache secondCache = (firstCache == mSmallImageBufferedDiskCache)
+          ? mDefaultBufferedDiskCache : mSmallImageBufferedDiskCache;
+      diskLookupTask = diskLookupTask.continueWithTask(
+          new Continuation<EncodedImage, Task<EncodedImage>>() {
+        @Override
+        public Task<EncodedImage> then(Task<EncodedImage> task) throws Exception {
+          if (isTaskCancelled(task) || (!task.isFaulted() && task.getResult() != null)) {
+            return task;
           }
-        };
-
-    AtomicBoolean isCancelled = new AtomicBoolean(false);
-    final Task<EncodedImage> diskCacheLookupTask = mUseMultipleReadKeys ?
-        cache.get(cacheKeys, isCancelled) :
-        cache.get(preferredCacheKey, isCancelled);
-    diskCacheLookupTask.continueWith(continuation);
+          return getFromCacheAsync(
+              secondCache, finalCacheKeys, preferredCacheKey, isCancelled);
+        }
+      });
+    } else {
+      diskLookupTask = getFromCacheAsync(preferredCache, cacheKeys, preferredCacheKey, isCancelled);
+    }
+    Continuation<EncodedImage, Void> continuation =
+        onFinishDiskReads(consumer, preferredCache, preferredCacheKey, producerContext);
+    diskLookupTask.continueWith(continuation);
     subscribeTaskForRequestCancellation(isCancelled, producerContext);
+  }
+
+  private Continuation<EncodedImage, Void> onFinishDiskReads(
+      final Consumer<EncodedImage> consumer,
+      final BufferedDiskCache preferredCache,
+      final CacheKey preferredCacheKey,
+      final ProducerContext producerContext) {
+    final String requestId = producerContext.getId();
+    final ProducerListener listener = producerContext.getListener();
+    return new Continuation<EncodedImage, Void>() {
+      @Override
+      public Void then(Task<EncodedImage> task)
+          throws Exception {
+        if (isTaskCancelled(task)) {
+          listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
+          consumer.onCancellation();
+        } else if (task.isFaulted()) {
+          listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
+          maybeStartInputProducer(
+              consumer,
+              new DiskCacheConsumer(consumer, preferredCache, preferredCacheKey),
+              producerContext);
+        } else {
+          EncodedImage cachedReference = task.getResult();
+          if (cachedReference != null) {
+            listener.onProducerFinishWithSuccess(
+                requestId,
+                PRODUCER_NAME,
+                getExtraMap(listener, requestId, true));
+            consumer.onProgressUpdate(1);
+            consumer.onNewResult(cachedReference, true);
+            cachedReference.close();
+          } else {
+            listener.onProducerFinishWithSuccess(
+                requestId,
+                PRODUCER_NAME,
+                getExtraMap(listener, requestId, false));
+            maybeStartInputProducer(
+                consumer,
+                new DiskCacheConsumer(consumer, preferredCache, preferredCacheKey),
+                producerContext);
+          }
+        }
+        return null;
+      }
+    };
+  }
+
+  private static boolean isTaskCancelled(Task<?> task) {
+    return task.isCancelled() ||
+        (task.isFaulted() && task.getError() instanceof CancellationException);
+  }
+
+  private Task<EncodedImage> getFromCacheAsync(
+      BufferedDiskCache cache,
+      List<CacheKey> cacheKeys,
+      CacheKey preferredKey,
+      AtomicBoolean isCancelled) {
+    return mUseMultipleReadKeys ?
+        cache.get(cacheKeys, isCancelled) :  cache.get(preferredKey, isCancelled);
   }
 
   private void maybeStartInputProducer(
@@ -189,7 +240,16 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     @Override
     public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       if (newResult != null && isLast) {
-        mCache.put(mCacheKey, newResult);
+        if (mChooseCacheByImageSize) {
+          int size = newResult.getSize();
+          if (size > 0 && size < mForceSmallCacheThresholdBytes) {
+            mSmallImageBufferedDiskCache.put(mCacheKey, newResult);
+          } else {
+            mDefaultBufferedDiskCache.put(mCacheKey, newResult);
+          }
+        } else {
+          mCache.put(mCacheKey, newResult);
+        }
       }
       getConsumer().onNewResult(newResult, isLast);
     }
