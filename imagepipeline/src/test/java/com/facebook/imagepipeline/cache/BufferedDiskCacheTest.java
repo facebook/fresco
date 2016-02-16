@@ -37,8 +37,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -50,7 +48,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -119,6 +116,24 @@ public class BufferedDiskCacheTest {
         mReadPriorityExecutor,
         mWritePriorityExecutor,
         mImageCacheStatsTracker);
+  }
+
+  @Test
+  public void testHasKeySyncFromFileCache() {
+    when(mFileCache.hasKeySync(mCacheKey)).thenReturn(true);
+    assertTrue(mBufferedDiskCache.containsSync(mCacheKeys));
+  }
+
+  @Test
+  public void testHasKeySyncFromStagingArea() {
+    when(mStagingArea.containsKey(mCacheKeys.get(1))).thenReturn(true);
+    assertTrue(mBufferedDiskCache.containsSync(mCacheKeys));
+  }
+
+  @Test
+  public void testDoesntAlwaysHaveKeySync() {
+    when(mFileCache.hasKey(mCacheKey)).thenReturn(true);
+    assertFalse(mBufferedDiskCache.containsSync(mCacheKeys));
   }
 
   @Test

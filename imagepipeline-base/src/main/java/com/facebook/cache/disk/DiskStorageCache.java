@@ -18,6 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.facebook.binaryresource.BinaryResource;
@@ -58,6 +60,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   private long mCacheSizeLimit;
 
   private final CacheEventListener mCacheEventListener;
+
+  @GuardedBy("mLock")
+  @VisibleForTesting final Map<CacheKey, String> mIndex;
 
   @GuardedBy("mLock")
   private long mCacheSizeLastUpdateTime;
@@ -163,6 +168,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       diskTrimmableRegistry.registerDiskTrimmable(this);
     }
     this.mClock = SystemClock.get();
+    this.mIndex = new HashMap<>();
   }
 
   @Override
@@ -189,11 +195,14 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public BinaryResource getResource(final CacheKey key) {
     try {
       synchronized (mLock) {
-        BinaryResource resource = mStorage.getResource(getResourceId(key), key);
+        String resourceId = getResourceId(key);
+        BinaryResource resource = mStorage.getResource(resourceId, key);
         if (resource == null) {
           mCacheEventListener.onMiss();
+          mIndex.remove(key);
         } else {
           mCacheEventListener.onHit();
+          mIndex.put(key, resourceId);
         }
         return resource;
       }
@@ -222,7 +231,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public boolean probe(final CacheKey key) {
     try {
       synchronized (mLock) {
-        return mStorage.touch(getResourceId(key), key);
+        String resourceId = getResourceId(key);
+        boolean retval = mStorage.touch(resourceId, key);
+        if (retval) {
+          mIndex.put(key, resourceId);
+        }
+        return retval;
       }
     } catch (IOException e) {
       mCacheEventListener.onReadException();
@@ -247,10 +261,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    */
   private BinaryResource endInsert(
       final DiskStorage.Inserter inserter,
-      final CacheKey key) throws IOException {
+      final CacheKey key,
+      String resourceId) throws IOException {
     synchronized (mLock) {
       BinaryResource resource = inserter.commit(key);
       mCacheStats.increment(resource.size(), 1);
+      mIndex.put(key, resourceId);
       return resource;
     }
   }
@@ -260,14 +276,17 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     // Write to a temp file, then move it into place. This allows more parallelism
     // when writing files.
     mCacheEventListener.onWriteAttempt();
-    final String resourceId = getResourceId(key);
+    String resourceId;
+    synchronized (mLock) {
+      resourceId = getResourceId(key);
+    }
     try {
       // getting the file is synchronized
       DiskStorage.Inserter inserter = startInsert(resourceId, key);
       try {
         inserter.writeData(callback, key);
         // Committing the file is synchronized
-        return endInsert(inserter, key);
+        return endInsert(inserter, key, resourceId);
       } finally {
         if (!inserter.cleanUp()) {
           FLog.e(TAG, "Failed to delete temp file");
@@ -285,6 +304,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       try {
         mStorage.remove(getResourceId(key));
+        mIndex.remove(key);
       } catch (IOException e) {
         mCacheErrorLogger.logError(
             CacheErrorLogger.CacheErrorCategory.DELETE_FILE,
@@ -314,6 +334,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           long entryAgeMs = Math.max(1, Math.abs(now - entry.getTimestamp()));
           if (entryAgeMs >= cacheExpirationMs) {
             long entryRemovedSize = mStorage.remove(entry);
+            removeFromIndex(entry);
             if (entryRemovedSize > 0) {
               itemsRemovedCount++;
               itemsRemovedSize += entryRemovedSize;
@@ -340,6 +361,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
     }
     return oldestRemainingEntryAgeMs;
+  }
+
+  @GuardedBy("mLock")
+  private void removeFromIndex(DiskStorage.Entry entry) throws IOException {
+    String resourceId = mStorage.getResourceId(entry.getResource());
+    mIndex.values().remove(resourceId);
   }
 
   private void reportEviction(
@@ -403,6 +430,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         break;
       }
       long deletedSize = mStorage.remove(entry);
+      removeFromIndex(entry);
       if (deletedSize > 0) {
         itemCount ++;
         sumItemSizes += deletedSize;
@@ -463,6 +491,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       try {
         mStorage.clearAll();
+        mIndex.clear();
       } catch (IOException ioe) {
         mCacheErrorLogger.logError(
             CacheErrorLogger.CacheErrorCategory.EVICTION,
@@ -475,11 +504,31 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     }
   }
 
+  @Override
+  public boolean hasKeySync(CacheKey key) {
+    synchronized (mLock) {
+      return mIndex.containsKey(key);
+    }
+  }
+
+  @Override
   public boolean hasKey(final CacheKey key) {
-    try {
-      return mStorage.contains(getResourceId(key), key);
-    } catch (IOException e) {
-      return false;
+    synchronized (mLock) {
+      if (hasKeySync(key)) {
+        return true;
+      }
+      try {
+        String resourceId = getResourceId(key);
+        boolean retval = mStorage.contains(resourceId, key);
+        if (retval) {
+          mIndex.put(key, resourceId);
+        } else {
+          mIndex.remove(key);
+        }
+        return retval;
+      } catch (IOException e) {
+        return false;
+      }
     }
   }
 
@@ -588,6 +637,11 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   @VisibleForTesting
   String getResourceId(final CacheKey key) {
+    synchronized (mLock) {
+      if (mIndex.containsKey(key)) {
+        return mIndex.get(key);
+      }
+    }
     try {
       return SecureHashUtil.makeSHA1HashBase64(key.toString().getBytes("UTF-8"));
     } catch (UnsupportedEncodingException e) {

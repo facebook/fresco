@@ -198,14 +198,6 @@ public class DiskStorageCacheTest {
     assertArrayEquals(value1, getContents(getResource(key1)));
 
     // 1. Touch the LRU file, and assert that it succeeds.
-    // Note: It might seem more natural to increment the clock before calling
-    // MediaCache.insertCachedMedia() to apply a desired timestamp to the
-    // files. But the time is being explicitly modified here so that any
-    // failures in setting/re-setting file timestamps are caught by the assert,
-    // instead of being hidden inside MediaCache code that can lead to
-    // intermittent test failures which are very tricky to debug.
-    // Note: For MediaCache.markForLru() to update the lru time, the clock
-    // needs to be incremented by at least MediaCache.CACHE_UPDATE_PERIOD_MS
     when(mClock.now()).thenReturn(TimeUnit.HOURS.toMillis(2));
     assertTrue(mCache.probe(key1));
 
@@ -480,4 +472,100 @@ public class DiskStorageCacheTest {
     return thread;
   }
 
+  @Test
+  public void testInsertionInIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    assertTrue(mCache.hasKeySync(key));
+    assertTrue(mCache.hasKey(key));
+  }
+
+  @Test
+  public void testDoesntHaveKey() {
+    CacheKey key = new SimpleCacheKey("foo");
+    assertFalse(mCache.hasKeySync(key));
+    assertFalse(mCache.hasKey(key));
+  }
+
+  @Test
+  public void testHasKeyNotInIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart
+    DiskStorageCache cache2 = createDiskCache(mStorage);
+    assertFalse(cache2.hasKeySync(key));
+    assertTrue(cache2.hasKey(key));
+    // Now that we checked disk, index should be updated
+    assertTrue(cache2.hasKeySync(key));
+  }
+
+  @Test
+  public void testReadRestoresIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    DiskStorageCache cache2 = createDiskCache(mStorage);
+    assertFalse(cache2.hasKeySync(key));
+    assertNotNull(cache2.getResource(key));
+    // Now that we checked disk, index should be updated
+    assertTrue(cache2.hasKeySync(key));
+  }
+
+  @Test
+  public void testProbeRestoresIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    DiskStorageCache cache2 = createDiskCache(mStorage);
+    assertFalse(cache2.hasKeySync(key));
+    assertTrue(cache2.probe(key));
+    assertTrue(cache2.hasKeySync(key));
+  }
+
+  @Test
+  public void testClearIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    mCache.clearAll();
+    assertFalse(mCache.hasKeySync(key));
+    assertFalse(mCache.hasKey(key));
+  }
+
+  @Test
+  public void testRemoveFileClearsIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    mStorage.clearAll();
+    assertNull(mCache.getResource(key));
+    assertFalse(mCache.hasKeySync(key));
+  }
+
+  @Test
+  public void testSizeEvictionClearsIndex() throws Exception {
+    when(mClock.now()).thenReturn(TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+    CacheKey key1 = putOneThingInCache();
+    CacheKey key2 = new SimpleCacheKey("bar");
+    CacheKey key3 = new SimpleCacheKey("duck");
+    byte[] value2 = new byte[(int) FILE_CACHE_MAX_SIZE_HIGH_LIMIT];
+    value2[80] = 'c';
+    WriterCallback callback = WriterCallbacks.from(value2);
+    when(mClock.now()).thenReturn(TimeUnit.MILLISECONDS.convert(2, TimeUnit.DAYS));
+    mCache.insert(key2, callback);
+    // now over limit. Next write will evict key1
+    when(mClock.now()).thenReturn(TimeUnit.MILLISECONDS.convert(3, TimeUnit.DAYS));
+    mCache.insert(key3, callback);
+    assertFalse(mCache.hasKeySync(key1));
+    assertFalse(mCache.hasKey(key1));
+    assertTrue(mCache.hasKeySync(key3));
+    assertTrue(mCache.hasKey(key3));
+  }
+
+  @Test
+  public void testTimeEvictionClearsIndex() throws Exception {
+    when(mClock.now()).thenReturn(5l);
+    CacheKey key = putOneThingInCache();
+    mCache.clearOldEntries(4);
+    assertFalse(mCache.hasKeySync(key));
+    assertFalse(mCache.hasKey(key));
+  }
+
+  private CacheKey putOneThingInCache() throws IOException {
+    CacheKey key = new SimpleCacheKey("foo");
+    byte[] value1 = new byte[101];
+    value1[80] = 'c';
+    mCache.insert(key, WriterCallbacks.from(value1));
+    return key;
+  }
 }

@@ -66,6 +66,25 @@ public class BufferedDiskCache {
   }
 
   /**
+   * Returns true if the key is in the in-memory key index.
+   *
+   * Not guaranteed to be correct. The cache may yet have this key even if this returns false.
+   * But if it returns true, it definitely has it.
+   *
+   * Avoids a disk read.
+   */
+  public boolean containsSync(List<CacheKey> keys) {
+    int size = keys.size();
+    for (int i = 0; i < size; i++) {
+      CacheKey key = keys.get(i);
+      if (mStagingArea.containsKey(key) || mFileCache.hasKeySync(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Performs a key-value look up in the disk cache. If the value is not found in the staging area,
    * then a disk cache check is scheduled on a background thread. Any error manifests itself as a
    * cache miss, i.e. the returned Task resolves to false.
@@ -87,14 +106,8 @@ public class BufferedDiskCache {
     if (keys.isEmpty()) {
       return Task.forResult(false);
     }
-    for (CacheKey key : keys) {
-      EncodedImage pinnedImage = mStagingArea.get(key);
-      if (pinnedImage != null) {
-        pinnedImage.close();
-        FLog.v(TAG, "Found image for %s in staging area", key.toString());
-        mImageCacheStatsTracker.onStagingAreaHit();
-        return Task.forResult(true);
-      }
+    if (containsSync(keys)) {
+      return Task.forResult(true);
     }
     Task<Boolean> masterTask = containsAsync(keys.get(0));
     if (keys.size() == 1) {

@@ -78,6 +78,15 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
   }
 
   @Override
+  public String getResourceId(BinaryResource resource) {
+    try {
+      return get().getResourceId(resource);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
   public boolean contains(String resourceId, Object debugInfo) throws IOException {
     return get().contains(resourceId, debugInfo);
   }
