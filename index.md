@@ -58,13 +58,14 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * Decode WebP images, even on older versions of Android that don't fully support them
 
 # Who Uses Fresco?
+* [Wikipedia](https://play.google.com/store/apps/details?id=org.wikipedia)
 * [Best Apps Market](https://play.google.com/store/apps/details?id=com.bestappsmarket.android.bestapps)
 * [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android) - See their [blog post](https://www.redfin.com/devblog/2015/10/using-fresco-to-load-images-efficiently-on-android.html) about Fresco!
 * [Memrise](https://play.google.com/store/apps/details?id=com.memrise.android.memrisecompanion)
 * [local.ch](https://play.google.com/store/apps/details?id=ch.local.android)
 * [Mappy](https://play.google.com/store/apps/details?id=com.mappy.app)
 * [YOP](https://play.google.com/store/apps/details?id=com.yopapp.yop)
-* [ChatGame] (https://play.google.com/store/apps/details?id=me.chatgame.mobilecg)
+* [ChatGame](https://play.google.com/store/apps/details?id=me.chatgame.mobilecg)
 * [Bobble - Chat Stickers Stories](https://play.google.com/store/apps/details?id=com.touchtalent.bobbleapp)
 * [ShareTheMeal](https://play.google.com/store/apps/details?id=org.sharethemeal.app)
 * [NativeScript](https://www.nativescript.org/)
@@ -85,7 +86,6 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
-* [Wikipedia](https://play.google.com/store/apps/details?id=org.wikipedia)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
