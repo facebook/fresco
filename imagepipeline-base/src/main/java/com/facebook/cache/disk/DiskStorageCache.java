@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-import android.os.SystemClock;
-
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
@@ -33,6 +31,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.statfs.StatFsHelper;
 import com.facebook.common.time.Clock;
+import com.facebook.common.time.SystemClock;
 import com.facebook.common.util.SecureHashUtil;
 
 /**
@@ -163,7 +162,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     if (diskTrimmableRegistry != null) {
       diskTrimmableRegistry.registerDiskTrimmable(this);
     }
-    this.mClock = com.facebook.common.time.SystemClock.get();
+    this.mClock = SystemClock.get();
   }
 
   @Override
@@ -533,7 +532,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @GuardedBy("mLock")
   private boolean maybeUpdateFileCacheSize() {
     boolean result = false;
-    long now = SystemClock.uptimeMillis();
+    long now = mClock.now();
     if ((!mCacheStats.isInitialized()) ||
         mCacheSizeLastUpdateTime == UNINITIALIZED ||
         (now - mCacheSizeLastUpdateTime) > FILECACHE_SIZE_UPDATE_PERIOD_MS) {
