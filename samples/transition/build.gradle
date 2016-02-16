@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.facebook.samples.transitions"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }

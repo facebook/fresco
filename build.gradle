@@ -16,6 +16,8 @@ buildscript {
 project.ext {
     buildToolsVersion = "${BUILD_TOOLS_VERSION}"
     compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
+    minSdkVersion = MIN_SDK_VERSION;
+    targetSdkVersion = TARGET_SDK_VERSION;
 }
 
 subprojects {
