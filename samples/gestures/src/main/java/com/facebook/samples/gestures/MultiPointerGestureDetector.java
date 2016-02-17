@@ -139,9 +139,13 @@ public class MultiPointerGestureDetector {
         if (!mGestureInProgress && shouldStartGesture()) {
           startGesture();
         }
+        long donwnTime = event.getDownTime();
+        long eventTime = event.getEventTime();
         // notify listener
         if (mGestureInProgress && mListener != null) {
-          mListener.onGestureUpdate(this);
+          if (Math.abs(eventTime-donwnTime) > 150){//if double tap to zoom we needn't update gesture one more time ,it will lead to image zoom shake
+              mListener.onGestureUpdate(this);
+          }
         }
         break;
       }
