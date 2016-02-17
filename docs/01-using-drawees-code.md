@@ -9,9 +9,9 @@ next: drawee-branches.html
 
 ### Setting the actual image
 
-The easy way is to call 
+The easy way is to call
 
-```java
+```
 mSimpleDraweeView.setImageURI(uri);
 ```
 
@@ -42,7 +42,7 @@ To change the actual image displayed by the view, use `setController` or `setIma
 
 ### Modifying the hierarchy in-place
 
-Some attributes of the hierarchy can be changed without having to build a new hierarchy. 
+Some attributes of the hierarchy can be changed without having to build a new hierarchy.
 
 You would first need to get it from the View:
 
@@ -51,6 +51,7 @@ GenericDraweeHierarchy hierarchy = mSimpleDraweeView.getHierarchy();
 ```
 
 <a name="change_placeholder"></a>
+
 #### Changing the placeholder
 
 Then you could modify the placeholder, either with a resource id:
@@ -62,14 +63,14 @@ hierarchy.setPlaceholderImage(R.drawable.placeholderId);
  or a full-fledged [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html):
 
 ```java
-Drawable placeholderImage = ...; 
+Drawable placeholderImage = ...;
 hierarchy.setPlaceholderImage(placeholderImage);
 ```
 
 The other image branches (failure image, retry image and progress bar) can be modified in a similar way too.
 
 ```java
-Drawable failureImage = ...; 
+Drawable failureImage = ...;
 hierarchy.setFailureImage(failureImage, ScaleType.CENTER);
 ```
 

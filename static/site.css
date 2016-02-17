@@ -86,7 +86,7 @@ code {
     border-radius: 3px;
 }
 
-.highlight pre {
+.highlighter-rouge pre {
     font-size: 13px;
     line-height: 20px;
     padding: 0 0 20px 20px;
@@ -112,7 +112,7 @@ code {
     color: hsl(39, 100%, 42%);
 }
 
-.highlight pre code, .highlighttable {
+.highlighter-rouge pre code, .highlighttable {
     overflow-x: scroll;
     display: block;
     padding: 0;
@@ -124,7 +124,7 @@ code {
     background-color: rgba(226, 141, 49, 0.1);
 }
 
-.highlight pre code {
+.highlighter-rouge pre code {
     width: 100%;
     white-space: pre;
 }
@@ -140,12 +140,12 @@ code {
 }
 
 
-.highlight pre code.language-bash {
+.highlighter-rouge pre code.language-bash {
     border-left: 4px solid hsl(19, 0%, 42%);
     background-color: hsla(8, 0%, 54%, 0.1);
 }
 
-.highlight pre code.language-bbcode {
+.highlighter-rouge pre code.language-bbcode {
     border-left: 4px solid hsl(19, 100%, 42%);
     background-color: hsla(8, 75%, 54%, 0.1);
 }

@@ -1,17 +1,18 @@
 ---
 permalink: /blog/:categories/:year/:month/:day/:title.html
-url: http://facebook.github.io/fresco
+url: "http://frescolib.org"
+baseurl: ""
 name: Fresco
 relative_permalinks: false
-markdown: redcarpet
-redcarpet:
-  extensions: ["tables"]
 description: An image management library.
 timezone: America/Los_Angeles
 
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
 safe: true
 lsi: false
-highlighter: pygments
 current_version: 0.9.0
 
 gems:

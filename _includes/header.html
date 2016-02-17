@@ -3,15 +3,17 @@
 <head>
     <meta charset='utf-8'>
     <title>Fresco | {{ page.title }}</title>
-    <link rel='stylesheet' href='/static/site.css' type='text/css'/>
-    <link rel="stylesheet" href='/static/pygments.css' type='text/css'/>
-    <link rel='shortcut icon' href='/static/favicon.png'>
+    <link rel='stylesheet' href='{{ site.baseurl }}/static/site.css' type='text/css'/>
+    <link rel="stylesheet" href='{{ site.baseurl }}/static/pygments.css' type='text/css'/>
+    <link rel='shortcut icon' href='{{ site.baseurl }}/static/favicon.png'>
     <meta name='viewport' content='width=480'>
     <meta property="og:title" content="{{ page.title }}" />
     <meta property="og:site_name" content="fresco">
     <meta property='og:description' content='Fresco is an image management library.'>
     <meta property='og:image' content='http://facebook.github.io/fresco/static/fresco-og-image.png'>
     <meta property='og:url' content="http://facebook.github.io/fresco{{ page.url }}">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
     {% if (page.is_post) %}
     <meta property='og:type' content='article'>
     <meta property='article:author' content="{{ author.facebook }}">
@@ -21,6 +23,7 @@
     <script type="text/javascript" src="https://use.typekit.net/vqa1hcx.js"></script>
     <script type="text/javascript">{'try{Typekit.load();}catch(e){}'}</script>
 
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
     <!-- Google Analytics -->
 </head>
 <body>
