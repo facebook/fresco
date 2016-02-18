@@ -376,7 +376,8 @@ public class ArrayDrawable extends Drawable
   @Override
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public void setHotspot(float x, float y) {
-    for (Drawable drawable : mLayers) {
+    for (int i = 0; i < mLayers.length; i++) {
+      Drawable drawable = mLayers[i];
       if (drawable != null) {
         drawable.setHotspot(x, y);
       }
