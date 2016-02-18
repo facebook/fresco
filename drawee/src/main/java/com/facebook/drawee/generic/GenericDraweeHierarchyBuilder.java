@@ -491,8 +491,12 @@ public class GenericDraweeHierarchyBuilder {
    * @param background background drawable
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setBackground(Drawable background) {
-    mBackgrounds = Arrays.asList(background);
+  public GenericDraweeHierarchyBuilder setBackground(@Nullable Drawable background) {
+    if (background == null) {
+      mBackgrounds = null;
+    } else {
+      mBackgrounds = Arrays.asList(background);
+    }
     return this;
   }
 
@@ -523,8 +527,12 @@ public class GenericDraweeHierarchyBuilder {
    * @param overlay overlay drawable
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setOverlay(Drawable overlay) {
-    mOverlays = Arrays.asList(overlay);
+  public GenericDraweeHierarchyBuilder setOverlay(@Nullable Drawable overlay) {
+    if (overlay == null) {
+      mOverlays = null;
+    } else {
+      mOverlays = Arrays.asList(overlay);
+    }
     return this;
   }
 
@@ -542,9 +550,13 @@ public class GenericDraweeHierarchyBuilder {
    * @return
    */
   public GenericDraweeHierarchyBuilder setPressedStateOverlay(@Nullable Drawable drawable) {
-    StateListDrawable stateListDrawable = new StateListDrawable();
-    stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawable);
-    mPressedStateOverlay = stateListDrawable;
+    if (drawable == null) {
+      mPressedStateOverlay = null;
+    } else {
+      StateListDrawable stateListDrawable = new StateListDrawable();
+      stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawable);
+      mPressedStateOverlay = stateListDrawable;
+    }
     return this;
   }
 

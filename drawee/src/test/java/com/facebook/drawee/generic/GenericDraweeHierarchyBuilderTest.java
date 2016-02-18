@@ -156,6 +156,13 @@ public class GenericDraweeHierarchyBuilderTest {
     assertArrayEquals(builder.getBackgrounds().toArray(), new Drawable[]{mBackgroundDrawable2});
     assertArrayEquals(builder.getOverlays().toArray(), new Drawable[] {mOverlayDrawable2});
     assertEquals(builder.getPressedStateOverlay().getClass(), StateListDrawable.class);
+    // test clearing backgrounds & overlays
+    builder.setBackground(null);
+    assertNull(builder.getBackgrounds());
+    builder.setOverlay(null);
+    assertNull(builder.getOverlays());
+    builder.setPressedStateOverlay(null);
+    assertNull(builder.getPressedStateOverlay());
 
     // test rounding params
     builder.setRoundingParams(mRoundingParams);
