@@ -107,137 +107,84 @@ public class GenericDraweeHierarchyInflater {
       try {
         final int indexCount = gdhAttrs.getIndexCount();
         for (int i = 0; i < indexCount; i++) {
-          final int idx = gdhAttrs.getIndex(i);
+          final int attr = gdhAttrs.getIndex(i);
           // most popular ones first
-          if (idx == R.styleable.GenericDraweeHierarchy_actualImageScaleType) {
-            builder.setActualImageScaleType(getScaleTypeFromXml(
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_actualImageScaleType));
+          if (attr == R.styleable.GenericDraweeHierarchy_actualImageScaleType) {
+            builder.setActualImageScaleType(getScaleTypeFromXml(gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_placeholderImage) {
-            builder.setPlaceholderImage(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_placeholderImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_placeholderImage) {
+            builder.setPlaceholderImage(getDrawable(context, gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_pressedStateOverlayImage) {
-            builder.setPressedStateOverlay(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_pressedStateOverlayImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_pressedStateOverlayImage) {
+            builder.setPressedStateOverlay(getDrawable(context, gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_progressBarImage) {
-            builder.setProgressBarImage(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_progressBarImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_progressBarImage) {
+            builder.setProgressBarImage(getDrawable(context, gdhAttrs, attr));
 
           // the remaining ones without any particular order
-          } else if (idx == R.styleable.GenericDraweeHierarchy_fadeDuration) {
-            builder.setFadeDuration(
-              gdhAttrs.getInt(R.styleable.GenericDraweeHierarchy_fadeDuration, 0));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_fadeDuration) {
+            builder.setFadeDuration(gdhAttrs.getInt(attr, 0));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_viewAspectRatio) {
-            builder.setDesiredAspectRatio(
-              gdhAttrs.getFloat(R.styleable.GenericDraweeHierarchy_viewAspectRatio, 0));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_viewAspectRatio) {
+            builder.setDesiredAspectRatio(gdhAttrs.getFloat(attr, 0));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_placeholderImageScaleType) {
-            builder.setPlaceholderImageScaleType(getScaleTypeFromXml(
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_placeholderImageScaleType));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_placeholderImageScaleType) {
+            builder.setPlaceholderImageScaleType(getScaleTypeFromXml(gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_retryImage) {
-            builder.setRetryImage(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_retryImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_retryImage) {
+            builder.setRetryImage(getDrawable(context, gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_retryImageScaleType) {
-            builder.setRetryImageScaleType(getScaleTypeFromXml(
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_retryImageScaleType));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_retryImageScaleType) {
+            builder.setRetryImageScaleType(getScaleTypeFromXml(gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_failureImage) {
-            builder.setFailureImage(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_failureImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_failureImage) {
+            builder.setFailureImage(getDrawable(context, gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_failureImageScaleType) {
-            builder.setFailureImageScaleType(getScaleTypeFromXml(
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_failureImageScaleType));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_failureImageScaleType) {
+            builder.setFailureImageScaleType(getScaleTypeFromXml(gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_progressBarImageScaleType) {
-            builder.setProgressBarImageScaleType(getScaleTypeFromXml(
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_progressBarImageScaleType));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_progressBarImageScaleType) {
+            builder.setProgressBarImageScaleType(getScaleTypeFromXml(gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_progressBarAutoRotateInterval) {
-            progressBarAutoRotateInterval = gdhAttrs.getInteger(
-              R.styleable.GenericDraweeHierarchy_progressBarAutoRotateInterval,
-              progressBarAutoRotateInterval);
+          } else if (attr == R.styleable.GenericDraweeHierarchy_progressBarAutoRotateInterval) {
+            progressBarAutoRotateInterval =
+                gdhAttrs.getInteger(attr, progressBarAutoRotateInterval);
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_backgroundImage) {
-            builder.setBackground(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_backgroundImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_backgroundImage) {
+            builder.setBackground(getDrawable(context, gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_overlayImage) {
-            builder.setOverlay(getDrawable(
-              context,
-              gdhAttrs,
-              R.styleable.GenericDraweeHierarchy_overlayImage));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_overlayImage) {
+            builder.setOverlay(getDrawable(context, gdhAttrs, attr));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundAsCircle) {
-            getRoundingParams(builder).setRoundAsCircle(
-              gdhAttrs.getBoolean(R.styleable.GenericDraweeHierarchy_roundAsCircle, false));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundAsCircle) {
+            getRoundingParams(builder).setRoundAsCircle(gdhAttrs.getBoolean(attr, false));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundedCornerRadius) {
-            roundedCornerRadius = gdhAttrs.getDimensionPixelSize(
-              R.styleable.GenericDraweeHierarchy_roundedCornerRadius,
-              roundedCornerRadius);
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundedCornerRadius) {
+            roundedCornerRadius = gdhAttrs.getDimensionPixelSize(attr, roundedCornerRadius);
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundTopLeft) {
-            roundTopLeft = gdhAttrs.getBoolean(
-              R.styleable.GenericDraweeHierarchy_roundTopLeft,
-              roundTopLeft);
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundTopLeft) {
+            roundTopLeft = gdhAttrs.getBoolean(attr, roundTopLeft);
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundTopRight) {
-            roundTopRight = gdhAttrs.getBoolean(
-              R.styleable.GenericDraweeHierarchy_roundTopRight,
-              roundTopRight);
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundTopRight) {
+            roundTopRight = gdhAttrs.getBoolean(attr, roundTopRight);
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundBottomLeft) {
-            roundBottomLeft = gdhAttrs.getBoolean(
-              R.styleable.GenericDraweeHierarchy_roundBottomLeft,
-              roundBottomLeft);
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundBottomLeft) {
+            roundBottomLeft = gdhAttrs.getBoolean(attr, roundBottomLeft);
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundBottomRight) {
-            roundBottomRight = gdhAttrs.getBoolean(
-              R.styleable.GenericDraweeHierarchy_roundBottomRight,
-              roundBottomRight);
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundBottomRight) {
+            roundBottomRight = gdhAttrs.getBoolean(attr, roundBottomRight);
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundWithOverlayColor) {
-            getRoundingParams(builder).setOverlayColor(gdhAttrs.getColor(
-              R.styleable.GenericDraweeHierarchy_roundWithOverlayColor,
-              0));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundWithOverlayColor) {
+            getRoundingParams(builder).setOverlayColor(gdhAttrs.getColor(attr, 0));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundingBorderWidth) {
-            getRoundingParams(builder).setBorderWidth(gdhAttrs.getDimensionPixelSize(
-              R.styleable.GenericDraweeHierarchy_roundingBorderWidth,
-              0));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundingBorderWidth) {
+            getRoundingParams(builder).setBorderWidth(gdhAttrs.getDimensionPixelSize(attr, 0));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundingBorderColor) {
-            getRoundingParams(builder).setBorderColor(gdhAttrs.getColor(
-              R.styleable.GenericDraweeHierarchy_roundingBorderColor,
-              0));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundingBorderColor) {
+            getRoundingParams(builder).setBorderColor(gdhAttrs.getColor(attr, 0));
 
-          } else if (idx == R.styleable.GenericDraweeHierarchy_roundingBorderPadding) {
-            getRoundingParams(builder).setPadding(gdhAttrs.getDimensionPixelSize(
-              R.styleable.GenericDraweeHierarchy_roundingBorderPadding,
-              0));
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundingBorderPadding) {
+            getRoundingParams(builder).setPadding(gdhAttrs.getDimensionPixelSize(attr, 0));
 
           }
         }
