@@ -342,4 +342,89 @@ public class ScalingUtils {
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
     }
   }
+
+  /**
+   * Scaletypes that have some internal state and are not static.
+   */
+  public interface StatefulScaleType {
+
+    /**
+     * Returns the internal state. The returned object must be immutable!
+     *
+     * The returned state may be used for caching the result of {@code ScaleType.getTransform}.
+     * If null state is returned, the result will not be cached. If non-null state is returned,
+     * the old transformation may be used if produced with an equal state.
+     */
+    public Object getState();
+  }
+
+  /**
+   * Scale type that interpolates transform of the two underlying scale types.
+   */
+  public static class InterpolatingScaleType implements ScaleType, StatefulScaleType {
+
+    private final ScaleType mScaleTypeFrom;
+    private final ScaleType mScaleTypeTo;
+    private final float[] mMatrixValuesFrom = new float[9];
+    private final float[] mMatrixValuesTo = new float[9];
+    private final float[] mMatrixValuesInterpolated = new float[9];
+
+    private float mInterpolatingValue;
+
+    public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo) {
+      mScaleTypeFrom = scaleTypeFrom;
+      mScaleTypeTo = scaleTypeTo;
+    }
+
+    public ScaleType getScaleTypeFrom() {
+      return mScaleTypeFrom;
+    }
+
+    public ScaleType getScaleTypeTo() {
+      return mScaleTypeTo;
+    }
+
+    /**
+     * Sets the interpolating value.
+     *
+     * Value of 0.0 will produce the transform same as ScaleTypeFrom.
+     * Value of 1.0 will produce the transform same as ScaleTypeTo.
+     * Inbetween values will produce a transform that is a linear combination between the two.
+     */
+    public void setValue(float value) {
+      mInterpolatingValue = value;
+    }
+
+    /**
+     * Gets the interpolating value.
+     */
+    public float getValue() {
+      return mInterpolatingValue;
+    }
+
+    @Override
+    public Object getState() {
+      return mInterpolatingValue;
+    }
+
+    @Override
+    public Matrix getTransform(
+        Matrix transform,
+        Rect parentBounds,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY) {
+      mScaleTypeFrom.getTransform(transform, parentBounds, childWidth, childHeight, focusX, focusY);
+      transform.getValues(mMatrixValuesFrom);
+      mScaleTypeTo.getTransform(transform, parentBounds, childWidth, childHeight, focusX, focusY);
+      transform.getValues(mMatrixValuesTo);
+      for (int i = 0; i < 9; i++) {
+        mMatrixValuesInterpolated[i] = mMatrixValuesFrom[i] * (1 - mInterpolatingValue) +
+            mMatrixValuesTo[i] * mInterpolatingValue;
+      }
+      transform.setValues(mMatrixValuesInterpolated);
+      return transform;
+    }
+  }
 }

@@ -372,6 +372,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     }
   }
 
+  /**
+   * Returns whether the given layer has a scale type drawable.
+   */
+  private boolean hasLayerScaleTypeDrawable(int index) {
+    DrawableParent parent = getLayerParentDrawable(index);
+    return (parent instanceof ScaleTypeDrawable);
+  }
+
   // Mutability
 
   /** Sets the fade duration. */
@@ -389,6 +397,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setActualImageScaleType(ScaleType scaleType) {
     Preconditions.checkNotNull(scaleType);
     getLayerScaleTypeDrawable(mActualImageIndex).setScaleType(scaleType);
+  }
+
+  public @Nullable ScaleType getActualImageScaleType() {
+    if (!hasLayerScaleTypeDrawable(mActualImageIndex)) {
+      return null;
+    }
+    return getLayerScaleTypeDrawable(mActualImageIndex).getScaleType();
   }
 
   /** Sets the color filter to be applied on the actual image. */
