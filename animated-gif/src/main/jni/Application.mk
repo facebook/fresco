@@ -24,4 +24,4 @@ NDK_TOOLCHAIN_VERSION := 4.8
 FRESCO_CPP_CFLAGS := -fno-weak
 
 # This hides all symbols exported from libgnustl_static
-FRESCO_CPP_LDFLAGS := -Wl,--exclude-libs,libgnustl_static.a
+FRESCO_CPP_LDFLAGS := -Wl,--gc-sections,--exclude-libs,libgnustl_static.a
