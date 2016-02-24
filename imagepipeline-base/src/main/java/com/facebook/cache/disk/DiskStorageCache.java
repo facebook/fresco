@@ -64,6 +64,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   @GuardedBy("mLock")
   private long mCacheSizeLastUpdateTime;
+  private boolean mDiskCacheIsExternal = false;
 
   private final long mCacheSizeLimitMinimum;
 
@@ -151,6 +152,11 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     this.mStatFsHelper = StatFsHelper.getInstance();
 
     this.mStorageSupplier = diskStorageSupplier;
+     try {
+      this.mDiskCacheIsExternal = mStorageSupplier.get().isExternal();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     this.mEntryEvictionComparatorSupplier = entryEvictionComparatorSupplier;
 
     this.mCacheSizeLastUpdateTime = UNINITIALIZED;
@@ -177,6 +183,16 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public boolean isEnabled() {
     try {
       return mStorageSupplier.get().isEnabled();
+    } catch (IOException e) {
+      return false;
+    }
+  }
+  
+  @Override
+  public boolean isExternal() {
+    try {
+      Log.d("TEST_DISK_isExt",String.valueOf(mStorageSupplier.get().isExternal()));
+      return mStorageSupplier.get().isExternal();
     } catch (IOException e) {
       return false;
     }
@@ -463,10 +479,18 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @GuardedBy("mLock")
   private void updateFileCacheSizeLimit() {
     // Test if mCacheSizeLimit can be set to the high limit
-    boolean isAvailableSpaceLowerThanHighLimit =
+    boolean isAvailableSpaceLowerThanHighLimit;
+    if(mDiskCacheIsExternal){
+    isAvailableSpaceLowerThanHighLimit =
         mStatFsHelper.testLowDiskSpace(
-            StatFsHelper.StorageType.INTERNAL,
+            StatFsHelper.StorageType.EXTERNAL, //modified for this bug https://github.com/facebook/fresco/issues/898
             mDefaultCacheSizeLimit - mCacheStats.getSize());
+    } else{
+      isAvailableSpaceLowerThanHighLimit =
+              mStatFsHelper.testLowDiskSpace(
+                      StatFsHelper.StorageType.INTERNAL, //modified for this bug https://github.com/facebook/fresco/issues/898
+                      mDefaultCacheSizeLimit - mCacheStats.getSize());
+    }
     if (isAvailableSpaceLowerThanHighLimit) {
       mCacheSizeLimit = mLowDiskSpaceCacheSizeLimit;
     } else {
