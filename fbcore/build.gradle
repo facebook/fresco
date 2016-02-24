@@ -38,6 +38,14 @@ android {
       exclude 'META-INF/NOTICE'
       exclude 'META-INF/NOTICE.txt'
     }
+
+    sourceSets {
+        test {
+            resources {
+                exclude '**/BUCK'
+            }
+        }
+    }
 }
 
 task sourcesJar(type: Jar) {

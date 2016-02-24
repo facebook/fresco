@@ -37,9 +37,11 @@ android {
             java {
                 exclude '**/EncodedImageTest.java'
             }
+            resources {
+                exclude '**/BUCK'
+            }
         }
     }
-
 }
 
 task sourcesJar(type: Jar) {
