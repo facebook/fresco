@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -88,6 +89,10 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
     Task<EncodedImage> diskLookupTask;
     if (mChooseCacheByImageSize) {
+      if (cacheKeys == null) {
+        cacheKeys = new ArrayList<>(1);
+        cacheKeys.add(preferredCacheKey);
+      }
       final List<CacheKey> finalCacheKeys = cacheKeys;
       boolean alreadyInSmall = mSmallImageBufferedDiskCache.containsSync(cacheKeys);
       boolean alreadyInMain = mDefaultBufferedDiskCache.containsSync(cacheKeys);
