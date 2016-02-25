@@ -20,6 +20,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.producers.PostprocessorProducer.RepeatedPostprocessorConsumer;
@@ -110,126 +111,28 @@ public class RepeatedPostprocessorProducerTest {
   }
 
   @Test
-  public void testIntermediateImageIsNotProcessed() {
+  public void testNonStaticBitmapIsPassedOn() {
     RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
     RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
 
-    setupNewSourceImage();
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, false);
-    mSourceCloseableImageRef.close();
+    CloseableAnimatedImage sourceCloseableAnimatedImage = mock(CloseableAnimatedImage.class);
+    CloseableReference<CloseableImage> sourceCloseableImageRef =
+        CloseableReference.<CloseableImage>of(sourceCloseableAnimatedImage);
+    postprocessorConsumer.onNewResult(sourceCloseableImageRef, true);
+    sourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
+    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(false));
     mInOrder.verifyNoMoreInteractions();
-    assertEquals(0, mResults.size());
-    verify(mSourceCloseableStaticBitmap).close();
 
-    // final result should be post-processed
-    performNewResult(postprocessorConsumer, true);
-    verifyNewResultProcessed(0);
+    assertEquals(1, mResults.size());
+    CloseableReference<CloseableImage> res0 = mResults.get(0);
+    assertTrue(CloseableReference.isValid(res0));
+    assertSame(sourceCloseableAnimatedImage, res0.get());
+    res0.close();
 
     performCancelAndVerifyOnCancellation();
-    verify(mSourceCloseableStaticBitmap).close();
-  }
-
-  @Test
-  public void testPostprocessSuccessful() {
-    RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
-    RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
-
-    performNewResult(postprocessorConsumer, true);
-    verifyNewResultProcessed(0);
-
-    performCancelAndVerifyOnCancellation();
-    verify(mSourceCloseableStaticBitmap).close();
-  }
-
-  @Test
-  public void testMultiplePostprocessThenClose() {
-    RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
-    RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
-
-    performNewResult(postprocessorConsumer, true);
-    verifyNewResultProcessed(0);
-
-    performUpdate(repeatedPostprocessorRunner, true);
-    verifyNewResultProcessed(1);
-
-    performUpdate(repeatedPostprocessorRunner, true);
-    verifyNewResultProcessed(2);
-
-    performUpdate(repeatedPostprocessorRunner, true);
-    verifyNewResultProcessed(3);
-
-    performCancelAndVerifyOnCancellation();
-    verify(mSourceCloseableStaticBitmap).close();
-
-    // Can't update now that the request is cancelled.
-    performUpdate(repeatedPostprocessorRunner, true);
-    mInOrder.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void testCannotPostprocessAfterPostprocessFailure() {
-    RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
-    RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
-
-    performNewResult(postprocessorConsumer, true);
-    verifyNewResultProcessed(0);
-
-    performFailure(repeatedPostprocessorRunner);
-
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
-    mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener).onProducerFinishWithFailure(
-        eq(mRequestId),
-        eq(PostprocessorProducer.NAME),
-        any(RuntimeException.class),
-        eq(mExtraMap));
-    mInOrder.verify(mConsumer).onFailure(any(RuntimeException.class));
-    mInOrder.verifyNoMoreInteractions();
-
-    // Can't update now that the request has failed.
-    performUpdate(repeatedPostprocessorRunner, true);
-    mInOrder.verifyNoMoreInteractions();
-
-    performCancelAfterFinished();
-    verify(mSourceCloseableStaticBitmap).close();
-  }
-
-  @Test
-  public void testUpdateBeforeNewResultDoesNothing() {
-    RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
-    RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
-
-    performUpdate(repeatedPostprocessorRunner, true);
-    performUpdate(repeatedPostprocessorRunner, true);
-    mInOrder.verifyNoMoreInteractions();
-
-    performNewResult(postprocessorConsumer, true);
-    verifyNewResultProcessed(0);
-  }
-
-  @Test
-  public void runPostprocessAgainWhenDirty() {
-    final RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
-    final RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
-
-    performNewResult(postprocessorConsumer, false);
-
-    Bitmap destBitmap0 = mDestinationBitmap;
-    performUpdateDuringTheNextPostprocessing(repeatedPostprocessorRunner);
-    mTestExecutorService.runNextPendingCommand();
-    verifyNewResultProcessed(0, destBitmap0);
-
-    Bitmap destBitmap1 = mDestinationBitmap;
-    performUpdateDuringTheNextPostprocessing(repeatedPostprocessorRunner);
-    mTestExecutorService.runNextPendingCommand();
-    verifyNewResultProcessed(1, destBitmap1);
-
-    Bitmap destBitmap2 = mDestinationBitmap;
-    mTestExecutorService.runNextPendingCommand();
-    verifyNewResultProcessed(2, destBitmap2);
+    verify(sourceCloseableAnimatedImage).close();
   }
 
   private void setupNewSourceImage() {

@@ -18,6 +18,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
+import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 
 /**
  * A representation of a GIF image. An instance of this class will hold a copy of the encoded
@@ -25,7 +26,8 @@ import com.facebook.imagepipeline.animated.base.AnimatedImage;
  * {@link GifFrame}.
  */
 @ThreadSafe
-public class GifImage implements AnimatedImage {
+@DoNotStrip
+public class GifImage implements AnimatedImage, AnimatedImageDecoder {
 
   private volatile static boolean sInitialized;
 
@@ -62,6 +64,15 @@ public class GifImage implements AnimatedImage {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
     return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
+  }
+
+  @Override
+  public AnimatedImage decode(long nativePtr, int sizeInBytes) {
+    return GifImage.create(nativePtr, sizeInBytes);
+  }
+
+  @DoNotStrip
+  public GifImage() {
   }
 
   /**

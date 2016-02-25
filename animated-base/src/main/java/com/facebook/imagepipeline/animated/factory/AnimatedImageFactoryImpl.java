@@ -23,12 +23,10 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
-import com.facebook.animated.gif.GifImage;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.animated.webp.WebPImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +34,29 @@ import java.util.List;
 /**
  * Decoder for animated images.
  */
-public class AnimatedImageFactory {
+public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final PlatformBitmapFactory mBitmapFactory;
 
-  public AnimatedImageFactory(
+  static AnimatedImageDecoder sGifAnimatedImageDecoder = null;
+  static AnimatedImageDecoder sWebpAnimatedImageDecoder = null;
+
+  private static AnimatedImageDecoder loadIfPresent(final String className) {
+    try {
+      Class<?> clazz = Class.forName(className);
+      return (AnimatedImageDecoder) clazz.newInstance();
+    } catch (Throwable e) {
+      return null;
+    }
+  }
+
+  static {
+    sGifAnimatedImageDecoder = loadIfPresent("com.facebook.animated.gif.GifImage");
+    sWebpAnimatedImageDecoder = loadIfPresent("com.facebook.animated.webp.WebPImage");
+  }
+
+  public AnimatedImageFactoryImpl(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       PlatformBitmapFactory bitmapFactory) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
@@ -59,12 +74,16 @@ public class AnimatedImageFactory {
       final EncodedImage encodedImage,
       final ImageDecodeOptions options,
       final Bitmap.Config bitmapConfig) {
+    if (sGifAnimatedImageDecoder == null) {
+      throw new UnsupportedOperationException("To encode animated gif please add the dependency " +
+          "to the animated-gif module");
+    }
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
       Preconditions.checkState(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
-      AnimatedImage gifImage = GifImage.create(input.getNativePtr(), input.size());
+      AnimatedImage gifImage = sGifAnimatedImageDecoder.decode(input.getNativePtr(), input.size());
 
       return getCloseableImage(options, gifImage, bitmapConfig);
     } finally {
@@ -83,12 +102,18 @@ public class AnimatedImageFactory {
       final EncodedImage encodedImage,
       final ImageDecodeOptions options,
       final Bitmap.Config bitmapConfig) {
+    if (sWebpAnimatedImageDecoder == null) {
+      throw new UnsupportedOperationException("To encode animated webp please add the dependency " +
+          "to the animated-webp module");
+    }
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
       Preconditions.checkArgument(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
-      AnimatedImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
+      AnimatedImage webPImage = sWebpAnimatedImageDecoder.decode(
+          input.getNativePtr(),
+          input.size());
       return getCloseableImage(options, webPImage, bitmapConfig);
     } finally {
       CloseableReference.closeSafely(bytesRef);

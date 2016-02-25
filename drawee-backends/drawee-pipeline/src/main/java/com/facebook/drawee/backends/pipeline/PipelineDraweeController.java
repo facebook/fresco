@@ -24,7 +24,7 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
-import com.facebook.imagepipeline.image.CloseableAnimatedImage;
+import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -113,12 +113,17 @@ public class PipelineDraweeController
       } else {
         return new OrientedDrawable(bitmapDrawable, closeableStaticBitmap.getRotationAngle());
       }
-    } else if (closeableImage instanceof CloseableAnimatedImage) {
-      return mAnimatedDrawableFactory.create(
-          ((CloseableAnimatedImage) closeableImage).getImageResult());
+    } else if (mAnimatedDrawableFactory != null) {
+    final AnimatedImageResult result = mAnimatedDrawableFactory
+        .getImageIfCloseableAnimatedImage(closeableImage);
+    if (result != null) {
+      return mAnimatedDrawableFactory.create(result);
     } else {
       throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
     }
+  } else {
+    throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+  }
   }
 
   @Override

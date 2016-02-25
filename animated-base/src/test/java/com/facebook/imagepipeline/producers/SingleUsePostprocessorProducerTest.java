@@ -19,6 +19,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.producers.PostprocessorProducer.SingleUsePostprocessorConsumer;
@@ -109,68 +110,25 @@ public class SingleUsePostprocessorProducerTest {
   }
 
   @Test
-  public void testIntermediateImageIsNotProcessed() {
+  public void testNonStaticBitmapIsPassedOn() {
     SingleUsePostprocessorConsumer postprocessorConsumer = produceResults();
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, false);
-    mSourceCloseableImageRef.close();
+    CloseableAnimatedImage sourceCloseableAnimatedImage = mock(CloseableAnimatedImage.class);
+    CloseableReference<CloseableImage> sourceCloseableImageRef =
+        CloseableReference.<CloseableImage>of(sourceCloseableAnimatedImage);
+    postprocessorConsumer.onNewResult(sourceCloseableImageRef, true);
+    sourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
-    mInOrder.verifyNoMoreInteractions();
-    assertEquals(0, mResults.size());
-
-    verify(mSourceCloseableStaticBitmap).close();
-
-  }
-
-  @Test
-  public void testSuccess() {
-    SingleUsePostprocessorConsumer postprocessorConsumer = produceResults();
-    doReturn(mDestinationCloseableBitmapRef)
-        .when(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, true);
-    mSourceCloseableImageRef.close();
-    mTestExecutorService.runUntilIdle();
-
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
-    mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener)
-        .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(true));
     mInOrder.verifyNoMoreInteractions();
 
     assertEquals(1, mResults.size());
     CloseableReference<CloseableImage> res0 = mResults.get(0);
     assertTrue(CloseableReference.isValid(res0));
-    assertSame(mDestinationBitmap, ((CloseableStaticBitmap) res0.get()).getUnderlyingBitmap());
+    assertSame(sourceCloseableAnimatedImage, res0.get());
     res0.close();
 
-    verify(mBitmapResourceReleaser).release(mDestinationBitmap);
-    verify(mSourceCloseableStaticBitmap).close();
-  }
-
-  @Test
-  public void testFailure() {
-    SingleUsePostprocessorConsumer postprocessorConsumer = produceResults();
-    doThrow(new RuntimeException())
-        .when(mPostprocessor).process(eq(mSourceBitmap), eq(mPlatformBitmapFactory));
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, true);
-    mSourceCloseableImageRef.close();
-    mTestExecutorService.runUntilIdle();
-
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
-    mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener).onProducerFinishWithFailure(
-        eq(mRequestId),
-        eq(PostprocessorProducer.NAME),
-        any(RuntimeException.class),
-        eq(mExtraMap));
-    mInOrder.verify(mConsumer).onFailure(any(IllegalStateException.class));
-    mInOrder.verifyNoMoreInteractions();
-    assertEquals(0, mResults.size());
-
-    verify(mSourceCloseableStaticBitmap).close();
+    verify(sourceCloseableAnimatedImage).close();
   }
 
   private SingleUsePostprocessorConsumer produceResults() {

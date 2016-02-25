@@ -19,6 +19,7 @@ import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
+import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 
 /**
  * A representation of a WebP image. An instance of this class will hold a copy of the encoded
@@ -26,7 +27,8 @@ import com.facebook.imagepipeline.animated.base.AnimatedImage;
  * {@link WebPFrame}.
  */
 @ThreadSafe
-public class WebPImage implements AnimatedImage {
+@DoNotStrip
+public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
 
   private volatile static boolean sInitialized;
 
@@ -45,6 +47,10 @@ public class WebPImage implements AnimatedImage {
       SoLoaderShim.loadLibrary("webpimage");
       sInitialized = true;
     }
+  }
+
+  @DoNotStrip
+  public WebPImage() {
   }
 
   /**
@@ -88,6 +94,11 @@ public class WebPImage implements AnimatedImage {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
     return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
+  }
+
+  @Override
+  public AnimatedImage decode(long nativePtr, int sizeInBytes) {
+    return WebPImage.create(nativePtr, sizeInBytes);
   }
 
   @Override

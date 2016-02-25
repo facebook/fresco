@@ -18,6 +18,7 @@ import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
+import com.facebook.imagepipeline.animated.factory.AnimatedImageFactoryImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
 import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
@@ -28,7 +29,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-import com.facebook.animated.webp.WebPImage;
+import com.facebook.animated.gif.GifImage;
 
 import org.junit.Rule;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -49,11 +50,11 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
-    WebPImage.class,
-    AnimatedImageFactory.class,
+    GifImage.class,
+    AnimatedImageFactoryImpl.class,
     AnimatedImageCompositor.class})
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-public class AnimatedImageFactoryTest {
+public class AnimatedImageFactoryGifImplTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
 
@@ -84,40 +85,46 @@ public class AnimatedImageFactoryTest {
   private PlatformBitmapFactory mMockBitmapFactory;
   private AnimatedImageFactory mAnimatedImageFactory;
 
+  private GifImage mGifImageMock;
+
   @Before
   public void setup() {
-    PowerMockito.mockStatic(WebPImage.class);
+    PowerMockito.mockStatic(GifImage.class);
+    mGifImageMock = mock(GifImage.class);
 
     mMockAnimatedDrawableBackendProvider = mock(AnimatedDrawableBackendProvider.class);
     mMockBitmapFactory = mock(PlatformBitmapFactory.class);
 
-    mAnimatedImageFactory = new AnimatedImageFactory(
+    mAnimatedImageFactory = new AnimatedImageFactoryImpl(
         mMockAnimatedDrawableBackendProvider,
         mMockBitmapFactory);
+
+    ((AnimatedImageFactoryImpl) mAnimatedImageFactory).sGifAnimatedImageDecoder = mGifImageMock;
+
   }
 
   @Test
   public void testCreateDefaults() {
-    WebPImage mockWebPImage = mock(WebPImage.class);
+    GifImage mockGifImage = mock(GifImage.class);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to GifImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(WebPImage.create(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockWebPImage);
+    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockGifImage);
 
     EncodedImage encodedImage = new EncodedImage(
         CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
     encodedImage.setImageFormat(ImageFormat.UNKNOWN);
 
     CloseableAnimatedImage closeableImage =
-        (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
+        (CloseableAnimatedImage) mAnimatedImageFactory.decodeGif(
             encodedImage,
             ImageDecodeOptions.defaults(),
             DEFAULT_BITMAP_CONFIG);
 
     // Verify we got the right result
     AnimatedImageResult imageResult = closeableImage.getImageResult();
-    assertSame(mockWebPImage, imageResult.getImage());
+    assertSame(mockGifImage, imageResult.getImage());
     assertNull(imageResult.getPreviewBitmap());
     assertFalse(imageResult.hasDecodedFrame(0));
 
@@ -128,16 +135,16 @@ public class AnimatedImageFactoryTest {
 
   @Test
   public void testCreateWithPreviewBitmap() throws Exception {
-    WebPImage mockWebPImage = mock(WebPImage.class);
+    GifImage mockGifImage = mock(GifImage.class);
 
     Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
     // Expect a call to WebPImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(WebPImage.create(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockWebPImage);
-    when(mockWebPImage.getWidth()).thenReturn(50);
-    when(mockWebPImage.getHeight()).thenReturn(50);
+    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockGifImage);
+    when(mockGifImage.getWidth()).thenReturn(50);
+    when(mockGifImage.getHeight()).thenReturn(50);
 
     // For decoding preview frame, expect some calls.
     when(mMockAnimatedDrawableBackendProvider.get(
@@ -158,14 +165,14 @@ public class AnimatedImageFactoryTest {
         CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
     encodedImage.setImageFormat(ImageFormat.UNKNOWN);
     CloseableAnimatedImage closeableImage =
-        (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
+        (CloseableAnimatedImage) mAnimatedImageFactory.decodeGif(
             encodedImage,
             imageDecodeOptions,
             DEFAULT_BITMAP_CONFIG);
 
     // Verify we got the right result
     AnimatedImageResult imageResult = closeableImage.getImageResult();
-    assertSame(mockWebPImage, imageResult.getImage());
+    assertSame(mockGifImage, imageResult.getImage());
     assertNotNull(imageResult.getPreviewBitmap());
     assertFalse(imageResult.hasDecodedFrame(0));
 
@@ -181,17 +188,17 @@ public class AnimatedImageFactoryTest {
 
   @Test
   public void testCreateWithDecodeAlFrames() throws Exception {
-    WebPImage mockWebPImage = mock(WebPImage.class);
+    GifImage mockGifImage = mock(GifImage.class);
 
     Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
     Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
 
-    // Expect a call to WebPImage.create
+    // Expect a call to GifImage.create
     TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(WebPImage.create(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockWebPImage);
-    when(mockWebPImage.getWidth()).thenReturn(50);
-    when(mockWebPImage.getHeight()).thenReturn(50);
+    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockGifImage);
+    when(mockGifImage.getWidth()).thenReturn(50);
+    when(mockGifImage.getHeight()).thenReturn(50);
 
     // For decoding preview frame, expect some calls.
     when(
@@ -217,14 +224,14 @@ public class AnimatedImageFactoryTest {
     encodedImage.setImageFormat(ImageFormat.UNKNOWN);
 
     CloseableAnimatedImage closeableImage =
-        (CloseableAnimatedImage) mAnimatedImageFactory.decodeWebP(
+        (CloseableAnimatedImage) mAnimatedImageFactory.decodeGif(
             encodedImage,
             imageDecodeOptions,
             DEFAULT_BITMAP_CONFIG);
 
     // Verify we got the right result
     AnimatedImageResult imageResult = closeableImage.getImageResult();
-    assertSame(mockWebPImage, imageResult.getImage());
+    assertSame(mockGifImage, imageResult.getImage());
     assertNotNull(imageResult.getDecodedFrame(0));
     assertNotNull(imageResult.getDecodedFrame(1));
     assertNotNull(imageResult.getPreviewBitmap());

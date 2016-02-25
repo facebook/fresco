@@ -17,6 +17,7 @@ import android.os.SystemClock;
 import android.util.DisplayMetrics;
 
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawable;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend;
@@ -29,12 +30,12 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendIm
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsNoop;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
-
+import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 
 /**
  * Factory for instances of {@link AnimatedDrawable}.
  */
-public class AnimatedDrawableFactory {
+public class AnimatedDrawableFactoryImpl implements AnimatedDrawableFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final AnimatedDrawableCachingBackendImplProvider mAnimatedDrawableCachingBackendProvider;
@@ -43,7 +44,7 @@ public class AnimatedDrawableFactory {
   private final MonotonicClock mMonotonicClock;
   private final Resources mResources;
 
-  public AnimatedDrawableFactory(
+  public AnimatedDrawableFactoryImpl(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       AnimatedDrawableCachingBackendImplProvider animatedDrawableCachingBackendProvider,
       AnimatedDrawableUtil animatedDrawableUtil,
@@ -69,6 +70,7 @@ public class AnimatedDrawableFactory {
    * @param animatedImageResult the result of the code
    * @return a newly constructed {@link AnimatedDrawable}
    */
+  @Override
   public AnimatedDrawable create(AnimatedImageResult animatedImageResult) {
     return create(animatedImageResult, AnimatedDrawableOptions.DEFAULTS);
   }
@@ -80,6 +82,7 @@ public class AnimatedDrawableFactory {
    * @param options additional options
    * @return a newly constructed {@link AnimatedDrawable}
    */
+  @Override
   public AnimatedDrawable create(
       AnimatedImageResult animatedImageResult,
       AnimatedDrawableOptions options) {
@@ -88,6 +91,14 @@ public class AnimatedDrawableFactory {
     AnimatedDrawableBackend animatedDrawableBackend =
         mAnimatedDrawableBackendProvider.get(animatedImageResult, initialBounds);
     return createAnimatedDrawable(options, animatedDrawableBackend);
+  }
+
+  @Override
+  public AnimatedImageResult getImageIfCloseableAnimatedImage(CloseableImage image) {
+    if (image instanceof CloseableAnimatedImage) {
+      return ((CloseableAnimatedImage) image).getImageResult();
+    }
+    return null;
   }
 
   private AnimatedDrawable createAnimatedDrawable(

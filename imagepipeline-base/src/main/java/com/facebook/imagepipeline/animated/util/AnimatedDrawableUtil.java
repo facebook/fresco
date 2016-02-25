@@ -16,10 +16,9 @@ import android.graphics.Bitmap;
 import android.os.Build;
 
 import com.facebook.common.util.ByteConstants;
-import com.facebook.imagepipeline.animated.base.AnimatedDrawable;
 
 /**
- * Utility methods for {@link AnimatedDrawable}.
+ * Utility methods for AnimatedDrawable.
  */
 public class AnimatedDrawableUtil {
 

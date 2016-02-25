@@ -3,7 +3,12 @@ apply plugin: 'com.android.application'
 dependencies {
     provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     compile project(':drawee-backends:drawee-pipeline')
+    // Include this in order to see static Webp
     compile project(':static-webp')
+    // Include this in order to see animated gif
+    compile project(':animated-gif')
+    // Include this in order to see animated webp
+    compile project(':animated-webp')
 }
 
 android {
