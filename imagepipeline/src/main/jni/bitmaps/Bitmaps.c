@@ -75,6 +75,54 @@ static void Bitmaps_pinBitmap(
   }
 }
 
+static jobject Bitmaps_getByteBuffer(
+  JNIEnv* env,
+  jclass clazz,
+  jobject bitmap,
+  jlong offset,
+  jlong size) {
+  UNUSED(clazz);
+  void* pixelPtr;
+  AndroidBitmapInfo bitmapInfo;
+
+  int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to get Bitmap info");
+    return NULL;
+  }
+
+  if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+    safe_throw_exception(env, "Unexpected bitmap format");
+    return NULL;
+  }
+
+  jlong arrayLength = bitmapInfo.width * bitmapInfo.height * 4;
+  if (offset < 0 || size < 0 || offset > arrayLength || arrayLength - offset < size) {
+    safe_throw_exception(env, "Index out of bounds");
+    return NULL;
+  }
+
+  rc = AndroidBitmap_lockPixels(env, bitmap, &pixelPtr);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to lock Bitmap pixels");
+    return NULL;
+  }
+
+  pixelPtr = (void*) ((uint8_t*) pixelPtr + offset);
+  return (*env)->NewDirectByteBuffer(env, pixelPtr, size);
+}
+
+static void Bitmaps_releaseByteBuffer(
+  JNIEnv* env,
+  jclass clazz,
+  jobject bitmap) {
+  UNUSED(clazz);
+  int rc = AndroidBitmap_unlockPixels(env, bitmap);
+  if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
+    safe_throw_exception(env, "Failed to unlock Bitmap pixels");
+  }
+}
+
 /**
  * Efficiently copies pixels between bitmaps.
  */
@@ -130,6 +178,12 @@ static JNINativeMethod bitmaps_native_methods[] = {
   { "nativeCopyBitmap",
     "(Landroid/graphics/Bitmap;ILandroid/graphics/Bitmap;II)V",
     (void*) Bitmaps_copyBitmap },
+  { "nativeGetByteBuffer",
+    "(Landroid/graphics/Bitmap;JJ)Ljava/nio/ByteBuffer;",
+    (void*) Bitmaps_getByteBuffer },
+  { "nativeReleaseByteBuffer",
+    "(Landroid/graphics/Bitmap;)V",
+    (void*) Bitmaps_releaseByteBuffer },
 };
 
 __attribute__((visibility("default")))
