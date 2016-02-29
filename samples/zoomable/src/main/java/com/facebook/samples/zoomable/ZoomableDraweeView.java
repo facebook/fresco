@@ -40,8 +40,7 @@ import com.facebook.drawee.view.DraweeView;
  * <p>
  * Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
-public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
-    implements ZoomableController.Listener {
+public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   private static final Class<?> TAG = ZoomableDraweeView.class;
 
@@ -65,8 +64,15 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     }
   };
 
+  private final ZoomableController.Listener mZoomableListener = new ZoomableController.Listener() {
+    @Override
+    public void onTransformChanged(Matrix transform) {
+      ZoomableDraweeView.this.onTransformChanged(transform);
+    }
+  };
+
   private DraweeController mHugeImageController;
-  private ZoomableController mZoomableController = DefaultZoomableController.newInstance();
+  private ZoomableController mZoomableController;
 
   public ZoomableDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context);
@@ -102,21 +108,19 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   private void init() {
-    mZoomableController.setListener(this);
+    mZoomableController = DefaultZoomableController.newInstance();
+    mZoomableController.setListener(mZoomableListener);
   }
 
   /**
-   * Returns the matrix that matches the zoom selected by user gestures,
-   * but does not include the base scaling of the image itself. Transforms
-   * from view-absolute to view-absolute coordinates.
+   * Returns the zoomable transformation matrix applied by this view.
    */
   public void getTransformMatrix(Matrix outMatrix) {
     outMatrix.set(mZoomableController.getTransform());
   }
 
   /**
-   * Gets the bounds of the image, in view-absolute coordinates,
-   * including the effects of user gestures.
+   * Gets the transformed image bounds, in view-absolute coordinates.
    */
   public void getTransformedBounds(RectF outBounds) {
     getPlainBounds(outBounds);
@@ -125,34 +129,64 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   /**
-   * Gets the bounds of the image, in view-absolute coordinates,
-   * but not including the effets of user gestures.
+   * Gets the original image bounds, in view-absolute coordinates.
+   *
+   * <p> The original image bounds are those reported by the hierarchy. The hierarchy itself may
+   * apply scaling on its own (e.g. due to scale type) so the reported bounds are not necessarily
+   * the same as the actual bitmap dimensions. In other words, the original image bounds correspond
+   * to the image bounds within this view when no zoomable transformation is applied, but including
+   * the potential scaling of the hierarchy.
+   * Having the actual bitmap dimensions abstracted away from this view greatly simplifies
+   * implementation because the actual bitmap may change (e.g. when a high-res image arrives and
+   * replaces the previously set low-res image). With proper hierarchy scaling (e.g. FIT_CENTER),
+   * this underlying change will not affect this view nor the zoomable transformation in any way.
    */
   public void getPlainBounds(RectF outBounds) {
     getHierarchy().getActualImageBounds(outBounds);
   }
 
+  /**
+   * Gets the bounds used to limit the translation, in view-absolute coordinates.
+   *
+   * <p> These bounds are passed to the zoomable controller in order to limit the translation. The
+   * image is attempted to be centered within the limit bounds if the transformed image is smaller.
+   * There will be no empty spaces within the limit bounds if the transformed image is bigger.
+   * This applies to each dimension (horizontal and vertical) independently.
+   * <p> Unless overridden by a subclass, these bounds are same as the view bounds.
+   */
+  public void getLimitBounds(RectF outBounds) {
+    outBounds.set(0, 0, getWidth(), getHeight());
+  }
+
+  /**
+   * Sets a custom zoomable controller, instead of using the default one.
+   */
   public void setZoomableController(ZoomableController zoomableController) {
     Preconditions.checkNotNull(zoomableController);
     mZoomableController.setListener(null);
     mZoomableController = zoomableController;
-    mZoomableController.setListener(this);
+    mZoomableController.setListener(mZoomableListener);
   }
 
+  /**
+   * Sets the image controller.
+   */
   @Override
   public void setController(@Nullable DraweeController controller) {
     setControllers(controller, null);
   }
 
-    /**
-     * Sets the controllers for the normal and huge image.
-     *
-     * <p> IMPORTANT: in order to avoid a flicker when switching to the huge image, the huge image
-     * controller should have the normal-image-uri set as its low-res-uri.
-     *
-     * @param controller controller to be initially used
-     * @param hugeImageController controller to be used after the client starts zooming-in
-     */
+  /**
+   * Sets the controllers for the normal and huge image.
+   *
+   * <p> The huge image controller is used after the image gets scaled above a certain threshold.
+   *
+   * <p> IMPORTANT: in order to avoid a flicker when switching to the huge image, the huge image
+   * controller should have the normal-image-uri set as its low-res-uri.
+   *
+   * @param controller controller to be initially used
+   * @param hugeImageController controller to be used after the client starts zooming-in
+   */
   public void setControllers(
       @Nullable DraweeController controller,
       @Nullable DraweeController hugeImageController) {
@@ -232,8 +266,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     mZoomableController.setEnabled(false);
   }
 
-  @Override
-  public void onTransformChanged(Matrix transform) {
+  protected void onTransformChanged(Matrix transform) {
     FLog.v(TAG, "onTransformChanged: view %x", this.hashCode());
     maybeSetHugeImageController();
     invalidate();
@@ -241,7 +274,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   private void updateZoomableControllerBounds() {
     getPlainBounds(mImageBounds);
-    mViewBounds.set(0, 0, getWidth(), getHeight());
+    getLimitBounds(mViewBounds);
     mZoomableController.setImageBounds(mImageBounds);
     mZoomableController.setViewBounds(mViewBounds);
     FLog.v(
