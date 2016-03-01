@@ -290,6 +290,24 @@ public class DefaultZoomableController
    * @param scale desired scale, will be limited to {min, max} scale factor
    * @param imagePoint 2D point in image's relative coordinate system (i.e. 0 <= x, y <= 1)
    * @param viewPoint 2D point in view's absolute coordinate system
+   */
+  public void zoomToImagePoint(
+      float scale,
+      PointF imagePoint,
+      PointF viewPoint) {
+    zoomToImagePoint(scale, imagePoint, viewPoint, true, true, 0, null);
+  }
+
+  /**
+   * Zooms to the desired scale and positions the image so that the given image point corresponds
+   * to the given view point.
+   *
+   * <p>If this method is called while an animation or gesture is already in progress,
+   * this will currently result in undefined behavior.
+   *
+   * @param scale desired scale, will be limited to {min, max} scale factor
+   * @param imagePoint 2D point in image's relative coordinate system (i.e. 0 <= x, y <= 1)
+   * @param viewPoint 2D point in view's absolute coordinate system
    * @param limitTransX  Whether to adjust the transform to prevent black bars from appearing on
    *                     the left or right.
    * @param limitTransY Whether to adjust the transform to prevent black bars from appearing on

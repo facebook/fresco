@@ -21,6 +21,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.facebook.common.internal.Preconditions;
@@ -49,6 +50,10 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
 
+  private DraweeController mHugeImageController;
+  private ZoomableController mZoomableController;
+  private GestureDetector mTapGestureDetector;
+
   private final ControllerListener mControllerListener = new BaseControllerListener<Object>() {
     @Override
     public void onFinalImageSet(
@@ -71,8 +76,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
     }
   };
 
-  private DraweeController mHugeImageController;
-  private ZoomableController mZoomableController;
+  private final GestureListenerWrapper mTapListenerWrapper = new GestureListenerWrapper();
 
   public ZoomableDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context);
@@ -110,6 +114,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   private void init() {
     mZoomableController = DefaultZoomableController.newInstance();
     mZoomableController.setListener(mZoomableListener);
+    mTapGestureDetector = new GestureDetector(getContext(), mTapListenerWrapper);
   }
 
   /**
@@ -166,6 +171,31 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
     mZoomableController.setListener(null);
     mZoomableController = zoomableController;
     mZoomableController.setListener(mZoomableListener);
+  }
+
+  /**
+   * Gets the zoomable controller.
+   *
+   * <p> Zoomable controller can be used to zoom to point, or to map point from view to image
+   * coordinates for instance.
+   */
+  public ZoomableController getZoomableController() {
+    return mZoomableController;
+  }
+
+  /**
+   * Sets the tap listener.
+   */
+  public void setTapListener(GestureDetector.SimpleOnGestureListener tapListener) {
+    mTapListenerWrapper.setListener(tapListener);
+  }
+
+  /**
+   * Sets whether long-press tap detection is enabled.
+   * Unfortunately, long-press conflicts with onDoubleTapEvent.
+   */
+  public void setIsLongpressEnabled(boolean enabled) {
+    mTapGestureDetector.setIsLongpressEnabled(enabled);
   }
 
   /**
@@ -235,6 +265,10 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
+    if (mTapGestureDetector.onTouchEvent(event)) {
+      FLog.v(TAG, "onTouchEvent: view %x, handled by tap gesture detector", this.hashCode());
+      return true;
+    }
     if (mZoomableController.onTouchEvent(event)) {
       if (mZoomableController.getScaleFactor() > 1.0f) {
         getParent().requestDisallowInterceptTouchEvent(true);
@@ -242,8 +276,11 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       FLog.v(TAG, "onTouchEvent: view %x, handled by zoomable controller", this.hashCode());
       return true;
     }
-    FLog.v(TAG, "onTouchEvent: view %x, handled by the super", this.hashCode());
-    return super.onTouchEvent(event);
+    if (super.onTouchEvent(event)) {
+      FLog.v(TAG, "onTouchEvent: view %x, handled by the super", this.hashCode());
+      return true;
+    }
+    return true;
   }
 
   @Override
