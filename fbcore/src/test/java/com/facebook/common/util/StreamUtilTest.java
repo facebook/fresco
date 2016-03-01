@@ -19,7 +19,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 import com.facebook.common.internal.Closeables;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link StreamUtil}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class StreamUtilTest {
 
   /**

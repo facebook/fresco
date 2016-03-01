@@ -6,6 +6,5 @@ LOCAL_MODULE    := gif
 LOCAL_SRC_FILES := \
 	dgif_lib.c \
 	gifalloc.c 
-LOCAL_LDLIBS := -llog -ldl -landroid
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)

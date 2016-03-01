@@ -16,21 +16,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.testing.FakeClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
+import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+
 import com.facebook.imagepipeline.animated.testing.MyShadowBitmap;
 import com.facebook.imagepipeline.animated.testing.MyShadowCanvas;
+import com.facebook.imagepipeline.testing.FakeClock;
+import com.facebook.imagepipeline.testing.TestExecutorService;
 import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
-import com.facebook.imagepipeline.animated.testing.TestExecutorService;
-import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 
 import bolts.Task;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend.pixelValue;
@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for {@link AnimatedDrawableCachingBackendImpl}.
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(shadows = {MyShadowCanvas.class, MyShadowBitmap.class})
 public class AnimatedDrawableCachingBackendImplTest {
 
@@ -57,7 +57,7 @@ public class AnimatedDrawableCachingBackendImplTest {
   @Before
   public void setup() {
     mActivityManager =
-        (ActivityManager) Robolectric.application.getSystemService(Context.ACTIVITY_SERVICE);
+        (ActivityManager) RuntimeEnvironment.application.getSystemService(Context.ACTIVITY_SERVICE);
     mFakeClock = new FakeClock();
     mExecutorService = new TestExecutorService(mFakeClock);
     mAnimatedDrawableUtil = new AnimatedDrawableUtil();

@@ -13,22 +13,26 @@ import java.io.InputStream;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunk;
-import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Basic tests for {@link NativePooledByteBuffer}
  */
-@RunWith(WithTestDefaultsRunner.class)
-public class NativePooledByteBufferTest {
+@RunWith(RobolectricTestRunner.class)
+public class NativePooledByteBufferTest extends TestUsingNativeMemoryChunk {
   private static final byte[] BYTES = new byte[] {1, 4, 5, 0, 100, 34, 0, 1, -1, -1};
   private static final int BUFFER_LENGTH = BYTES.length - 2;
 

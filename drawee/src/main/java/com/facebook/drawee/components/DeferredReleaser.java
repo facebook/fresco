@@ -15,6 +15,8 @@ import java.util.Set;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.facebook.common.internal.Preconditions;
+
 /**
  * Component that defers {@code release} until after the main Looper has completed its current
  * message. Although we would like for defer {@code release} to happen immediately after the current
@@ -60,6 +62,7 @@ public class DeferredReleaser {
   private final Runnable releaseRunnable = new Runnable() {
     @Override
     public void run() {
+      ensureOnUiThread();
       for (Releasable releasable : mPendingReleasables) {
         releasable.release();
       }
@@ -75,6 +78,8 @@ public class DeferredReleaser {
    * @param releasable Object to release.
    */
   public void scheduleDeferredRelease(Releasable releasable) {
+    ensureOnUiThread();
+
     if (!mPendingReleasables.add(releasable)) {
       return;
     }
@@ -90,7 +95,11 @@ public class DeferredReleaser {
    * @param releasable Object to cancel release of.
    */
   public void cancelDeferredRelease(Releasable releasable) {
+    ensureOnUiThread();
     mPendingReleasables.remove(releasable);
   }
 
+  private static void ensureOnUiThread() {
+    Preconditions.checkState(Looper.getMainLooper().getThread() == Thread.currentThread());
+  }
 }

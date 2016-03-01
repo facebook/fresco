@@ -13,7 +13,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import com.facebook.common.internal.Closeables;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import junit.framework.Assert;
 import org.robolectric.RobolectricTestRunner;
@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 /**
  * Basic tests for shared references
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class SharedReferenceTest {
 
   /**

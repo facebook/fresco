@@ -23,12 +23,12 @@ public interface TransformCallback {
    *
    * @param transform Matrix that is applied to the drawable by the parent drawables.
    */
-  public void getTransform(Matrix transform);
+  void getTransform(Matrix transform);
 
   /**
    * Called when the drawable needs to get its root bounds.
    *
    * @param bounds The root bounds of the drawable.
    */
-  public void getRootBounds(RectF bounds);
+  void getRootBounds(RectF bounds);
 }

@@ -9,7 +9,7 @@
 
 package com.facebook.imagepipeline.animated.util;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for {@link AnimatedDrawableUtil}.
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class AnimatedDrawableUtilTest {
 
   @Test

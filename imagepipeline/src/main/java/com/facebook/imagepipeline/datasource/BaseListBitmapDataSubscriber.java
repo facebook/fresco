@@ -9,11 +9,11 @@
 
 package com.facebook.imagepipeline.datasource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
@@ -58,7 +58,7 @@ public abstract class BaseListBitmapDataSubscriber extends
       return;
     }
     try {
-      List<Bitmap> bitmapList =  Lists.newArrayListWithCapacity(imageRefList.size());
+      List<Bitmap> bitmapList = new ArrayList<>(imageRefList.size());
       for (CloseableReference<CloseableImage> closeableImageRef: imageRefList) {
         if (closeableImageRef != null && closeableImageRef.get() instanceof CloseableBitmap) {
           bitmapList.add(((CloseableBitmap) closeableImageRef.get()).getUnderlyingBitmap());

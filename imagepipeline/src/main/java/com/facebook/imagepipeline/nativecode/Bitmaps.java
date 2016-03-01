@@ -14,27 +14,17 @@ import android.graphics.Bitmap;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imagepipeline.nativecode.ImagePipelineNativeLoader;
+import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Utility methods for handling Bitmaps.
  */
 @DoNotStrip
 public class Bitmaps {
-  /**
-   * The only bitmap config we use. Every bitmap managed by this pool will use this config.
-   * If we need to change this, please change BYTES_PER_PIXEL below.
-   */
-  public static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
-
-  /**
-   * Bytes per pixel - corresponds to the specific BITMAP_CONFIG above ARGB_8888.
-   * Must change if the Config above changes
-   */
-  public static final int BYTES_PER_PIXEL = 4;
 
   static {
-    ImagePipelineNativeLoader.load();
+    SoLoaderShim.loadLibrary("bitmaps");
   }
 
   /**
@@ -55,7 +45,7 @@ public class Bitmaps {
    * This blits the pixel data from src to dest.
    * <p>The destination bitmap must have both a height and a width equal to the source. For maximum
    * speed stride should be equal as well.
-   * <p>Both bitmaps must be in {@link android.graphics.Bitmap.Config#ARGB_8888} format.
+   * <p>Both bitmaps must use the same {@link android.graphics.Bitmap.Config} format.
    * <p>If the src is purgeable, it will be decoded as part of this operation if it was purged.
    * The dest should not be purgeable. If it is, the copy will still take place,
    * but will be lost the next time the dest gets purged, without warning.
@@ -64,8 +54,7 @@ public class Bitmaps {
    * @param src Bitmap to copy out of
    */
   public static void copyBitmap(Bitmap dest, Bitmap src) {
-    Preconditions.checkArgument(src.getConfig() == Bitmap.Config.ARGB_8888);
-    Preconditions.checkArgument(dest.getConfig() == Bitmap.Config.ARGB_8888);
+    Preconditions.checkArgument(src.getConfig() == dest.getConfig());
     Preconditions.checkArgument(dest.isMutable());
     Preconditions.checkArgument(dest.getWidth() == src.getWidth());
     Preconditions.checkArgument(dest.getHeight() == src.getHeight());
@@ -85,12 +74,16 @@ public class Bitmaps {
    * are part of that.
    */
   @TargetApi(19)
-  public static void reconfigureBitmap(Bitmap bitmap, int width, int height) {
+  public static void reconfigureBitmap(
+      Bitmap bitmap,
+      int width,
+      int height,
+      Bitmap.Config bitmapConfig) {
     Preconditions.checkArgument(
-        bitmap.getAllocationByteCount() >= width * height * BYTES_PER_PIXEL);
-    bitmap.reconfigure(width, height, BITMAP_CONFIG);
+        bitmap.getAllocationByteCount() >=
+            width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig));
+    bitmap.reconfigure(width, height, bitmapConfig);
   }
-
 
   @DoNotStrip
   private static native void nativePinBitmap(Bitmap bitmap);

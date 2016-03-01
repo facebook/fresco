@@ -28,42 +28,47 @@ public interface ProducerContext {
   /**
    * @return image request that is being executed
    */
-  public ImageRequest getImageRequest();
+  ImageRequest getImageRequest();
 
   /**
    * @return id of this request
    */
-  public String getId();
+  String getId();
 
   /**
    * @return ProducerListener for producer's events
    */
-  public ProducerListener getListener();
+  ProducerListener getListener();
 
   /**
    * @return the {@link Object} that indicates the caller's context
    */
-  public Object getCallerContext();
+  Object getCallerContext();
+
+  /**
+   * @return the lowest permitted {@link ImageRequest.RequestLevel}
+   */
+  ImageRequest.RequestLevel getLowestPermittedRequestLevel();
 
   /**
    * @return true if the request is a prefetch, false otherwise.
    */
-  public boolean isPrefetch();
+  boolean isPrefetch();
 
   /**
    * @return priority of the request.
    */
-  public Priority getPriority();
+  Priority getPriority();
 
   /**
    * @return true if request's owner expects intermediate results
    */
-  public boolean isIntermediateResultExpected();
+  boolean isIntermediateResultExpected();
 
   /**
    * Adds callbacks to the set of callbacks that are executed at various points during the
    * processing of a request.
    * @param callbacks callbacks to be executed
    */
-  public void addCallbacks(ProducerContextCallbacks callbacks);
+  void addCallbacks(ProducerContextCallbacks callbacks);
 }

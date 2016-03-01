@@ -88,6 +88,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private boolean mIsAttached;
   private boolean mIsRequestSubmitted;
   private boolean mHasFetchFailed;
+  private boolean mRetainImageOnFailure;
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
   private @Nullable Drawable mDrawable;
@@ -99,7 +100,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
       Object callerContext) {
     mDeferredReleaser = deferredReleaser;
     mUiThreadImmediateExecutor = uiThreadImmediateExecutor;
-    init(id, callerContext);
+    init(id, callerContext, true);
   }
 
   /**
@@ -110,18 +111,19 @@ public abstract class AbstractDraweeController<T, INFO> implements
    * @param callerContext tag and context for this controller
    */
   protected void initialize(String id, Object callerContext) {
-    init(id, callerContext);
+    init(id, callerContext, false);
   }
 
-  private void init(String id, Object callerContext) {
+  private void init(String id, Object callerContext, boolean justConstructed) {
     mEventTracker.recordEvent(Event.ON_INIT_CONTROLLER);
     // cancel deferred release
-    if (mDeferredReleaser != null) {
+    if (!justConstructed && mDeferredReleaser != null) {
       mDeferredReleaser.cancelDeferredRelease(this);
     }
     // reinitialize mutable state (fetch state)
     mIsAttached = false;
     releaseFetch();
+    mRetainImageOnFailure = false;
     // reinitialize optional components
     if (mRetryManager != null) {
       mRetryManager.init();
@@ -218,6 +220,11 @@ public abstract class AbstractDraweeController<T, INFO> implements
     if (mGestureDetector != null) {
       mGestureDetector.setClickListener(this);
     }
+  }
+
+  /** Sets whether to display last available image in case of failure. */
+  protected void setRetainImageOnFailure(boolean enabled) {
+    mRetainImageOnFailure = enabled;
   }
 
   /** Adds controller listener. */
@@ -502,7 +509,10 @@ public abstract class AbstractDraweeController<T, INFO> implements
       logMessageAndFailure("final_failed @ onFailure", throwable);
       mDataSource = null;
       mHasFetchFailed = true;
-      if (shouldRetryOnTap()) {
+      // Set the previously available image if available.
+      if (mRetainImageOnFailure && mDrawable != null) {
+        mSettableDraweeHierarchy.setImage(mDrawable, 1f, true);
+      } else if (shouldRetryOnTap()) {
         mSettableDraweeHierarchy.setRetry(throwable);
       } else {
         mSettableDraweeHierarchy.setFailure(throwable);

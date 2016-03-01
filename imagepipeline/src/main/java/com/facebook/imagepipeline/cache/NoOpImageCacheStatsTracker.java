@@ -70,10 +70,10 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   }
 
   @Override
-  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?, ?> bitmapMemoryCache) {
+  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache) {
   }
 
   @Override
-  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?, ?> encodedMemoryCache) {
+  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?> encodedMemoryCache) {
   }
 }

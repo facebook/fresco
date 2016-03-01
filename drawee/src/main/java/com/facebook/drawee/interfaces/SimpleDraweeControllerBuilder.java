@@ -19,14 +19,17 @@ import android.net.Uri;
 public interface SimpleDraweeControllerBuilder {
 
   /** Sets the caller context. */
-  public SimpleDraweeControllerBuilder setCallerContext(Object callerContext);
+  SimpleDraweeControllerBuilder setCallerContext(Object callerContext);
 
   /** Sets the uri. */
-  public SimpleDraweeControllerBuilder setUri(Uri uri);
+  SimpleDraweeControllerBuilder setUri(Uri uri);
+
+  /** Sets the uri from a string. */
+  SimpleDraweeControllerBuilder setUri(@Nullable String uriString);
 
   /** Sets the old controller to be reused if possible. */
-  public SimpleDraweeControllerBuilder setOldController(@Nullable DraweeController oldController);
+  SimpleDraweeControllerBuilder setOldController(@Nullable DraweeController oldController);
 
   /** Builds the specified controller. */
-  public DraweeController build();
+  DraweeController build();
 }

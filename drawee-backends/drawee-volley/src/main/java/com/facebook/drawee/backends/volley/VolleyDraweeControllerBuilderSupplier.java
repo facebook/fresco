@@ -12,7 +12,7 @@ package com.facebook.drawee.backends.volley;
 import android.content.Context;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.common.executors.UiThreadExecutorService;
+import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.ControllerListener;
@@ -45,7 +45,7 @@ public class VolleyDraweeControllerBuilderSupplier implements
     mVolleyDraweeControllerFactory = new VolleyDraweeControllerFactory(
         context.getResources(),
         DeferredReleaser.getInstance(),
-        UiThreadExecutorService.getInstance());
+        UiThreadImmediateExecutorService.getInstance());
     mBoundControllerListeners = boundControllerListeners;
   }
 

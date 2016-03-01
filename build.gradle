@@ -6,13 +6,16 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_PLUGIN_VERSION}"
-        classpath "com.palominolabs.gradle.task:gradle-git-clone-task:${GRADLE_GIT_CLONE_TASK_VERSION}"
         classpath "de.undercouch:gradle-download-task:${GRADLE_DOWNLOAD_TASK_VERSION}"
-        classpath "org.robolectric:robolectric-gradle-plugin:${ROBOLECTRIC_GRADLE_PLUGIN_VERSION}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+
+project.ext {
+    buildToolsVersion = "${BUILD_TOOLS_VERSION}"
+    compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
 }
 
 subprojects {
@@ -21,6 +24,27 @@ subprojects {
         mavenLocal()
         jcenter()
         mavenCentral()
+    }
+
+    task allclean {
+    }
+
+    afterEvaluate { project ->
+      allclean.dependsOn(project.tasks.matching {it.name == 'clean'})
+
+        if (project.tasks.matching { it.name == 'assembleRelease'}) {
+            def jarList = new ArrayList()
+            task setJarList(dependsOn: assembleRelease) << {
+                configurations.compile.each {
+                    jarList.add(it)
+                }
+            }
+
+            task copyDeps(dependsOn: setJarList, type: Copy) {
+                from jarList
+                into 'build/external'
+            }
+        }
     }
 }
 

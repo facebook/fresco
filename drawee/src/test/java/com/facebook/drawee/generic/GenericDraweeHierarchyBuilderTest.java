@@ -9,16 +9,17 @@
 
 package com.facebook.drawee.generic;
 
+import java.util.Arrays;
+
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyBuilderTest {
 
   private final Drawable mBackgroundDrawable1 = mock(BitmapDrawable.class);
@@ -120,8 +121,8 @@ public class GenericDraweeHierarchyBuilderTest {
     assertSame(null, builder.getActualImageMatrix());
 
     // test backgrounds & overlays
-    builder.setBackgrounds(Lists.newArrayList(mBackgroundDrawable1, mBackgroundDrawable2));
-    builder.setOverlays(Lists.newArrayList(mOverlayDrawable1, mOverlayDrawable2));
+    builder.setBackgrounds(Arrays.asList(mBackgroundDrawable1, mBackgroundDrawable2));
+    builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
     assertArrayEquals(
         builder.getBackgrounds().toArray(),
         new Drawable[]{mBackgroundDrawable1, mBackgroundDrawable2});

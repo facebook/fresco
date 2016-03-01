@@ -13,14 +13,12 @@ LOCAL_SRC_FILES := \
 
 CXX11_FLAGS := -std=c++11
 LOCAL_CFLAGS += $(CXX11_FLAGS)
+LOCAL_CFLAGS += -fvisibility=hidden
+LOCAL_CFLAGS += $(FRESCO_CPP_CFLAGS)
 LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_LDLIBS += -ljnigraphics
-ifeq ($(BUCK_BUILD), 1)
-  LOCAL_CFLAGS += $(BUCK_DEP_CFLAGS)
-  LOCAL_LDFLAGS += $(BUCK_DEP_LDFLAGS)
-  include $(BUILD_SHARED_LIBRARY)
-else
-  LOCAL_SHARED_LIBRARIES += gif
-  include $(BUILD_SHARED_LIBRARY)
-  $(call import-module, giflib)
-endif
+LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
+LOCAL_LDLIBS += -llog -ldl -landroid
+LOCAL_STATIC_LIBRARIES += gif
+include $(BUILD_SHARED_LIBRARY)
+$(call import-module, giflib)

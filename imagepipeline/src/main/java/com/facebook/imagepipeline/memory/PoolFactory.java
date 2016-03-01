@@ -22,11 +22,12 @@ public class PoolFactory {
   private final PoolConfig mConfig;
 
   private BitmapPool mBitmapPool;
-  private ByteArrayPool mCommonByteArrayPool;
+  private FlexByteArrayPool mFlexByteArrayPool;
   private NativeMemoryChunkPool mNativeMemoryChunkPool;
   private PooledByteBufferFactory mPooledByteBufferFactory;
   private PooledByteStreams mPooledByteStreams;
-  private SingleByteArrayPool mSingleByteArrayPool;
+  private SharedByteArray mSharedByteArray;
+  private ByteArrayPool mSmallByteArrayPool;
 
   public PoolFactory(PoolConfig config) {
     mConfig = Preconditions.checkNotNull(config);
@@ -42,14 +43,17 @@ public class PoolFactory {
     return mBitmapPool;
   }
 
-  public ByteArrayPool getCommonByteArrayPool() {
-    if (mCommonByteArrayPool == null) {
-      mCommonByteArrayPool = new GenericByteArrayPool(
+  public FlexByteArrayPool getFlexByteArrayPool() {
+    if (mFlexByteArrayPool == null) {
+      mFlexByteArrayPool = new FlexByteArrayPool(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getCommonByteArrayPoolParams(),
-          mConfig.getCommonByteArrayPoolStatsTracker());
+          mConfig.getFlexByteArrayPoolParams());
     }
-    return mCommonByteArrayPool;
+    return mFlexByteArrayPool;
+  }
+
+  public int getFlexByteArrayPoolMaxNumThreads() {
+    return mConfig.getFlexByteArrayPoolParams().maxNumThreads;
   }
 
   public NativeMemoryChunkPool getNativeMemoryChunkPool() {
@@ -73,18 +77,27 @@ public class PoolFactory {
 
   public PooledByteStreams getPooledByteStreams() {
     if (mPooledByteStreams == null) {
-      mPooledByteStreams = new PooledByteStreams(getCommonByteArrayPool());
+      mPooledByteStreams = new PooledByteStreams(getSmallByteArrayPool());
     }
     return mPooledByteStreams;
   }
 
-  public SingleByteArrayPool getSingleByteArrayPool() {
-    if (mSingleByteArrayPool == null) {
-      mSingleByteArrayPool = new SingleByteArrayPool(
+  public SharedByteArray getSharedByteArray() {
+    if (mSharedByteArray == null) {
+      mSharedByteArray = new SharedByteArray(
           mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getSingleByteArrayPoolParams(),
-          mConfig.getSingleByteArrayPoolStatsTracker());
+          mConfig.getFlexByteArrayPoolParams());
     }
-    return mSingleByteArrayPool;
+    return mSharedByteArray;
+  }
+
+  public ByteArrayPool getSmallByteArrayPool() {
+    if (mSmallByteArrayPool == null) {
+      mSmallByteArrayPool = new GenericByteArrayPool(
+          mConfig.getMemoryTrimmableRegistry(),
+          mConfig.getSmallByteArrayPoolParams(),
+          mConfig.getSmallByteArrayPoolStatsTracker());
+    }
+    return mSmallByteArrayPool;
   }
 }

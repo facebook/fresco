@@ -36,17 +36,10 @@ public class ImagePipelineNativeLoader {
   public static final List<String> DEPENDENCIES;
   static {
     List<String> dependencies = new ArrayList<String>();
-    dependencies.add("gnustl_shared");
-    dependencies.add("fb_png");
-    dependencies.add("webp");
-    dependencies.add("fb_jpegturbo");
     DEPENDENCIES = Collections.unmodifiableList(dependencies);
   }
 
   public static void load() {
-    for (int i = 0; i < DEPENDENCIES.size(); ++i) {
-      SoLoaderShim.loadLibrary(DEPENDENCIES.get(i));
-    }
-    SoLoaderShim.loadLibrary(DSO_NAME);
+    SoLoaderShim.loadLibrary("imagepipeline");
   }
 }

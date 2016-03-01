@@ -19,22 +19,22 @@ package com.facebook.imagepipeline.cache;
 public interface ImageCacheStatsTracker {
 
   /** Called whenever decoded images are put into the bitmap cache. */
-  public void onBitmapCachePut();
+  void onBitmapCachePut();
 
   /** Called on a bitmap cache hit. */
-  public void onBitmapCacheHit();
+  void onBitmapCacheHit();
 
   /** Called on a bitmap cache miss. */
-  public void onBitmapCacheMiss();
+  void onBitmapCacheMiss();
 
   /** Called whenever encoded images are put into the encoded memory cache. */
-  public void onMemoryCachePut();
+  void onMemoryCachePut();
 
   /** Called on an encoded memory cache hit. */
-  public void onMemoryCacheHit();
+  void onMemoryCacheHit();
 
   /** Called on an encoded memory cache hit. */
-  public void onMemoryCacheMiss();
+  void onMemoryCacheMiss();
 
   /**
    * Called on an staging area hit.
@@ -42,31 +42,31 @@ public interface ImageCacheStatsTracker {
    * <p>The staging area stores encoded images. It gets the images before they are written
    * to disk cache.
    */
-  public void onStagingAreaHit();
+  void onStagingAreaHit();
 
   /** Called on a staging area miss hit. */
-  public void onStagingAreaMiss();
+  void onStagingAreaMiss();
 
   /** Called on a disk cache hit. */
-  public void onDiskCacheHit();
+  void onDiskCacheHit();
 
   /** Called on a disk cache miss. */
-  public void onDiskCacheMiss();
+  void onDiskCacheMiss();
 
   /** Called if an exception is thrown on a disk cache read. */
-  public void onDiskCacheGetFail();
+  void onDiskCacheGetFail();
 
   /**
    * Registers a bitmap cache with this tracker.
    *
    * <p>Use this method if you need access to the cache itself to compile your stats.
    */
-  public void registerBitmapMemoryCache(CountingMemoryCache<?, ?, ?> bitmapMemoryCache);
+  void registerBitmapMemoryCache(CountingMemoryCache<?, ?> bitmapMemoryCache);
 
   /**
    * Registers an encoded memory cache with this tracker.
    *
    * <p>Use this method if you need access to the cache itself to compile your stats.
    */
-  public void registerEncodedMemoryCache(CountingMemoryCache<?, ?, ?> encodedMemoryCache);
+  void registerEncodedMemoryCache(CountingMemoryCache<?, ?> encodedMemoryCache);
 }

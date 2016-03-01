@@ -14,7 +14,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link ForwardingDrawable}
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ForwardingDrawableTest {
   private Drawable mInnerDrawable;
   private FakeForwardingDrawable mDrawable;

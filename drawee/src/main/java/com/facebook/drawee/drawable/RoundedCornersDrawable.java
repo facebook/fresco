@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.drawable;
 
-import java.util.Arrays;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,10 +20,12 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 
+import java.util.Arrays;
+
 /**
  * Drawable that draws underlying drawable with rounded corners.
  */
-public class RoundedCornersDrawable extends ForwardingDrawable {
+public class RoundedCornersDrawable extends ForwardingDrawable implements Rounded {
 
   public enum Type {
     /**
@@ -43,13 +43,16 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
   }
 
   @VisibleForTesting Type mType = Type.OVERLAY_COLOR;
-  @VisibleForTesting final float[] mRadii = new float[8];
+  private final float[] mRadii = new float[8];
+  @VisibleForTesting final float[] mBorderRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-  @VisibleForTesting boolean mIsCircle = false;
-  @VisibleForTesting float mBorderWidth = 0;
-  @VisibleForTesting int mBorderColor = Color.TRANSPARENT;
-  @VisibleForTesting int mOverlayColor = Color.TRANSPARENT;
+  private boolean mIsCircle = false;
+  private float mBorderWidth = 0;
+  private int mBorderColor = Color.TRANSPARENT;
+  private int mOverlayColor = Color.TRANSPARENT;
+  private float mPadding = 0;
   private final Path mPath = new Path();
+  private final Path mBorderPath = new Path();
   private final RectF mTempRectangle = new RectF();
 
   /**
@@ -76,10 +79,17 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param isCircle whether or not to round as circle
    */
+  @Override
   public void setCircle(boolean isCircle) {
     mIsCircle = isCircle;
     updatePath();
     invalidateSelf();
+  }
+
+  /** Returns whether or not this drawable rounds as circle. */
+  @Override
+  public boolean isCircle() {
+    return mIsCircle;
   }
 
   /**
@@ -87,6 +97,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param radius corner radius in pixels
    */
+  @Override
   public void setRadius(float radius) {
     Arrays.fill(mRadii, radius);
     updatePath();
@@ -100,6 +111,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
    *
    * @param radii Array of 8 values, 4 pairs of [X,Y] radii
    */
+  @Override
   public void setRadii(float[] radii) {
     if (radii == null) {
       Arrays.fill(mRadii, 0);
@@ -109,6 +121,12 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
     }
     updatePath();
     invalidateSelf();
+  }
+
+  /** Gets the radii. */
+  @Override
+  public float[] getRadii() {
+    return mRadii;
   }
 
   /**
@@ -121,16 +139,47 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
     invalidateSelf();
   }
 
+  /** Gets the overlay color. */
+  public int getOverlayColor() {
+    return mOverlayColor;
+  }
+
   /**
    * Sets the border
    * @param color of the border
    * @param width of the border
    */
+  @Override
   public void setBorder(int color, float width) {
     mBorderColor = color;
     mBorderWidth = width;
     updatePath();
     invalidateSelf();
+  }
+
+  /** Gets the border color. */
+  @Override
+  public int getBorderColor() {
+    return mBorderColor;
+  }
+
+  /** Gets the border width. */
+  @Override
+  public float getBorderWidth() {
+    return mBorderWidth;
+  }
+
+  @Override
+  public void setPadding(float padding) {
+    mPadding = padding;
+    updatePath();
+    invalidateSelf();
+  }
+
+  /** Gets the padding. */
+  @Override
+  public float getPadding() {
+    return mPadding;
   }
 
   @Override
@@ -141,16 +190,31 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
 
   private void updatePath() {
     mPath.reset();
+    mBorderPath.reset();
     mTempRectangle.set(getBounds());
-    mTempRectangle.inset(mBorderWidth/2, mBorderWidth/2);
+
+    mTempRectangle.inset(mPadding, mPadding);
     if (mIsCircle) {
       mPath.addCircle(
-          mTempRectangle.centerX(),
-          mTempRectangle.centerY(),
-          Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
-          Path.Direction.CW);
+              mTempRectangle.centerX(),
+              mTempRectangle.centerY(),
+              Math.min(mTempRectangle.width(), mTempRectangle.height())/2,
+              Path.Direction.CW);
     } else {
       mPath.addRoundRect(mTempRectangle, mRadii, Path.Direction.CW);
+    }
+    mTempRectangle.inset(-mPadding, -mPadding);
+
+    mTempRectangle.inset(mBorderWidth/2, mBorderWidth/2);
+    if (mIsCircle) {
+      float radius = Math.min(mTempRectangle.width(), mTempRectangle.height())/2;
+      mBorderPath.addCircle(
+          mTempRectangle.centerX(), mTempRectangle.centerY(), radius, Path.Direction.CW);
+    } else {
+      for (int i = 0; i < mBorderRadii.length; i++) {
+        mBorderRadii[i] = mRadii[i] + mPadding - mBorderWidth/2;
+      }
+      mBorderPath.addRoundRect(mTempRectangle, mBorderRadii, Path.Direction.CW);
     }
     mTempRectangle.inset(-mBorderWidth/2, -mBorderWidth/2);
   }
@@ -160,8 +224,8 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
     Rect bounds = getBounds();
     switch (mType) {
       case CLIPPING:
-        // clip, note: doesn't support anti-aliasing
         int saveCount = canvas.save();
+        // clip, note: doesn't support anti-aliasing
         mPath.setFillType(Path.FillType.EVEN_ODD);
         canvas.clipPath(mPath);
         super.draw(canvas);
@@ -206,7 +270,7 @@ public class RoundedCornersDrawable extends ForwardingDrawable {
       mPaint.setColor(mBorderColor);
       mPaint.setStrokeWidth(mBorderWidth);
       mPath.setFillType(Path.FillType.EVEN_ODD);
-      canvas.drawPath(mPath, mPaint);
+      canvas.drawPath(mBorderPath, mPaint);
     }
   }
 }

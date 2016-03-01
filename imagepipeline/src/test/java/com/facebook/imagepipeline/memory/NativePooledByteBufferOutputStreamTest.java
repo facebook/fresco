@@ -13,19 +13,19 @@ import java.util.Arrays;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
-import com.google.common.collect.ImmutableMap;
+import com.facebook.common.internal.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for NativePooledByteBufferOutputStream
  */
-@RunWith(WithTestDefaultsRunner.class)
-public class NativePooledByteBufferOutputStreamTest {
+@RunWith(RobolectricTestRunner.class)
+public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemoryChunk {
   private NativeMemoryChunkPool mPool;
   private byte[] mData;
   private PoolStats<byte[]> mStats;

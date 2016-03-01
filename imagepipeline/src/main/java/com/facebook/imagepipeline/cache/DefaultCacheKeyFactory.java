@@ -12,12 +12,15 @@ package com.facebook.imagepipeline.cache;
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.Postprocessor;
 
 /**
  * Default implementation of {@link CacheKeyFactory}.
  */
 public class DefaultCacheKeyFactory implements CacheKeyFactory {
+
   private static DefaultCacheKeyFactory sInstance = null;
 
   protected DefaultCacheKeyFactory() {
@@ -31,17 +34,40 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public BitmapMemoryCacheKey getBitmapCacheKey(ImageRequest request) {
+  public CacheKey getBitmapCacheKey(ImageRequest request) {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
         request.getAutoRotateEnabled(),
-        request.getImageDecodeOptions());
+        request.getImageDecodeOptions(),
+        null,
+        null);
+  }
+
+  @Override
+  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request) {
+    final Postprocessor postprocessor = request.getPostprocessor();
+    final CacheKey postprocessorCacheKey;
+    final String postprocessorName;
+    if (postprocessor != null) {
+      postprocessorCacheKey = postprocessor.getPostprocessorCacheKey();
+      postprocessorName = postprocessor.getClass().getName();
+    } else {
+      postprocessorCacheKey = null;
+      postprocessorName = null;
+    }
+    return new BitmapMemoryCacheKey(
+        getCacheKeySourceUri(request.getSourceUri()).toString(),
+        request.getResizeOptions(),
+        request.getAutoRotateEnabled(),
+        request.getImageDecodeOptions(),
+        postprocessorCacheKey,
+        postprocessorName);
   }
 
   @Override
   public CacheKey getEncodedCacheKey(ImageRequest request) {
-    return new CacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
+    return new SimpleCacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
   }
 
   @Override

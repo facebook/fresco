@@ -15,18 +15,20 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-import static org.mockito.Mockito.*;
-
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ScaleTypeDrawableTest {
   private Drawable mUnderlyingDrawable = mock(Drawable.class);
   private PointF mFocusPoint = new PointF(0.1f, 0.4f);

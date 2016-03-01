@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
@@ -145,6 +146,16 @@ public class TestAnimatedDrawableBackend implements AnimatedDrawableBackend {
   @Override
   public int getMemoryUsage() {
     return 0;
+  }
+
+  @Override
+  public CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
+    return null;
+  }
+
+  @Override
+  public boolean hasPreDecodedFrame(int frameNumber) {
+    return false;
   }
 
   public int getDropCachesCallCount() {

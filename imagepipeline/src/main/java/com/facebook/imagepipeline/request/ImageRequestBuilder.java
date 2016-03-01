@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.request;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
 
 import com.facebook.common.internal.Preconditions;
@@ -18,6 +16,8 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+
+import javax.annotation.Nullable;
 
 import static com.facebook.imagepipeline.request.ImageRequest.ImageType;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
@@ -45,6 +45,49 @@ public class ImageRequestBuilder {
    */
   public static ImageRequestBuilder newBuilderWithSource(Uri uri) {
     return new ImageRequestBuilder().setSource(uri);
+  }
+
+  /**
+   * Creates a new request builder instance for a local resource image.
+   *
+   * <p>Only image resources can be used with the image pipeline (PNG, JPG, GIF). Other resource
+   * types such as Strings or XML Drawables make no sense in the context of the image pipeline and
+   * so cannot be supported. Attempts to do so will throw an
+   * {@link java.lang.IllegalArgumentException} when the pipeline tries to decode the resource.
+   *
+   * <p>One potentially confusing case is drawable declared in XML (e.g. ShapeDrawable). This is not
+   * an image. If you want to display an XML drawable as the main image, then set it as a
+   * placeholder and do not set a URI.
+   * <p/>
+   *
+   * @param resId local image resource id.
+   * @return a new request builder instance.
+   */
+  public static ImageRequestBuilder newBuilderWithResourceId(int resId) {
+    Uri uri = new Uri.Builder()
+        .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
+        .path(String.valueOf(resId))
+        .build();
+
+    return newBuilderWithSource(uri);
+  }
+
+  /**
+   * Creates a new request builder instance with the same parameters as the imageRequest passed in.
+   * @param imageRequest the ImageRequest from where to copy the parameters to the builder.
+   * @return a new request builder instance
+   */
+  public static ImageRequestBuilder fromRequest(ImageRequest imageRequest) {
+    return ImageRequestBuilder.newBuilderWithSource(imageRequest.getSourceUri())
+        .setAutoRotateEnabled(imageRequest.getAutoRotateEnabled())
+        .setImageDecodeOptions(imageRequest.getImageDecodeOptions())
+        .setImageType(imageRequest.getImageType())
+        .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
+        .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
+        .setPostprocessor(imageRequest.getPostprocessor())
+        .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
+        .setRequestPriority(imageRequest.getPriority())
+        .setResizeOptions(imageRequest.getResizeOptions());
   }
 
   private ImageRequestBuilder() {

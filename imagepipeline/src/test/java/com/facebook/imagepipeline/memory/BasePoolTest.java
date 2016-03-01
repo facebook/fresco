@@ -13,10 +13,10 @@ import android.util.SparseIntArray;
 
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.memory.BasePool.PoolSizeViolationException;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Tests for BasePool
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class BasePoolTest {
   private TestPool mPool;
   private PoolStats<byte[]> mStats;
@@ -325,36 +325,6 @@ public class BasePoolTest {
     Assert.assertEquals(2, mStats.mUsedBytes);
     Assert.assertEquals(0, mStats.mFreeCount);
     Assert.assertEquals(1, mStats.mUsedCount);
-  }
-
-  // Test 'taking-over' a value
-  @Test
-  public void testTakeOver() throws Exception {
-    // allocate a buffer outside the pool
-    byte[] b2 = new byte[2];
-    Assert.assertTrue(mPool.takeOver(b2));
-    // verify stats
-    mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(1, 0)),
-        mStats.mBucketStats);
-    Assert.assertEquals(0, mStats.mFreeBytes);
-    Assert.assertEquals(2, mStats.mUsedBytes);
-    Assert.assertEquals(0, mStats.mFreeCount);
-    Assert.assertEquals(1, mStats.mUsedCount);
-
-    // try to take it over again. Nothing should change
-    Assert.assertTrue(mPool.takeOver(b2));
-    mStats.refresh();
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(1, 0)),
-        mStats.mBucketStats);
-
-    byte[] b3 = new byte[14];
-    Assert.assertFalse(mPool.takeOver(b3));
-    Assert.assertEquals(
-        ImmutableMap.of(2, new IntPair(1, 0)),
-        mStats.mBucketStats);
   }
 
   // test out release with non reusable values

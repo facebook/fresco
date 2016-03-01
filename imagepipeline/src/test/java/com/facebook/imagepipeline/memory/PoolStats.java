@@ -9,9 +9,8 @@
 
 package com.facebook.imagepipeline.memory;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Helper class to get pool stats
@@ -28,7 +27,7 @@ public class PoolStats<V> {
 
   public PoolStats(BasePool<V> pool) {
     mPool = pool;
-    mBucketStats = Maps.newHashMap();
+    mBucketStats = new HashMap<>();
   }
 
   public void setPool(BasePool<V> pool) {
@@ -55,7 +54,7 @@ public class PoolStats<V> {
     for (int i = 0; i < mPool.mBuckets.size(); ++i) {
       final int bucketedSize = mPool.mBuckets.keyAt(i);
       final Bucket<V> bucket = mPool.mBuckets.valueAt(i);
-      mBucketStats.put(bucketedSize, new IntPair(bucket.mInUseLength, bucket.mFreeList.size()));
+      mBucketStats.put(bucketedSize, new IntPair(bucket.getInUseCount(), bucket.getFreeListSize()));
     }
   }
 }

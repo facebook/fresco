@@ -11,6 +11,8 @@ package com.facebook.imagepipeline.common;
 
 import javax.annotation.concurrent.Immutable;
 
+import java.util.Locale;
+
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
  */
@@ -44,12 +46,20 @@ public class ImageDecodeOptions {
    */
   public final boolean useLastFrameForPreview;
 
+  /**
+   * Whether to decode all the frames and store them in memory. This should only ever be used
+   * for animations that are known to be small (e.g. stickers). Caching dozens of large Bitmaps
+   * in memory for general GIFs or WebP's will not fit in memory.
+   */
+  public final boolean decodeAllFrames;
+
   ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.backgroundColor = b.getBackgroundColor();
     this.forceOldAnimationCode = b.getForceOldAnimationCode();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
+    this.decodeAllFrames = b.getDecodeAllFrames();
   }
 
   /**
@@ -81,6 +91,7 @@ public class ImageDecodeOptions {
     if (forceOldAnimationCode != that.forceOldAnimationCode) return false;
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
+    if (decodeAllFrames != that.decodeAllFrames) return false;
 
     return true;
   }
@@ -90,5 +101,18 @@ public class ImageDecodeOptions {
     int result = backgroundColor;
     result = 31 * result + (forceOldAnimationCode ? 1 : 0);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return String.format(
+        (Locale) null,
+        "%d-%d-%b-%b-%b-%b",
+        minDecodeIntervalMs,
+        backgroundColor,
+        forceOldAnimationCode,
+        decodePreviewFrame,
+        useLastFrameForPreview,
+        decodeAllFrames);
   }
 }

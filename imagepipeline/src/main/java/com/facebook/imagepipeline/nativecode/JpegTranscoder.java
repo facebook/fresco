@@ -15,7 +15,6 @@ import java.io.OutputStream;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imagepipeline.nativecode.ImagePipelineNativeLoader;
 
 /**
  * Helper methods for modifying jpeg images.

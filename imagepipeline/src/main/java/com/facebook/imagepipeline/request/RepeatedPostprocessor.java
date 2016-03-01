@@ -12,8 +12,6 @@ package com.facebook.imagepipeline.request;
 /**
  * Use an instance of this interface to perform post-process operations that must be performed
  * more than once.
- *
- * <p>Postprocessors are not supported on Gingerbread and below.
  */
 public interface RepeatedPostprocessor extends Postprocessor {
 

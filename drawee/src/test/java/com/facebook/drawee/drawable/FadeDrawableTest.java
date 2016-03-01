@@ -12,8 +12,7 @@ package com.facebook.drawee.drawable;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.common.testing.FakeClock;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +22,7 @@ import org.mockito.InOrder;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class FadeDrawableTest {
   private Drawable[] mLayers = new Drawable[] {
       DrawableTestUtils.mockDrawable(),
@@ -31,15 +30,13 @@ public class FadeDrawableTest {
       DrawableTestUtils.mockDrawable(),
   };
 
-  private FakeClock mFakeClock;
-  private FadeDrawable mFadeDrawable;
+  private FakeFadeDrawable mFadeDrawable;
   private Canvas mCanvas = mock(Canvas.class);
   private Drawable.Callback mCallback = mock(Drawable.Callback.class);
 
   @Before
   public void setUp() {
-    mFakeClock = new FakeClock();
-    mFadeDrawable = new FakeFadeDrawable(mFakeClock, mLayers);
+    mFadeDrawable = new FakeFadeDrawable(mLayers);
     mFadeDrawable.setCallback(mCallback);
   }
 
@@ -258,7 +255,7 @@ public class FadeDrawableTest {
     // intermediate frames
     for (int i = 1; i < 5; i++) {
       resetInteractions();
-      mFakeClock.incrementBy(17);
+      mFadeDrawable.incrementCurrentTimeMs(17);
       mFadeDrawable.draw(mCanvas);
       Assert.assertEquals(fadeUpToLayer ? 255 : 255 - 51 * i, mFadeDrawable.mAlphas[0]);
       Assert.assertEquals(51 * i, mFadeDrawable.mAlphas[1]);
@@ -282,7 +279,7 @@ public class FadeDrawableTest {
 
     // last frame
     resetInteractions();
-    mFakeClock.incrementBy(17);
+    mFadeDrawable.incrementCurrentTimeMs(17);
     mFadeDrawable.draw(mCanvas);
     Assert.assertEquals(fadeUpToLayer ? 255 : 0, mFadeDrawable.mAlphas[0]);
     Assert.assertEquals(255, mFadeDrawable.mAlphas[1]);
@@ -317,7 +314,7 @@ public class FadeDrawableTest {
     Assert.assertEquals(128, mFadeDrawable.getAlpha());
     inOrder.verify(mCallback).invalidateDrawable(mFadeDrawable);
     // next frame
-    mFakeClock.incrementBy(17);
+    mFadeDrawable.incrementCurrentTimeMs(17);
     mFadeDrawable.draw(mCanvas);
     Assert.assertEquals(128, mFadeDrawable.getAlpha());
     Assert.assertEquals(255, mFadeDrawable.mAlphas[0]);
@@ -334,7 +331,7 @@ public class FadeDrawableTest {
     inOrder.verifyNoMoreInteractions();
 
     // make sure the fade has finished, and verify that after that we don't invalidate
-    mFakeClock.incrementBy(1000);
+    mFadeDrawable.incrementCurrentTimeMs(1000);
     mFadeDrawable.draw(mCanvas);
     inOrder.verify(mCallback, never()).invalidateDrawable(mFadeDrawable);
   }
@@ -395,20 +392,22 @@ public class FadeDrawableTest {
     Assert.assertEquals(false, mFadeDrawable.mIsLayerOn[2]);
   }
 
-  private class FakeFadeDrawable extends FadeDrawable {
+  private static class FakeFadeDrawable extends FadeDrawable {
 
-    private final FakeClock mFakeClock;
+    private long mCurrentTimeMs;
 
-    public FakeFadeDrawable(FakeClock fakeClock, Drawable[] layers) {
+    public FakeFadeDrawable(Drawable[] layers) {
       super(layers);
-      mFakeClock = fakeClock;
+      mCurrentTimeMs = 0;
     }
 
     @Override
     protected long getCurrentTimeMs() {
-      return mFakeClock.now();
+      return mCurrentTimeMs;
     }
 
+    void incrementCurrentTimeMs(long increment) {
+      mCurrentTimeMs += increment;
+    }
   }
-
 }

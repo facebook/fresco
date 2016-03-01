@@ -9,8 +9,13 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import javax.annotation.Nullable;
+
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+
+import com.facebook.common.references.CloseableReference;
 
 /**
  * Interface that {@link AnimatedDrawable} uses that abstracts out the image format.
@@ -140,7 +145,26 @@ public interface AnimatedDrawableBackend {
   int getMemoryUsage();
 
   /**
-   * Instructs the backend to drop its caches.
+   * Gets a pre-decoded frame. This will only return non-null if the {@code ImageDecodeOptions}
+   * were configured to decode all frames at decode time.
+   *
+   * @param frameNumber the index of the frame to get
+   * @return a reference to the preview bitmap which must be released by the caller when done or
+   *     null if there is no preview bitmap set
    */
+  @Nullable CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber);
+
+  /**
+   * Gets whether it has the decoded frame. This will only return true if the
+   * {@code ImageDecodeOptions} were configured to decode all frames at decode time.
+   *
+   * @param frameNumber the index of the frame to get
+   * @return true if the result has the decoded frame
+   */
+  boolean hasPreDecodedFrame(int frameNumber);
+
+    /**
+     * Instructs the backend to drop its caches.
+     */
   void dropCaches();
 }

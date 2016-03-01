@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.memory;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import com.facebook.common.internal.Preconditions;

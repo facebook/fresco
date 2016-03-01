@@ -33,7 +33,6 @@ public class NativeMemoryChunk implements Closeable {
   private static final String TAG = "NativeMemoryChunk";
 
   static {
-    SoLoaderShim.loadLibrary("gnustl_shared");
     SoLoaderShim.loadLibrary("memchunk");
   }
 

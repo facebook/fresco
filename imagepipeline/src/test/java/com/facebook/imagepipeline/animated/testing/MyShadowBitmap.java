@@ -11,9 +11,10 @@ package com.facebook.imagepipeline.animated.testing;
 
 import android.graphics.Bitmap;
 
-import org.robolectric.Robolectric;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
+import org.robolectric.internal.Shadow;
+import org.robolectric.internal.ShadowExtractor;
 
 /**
  * A shadow of {@link Bitmap} that works with the tests in this package.
@@ -37,8 +38,8 @@ public class MyShadowBitmap {
 
   @Implementation
   public static Bitmap createBitmap(int width, int height, Bitmap.Config config) {
-    Bitmap bitmap = Robolectric.newInstanceOf(Bitmap.class);
-    MyShadowBitmap shadowBitmap = Robolectric.shadowOf_(bitmap);
+    Bitmap bitmap = Shadow.newInstanceOf(Bitmap.class);
+    MyShadowBitmap shadowBitmap = (MyShadowBitmap) ShadowExtractor.extract(bitmap);
     shadowBitmap.width = width;
     shadowBitmap.height = height;
     shadowBitmap.mPixels = new int[width * height];
@@ -47,8 +48,8 @@ public class MyShadowBitmap {
 
   @Implementation
   public static Bitmap createBitmap(int colors[], int width, int height, Bitmap.Config config) {
-    Bitmap bitmap = Robolectric.newInstanceOf(Bitmap.class);
-    MyShadowBitmap shadowBitmap = Robolectric.shadowOf_(bitmap);
+    Bitmap bitmap = Shadow.newInstanceOf(Bitmap.class);
+    MyShadowBitmap shadowBitmap = (MyShadowBitmap) ShadowExtractor.extract(bitmap);
     shadowBitmap.width = width;
     shadowBitmap.height = height;
     shadowBitmap.mPixels = new int[width * height];

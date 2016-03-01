@@ -16,28 +16,22 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 public class EncodedCountingMemoryCacheFactory {
 
-  public static CountingMemoryCache<CacheKey, PooledByteBuffer, Void> get(
+  public static CountingMemoryCache<CacheKey, PooledByteBuffer> get(
       Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry) {
-    MemoryCacheIndex<CacheKey, PooledByteBuffer, Void> memoryCacheIndex =
-        new SimpleMemoryCacheIndex<CacheKey, PooledByteBuffer>();
 
-    CountingMemoryCache.ValueInfoCallback<PooledByteBuffer> valueTypeDescriptor =
-        new CountingMemoryCache.ValueInfoCallback<PooledByteBuffer>() {
+    ValueDescriptor<PooledByteBuffer> valueDescriptor =
+        new ValueDescriptor<PooledByteBuffer>() {
           @Override
-          public long getSizeInBytes(PooledByteBuffer value) {
+          public int getSizeInBytes(PooledByteBuffer value) {
             return value.size();
           }
         };
 
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
 
-    CountingMemoryCache<CacheKey, PooledByteBuffer, Void> countingCache =
-        new CountingMemoryCache<CacheKey, PooledByteBuffer, Void>(
-            memoryCacheIndex,
-            valueTypeDescriptor,
-            trimStrategy,
-            encodedMemoryCacheParamsSupplier);
+    CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
+        new CountingMemoryCache<>(valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

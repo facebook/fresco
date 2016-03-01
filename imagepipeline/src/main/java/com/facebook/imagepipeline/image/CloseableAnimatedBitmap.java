@@ -12,14 +12,15 @@ package com.facebook.imagepipeline.image;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * CloseableImage that contains array of Bitmaps and frame durations.
@@ -40,8 +41,8 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
       List<Integer> durations) {
     Preconditions.checkNotNull(bitmapReferences);
     Preconditions.checkState(bitmapReferences.size() >= 1, "Need at least 1 frame!");
-    mBitmapReferences = Lists.newArrayList();
-    mBitmaps = Lists.newArrayList();
+    mBitmapReferences = new ArrayList<>();
+    mBitmaps = new ArrayList<>();
     for (CloseableReference<Bitmap> bitmapReference : bitmapReferences) {
       mBitmapReferences.add(bitmapReference.clone());
       mBitmaps.add(bitmapReference.get());
@@ -52,6 +53,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Creates a new instance of a CloseableStaticBitmap.
+   *
    * @param bitmaps the bitmap frames. This list must be immutable.
    * @param durations the frame durations, This list must be immutable.
    * @param resourceReleaser ResourceReleaser to release the bitmaps to
@@ -62,8 +64,8 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
       ResourceReleaser<Bitmap> resourceReleaser) {
     Preconditions.checkNotNull(bitmaps);
     Preconditions.checkState(bitmaps.size() >= 1, "Need at least 1 frame!");
-    mBitmaps = Lists.newArrayList();
-    mBitmapReferences = Lists.newArrayList();
+    mBitmaps = new ArrayList<>();
+    mBitmapReferences = new ArrayList<>();
     for (Bitmap bitmap : bitmaps) {
       mBitmapReferences.add(CloseableReference.of(bitmap, resourceReleaser));
       mBitmaps.add(bitmap);
@@ -100,6 +102,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Gets the bitmap frames.
+   *
    * @return bitmap frames
    */
   public List<Bitmap> getBitmaps() {
@@ -108,6 +111,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Gets the frame durations.
+   *
    * @return frame durations
    */
   public List<Integer> getDurations() {
@@ -116,6 +120,7 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
 
   /**
    * Gets the first frame.
+   *
    * @return the first frame
    */
   @Override
@@ -130,10 +135,10 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
   @Override
   public int getSizeInBytes() {
     List<Bitmap> bitmaps = mBitmaps;
-    if (bitmaps == null) {
+    if (bitmaps == null || bitmaps.size() == 0) {
       return 0;
     } else {
-      return bitmaps.get(0).getHeight() * bitmaps.get(0).getRowBytes() * bitmaps.size();
+      return BitmapUtil.getSizeInBytes(bitmaps.get(0)) * bitmaps.size();
     }
   }
 

@@ -11,9 +11,9 @@ package com.facebook.common.references;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
@@ -101,7 +101,7 @@ public class SharedReference<T> {
   // SharedReference first disposes of it. Note, this does not prevent CloseableReference's from
   // being finalized when the reference is no longer reachable.
   @GuardedBy("itself")
-  private static final Map<Object, Integer> sLiveObjects = Maps.newIdentityHashMap();
+  private static final Map<Object, Integer> sLiveObjects = new IdentityHashMap<>();
 
   @GuardedBy("this")
   private T mValue;

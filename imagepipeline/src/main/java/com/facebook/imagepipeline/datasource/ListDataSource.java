@@ -13,10 +13,10 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 
 import com.facebook.common.executors.CallerThreadExecutor;
-import com.facebook.common.internal.Lists;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.AbstractDataSource;
@@ -32,7 +32,7 @@ import com.facebook.datasource.DataSubscriber;
  *
  * @param <T>
  */
-public class ListDataSource<T> extends AbstractDataSource<ArrayList<CloseableReference<T>>> {
+public class ListDataSource<T> extends AbstractDataSource<List<CloseableReference<T>>> {
   private final DataSource<CloseableReference<T>>[] mDataSources;
   @GuardedBy("this")
   private int mFinishedDataSources;
@@ -48,20 +48,22 @@ public class ListDataSource<T> extends AbstractDataSource<ArrayList<CloseableRef
     Preconditions.checkState(dataSources.length > 0);
     ListDataSource<T> listDataSource = new ListDataSource<T>(dataSources);
     for (DataSource<CloseableReference<T>> dataSource : dataSources) {
-      dataSource.subscribe(
-          listDataSource.new InternalDataSubscriber(),
-          CallerThreadExecutor.getInstance());
+      if (dataSource != null) {
+        dataSource.subscribe(
+            listDataSource.new InternalDataSubscriber(),
+            CallerThreadExecutor.getInstance());
+      }
     }
     return listDataSource;
   }
 
   @Override
   @Nullable
-  public synchronized ArrayList<CloseableReference<T>> getResult() {
+  public synchronized List<CloseableReference<T>> getResult() {
     if (!hasResult()) {
       return null;
     }
-    ArrayList<CloseableReference<T>> results = Lists.newArrayListWithCapacity(mDataSources.length);
+    List<CloseableReference<T>> results = new ArrayList<>(mDataSources.length);
     for (DataSource<CloseableReference<T>> dataSource : mDataSources) {
       results.add(dataSource.getResult());
     }

@@ -15,7 +15,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ArrayDrawableTest {
   private Drawable mUnderlyingDrawable0;
   private Drawable mUnderlyingDrawable1;
@@ -48,7 +48,9 @@ public class ArrayDrawableTest {
     when(mUnderlyingDrawable2.mutate()).thenReturn(mUnderlyingDrawable2);
     mArrayDrawable = new ArrayDrawable(new Drawable[] {
         mUnderlyingDrawable0,
+        null,
         mUnderlyingDrawable1,
+        null,
         mUnderlyingDrawable2
     });
   }
@@ -68,8 +70,10 @@ public class ArrayDrawableTest {
   @Test
   public void testGetDrawable() {
     Assert.assertEquals(mUnderlyingDrawable0, mArrayDrawable.getDrawable(0));
-    Assert.assertEquals(mUnderlyingDrawable1, mArrayDrawable.getDrawable(1));
-    Assert.assertEquals(mUnderlyingDrawable2, mArrayDrawable.getDrawable(2));
+    Assert.assertEquals(null, mArrayDrawable.getDrawable(1));
+    Assert.assertEquals(mUnderlyingDrawable1, mArrayDrawable.getDrawable(2));
+    Assert.assertEquals(null, mArrayDrawable.getDrawable(3));
+    Assert.assertEquals(mUnderlyingDrawable2, mArrayDrawable.getDrawable(4));
   }
 
   @Test
@@ -152,8 +156,8 @@ public class ArrayDrawableTest {
   @Test
   public void testSetDrawableNonMutated() {
     Drawable newDrawable = mock(Drawable.class);
-    mArrayDrawable.setDrawable(1, newDrawable);
-    assertSame(newDrawable, mArrayDrawable.getDrawable(1));
+    mArrayDrawable.setDrawable(2, newDrawable);
+    assertSame(newDrawable, mArrayDrawable.getDrawable(2));
     verify(mUnderlyingDrawable1).setCallback(isNull(Drawable.Callback.class));
     verify(newDrawable).setCallback(eq(mArrayDrawable));
     verify(newDrawable, never()).mutate();
@@ -161,13 +165,23 @@ public class ArrayDrawableTest {
 
   @Test
   public void testSetDrawableMutated() {
+    mArrayDrawable.setDrawable(2, null);
+
+    int level = 10;
+    int[] state = new int[]{1, 2, 3};
     BitmapDrawable newDrawable = mock(BitmapDrawable.class);
     when(newDrawable.mutate()).thenReturn(newDrawable);
     Rect rect = new Rect(1, 2, 3, 4);
-    when(mUnderlyingDrawable1.getBounds()).thenReturn(rect);
+    mArrayDrawable.setBounds(rect);
+    mArrayDrawable.setVisible(true, false);
+    mArrayDrawable.setLevel(level);
+    mArrayDrawable.setState(state);
     mArrayDrawable = (ArrayDrawable) mArrayDrawable.mutate();
-    mArrayDrawable.setDrawable(1, newDrawable);
+    mArrayDrawable.setDrawable(2, newDrawable);
     verify(newDrawable).setBounds(eq(rect));
+    verify(newDrawable).setVisible(true, false);
+    verify(newDrawable).setLevel(level);
+    verify(newDrawable).setState(state);
     verify(mUnderlyingDrawable1).setCallback(isNull(Drawable.Callback.class));
     verify(newDrawable).setCallback(eq(mArrayDrawable));
     verify(newDrawable).mutate();

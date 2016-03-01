@@ -12,7 +12,7 @@ package com.facebook.common.references;
 import java.io.Closeable;
 import java.io.IOException;
 
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +23,7 @@ import org.mockito.Mockito;
 /**
  * Basic tests for shared references
  */
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class CloseableReferenceTest {
 
   private Closeable mMockCloseable;

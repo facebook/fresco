@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-@RunWith(WithTestDefaultsRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class PooledByteArrayBufferedInputStreamTest {
 
   private ResourceReleaser mResourceReleaser;

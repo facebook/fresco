@@ -12,9 +12,7 @@
 #include "exceptions.h"
 #include "java_globals.h"
 #include "logging.h"
-#include "Bitmaps.h"
 #include "JpegTranscoder.h"
-#include "WebpTranscoder.h"
 
 jmethodID midInputStreamRead;
 jmethodID midInputStreamSkip;
@@ -32,6 +30,7 @@ jclass jRuntimeException_class;
  *
  * <p> In case of method registration failure a RuntimeException is thrown.
  */
+__attribute__((visibility("default")))
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   JNIEnv* env;
 
@@ -81,16 +80,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
   // register native methods
   THROW_AND_RETURNVAL_IF(
-      !registerBitmapsMethods(env),
-      "Could not register Bitmaps methods",
-      -1);
-  THROW_AND_RETURNVAL_IF(
       !registerJpegTranscoderMethods(env),
       "Could not register JpegTranscoder methods",
-      -1);
-  THROW_AND_RETURNVAL_IF(
-      !registerWebpTranscoderMethods(env),
-      "Could not register WebpTranscoderMethods",
       -1);
 
   return JNI_VERSION_1_6;

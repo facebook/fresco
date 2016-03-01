@@ -35,6 +35,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
@@ -66,9 +67,9 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
   private final AnimatedDrawableOptions mAnimatedDrawableOptions;
   private final AnimatedImageCompositor mAnimatedImageCompositor;
   private final ResourceReleaser<Bitmap> mResourceReleaserForBitmaps;
-  private final int mMaximumBytes;
+  private final double mMaximumKiloBytes;
 
-  private final int mApproxBytesToHoldAllFrames;
+  private final double mApproxKiloBytesToHoldAllFrames;
 
   @GuardedBy("this")
   private final List<Bitmap> mFreeBitmaps;
@@ -99,8 +100,9 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     mMonotonicClock = monotonicClock;
     mAnimatedDrawableBackend = animatedDrawableBackend;
     mAnimatedDrawableOptions = options;
-    mMaximumBytes = options.maximumBytes >= 0 ?
-        options.maximumBytes : getDefaultMaxBytes(activityManager);
+    mMaximumKiloBytes = options.maximumBytes >= 0 ?
+        options.maximumBytes / ByteConstants.KB:
+        getDefaultMaxBytes(activityManager)/ ByteConstants.KB;
     mAnimatedImageCompositor = new AnimatedImageCompositor(
         animatedDrawableBackend,
         new AnimatedImageCompositor.Callback() {
@@ -111,9 +113,7 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
 
           @Override
           public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
-            synchronized (AnimatedDrawableCachingBackendImpl.this) {
-              return CloseableReference.cloneOrNull(mCachedBitmaps.get(frameNumber));
-            }
+            return getCachedOrPredecodedFrame(frameNumber);
           }
         });
     mResourceReleaserForBitmaps = new ResourceReleaser<Bitmap>() {
@@ -126,10 +126,10 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     mDecodesInFlight = new SparseArrayCompat<Task<Object>>(10);
     mCachedBitmaps = new SparseArrayCompat<CloseableReference<Bitmap>>(10);
     mBitmapsToKeepCached = new WhatToKeepCachedArray(mAnimatedDrawableBackend.getFrameCount());
-    mApproxBytesToHoldAllFrames =
-        mAnimatedDrawableBackend.getFrameCount() *
-            mAnimatedDrawableBackend.getRenderedWidth() *
-            mAnimatedDrawableBackend.getRenderedHeight() * 4;
+    mApproxKiloBytesToHoldAllFrames =
+        mAnimatedDrawableBackend.getRenderedWidth() *
+        mAnimatedDrawableBackend.getRenderedHeight() / ByteConstants.KB *
+        mAnimatedDrawableBackend.getFrameCount() * 4;
   }
 
   @Override
@@ -228,12 +228,12 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     if (mAnimatedDrawableOptions.forceKeepAllFramesInMemory) {
       sb.append("Pinned To Memory");
     } else {
-      if (mApproxBytesToHoldAllFrames < mMaximumBytes) {
+      if (mApproxKiloBytesToHoldAllFrames < mMaximumKiloBytes) {
         sb.append("within ");
       } else {
         sb.append("exceeds ");
       }
-      mAnimatedDrawableUtil.appendMemoryString(sb, mMaximumBytes);
+      mAnimatedDrawableUtil.appendMemoryString(sb, (int) mMaximumKiloBytes);
     }
     if (shouldKeepAllFramesInMemory() && mAnimatedDrawableOptions.allowPrefetching) {
       sb.append(" MT");
@@ -249,8 +249,7 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
     try {
       synchronized (this) {
         mBitmapsToKeepCached.set(frameNumber, true);
-        CloseableReference<Bitmap> bitmapReference =
-            CloseableReference.cloneOrNull(mCachedBitmaps.get(frameNumber));
+        CloseableReference<Bitmap> bitmapReference = getCachedOrPredecodedFrame(frameNumber);
         if (bitmapReference != null) {
           return bitmapReference;
         }
@@ -397,15 +396,15 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
       // This overrides everything.
       return true;
     }
-    return mApproxBytesToHoldAllFrames < mMaximumBytes;
+    return mApproxKiloBytesToHoldAllFrames < mMaximumKiloBytes;
   }
 
   private synchronized void doPrefetch(int startFrame, int count) {
     for (int i = 0; i < count; i++) {
       final int frameNumber = (startFrame + i) % mAnimatedDrawableBackend.getFrameCount();
-      CloseableReference<Bitmap> bitmapReference = mCachedBitmaps.get(frameNumber);
+      boolean hasCached = hasCachedOrPredecodedFrame(frameNumber);
       Task<Object> future = mDecodesInFlight.get(frameNumber);
-      if (bitmapReference == null && future == null) {
+      if (!hasCached && future == null) {
         final Task<Object> newFuture = Task.call(
             new Callable<Object>() {
               @Override
@@ -438,19 +437,29 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
         // Looks like we're no longer supposed to keep this cached.
         return;
       }
-      if (mCachedBitmaps.get(frameNumber) != null) {
+      if (hasCachedOrPredecodedFrame(frameNumber)) {
         // Looks like it's already cached.
         return;
       }
     }
 
-    CloseableReference<Bitmap> bitmapReference = obtainBitmapInternal();
+    CloseableReference<Bitmap> preDecodedFrame =
+        mAnimatedDrawableBackend.getPreDecodedFrame(frameNumber);
     try {
-      mAnimatedImageCompositor.renderFrame(frameNumber, bitmapReference.get());
-      maybeCacheRenderedBitmap(frameNumber, bitmapReference);
-      FLog.v(TAG, "Prefetch rendered frame %d", frameNumber);
+      if (preDecodedFrame != null) {
+        maybeCacheRenderedBitmap(frameNumber, preDecodedFrame);
+      } else {
+        CloseableReference<Bitmap> bitmapReference = obtainBitmapInternal();
+        try {
+          mAnimatedImageCompositor.renderFrame(frameNumber, bitmapReference.get());
+          maybeCacheRenderedBitmap(frameNumber, bitmapReference);
+          FLog.v(TAG, "Prefetch rendered frame %d", frameNumber);
+        } finally {
+          bitmapReference.close();
+        }
+      }
     } finally {
-      bitmapReference.close();
+      CloseableReference.closeSafely(preDecodedFrame);
     }
   }
 
@@ -511,6 +520,20 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
       mCachedBitmaps.removeAt(existingIndex);
     }
     mCachedBitmaps.put(frameNumber, bitmapReference.clone());
+  }
+
+  private synchronized CloseableReference<Bitmap> getCachedOrPredecodedFrame(int frameNumber) {
+    CloseableReference<Bitmap> ret =
+        CloseableReference.cloneOrNull(mCachedBitmaps.get(frameNumber));
+    if (ret == null) {
+      ret = mAnimatedDrawableBackend.getPreDecodedFrame(frameNumber);
+    }
+    return ret;
+  }
+
+  private synchronized boolean hasCachedOrPredecodedFrame(int frameNumber) {
+    return mCachedBitmaps.get(frameNumber) != null ||
+        mAnimatedDrawableBackend.hasPreDecodedFrame(frameNumber);
   }
 
   @VisibleForTesting

@@ -9,22 +9,29 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import android.graphics.Rect;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Pair;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
-import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
+import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 
 /**
@@ -33,25 +40,27 @@ import com.facebook.imageutils.JfifUtil;
  * <p>At present, these thumbnails are retrieved on the java heap before being put into native
  * memory.
  */
-public class LocalExifThumbnailProducer implements
-    Producer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> {
+public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
 
   @VisibleForTesting static final String PRODUCER_NAME = "LocalExifThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
+  private final ContentResolver mContentResolver;
 
   public LocalExifThumbnailProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory) {
+      PooledByteBufferFactory pooledByteBufferFactory,
+      ContentResolver contentResolver) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
+    mContentResolver = contentResolver;
   }
 
   @Override
   public void produceResults(
-      final Consumer<Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>> consumer,
+      final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
 
     final ProducerListener listener = producerContext.getListener();
@@ -59,39 +68,33 @@ public class LocalExifThumbnailProducer implements
     final ImageRequest imageRequest = producerContext.getImageRequest();
 
     final StatefulProducerRunnable cancellableProducerRunnable =
-        new StatefulProducerRunnable<
-            Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData>>(
+        new StatefulProducerRunnable<EncodedImage>(
             consumer,
             listener,
             PRODUCER_NAME,
             requestId) {
           @Override
-          protected Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> getResult()
+          protected EncodedImage getResult()
               throws Exception {
-            final ExifInterface exifInterface =
-                getExifInterface(imageRequest.getSourceFile().getPath());
-            if (!exifInterface.hasThumbnail()) {
+            final Uri sourceUri = imageRequest.getSourceUri();
+
+            final ExifInterface exifInterface = getExifInterface(sourceUri);
+            if (exifInterface == null || !exifInterface.hasThumbnail()) {
               return null;
             }
 
             byte[] bytes = exifInterface.getThumbnail();
             PooledByteBuffer pooledByteBuffer = mPooledByteBufferFactory.newByteBuffer(bytes);
-            ImageTransformMetaData imageTransformMetaData =
-                getImageTransformMetaData(pooledByteBuffer, exifInterface);
-            return Pair.create(CloseableReference.of(pooledByteBuffer), imageTransformMetaData);
+            return buildEncodedImage(pooledByteBuffer, exifInterface);
           }
 
           @Override
-          protected void disposeResult(
-              Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> result) {
-            if (result != null) {
-              CloseableReference.closeSafely(result.first);
-            }
+          protected void disposeResult(EncodedImage result) {
+            EncodedImage.closeSafely(result);
           }
 
           @Override
-          protected Map<String, String> getExtraMapOnSuccess(
-              final Pair<CloseableReference<PooledByteBuffer>, ImageTransformMetaData> result) {
+          protected Map<String, String> getExtraMapOnSuccess(final EncodedImage result) {
             return ImmutableMap.of(CREATED_THUMBNAIL, Boolean.toString(result != null));
           }
         };
@@ -105,22 +108,28 @@ public class LocalExifThumbnailProducer implements
     mExecutor.execute(cancellableProducerRunnable);
   }
 
-  @VisibleForTesting ExifInterface getExifInterface(String path) throws IOException {
-    return new ExifInterface(path);
+  @VisibleForTesting ExifInterface getExifInterface(Uri uri) throws IOException {
+    final String realPath = getRealPathFromUri(uri);
+    if (canReadAsFile(realPath)) {
+        return new ExifInterface(realPath);
+    }
+    return null;
   }
 
-  private ImageTransformMetaData getImageTransformMetaData(
+  private EncodedImage buildEncodedImage(
       PooledByteBuffer imageBytes,
       ExifInterface exifInterface) {
-    ImageTransformMetaData.Builder builder = ImageTransformMetaData.newBuilder()
-        .setImageFormat(ImageFormat.JPEG);
-    builder.setRotationAngle(getRotationAngle(exifInterface));
-    Rect dimensions = JfifUtil.getDimensions(new PooledByteBufferInputStream(imageBytes));
-    if (dimensions != null) {
-      builder.setWidth(dimensions.width());
-      builder.setHeight(dimensions.height());
-    }
-    return builder.build();
+    Pair<Integer, Integer> dimensions =
+        BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
+    int rotationAngle = getRotationAngle(exifInterface);
+    int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
+    int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
+    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(imageBytes));
+    encodedImage.setImageFormat(ImageFormat.JPEG);
+    encodedImage.setRotationAngle(rotationAngle);
+    encodedImage.setWidth(width);
+    encodedImage.setHeight(height);
+    return encodedImage;
   }
 
   // Gets the correction angle based on the image's orientation
@@ -128,4 +137,40 @@ public class LocalExifThumbnailProducer implements
     return JfifUtil.getAutoRotateAngleFromOrientation(
         Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)));
   }
+
+  /**
+   * Get the path of a file from the Uri
+   * @param srcUri The source uri
+   * @return The Path for the file or null if doesn't exists
+   */
+  private String getRealPathFromUri(final Uri srcUri) {
+    String result = null;
+    if (UriUtil.isLocalContentUri(srcUri)) {
+      Cursor cursor = null;
+      try {
+        cursor = mContentResolver.query(srcUri, null, null, null, null);
+        if (cursor != null) {
+          cursor.moveToFirst();
+          int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+          result = cursor.getString(idx);
+        }
+      } finally {
+        if (cursor != null) {
+          cursor.close();
+        }
+      }
+    } else if (UriUtil.isLocalFileUri(srcUri)) {
+      result = srcUri.getPath();
+    }
+    return result;
+  }
+
+  @VisibleForTesting boolean canReadAsFile(String realPath) throws IOException {
+    if (realPath == null) {
+      return false;
+    }
+    final File file = new File(realPath);
+    return file.exists() && file.canRead();
+  }
+
 }

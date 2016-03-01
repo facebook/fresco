@@ -10,11 +10,11 @@
 package com.facebook.imagepipeline.cache;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import java.util.Locale;
 
-import android.net.Uri;
-
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.HashCodeUtil;
@@ -24,27 +24,37 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 /**
  * Cache key for BitmapMemoryCache
  */
-public class BitmapMemoryCacheKey {
+@Immutable
+public class BitmapMemoryCacheKey implements CacheKey {
+
   private final String mSourceString;
   private final @Nullable ResizeOptions mResizeOptions;
   private final boolean mAutoRotated;
   private final ImageDecodeOptions mImageDecodeOptions;
+  private final @Nullable CacheKey mPostprocessorCacheKey;
+  private final @Nullable String mPostprocessorName;
   private final int mHash;
 
   public BitmapMemoryCacheKey(
       String sourceString,
       @Nullable ResizeOptions resizeOptions,
       boolean autoRotated,
-      ImageDecodeOptions imageDecodeOptions) {
+      ImageDecodeOptions imageDecodeOptions,
+      @Nullable CacheKey postprocessorCacheKey,
+      @Nullable String postprocessorName) {
     mSourceString = Preconditions.checkNotNull(sourceString);
     mResizeOptions = resizeOptions;
     mAutoRotated = autoRotated;
     mImageDecodeOptions = imageDecodeOptions;
+    mPostprocessorCacheKey = postprocessorCacheKey;
+    mPostprocessorName = postprocessorName;
     mHash = HashCodeUtil.hashCode(
         sourceString.hashCode(),
         (resizeOptions != null) ? resizeOptions.hashCode() : 0,
         autoRotated ? Boolean.TRUE.hashCode() : Boolean.FALSE.hashCode(),
-        mImageDecodeOptions);
+        mImageDecodeOptions,
+        mPostprocessorCacheKey,
+        postprocessorName);
   }
 
   @Override
@@ -52,13 +62,14 @@ public class BitmapMemoryCacheKey {
     if (!(o instanceof BitmapMemoryCacheKey)) {
       return false;
     }
-
     BitmapMemoryCacheKey otherKey = (BitmapMemoryCacheKey) o;
     return mHash == otherKey.mHash &&
         mSourceString.equals(otherKey.mSourceString) &&
         Objects.equal(this.mResizeOptions, otherKey.mResizeOptions) &&
         mAutoRotated == otherKey.mAutoRotated &&
-        Objects.equal(mImageDecodeOptions, otherKey.mImageDecodeOptions);
+        Objects.equal(mImageDecodeOptions, otherKey.mImageDecodeOptions) &&
+        Objects.equal(mPostprocessorCacheKey, otherKey.mPostprocessorCacheKey) &&
+        Objects.equal(mPostprocessorName, otherKey.mPostprocessorName);
   }
 
   @Override
@@ -66,23 +77,26 @@ public class BitmapMemoryCacheKey {
     return mHash;
   }
 
-  public Uri sourceUri() {
-    return Uri.parse(mSourceString);
-  }
-
   public String getSourceUriString() {
     return mSourceString;
+  }
+
+  @Nullable
+  public String getPostprocessorName() {
+    return mPostprocessorName;
   }
 
   @Override
   public String toString() {
     return String.format(
         (Locale) null,
-        "%s_%s_%s_%d_%d",
+        "%s_%s_%s_%s_%s_%s_%d",
         mSourceString,
         mResizeOptions,
         Boolean.toString(mAutoRotated),
         mImageDecodeOptions,
+        mPostprocessorCacheKey,
+        mPostprocessorName,
         mHash);
   }
 }

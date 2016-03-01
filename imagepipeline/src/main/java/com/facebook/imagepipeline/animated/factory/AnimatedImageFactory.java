@@ -9,22 +9,29 @@
 
 package com.facebook.imagepipeline.animated.factory;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.gif.GifImage;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.webp.WebPImage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Decoder for animated images.
@@ -32,68 +39,98 @@ import com.facebook.imagepipeline.webp.WebPImage;
 public class AnimatedImageFactory {
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
+  private final PlatformBitmapFactory mBitmapFactory;
 
   public AnimatedImageFactory(
-      AnimatedDrawableBackendProvider animatedDrawableBackendProvider) {
+      AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
+      PlatformBitmapFactory bitmapFactory) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
+    mBitmapFactory = bitmapFactory;
   }
 
   /**
    * Decodes a GIF into a CloseableImage.
-   *
-   * @param pooledByteBufferRef native byte array holding the encoded bytes
+   * @param encodedImage encoded image (native byte array holding the encoded bytes and meta data)
    * @param options the options for the decode
+   * @param bitmapConfig the Bitmap.Config used to generate the output bitmaps
    * @return a {@link CloseableImage} for the GIF image
    */
   public CloseableImage decodeGif(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      final ImageDecodeOptions options) {
-    Preconditions.checkState(!options.forceOldAnimationCode);
-    final PooledByteBuffer input = pooledByteBufferRef.get();
-    GifImage gifImage = GifImage.create(input.getNativePtr(), input.size());
+      final EncodedImage encodedImage,
+      final ImageDecodeOptions options,
+      final Bitmap.Config bitmapConfig) {
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
+    try {
+      Preconditions.checkState(!options.forceOldAnimationCode);
+      final PooledByteBuffer input = bytesRef.get();
+      GifImage gifImage = GifImage.create(input.getNativePtr(), input.size());
 
-    return getCloseableImage(options, gifImage);
+      return getCloseableImage(options, gifImage, bitmapConfig);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
+    }
   }
 
   /**
    * Decode a WebP into a CloseableImage.
-   *
-   * @param pooledByteBufferRef native byte array holding the encoded bytes
+   * @param encodedImage encoded image (native byte array holding the encoded bytes and meta data)
    * @param options the options for the decode
+   * @param bitmapConfig the Bitmap.Config used to generate the output bitmaps
    * @return a {@link CloseableImage} for the WebP image
    */
   public CloseableImage decodeWebP(
-      final CloseableReference<PooledByteBuffer> pooledByteBufferRef,
-      final ImageDecodeOptions options) {
-    Preconditions.checkArgument(!options.forceOldAnimationCode);
-    final PooledByteBuffer input = pooledByteBufferRef.get();
-    WebPImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
-    return getCloseableImage(options, webPImage);
+      final EncodedImage encodedImage,
+      final ImageDecodeOptions options,
+      final Bitmap.Config bitmapConfig) {
+    final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
+    Preconditions.checkNotNull(bytesRef);
+    try {
+      Preconditions.checkArgument(!options.forceOldAnimationCode);
+      final PooledByteBuffer input = bytesRef.get();
+      WebPImage webPImage = WebPImage.create(input.getNativePtr(), input.size());
+      return getCloseableImage(options, webPImage, bitmapConfig);
+    } finally {
+      CloseableReference.closeSafely(bytesRef);
+    }
   }
 
-  private CloseableImage getCloseableImage(ImageDecodeOptions options, AnimatedImage image) {
-    int frameForPreview = options.useLastFrameForPreview ? image.getFrameCount() - 1 : 0;
+  private CloseableAnimatedImage getCloseableImage(
+      ImageDecodeOptions options,
+      AnimatedImage image,
+      Bitmap.Config bitmapConfig) {
+    List<CloseableReference<Bitmap>> decodedFrames = null;
     CloseableReference<Bitmap> previewBitmap = null;
-    if (options.decodePreviewFrame) {
-      previewBitmap = createPreviewBitmap(image, frameForPreview);
-    }
     try {
+      int frameForPreview = options.useLastFrameForPreview ? image.getFrameCount() - 1 : 0;
+      if (options.decodeAllFrames) {
+        decodedFrames = decodeAllFrames(image, bitmapConfig);
+        previewBitmap = CloseableReference.cloneOrNull(decodedFrames.get(frameForPreview));
+      }
+
+      if (options.decodePreviewFrame && previewBitmap == null) {
+        previewBitmap = createPreviewBitmap(image, bitmapConfig, frameForPreview);
+      }
       AnimatedImageResult animatedImageResult = AnimatedImageResult.newBuilder(image)
           .setPreviewBitmap(previewBitmap)
           .setFrameForPreview(frameForPreview)
+          .setDecodedFrames(decodedFrames)
           .build();
       return new CloseableAnimatedImage(animatedImageResult);
     } finally {
       CloseableReference.closeSafely(previewBitmap);
+      CloseableReference.closeSafely(decodedFrames);
     }
   }
 
   private CloseableReference<Bitmap> createPreviewBitmap(
       AnimatedImage image,
+      Bitmap.Config bitmapConfig,
       int frameForPreview) {
-    Bitmap previewBitmap;
-    previewBitmap = Bitmap.createBitmap(
-        image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
+    CloseableReference<Bitmap> bitmap = createBitmap(
+        image.getWidth(),
+        image.getHeight(),
+        bitmapConfig);
     AnimatedImageResult tempResult = AnimatedImageResult.forAnimatedImage(image);
     AnimatedDrawableBackend drawableBackend =
         mAnimatedDrawableBackendProvider.get(tempResult, null);
@@ -110,14 +147,51 @@ public class AnimatedImageFactory {
             return null;
           }
         });
-    animatedImageCompositor.renderFrame(frameForPreview, previewBitmap);
-    return CloseableReference.of(
-        previewBitmap,
-        new ResourceReleaser<Bitmap>() {
+    animatedImageCompositor.renderFrame(frameForPreview, bitmap.get());
+    return bitmap;
+  }
+
+  private List<CloseableReference<Bitmap>> decodeAllFrames(
+      AnimatedImage image,
+      Bitmap.Config bitmapConfig) {
+    final List<CloseableReference<Bitmap>> bitmaps = new ArrayList<>();
+    AnimatedImageResult tempResult = AnimatedImageResult.forAnimatedImage(image);
+    AnimatedDrawableBackend drawableBackend =
+        mAnimatedDrawableBackendProvider.get(tempResult, null);
+    AnimatedImageCompositor animatedImageCompositor = new AnimatedImageCompositor(
+        drawableBackend,
+        new AnimatedImageCompositor.Callback() {
           @Override
-          public void release(Bitmap value) {
-            value.recycle();
+          public void onIntermediateResult(int frameNumber, Bitmap bitmap) {
+            // Don't care.
+          }
+
+          @Override
+          public CloseableReference<Bitmap> getCachedBitmap(int frameNumber) {
+            return CloseableReference.cloneOrNull(bitmaps.get(frameNumber));
           }
         });
+    for (int i = 0; i < drawableBackend.getFrameCount(); i++) {
+      CloseableReference<Bitmap> bitmap = createBitmap(
+          drawableBackend.getWidth(),
+          drawableBackend.getHeight(),
+          bitmapConfig);
+      animatedImageCompositor.renderFrame(i, bitmap.get());
+      bitmaps.add(bitmap);
+    }
+    return bitmaps;
+  }
+
+  @SuppressLint("NewApi")
+  private CloseableReference<Bitmap> createBitmap(
+      int width,
+      int height,
+      Bitmap.Config bitmapConfig) {
+    CloseableReference<Bitmap> bitmap = mBitmapFactory.createBitmap(width, height, bitmapConfig);
+    bitmap.get().eraseColor(Color.TRANSPARENT);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      bitmap.get().setHasAlpha(true);
+    }
+    return bitmap;
   }
 }

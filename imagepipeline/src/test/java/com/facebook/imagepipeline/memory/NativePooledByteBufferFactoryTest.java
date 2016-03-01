@@ -12,13 +12,13 @@ package com.facebook.imagepipeline.memory;
 import java.io.ByteArrayInputStream;
 
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-import com.facebook.testing.robolectric.v2.WithTestDefaultsRunner;
 
-import com.google.common.collect.ImmutableMap;
+import com.facebook.common.internal.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,8 +26,8 @@ import static org.mockito.Mockito.when;
 /**
  * Basic tests for {@link NativePooledByteBufferFactory}
  */
-@RunWith(WithTestDefaultsRunner.class)
-public class NativePooledByteBufferFactoryTest {
+@RunWith(RobolectricTestRunner.class)
+public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChunk {
   private NativeMemoryChunkPool mPool;
   private NativePooledByteBufferFactory mFactory;
   private PoolStats mStats;

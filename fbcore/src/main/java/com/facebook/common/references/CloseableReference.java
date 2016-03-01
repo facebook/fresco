@@ -14,6 +14,10 @@ import javax.annotation.concurrent.GuardedBy;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
@@ -229,6 +233,26 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   @Nullable
   public static <T> CloseableReference<T> cloneOrNull(@Nullable CloseableReference<T> ref) {
     return (ref != null) ? ref.cloneOrNull() : null;
+  }
+
+  /**
+   * Clones a collection of references and returns a list. Returns null if the list is null. If
+   * the list is non-null, clones each reference. If a reference cannot be cloned due to already
+   * being closed, the list will contain a null value in its place.
+   *
+   * @param refs the references to clone
+   * @return the list of cloned references or null
+   */
+  public static <T> List<CloseableReference<T>> cloneOrNull(
+      Collection<CloseableReference<T>> refs) {
+    if (refs == null) {
+      return null;
+    }
+    List<CloseableReference<T>> ret = new ArrayList<>(refs.size());
+    for (CloseableReference<T> ref : refs) {
+      ret.add(CloseableReference.cloneOrNull(ref));
+    }
+    return ret;
   }
 
   /**

@@ -11,17 +11,20 @@ package com.facebook.imagepipeline.cache;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.facebook.common.internal.Maps;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.cache.common.CacheKey;
 
 /**
- * This is class encapsulates Map that maps ImageCacheKeys to SharedReferences pointing to
+ * This is class encapsulates Map that maps ImageCacheKeys to EncodedImages pointing to
  * PooledByteBuffers. It is used by SimpleImageCache to store values that are being written
  * to disk cache, so that they can be returned by parallel cache get operations.
  */
@@ -29,10 +32,10 @@ public class StagingArea {
   private static final Class<?> TAG = StagingArea.class;
 
   @GuardedBy("this")
-  private Map<CacheKey, CloseableReference<PooledByteBuffer>> mMap;
+  private Map<CacheKey, EncodedImage> mMap;
 
   private StagingArea() {
-    mMap = Maps.newHashMap();
+    mMap = new HashMap<>();
   }
 
   public static StagingArea getInstance() {
@@ -43,43 +46,86 @@ public class StagingArea {
    * Stores key-value in this StagingArea. This call overrides previous value
    * of stored reference if
    * @param key
-   * @param bufferRef reference to be associated with key
+   * @param encodedImage EncodedImage to be associated with key
    */
-  public synchronized void put(
-      final CacheKey key,
-      final CloseableReference<PooledByteBuffer> bufferRef) {
+  public synchronized void put(final CacheKey key, final EncodedImage encodedImage) {
     Preconditions.checkNotNull(key);
-    Preconditions.checkArgument(CloseableReference.isValid(bufferRef));
+    Preconditions.checkArgument(EncodedImage.isValid(encodedImage));
 
     // we're making a 'copy' of this reference - so duplicate it
-    final CloseableReference<?> oldEntry = mMap.put(key, bufferRef.clone());
-    if (oldEntry != null) {
-      oldEntry.close();
-    }
+    final EncodedImage oldEntry = mMap.put(key, EncodedImage.cloneOrNull(encodedImage));
+    EncodedImage.closeSafely(oldEntry);
     logStats();
+  }
+
+  /**
+   * Removes all items from the StagingArea.
+   */
+  public void clearAll() {
+    final List<EncodedImage> old;
+    synchronized (this) {
+      old = new ArrayList<>(mMap.values());
+      mMap.clear();
+    }
+    for (int i = 0; i < old.size(); i++) {
+      EncodedImage encodedImage = old.get(i);
+      if (encodedImage != null) {
+        encodedImage.close();
+      }
+    }
+  }
+
+  /**
+   * Removes item from the StagingArea.
+   * @param key
+   * @return true if item was removed
+   */
+  public boolean remove(final CacheKey key) {
+    Preconditions.checkNotNull(key);
+    final EncodedImage encodedImage;
+    synchronized (this) {
+      encodedImage = mMap.remove(key);
+    }
+    if (encodedImage == null) {
+      return false;
+    }
+    try {
+      return encodedImage.isValid();
+    } finally {
+      encodedImage.close();
+    }
   }
 
   /**
    * Removes key-value from the StagingArea. Both key and value must match.
    * @param key
-   * @param bufferRef value corresponding to key
+   * @param encodedImage value corresponding to key
    * @return true if item was removed
    */
-  public synchronized boolean remove(
-      final CacheKey key,
-      final CloseableReference<PooledByteBuffer> bufferRef) {
+  public synchronized boolean remove(final CacheKey key, final EncodedImage encodedImage) {
     Preconditions.checkNotNull(key);
-    Preconditions.checkNotNull(bufferRef);
-    Preconditions.checkArgument(CloseableReference.isValid(bufferRef));
+    Preconditions.checkNotNull(encodedImage);
+    Preconditions.checkArgument(EncodedImage.isValid(encodedImage));
 
-    final CloseableReference<?> oldValue = mMap.get(key);
+    final EncodedImage oldValue = mMap.get(key);
 
-    if (oldValue == null || oldValue.get() != bufferRef.get()) {
+    if (oldValue == null) {
       return false;
     }
 
-    mMap.remove(key);
-    oldValue.close();
+    CloseableReference<PooledByteBuffer> oldRef = oldValue.getByteBufferRef();
+    CloseableReference<PooledByteBuffer> ref = encodedImage.getByteBufferRef();
+    try {
+      if (oldRef == null || ref == null || oldRef.get() != ref.get()) {
+        return false;
+      }
+      mMap.remove(key);
+    } finally {
+      CloseableReference.closeSafely(ref);
+      CloseableReference.closeSafely(oldRef);
+      EncodedImage.closeSafely(oldValue);
+    }
+
     logStats();
     return true;
   }
@@ -88,12 +134,12 @@ public class StagingArea {
    * @param key
    * @return value associated with given key or null if no value is associated
    */
-  public synchronized CloseableReference<PooledByteBuffer> get(final CacheKey key) {
+  public synchronized EncodedImage get(final CacheKey key) {
     Preconditions.checkNotNull(key);
-    CloseableReference<PooledByteBuffer> storedRef = mMap.get(key);
-    if (storedRef != null) {
-      synchronized (storedRef) {
-        if (!CloseableReference.isValid(storedRef)) {
+    EncodedImage storedEncodedImage = mMap.get(key);
+    if (storedEncodedImage != null) {
+      synchronized (storedEncodedImage) {
+        if (!EncodedImage.isValid(storedEncodedImage)) {
           // Reference is not valid, this means that someone cleared reference while it was still in
           // use. Log error
           // TODO: 3697790
@@ -101,15 +147,15 @@ public class StagingArea {
           FLog.w(
               TAG,
               "Found closed reference %d for key %s (%d)",
-              System.identityHashCode(storedRef),
+              System.identityHashCode(storedEncodedImage),
               key.toString(),
               System.identityHashCode(key));
           return null;
         }
-        storedRef = storedRef.clone();
+        storedEncodedImage = EncodedImage.cloneOrNull(storedEncodedImage);
       }
     }
-    return storedRef;
+    return storedEncodedImage;
   }
 
   /**

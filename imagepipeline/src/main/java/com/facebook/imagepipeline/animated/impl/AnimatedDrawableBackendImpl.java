@@ -17,7 +17,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.logging.FLog;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
@@ -29,8 +29,6 @@ import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
  * An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}.
  */
 public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
-
-  private static final Class<?> TAG = AnimatedDrawableBackendImpl.class;
 
   private final AnimatedDrawableUtil mAnimatedDrawableUtil;
 
@@ -161,6 +159,16 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     }
     bytes += mAnimatedImage.getSizeInBytes();
     return bytes;
+  }
+
+  @Override
+  public CloseableReference<Bitmap> getPreDecodedFrame(int frameNumber) {
+    return mAnimatedImageResult.getDecodedFrame(frameNumber);
+  }
+
+  @Override
+  public boolean hasPreDecodedFrame(int index) {
+    return mAnimatedImageResult.hasDecodedFrame(index);
   }
 
   @Override

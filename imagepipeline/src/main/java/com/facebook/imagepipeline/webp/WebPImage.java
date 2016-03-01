@@ -33,13 +33,16 @@ public class WebPImage implements AnimatedImage {
   // Accessed by native methods
   @SuppressWarnings("unused")
   @DoNotStrip
-  private int mNativeContext;
+  private long mNativeContext;
 
   private static synchronized void ensure() {
     if (!sInitialized) {
       sInitialized = true;
-      SoLoaderShim.loadLibrary("gnustl_shared");
-      SoLoaderShim.loadLibrary("webp");
+      try {
+        SoLoaderShim.loadLibrary("webp");
+      } catch(UnsatisfiedLinkError error) {
+        // Optional library not present
+      }
       SoLoaderShim.loadLibrary("webpimage");
     }
   }
@@ -50,7 +53,7 @@ public class WebPImage implements AnimatedImage {
    * @param nativeContext the native pointer
    */
   @DoNotStrip
-  WebPImage(int nativeContext) {
+  WebPImage(long nativeContext) {
     mNativeContext = nativeContext;
   }
 

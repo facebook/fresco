@@ -41,6 +41,9 @@ public class UriUtil {
    */
   public static final String LOCAL_RESOURCE_SCHEME = "res";
 
+  /** Data scheme for URIs */
+  public static final String DATA_SCHEME = "data";
+
   /**
    * /**
    * Check if uri represents network resource
@@ -95,6 +98,11 @@ public class UriUtil {
   public static boolean isLocalResourceUri(@Nullable Uri uri) {
     final String scheme = getSchemeOrNull(uri);
     return LOCAL_RESOURCE_SCHEME.equals(scheme);
+  }
+
+  /** Check if the uri is a data uri */
+  public static boolean isDataUri(@Nullable Uri uri) {
+    return DATA_SCHEME.equals(getSchemeOrNull(uri));
   }
 
   /**

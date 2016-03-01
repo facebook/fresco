@@ -10,43 +10,54 @@
 package com.facebook.drawee.drawable;
 
 import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 
+/**
+ * Set of properties for drawable. There are no default values and only gets applied if were set
+ * explicitly.
+ */
 public class DrawableProperties {
 
-  private int mAlpha = 255;
-  private ColorFilter mColorFilter = null;
-  private boolean mDither = true;
-  private boolean mFilterBitmap = true;
+  private static final int UNSET = -1;
 
-  public int getAlpha() {
-    return mAlpha;
-  }
+  private int mAlpha = UNSET;
+  private boolean mIsSetColorFilter = false;
+  private ColorFilter mColorFilter = null;
+  private int mDither = UNSET;
+  private int mFilterBitmap = UNSET;
 
   public void setAlpha(int alpha) {
     mAlpha = alpha;
   }
 
-  public ColorFilter getColorFilter() {
-    return mColorFilter;
-  }
-
   public void setColorFilter(ColorFilter colorFilter) {
     mColorFilter = colorFilter;
-  }
-
-  public boolean isDither() {
-    return mDither;
+    mIsSetColorFilter = true;
   }
 
   public void setDither(boolean dither) {
-    mDither = dither;
-  }
-
-  public boolean isFilterBitmap() {
-    return mFilterBitmap;
+    mDither = dither ? 1 : 0;
   }
 
   public void setFilterBitmap(boolean filterBitmap) {
-    mFilterBitmap = filterBitmap;
+    mFilterBitmap = filterBitmap ? 1 : 0;
+  }
+
+  public void applyTo(Drawable drawable) {
+    if (drawable == null) {
+      return;
+    }
+    if (mAlpha != UNSET) {
+      drawable.setAlpha(mAlpha);
+    }
+    if (mIsSetColorFilter) {
+      drawable.setColorFilter(mColorFilter);
+    }
+    if (mDither != UNSET) {
+      drawable.setDither(mDither != 0);
+    }
+    if (mFilterBitmap != UNSET) {
+      drawable.setFilterBitmap(mFilterBitmap != 0);
+    }
   }
 }
