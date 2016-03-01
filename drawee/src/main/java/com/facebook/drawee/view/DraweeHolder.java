@@ -241,7 +241,8 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     mEventTracker.recordEvent(Event.ON_SET_HIERARCHY);
     setVisibilityCallback(null);
     mHierarchy = Preconditions.checkNotNull(hierarchy);
-    onVisibilityChange(mHierarchy.getTopLevelDrawable().isVisible());
+    Drawable drawable = mHierarchy.getTopLevelDrawable();
+    onVisibilityChange(drawable == null || drawable.isVisible());
     setVisibilityCallback(this);
     if (mController != null) {
       mController.setHierarchy(hierarchy);
