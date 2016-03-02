@@ -141,8 +141,8 @@ public class ImageRequest {
 
   public synchronized File getSourceFile() {
     if (mSourceFile == null) {
-		  String filepath = mSourceUri.toString();
-		  filepath = filepath.substring("file://".length());
+      String filepath = mSourceUri.toString();
+      filepath = filepath.substring("file://".length());
       mSourceFile = new File(filepath);
     }
     return mSourceFile;
