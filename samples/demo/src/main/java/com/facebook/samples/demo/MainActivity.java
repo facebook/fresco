@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
         .build();
     mProgressiveJpegView.setController(controller);
 
-    mStaticWebpView.setImageURI(Uri.parse("https://www.gstatic.com/webp/gallery/2.sm.webp"));
+    mStaticWebpView.setImageURI("https://www.gstatic.com/webp/gallery/2.sm.webp");
 
     mAlphaWebpView.setImageURI(Uri.parse("http://frescolib.org/static/translucent.webp"));
 
