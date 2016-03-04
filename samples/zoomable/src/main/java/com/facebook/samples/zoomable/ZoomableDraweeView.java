@@ -280,7 +280,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       FLog.v(TAG, "onTouchEvent: view %x, handled by the super", this.hashCode());
       return true;
     }
-    return true;
+    return false;
   }
 
   @Override
