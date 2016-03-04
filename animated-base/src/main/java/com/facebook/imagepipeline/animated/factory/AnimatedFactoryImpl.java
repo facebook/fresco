@@ -54,7 +54,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier) {
     this.mContext = context;
-    this.mPlatformBitmapFactory = mPlatformBitmapFactory;
+    this.mPlatformBitmapFactory = platformBitmapFactory;
     this.mExecutorSupplier = executorSupplier;
   }
 
