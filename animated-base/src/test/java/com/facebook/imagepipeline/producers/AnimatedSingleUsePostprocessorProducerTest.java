@@ -41,7 +41,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
-public class SingleUsePostprocessorProducerTest {
+public class AnimatedSingleUsePostprocessorProducerTest {
 
   private static final String POSTPROCESSOR_NAME = "postprocessor_name";
   private static final Map<String, String> mExtraMap =
