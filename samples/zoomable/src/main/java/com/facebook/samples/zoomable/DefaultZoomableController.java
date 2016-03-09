@@ -45,7 +45,7 @@ public class DefaultZoomableController
   private boolean mIsTranslationEnabled = true;
 
   private float mMinScaleFactor = 1.0f;
-  private float mMaxScaleFactor = Float.POSITIVE_INFINITY;
+  private float mMaxScaleFactor = 2.0f;
 
   // View bounds, in view-absolute coordinates
   private final RectF mViewBounds = new RectF();
@@ -200,6 +200,14 @@ public class DefaultZoomableController
   }
 
   /**
+   * Returns true if the zoomable transform is identity matrix.
+   */
+  @Override
+  public boolean isIdentity() {
+    return isMatrixIdentity(mActiveTransform, 1e-3f);
+  }
+
+  /**
    * Gets the matrix that transforms image-absolute coordinates to view-absolute coordinates.
    * The zoomable transformation is taken into account.
    *
@@ -330,7 +338,7 @@ public class DefaultZoomableController
     float distanceX = viewPoint.x - viewAbsolute[0];
     float distanceY = viewPoint.y - viewAbsolute[1];
     mNewTransform.setScale(scale, scale, viewAbsolute[0], viewAbsolute[1]);
-    limitScale(mNewTransform, viewAbsolute[0], viewAbsolute[1]);
+    limitScale(mNewTransform, viewAbsolute[0], viewAbsolute[1], true);
     mNewTransform.postTranslate(distanceX, distanceY);
     limitTranslation(mNewTransform, limitTransX, limitTransY);
     setTransform(mNewTransform, durationMs, onAnimationComplete);
@@ -447,7 +455,8 @@ public class DefaultZoomableController
       float scale = detector.getScale();
       mActiveTransform.postScale(scale, scale, detector.getPivotX(), detector.getPivotY());
     }
-    transformCorrected |= limitScale(mActiveTransform, detector.getPivotX(), detector.getPivotY());
+    transformCorrected |=
+        limitScale(mActiveTransform, detector.getPivotX(), detector.getPivotY(), true);
     if (mIsTranslationEnabled) {
       mActiveTransform.postTranslate(detector.getTranslationX(), detector.getTranslationY());
     }
@@ -476,9 +485,13 @@ public class DefaultZoomableController
    *
    * @param pivotX x coordinate of the pivot point
    * @param pivotY y coordinate of the pivot point
+   * @param shouldLimit whether to apply the limit on the scale
    * @return whether limiting has been applied or not
    */
-  private boolean limitScale(Matrix transform, float pivotX, float pivotY) {
+  private boolean limitScale(Matrix transform, float pivotX, float pivotY, boolean shouldLimit) {
+    if (!shouldLimit) {
+      return false;
+    }
     float currentScale = getMatrixScaleFactor(transform);
     float targetScale = limit(currentScale, mMinScaleFactor, mMaxScaleFactor);
     if (targetScale != currentScale) {
@@ -496,18 +509,21 @@ public class DefaultZoomableController
    * smaller. There will be no empty spaces within the view bounds if the transformed image is
    * bigger. This applies to each dimension (horizontal and vertical) independently.
    *
-   * @param limitX whether to apply the limit on the x-axis
-   * @param limitY whether to apply the limit on the y-axis
+   * @param shouldLimitX whether to apply the limit on the x-axis
+   * @param shouldLimitY whether to apply the limit on the y-axis
    * @return whether limiting has been applied or not
    */
-  private boolean limitTranslation(Matrix transform, boolean limitX, boolean limitY) {
-    RectF bounds = mTempRect;
-    bounds.set(mImageBounds);
-    transform.mapRect(bounds);
-    float offsetLeft = limitX ?
-        getOffset(bounds.left, bounds.right, mViewBounds.left, mViewBounds.right) : 0;
-    float offsetTop = limitY ?
-        getOffset(bounds.top, bounds.bottom, mViewBounds.top, mViewBounds.bottom) : 0;
+  private boolean limitTranslation(Matrix transform, boolean shouldLimitX, boolean shouldLimitY) {
+    if (!shouldLimitX && !shouldLimitY) {
+      return false;
+    }
+    RectF b = mTempRect;
+    b.set(mImageBounds);
+    transform.mapRect(b);
+    float offsetLeft = !shouldLimitX ? 0 :
+        getOffset(b.left, b.right, mViewBounds.left, mViewBounds.right, mImageBounds.centerX());
+    float offsetTop = !shouldLimitY ? 0 :
+        getOffset(b.top, b.bottom, mViewBounds.top, mViewBounds.bottom, mImageBounds.centerY());
     if (offsetLeft != 0 || offsetTop != 0) {
       transform.postTranslate(offsetLeft, offsetTop);
       return true;
@@ -520,13 +536,27 @@ public class DefaultZoomableController
    * - the image is centered within the limit if the image is smaller than the limit
    * - there is no empty space on left/right if the image is bigger than the limit
    */
-  private float getOffset(float imageLeft, float imageRight, float limitLeft, float limitRight) {
+  private float getOffset(
+      float imageLeft,
+      float imageRight,
+      float limitLeft,
+      float limitRight,
+      float limitCenter) {
     float imageWidth = imageRight - imageLeft, limitWidth = limitRight - limitLeft;
-    // center if smaller
-    if (imageWidth < limitWidth) {
-      return (limitLeft + limitRight) / 2 - (imageRight + imageLeft) / 2;
+    float limitInnerWidth = Math.min(limitCenter - limitLeft, limitRight - limitCenter) * 2;
+    // center if smaller than limitInnerWidth
+    if (imageWidth < limitInnerWidth) {
+      return limitCenter - (imageRight + imageLeft) / 2;
     }
-    // to the edge if necessary
+    // to the edge if in between and limitCenter is not (limitLeft + limitRight) / 2
+    if (imageWidth < limitWidth) {
+      if (limitCenter < (limitLeft + limitRight) / 2) {
+        return limitLeft - imageLeft;
+      } else {
+        return limitRight - imageRight;
+      }
+    }
+    // to the edge if larger than limitWidth and empty space visible
     if (imageLeft > limitLeft) {
       return limitLeft - imageLeft;
     }
@@ -552,4 +582,27 @@ public class DefaultZoomableController
     return mTempValues[Matrix.MSCALE_X];
   }
 
+  /**
+   * Same as {@code Matrix.isIdentity()}, but with tolerance {@code eps}.
+   */
+  private boolean isMatrixIdentity(Matrix transform, float eps) {
+    // Checks whether the given matrix is close enough to the identity matrix:
+    //   1 0 0
+    //   0 1 0
+    //   0 0 1
+    // Or equivalently to the zero matrix, after subtracting 1.0f from the diagonal elements:
+    //   0 0 0
+    //   0 0 0
+    //   0 0 0
+    transform.getValues(mTempValues);
+    mTempValues[0] -= 1.0f; // m00
+    mTempValues[4] -= 1.0f; // m11
+    mTempValues[8] -= 1.0f; // m22
+    for (int i = 0; i < 9; i++) {
+      if (Math.abs(mTempValues[i]) > eps) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

@@ -66,6 +66,11 @@ public interface ZoomableController {
   float getScaleFactor();
 
   /**
+   * Returns true if the zoomable transform is identity matrix, and the controller is idle.
+   */
+  boolean isIdentity();
+
+  /**
    * Gets the current transform.
    *
    * @return the transform
