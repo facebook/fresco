@@ -25,14 +25,19 @@ public class MyApplication extends Application {
 You need to specify your application class in the XML. For images from the network, you will also need to request Internet permission from your users. The `application` tag in your ```AndroidManifest.xml``` should look something like this:
 
 ```xml
-  <application
+  <manifest
     ...
-    android:label="@string/app_name"
-    android:name="MyApplication"
     >
     <uses-permission android:name="android.permission.INTERNET" />
+    <application
+      ...
+      android:label="@string/app_name"
+      android:name=".MyApplication"
+      >
+      ...
+    </application>
     ...
-  </application>
+  </manifest>
 ```
 
 
