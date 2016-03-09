@@ -118,22 +118,6 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   /**
-   * Returns the zoomable transformation matrix applied by this view.
-   */
-  public void getTransformMatrix(Matrix outMatrix) {
-    outMatrix.set(mZoomableController.getTransform());
-  }
-
-  /**
-   * Gets the transformed image bounds, in view-absolute coordinates.
-   */
-  public void getTransformedBounds(RectF outBounds) {
-    getPlainBounds(outBounds);
-    Matrix matrix = mZoomableController.getTransform();
-    matrix.mapRect(outBounds);
-  }
-
-  /**
    * Gets the original image bounds, in view-absolute coordinates.
    *
    * <p> The original image bounds are those reported by the hierarchy. The hierarchy itself may
@@ -146,7 +130,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
    * replaces the previously set low-res image). With proper hierarchy scaling (e.g. FIT_CENTER),
    * this underlying change will not affect this view nor the zoomable transformation in any way.
    */
-  public void getPlainBounds(RectF outBounds) {
+  protected void getImageBounds(RectF outBounds) {
     getHierarchy().getActualImageBounds(outBounds);
   }
 
@@ -159,7 +143,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
    * This applies to each dimension (horizontal and vertical) independently.
    * <p> Unless overridden by a subclass, these bounds are same as the view bounds.
    */
-  public void getLimitBounds(RectF outBounds) {
+  protected void getLimitBounds(RectF outBounds) {
     outBounds.set(0, 0, getWidth(), getHeight());
   }
 
@@ -309,8 +293,8 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
     invalidate();
   }
 
-  private void updateZoomableControllerBounds() {
-    getPlainBounds(mImageBounds);
+  protected void updateZoomableControllerBounds() {
+    getImageBounds(mImageBounds);
     getLimitBounds(mViewBounds);
     mZoomableController.setImageBounds(mImageBounds);
     mZoomableController.setViewBounds(mViewBounds);
