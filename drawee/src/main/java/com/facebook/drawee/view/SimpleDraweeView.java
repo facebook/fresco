@@ -128,10 +128,7 @@ public class SimpleDraweeView extends GenericDraweeView {
    * @param callerContext caller context
    */
   public void setImageURI(@Nullable String uriString, @Nullable Object callerContext) {
-    Uri uri = null;
-    if(uriString != null) {
-      uri = Uri.parse(uriString);
-    }
+    Uri uri = (uriString != null) ? Uri.parse(uriString) : null;
     setImageURI(uri, callerContext);
   }
 }
