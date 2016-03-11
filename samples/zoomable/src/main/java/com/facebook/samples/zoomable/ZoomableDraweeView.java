@@ -112,7 +112,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   private void init() {
-    mZoomableController = DefaultZoomableController.newInstance();
+    mZoomableController = AnimatedZoomableController.newInstance();
     mZoomableController.setListener(mZoomableListener);
     mTapGestureDetector = new GestureDetector(getContext(), mTapListenerWrapper);
   }
@@ -249,19 +249,21 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
+    int a = event.getActionMasked();
+    FLog.v(TAG, "onTouchEvent: %d, view %x, received", a, this.hashCode());
     if (mTapGestureDetector.onTouchEvent(event)) {
-      FLog.v(TAG, "onTouchEvent: view %x, handled by tap gesture detector", this.hashCode());
+      FLog.v(TAG, "onTouchEvent: %d, view %x, handled by tap gesture detector", a, this.hashCode());
       return true;
     }
     if (mZoomableController.onTouchEvent(event)) {
-      if (mZoomableController.getScaleFactor() > 1.0f) {
+      if (!mZoomableController.isIdentity()) {
         getParent().requestDisallowInterceptTouchEvent(true);
       }
-      FLog.v(TAG, "onTouchEvent: view %x, handled by zoomable controller", this.hashCode());
+      FLog.v(TAG, "onTouchEvent: %d, view %x, handled by zoomable controller", a, this.hashCode());
       return true;
     }
     if (super.onTouchEvent(event)) {
-      FLog.v(TAG, "onTouchEvent: view %x, handled by the super", this.hashCode());
+      FLog.v(TAG, "onTouchEvent: %d, view %x, handled by the super", a, this.hashCode());
       return true;
     }
     return false;
@@ -288,7 +290,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   protected void onTransformChanged(Matrix transform) {
-    FLog.v(TAG, "onTransformChanged: view %x", this.hashCode());
+    FLog.v(TAG, "onTransformChanged: view %x, transform: %s", this.hashCode(), transform);
     maybeSetHugeImageController();
     invalidate();
   }
