@@ -58,6 +58,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * Decode WebP images, even on older versions of Android that don't fully support them
 
 # Who Uses Fresco?
+* [Vimeo](https://play.google.com/store/apps/details?id=com.vimeo.android.videoapp)
 * [Wikipedia](https://play.google.com/store/apps/details?id=org.wikipedia)
 * [Best Apps Market](https://play.google.com/store/apps/details?id=com.bestappsmarket.android.bestapps)
 * [Redfin](https://play.google.com/store/apps/details?id=com.redfin.android) - See their [blog post](https://www.redfin.com/devblog/2015/10/using-fresco-to-load-images-efficiently-on-android.html) about Fresco!
