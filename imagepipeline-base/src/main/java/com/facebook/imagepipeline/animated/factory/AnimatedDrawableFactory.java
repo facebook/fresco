@@ -10,9 +10,8 @@
 package com.facebook.imagepipeline.animated.factory;
 
 
-import com.facebook.imagepipeline.animated.base.AnimatedDrawable;
-import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
-import com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions;
+import android.graphics.drawable.Drawable;
+
 import com.facebook.imagepipeline.image.CloseableImage;
 
 /**
@@ -23,28 +22,10 @@ public interface AnimatedDrawableFactory {
   /**
    * Creates an {@link AnimatedDrawable} based on an {@link AnimatedImage}.
    *
-   * @param animatedImageResult the result of the code
-   * @return a newly constructed {@link AnimatedDrawable}
+   * @param closeableImage the result of the code
+   * @return a newly constructed {@link Drawable}
    */
-  AnimatedDrawable create(AnimatedImageResult animatedImageResult);
+  Drawable create(CloseableImage closeableImage);
 
-  /**
-   * Creates an {@link AnimatedDrawable} based on an {@link AnimatedImage}.
-   *
-   * @param animatedImageResult the result of the code
-   * @param options additional options
-   * @return a newly constructed {@link AnimatedDrawable}
-   */
-  AnimatedDrawable create(
-      AnimatedImageResult animatedImageResult,
-      AnimatedDrawableOptions options);
-
-  /**
-   * If the image is a CloseableAnimatedImage this method returns the contained Drawable. If not
-   * this returns null
-   * @param image The CloseableImage to check
-   * @return The Drawable if CloseableAnimatedImage or null if not
-   */
-  AnimatedImageResult getImageIfCloseableAnimatedImage(CloseableImage image);
 
 }

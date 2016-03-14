@@ -15,24 +15,11 @@ import android.app.ActivityManager;
 import android.content.res.Resources;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.executors.SerialExecutorService;
-import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
-import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 
 @NotThreadSafe
 public interface AnimatedFactory {
-
-  AnimatedDrawableFactory buildAnimatedDrawableFactory(
-      final SerialExecutorService serialExecutorService,
-      final ActivityManager activityManager,
-      final AnimatedDrawableUtil animatedDrawableUtil,
-      AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
-      ScheduledExecutorService scheduledExecutorService,
-      final MonotonicClock monotonicClock,
-      Resources resources);
-
-  AnimatedDrawableBackendProvider getAnimatedDrawableBackendProvider();
 
   AnimatedDrawableFactory getAnimatedDrawableFactory();
 

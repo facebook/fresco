@@ -13,6 +13,7 @@ dependencies {
     compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
     compile project(':fbcore')
     compile project(':imagepipeline-base')
+    compile project(':imagepipeline')
 
     testCompile project(':animated-base-test')
     testCompile project(':imagepipeline-test')

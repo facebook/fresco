@@ -15,6 +15,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.graphics.drawable.Drawable;
 
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -65,14 +66,20 @@ public class AnimatedDrawableFactoryImpl implements AnimatedDrawableFactory {
   }
 
   /**
-   * Creates an {@link AnimatedDrawable} based on an {@link AnimatedImage}.
+   * Creates an {@link AnimatedDrawable} based on an {@link CloseableImage} which should be a
+   * CloseableAnimatedImage.
    *
-   * @param animatedImageResult the result of the code
+   * @param closeableImage The CloseableAnimatedImage to use for the AnimatedDrawable
    * @return a newly constructed {@link AnimatedDrawable}
    */
   @Override
-  public AnimatedDrawable create(AnimatedImageResult animatedImageResult) {
-    return create(animatedImageResult, AnimatedDrawableOptions.DEFAULTS);
+  public Drawable create(CloseableImage closeableImage) {
+    if (closeableImage instanceof CloseableAnimatedImage) {
+      final AnimatedImageResult result = ((CloseableAnimatedImage) closeableImage).getImageResult();
+      return create(result, AnimatedDrawableOptions.DEFAULTS);
+    } else {
+      throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+    }
   }
 
   /**
@@ -82,8 +89,7 @@ public class AnimatedDrawableFactoryImpl implements AnimatedDrawableFactory {
    * @param options additional options
    * @return a newly constructed {@link AnimatedDrawable}
    */
-  @Override
-  public AnimatedDrawable create(
+  private AnimatedDrawable create(
       AnimatedImageResult animatedImageResult,
       AnimatedDrawableOptions options) {
     AnimatedImage animatedImage = animatedImageResult.getImage();
@@ -93,8 +99,7 @@ public class AnimatedDrawableFactoryImpl implements AnimatedDrawableFactory {
     return createAnimatedDrawable(options, animatedDrawableBackend);
   }
 
-  @Override
-  public AnimatedImageResult getImageIfCloseableAnimatedImage(CloseableImage image) {
+  private AnimatedImageResult getImageIfCloseableAnimatedImage(CloseableImage image) {
     if (image instanceof CloseableAnimatedImage) {
       return ((CloseableAnimatedImage) image).getImageResult();
     }

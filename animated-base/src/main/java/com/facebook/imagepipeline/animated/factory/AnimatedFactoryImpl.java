@@ -58,8 +58,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
     this.mExecutorSupplier = executorSupplier;
   }
 
-  @Override
-  public AnimatedDrawableFactory buildAnimatedDrawableFactory(
+  private AnimatedDrawableFactory buildAnimatedDrawableFactory(
       final SerialExecutorService serialExecutorService,
       final ActivityManager activityManager,
       final AnimatedDrawableUtil animatedDrawableUtil,
@@ -91,8 +90,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
         resources);
   }
 
-  @Override
-  public AnimatedDrawableBackendProvider getAnimatedDrawableBackendProvider() {
+  private AnimatedDrawableBackendProvider getAnimatedDrawableBackendProvider() {
     if (mAnimatedDrawableBackendProvider == null) {
       mAnimatedDrawableBackendProvider = new AnimatedDrawableBackendProvider() {
         @Override
