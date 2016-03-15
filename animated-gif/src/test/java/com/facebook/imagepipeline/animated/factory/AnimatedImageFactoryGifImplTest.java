@@ -17,11 +17,11 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactoryImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
-import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
@@ -147,10 +147,12 @@ public class AnimatedImageFactoryGifImplTest {
     when(mockGifImage.getHeight()).thenReturn(50);
 
     // For decoding preview frame, expect some calls.
+    final AnimatedDrawableBackend mockAnimatedDrawableBackend =
+        createAnimatedDrawableBackendMock(1);
     when(mMockAnimatedDrawableBackendProvider.get(
-            any(AnimatedImageResult.class),
-            isNull(Rect.class)))
-        .thenReturn(new TestAnimatedDrawableBackend(50, 50, new int[]{100}));
+        any(AnimatedImageResult.class),
+        isNull(Rect.class)))
+        .thenReturn(mockAnimatedDrawableBackend);
     when(mMockBitmapFactory.createBitmap(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER));
     AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
@@ -201,11 +203,15 @@ public class AnimatedImageFactoryGifImplTest {
     when(mockGifImage.getHeight()).thenReturn(50);
 
     // For decoding preview frame, expect some calls.
+    final AnimatedDrawableBackend mockAnimatedDrawableBackend =
+        createAnimatedDrawableBackendMock(2);
+
     when(
         mMockAnimatedDrawableBackendProvider.get(
             any(AnimatedImageResult.class),
             isNull(Rect.class)))
-        .thenReturn(new TestAnimatedDrawableBackend(50, 50, new int[]{ 100, 200 }));
+        .thenReturn(mockAnimatedDrawableBackend);
+
     when(mMockBitmapFactory.createBitmap(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap1, FAKE_BITMAP_RESOURCE_RELEASER))
         .thenReturn(CloseableReference.of(mockBitmap2, FAKE_BITMAP_RESOURCE_RELEASER));
@@ -250,5 +256,18 @@ public class AnimatedImageFactoryGifImplTest {
   private TrivialPooledByteBuffer createByteBuffer() {
     byte[] buf = new byte[16];
     return new TrivialPooledByteBuffer(buf);
+  }
+
+  /**
+   * Creates the mock for the AnimatedDrawableBackend with the number of frame
+   * @param frameCount The number of frame to mock
+   */
+  private AnimatedDrawableBackend createAnimatedDrawableBackendMock(final int frameCount) {
+    // For decoding preview frame, expect some calls.
+    final AnimatedDrawableBackend mockAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
+    when(mockAnimatedDrawableBackend.getFrameCount()).thenReturn(frameCount);
+    when(mockAnimatedDrawableBackend.getWidth()).thenReturn(50);
+    when(mockAnimatedDrawableBackend.getHeight()).thenReturn(50);
+    return mockAnimatedDrawableBackend;
   }
 }

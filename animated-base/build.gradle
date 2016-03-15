@@ -45,4 +45,10 @@ task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
+
+task testJar(type: Jar) {
+    from android.sourceSets.test.java.srcDirs
+    classifier = 'sources'
+}
+
 artifacts.add('archives', sourcesJar)

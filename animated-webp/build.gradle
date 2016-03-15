@@ -20,6 +20,7 @@ dependencies {
     compile project(':animated-base')
 
     testCompile project(':imagepipeline-base-test')
+    testCompile project(':imagepipeline-test')
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
