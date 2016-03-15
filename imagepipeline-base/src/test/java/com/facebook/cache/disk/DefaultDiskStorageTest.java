@@ -43,6 +43,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -280,6 +281,46 @@ public class DefaultDiskStorageTest {
     assertFalse(storage.contains(resourceId1, null));
     assertFalse(storage.contains(resourceId2, null));
     assertFalse(storage.contains(resourceId3, null));
+  }
+
+  @Test
+  public void testEntryIds() throws Exception {
+    DefaultDiskStorage storage = getStorageSupplier(1).get();
+
+    final byte[] value1 = new byte[101];
+    final byte[] value2 = new byte[102];
+    final byte[] value3 = new byte[103];
+    value1[80] = 123;
+    value2[80] = 45;
+    value3[80] = 67;
+    writeFileToStorage(storage, "resourceId1", value1);
+    writeFileToStorage(storage, "resourceId2", value2);
+    writeFileToStorage(storage, "resourceId3", value3);
+
+    // check that resources are retrieved by the right name, before testing getEntries
+    BinaryResource res1 = storage.getResource("resourceId1", null);
+    BinaryResource res2 = storage.getResource("resourceId2", null);
+    BinaryResource res3 = storage.getResource("resourceId3", null);
+    assertArrayEquals(value1, res1.read());
+    assertArrayEquals(value2, res2.read());
+    assertArrayEquals(value3, res3.read());
+
+    // obtain entries and sort by name
+    List<DiskStorage.Entry> entries = new ArrayList<>(storage.getEntries());
+    Collections.sort(entries, new Comparator<DiskStorage.Entry>() {
+      @Override
+      public int compare(DiskStorage.Entry lhs, DiskStorage.Entry rhs) {
+        return lhs.getId().compareTo(rhs.getId());
+      }
+    });
+
+    assertEquals(3, entries.size());
+    assertEquals("resourceId1", entries.get(0).getId());
+    assertEquals("resourceId2", entries.get(1).getId());
+    assertEquals("resourceId3", entries.get(2).getId());
+    assertArrayEquals(value1, entries.get(0).getResource().read());
+    assertArrayEquals(value2, entries.get(1).getResource().read());
+    assertArrayEquals(value3, entries.get(2).getResource().read());
   }
 
   @Test

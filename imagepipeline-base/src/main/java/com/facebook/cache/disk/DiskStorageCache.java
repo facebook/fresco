@@ -365,7 +365,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   @GuardedBy("mLock")
   private void removeFromIndex(DiskStorage.Entry entry) throws IOException {
-    String resourceId = mStorage.getResourceId(entry.getResource());
+    String resourceId = entry.getId();
     mIndex.values().remove(resourceId);
   }
 

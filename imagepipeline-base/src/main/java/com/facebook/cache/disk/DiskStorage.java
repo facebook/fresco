@@ -62,9 +62,6 @@ public interface DiskStorage {
    */
   BinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
 
-  /** Maps back to a resource id from the filename. */
-  String getResourceId(BinaryResource resource);
-
   /**
    * Does a resource with this name exist?
    * @param resourceId id of the resource

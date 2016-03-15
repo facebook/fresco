@@ -341,12 +341,6 @@ public class DefaultDiskStorage implements DiskStorage {
     return null;
   }
 
-  @Override
-  public String getResourceId(BinaryResource resource) {
-    String filename = ((FileBinaryResource) resource).getFile().getName();
-    return filename.replace(FileType.CONTENT.extension, "");
-  }
-
   private String getFilename(String resourceId) {
     FileInfo fileInfo = new FileInfo(FileType.CONTENT, resourceId);
     String path = getSubdirectoryPath(fileInfo.resourceId);
