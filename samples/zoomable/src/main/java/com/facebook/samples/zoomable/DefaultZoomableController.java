@@ -12,11 +12,13 @@
 
 package com.facebook.samples.zoomable;
 
-import java.util.EnumSet;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.IntDef;
 import android.view.MotionEvent;
 
 import com.facebook.common.logging.FLog;
@@ -28,11 +30,21 @@ import com.facebook.samples.gestures.TransformGestureDetector;
 public class DefaultZoomableController
     implements ZoomableController, TransformGestureDetector.Listener {
 
-  public enum LimitType {
-    TRANSLATION_X, TRANSLATION_Y, SCALE;
-    public static final EnumSet<LimitType> NONE = EnumSet.noneOf(LimitType.class);
-    public static final EnumSet<LimitType> ALL = EnumSet.allOf(LimitType.class);
-  }
+  @IntDef(flag=true, value={
+      LIMIT_NONE,
+      LIMIT_TRANSLATION_X,
+      LIMIT_TRANSLATION_Y,
+      LIMIT_SCALE,
+      LIMIT_ALL
+  })
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface LimitFlag {}
+
+  public static final int LIMIT_NONE = 0;
+  public static final int LIMIT_TRANSLATION_X = 1;
+  public static final int LIMIT_TRANSLATION_Y = 2;
+  public static final int LIMIT_SCALE = 4;
+  public static final int LIMIT_ALL = LIMIT_TRANSLATION_X | LIMIT_TRANSLATION_Y | LIMIT_SCALE;
 
   private static final Class<?> TAG = DefaultZoomableController.class;
 
@@ -290,7 +302,7 @@ public class DefaultZoomableController
    */
   public void zoomToPoint(float scale, PointF imagePoint, PointF viewPoint) {
     FLog.v(TAG, "zoomToPoint");
-    calculateZoomToPointTransform(mActiveTransform, scale, imagePoint, viewPoint, LimitType.ALL);
+    calculateZoomToPointTransform(mActiveTransform, scale, imagePoint, viewPoint, LIMIT_ALL);
     onTransformChanged();
   }
 
@@ -302,7 +314,7 @@ public class DefaultZoomableController
    * @param scale desired scale, will be limited to {min, max} scale factor
    * @param imagePoint 2D point in image's relative coordinate system (i.e. 0 <= x, y <= 1)
    * @param viewPoint 2D point in view's absolute coordinate system
-   * @param limitTypes whether to limit translation and/or scale.
+   * @param limitFlags whether to limit translation and/or scale.
    * @return whether or not the transform has been corrected due to limitation
    */
   protected boolean calculateZoomToPointTransform(
@@ -310,7 +322,7 @@ public class DefaultZoomableController
       float scale,
       PointF imagePoint,
       PointF viewPoint,
-      EnumSet<LimitType> limitTypes) {
+      @LimitFlag int limitFlags) {
     float[] viewAbsolute = mTempValues;
     viewAbsolute[0] = imagePoint.x;
     viewAbsolute[1] = imagePoint.y;
@@ -319,9 +331,9 @@ public class DefaultZoomableController
     float distanceY = viewPoint.y - viewAbsolute[1];
     boolean transformCorrected = false;
     outTransform.setScale(scale, scale, viewAbsolute[0], viewAbsolute[1]);
-    transformCorrected |= limitScale(outTransform, viewAbsolute[0], viewAbsolute[1], limitTypes);
+    transformCorrected |= limitScale(outTransform, viewAbsolute[0], viewAbsolute[1], limitFlags);
     outTransform.postTranslate(distanceX, distanceY);
-    transformCorrected |= limitTranslation(outTransform, limitTypes);
+    transformCorrected |= limitTranslation(outTransform, limitFlags);
     return transformCorrected;
   }
 
@@ -358,7 +370,7 @@ public class DefaultZoomableController
   @Override
   public void onGestureUpdate(TransformGestureDetector detector) {
     FLog.v(TAG, "onGestureUpdate");
-    boolean transformCorrected = calculateGestureTransform(mActiveTransform, LimitType.ALL);
+    boolean transformCorrected = calculateGestureTransform(mActiveTransform, LIMIT_ALL);
     onTransformChanged();
     if (transformCorrected) {
       mGestureDetector.restartGesture();
@@ -379,7 +391,7 @@ public class DefaultZoomableController
    */
   protected boolean calculateGestureTransform(
       Matrix outTransform,
-      EnumSet<LimitType> limitTypes) {
+      @LimitFlag int limitTypes) {
     TransformGestureDetector detector = mGestureDetector;
     boolean transformCorrected = false;
     outTransform.set(mPreviousTransform);
@@ -419,8 +431,8 @@ public class DefaultZoomableController
       Matrix transform,
       float pivotX,
       float pivotY,
-      EnumSet<LimitType> limitTypes) {
-    if (!limitTypes.contains(LimitType.SCALE)) {
+      @LimitFlag int limitTypes) {
+    if (!shouldLimit(limitTypes, LIMIT_SCALE)) {
       return false;
     }
     float currentScale = getMatrixScaleFactor(transform);
@@ -443,18 +455,17 @@ public class DefaultZoomableController
    * @param limitTypes whether to limit translation along the specific axis.
    * @return whether limiting has been applied or not
    */
-  private boolean limitTranslation(Matrix transform, EnumSet<LimitType> limitTypes) {
-    if (!limitTypes.contains(LimitType.TRANSLATION_X) &&
-        !limitTypes.contains(LimitType.TRANSLATION_Y)) {
+  private boolean limitTranslation(Matrix transform, @LimitFlag int limitTypes) {
+    if (!shouldLimit(limitTypes, LIMIT_TRANSLATION_X | LIMIT_TRANSLATION_Y)) {
       return false;
     }
     RectF b = mTempRect;
     b.set(mImageBounds);
     transform.mapRect(b);
-    float offsetLeft = !limitTypes.contains(LimitType.TRANSLATION_X) ? 0 :
-        getOffset(b.left, b.right, mViewBounds.left, mViewBounds.right, mImageBounds.centerX());
-    float offsetTop = !limitTypes.contains(LimitType.TRANSLATION_Y) ? 0 :
-        getOffset(b.top, b.bottom, mViewBounds.top, mViewBounds.bottom, mImageBounds.centerY());
+    float offsetLeft = shouldLimit(limitTypes, LIMIT_TRANSLATION_X) ?
+        getOffset(b.left, b.right, mViewBounds.left, mViewBounds.right, mImageBounds.centerX()) : 0;
+    float offsetTop = shouldLimit(limitTypes, LIMIT_TRANSLATION_Y) ?
+        getOffset(b.top, b.bottom, mViewBounds.top, mViewBounds.bottom, mImageBounds.centerY()) : 0;
     if (offsetLeft != 0 || offsetTop != 0) {
       transform.postTranslate(offsetLeft, offsetTop);
       return true;
@@ -463,36 +474,50 @@ public class DefaultZoomableController
   }
 
   /**
+   * Checks whether the specified limit flag is present in the limits provided.
+   *
+   * <p> If the flag contains multiple flags together using a bitwise OR, this only checks that at
+   * least one of the flags is included.
+   *
+   * @param limits the limits to apply
+   * @param flag the limit flag(s) to check for
+   * @return true if the flag (or one of the flags) is included in the limits
+   */
+  private static boolean shouldLimit(@LimitFlag int limits, @LimitFlag int flag) {
+    return (limits & flag) != LIMIT_NONE;
+  }
+
+  /**
    * Returns the offset necessary to make sure that:
    * - the image is centered within the limit if the image is smaller than the limit
    * - there is no empty space on left/right if the image is bigger than the limit
    */
   private float getOffset(
-      float imageLeft,
-      float imageRight,
-      float limitLeft,
-      float limitRight,
+      float imageStart,
+      float imageEnd,
+      float limitStart,
+      float limitEnd,
       float limitCenter) {
-    float imageWidth = imageRight - imageLeft, limitWidth = limitRight - limitLeft;
-    float limitInnerWidth = Math.min(limitCenter - limitLeft, limitRight - limitCenter) * 2;
+    float imageWidth = imageEnd - imageStart, limitWidth = limitEnd - limitStart;
+    float limitInnerWidth = Math.min(limitCenter - limitStart, limitEnd - limitCenter) * 2;
     // center if smaller than limitInnerWidth
     if (imageWidth < limitInnerWidth) {
-      return limitCenter - (imageRight + imageLeft) / 2;
+      return limitCenter - (imageEnd + imageStart) / 2;
     }
     // to the edge if in between and limitCenter is not (limitLeft + limitRight) / 2
     if (imageWidth < limitWidth) {
-      if (limitCenter < (limitLeft + limitRight) / 2) {
-        return limitLeft - imageLeft;
+      if (limitCenter < (limitStart + limitEnd) / 2) {
+        return limitStart - imageStart;
       } else {
-        return limitRight - imageRight;
+        return limitEnd - imageEnd;
       }
     }
     // to the edge if larger than limitWidth and empty space visible
-    if (imageLeft > limitLeft) {
-      return limitLeft - imageLeft;
+    if (imageStart > limitStart) {
+      return limitStart - imageStart;
     }
-    if (imageRight < limitRight) {
-      return limitRight - imageRight;
+    if (imageEnd < limitEnd) {
+      return limitEnd - imageEnd;
     }
     return 0;
   }

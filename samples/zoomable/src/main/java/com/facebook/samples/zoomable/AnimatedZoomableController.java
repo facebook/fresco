@@ -13,8 +13,6 @@ package com.facebook.samples.zoomable;
 
 import javax.annotation.Nullable;
 
-import java.util.EnumSet;
-
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.view.animation.DecelerateInterpolator;
@@ -85,7 +83,7 @@ public class AnimatedZoomableController extends DefaultZoomableController {
       float scale,
       PointF imagePoint,
       PointF viewPoint) {
-    zoomToPoint(scale, imagePoint, viewPoint, LimitType.ALL, 0, null);
+    zoomToPoint(scale, imagePoint, viewPoint, LIMIT_ALL, 0, null);
   }
 
   /**
@@ -98,7 +96,7 @@ public class AnimatedZoomableController extends DefaultZoomableController {
    * @param scale desired scale, will be limited to {min, max} scale factor
    * @param imagePoint 2D point in image's relative coordinate system (i.e. 0 <= x, y <= 1)
    * @param viewPoint 2D point in view's absolute coordinate system
-   * @param limitTypes whether to limit translation and/or scale.
+   * @param limitFlags whether to limit translation and/or scale.
    * @param durationMs length of animation of the zoom, or 0 if no animation desired
    * @param onAnimationComplete code to run when the animation completes. Ignored if durationMs=0
    */
@@ -106,7 +104,7 @@ public class AnimatedZoomableController extends DefaultZoomableController {
       float scale,
       PointF imagePoint,
       PointF viewPoint,
-      EnumSet<LimitType> limitTypes,
+      @LimitFlag int limitFlags,
       long durationMs,
       @Nullable Runnable onAnimationComplete) {
     FLog.v(TAG, "zoomToPoint: duration %d ms", durationMs);
@@ -115,7 +113,7 @@ public class AnimatedZoomableController extends DefaultZoomableController {
         scale,
         imagePoint,
         viewPoint,
-        limitTypes);
+        limitFlags);
     setTransform(mNewTransform, durationMs, onAnimationComplete);
   }
 
