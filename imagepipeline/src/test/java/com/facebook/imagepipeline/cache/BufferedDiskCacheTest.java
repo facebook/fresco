@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.disk.FileCache;
@@ -74,8 +75,7 @@ public class BufferedDiskCacheTest {
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
-  private CacheKey mCacheKey;
-  private List<CacheKey> mCacheKeys;
+  private MultiCacheKey mCacheKey;
   private AtomicBoolean mIsCancelled;
   private BufferedDiskCache mBufferedDiskCache;
   private CloseableReference<PooledByteBuffer> mCloseableReference;
@@ -88,13 +88,11 @@ public class BufferedDiskCacheTest {
     MockitoAnnotations.initMocks(this);
     mCloseableReference = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mCloseableReference);
-    mCacheKey = new SimpleCacheKey("http://test.uri");
-    CacheKey cacheKey2 = new SimpleCacheKey("http://tyrone.uri");
-    CacheKey cacheKey3 = new SimpleCacheKey("http://ian.uri");
-    mCacheKeys = new ArrayList<>();
-    mCacheKeys.add(mCacheKey);
-    mCacheKeys.add(cacheKey2);
-    mCacheKeys.add(cacheKey3);
+    List<CacheKey> keys = new ArrayList<>();
+    keys.add(new SimpleCacheKey("http://test.uri"));
+    keys.add(new SimpleCacheKey("http://tyrone.uri"));
+    keys.add(new SimpleCacheKey("http://ian.uri"));
+    mCacheKey = new MultiCacheKey(keys);
 
     mIsCancelled = new AtomicBoolean(false);
     FakeClock fakeClock = new FakeClock();
@@ -121,19 +119,19 @@ public class BufferedDiskCacheTest {
   @Test
   public void testHasKeySyncFromFileCache() {
     when(mFileCache.hasKeySync(mCacheKey)).thenReturn(true);
-    assertTrue(mBufferedDiskCache.containsSync(mCacheKeys));
+    assertTrue(mBufferedDiskCache.containsSync(mCacheKey));
   }
 
   @Test
   public void testHasKeySyncFromStagingArea() {
-    when(mStagingArea.containsKey(mCacheKeys.get(1))).thenReturn(true);
-    assertTrue(mBufferedDiskCache.containsSync(mCacheKeys));
+    when(mStagingArea.containsKey(mCacheKey)).thenReturn(true);
+    assertTrue(mBufferedDiskCache.containsSync(mCacheKey));
   }
 
   @Test
   public void testDoesntAlwaysHaveKeySync() {
     when(mFileCache.hasKey(mCacheKey)).thenReturn(true);
-    assertFalse(mBufferedDiskCache.containsSync(mCacheKeys));
+    assertFalse(mBufferedDiskCache.containsSync(mCacheKey));
   }
 
   @Test
@@ -151,12 +149,10 @@ public class BufferedDiskCacheTest {
 
   @Test
   public void testListQueriesDiskCache() throws Exception {
-    when(mFileCache.getResource(eq(mCacheKeys.get(2)))).thenReturn(mBinaryResource);
-    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKeys, mIsCancelled);
+    when(mFileCache.getResource(eq(mCacheKey))).thenReturn(mBinaryResource);
+    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     mReadPriorityExecutor.runUntilIdle();
-    for (CacheKey key : mCacheKeys) {
-      verify(mFileCache).getResource(eq(key));
-    }
+    verify(mFileCache).getResource(eq(mCacheKey));
     assertEquals(
         2,
         readTask.getResult().getByteBufferRef()
@@ -215,11 +211,9 @@ public class BufferedDiskCacheTest {
 
   @Test
   public void testCacheMissList() throws Exception {
-    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKeys, mIsCancelled);
+    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     mReadPriorityExecutor.runUntilIdle();
-    for (CacheKey key : mCacheKeys) {
-      verify(mFileCache).getResource(eq(key));
-    }
+    verify(mFileCache).getResource(eq(mCacheKey));
     assertNull(readTask.getResult());
   }
 
@@ -262,25 +256,6 @@ public class BufferedDiskCacheTest {
 
     assertSame(readTask.getResult(), mEncodedImage);
     verify(mFileCache, never()).getResource(eq(mCacheKey));
-    // Ref count should be equal to 3 (One for mCloseableReference, one that is cloned when
-    // mEncodedImage is created and a third one that is cloned when the method getByteBufferRef is
-    // called in EncodedImage).
-    assertEquals(
-        3,
-        mEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-  }
-
-  @Test
-  public void testListFromStagingAreaLater() throws Exception {
-    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKeys, mIsCancelled);
-    assertFalse(readTask.isCompleted());
-
-    when(mStagingArea.get(mCacheKeys.get(1))).thenReturn(mEncodedImage);
-    mReadPriorityExecutor.runUntilIdle();
-
-    assertSame(readTask.getResult(), mEncodedImage);
-    verify(mFileCache, never()).getResource(eq(mCacheKeys.get(2)));
     // Ref count should be equal to 3 (One for mCloseableReference, one that is cloned when
     // mEncodedImage is created and a third one that is cloned when the method getByteBufferRef is
     // called in EncodedImage).

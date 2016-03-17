@@ -33,24 +33,6 @@ public interface CacheKeyFactory {
 
   /**
    * @return {@link CacheKey} for doing encoded image lookups in the pipeline.
-   * @deprecated Will be removed in the next release of Fresco.
    */
-   @Deprecated
   CacheKey getEncodedCacheKey(ImageRequest request);
-
-  /**
-   * Return a series of one more cache keys that can be used to look up in the
-   * encoded-memory and disk caches.
-   *
-   * <p>Reads will try all the keys in the list, in order. Writes will use only the
-   * first key in the list.
-   *
-   * <p>Most implementations should return a list of length 1. Use more than one only if
-   * your app is transitioning between key generation algorithms.
-   *
-   * <p>Avoid having duplicates in this list - they will result in extra disk reads.
-   *
-   * @return {@link CacheKey}s for doing encoded image lookups in the pipeline.
-   */
-  List<CacheKey> getEncodedCacheKeys(ImageRequest request);
 }

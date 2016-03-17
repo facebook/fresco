@@ -9,15 +9,12 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
@@ -45,7 +42,6 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final boolean mUseMultipleReadKeys;
   private final boolean mChooseCacheByImageSize;
   private final int mForceSmallCacheThresholdBytes;
 
@@ -54,13 +50,11 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer,
-      boolean useMultipleReadKeys,
       int forceSmallCacheThresholdBytes) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
-    mUseMultipleReadKeys = useMultipleReadKeys;
     mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
     mChooseCacheByImageSize = (forceSmallCacheThresholdBytes > 0);
   }
@@ -76,36 +70,25 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
 
     producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
 
-    List<CacheKey> cacheKeys = null;
-    if (mUseMultipleReadKeys) {
-      cacheKeys = mCacheKeyFactory.getEncodedCacheKeys(imageRequest);
-      Preconditions.checkState(!cacheKeys.isEmpty(), "Cache key factory returned empty list");
-    }
-    final CacheKey preferredCacheKey = mUseMultipleReadKeys ?
-        cacheKeys.get(0) : mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
     boolean isSmallRequest = (imageRequest.getImageType() == ImageRequest.ImageType.SMALL);
-    BufferedDiskCache preferredCache = isSmallRequest ?
+    final BufferedDiskCache preferredCache = isSmallRequest ?
         mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
     Task<EncodedImage> diskLookupTask;
     if (mChooseCacheByImageSize) {
-      if (cacheKeys == null) {
-        cacheKeys = new ArrayList<>(1);
-        cacheKeys.add(preferredCacheKey);
-      }
-      final List<CacheKey> finalCacheKeys = cacheKeys;
-      boolean alreadyInSmall = mSmallImageBufferedDiskCache.containsSync(cacheKeys);
-      boolean alreadyInMain = mDefaultBufferedDiskCache.containsSync(cacheKeys);
-      BufferedDiskCache firstCache;
+      boolean alreadyInSmall = mSmallImageBufferedDiskCache.containsSync(cacheKey);
+      boolean alreadyInMain = mDefaultBufferedDiskCache.containsSync(cacheKey);
+      final BufferedDiskCache firstCache;
+      final BufferedDiskCache secondCache ;
       if (alreadyInSmall || !alreadyInMain) {
         firstCache = mSmallImageBufferedDiskCache;
+        secondCache = mDefaultBufferedDiskCache;
       } else {
         firstCache = mDefaultBufferedDiskCache;
+        secondCache = mSmallImageBufferedDiskCache;
       }
-      diskLookupTask = getFromCacheAsync(
-            firstCache, cacheKeys, preferredCacheKey, isCancelled);
-      final BufferedDiskCache secondCache = (firstCache == mSmallImageBufferedDiskCache)
-          ? mDefaultBufferedDiskCache : mSmallImageBufferedDiskCache;
+      diskLookupTask = firstCache.get(cacheKey, isCancelled);
       diskLookupTask = diskLookupTask.continueWithTask(
           new Continuation<EncodedImage, Task<EncodedImage>>() {
         @Override
@@ -113,15 +96,14 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
           if (isTaskCancelled(task) || (!task.isFaulted() && task.getResult() != null)) {
             return task;
           }
-          return getFromCacheAsync(
-              secondCache, finalCacheKeys, preferredCacheKey, isCancelled);
+          return secondCache.get(cacheKey, isCancelled);
         }
       });
     } else {
-      diskLookupTask = getFromCacheAsync(preferredCache, cacheKeys, preferredCacheKey, isCancelled);
+      diskLookupTask = preferredCache.get(cacheKey, isCancelled);
     }
     Continuation<EncodedImage, Void> continuation =
-        onFinishDiskReads(consumer, preferredCache, preferredCacheKey, producerContext);
+        onFinishDiskReads(consumer, preferredCache, cacheKey, producerContext);
     diskLookupTask.continueWith(continuation);
     subscribeTaskForRequestCancellation(isCancelled, producerContext);
   }
@@ -175,15 +157,6 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
   private static boolean isTaskCancelled(Task<?> task) {
     return task.isCancelled() ||
         (task.isFaulted() && task.getError() instanceof CancellationException);
-  }
-
-  private Task<EncodedImage> getFromCacheAsync(
-      BufferedDiskCache cache,
-      List<CacheKey> cacheKeys,
-      CacheKey preferredKey,
-      AtomicBoolean isCancelled) {
-    return mUseMultipleReadKeys ?
-        cache.get(cacheKeys, isCancelled) :  cache.get(preferredKey, isCancelled);
   }
 
   private void maybeStartInputProducer(

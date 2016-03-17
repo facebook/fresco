@@ -271,7 +271,6 @@ public class ProducerSequenceFactoryTest {
           null,
           null,
           false,
-          true,
           -1);
     }
 

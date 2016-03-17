@@ -338,7 +338,6 @@ public class ImagePipelineFactory {
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory(),
               mConfig.isDecodeFileDescriptorEnabled(),
-              mConfig.useMultipleReadKeys(),
               mConfig.getForceSmallCacheThresholdBytes());
     }
     return mProducerFactory;

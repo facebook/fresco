@@ -157,11 +157,11 @@ public class DiskStorageCacheTest {
   private BinaryResource getResource(
       DiskStorage storage,
       final CacheKey key) throws IOException {
-     return storage.getResource(mCache.getResourceId(key), key);
+     return storage.getResource(mCache.getResourceIds(key).get(0), key);
   }
 
   private BinaryResource getResource(final CacheKey key) throws IOException {
-    return mStorage.getResource(mCache.getResourceId(key), key);
+    return mStorage.getResource(mCache.getResourceIds(key).get(0), key);
   }
 
   private byte[] getContents(BinaryResource resource) throws IOException {

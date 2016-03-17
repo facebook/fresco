@@ -15,6 +15,7 @@ import java.util.List;
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
@@ -323,10 +324,11 @@ public class ImagePipelineTest {
     CacheKey dummyCacheKey = mock(CacheKey.class);
     List<CacheKey> list = new ArrayList<>();
     list.add(dummyCacheKey);
-    when(mCacheKeyFactory.getEncodedCacheKeys(any(ImageRequest.class))).thenReturn(list);
+    MultiCacheKey multiKey = new MultiCacheKey(list);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class))).thenReturn(multiKey);
     mImagePipeline.evictFromDiskCache(uri);
-    verify(mMainDiskStorageCache).remove(dummyCacheKey);
-    verify(mSmallImageDiskStorageCache).remove(dummyCacheKey);
+    verify(mMainDiskStorageCache).remove(multiKey);
+    verify(mSmallImageDiskStorageCache).remove(multiKey);
   }
 
   @Test

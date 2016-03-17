@@ -12,7 +12,6 @@ package com.facebook.imagepipeline.core;
 import javax.annotation.concurrent.ThreadSafe;
 
 import java.lang.Exception;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,7 +27,6 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
 import com.facebook.datasource.SimpleDataSource;
-import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
@@ -316,11 +314,9 @@ public class ImagePipeline {
    * @param imageRequest The imageRequest for the image to evict from disk cache
    */
   public void evictFromDiskCache(final ImageRequest imageRequest) {
-    List<CacheKey> cacheKeys = mCacheKeyFactory.getEncodedCacheKeys(imageRequest);
-    for (CacheKey cacheKey : cacheKeys) {
-      mMainBufferedDiskCache.remove(cacheKey);
-      mSmallImageBufferedDiskCache.remove(cacheKey);
-    }
+    CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    mMainBufferedDiskCache.remove(cacheKey);
+    mSmallImageBufferedDiskCache.remove(cacheKey);
   }
 
   /**
@@ -414,9 +410,9 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public DataSource<Boolean> isInDiskCache(final ImageRequest imageRequest) {
-    final List<CacheKey> cacheKeys = mCacheKeyFactory.getEncodedCacheKeys(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
     final SimpleDataSource<Boolean> dataSource = SimpleDataSource.create();
-    mMainBufferedDiskCache.contains(cacheKeys)
+    mMainBufferedDiskCache.contains(cacheKey)
         .continueWithTask(
             new Continuation<Boolean, Task<Boolean>>() {
               @Override
@@ -424,7 +420,7 @@ public class ImagePipeline {
                 if (!task.isCancelled() && !task.isFaulted() && task.getResult()) {
                   return Task.forResult(true);
                 }
-                return mSmallImageBufferedDiskCache.contains(cacheKeys);
+                return mSmallImageBufferedDiskCache.contains(cacheKey);
               }
             })
         .continueWith(

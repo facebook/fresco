@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
@@ -57,7 +58,7 @@ public class EncodedMemoryCacheProducerTest {
   @Mock public ImageRequest mImageRequest;
   @Mock public ProducerListener mProducerListener;
   @Mock public Exception mException;
-  private CacheKey mCacheKey;
+  private MultiCacheKey mCacheKey;
   private PooledByteBuffer mPooledByteBuffer1;
   private PooledByteBuffer mPooledByteBuffer2;
   private CloseableReference<PooledByteBuffer> mFinalImageReference;
@@ -73,8 +74,7 @@ public class EncodedMemoryCacheProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mEncodedMemoryCacheProducer =
-        new EncodedMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mInputProducer, true);
-    mCacheKey = new SimpleCacheKey("http://dummy.uri");
+        new EncodedMemoryCacheProducer(mMemoryCache, mCacheKeyFactory, mInputProducer);
     mPooledByteBuffer1 = mock(PooledByteBuffer.class);
     mPooledByteBuffer2 = mock(PooledByteBuffer.class);
     mFinalImageReference = CloseableReference.of(mPooledByteBuffer1);
@@ -83,6 +83,10 @@ public class EncodedMemoryCacheProducerTest {
     mFinalEncodedImage = new EncodedImage(mFinalImageReference);
     mIntermediateEncodedImage = new EncodedImage(mIntermediateImageReference);
     mFinalEncodedImageClone = new EncodedImage(mFinalImageReferenceClone);
+    List<CacheKey> list = new ArrayList<>();
+    list.add(new SimpleCacheKey("http://dummy.uri"));
+    mCacheKey = new MultiCacheKey(list);
+    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest)).thenReturn(mCacheKey);
 
     when(mMemoryCache.cache(mCacheKey, mFinalImageReference)).thenReturn(mFinalImageReferenceClone);
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
@@ -91,9 +95,6 @@ public class EncodedMemoryCacheProducerTest {
     when(mProducerContext.getId()).thenReturn(mRequestId);
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
-    List<CacheKey> list = new ArrayList<>();
-    list.add(mCacheKey);
-    when(mCacheKeyFactory.getEncodedCacheKeys(mImageRequest)).thenReturn(list);
 
   }
 

@@ -30,17 +30,14 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
   private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final boolean mUseNewInterface;
 
   public EncodedMemoryCacheProducer(
       MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
       CacheKeyFactory cacheKeyFactory,
-      Producer<EncodedImage> inputProducer,
-      boolean useNewInterface) {
+      Producer<EncodedImage> inputProducer) {
     mMemoryCache = memoryCache;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
-    mUseNewInterface = useNewInterface;
   }
 
   @Override
@@ -52,9 +49,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     final ProducerListener listener = producerContext.getListener();
     listener.onProducerStart(requestId, PRODUCER_NAME);
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    final CacheKey cacheKey = mUseNewInterface ?
-        mCacheKeyFactory.getEncodedCacheKeys(imageRequest).get(0) :
-        mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
 
     CloseableReference<PooledByteBuffer> cachedReference = mMemoryCache.get(cacheKey);
     try {

@@ -80,7 +80,6 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final boolean mUseMultipleReadKeys;
   private final int mForceSmallCacheThresholdBytes;
 
   // Postproc dependencies
@@ -102,7 +101,6 @@ public class ProducerFactory {
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       boolean decodeFileDescriptorEnabled,
-      boolean useMultipleReadKeys,
       int forceSmallCacheThresholdBytes) {
     mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
     mContentResolver = context.getApplicationContext().getContentResolver();
@@ -127,7 +125,6 @@ public class ProducerFactory {
     mPlatformBitmapFactory = platformBitmapFactory;
 
     mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
-    mUseMultipleReadKeys = useMultipleReadKeys;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -178,7 +175,6 @@ public class ProducerFactory {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         inputProducer,
-        mUseMultipleReadKeys,
         mForceSmallCacheThresholdBytes);
   }
 
@@ -186,8 +182,7 @@ public class ProducerFactory {
       Producer<EncodedImage> inputProducer) {
     return new EncodedCacheKeyMultiplexProducer(
         mCacheKeyFactory,
-        inputProducer,
-        mUseMultipleReadKeys);
+        inputProducer);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(
@@ -195,8 +190,7 @@ public class ProducerFactory {
     return new EncodedMemoryCacheProducer(
         mEncodedMemoryCache,
         mCacheKeyFactory,
-        inputProducer,
-        mUseMultipleReadKeys);
+        inputProducer);
   }
 
   public LocalAssetFetchProducer newLocalAssetFetchProducer() {

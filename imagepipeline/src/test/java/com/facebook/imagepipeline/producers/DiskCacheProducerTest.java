@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
@@ -69,8 +70,7 @@ public class DiskCacheProducerTest {
   private SettableProducerContext mProducerContext;
   private SettableProducerContext mLowestLevelProducerContext;
   private final String mRequestId = "mRequestId";
-  private CacheKey mCacheKey;
-  private List<CacheKey> mCacheKeys;
+  private MultiCacheKey mCacheKey;
   private PooledByteBuffer mIntermediatePooledByteBuffer;
   private PooledByteBuffer mFinalPooledByteBuffer;
   private CloseableReference<PooledByteBuffer> mIntermediateImageReference;
@@ -90,18 +90,16 @@ public class DiskCacheProducerTest {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mInputProducer,
-        true,
         -1);
     mForceSmallCacheProducer = new DiskCacheProducer(
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mInputProducer,
-        true,
         FORCE_SMALL_CACHE_THRESHOLD);
-    mCacheKey = new SimpleCacheKey("http://dummy.uri");
-    mCacheKeys = new ArrayList<>(1);
-    mCacheKeys.add(mCacheKey);
+    List<CacheKey> keys = new ArrayList<>(1);
+    keys.add(new SimpleCacheKey("http://dummy.uri"));
+    mCacheKey = new MultiCacheKey(keys);
     mIntermediatePooledByteBuffer = mock(PooledByteBuffer.class);
     mFinalPooledByteBuffer = mock(PooledByteBuffer.class);
     mIntermediateImageReference = CloseableReference.of(mIntermediatePooledByteBuffer);
@@ -129,7 +127,7 @@ public class DiskCacheProducerTest {
         true,
         Priority.MEDIUM);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKeys(mImageRequest)).thenReturn(mCacheKeys);
+    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest)).thenReturn(mCacheKey);
     when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.DEFAULT);
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
   }
@@ -405,15 +403,17 @@ public class DiskCacheProducerTest {
   public void testChecksSmallCacheFirst() {
     setupDiskCacheGetSuccess(mSmallImageBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);
-    verify(mDefaultBufferedDiskCache, never()).get(any(List.class), any(AtomicBoolean.class));
+    verify(mDefaultBufferedDiskCache, never())
+        .get(any(MultiCacheKey.class), any(AtomicBoolean.class));
   }
 
   @Test
   public void testAvoidsDiskReadWhenFoundInIndex() {
-    when(mDefaultBufferedDiskCache.containsSync(mCacheKeys)).thenReturn(true);
+    when(mDefaultBufferedDiskCache.containsSync(mCacheKey)).thenReturn(true);
     setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);
-    verify(mSmallImageBufferedDiskCache, never()).get(any(List.class), any(AtomicBoolean.class));
+    verify(mSmallImageBufferedDiskCache, never())
+        .get(any(MultiCacheKey.class), any(AtomicBoolean.class));
   }
 
   @Test
@@ -421,17 +421,18 @@ public class DiskCacheProducerTest {
     setupDiskCacheGetNotFound(mSmallImageBufferedDiskCache);
     setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);
-    verify(mSmallImageBufferedDiskCache).get(eq(mCacheKeys), any(AtomicBoolean.class));
-    verify(mDefaultBufferedDiskCache).get(eq(mCacheKeys), any(AtomicBoolean.class));
+    verify(mSmallImageBufferedDiskCache).get(eq(mCacheKey), any(AtomicBoolean.class));
+    verify(mDefaultBufferedDiskCache).get(eq(mCacheKey), any(AtomicBoolean.class));
   }
 
   @Test
   public void testIgnoresSmallHintIndex() {
     when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
-    when(mDefaultBufferedDiskCache.containsSync(mCacheKeys)).thenReturn(true);
+    when(mDefaultBufferedDiskCache.containsSync(mCacheKey)).thenReturn(true);
     setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);
-    verify(mSmallImageBufferedDiskCache, never()).get(any(List.class), any(AtomicBoolean.class));
+    verify(mSmallImageBufferedDiskCache, never())
+        .get(any(MultiCacheKey.class), any(AtomicBoolean.class));
     verify(mConsumer).onNewResult(mFinalEncodedImage, true);
   }
 
@@ -470,7 +471,8 @@ public class DiskCacheProducerTest {
     setupDiskCacheGetWait(mSmallImageBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);
     mTaskCompletionSource.setCancelled();
-    verify(mDefaultBufferedDiskCache, never()).get(any(List.class), any(AtomicBoolean.class));
+    verify(mDefaultBufferedDiskCache, never())
+        .get(any(MultiCacheKey.class), any(AtomicBoolean.class));
     verifyNoMoreInteractions(mInputProducer);
     verify(mProducerListener).onProducerFinishWithCancellation(
         mRequestId, PRODUCER_NAME, null);
@@ -478,22 +480,22 @@ public class DiskCacheProducerTest {
 
   private void setupDiskCacheGetWait(BufferedDiskCache bufferedDiskCache) {
     mTaskCompletionSource = Task.create();
-    when(bufferedDiskCache.get(eq(mCacheKeys), mIsCancelled.capture()))
+    when(bufferedDiskCache.get(eq(mCacheKey), mIsCancelled.capture()))
         .thenReturn(mTaskCompletionSource.getTask());
   }
 
   private void setupDiskCacheGetSuccess(BufferedDiskCache bufferedDiskCache) {
-    when(bufferedDiskCache.get(eq(mCacheKeys), any(AtomicBoolean.class)))
+    when(bufferedDiskCache.get(eq(mCacheKey), any(AtomicBoolean.class)))
         .thenReturn(Task.forResult(mFinalEncodedImage));
   }
 
   private void setupDiskCacheGetNotFound(BufferedDiskCache bufferedDiskCache) {
-    when(bufferedDiskCache.get(eq(mCacheKeys), any(AtomicBoolean.class)))
+    when(bufferedDiskCache.get(eq(mCacheKey), any(AtomicBoolean.class)))
         .thenReturn(Task.<EncodedImage>forResult(null));
   }
 
   private void setupDiskCacheGetFailure(BufferedDiskCache bufferedDiskCache) {
-    when(bufferedDiskCache.get(eq(mCacheKeys), any(AtomicBoolean.class)))
+    when(bufferedDiskCache.get(eq(mCacheKey), any(AtomicBoolean.class)))
         .thenReturn(Task.<EncodedImage>forError(mException));
   }
 
