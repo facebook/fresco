@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.generic;
 
-import javax.annotation.Nullable;
-
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -28,6 +26,8 @@ import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+
+import javax.annotation.Nullable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
@@ -163,6 +163,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     // fade drawable composed of layers
     mFadeDrawable = new FadeDrawable(layers);
     mFadeDrawable.setTransitionDuration(builder.getFadeDuration());
+    mFadeDrawable.setCrossFadeEnabled(builder.getCrossFadeEnabled());
 
     // rounded corners drawable (optional)
     Drawable maybeRoundedDrawable =
@@ -468,6 +469,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
       WrappingUtils.updateLeafRounding(getLayerParentDrawable(i), mRoundingParams, mResources);
     }
+  }
+
+  public void setCrossFadeEnabled(boolean crossFadeEnabled){
+    mFadeDrawable.setCrossFadeEnabled(crossFadeEnabled);
   }
 
   /** Gets the rounding params. */
