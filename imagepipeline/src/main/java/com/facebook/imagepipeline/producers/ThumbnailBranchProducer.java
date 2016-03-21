@@ -49,6 +49,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
 
     private final ProducerContext mProducerContext;
     private final int mProducerIndex;
+    private final ResizeOptions mResizeOptions;
 
     public ThumbnailConsumer(
         final Consumer<EncodedImage> consumer,
@@ -56,13 +57,17 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
       super(consumer);
       mProducerContext = producerContext;
       mProducerIndex = producerIndex;
+      mResizeOptions = mProducerContext.getImageRequest().getResizeOptions();
     }
 
     @Override
     protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
-      if (newResult != null) {
+      if (newResult != null &&
+          (!isLast || ThumbnailSizeChecker.isImageBigEnough(newResult, mResizeOptions))) {
         getConsumer().onNewResult(newResult, isLast);
       } else if (isLast) {
+        EncodedImage.closeSafely(newResult);
+
         boolean fallback = produceResultsFromThumbnailProducer(
             mProducerIndex + 1,
             getConsumer(),
@@ -97,7 +102,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
     }
 
     mThumbnailProducers[producerIndex]
-        .produceResults(new ThumbnailConsumer(consumer, context, startIndex), context);
+        .produceResults(new ThumbnailConsumer(consumer, context, producerIndex), context);
     return true;
   }
 

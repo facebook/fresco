@@ -212,7 +212,7 @@ public class ProducerFactory {
         mDecodeFileDescriptorEnabled);
   }
 
-  public LocalContentUriThumbnailFetchProducer newLocalContentUriThumbnailFetchProducer() {
+    public LocalContentUriThumbnailFetchProducer newLocalContentUriThumbnailFetchProducer() {
     return new LocalContentUriThumbnailFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,

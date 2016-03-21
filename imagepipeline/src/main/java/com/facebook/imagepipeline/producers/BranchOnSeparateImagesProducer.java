@@ -57,6 +57,8 @@ public class BranchOnSeparateImagesProducer
         getConsumer().onNewResult(newResult, isLast && isGoodEnough);
       }
       if (isLast && !isGoodEnough) {
+        EncodedImage.closeSafely(newResult);
+
         mInputProducer2.produceResults(getConsumer(), mProducerContext);
       }
     }

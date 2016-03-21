@@ -71,14 +71,14 @@ public class ThumbnailBranchProducerTest {
     mProducer.produceResults(mImageConsumer, mProducerContext);
 
     verify(mImageConsumer).onNewResult(null, true);
-    verifyZeroInteractions(mThumbnailProducers);
+    verifyZeroInteractions((Object[]) mThumbnailProducers);
   }
 
   @Test
   public void testFirstProducerUsedIfSufficientForResizeOptions() {
     mockRequestWithResizeOptions(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0]);
 
-    EncodedImage firstImage = mockEncodedImage(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0]);
+    EncodedImage firstImage = mockEncodedImage(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0], 0);
     mockProducersToProduce(firstImage);
 
     mProducer.produceResults(mImageConsumer, mProducerContext);
@@ -91,9 +91,9 @@ public class ThumbnailBranchProducerTest {
   public void testSecondProducerUsedIfSufficientForResizeOptions() {
     mockRequestWithResizeOptions(THUMBNAIL_WIDTHS[0] + 50, THUMBNAIL_HEIGHTS[0] + 50);
 
-    EncodedImage secondImage = mockEncodedImage(THUMBNAIL_WIDTHS[1], THUMBNAIL_HEIGHTS[1]);
+    EncodedImage secondImage = mockEncodedImage(THUMBNAIL_WIDTHS[1], THUMBNAIL_HEIGHTS[1], 0);
     mockProducersToProduce(
-        mockEncodedImage(THUMBNAIL_WIDTHS[0] + 50, THUMBNAIL_HEIGHTS[0] + 50),
+        mockEncodedImage(THUMBNAIL_WIDTHS[0] + 50, THUMBNAIL_HEIGHTS[0] + 50, 0),
         secondImage);
 
     mProducer.produceResults(mImageConsumer, mProducerContext);
@@ -106,7 +106,7 @@ public class ThumbnailBranchProducerTest {
   public void testFinalProducerUsedIfFirstTwoReturnNullOrFailure() {
     mockRequestWithResizeOptions(THUMBNAIL_WIDTHS[0] - 50, THUMBNAIL_HEIGHTS[0] - 50);
 
-    EncodedImage thirdImage = mockEncodedImage(THUMBNAIL_WIDTHS[2], THUMBNAIL_HEIGHTS[2]);
+    EncodedImage thirdImage = mockEncodedImage(THUMBNAIL_WIDTHS[2], THUMBNAIL_HEIGHTS[2], 0);
     mockProducersToProduce(THROW_FAILURE, null, thirdImage);
 
     mProducer.produceResults(mImageConsumer, mProducerContext);
@@ -128,7 +128,7 @@ public class ThumbnailBranchProducerTest {
     verify(mThumbnailProducers[0]).canProvideImageForSize(resizeOptions);
     verify(mThumbnailProducers[1]).canProvideImageForSize(resizeOptions);
     verify(mThumbnailProducers[2]).canProvideImageForSize(resizeOptions);
-    verifyNoMoreInteractions(mThumbnailProducers);
+    verifyNoMoreInteractions((Object[]) mThumbnailProducers);
   }
 
   @Test
@@ -159,15 +159,65 @@ public class ThumbnailBranchProducerTest {
     verifyAllProducersRequestedForResults();
   }
 
+  @Test
+  public void testFinalProducerUsedIfFirstTwoReturnTooSmallImages() {
+    int desiredWidth = THUMBNAIL_WIDTHS[0] - 50;
+    int desiredHeight = THUMBNAIL_HEIGHTS[0] - 50;
+    mockRequestWithResizeOptions(desiredWidth, desiredHeight);
+
+    EncodedImage thirdImage = mockEncodedImage(THUMBNAIL_WIDTHS[2], THUMBNAIL_HEIGHTS[2], 0);
+    mockProducersToProduce(
+        mockEncodedImage(desiredWidth / 2, desiredHeight / 2, 0),
+        mockEncodedImage(desiredWidth / 2, desiredHeight / 2, 0),
+        thirdImage);
+
+    mProducer.produceResults(mImageConsumer, mProducerContext);
+
+    verify(mImageConsumer).onNewResult(thirdImage, true);
+    verifyAllProducersRequestedForResults();
+  }
+
+  @Test
+  public void testSecondProducerUsedIfImageBigEnoughWhenRotated() {
+    mockRequestWithResizeOptions(THUMBNAIL_WIDTHS[1], THUMBNAIL_HEIGHTS[1]);
+
+    EncodedImage secondImage =
+        mockEncodedImage(THUMBNAIL_HEIGHTS[1] * 3 / 4, THUMBNAIL_WIDTHS[1] * 3 / 4, 90);
+    mockProducersToProduce(
+        mockEncodedImage(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0], 0),
+        secondImage);
+
+    mProducer.produceResults(mImageConsumer, mProducerContext);
+
+    verify(mImageConsumer).onNewResult(secondImage, true);
+    verifyZeroInteractions(mThumbnailProducers[2]);
+  }
+
+  @Test
+  public void testNullReturnedIfLastImageNotBigEnoughWhenRotated() {
+    mockRequestWithResizeOptions(THUMBNAIL_WIDTHS[2], THUMBNAIL_HEIGHTS[2]);
+
+    mockProducersToProduce(
+        mockEncodedImage(THUMBNAIL_WIDTHS[0], THUMBNAIL_HEIGHTS[0], 0),
+        mockEncodedImage(THUMBNAIL_WIDTHS[1], THUMBNAIL_HEIGHTS[1], 0),
+        mockEncodedImage(THUMBNAIL_HEIGHTS[2] / 2, THUMBNAIL_WIDTHS[2] / 2, 90));
+
+    mProducer.produceResults(mImageConsumer, mProducerContext);
+
+    verify(mImageConsumer).onNewResult(null, true);
+    verify(mThumbnailProducers[2]).produceResults(any(Consumer.class), any(ProducerContext.class));
+  }
+
   private void mockRequestWithResizeOptions(int width, int height) {
     ResizeOptions resizeOptions = new ResizeOptions(width, height);
     when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
   }
 
-  private EncodedImage mockEncodedImage(int width, int height) {
+  private static EncodedImage mockEncodedImage(int width, int height, int rotationAngle) {
     EncodedImage mockImage = mock(EncodedImage.class);
     when(mockImage.getWidth()).thenReturn(width);
     when(mockImage.getHeight()).thenReturn(height);
+    when(mockImage.getRotationAngle()).thenReturn(rotationAngle);
     return mockImage;
   }
 

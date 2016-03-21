@@ -26,6 +26,9 @@ public final class ThumbnailSizeChecker {
    */
   public static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f/3;
 
+  private static final int ROTATED_90_DEGREES_CLOCKWISE = 90;
+  private static final int ROTATED_90_DEGREES_COUNTER_CLOCKWISE = 270;
+
   /**
    * Checks whether the producer may be able to produce images of the specified size. This makes no
    * promise about being able to produce images for a particular source, only generally being able
@@ -50,7 +53,14 @@ public final class ThumbnailSizeChecker {
       return false;
     }
 
-    return isImageBigEnough(encodedImage.getWidth(), encodedImage.getHeight(), resizeOptions);
+    switch (encodedImage.getRotationAngle()) {
+      case ROTATED_90_DEGREES_CLOCKWISE:
+      case ROTATED_90_DEGREES_COUNTER_CLOCKWISE:
+        // Swap width and height when checking size as this will be rotated
+        return isImageBigEnough(encodedImage.getHeight(), encodedImage.getWidth(), resizeOptions);
+      default:
+        return isImageBigEnough(encodedImage.getWidth(), encodedImage.getHeight(), resizeOptions);
+    }
   }
 
   public static int getAcceptableSize(int size) {
