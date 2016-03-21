@@ -35,7 +35,8 @@ import com.facebook.imageutils.JfifUtil;
 /**
  * Represents a local content Uri fetch producer.
  */
-public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer {
+public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
+    implements ThumbnailProducer<EncodedImage> {
 
   private static final Class<?> TAG = LocalContentUriThumbnailFetchProducer.class;
 
@@ -50,7 +51,6 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer {
 
   private static final Rect MINI_THUMBNAIL_DIMENSIONS = new Rect(0, 0, 512, 384);
   private static final Rect MICRO_THUMBNAIL_DIMENSIONS = new Rect(0, 0, 96, 96);
-  private static final float ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO = 4.0f/3;
 
   private static final int NO_THUMBNAIL = 0;
 
@@ -63,6 +63,14 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer {
       boolean decodeFileDescriptorEnabled) {
     super(executor, pooledByteBufferFactory,decodeFileDescriptorEnabled);
     mContentResolver = contentResolver;
+  }
+
+  @Override
+  public boolean canProvideImageForSize(ResizeOptions resizeOptions) {
+    return ThumbnailSizeChecker.isImageBigEnough(
+        MINI_THUMBNAIL_DIMENSIONS.width(),
+        MINI_THUMBNAIL_DIMENSIONS.height(),
+        resizeOptions);
   }
 
   @Override
@@ -146,21 +154,19 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer {
   // We can add a small interval of acceptance over the size of the thumbnail since the quality lost
   // when scaling it to fit a view will not be significant.
   private static int getThumbnailKind(ResizeOptions resizeOptions) {
-    if (isThumbnailBigEnough(resizeOptions, MICRO_THUMBNAIL_DIMENSIONS)) {
+    if (ThumbnailSizeChecker.isImageBigEnough(
+        MICRO_THUMBNAIL_DIMENSIONS.width(),
+        MICRO_THUMBNAIL_DIMENSIONS.height(),
+        resizeOptions)) {
       return MediaStore.Images.Thumbnails.MICRO_KIND;
-    } else if (isThumbnailBigEnough(resizeOptions, MINI_THUMBNAIL_DIMENSIONS)) {
+    } else if (ThumbnailSizeChecker.isImageBigEnough(
+        MINI_THUMBNAIL_DIMENSIONS.width(),
+        MINI_THUMBNAIL_DIMENSIONS.height(),
+        resizeOptions)) {
       return MediaStore.Images.Thumbnails.MINI_KIND;
+    } else {
+      return NO_THUMBNAIL;
     }
-    return NO_THUMBNAIL;
-  }
-
-  private static boolean isThumbnailBigEnough(
-      ResizeOptions resizeOptions,
-      Rect thumbnailDimensions) {
-    return resizeOptions.width <=
-        thumbnailDimensions.width() * ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO
-        && resizeOptions.height <=
-        thumbnailDimensions.height() * ACCEPTABLE_REQUESTED_TO_ACTUAL_SIZE_RATIO;
   }
 
   private static int getLength(String pathname) {

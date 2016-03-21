@@ -68,7 +68,6 @@ public class LocalContentUriThumbnailFetchProducerTest {
   private final String mRequestId = "mRequestId";
   private Uri mContentUri;
   private LocalContentUriThumbnailFetchProducer mLocalContentUriThumbnailFetchProducer;
-  private EncodedImage mCapturedEncodedImage;
 
   @Before
   public void setUp() throws Exception {
@@ -179,7 +178,7 @@ public class LocalContentUriThumbnailFetchProducerTest {
 
   @Test
   public void testIsLargerThanThumbnailMaxSize() {
-    mockResizeOptions(700, 384);
+    mockResizeOptions(1000, 384);
 
     produceResultsAndRunUntilIdle();
 

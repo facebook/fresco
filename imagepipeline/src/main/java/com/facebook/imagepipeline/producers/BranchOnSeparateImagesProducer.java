@@ -51,7 +51,8 @@ public class BranchOnSeparateImagesProducer
     @Override
     protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       ImageRequest request = mProducerContext.getImageRequest();
-      boolean isGoodEnough = isResultGoodEnough(newResult, request);
+      boolean isGoodEnough =
+          ThumbnailSizeChecker.isImageBigEnough(newResult, request.getResizeOptions());
       if (newResult != null && (isGoodEnough || request.getLocalThumbnailPreviewsEnabled())) {
         getConsumer().onNewResult(newResult, isLast && isGoodEnough);
       }
@@ -63,15 +64,6 @@ public class BranchOnSeparateImagesProducer
     @Override
     protected void onFailureImpl(Throwable t) {
       mInputProducer2.produceResults(getConsumer(), mProducerContext);
-    }
-
-    private boolean isResultGoodEnough(EncodedImage encodedImage, ImageRequest imageRequest) {
-      if (encodedImage == null) {
-        return false;
-      }
-
-      return encodedImage.getWidth() >= imageRequest.getPreferredWidth() &&
-          encodedImage.getHeight() >= imageRequest.getPreferredHeight();
     }
   }
 }
