@@ -25,7 +25,7 @@ Android lays out View objects, and only they get notified of system events. `Dra
 
 #### Handling attach/detach events
 
-**Your app may leak memory if this steps are not followed.**
+**Your app may leak memory if these steps are not followed.**
 
 There is no point in images staying in memory when Android is no longer displaying the view - it may have scrolled off-screen, or otherwise not be drawing. Drawees listen for detaches and release memory when they occur. They will automatically restore the image when it comes back on-screen.
 
