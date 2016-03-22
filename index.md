@@ -86,6 +86,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Facebook Pages Manager](https://play.google.com/store/apps/details?id=com.facebook.pages.app)
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
+* [CondomCraze](https://play.google.com/store/apps/details?id=com.condomcraze.android)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
