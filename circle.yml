@@ -1,0 +1,3 @@
+machine:
+  environment:
+    PATH: $ANDROID_NDK:$PATH
