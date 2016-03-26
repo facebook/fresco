@@ -11,13 +11,13 @@ These features require you to [construct an image request](using-controllerbuild
 
 ### Terminology
 
-- **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn upscaled or downscaled.
-- **Resizing** is a pipeline operation executed in software. This changes the encoded image in memory before it is being decoded.
-- **Downsampling** is also a pipeline operation implemented in software. Rather than create a new encoded image, it simply decodes only a subset of the pixels, resulting in a smaller output bitmap.
+- **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn downscaled or upscaled.
+- **Resizing** is a pipeline operation executed in software. This changes the encoded image in memory before it is being decoded. The decoded bitmap will be smaller than the original image.
+- **Downsampling** is also a pipeline operation implemented in software. Rather than creating a new encoded image, it simply decodes only a subset of the pixels, resulting in a smaller output bitmap.
 
 ### Which should you use and when?
 
-If the image is not much bigger than the view, then just scaling should be done. It's faster, easier to code, and results in a higher quality output.
+If the image is **not** much bigger than the view, then only scaling should be done. It's faster, easier to code, and results in a higher quality output. Of course, images smaller than the view are subset of those **not** much bigger than the view. Therefore, if you need to upscale the image, this should too be done by scaling, and not by resizing. That way memory won't be wasted on a larger bitmap that does not provide any better quality.
 However, for images much bigger than the view, such as **local camera images**, resizing in addition to scaling is higly recommended.
 
 As for what exactly "much bigger" means, as a rule of thumb if the image is more than 2 times biger than the view (in total number of pixels, i.e. width*height), you should resize it. This almost always applies for local images taken by camera. For example, a device with the screen size of 1080 x 1920 pixels (roughly 2MP) and a camera of 16MP produces images 8 times bigger than the display. Without any doubt resizing in such cases is always best to be done.
