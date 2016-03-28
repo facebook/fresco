@@ -11,48 +11,49 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.Executor;
 
 public class ThreadHandoffProducerQueue {
-  private boolean mQueueing = false;
-  private final ArrayList<Runnable> mRunnableList;
-  private final Executor mExecutor;
+    private boolean mQueueing = false;
+    private final Deque<Runnable> mRunnableList;
+    private final Executor mExecutor;
 
-  public ThreadHandoffProducerQueue(Executor executor) {
-    mExecutor = Preconditions.checkNotNull(executor);
-    mRunnableList = new ArrayList<>();
-  }
-
-  public synchronized void addToQueueOrExecute(Runnable runnable) {
-    if (mQueueing) {
-      mRunnableList.add(runnable);
-    } else {
-      mExecutor.execute(runnable);
+    public ThreadHandoffProducerQueue(Executor executor) {
+        mExecutor = Preconditions.checkNotNull(executor);
+        mRunnableList = new ArrayDeque<>();
     }
-  }
 
-  public synchronized void startQueueing() {
-    mQueueing = true;
-  }
 
-  public synchronized void stopQueuing() {
-    mQueueing = false;
-    execInQueue();
-  }
-
-  private void execInQueue() {
-    for (Runnable runnable : mRunnableList) {
-      mExecutor.execute(runnable);
+    public synchronized void addToQueueOrExecute(Runnable runnable) {
+        if (mQueueing) {
+            mRunnableList.add(runnable);
+        } else {
+            mExecutor.execute(runnable);
+        }
     }
-    mRunnableList.clear();
-  }
 
-  public void remove(Runnable runnable) {
-    mRunnableList.remove(runnable);
-  }
+    public synchronized void startQueueing() {
+        mQueueing = true;
+    }
 
-  public synchronized boolean isQueueing() {
-    return mQueueing;
-  }
+    public synchronized void stopQueuing() {
+        mQueueing = false;
+        execInQueue();
+    }
+
+    private void execInQueue() {
+        while (!mRunnableList.isEmpty())
+            mExecutor.execute(mRunnableList.pop());
+        mRunnableList.clear();
+    }
+
+    public synchronized void remove(Runnable runnable) {
+        mRunnableList.remove(runnable);
+    }
+
+    public synchronized boolean isQueueing() {
+        return mQueueing;
+    }
 }
