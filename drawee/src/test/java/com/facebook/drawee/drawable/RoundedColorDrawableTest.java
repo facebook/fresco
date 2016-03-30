@@ -46,15 +46,15 @@ public class RoundedColorDrawableTest {
   @Test
   public void testInitialSetup() {
     assertEquals(Color.GREEN, mRoundedColorDrawable.getColor());
-    assertFalse(mRoundedColorDrawable.mIsCircle);
-    assertArrayEquals(new float[] {0, 0, 0, 0, 0, 0, 0, 0}, mRoundedColorDrawable.mRadii, 0f);
+    assertFalse(mRoundedColorDrawable.isCircle());
+    assertArrayEquals(new float[] {0, 0, 0, 0, 0, 0, 0, 0}, mRoundedColorDrawable.getRadii(), 0f);
   }
 
   @Test
   public void testSetCircle() {
     mRoundedColorDrawable.setCircle(true);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertTrue(mRoundedColorDrawable.mIsCircle);
+    assertTrue(mRoundedColorDrawable.isCircle());
   }
 
   @Test
@@ -63,7 +63,7 @@ public class RoundedColorDrawableTest {
     float[] expectedRadii = {8f, 8f, 8f, 8f, 8f, 8f, 8f, 8f};
     mRoundedColorDrawable.setRadii(radii);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertArrayEquals(expectedRadii, mRoundedColorDrawable.mRadii, 0f);
+    assertArrayEquals(expectedRadii, mRoundedColorDrawable.getRadii(), 0f);
   }
 
   @Test
@@ -72,7 +72,7 @@ public class RoundedColorDrawableTest {
     float[] expectedRadii = {8f, 8f, 8f, 8f, 8f, 8f, 8f, 8f};
     mRoundedColorDrawable.setRadius(radius);
     verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
-    assertArrayEquals(expectedRadii, mRoundedColorDrawable.mRadii, 0f);
+    assertArrayEquals(expectedRadii, mRoundedColorDrawable.getRadii(), 0f);
   }
 
   @Test
@@ -97,8 +97,16 @@ public class RoundedColorDrawableTest {
     float width = 5;
     mRoundedColorDrawable.setBorder(color, width);
     verify(mCallback, times(2)).invalidateDrawable(mRoundedColorDrawable);
-    assertEquals(color, mRoundedColorDrawable.mBorderColor);
-    assertEquals(width, mRoundedColorDrawable.mBorderWidth, 0);
+    assertEquals(color, mRoundedColorDrawable.getBorderColor());
+    assertEquals(width, mRoundedColorDrawable.getBorderWidth(), 0);
+  }
+
+  @Test
+  public void testSetPadding() {
+    float padding = 10;
+    mRoundedColorDrawable.setPadding(padding);
+    verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
+    assertEquals(padding, mRoundedColorDrawable.getPadding(), 0);
   }
 
   @Test

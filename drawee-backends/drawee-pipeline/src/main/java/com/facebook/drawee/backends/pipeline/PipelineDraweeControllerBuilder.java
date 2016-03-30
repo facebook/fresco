@@ -9,6 +9,8 @@
 
 package com.facebook.drawee.backends.pipeline;
 
+import javax.annotation.Nullable;
+
 import java.util.Set;
 
 import android.content.Context;
@@ -50,6 +52,11 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   @Override
   public PipelineDraweeControllerBuilder setUri(Uri uri) {
     return super.setImageRequest(ImageRequest.fromUri(uri));
+  }
+
+  @Override
+  public PipelineDraweeControllerBuilder setUri(@Nullable String uriString) {
+    return super.setImageRequest(ImageRequest.fromUri(uriString));
   }
 
   @Override

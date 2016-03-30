@@ -36,7 +36,7 @@ public interface MemoryCache<K, V> {
    * @return a new reference to be used, or null if the caching failed
    */
   @Nullable
-  public CloseableReference<V> cache(K key, CloseableReference<V> value);
+  CloseableReference<V> cache(K key, CloseableReference<V> value);
 
   /**
    * Gets the item with the given key, or null if there is no such item.
@@ -45,7 +45,7 @@ public interface MemoryCache<K, V> {
    * @return a reference to the cached value, or null if the item was not found
    */
   @Nullable
-  public CloseableReference<V> get(K key);
+  CloseableReference<V> get(K key);
 
   /**
    * Removes all the items from the cache whose keys match the specified predicate.
@@ -54,4 +54,12 @@ public interface MemoryCache<K, V> {
    * @return number of the items removed from the cache
    */
   public int removeAll(Predicate<K> predicate);
+
+  /**
+   * Find if any of the items from the cache whose keys match the specified predicate.
+   *
+   * @param predicate returns true if an item with the given key matches
+   * @return true if the predicate was found in the cache, false otherwise
+   */
+  public boolean contains(Predicate<K> predicate);
 }

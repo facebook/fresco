@@ -11,10 +11,12 @@ package com.facebook.drawee.view;
 
 import javax.annotation.Nullable;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 
 import com.facebook.drawee.R;
@@ -54,11 +56,9 @@ import com.facebook.drawee.generic.RoundingParams;
  * @attr ref com.facebook.R.styleable#GenericDraweeView_roundWithOverlayColor
  * @attr ref com.facebook.R.styleable#GenericDraweeView_roundingBorderWidth
  * @attr ref com.facebook.R.styleable#GenericDraweeView_roundingBorderColor
+ * @attr ref com.facebook.R.styleable#GenericDraweeView_roundingBorderPadding
  */
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
-
-  private float mAspectRatio = 0;
-  private final AspectRatioMeasure.Spec mMeasureSpec = new AspectRatioMeasure.Spec();
 
   public GenericDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context);
@@ -77,6 +77,12 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   public GenericDraweeView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+    inflateHierarchy(context, attrs);
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public GenericDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
     inflateHierarchy(context, attrs);
   }
 
@@ -113,6 +119,7 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
     int roundWithOverlayColor = 0;
     int roundingBorderWidth = 0;
     int roundingBorderColor = 0;
+    int roundingBorderPadding = 0;
     int progressBarAutoRotateInterval = 0;
 
 
@@ -120,112 +127,164 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       TypedArray gdhAttrs = context.obtainStyledAttributes(
           attrs,
           R.styleable.GenericDraweeView);
+
       try {
-        // fade duration
-        fadeDuration = gdhAttrs.getInt(
-            R.styleable.GenericDraweeView_fadeDuration,
-            fadeDuration);
+        final int indexCount = gdhAttrs.getIndexCount();
 
-        // aspect ratio
-        mAspectRatio = gdhAttrs.getFloat(
-            R.styleable.GenericDraweeView_viewAspectRatio,
-            mAspectRatio);
+        for (int i = 0; i < indexCount; i++) {
+          final int idx = gdhAttrs.getIndex(i);
 
-        // placeholder image
-        placeholderId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_placeholderImage,
-            placeholderId);
-        // placeholder image scale type
-        placeholderScaleType = getScaleTypeFromXml(
-            gdhAttrs,
-            R.styleable.GenericDraweeView_placeholderImageScaleType,
-            placeholderScaleType);
+          // most popular ones first
+          if (idx == R.styleable.GenericDraweeView_actualImageScaleType) {
+            // actual image scale type
+            actualImageScaleType = getScaleTypeFromXml(
+                gdhAttrs,
+                R.styleable.GenericDraweeView_actualImageScaleType,
+                actualImageScaleType);
 
-        // retry image
-        retryImageId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_retryImage,
-            retryImageId);
-        // retry image scale type
-        retryImageScaleType = getScaleTypeFromXml(
-            gdhAttrs,
-            R.styleable.GenericDraweeView_retryImageScaleType,
-            retryImageScaleType);
+          } else if (idx == R.styleable.GenericDraweeView_placeholderImage) {
+            // placeholder image
+            placeholderId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_placeholderImage,
+                placeholderId);
 
-        // failure image
-        failureImageId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_failureImage,
-            failureImageId);
-        // failure image scale type
-        failureImageScaleType = getScaleTypeFromXml(
-            gdhAttrs,
-            R.styleable.GenericDraweeView_failureImageScaleType,
-            failureImageScaleType);
+          } else if (idx == R.styleable.GenericDraweeView_pressedStateOverlayImage) {
+            // pressedState overlay
+            pressedStateOverlayId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_pressedStateOverlayImage,
+                pressedStateOverlayId);
 
-        // progress bar image
-        progressBarId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_progressBarImage,
-            progressBarId);
-        // progress bar image scale type
-        progressBarScaleType = getScaleTypeFromXml(
-            gdhAttrs,
-            R.styleable.GenericDraweeView_progressBarImageScaleType,
-            progressBarScaleType);
-        // progress bar auto rotate interval
-        progressBarAutoRotateInterval = gdhAttrs.getInteger(
-            R.styleable.GenericDraweeView_progressBarAutoRotateInterval,
-            0);
+          } else if (idx == R.styleable.GenericDraweeView_progressBarImage) {
+            // progress bar image
+            progressBarId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_progressBarImage,
+                progressBarId);
 
-        // actual image scale type
-        actualImageScaleType = getScaleTypeFromXml(
-            gdhAttrs,
-            R.styleable.GenericDraweeView_actualImageScaleType,
-            actualImageScaleType);
+          // the remaining ones without any particular order
+          } else if (idx == R.styleable.GenericDraweeView_fadeDuration) {
+            // fade duration
+            fadeDuration = gdhAttrs.getInt(
+                R.styleable.GenericDraweeView_fadeDuration,
+                fadeDuration);
 
-        // background
-        backgroundId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_backgroundImage,
-            backgroundId);
+          } else if (idx == R.styleable.GenericDraweeView_viewAspectRatio) {
+            // aspect ratio
+            setAspectRatio(gdhAttrs.getFloat(
+                R.styleable.GenericDraweeView_viewAspectRatio,
+                getAspectRatio()));
 
-        // overlay
-        overlayId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_overlayImage,
-            overlayId);
+          } else if (idx == R.styleable.GenericDraweeView_placeholderImageScaleType) {
+            // placeholder image scale type
+            placeholderScaleType = getScaleTypeFromXml(
+                gdhAttrs,
+                R.styleable.GenericDraweeView_placeholderImageScaleType,
+                placeholderScaleType);
 
-        // pressedState overlay
-        pressedStateOverlayId = gdhAttrs.getResourceId(
-            R.styleable.GenericDraweeView_pressedStateOverlayImage,
-            pressedStateOverlayId);
+          } else if (idx == R.styleable.GenericDraweeView_retryImage) {
+            // retry image
+            retryImageId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_retryImage,
+                retryImageId);
 
-        // rounding parameters
-        roundAsCircle = gdhAttrs.getBoolean(
-            R.styleable.GenericDraweeView_roundAsCircle,
-            roundAsCircle);
-        roundedCornerRadius = gdhAttrs.getDimensionPixelSize(
-            R.styleable.GenericDraweeView_roundedCornerRadius,
-            roundedCornerRadius);
-        roundTopLeft = gdhAttrs.getBoolean(
-            R.styleable.GenericDraweeView_roundTopLeft,
-            roundTopLeft);
-        roundTopRight = gdhAttrs.getBoolean(
-            R.styleable.GenericDraweeView_roundTopRight,
-            roundTopRight);
-        roundBottomRight = gdhAttrs.getBoolean(
-            R.styleable.GenericDraweeView_roundBottomRight,
-            roundBottomRight);
-        roundBottomLeft = gdhAttrs.getBoolean(
-            R.styleable.GenericDraweeView_roundBottomLeft,
-            roundBottomLeft);
-        roundWithOverlayColor = gdhAttrs.getColor(
-            R.styleable.GenericDraweeView_roundWithOverlayColor,
-            roundWithOverlayColor);
-        roundingBorderWidth = gdhAttrs.getDimensionPixelSize(
-            R.styleable.GenericDraweeView_roundingBorderWidth,
-            roundingBorderWidth);
-        roundingBorderColor = gdhAttrs.getColor(
-            R.styleable.GenericDraweeView_roundingBorderColor,
-            roundingBorderColor);
-      }
-      finally {
+          } else if (idx == R.styleable.GenericDraweeView_retryImageScaleType) {
+            // retry image scale type
+            retryImageScaleType = getScaleTypeFromXml(
+                gdhAttrs,
+                R.styleable.GenericDraweeView_retryImageScaleType,
+                retryImageScaleType);
+
+          } else if (idx == R.styleable.GenericDraweeView_failureImage) {
+            // failure image
+            failureImageId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_failureImage,
+                failureImageId);
+
+          } else if (idx == R.styleable.GenericDraweeView_failureImageScaleType) {
+            // failure image scale type
+            failureImageScaleType = getScaleTypeFromXml(
+                gdhAttrs,
+                R.styleable.GenericDraweeView_failureImageScaleType,
+                failureImageScaleType);
+
+          } else if (idx == R.styleable.GenericDraweeView_progressBarImageScaleType) {
+            // progress bar image scale type
+            progressBarScaleType = getScaleTypeFromXml(
+                gdhAttrs,
+                R.styleable.GenericDraweeView_progressBarImageScaleType,
+                progressBarScaleType);
+
+          } else if (idx == R.styleable.GenericDraweeView_progressBarAutoRotateInterval) {
+            // progress bar auto rotate interval
+            progressBarAutoRotateInterval = gdhAttrs.getInteger(
+                R.styleable.GenericDraweeView_progressBarAutoRotateInterval,
+                0);
+
+          } else if (idx == R.styleable.GenericDraweeView_backgroundImage) {
+            // background
+            backgroundId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_backgroundImage,
+                backgroundId);
+
+          } else if (idx == R.styleable.GenericDraweeView_overlayImage) {
+            // overlay
+            overlayId = gdhAttrs.getResourceId(
+                R.styleable.GenericDraweeView_overlayImage,
+                overlayId);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundAsCircle) {
+            // rounding parameters
+            roundAsCircle = gdhAttrs.getBoolean(
+                R.styleable.GenericDraweeView_roundAsCircle,
+                roundAsCircle);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundedCornerRadius) {
+            roundedCornerRadius = gdhAttrs.getDimensionPixelSize(
+                R.styleable.GenericDraweeView_roundedCornerRadius,
+                roundedCornerRadius);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundTopLeft) {
+            roundTopLeft = gdhAttrs.getBoolean(
+                R.styleable.GenericDraweeView_roundTopLeft,
+                roundTopLeft);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundTopRight) {
+            roundTopRight = gdhAttrs.getBoolean(
+                R.styleable.GenericDraweeView_roundTopRight,
+                roundTopRight);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundBottomRight) {
+            roundBottomRight = gdhAttrs.getBoolean(
+                R.styleable.GenericDraweeView_roundBottomRight,
+                roundBottomRight);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundBottomLeft) {
+            roundBottomLeft = gdhAttrs.getBoolean(
+                R.styleable.GenericDraweeView_roundBottomLeft,
+                roundBottomLeft);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundWithOverlayColor) {
+            roundWithOverlayColor = gdhAttrs.getColor(
+                R.styleable.GenericDraweeView_roundWithOverlayColor,
+                roundWithOverlayColor);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundingBorderWidth) {
+            roundingBorderWidth = gdhAttrs.getDimensionPixelSize(
+                R.styleable.GenericDraweeView_roundingBorderWidth,
+                roundingBorderWidth);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundingBorderColor) {
+            roundingBorderColor = gdhAttrs.getColor(
+                R.styleable.GenericDraweeView_roundingBorderColor,
+                roundingBorderColor);
+
+          } else if (idx == R.styleable.GenericDraweeView_roundingBorderPadding) {
+            roundingBorderPadding = gdhAttrs.getDimensionPixelSize(
+                R.styleable.GenericDraweeView_roundingBorderPadding,
+                roundingBorderPadding);
+
+          }
+        }
+      } finally {
         gdhAttrs.recycle();
       }
     }
@@ -279,6 +338,9 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       if (roundingBorderColor != 0 && roundingBorderWidth > 0) {
         roundingParams.setBorder(roundingBorderColor, roundingBorderWidth);
       }
+      if (roundingBorderPadding != 0) {
+        roundingParams.setPadding(roundingBorderPadding);
+      }
       builder.setRoundingParams(roundingParams);
     }
     setHierarchy(builder.build());
@@ -291,38 +353,7 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
       TypedArray attrs,
       int attrId,
       ScalingUtils.ScaleType defaultScaleType) {
-    String xmlType = attrs.getString(attrId);
-    return (xmlType != null) ? ScalingUtils.ScaleType.fromString(xmlType) : defaultScaleType;
-  }
-
- /**
-  * Sets the desired aspect ratio (w/h).
-  */
-  public void setAspectRatio(float aspectRatio) {
-    if (aspectRatio == mAspectRatio) {
-      return;
-    }
-    mAspectRatio = aspectRatio;
-    requestLayout();
-  }
-
-  /**
-   * Gets the desired aspect ratio (w/h).
-   */
-  public float getAspectRatio() {
-    return mAspectRatio;
-  }
-
-  @Override
-  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    mMeasureSpec.width = widthMeasureSpec;
-    mMeasureSpec.height = heightMeasureSpec;
-    AspectRatioMeasure.updateMeasureSpec(
-        mMeasureSpec,
-        mAspectRatio,
-        getLayoutParams(),
-        getPaddingLeft() + getPaddingRight(),
-        getPaddingTop() + getPaddingBottom());
-    super.onMeasure(mMeasureSpec.width, mMeasureSpec.height);
+    int index = attrs.getInt(attrId, -1);
+    return index < 0 ? defaultScaleType : ScalingUtils.ScaleType.values()[index];
   }
 }

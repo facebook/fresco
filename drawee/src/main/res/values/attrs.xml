@@ -16,27 +16,77 @@
     <!-- A drawable or color to be be used as a placeholder. -->
     <attr name="placeholderImage" format="reference"/>
     <!-- Scale type of the placeholder image. Ignored if placeholderImage is not specified. -->
-    <attr name="placeholderImageScaleType" format="string"/>
+    <attr name="placeholderImageScaleType">
+      <enum name="none" value="-1" />
+      <enum name="fitXY" value="0" />
+      <enum name="fitStart" value="1" />
+      <enum name="fitCenter" value="2" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
+    </attr>
 
     <!-- A drawable to be be used as a retry image. -->
     <attr name="retryImage" format="reference"/>
     <!-- Scale type of the retry image. Ignored if retryImage is not specified. -->
-    <attr name="retryImageScaleType" format="string"/>
+    <attr name="retryImageScaleType">
+      <enum name="none" value="-1" />
+      <enum name="fitXY" value="0" />
+      <enum name="fitStart" value="1" />
+      <enum name="fitCenter" value="2" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
+    </attr>
 
     <!-- A drawable to be be used as a failure image. -->
     <attr name="failureImage" format="reference"/>
     <!-- Scale type of the failure image. Ignored if failureImage is not specified. -->
-    <attr name="failureImageScaleType" format="string"/>
+    <attr name="failureImageScaleType">
+      <enum name="none" value="-1" />
+      <enum name="fitXY" value="0" />
+      <enum name="fitStart" value="1" />
+      <enum name="fitCenter" value="2" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
+    </attr>
 
     <!-- A drawable to be be used as a progress bar. -->
     <attr name="progressBarImage" format="reference"/>
     <!-- Scale type of the progress bar. Ignored if progressBarImage is not specified. -->
-    <attr name="progressBarImageScaleType" format="string"/>
+    <attr name="progressBarImageScaleType">
+      <enum name="none" value="-1" />
+      <enum name="fitXY" value="0" />
+      <enum name="fitStart" value="1" />
+      <enum name="fitCenter" value="2" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
+    </attr>
     <!-- Progress bar Auto Rotate interval in milliseconds -->
     <attr name="progressBarAutoRotateInterval" format="integer"/>
 
     <!-- Scale type of the actual image. -->
-    <attr name="actualImageScaleType" format="string"/>
+    <attr name="actualImageScaleType">
+      <enum name="none" value="-1" />
+      <enum name="fitXY" value="0" />
+      <enum name="fitStart" value="1" />
+      <enum name="fitCenter" value="2" />
+      <enum name="fitEnd" value="3" />
+      <enum name="center" value="4" />
+      <enum name="centerInside" value="5" />
+      <enum name="centerCrop" value="6" />
+      <enum name="focusCrop" value="7" />
+    </attr>
 
     <!-- A drawable or color to be used as a background. -->
     <attr name="backgroundImage" format="reference"/>
@@ -68,6 +118,8 @@
     <attr name="roundingBorderWidth" format="dimension"/>
     <!-- Rounding border color -->
     <attr name="roundingBorderColor" format="color"/>
+    <!-- Rounding border padding -->
+    <attr name="roundingBorderPadding" format="dimension" />
 
   </declare-styleable>
 </resources>

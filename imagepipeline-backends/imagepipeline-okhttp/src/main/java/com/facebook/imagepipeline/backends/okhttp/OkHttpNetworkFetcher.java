@@ -15,7 +15,6 @@ import android.os.SystemClock;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.BaseNetworkFetcher;
 import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
 import com.facebook.imagepipeline.producers.Consumer;
@@ -108,6 +107,10 @@ public class OkHttpNetworkFetcher extends
           @Override
           public void onResponse(Response response) {
             fetchState.responseTime = SystemClock.elapsedRealtime();
+            if (!response.isSuccessful()) {
+              handleException(call, new IOException("Unexpected HTTP code " + response), callback);
+              return;
+            }
             final ResponseBody body = response.body();
             try {
               long contentLength = body.contentLength();
@@ -115,13 +118,13 @@ public class OkHttpNetworkFetcher extends
                 contentLength = 0;
               }
               callback.onResponse(body.byteStream(), (int) contentLength);
-            } catch (IOException ioe) {
-              handleException(call, ioe, callback);
+            } catch (Exception e) {
+              handleException(call, e, callback);
             } finally {
               try {
                 body.close();
-              } catch (IOException ioe) {
-                FLog.w(TAG, "Exception when closing response body", ioe);
+              } catch (Exception e) {
+                FLog.w(TAG, "Exception when closing response body", e);
               }
             }
           }
@@ -149,17 +152,17 @@ public class OkHttpNetworkFetcher extends
   }
 
   /**
-   * Handles IOExceptions.
+   * Handles exceptions.
    *
    * <p> OkHttp notifies callers of cancellations via an IOException. If IOException is caught
    * after request cancellation, then the exception is interpreted as successful cancellation
    * and onCancellation is called. Otherwise onFailure is called.
    */
-  private void handleException(final Call call, final IOException ioe, final Callback callback) {
+  private void handleException(final Call call, final Exception e, final Callback callback) {
     if (call.isCanceled()) {
       callback.onCancellation();
     } else {
-      callback.onFailure(ioe);
+      callback.onFailure(e);
     }
   }
 }

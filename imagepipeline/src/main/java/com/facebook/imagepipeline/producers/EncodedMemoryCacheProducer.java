@@ -29,15 +29,15 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public EncodedMemoryCacheProducer(
       MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
       CacheKeyFactory cacheKeyFactory,
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     mMemoryCache = memoryCache;
     mCacheKeyFactory = cacheKeyFactory;
-    mNextProducer = nextProducer;
+    mInputProducer = inputProducer;
   }
 
   @Override
@@ -78,7 +78,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         return;
       }
 
-      Consumer<EncodedImage> consumerOfNextProducer = new DelegatingConsumer<
+      Consumer<EncodedImage> consumerOfInputProducer = new DelegatingConsumer<
           EncodedImage,
           EncodedImage>(consumer) {
         @Override
@@ -90,29 +90,31 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           }
           // cache and forward the last result
           CloseableReference<PooledByteBuffer> ref = newResult.getByteBufferRef();
-          CloseableReference<PooledByteBuffer> cachedResult;
-          try {
-            cachedResult = mMemoryCache.cache(cacheKey, ref);
-          } finally {
-            CloseableReference.closeSafely(ref);
-          }
-          if (cachedResult != null) {
-            EncodedImage cachedEncodedImage;
+          if (ref != null) {
+            CloseableReference<PooledByteBuffer> cachedResult;
             try {
-              cachedEncodedImage = new EncodedImage(cachedResult);
+              cachedResult = mMemoryCache.cache(cacheKey, ref);
             } finally {
-              CloseableReference.closeSafely(cachedResult);
+              CloseableReference.closeSafely(ref);
             }
-            try {
-              getConsumer().onProgressUpdate(1f);
-              getConsumer().onNewResult(cachedEncodedImage, true);
-            } finally {
-              EncodedImage.closeSafely(cachedEncodedImage);
+            if (cachedResult != null) {
+              EncodedImage cachedEncodedImage;
+              try {
+                cachedEncodedImage = new EncodedImage(cachedResult);
+                cachedEncodedImage.copyMetaDataFrom(newResult);
+              } finally {
+                CloseableReference.closeSafely(cachedResult);
+              }
+              try {
+                getConsumer().onProgressUpdate(1f);
+                getConsumer().onNewResult(cachedEncodedImage, true);
+                return;
+              } finally {
+                EncodedImage.closeSafely(cachedEncodedImage);
+              }
             }
-          } else {
-            getConsumer().onNewResult(newResult, true);
           }
-
+          getConsumer().onNewResult(newResult, true);
         }
       };
 
@@ -120,7 +122,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           requestId,
           PRODUCER_NAME,
           listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
-      mNextProducer.produceResults(consumerOfNextProducer, producerContext);
+      mInputProducer.produceResults(consumerOfInputProducer, producerContext);
     } finally {
       CloseableReference.closeSafely(cachedReference);
     }

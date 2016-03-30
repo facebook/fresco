@@ -17,7 +17,7 @@ import java.util.Random;
 
 import org.robolectric.RobolectricTestRunner;
 
-import com.google.common.io.ByteStreams;
+import com.facebook.common.internal.ByteStreams;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +71,7 @@ public class TailAppendingInputStreamTest {
 
   @Test
   public void testDoesReadMultipleBytes() throws Exception {
-    ByteStreams.readFully(mTailAppendingInputStream, mOutputBuffer);
+    ByteStreams.readFully(mTailAppendingInputStream, mOutputBuffer, 0, OUTPUT_LENGTH);
     assertArrayEquals(mBytes, Arrays.copyOfRange(mOutputBuffer, 0, BYTES_LENGTH));
     assertArrayEquals(mTail, Arrays.copyOfRange(mOutputBuffer, BYTES_LENGTH, OUTPUT_LENGTH));
   }

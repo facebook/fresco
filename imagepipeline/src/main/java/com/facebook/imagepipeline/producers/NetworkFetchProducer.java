@@ -164,6 +164,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     EncodedImage encodedImage = null;
     try {
       encodedImage = new EncodedImage(result);
+      encodedImage.parseMetaData();
       consumer.onNewResult(encodedImage, isFinal);
     } finally {
       EncodedImage.closeSafely(encodedImage);

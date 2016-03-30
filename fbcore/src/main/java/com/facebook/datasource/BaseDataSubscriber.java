@@ -39,10 +39,15 @@ public abstract class BaseDataSubscriber<T> implements DataSubscriber<T> {
 
   @Override
   public void onNewResult(DataSource<T> dataSource) {
+    // isFinished() should be checked before calling onNewResultImpl(), otherwise
+    // there would be a race condition: the final data source result might be ready before
+    // we call isFinished() here, which would lead to the loss of the final result
+    // (because of an early dataSource.close() call).
+    final boolean shouldClose = dataSource.isFinished();
     try {
       onNewResultImpl(dataSource);
     } finally {
-      if (dataSource.isFinished()) {
+      if (shouldClose) {
         dataSource.close();
       }
     }

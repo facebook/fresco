@@ -25,8 +25,8 @@ import android.graphics.drawable.Drawable;
  * like DrawableContainer, LevelListDrawable etc. DrawableContainer is not directly subclassable,
  * and the others don't allow changing the member drawables.
  */
-public abstract class ForwardingDrawable extends Drawable
-    implements Drawable.Callback, TransformCallback, TransformAwareDrawable {
+public class ForwardingDrawable extends Drawable
+    implements Drawable.Callback, TransformCallback, TransformAwareDrawable, DrawableParent {
 
   /** The current drawable to be drawn by this drawable when drawing is needed */
   private Drawable mCurrentDelegate;
@@ -166,9 +166,19 @@ public abstract class ForwardingDrawable extends Drawable
     return mCurrentDelegate;
   }
 
-  /**
-   * Drawable.Callback methods
-   */
+  // DrawableParent methods
+
+  @Override
+  public Drawable setDrawable(Drawable newDrawable) {
+    return setCurrent(newDrawable);
+  }
+
+  @Override
+  public Drawable getDrawable() {
+    return getCurrent();
+  }
+
+  // Drawable.Callback methods
 
   @Override
   public void invalidateDrawable(Drawable who) {
@@ -185,17 +195,14 @@ public abstract class ForwardingDrawable extends Drawable
     unscheduleSelf(what);
   }
 
-  /**
-   * TransformationCallbackSetter method
-   */
+  //  TransformAwareDrawable methods
+
   @Override
   public void setTransformCallback(TransformCallback transformCallback) {
     mTransformCallback = transformCallback;
   }
 
-  /**
-   * TransformationCallback methods
-   */
+  // TransformationCallback methods
 
   protected void getParentTransform(Matrix transform) {
     if (mTransformCallback != null) {

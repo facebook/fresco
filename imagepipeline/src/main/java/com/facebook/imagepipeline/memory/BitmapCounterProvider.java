@@ -23,6 +23,8 @@ public class BitmapCounterProvider {
   public static final int MAX_BITMAP_TOTAL_SIZE = getMaxSizeHardCap();
   public static final int MAX_BITMAP_COUNT = 384;
 
+  private static BitmapCounter sBitmapCounter;
+
   private static int getMaxSizeHardCap() {
     final int maxMemory = (int) Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
     if (maxMemory > 16 * MB) {
@@ -33,6 +35,9 @@ public class BitmapCounterProvider {
   }
 
   public static BitmapCounter get() {
-    return new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_TOTAL_SIZE);
+    if (sBitmapCounter == null) {
+      sBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_TOTAL_SIZE);
+    }
+    return sBitmapCounter;
   }
 }

@@ -1,12 +1,15 @@
 apply plugin: 'com.android.application'
 
 dependencies {
+    provided 'com.android.support:support-annotations:+'
     compile project(':drawee-backends:drawee-pipeline')
+    compile project(':static-webp')
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
     defaultConfig {
         applicationId "com.facebook.samples.demo"
         minSdkVersion 9

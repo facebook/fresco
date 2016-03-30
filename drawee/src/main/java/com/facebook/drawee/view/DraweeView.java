@@ -11,10 +11,13 @@ package com.facebook.drawee.view;
 
 import javax.annotation.Nullable;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -40,7 +43,10 @@ import com.facebook.drawee.interfaces.DraweeController;
  */
 public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
+  private final AspectRatioMeasure.Spec mMeasureSpec = new AspectRatioMeasure.Spec();
+  private float mAspectRatio = 0;
   private DraweeHolder<DH> mDraweeHolder;
+  private boolean mInitialised = false;
 
   public DraweeView(Context context) {
     super(context);
@@ -57,8 +63,26 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
     init(context);
   }
 
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public DraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context,attrs,defStyleAttr,defStyleRes);
+    init(context);
+  }
+
+  /** This method is idempotent so it only has effect the first time it's called */
   private void init(Context context) {
+    if (mInitialised) {
+      return;
+    }
+    mInitialised = true;
     mDraweeHolder = DraweeHolder.create(null, context);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      ColorStateList imageTintList = getImageTintList();
+      if (imageTintList == null) {
+        return;
+      }
+      setColorFilter(imageTintList.getDefaultColor());
+    }
   }
 
   /** Sets the hierarchy. */
@@ -137,6 +161,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   @Deprecated
   public void setImageDrawable(Drawable drawable) {
+    init(getContext());
     mDraweeHolder.setController(null);
     super.setImageDrawable(drawable);
   }
@@ -148,6 +173,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   @Deprecated
   public void setImageBitmap(Bitmap bm) {
+    init(getContext());
     mDraweeHolder.setController(null);
     super.setImageBitmap(bm);
   }
@@ -159,6 +185,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   @Deprecated
   public void setImageResource(int resId) {
+    init(getContext());
     mDraweeHolder.setController(null);
     super.setImageResource(resId);
   }
@@ -170,14 +197,46 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   @Deprecated
   public void setImageURI(Uri uri) {
+    init(getContext());
     mDraweeHolder.setController(null);
     super.setImageURI(uri);
+  }
+
+  /**
+   * Sets the desired aspect ratio (w/h).
+   */
+  public void setAspectRatio(float aspectRatio) {
+    if (aspectRatio == mAspectRatio) {
+      return;
+    }
+    mAspectRatio = aspectRatio;
+    requestLayout();
+  }
+
+  /**
+   * Gets the desired aspect ratio (w/h).
+   */
+  public float getAspectRatio() {
+    return mAspectRatio;
+  }
+
+  @Override
+  protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    mMeasureSpec.width = widthMeasureSpec;
+    mMeasureSpec.height = heightMeasureSpec;
+    AspectRatioMeasure.updateMeasureSpec(
+        mMeasureSpec,
+        mAspectRatio,
+        getLayoutParams(),
+        getPaddingLeft() + getPaddingRight(),
+        getPaddingTop() + getPaddingBottom());
+    super.onMeasure(mMeasureSpec.width, mMeasureSpec.height);
   }
 
   @Override
   public String toString() {
     return Objects.toStringHelper(this)
-        .add("holder", mDraweeHolder.toString())
+        .add("holder", mDraweeHolder != null ? mDraweeHolder.toString(): "<no holder set>")
         .toString();
   }
 }

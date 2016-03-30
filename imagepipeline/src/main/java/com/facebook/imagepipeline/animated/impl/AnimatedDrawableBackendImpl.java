@@ -17,7 +17,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
@@ -30,8 +29,6 @@ import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
  * An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}.
  */
 public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
-
-  private static final Class<?> TAG = AnimatedDrawableBackendImpl.class;
 
   private final AnimatedDrawableUtil mAnimatedDrawableUtil;
 

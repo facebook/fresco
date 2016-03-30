@@ -12,18 +12,28 @@
 
 package com.facebook.samples.zoomable;
 
+import javax.annotation.Nullable;
+
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.view.animation.DecelerateInterpolator;
 
+import com.facebook.common.internal.Preconditions;
 import com.facebook.samples.gestures.TransformGestureDetector;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ValueAnimator;
 
 /**
  * Zoomable controller that calculates transformation based on touch events.
  */
 public class DefaultZoomableController
     implements ZoomableController, TransformGestureDetector.Listener {
+
+  private static final RectF IDENTITY_RECT = new RectF(0, 0, 1, 1);
 
   private TransformGestureDetector mGestureDetector;
 
@@ -44,10 +54,19 @@ public class DefaultZoomableController
   private final Matrix mActiveTransform = new Matrix();
   private final Matrix mActiveTransformInverse = new Matrix();
   private final float[] mTempValues = new float[9];
+  private final RectF mTempRect = new RectF();
+
+  private final ValueAnimator mValueAnimator;
+  private final float[] mAnimationStartValues = new float[9];
+  private final float[] mAnimationDestValues = new float[9];
+  private final float[] mAnimationCurrValues = new float[9];
+  private final Matrix mNewTransform = new Matrix();
 
   public DefaultZoomableController(TransformGestureDetector gestureDetector) {
     mGestureDetector = gestureDetector;
     mGestureDetector.setListener(this);
+    mValueAnimator = ValueAnimator.ofFloat(0, 1);
+    mValueAnimator.setInterpolator(new DecelerateInterpolator());
   }
 
   public static DefaultZoomableController newInstance() {
@@ -64,6 +83,7 @@ public class DefaultZoomableController
     mGestureDetector.reset();
     mPreviousTransform.reset();
     mActiveTransform.reset();
+    onTransformChanged();
   }
 
   /** Sets whether the controller is enabled or not. */
@@ -116,10 +136,17 @@ public class DefaultZoomableController
     return mImageBounds;
   }
 
+  protected RectF getTransformedImageBounds() {
+    return mTransformedImageBounds;
+  }
+
   /** Sets the image bounds before zoomable transformation is applied. */
   @Override
   public void setImageBounds(RectF imageBounds) {
-    mImageBounds.set(imageBounds);
+    if (!imageBounds.equals(mImageBounds)) {
+      mImageBounds.set(imageBounds);
+      onTransformChanged();
+    }
   }
 
   /** Gets the view bounds. */
@@ -202,7 +229,7 @@ public class DefaultZoomableController
   private void mapAbsoluteToRelative(float[] destPoints, float[] srcPoints, int numPoints) {
     for (int i = 0; i < numPoints; i++) {
       destPoints[i * 2 + 0] = (srcPoints[i * 2 + 0] - mImageBounds.left) / mImageBounds.width();
-      destPoints[i * 2 + 1] = (srcPoints[i * 2 + 1] - mImageBounds.top) / mImageBounds.height();
+      destPoints[i * 2 + 1] = (srcPoints[i * 2 + 1] - mImageBounds.top)  / mImageBounds.height();
     }
   }
 
@@ -232,13 +259,92 @@ public class DefaultZoomableController
   }
 
   /**
-   * Sets the zoomable transformation. Cancels the current gesture if one is happening.
+   * Returns the matrix that fully transforms the image from image-relative coordinates
+   * to scaled view-absolute coordinates.
    */
-  public void setTransform(Matrix activeTransform) {
+  public void getImageRelativeToViewAbsoluteTransform(Matrix outMatrix) {
+    mActiveTransform.mapRect(mTempRect, mImageBounds);
+    outMatrix.setRectToRect(IDENTITY_RECT, mTempRect, Matrix.ScaleToFit.FILL);
+  }
+
+  // TODO(balazsbalazs) resolve issues with interrupting an existing animation/gesture with
+  // a new animation or transform
+
+  /**
+   * Sets a new zoom transformation.
+   *
+   * <p>If this method is called while an animation or gesture is already in progress,
+   * this will currently result in undefined behavior.
+   */
+  public void setTransform(Matrix newTransform) {
+    setTransform(newTransform, 0, null);
+  }
+
+  /**
+   * Sets a new zoomable transformation and animates to it if desired.
+   *
+   * <p>If this method is called while an animation or gesture is already in progress,
+   * this will currently result in undefined behavior.
+   *
+   * @param newTransform new transform to make active
+   * @param durationMs duration of the animation, or 0 to not animate
+   * @param onAnimationComplete code to run when the animation completes. Ignored if durationMs=0
+   */
+  public void setTransform(
+      Matrix newTransform,
+      long durationMs,
+      @Nullable Runnable onAnimationComplete) {
     if (mGestureDetector.isGestureInProgress()) {
       mGestureDetector.reset();
     }
-    mActiveTransform.set(activeTransform);
+    cancelAnimation();
+    if (durationMs <= 0) {
+      mActiveTransform.set(newTransform);
+      onTransformChanged();
+    } else {
+      setTransformAnimated(newTransform, durationMs, onAnimationComplete);
+    }
+  }
+
+  /** Do not call this method directly; call it only from setTransform. */
+  private void setTransformAnimated(
+      final Matrix newTransform,
+      long durationMs,
+      @Nullable final Runnable onAnimationComplete) {
+    Preconditions.checkArgument(durationMs > 0);
+    Preconditions.checkState(!mValueAnimator.isRunning());
+    mValueAnimator.setDuration(durationMs);
+    mActiveTransform.getValues(mAnimationStartValues);
+    newTransform.getValues(mAnimationDestValues);
+    mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator valueAnimator) {
+        float fraction = (float) valueAnimator.getAnimatedValue();
+        for (int i = 0; i < mAnimationCurrValues.length; i++) {
+          mAnimationCurrValues[i] = (1 - fraction) * mAnimationStartValues[i] +
+              fraction * mAnimationDestValues[i];
+        }
+        mActiveTransform.setValues(mAnimationCurrValues);
+        onTransformChanged();
+      }
+    });
+    if (onAnimationComplete != null) {
+      mValueAnimator.addListener(new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+          onAnimationComplete.run();
+        }
+      });
+    }
+    mValueAnimator.start();
+  }
+
+  private void cancelAnimation() {
+    mValueAnimator.removeAllUpdateListeners();
+    mValueAnimator.removeAllListeners();
+    if (mValueAnimator.isRunning()) {
+      mValueAnimator.cancel();
+    }
   }
 
   /** Notifies controller of the received touch event.  */
@@ -250,30 +356,50 @@ public class DefaultZoomableController
     return false;
   }
 
+  protected void onTransformChanged() {
+    mActiveTransform.mapRect(mTransformedImageBounds, mImageBounds);
+    if (mListener != null && isEnabled()) {
+      mListener.onTransformChanged(mActiveTransform);
+    }
+  }
+
   /**
    * Zooms to the desired scale and positions the view so that imagePoint is in the center.
-   * <p>
-   * It might not be possible to center imagePoint (= a corner for e.g.), in those cases the view
-   * will be adjusted so that there are no black bars in it.
-   * Resets any previous transform and cancels the current gesture if one is happening.
+   *
+   * <p>If this method is called while an animation or gesture is already in progress,
+   * this will currently result in undefined behavior.
    *
    * @param scale desired scale, will be limited to {min, max} scale factor
    * @param imagePoint 2D point in image's relative coordinate system (i.e. 0 <= x, y <= 1)
+   * @param viewPoint 2D point in view's absolute coordinate system
+   * @param limitTransX  Whether to adjust the transform to prevent black bars from appearing on
+   *                     the left or right.
+   * @param limitTransY Whether to adjust the transform to prevent black bars from appearing on
+   *                    the top or bottom.
+   * @param durationMs length of animation of the zoom, or 0 if no animation desired
+   * @param onAnimationComplete code to execute when the animation is complete.
+   *                            Ignored if durationMs=0
    */
-  public void zoomToImagePoint(float scale, PointF imagePoint) {
-    if (mGestureDetector.isGestureInProgress()) {
-      mGestureDetector.reset();
-    }
+  public void zoomToImagePoint(
+      float scale,
+      PointF imagePoint,
+      PointF viewPoint,
+      boolean limitTransX,
+      boolean limitTransY,
+      long durationMs,
+      @Nullable Runnable onAnimationComplete) {
     scale = limit(scale, mMinScaleFactor, mMaxScaleFactor);
-    float[] points = mTempValues;
-    points[0] = imagePoint.x;
-    points[1] = imagePoint.y;
-    mapRelativeToAbsolute(points, points, 1);
-    mActiveTransform.setScale(scale, scale, points[0], points[1]);
-    mActiveTransform.postTranslate(
-        mViewBounds.centerX() - points[0],
-        mViewBounds.centerY() - points[1]);
-    limitTranslation();
+    float[] viewAbsolute = mTempValues;
+    viewAbsolute[0] = imagePoint.x;
+    viewAbsolute[1] = imagePoint.y;
+    mapRelativeToAbsolute(viewAbsolute, viewAbsolute, 1);
+    float distanceX = viewPoint.x - viewAbsolute[0];
+    float distanceY = viewPoint.y - viewAbsolute[1];
+    mNewTransform.setScale(scale, scale, viewAbsolute[0], viewAbsolute[1]);
+    mNewTransform.postTranslate(distanceX, distanceY);
+    limitTranslation(mNewTransform, limitTransX, limitTransY);
+
+    setTransform(mNewTransform, durationMs, onAnimationComplete);
   }
 
   /* TransformGestureDetector.Listener methods  */
@@ -281,6 +407,7 @@ public class DefaultZoomableController
   @Override
   public void onGestureBegin(TransformGestureDetector detector) {
     mPreviousTransform.set(mActiveTransform);
+    // TODO(balazsbalazs): animation should be cancelled here
   }
 
   @Override
@@ -298,12 +425,10 @@ public class DefaultZoomableController
     if (mIsTranslationEnabled) {
       mActiveTransform.postTranslate(detector.getTranslationX(), detector.getTranslationY());
     }
-    if (limitTranslation()) {
+    if (limitTranslation(mActiveTransform, true, true)) {
       mGestureDetector.restartGesture();
     }
-    if (mListener != null) {
-      mListener.onTransformChanged(mActiveTransform);
-    }
+    onTransformChanged();
   }
 
   @Override
@@ -330,17 +455,20 @@ public class DefaultZoomableController
   /**
    * Keeps the view inside the image if possible, if not (i.e. image is smaller than view)
    * centers the image.
+   * @param limitX whether to apply the limit on the x-axis
+   * @param limitY whether to apply the limit on the y-axis
    * @return whether adjustments were needed or not
    */
-  private boolean limitTranslation() {
+  private boolean limitTranslation(Matrix newTransform, boolean limitX, boolean limitY) {
     RectF bounds = mTransformedImageBounds;
     bounds.set(mImageBounds);
-    mActiveTransform.mapRect(bounds);
-
-    float offsetLeft = getOffset(bounds.left, bounds.width(), mViewBounds.width());
-    float offsetTop = getOffset(bounds.top, bounds.height(), mViewBounds.height());
+    newTransform.mapRect(bounds);
+    float offsetLeft = limitX ?
+        getOffset(bounds.left, bounds.width(), mViewBounds.width()) : bounds.left;
+    float offsetTop = limitY ?
+        getOffset(bounds.top, bounds.height(), mViewBounds.height()) : bounds.top;
     if (offsetLeft != bounds.left || offsetTop != bounds.top) {
-      mActiveTransform.postTranslate(offsetLeft - bounds.left, offsetTop - bounds.top);
+      newTransform.postTranslate(offsetLeft - bounds.left, offsetTop - bounds.top);
       return true;
     }
     return false;

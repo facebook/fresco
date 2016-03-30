@@ -12,48 +12,43 @@
 
 package com.facebook.samples.comparison.adapters;
 
-
 import android.content.Context;
-import android.net.Uri;
+import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.volley.VolleyDraweeControllerBuilderSupplier;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.samples.comparison.Drawables;
 import com.facebook.samples.comparison.configs.volley.SampleVolleyFactory;
+import com.facebook.samples.comparison.holders.VolleyDraweeHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/** Populate the list view with images using Drawee backed by Volley. */
-public class VolleyDraweeAdapter extends ImageListAdapter<InstrumentedDraweeView> {
+/**
+ * RecyclerView Adapter for Volley using Drawee
+ */
+public class VolleyDraweeAdapter extends ImageListAdapter {
 
-  private VolleyDraweeControllerBuilderSupplier mVolleyDraweeControllerBuilderSupplier;
-
-  public VolleyDraweeAdapter(Context context, int resourceId, PerfListener perfListener) {
-    super(context, resourceId, perfListener);
-    mVolleyDraweeControllerBuilderSupplier = new VolleyDraweeControllerBuilderSupplier(
-        context,
-        SampleVolleyFactory.getImageLoader(context));
-    InstrumentedDraweeView.initialize(mVolleyDraweeControllerBuilderSupplier);
+  public VolleyDraweeAdapter(
+      Context context,
+      PerfListener perfListener) {
+    super(context, perfListener);
+    final VolleyDraweeControllerBuilderSupplier supplier =
+        new VolleyDraweeControllerBuilderSupplier(
+            context,
+            SampleVolleyFactory.getImageLoader(context));
+    InstrumentedDraweeView.initialize(supplier);
   }
 
   @Override
-  protected Class<InstrumentedDraweeView> getViewClass() {
-    return InstrumentedDraweeView.class;
-  }
-
-  protected InstrumentedDraweeView createView() {
+  public VolleyDraweeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(getContext().getResources())
         .setPlaceholderImage(Drawables.sPlaceholderDrawable)
         .setFailureImage(Drawables.sErrorDrawable)
         .build();
     InstrumentedDraweeView view = new InstrumentedDraweeView(getContext());
     view.setHierarchy(gdh);
-    return view;
-  }
-
-  protected void bind(InstrumentedDraweeView view, String uri) {
-    view.setImageURI(Uri.parse(uri));
+    return new VolleyDraweeHolder(getContext(), parent, view, getPerfListener());
   }
 
   @Override

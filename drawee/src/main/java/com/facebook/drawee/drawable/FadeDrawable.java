@@ -299,7 +299,7 @@ public class FadeDrawable extends ArrayDrawable {
   }
 
   private void drawDrawableWithAlpha(Canvas canvas, Drawable drawable, int alpha) {
-    if (alpha > 0) {
+    if (drawable != null && alpha > 0) {
       mPreventInvalidateCount++;
       drawable.mutate().setAlpha(alpha);
       mPreventInvalidateCount--;

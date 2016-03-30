@@ -63,6 +63,59 @@ public class BufferedDiskCache {
   }
 
   /**
+   * Performs a key-value look up in the disk cache. If the value is not found in the staging area,
+   * then a disk cache check is scheduled on a background thread. Any error manifests itself as a
+   * cache miss, i.e. the returned Task resolves to false.
+   * @param key
+   * @return Task that resolves to true if the element is found, or false otherwise
+   */
+  public Task<Boolean> contains(final CacheKey key) {
+    Preconditions.checkNotNull(key);
+
+    final EncodedImage pinnedImage = mStagingArea.get(key);
+    if (pinnedImage != null) {
+      pinnedImage.close();
+      FLog.v(TAG, "Found image for %s in staging area", key.toString());
+      mImageCacheStatsTracker.onStagingAreaHit();
+      return Task.forResult(true);
+    }
+
+    try {
+      return Task.call(
+          new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+              EncodedImage result = mStagingArea.get(key);
+              if (result != null) {
+                result.close();
+                FLog.v(TAG, "Found image for %s in staging area", key.toString());
+                mImageCacheStatsTracker.onStagingAreaHit();
+                return true;
+              } else {
+                FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+                mImageCacheStatsTracker.onStagingAreaMiss();
+                try {
+                  return mFileCache.hasKey(key);
+                } catch (Exception exception) {
+                  return false;
+                }
+              }
+            }
+          },
+          mReadExecutor);
+    } catch (Exception exception) {
+      // Log failure
+      // TODO: 3697790
+      FLog.w(
+          TAG,
+          exception,
+          "Failed to schedule disk-cache read for %s",
+          key.toString());
+      return Task.forError(exception);
+    }
+  }
+
+  /**
    * Performs key-value look up in disk cache. If value is not found in disk cache staging area
    * then disk cache read is scheduled on background thread. Any error manifests itself as
    * cache miss, i.e. the returned future resolves to null.
@@ -70,9 +123,7 @@ public class BufferedDiskCache {
    * @return ListenableFuture that resolves to cached element or null if one cannot be retrieved;
    *   returned future never rethrows any exception
    */
-  public Task<EncodedImage> get(
-      final CacheKey key,
-      final AtomicBoolean isCancelled) {
+  public Task<EncodedImage> get(final CacheKey key, final AtomicBoolean isCancelled) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(isCancelled);
 
@@ -177,6 +228,55 @@ public class BufferedDiskCache {
           key.toString());
       mStagingArea.remove(key, encodedImage);
       EncodedImage.closeSafely(finalEncodedImage);
+    }
+  }
+
+  /**
+   * Removes the item from the disk cache and the staging area.
+   */
+  public Task<Void> remove(final CacheKey key) {
+    Preconditions.checkNotNull(key);
+    mStagingArea.remove(key);
+    try {
+      return Task.call(
+          new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+              mStagingArea.remove(key);
+              mFileCache.remove(key);
+              return null;
+            }
+          },
+          mWriteExecutor);
+    } catch (Exception exception) {
+      // Log failure
+      // TODO: 3697790
+      FLog.w(TAG, exception, "Failed to schedule disk-cache remove for %s", key.toString());
+      return Task.forError(exception);
+    }
+  }
+
+  /**
+   * Clears the disk cache and the staging area.
+   */
+  public Task<Void> clearAll() {
+    mStagingArea.clearAll();
+    try {
+      return Task.call(
+          new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+              mStagingArea.clearAll();
+              mFileCache.clearAll();
+              return null;
+            }
+          },
+          mWriteExecutor);
+    } catch (Exception exception) {
+      // Log failure
+      // TODO: 3697790
+      FLog.w(TAG, exception, "Failed to schedule disk-cache clear");
+      return Task.forError(exception);
     }
   }
 

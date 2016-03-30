@@ -26,7 +26,7 @@ public class SettableDrawableTest {
   private Drawable mUnderlyingDrawable1;
   private Drawable mUnderlyingDrawable2;
   private Drawable mUnderlyingDrawable3;
-  private SettableDrawable mSettableDrawable;
+  private ForwardingDrawable mSettableDrawable;
 
   @Before
   public void setUp() {
@@ -34,7 +34,7 @@ public class SettableDrawableTest {
     mUnderlyingDrawable1 = mock(Drawable.class);
     mUnderlyingDrawable2 = mock(Drawable.class);
     mUnderlyingDrawable3 = mock(Drawable.class);
-    mSettableDrawable = new SettableDrawable(mUnderlyingDrawable0);
+    mSettableDrawable = new ForwardingDrawable(mUnderlyingDrawable0);
   }
 
   @Test

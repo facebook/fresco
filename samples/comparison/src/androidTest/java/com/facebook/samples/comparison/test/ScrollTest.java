@@ -12,12 +12,9 @@
 
 package com.facebook.samples.comparison.test;
 
-import android.graphics.Point;
-import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
-import android.view.Display;
-import android.widget.GridView;
 import android.widget.Spinner;
 
 import com.facebook.common.logging.FLog;
@@ -31,14 +28,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * app by scrolling down SCROLLS times.
  */
 public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
-  private static final int SCROLLS = 30;
+  private static final int SCROLLS = 10;
   private static final int SCROLL_TIME_MS = 1000;
-  private static final int BEFORE_SCROLL_TIME_MS = 500;
+  private static final int BEFORE_SCROLL_TIME_MS = 1500;
   private static final int WAIT_FOR_IMAGES_INTERCHECK_MS = 1000;
   private static final int WAIT_BEFORE_TEST_END_MS = 5000;
 
   private MainActivity mActivity;
-  private GridView mImageList;
+  private RecyclerView mImageList;
   private Spinner mLoaderSelect;
   private Spinner mSourceSelect;
 
@@ -50,7 +47,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
   public void setUp() throws Exception {
     super.setUp();
     mActivity = getActivity();
-    mImageList = (GridView) mActivity.findViewById(R.id.image_grid);
+    mImageList = (RecyclerView) mActivity.findViewById(R.id.image_grid);
     mLoaderSelect = (Spinner) mActivity.findViewById(R.id.loader_select);
     mSourceSelect = (Spinner) mActivity.findViewById(R.id.source_select);
     FLog.setMinimumLoggingLevel(FLog.INFO);
@@ -128,12 +125,12 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
    */
   private void disableAnimatedImages() {
     getInstrumentation().runOnMainSync(
-            new Runnable() {
-              @Override
-              public void run() {
-                mActivity.setAllowAnimations(false);
-              }
-            });
+        new Runnable() {
+          @Override
+          public void run() {
+            mActivity.setAllowAnimations(false);
+          }
+        });
   }
 
   /**
@@ -187,7 +184,7 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
           new Runnable() {
             @Override
             public void run() {
-              mImagesLoaded.set(mImageList.getAdapter().getCount() > 0);
+              mImagesLoaded.set(mImageList.getAdapter().getItemCount() > 0);
             }
           });
     }
@@ -197,31 +194,17 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
    * Scrolls the list view given number of times.
    */
   private void scrollMultipleTimes(int times) throws Exception {
-    final int height = getDisplayHeight();
-    for (int i = 0; i < times; ++i) {
+    final int height = mActivity.getDisplayHeight();
+    for (int i = 0; i < times; i++) {
       Thread.sleep(BEFORE_SCROLL_TIME_MS);
       getInstrumentation().runOnMainSync(
           new Runnable() {
             @Override
             public void run() {
-              mImageList.smoothScrollBy(height / 2, SCROLL_TIME_MS);
+              mImageList.smoothScrollBy(0, height / 2);
             }
           });
       Thread.sleep(SCROLL_TIME_MS);
-    }
-  }
-
-  /**
-   * Determines display's height.
-   */
-  private int getDisplayHeight() {
-    Display display = mActivity.getWindowManager().getDefaultDisplay();
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
-      return display.getHeight();
-    } else {
-      final Point size = new Point();
-      display.getSize(size);
-      return size.y;
     }
   }
 }

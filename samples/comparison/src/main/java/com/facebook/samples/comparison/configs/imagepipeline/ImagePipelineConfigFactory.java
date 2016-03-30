@@ -15,18 +15,20 @@ package com.facebook.samples.comparison.configs.imagepipeline;
 
 import android.content.Context;
 
-import com.facebook.common.internal.Sets;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
-import com.squareup.okhttp.OkHttpClient;
-
 import com.facebook.cache.disk.DiskCacheConfig;
+import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
 import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-
+import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.samples.comparison.configs.ConfigConstants;
+import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.squareup.okhttp.OkHttpClient;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Creates ImagePipeline configuration for the sample app
@@ -45,6 +47,7 @@ public class ImagePipelineConfigFactory {
       ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context);
       configureCaches(configBuilder, context);
       configureLoggingListeners(configBuilder);
+      configureOptions(configBuilder);
       sImagePipelineConfig = configBuilder.build();
     }
     return sImagePipelineConfig;
@@ -56,6 +59,7 @@ public class ImagePipelineConfigFactory {
   public static ImagePipelineConfig getOkHttpImagePipelineConfig(Context context) {
     if (sOkHttpImagePipelineConfig == null) {
       OkHttpClient okHttpClient = new OkHttpClient();
+      okHttpClient.networkInterceptors().add(new StethoInterceptor());
       ImagePipelineConfig.Builder configBuilder =
         OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
       configureCaches(configBuilder, context);
@@ -85,7 +89,7 @@ public class ImagePipelineConfigFactory {
               }
             })
         .setMainDiskCacheConfig(
-            DiskCacheConfig.newBuilder()
+            DiskCacheConfig.newBuilder(context)
                 .setBaseDirectoryPath(context.getApplicationContext().getCacheDir())
                 .setBaseDirectoryName(IMAGE_PIPELINE_CACHE_DIR)
                 .setMaxCacheSize(ConfigConstants.MAX_DISK_CACHE_SIZE)
@@ -93,7 +97,12 @@ public class ImagePipelineConfigFactory {
   }
 
   private static void configureLoggingListeners(ImagePipelineConfig.Builder configBuilder) {
-    configBuilder.setRequestListeners(
-        Sets.newHashSet((RequestListener) new RequestLoggingListener()));
+    Set<RequestListener> requestListeners = new HashSet<>();
+    requestListeners.add(new RequestLoggingListener());
+    configBuilder.setRequestListeners(requestListeners);
+  }
+
+  private static void configureOptions(ImagePipelineConfig.Builder configBuilder) {
+    configBuilder.setDownsampleEnabled(true);
   }
 }

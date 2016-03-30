@@ -62,19 +62,30 @@ public class DrawableUtilsTest {
   }
 
   @Test
-  public void testSetDrawableProperties() {
-    DrawableProperties properties = mock(DrawableProperties.class);
+   public void testSetDrawableProperties() {
+    DrawableProperties properties = new DrawableProperties();
     ColorFilter colorFilter = mock(ColorFilter.class);
-    when(properties.getAlpha()).thenReturn(42);
-    when(properties.getColorFilter()).thenReturn(colorFilter);
-    when(properties.isDither()).thenReturn(true);
-    when(properties.isFilterBitmap()).thenReturn(true);
+    properties.setAlpha(42);
+    properties.setColorFilter(colorFilter);
+    properties.setDither(true);
+    properties.setFilterBitmap(true);
     Drawable drawableTo = mock(Drawable.class);
     DrawableUtils.setDrawableProperties(drawableTo, properties);
     verify(drawableTo).setAlpha(42);
     verify(drawableTo).setColorFilter(colorFilter);
     verify(drawableTo).setDither(true);
     verify(drawableTo).setFilterBitmap(true);
+  }
+
+  @Test
+  public void testSetDrawablePropertiesDefault() {
+    DrawableProperties properties = new DrawableProperties();
+    Drawable drawableTo = mock(Drawable.class);
+    DrawableUtils.setDrawableProperties(drawableTo, properties);
+    verify(drawableTo, never()).setAlpha(anyInt());
+    verify(drawableTo, never()).setColorFilter(any(ColorFilter.class));
+    verify(drawableTo, never()).setDither(anyBoolean());
+    verify(drawableTo, never()).setFilterBitmap(anyBoolean());
   }
 
   @Test

@@ -9,27 +9,26 @@
 
 package com.facebook.drawee.generic;
 
-import android.annotation.TargetApi;
+import java.util.Arrays;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
-import com.facebook.common.internal.Lists;
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.DrawableTestUtils;
 import com.facebook.drawee.drawable.FadeDrawable;
+import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
+import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import com.facebook.drawee.drawable.SettableDrawable;
 
 import org.robolectric.RobolectricTestRunner;
 
@@ -44,37 +43,41 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyTest {
 
-  private final BitmapDrawable mPlaceholderImage = mock(BitmapDrawable.class);
-  private final BitmapDrawable mFailureImage = mock(BitmapDrawable.class);
-  private final BitmapDrawable mRetryImage = mock(BitmapDrawable.class);
-  private final BitmapDrawable mProgressBarImage = mock(BitmapDrawable.class);
-  private final BitmapDrawable mActualImage1 = mock(BitmapDrawable.class);
-  private final BitmapDrawable mActualImage2 = mock(BitmapDrawable.class);
-  private final Matrix mActualImageMatrix = mock(Matrix.class);
-  private final PointF mFocusPoint = new PointF(0.1f, 0.4f);
-  private final Drawable mBackground1 = mock(BitmapDrawable.class);
-  private final Drawable mBackground2 = mock(BitmapDrawable.class);
-  private final Drawable mOverlay1 = mock(BitmapDrawable.class);
-  private final Drawable mOverlay2 = mock(BitmapDrawable.class);
-
   private GenericDraweeHierarchyBuilder mBuilder;
+
+  private Drawable mBackground1;
+  private Drawable mBackground2;
+  private Drawable mOverlay1;
+  private Drawable mOverlay2;
+  private BitmapDrawable mPlaceholderImage;
+  private BitmapDrawable mFailureImage;
+  private BitmapDrawable mRetryImage;
+  private BitmapDrawable mProgressBarImage;
+  private BitmapDrawable mActualImage1;
+  private BitmapDrawable mActualImage2;
+  private ColorDrawable mWrappedLeaf;
+  private ForwardingDrawable mWrappedImage;
+  private Matrix mActualImageMatrix;
+  private PointF mFocusPoint;
 
   @Before
   public void setUp() {
-    when(mPlaceholderImage.getBounds()).thenReturn(new Rect());
-    when(mPlaceholderImage.getPaint()).thenReturn(new Paint());
-    when(mFailureImage.getBounds()).thenReturn(new Rect());
-    when(mFailureImage.getPaint()).thenReturn(new Paint());
-    when(mRetryImage.getBounds()).thenReturn(new Rect());
-    when(mRetryImage.getPaint()).thenReturn(new Paint());
-    when(mProgressBarImage.getBounds()).thenReturn(new Rect());
-    when(mProgressBarImage.getPaint()).thenReturn(new Paint());
-    when(mActualImage1.getBounds()).thenReturn(new Rect());
-    when(mActualImage1.getPaint()).thenReturn(new Paint());
-    when(mActualImage2.getBounds()).thenReturn(new Rect());
-    when(mActualImage2.getPaint()).thenReturn(new Paint());
-
     mBuilder = new GenericDraweeHierarchyBuilder(null);
+
+    mBackground1 = DrawableTestUtils.mockDrawable();
+    mBackground2 = DrawableTestUtils.mockDrawable();
+    mOverlay1 = DrawableTestUtils.mockDrawable();
+    mOverlay2 = DrawableTestUtils.mockDrawable();
+    mPlaceholderImage = DrawableTestUtils.mockBitmapDrawable();
+    mFailureImage = DrawableTestUtils.mockBitmapDrawable();
+    mRetryImage = DrawableTestUtils.mockBitmapDrawable();
+    mProgressBarImage = DrawableTestUtils.mockBitmapDrawable();
+    mActualImage1 = DrawableTestUtils.mockBitmapDrawable();
+    mActualImage2 = DrawableTestUtils.mockBitmapDrawable();
+    mWrappedLeaf = new ColorDrawable(Color.BLUE);
+    mWrappedImage = new ForwardingDrawable(new ForwardingDrawable(mWrappedLeaf));
+    mActualImageMatrix = mock(Matrix.class);
+    mFocusPoint = new PointF(0.1f, 0.4f);
   }
 
   @Test
@@ -83,42 +86,19 @@ public class GenericDraweeHierarchyTest {
         .setPlaceholderImage(mPlaceholderImage, ScaleType.CENTER)
         .setRetryImage(mRetryImage, ScaleType.FIT_CENTER)
         .setFailureImage(mFailureImage, ScaleType.CENTER_INSIDE)
-        .setProgressBarImage(mProgressBarImage, ScaleType.CENTER_CROP)
+        .setProgressBarImage(mProgressBarImage, ScaleType.CENTER)
         .setActualImageScaleType(ScaleType.FOCUS_CROP)
         .setActualImageFocusPoint(mFocusPoint)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(0).getClass());
-    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertEquals(ScaleType.CENTER, placeholderBranch.getScaleType());
-    assertEquals(mPlaceholderImage, placeholderBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable actualImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.FOCUS_CROP, actualImageBranch.getScaleType());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
-    AndroidGraphicsTestUtils.assertEquals(mFocusPoint, actualImageBranch.getFocusPoint(), 0f);
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    ScaleTypeDrawable progressBarImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(2);
-    assertEquals(ScaleType.CENTER_CROP, progressBarImageBranch.getScaleType());
-    assertEquals(mProgressBarImage, progressBarImageBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(3).getClass());
-    ScaleTypeDrawable retryImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(3);
-    assertEquals(ScaleType.FIT_CENTER, retryImageBranch.getScaleType());
-    assertEquals(mRetryImage, retryImageBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(4).getClass());
-    ScaleTypeDrawable failureImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(4);
-    assertEquals(ScaleType.CENTER_INSIDE, failureImageBranch.getScaleType());
-    assertEquals(mFailureImage, failureImageBranch.getCurrent());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(5, fadeDrawable.getNumberOfLayers());
+    assertScaleTypeAndDrawable(mPlaceholderImage, ScaleType.CENTER, fadeDrawable.getDrawable(0));
+    assertActualImageScaleType(ScaleType.FOCUS_CROP, mFocusPoint, fadeDrawable.getDrawable(1));
+    assertScaleTypeAndDrawable(mProgressBarImage, ScaleType.CENTER, fadeDrawable.getDrawable(2));
+    assertScaleTypeAndDrawable(mRetryImage, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(3));
+    assertScaleTypeAndDrawable(mFailureImage, ScaleType.CENTER_INSIDE, fadeDrawable.getDrawable(4));
+    verifyCallback(rootDrawable, mPlaceholderImage);
   }
 
   @Test
@@ -130,25 +110,18 @@ public class GenericDraweeHierarchyTest {
         .setProgressBarImage(mProgressBarImage, null)
         .setActualImageMatrix(mActualImageMatrix)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(0));
-
-    assertEquals(MatrixDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    MatrixDrawable actualImageBranch = (MatrixDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(mActualImageMatrix, actualImageBranch.getMatrix());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
-
-    assertEquals(mProgressBarImage, fadeDrawable.getDrawable(2));
-
-    assertEquals(mRetryImage, fadeDrawable.getDrawable(3));
-
-    assertEquals(mFailureImage, fadeDrawable.getDrawable(4));
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(5, fadeDrawable.getNumberOfLayers());
+    assertSame(mPlaceholderImage, fadeDrawable.getDrawable(0));
+    assertSame(mProgressBarImage, fadeDrawable.getDrawable(2));
+    assertSame(mRetryImage, fadeDrawable.getDrawable(3));
+    assertSame(mFailureImage, fadeDrawable.getDrawable(4));
+    MatrixDrawable matrixDrawable = (MatrixDrawable) fadeDrawable.getDrawable(1);
+    assertNotNull(matrixDrawable);
+    assertEquals(mActualImageMatrix, matrixDrawable.getMatrix());
+    assertSame(ForwardingDrawable.class, matrixDrawable.getCurrent().getClass());
+    verifyCallback(rootDrawable, mPlaceholderImage);
   }
 
   @Test
@@ -160,38 +133,30 @@ public class GenericDraweeHierarchyTest {
         .setProgressBarImage(mProgressBarImage, null)
         .setActualImageScaleType(null)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(0));
-    assertEquals(SettableDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    assertEquals(mProgressBarImage, fadeDrawable.getDrawable(2));
-    assertEquals(mRetryImage, fadeDrawable.getDrawable(3));
-    assertEquals(mFailureImage, fadeDrawable.getDrawable(4));
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(5, fadeDrawable.getNumberOfLayers());
+    assertSame(mPlaceholderImage, fadeDrawable.getDrawable(0));
+    assertSame(ForwardingDrawable.class, fadeDrawable.getDrawable(1).getClass());
+    assertSame(mProgressBarImage, fadeDrawable.getDrawable(2));
+    assertSame(mRetryImage, fadeDrawable.getDrawable(3));
+    assertSame(mFailureImage, fadeDrawable.getDrawable(4));
+    verifyCallback(rootDrawable, mPlaceholderImage);
   }
 
   @Test
-  public void testHierarchy_NoPlaceholderImage() throws Exception {
+  public void testHierarchy_NoBranches() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    // transparent color drawable will be used as placeholder
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(0).getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable actualImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.CENTER_CROP, actualImageBranch.getScaleType());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(5, fadeDrawable.getNumberOfLayers());
+    assertNull(fadeDrawable.getDrawable(0));
+    assertActualImageScaleType(ScaleType.CENTER_CROP, null, fadeDrawable.getDrawable(1));
+    assertNull(fadeDrawable.getDrawable(2));
+    assertNull(fadeDrawable.getDrawable(3));
+    assertNull(fadeDrawable.getDrawable(4));
+    verifyCallback(rootDrawable, fadeDrawable);
   }
 
   @Test
@@ -199,22 +164,10 @@ public class GenericDraweeHierarchyTest {
     GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage, ScaleType.CENTER)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(0).getClass());
-    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertEquals(ScaleType.CENTER, placeholderBranch.getScaleType());
-    assertEquals(mPlaceholderImage, placeholderBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable actualImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.CENTER_CROP, actualImageBranch.getScaleType());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertScaleTypeAndDrawable(mPlaceholderImage, ScaleType.CENTER, fadeDrawable.getDrawable(0));
+    verifyCallback(rootDrawable, mPlaceholderImage);
   }
 
   @Test
@@ -222,25 +175,10 @@ public class GenericDraweeHierarchyTest {
     GenericDraweeHierarchy dh = mBuilder
         .setFailureImage(mFailureImage, ScaleType.CENTER)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    // transparent color drawable is used as placeholder when not specified otherwise
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(0).getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable actualImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.CENTER_CROP, actualImageBranch.getScaleType());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    ScaleTypeDrawable failureImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(2);
-    assertEquals(ScaleType.CENTER, failureImageBranch.getScaleType());
-    assertEquals(mFailureImage, failureImageBranch.getCurrent());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertScaleTypeAndDrawable(mFailureImage, ScaleType.CENTER, fadeDrawable.getDrawable(4));
+    verifyCallback(rootDrawable, mFailureImage);
   }
 
   @Test
@@ -248,25 +186,10 @@ public class GenericDraweeHierarchyTest {
     GenericDraweeHierarchy dh = mBuilder
         .setRetryImage(mRetryImage, ScaleType.CENTER)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    // transparent color drawable is used as placeholder when not specified otherwise
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(0).getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable actualImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.CENTER_CROP, actualImageBranch.getScaleType());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    ScaleTypeDrawable retryImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(2);
-    assertEquals(ScaleType.CENTER, retryImageBranch.getScaleType());
-    assertEquals(mRetryImage, retryImageBranch.getCurrent());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertScaleTypeAndDrawable(mRetryImage, ScaleType.CENTER, fadeDrawable.getDrawable(3));
+    verifyCallback(rootDrawable, mRetryImage);
   }
 
   @Test
@@ -274,25 +197,10 @@ public class GenericDraweeHierarchyTest {
     GenericDraweeHierarchy dh = mBuilder
         .setProgressBarImage(mProgressBarImage, ScaleType.CENTER)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    // transparent color drawable is used as placeholder when not specified otherwise
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(0).getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable actualImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.CENTER_CROP, actualImageBranch.getScaleType());
-    assertEquals(SettableDrawable.class, actualImageBranch.getCurrent().getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    ScaleTypeDrawable progressBarImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(2);
-    assertEquals(ScaleType.CENTER, progressBarImageBranch.getScaleType());
-    assertEquals(mProgressBarImage, progressBarImageBranch.getCurrent());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertScaleTypeAndDrawable(mProgressBarImage, ScaleType.CENTER, fadeDrawable.getDrawable(2));
+    verifyCallback(rootDrawable, mProgressBarImage);
   }
 
   @Test
@@ -304,103 +212,53 @@ public class GenericDraweeHierarchyTest {
         .setProgressBarImage(mProgressBarImage, ScaleType.CENTER)
         .setActualImageScaleType(ScaleType.CENTER_CROP)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(6, fadeDrawable.getNumberOfLayers());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(0).getClass());
-    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertEquals(ScaleType.CENTER, placeholderBranch.getScaleType());
-    assertEquals(mPlaceholderImage, placeholderBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    ScaleTypeDrawable imageBranch1 = (ScaleTypeDrawable) fadeDrawable.getDrawable(1);
-    assertEquals(ScaleType.CENTER_CROP, imageBranch1.getScaleType());
-    assertEquals(SettableDrawable.class, imageBranch1.getCurrent().getClass());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    ScaleTypeDrawable progressBarImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(2);
-    assertEquals(ScaleType.CENTER, progressBarImageBranch.getScaleType());
-    assertEquals(mProgressBarImage, progressBarImageBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(3).getClass());
-    ScaleTypeDrawable retryImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(3);
-    assertEquals(ScaleType.FIT_CENTER, retryImageBranch.getScaleType());
-    assertEquals(mRetryImage, retryImageBranch.getCurrent());
-
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(4).getClass());
-    ScaleTypeDrawable failureImageBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(4);
-    assertEquals(ScaleType.FIT_CENTER, failureImageBranch.getScaleType());
-    assertEquals(mFailureImage, failureImageBranch.getCurrent());
-
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(5).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(5, fadeDrawable.getNumberOfLayers());
+    assertScaleTypeAndDrawable(mPlaceholderImage, ScaleType.CENTER, fadeDrawable.getDrawable(0));
+    assertActualImageScaleType(ScaleType.CENTER_CROP, null, fadeDrawable.getDrawable(1));
+    assertScaleTypeAndDrawable(mProgressBarImage, ScaleType.CENTER, fadeDrawable.getDrawable(2));
+    assertScaleTypeAndDrawable(mRetryImage, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(3));
+    assertScaleTypeAndDrawable(mFailureImage, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(4));
+    verifyCallback(rootDrawable, mPlaceholderImage);
   }
 
   @Test
   public void testHierarchy_WithBackgrounds() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setBackgrounds(Lists.newArrayList(mBackground1, mBackground2))
+        .setBackgrounds(Arrays.asList(mBackground1, mBackground2))
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(5, fadeDrawable.getNumberOfLayers());
-    assertEquals(mBackground1, fadeDrawable.getDrawable(0));
-    assertEquals(mBackground2, fadeDrawable.getDrawable(1));
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(2));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(3).getClass());
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(4).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(7, fadeDrawable.getNumberOfLayers());
+    assertSame(mBackground1, fadeDrawable.getDrawable(0));
+    assertSame(mBackground2, fadeDrawable.getDrawable(1));
+    verifyCallback(rootDrawable, mBackground1);
   }
 
   @Test
   public void testHierarchy_WithSingleBackground() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
         .setBackground(mBackground1)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(4, fadeDrawable.getNumberOfLayers());
-    assertEquals(mBackground1, fadeDrawable.getDrawable(0));
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(1));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(3).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(6, fadeDrawable.getNumberOfLayers());
+    assertSame(mBackground1, fadeDrawable.getDrawable(0));
+    verifyCallback(rootDrawable, mBackground1);
   }
 
   @Test
   public void testHierarchy_WithOverlays() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setOverlays(Lists.newArrayList(mOverlay1, mOverlay2))
+        .setOverlays(Arrays.asList(mOverlay1, mOverlay2))
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(5, fadeDrawable.getNumberOfLayers());
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(0));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    assertEquals(mOverlay1, fadeDrawable.getDrawable(2));
-    assertEquals(mOverlay2, fadeDrawable.getDrawable(3));
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(4).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(7, fadeDrawable.getNumberOfLayers());
+    assertSame(mOverlay1, fadeDrawable.getDrawable(5));
+    assertSame(mOverlay2, fadeDrawable.getDrawable(6));
+    verifyCallback(rootDrawable, mOverlay1);
   }
 
   @Test
@@ -409,144 +267,108 @@ public class GenericDraweeHierarchyTest {
         .setPlaceholderImage(mPlaceholderImage, null)
         .setOverlay(mOverlay1)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(4, fadeDrawable.getNumberOfLayers());
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(0));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(1).getClass());
-    assertEquals(mOverlay1, fadeDrawable.getDrawable(2));
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(3).getClass()); // controller overlay
-  }
-
-  @Test
-  public void testHierarchy_WithBackgroundsAndOverlays() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setBackgrounds(Lists.newArrayList(mBackground1, mBackground2))
-        .setOverlays(Lists.newArrayList(mOverlay1, mOverlay2))
-        .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(7, fadeDrawable.getNumberOfLayers());
-    assertEquals(mBackground1, fadeDrawable.getDrawable(0));
-    assertEquals(mBackground2, fadeDrawable.getDrawable(1));
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(2));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(3).getClass());
-    assertEquals(mOverlay1, fadeDrawable.getDrawable(4));
-    assertEquals(mOverlay2, fadeDrawable.getDrawable(5));
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(6).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(6, fadeDrawable.getNumberOfLayers());
+    assertSame(mOverlay1, fadeDrawable.getDrawable(5));
+    verifyCallback(rootDrawable, mOverlay1);
   }
 
   @Test
   public void testHierarchy_WithSingleBackgroundAndOverlay() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
         .setBackground(mBackground2)
         .setOverlay(mOverlay2)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(5, fadeDrawable.getNumberOfLayers());
-    assertEquals(mBackground2, fadeDrawable.getDrawable(0));
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(1));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    assertEquals(mOverlay2, fadeDrawable.getDrawable(3));
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(4).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(7, fadeDrawable.getNumberOfLayers());
+    assertSame(mBackground2, fadeDrawable.getDrawable(0));
+    assertSame(mOverlay2, fadeDrawable.getDrawable(6));
+    verifyCallback(rootDrawable, mBackground2);
+    verifyCallback(rootDrawable, mOverlay2);
   }
 
   @Test
-  public void testHierarchy_WithPressedStateOverlaySetFirst() throws Exception {
-    //Setting PressedStateOverlay before Overlays and Backgroud
+  public void testHierarchy_WithAllBranchesBackgroundsAndOverlays() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setPressedStateOverlay(mOverlay1)
-        .setBackground(mBackground2)
-        .setOverlay(mOverlay2)
+        .setPlaceholderImage(mPlaceholderImage, ScaleType.CENTER)
+        .setRetryImage(mRetryImage, ScaleType.FIT_CENTER)
+        .setFailureImage(mFailureImage, ScaleType.FIT_CENTER)
+        .setProgressBarImage(mProgressBarImage, ScaleType.CENTER)
+        .setActualImageScaleType(ScaleType.CENTER_CROP)
+        .setBackgrounds(Arrays.asList(mBackground1, mBackground2))
+        .setOverlays(Arrays.asList(mOverlay1, mOverlay2))
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(6, fadeDrawable.getNumberOfLayers());
-    assertEquals(mBackground2, fadeDrawable.getDrawable(0));
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(1));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    assertEquals(mOverlay2, fadeDrawable.getDrawable(3));
-    assertEquals(StateListDrawable.class, fadeDrawable.getDrawable(4).getClass());
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(5).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(9, fadeDrawable.getNumberOfLayers());
+    assertSame(mBackground1, fadeDrawable.getDrawable(0));
+    assertSame(mBackground2, fadeDrawable.getDrawable(1));
+    assertScaleTypeAndDrawable(mPlaceholderImage, ScaleType.CENTER, fadeDrawable.getDrawable(2));
+    assertActualImageScaleType(ScaleType.CENTER_CROP, null, fadeDrawable.getDrawable(3));
+    assertScaleTypeAndDrawable(mProgressBarImage, ScaleType.CENTER, fadeDrawable.getDrawable(4));
+    assertScaleTypeAndDrawable(mRetryImage, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(5));
+    assertScaleTypeAndDrawable(mFailureImage, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(6));
+    assertSame(mOverlay1, fadeDrawable.getDrawable(7));
+    assertSame(mOverlay2, fadeDrawable.getDrawable(8));
+    verifyCallback(rootDrawable, mBackground2);
+    verifyCallback(rootDrawable, mPlaceholderImage);
+    verifyCallback(rootDrawable, mOverlay2);
   }
 
   @Test
-  public void testHierarchy_WithPressedStateOverlaySetLast() throws Exception {
-    //Setting PressedStateOverlay after Overlays and Backgroud
+  public void testHierarchy_WithPressedStateOverlay() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setBackground(mBackground2)
         .setOverlay(mOverlay2)
         .setPressedStateOverlay(mOverlay1)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertAssignableFrom(FadeDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    assertEquals(6, fadeDrawable.getNumberOfLayers());
-    assertEquals(mBackground2, fadeDrawable.getDrawable(0));
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(1));
-    assertEquals(ScaleTypeDrawable.class, fadeDrawable.getDrawable(2).getClass());
-    assertEquals(mOverlay2, fadeDrawable.getDrawable(3));
-    assertEquals(StateListDrawable.class, fadeDrawable.getDrawable(4).getClass());
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(5).getClass()); // controller overlay
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertEquals(7, fadeDrawable.getNumberOfLayers());
+    assertSame(mOverlay2, fadeDrawable.getDrawable(5));
+    StateListDrawable stateListDrawable = (StateListDrawable) fadeDrawable.getDrawable(6);
+    assertNotNull(stateListDrawable);
   }
 
   @Test
-  public void testHierarchy_WithRoundedCornersDrawable() throws Exception {
+  public void testHierarchy_WithRoundedOverlayColor() throws Exception {
+    RoundingParams roundingParams =
+        RoundingParams.fromCornersRadius(10).setOverlayColor(0xFFFFFFFF);
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setActualImageScaleType(null)
-        .setRoundingParams(RoundingParams.fromCornersRadius(10).setOverlayColor(0xFFFFFFFF))
-        .setFadeDuration(250)
+        .setRoundingParams(roundingParams)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertEquals(RoundedCornersDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    RoundedCornersDrawable roundedDrawable = (RoundedCornersDrawable) rootDrawable.getCurrent();
+    assertRoundingParams(roundingParams, roundedDrawable);
+    assertEquals(roundingParams.getOverlayColor(), roundedDrawable.getOverlayColor());
+    FadeDrawable fadeDrawable = (FadeDrawable) roundedDrawable.getCurrent();
+    assertNotNull(fadeDrawable);
+    verifyCallback(rootDrawable, fadeDrawable);
   }
 
   @Test
-  public void testHierarchy_WithRoundedCornersDrawableAsCircle() throws Exception {
+  public void testHierarchy_WithRoundedLeafs() throws Exception {
+    RoundingParams roundingParams = RoundingParams.asCircle();
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setActualImageScaleType(null)
-        .setRoundingParams(RoundingParams.asCircle().setOverlayColor(0xFFFFFFFF))
-        .setFadeDuration(100)
+        .setPlaceholderImage(mWrappedImage, ScaleType.CENTER)
+        .setFailureImage(mFailureImage, ScaleType.CENTER)
+        .setRetryImage(mRetryImage, null)
+        .setRoundingParams(roundingParams)
         .build();
-
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicWidth());
-    assertEquals(-1, dh.getTopLevelDrawable().getIntrinsicHeight());
-
-    assertEquals(RoundedCornersDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    assertNotNull(fadeDrawable);
+    assertScaleTypeAndDrawable(mWrappedImage, ScaleType.CENTER, fadeDrawable.getDrawable(0));
+    Rounded roundedPlaceholder = (Rounded) mWrappedImage.getCurrent().getCurrent();
+    assertRoundingParams(roundingParams, roundedPlaceholder);
+    Rounded roundedFailureImage = (Rounded) fadeDrawable.getDrawable(4).getCurrent();
+    assertRoundingParams(roundingParams, roundedFailureImage);
+    Rounded roundedRetryImage = (Rounded) fadeDrawable.getDrawable(3);
+    assertRoundingParams(roundingParams, roundedRetryImage);
+    verifyCallback(rootDrawable, mWrappedImage.getCurrent().getCurrent());
+    verifyCallback(rootDrawable, (Drawable) roundedFailureImage);
+    verifyCallback(rootDrawable, (Drawable) roundedRetryImage);
   }
 
   @Test
@@ -565,11 +387,11 @@ public class GenericDraweeHierarchyTest {
 
     assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(placeholderImageIndex));
     assertEquals(
-        SettableDrawable.class,
+        ForwardingDrawable.class,
         fadeDrawable.getDrawable(actualImageIndex).getClass());
 
-    SettableDrawable actualImageSettableDrawable =
-        (SettableDrawable) fadeDrawable.getDrawable(actualImageIndex);
+    ForwardingDrawable actualImageSettableDrawable =
+        (ForwardingDrawable) fadeDrawable.getDrawable(actualImageIndex);
 
     // initial state -> final image (non-immediate)
     // initial state
@@ -633,8 +455,8 @@ public class GenericDraweeHierarchyTest {
   @Test
   public void testControlling_WithAllLayers() throws Exception {
     GenericDraweeHierarchy dh = mBuilder
-        .setBackgrounds(Lists.newArrayList(mBackground1, mBackground2))
-        .setOverlays(Lists.newArrayList(mOverlay1, mOverlay2))
+        .setBackgrounds(Arrays.asList(mBackground1, mBackground2))
+        .setOverlays(Arrays.asList(mOverlay1, mOverlay2))
         .setPlaceholderImage(mPlaceholderImage, null)
         .setRetryImage(mRetryImage, null)
         .setFailureImage(mFailureImage, null)
@@ -662,11 +484,11 @@ public class GenericDraweeHierarchyTest {
     assertEquals(mRetryImage, fadeDrawable.getDrawable(retryImageIndex));
     assertEquals(mFailureImage, fadeDrawable.getDrawable(failureImageIndex));
     assertEquals(
-        SettableDrawable.class,
+        ForwardingDrawable.class,
         fadeDrawable.getDrawable(actualImageIndex).getClass());
 
-    SettableDrawable finalImageSettableDrawable =
-        (SettableDrawable) fadeDrawable.getDrawable(actualImageIndex);
+    ForwardingDrawable finalImageSettableDrawable =
+        (ForwardingDrawable) fadeDrawable.getDrawable(actualImageIndex);
 
     // initial state -> final image (immediate)
     // initial state, show progress bar
@@ -887,7 +709,7 @@ public class GenericDraweeHierarchyTest {
     final int imageIndex = 1;
 
     FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    SettableDrawable settableDrawable = (SettableDrawable) fadeDrawable.getDrawable(imageIndex);
+    ForwardingDrawable settableDrawable = (ForwardingDrawable) fadeDrawable.getDrawable(imageIndex);
 
     // set temporary image
     dh.setImage(mActualImage1, 0.5f, true);
@@ -895,6 +717,7 @@ public class GenericDraweeHierarchyTest {
     assertEquals(RoundedBitmapDrawable.class, settableDrawable.getCurrent().getClass());
     assertEquals(true, fadeDrawable.isLayerOn(imageIndex));
     assertEquals(FadeDrawable.TRANSITION_NONE, fadeDrawable.getTransitionState());
+    verifyCallback(dh.getTopLevelDrawable(), settableDrawable.getCurrent());
 
     // set final image
     dh.setImage(mActualImage2, 1f, false);
@@ -903,6 +726,7 @@ public class GenericDraweeHierarchyTest {
     assertEquals(true, fadeDrawable.isLayerOn(imageIndex));
     assertEquals(FadeDrawable.TRANSITION_STARTING, fadeDrawable.getTransitionState());
     assertEquals(250, fadeDrawable.getTransitionDuration());
+    verifyCallback(dh.getTopLevelDrawable(), settableDrawable.getCurrent());
   }
 
   @Test
@@ -913,27 +737,15 @@ public class GenericDraweeHierarchyTest {
         .setFadeDuration(250)
         .build();
 
-    Drawable controllerOverlay = DrawableTestUtils.mockDrawable();
-
-    // image indexes in DH tree
-    final int placeholderImageIndex = 0;
-    final int actualImageIndex = 1;
-    final int controllerOverlayIndex = 2;
-
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-
-    // initial state
-    assertEquals(mPlaceholderImage, fadeDrawable.getDrawable(placeholderImageIndex));
-    assertEquals(SettableDrawable.class, fadeDrawable.getDrawable(actualImageIndex).getClass());
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(controllerOverlayIndex).getClass());
-
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
     // set controller overlay
+    Drawable controllerOverlay = DrawableTestUtils.mockDrawable();
     dh.setControllerOverlay(controllerOverlay);
-    assertEquals(controllerOverlay, fadeDrawable.getDrawable(controllerOverlayIndex));
+    assertSame(controllerOverlay, rootDrawable.mControllerOverlay);
 
     // clear controller overlay
     dh.setControllerOverlay(null);
-    assertEquals(ColorDrawable.class, fadeDrawable.getDrawable(controllerOverlayIndex).getClass());
+    assertNull(rootDrawable.mControllerOverlay);
   }
 
   private void assertLayersOn(FadeDrawable fadeDrawable, int firstLayerIndex, int numberOfLayers) {
@@ -957,25 +769,117 @@ public class GenericDraweeHierarchyTest {
   }
 
   @Test
-  @TargetApi(11)
   public void testSetPlaceholderImage() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
+    final GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage, ScaleType.FIT_XY)
         .build();
+    testSetDrawable(dh, 0, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setPlaceholderImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setPlaceholderImage(drawable, scaleType);
+      }
+    });
+  }
 
+  @Test
+  public void testSetFailureImage() throws Exception {
+    final GenericDraweeHierarchy dh = mBuilder
+        .setFailureImage(mFailureImage, null)
+        .build();
+    testSetDrawable(dh, 4, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setFailureImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setFailureImage(drawable, scaleType);
+      }
+    });
+  }
+
+  @Test
+  public void testSetRetryImage() throws Exception {
+    final GenericDraweeHierarchy dh = mBuilder
+        .setRetryImage(mRetryImage, null)
+        .build();
+    testSetDrawable(dh, 3, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setRetryImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setRetryImage(drawable, scaleType);
+      }
+    });
+  }
+
+  @Test
+  public void testSetProgressBarImage() throws Exception {
+    final GenericDraweeHierarchy dh = mBuilder
+        .setProgressBarImage(mProgressBarImage, null)
+        .build();
+    testSetDrawable(dh, 2, new SetDrawableCallback() {
+      @Override
+      public void setDrawable(Drawable drawable) {
+        dh.setProgressBarImage(drawable);
+      }
+      @Override
+      public void setDrawable(Drawable drawable, ScaleType scaleType) {
+        dh.setProgressBarImage(drawable, scaleType);
+      }
+    });
+  }
+
+  private interface SetDrawableCallback {
+    void setDrawable(Drawable drawable);
+    void setDrawable(Drawable drawable, ScaleType scaleType);
+  }
+
+  private void testSetDrawable(GenericDraweeHierarchy dh, int index, SetDrawableCallback callback) {
     FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertEquals(mPlaceholderImage, placeholderBranch.getCurrent());
-
-    dh.setPlaceholderImage(null);
-    assertTrue(placeholderBranch.getCurrent() instanceof ColorDrawable);
-    assertEquals(Color.TRANSPARENT, ((ColorDrawable) placeholderBranch.getCurrent()).getColor());
-
-    Drawable newPlaceholder = mock(Drawable.class);
-    dh.setPlaceholderImage(newPlaceholder);
-    assertSame(placeholderBranch, fadeDrawable.getDrawable(0));
-    assertSame(newPlaceholder, placeholderBranch.getCurrent());
-    assertEquals(ScaleType.FIT_XY, placeholderBranch.getScaleType());
+    // null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // null -> null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // null -> drawable
+    Drawable drawable1 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable1);
+    assertSame(drawable1, fadeDrawable.getDrawable(index));
+    // drawable -> drawable
+    Drawable drawable2 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable2);
+    assertSame(drawable2, fadeDrawable.getDrawable(index));
+    // drawable -> null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // null -> scaletype + drawable
+    Drawable drawable3 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable3, ScaleType.FOCUS_CROP);
+    assertScaleTypeAndDrawable(drawable3, ScaleType.FOCUS_CROP, fadeDrawable.getDrawable(index));
+    // scaletype + drawable -> scaletype + drawable
+    Drawable drawable4 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable4, ScaleType.CENTER);
+    assertScaleTypeAndDrawable(drawable4, ScaleType.CENTER, fadeDrawable.getDrawable(index));
+    // scaletype + drawable -> null
+    callback.setDrawable(null);
+    assertNull(fadeDrawable.getDrawable(index));
+    // drawable -> scaletype + drawable
+    callback.setDrawable(drawable1);
+    Drawable drawable5 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable5, ScaleType.FIT_CENTER);
+    assertScaleTypeAndDrawable(drawable5, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(index));
+    // scaletype + drawable -> drawable (kep the old scaletype)
+    Drawable drawable6 = DrawableTestUtils.mockDrawable();
+    callback.setDrawable(drawable6);
+    assertScaleTypeAndDrawable(drawable6, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(index));
   }
 
   @Test
@@ -1024,129 +928,176 @@ public class GenericDraweeHierarchyTest {
   }
 
   @Test
-  public void testSetRoundingParams_OverlayColor() {
-    GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage)
-        .setRoundingParams(RoundingParams.asCircle().setOverlayColor(0xC0123456))
-        .build();
-
-    assertEquals(RoundedCornersDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-
-    assertTrue(dh.getRoundingParams().getRoundAsCircle());
-    assertEquals(
-        RoundingParams.RoundingMethod.OVERLAY_COLOR,
-        dh.getRoundingParams().getRoundingMethod());
-    assertEquals(0xC0123456, dh.getRoundingParams().getOverlayColor());
-
-    dh.setRoundingParams(RoundingParams.fromCornersRadius(9).setOverlayColor(0xFFFFFFFF));
-
-    assertFalse(dh.getRoundingParams().getRoundAsCircle());
-    assertEquals(
-        RoundingParams.RoundingMethod.OVERLAY_COLOR,
-        dh.getRoundingParams().getRoundingMethod());
-    float[] expectedRadii = new float[] {9, 9, 9, 9, 9, 9, 9, 9};
-    assertArrayEquals(expectedRadii, dh.getRoundingParams().getCornersRadii(), 0);
-    assertEquals(0xFFFFFFFF, dh.getRoundingParams().getOverlayColor());
+  public void testSetRoundingParams_NoneToNone() {
+    testSetRoundingParams_ToNoneFrom(null);
   }
 
   @Test
-  public void testSetRoundingParams_Border() {
-    int borderColor = Color.CYAN;
-    float borderWidth = 0.4f;
+  public void testSetRoundingParams_OverlayToNone() {
+    testSetRoundingParams_ToNoneFrom(RoundingParams.asCircle().setOverlayColor(0x12345678));
+  }
 
-    RoundingParams roundingParams = RoundingParams
-        .asCircle()
-        .setOverlayColor(Color.GRAY)
-        .setBorder(borderColor, borderWidth);
+  @Test
+  public void testSetRoundingParams_RoundedLeafsToNone() {
+    testSetRoundingParams_ToNoneFrom(RoundingParams.asCircle());
+  }
 
+  private void testSetRoundingParams_ToNoneFrom(RoundingParams prev) {
+    RoundingParams roundingParams = null;
+    GenericDraweeHierarchy dh = testRoundingParams_createHierarchy(prev, roundingParams);
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    if (prev != null && prev.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
+      // Rounded leafs remain rounded, but with reset params, so no leaf rounding actually occurs
+      testRoundingParams_RoundedLeafs(rootDrawable, fadeDrawable, roundingParams);
+    } else {
+      testRoundingParams_NoRoundedLeafs(rootDrawable, fadeDrawable);
+    }
+  }
+
+  @Test
+  public void testSetRoundingParams_NoneToOverlay() {
+    testSetRoundingParams_ToOverlayFrom(null);
+  }
+
+  @Test
+  public void testSetRoundingParams_OverlayToOverlay() {
+    testSetRoundingParams_ToOverlayFrom(RoundingParams.asCircle().setOverlayColor(0x12345678));
+  }
+
+  @Test
+  public void testSetRoundingParams_RoundedLeafsToOverlay() {
+    testSetRoundingParams_ToOverlayFrom(RoundingParams.fromCornersRadius(10));
+  }
+
+  private void testSetRoundingParams_ToOverlayFrom(RoundingParams prev) {
+    RoundingParams roundingParams = RoundingParams.fromCornersRadius(7)
+        .setOverlayColor(0xFFFFFFFF)
+        .setBorder(0x12345678, 5)
+        .setPadding(10);
+    GenericDraweeHierarchy dh = testRoundingParams_createHierarchy(prev, roundingParams);
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    RoundedCornersDrawable roundedDrawable = (RoundedCornersDrawable) rootDrawable.getCurrent();
+    assertRoundingParams(roundingParams, roundedDrawable);
+    assertEquals(roundingParams.getOverlayColor(), roundedDrawable.getOverlayColor());
+    FadeDrawable fadeDrawable = (FadeDrawable) roundedDrawable.getCurrent();
+    if (prev != null && prev.getRoundingMethod() == RoundingParams.RoundingMethod.BITMAP_ONLY) {
+      // Rounded leafs remain rounded, but with reset params, so no leaf rounding actually occurs
+      testRoundingParams_RoundedLeafs(rootDrawable, fadeDrawable, null);
+    } else {
+      testRoundingParams_NoRoundedLeafs(rootDrawable, fadeDrawable);
+    }
+  }
+
+  @Test
+  public void testSetRoundingParams_NoneToRoundedLeafs() {
+    testSetRoundingParams_ToRoundedLeafsFrom(null);
+  }
+
+  @Test
+  public void testSetRoundingParams_OverlayToRoundedLeafs() {
+    testSetRoundingParams_ToRoundedLeafsFrom(RoundingParams.asCircle().setOverlayColor(0x12345678));
+  }
+
+  @Test
+  public void testSetRoundingParams_RoundedLeafsToRoundedLeafs() {
+    testSetRoundingParams_ToRoundedLeafsFrom(RoundingParams.fromCornersRadius(10));
+  }
+
+  private void testSetRoundingParams_ToRoundedLeafsFrom(RoundingParams prev) {
+    RoundingParams roundingParams = RoundingParams.asCircle().setBorder(0xAAAAAAAA, 4);
+    GenericDraweeHierarchy dh = testRoundingParams_createHierarchy(prev, roundingParams);
+    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
+    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
+    testRoundingParams_RoundedLeafs(rootDrawable, fadeDrawable, roundingParams);
+  }
+
+  private GenericDraweeHierarchy testRoundingParams_createHierarchy(
+      RoundingParams prevRoundingParams,
+      RoundingParams roundingParams) {
     GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage)
-        .setRoundingParams(roundingParams)
+        .setPlaceholderImage(mWrappedImage, ScaleType.CENTER)
+        .setFailureImage(mFailureImage, ScaleType.CENTER)
+        .setRetryImage(mRetryImage, null)
+        .setRoundingParams(prevRoundingParams)
         .build();
-
-    assertEquals(RoundedCornersDrawable.class, dh.getTopLevelDrawable().getCurrent().getClass());
-
-    assertTrue(dh.getRoundingParams().getRoundAsCircle());
-    assertEquals(borderColor, dh.getRoundingParams().getBorderColor());
-    assertEquals(borderWidth, dh.getRoundingParams().getBorderWidth(), 0);
-    assertEquals(Color.GRAY, dh.getRoundingParams().getOverlayColor());
-
-    int borderColor2 = Color.RED;
-    float borderWidth2 = 0.3f;
-    roundingParams = RoundingParams
-        .fromCornersRadius(9)
-        .setOverlayColor(Color.RED)
-        .setBorder(borderColor2, borderWidth2);
-
     dh.setRoundingParams(roundingParams);
-
-    assertFalse(dh.getRoundingParams().getRoundAsCircle());
-
-    float[] expectedRadii = new float[] {9, 9, 9, 9, 9, 9, 9, 9};
-    assertArrayEquals(expectedRadii, dh.getRoundingParams().getCornersRadii(), 0);
-    assertEquals(borderColor2, dh.getRoundingParams().getBorderColor());
-    assertEquals(borderWidth2, dh.getRoundingParams().getBorderWidth(), 0);
-    assertEquals(Color.RED, dh.getRoundingParams().getOverlayColor());
+    return dh;
   }
 
-  @Test
-  public void testSetRoundingParams_BitmapOnly() {
-    GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage)
-        .setRoundingParams(RoundingParams.asCircle())
-        .build();
-
-    assertTrue(dh.getRoundingParams().getRoundAsCircle());
-    assertEquals(
-        RoundingParams.RoundingMethod.BITMAP_ONLY,
-        dh.getRoundingParams().getRoundingMethod());
-
-    dh.setRoundingParams(RoundingParams.fromCornersRadius(9));
-
-    assertFalse(dh.getRoundingParams().getRoundAsCircle());
-    assertEquals(
-        RoundingParams.RoundingMethod.BITMAP_ONLY,
-        dh.getRoundingParams().getRoundingMethod());
-    float[] expectedRadii = new float[] {9, 9, 9, 9, 9, 9, 9, 9};
-    assertArrayEquals(expectedRadii, dh.getRoundingParams().getCornersRadii(), 0);
+  private void testRoundingParams_NoRoundedLeafs(
+      RootDrawable rootDrawable,
+      FadeDrawable fadeDrawable) {
+    assertNotNull(fadeDrawable);
+    assertScaleTypeAndDrawable(mWrappedImage, ScaleType.CENTER, fadeDrawable.getDrawable(0));
+    assertScaleTypeAndDrawable(mFailureImage, ScaleType.CENTER, fadeDrawable.getDrawable(4));
+    assertSame(mRetryImage, fadeDrawable.getDrawable(3));
+    verifyCallback(rootDrawable, mWrappedLeaf);
+    verifyCallback(rootDrawable, mFailureImage);
+    verifyCallback(rootDrawable, mRetryImage);
   }
 
-  @Test
-  public void testSetRoundingParamsOverlay_PreviouslyBitmap() {
-    GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage)
-        .setRoundingParams(RoundingParams.asCircle())
-        .build();
-
-    assertTrue(dh.getTopLevelDrawable().getCurrent() instanceof FadeDrawable);
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent();
-    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertTrue(placeholderBranch.getCurrent() instanceof RoundedBitmapDrawable);
-
-    dh.setRoundingParams(
-        RoundingParams.asCircle().setOverlayColor(Color.BLUE));
-    assertTrue(dh.getTopLevelDrawable().getCurrent() instanceof RoundedCornersDrawable);
+  private void testRoundingParams_RoundedLeafs(
+      RootDrawable rootDrawable,
+      FadeDrawable fadeDrawable,
+      RoundingParams roundingParams) {
+    assertNotNull(fadeDrawable);
+    assertScaleTypeAndDrawable(mWrappedImage, ScaleType.CENTER, fadeDrawable.getDrawable(0));
+    Rounded roundedPlaceholder = (Rounded) mWrappedImage.getCurrent().getCurrent();
+    assertRoundingParams(roundingParams, roundedPlaceholder);
+    Rounded roundedFailureImage = (Rounded) fadeDrawable.getDrawable(4).getCurrent();
+    assertRoundingParams(roundingParams, roundedFailureImage);
+    Rounded roundedRetryImage = (Rounded) fadeDrawable.getDrawable(3);
+    assertRoundingParams(roundingParams, roundedRetryImage);
+    verifyCallback(rootDrawable, (Drawable) roundedPlaceholder);
+    verifyCallback(rootDrawable, (Drawable) roundedFailureImage);
+    verifyCallback(rootDrawable, (Drawable) roundedRetryImage);
   }
 
-  @Test
-  public void testSetRoundingParamsBitmap_PreviouslyOverlay() {
-    GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage)
-        .setRoundingParams(RoundingParams.asCircle().setOverlayColor(Color.BLACK))
-        .build();
-
-    assertTrue(dh.getTopLevelDrawable().getCurrent() instanceof RoundedCornersDrawable);
-    FadeDrawable fadeDrawable = (FadeDrawable) dh.getTopLevelDrawable().getCurrent().getCurrent();
-    ScaleTypeDrawable placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertFalse(placeholderBranch.getCurrent() instanceof RoundedBitmapDrawable);
-
-    dh.setRoundingParams(RoundingParams.asCircle());
-    assertTrue(dh.getTopLevelDrawable().getCurrent() instanceof FadeDrawable);
-    placeholderBranch = (ScaleTypeDrawable) fadeDrawable.getDrawable(0);
-    assertTrue(placeholderBranch.getCurrent() instanceof RoundedBitmapDrawable);
+  private void assertScaleTypeAndDrawable(
+      Drawable expectedChild,
+      ScaleType expectedScaleType,
+      Drawable actualBranch) {
+    assertNotNull(actualBranch);
+    ScaleTypeDrawable scaleTypeDrawable = (ScaleTypeDrawable) actualBranch;
+    assertSame(expectedChild, scaleTypeDrawable.getCurrent());
+    assertSame(expectedScaleType, scaleTypeDrawable.getScaleType());
   }
 
-  private <T, F> void assertAssignableFrom(Class<T> to, Class<F> from) {
-    assertTrue(to + " is not assignable from " + from, to.isAssignableFrom(from));
+  private void assertActualImageScaleType(
+      ScaleType expectedScaleType,
+      PointF expectedFocusPoint,
+      Drawable actualBranch) {
+    assertNotNull(actualBranch);
+    ScaleTypeDrawable scaleTypeDrawable = (ScaleTypeDrawable) actualBranch;
+    assertSame(expectedScaleType, scaleTypeDrawable.getScaleType());
+    assertSame(ForwardingDrawable.class, scaleTypeDrawable.getCurrent().getClass());
+    AndroidGraphicsTestUtils.assertEquals(expectedFocusPoint, scaleTypeDrawable.getFocusPoint(), 0);
+  }
+
+  private void assertRoundingParams(
+      RoundingParams roundingParams,
+      Rounded roundedDrawable) {
+    assertNotNull(roundedDrawable);
+    if (roundingParams == null) {
+      // default rounding params, no rounding specified
+      roundingParams = new RoundingParams();
+    }
+    if (roundingParams.getCornersRadii() == null) {
+      // create a zero radii array if null
+      roundingParams.setCornersRadius(0);
+    }
+    assertEquals(roundingParams.getRoundAsCircle(), roundedDrawable.isCircle());
+    assertArrayEquals(roundingParams.getCornersRadii(), roundedDrawable.getRadii(), 0f);
+    assertEquals(roundingParams.getBorderColor(), roundedDrawable.getBorderColor());
+    assertEquals(roundingParams.getBorderWidth(), roundedDrawable.getBorderWidth(), 0f);
+    assertEquals(roundingParams.getPadding(), roundedDrawable.getPadding(), 0f);
+  }
+
+  private void verifyCallback(Drawable parent, Drawable child) {
+    Drawable.Callback callback = mock(Drawable.Callback.class);
+    parent.setCallback(callback);
+    child.invalidateSelf();
+    verify(callback).invalidateDrawable(any(Drawable.class));
   }
 }

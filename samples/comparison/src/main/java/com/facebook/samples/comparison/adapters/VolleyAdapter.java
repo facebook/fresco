@@ -13,38 +13,37 @@
 package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
 import com.android.volley.toolbox.ImageLoader;
-
 import com.facebook.samples.comparison.R;
 import com.facebook.samples.comparison.configs.volley.SampleVolleyFactory;
+import com.facebook.samples.comparison.holders.VolleyHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedNetworkImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/** Populate the list view with images using the Volley library's ImageLoader. */
-public class VolleyAdapter extends ImageListAdapter<InstrumentedNetworkImageView> {
+/**
+ * RecyclerView Adapter for Volley
+ */
+public class VolleyAdapter extends ImageListAdapter {
 
   private final ImageLoader mImageLoader;
 
-  public VolleyAdapter(Context context, int resourceId, PerfListener perfListener) {
-    super(context, resourceId, perfListener);
+  public VolleyAdapter(
+      Context context,
+      PerfListener perfListener) {
+    super(context, perfListener);
     mImageLoader = SampleVolleyFactory.getImageLoader(context);
   }
 
   @Override
-  protected Class<InstrumentedNetworkImageView> getViewClass() {
-    return InstrumentedNetworkImageView.class;
-  }
-
-  protected InstrumentedNetworkImageView createView() {
+  public VolleyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     InstrumentedNetworkImageView view = new InstrumentedNetworkImageView(getContext());
     view.setDefaultImageResId(R.color.placeholder);
     view.setErrorImageResId(R.color.error);
-    return view;
-  }
-
-  protected void bind(InstrumentedNetworkImageView view, String uri) {
-    view.setImageUrl(uri, mImageLoader);
+    return new VolleyHolder(
+        getContext(), mImageLoader, parent,
+        view, getPerfListener());
   }
 
   @Override

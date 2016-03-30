@@ -4,8 +4,6 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'org.robolectric'
-
 dependencies {
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
@@ -24,8 +22,8 @@ dependencies {
 apply from: rootProject.file('release.gradle')
 
 android {
-    buildToolsVersion "21.1.2"
-    compileSdkVersion 21
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     packagingOptions {
         exclude 'NOTICE'

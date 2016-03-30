@@ -53,10 +53,10 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
    */
   @GuardedBy("this")
   @VisibleForTesting final Map<K, Multiplexer> mMultiplexers;
-  private final Producer<T> mNextProducer;
+  private final Producer<T> mInputProducer;
 
-  protected MultiplexProducer(Producer<T> nextProducer) {
-    mNextProducer = nextProducer;
+  protected MultiplexProducer(Producer<T> inputProducer) {
+    mInputProducer = inputProducer;
     mMultiplexers = new HashMap<>();
   }
 
@@ -84,7 +84,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     } while (!multiplexer.addNewConsumer(consumer, context));
 
     if (createdNewMultiplexer) {
-      multiplexer.startNextProducerIfHasAttachedConsumers();
+      multiplexer.startInputProducerIfHasAttachedConsumers();
     }
   }
 
@@ -162,7 +162,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     /**
      * Currently used consumer of next producer.
      *
-     * <p> The same Multiplexer might call mNextProducer.produceResults multiple times when
+     * <p> The same Multiplexer might call mInputProducer.produceResults multiple times when
      * cancellation happens. This field is used to guard against late callbacks.
      *
      * <p>  If not null, then underlying computation has been started, and no onCancellation
@@ -305,7 +305,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      * the data. If all consumers are cancelled, then this multiplexer is removed from mRequest
      * map to clean up.
      */
-    private void startNextProducerIfHasAttachedConsumers() {
+    private void startInputProducerIfHasAttachedConsumers() {
       BaseProducerContext multiplexProducerContext;
       ForwardingConsumer forwardingConsumer;
       synchronized (Multiplexer.this) {
@@ -333,7 +333,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         multiplexProducerContext = mMultiplexProducerContext;
         forwardingConsumer = mForwardingConsumer;
       }
-      mNextProducer.produceResults(
+      mInputProducer.produceResults(
           forwardingConsumer,
           multiplexProducerContext);
     }
@@ -457,7 +457,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         mLastIntermediateResult = null;
       }
 
-      startNextProducerIfHasAttachedConsumers();
+      startInputProducerIfHasAttachedConsumers();
     }
 
     public void onProgressUpdate(ForwardingConsumer forwardingConsumer, float progress) {

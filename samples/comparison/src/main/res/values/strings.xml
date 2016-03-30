@@ -14,6 +14,7 @@
       <item>Picasso</item>
       <item>Universal Image Loader</item>
       <item>Volley</item>
+      <item>AQuery</item>
     </string-array>
 
     <!-- If you change the order of the elements, update the indices in the MainActivity.java -->

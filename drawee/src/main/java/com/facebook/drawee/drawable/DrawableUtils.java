@@ -39,17 +39,13 @@ public class DrawableUtils {
   /**
    * Sets various paint properties on the drawable
    * @param drawable Drawable on which to set the properties
-   * @param properties wrapper around property values to set on the drawable
+   * @param properties wrapper around mValue values to set on the drawable
    */
   public static void setDrawableProperties(Drawable drawable, DrawableProperties properties) {
     if (drawable == null || properties == null) {
       return;
     }
-
-    drawable.setAlpha(properties.getAlpha());
-    drawable.setColorFilter(properties.getColorFilter());
-    drawable.setDither(properties.isDither());
-    drawable.setFilterBitmap(properties.isFilterBitmap());
+    properties.applyTo(drawable);
   }
 
   /**

@@ -80,7 +80,7 @@ public class SecureHashUtil {
       (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'
   };
 
-  private static String convertToHex(byte[] raw) throws UnsupportedEncodingException {
+  public static String convertToHex(byte[] raw) throws UnsupportedEncodingException {
     StringBuilder sb = new StringBuilder(raw.length);
     for (byte b : raw) {
       int v = b & 0xFF;

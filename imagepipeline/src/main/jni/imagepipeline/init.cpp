@@ -13,7 +13,6 @@
 #include "java_globals.h"
 #include "logging.h"
 #include "JpegTranscoder.h"
-#include "WebpTranscoder.h"
 
 jmethodID midInputStreamRead;
 jmethodID midInputStreamSkip;
@@ -83,10 +82,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   THROW_AND_RETURNVAL_IF(
       !registerJpegTranscoderMethods(env),
       "Could not register JpegTranscoder methods",
-      -1);
-  THROW_AND_RETURNVAL_IF(
-      !registerWebpTranscoderMethods(env),
-      "Could not register WebpTranscoderMethods",
       -1);
 
   return JNI_VERSION_1_6;

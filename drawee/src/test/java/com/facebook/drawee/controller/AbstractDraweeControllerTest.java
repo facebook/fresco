@@ -22,7 +22,7 @@ import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Throwables;
 import com.facebook.datasource.DataSource;
-import com.facebook.datasource.SettableDataSource;
+import com.facebook.datasource.SimpleDataSource;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import org.robolectric.RobolectricTestRunner;
@@ -199,7 +199,7 @@ public class AbstractDraweeControllerTest {
             return null;
           }
         }).when(mDeferredReleaser).scheduleDeferredRelease(any(DeferredReleaser.Releasable.class));
-    when(mDataSourceSupplier.get()).thenReturn(SettableDataSource.<FakeImage>create());
+    when(mDataSourceSupplier.get()).thenReturn(SimpleDataSource.<FakeImage>create());
   }
 
   @Test
@@ -341,8 +341,8 @@ public class AbstractDraweeControllerTest {
   }
 
   private void testListenerReentrancy(int outcome) {
-    final SettableDataSource<FakeImage> dataSource0 = SettableDataSource.create();
-    final SettableDataSource<FakeImage> dataSource = SettableDataSource.create();
+    final SimpleDataSource<FakeImage> dataSource0 = SimpleDataSource.create();
+    final SimpleDataSource<FakeImage> dataSource = SimpleDataSource.create();
     when(mDataSourceSupplier.get()).thenReturn(dataSource0);
     FakeImage image0 = FakeImage.create(mock(Drawable.class), mock(FakeImageInfo.class));
     finish(dataSource0, image0, outcome);
@@ -559,7 +559,7 @@ public class AbstractDraweeControllerTest {
 
     // create image and the corresponding data source
     FakeImage image = FakeImage.create(mock(Drawable.class), mock(FakeImageInfo.class));
-    SettableDataSource<FakeImage> dataSource = SettableDataSource.create();
+    SimpleDataSource<FakeImage> dataSource = SimpleDataSource.create();
     when(mDataSourceSupplier.get()).thenReturn(dataSource);
 
     // finish immediate
@@ -620,7 +620,7 @@ public class AbstractDraweeControllerTest {
     int n = outcomes.length;
 
     // create data source and images
-    SettableDataSource<FakeImage> dataSource = SettableDataSource.create();
+    SimpleDataSource<FakeImage> dataSource = SimpleDataSource.create();
     when(mDataSourceSupplier.get()).thenReturn(dataSource);
     List<FakeImage> images = new ArrayList<>();
     for (int i = 0; i < n; i++) {
@@ -660,7 +660,7 @@ public class AbstractDraweeControllerTest {
     verifyNoMoreInteractions(mDataSourceSupplier);
   }
 
-  private void finish(SettableDataSource<FakeImage> dataSource, FakeImage image, int outcome) {
+  private static void finish(SimpleDataSource<FakeImage> dataSource, FakeImage image, int outcome) {
     switch (outcome) {
       case FAILURE:
         dataSource.setFailure(new RuntimeException());

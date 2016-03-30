@@ -16,9 +16,11 @@ import java.io.File;
 
 import android.net.Uri;
 
+import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Immutable object encapsulating everything pipeline has to know about requested image to proceed.
@@ -98,11 +100,11 @@ public class ImageRequest {
   }
 
   public int getPreferredWidth() {
-    return (mResizeOptions != null) ? mResizeOptions.width : -1;
+    return (mResizeOptions != null) ? mResizeOptions.width : (int) BitmapUtil.MAX_BITMAP_SIZE;
   }
 
   public int getPreferredHeight() {
-    return (mResizeOptions != null) ? mResizeOptions.height : -1;
+    return (mResizeOptions != null) ? mResizeOptions.height : (int) BitmapUtil.MAX_BITMAP_SIZE;
   }
 
   public @Nullable ResizeOptions getResizeOptions() {
@@ -146,6 +148,22 @@ public class ImageRequest {
 
   public @Nullable Postprocessor getPostprocessor() {
     return mPostprocessor;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof ImageRequest)) {
+      return false;
+    }
+    ImageRequest request = (ImageRequest) o;
+    return Objects.equal(mSourceUri, request.mSourceUri) &&
+        Objects.equal(mImageType, request.mImageType) &&
+        Objects.equal(mSourceFile, request.mSourceFile);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(mImageType, mSourceUri, mSourceFile);
   }
 
   /**

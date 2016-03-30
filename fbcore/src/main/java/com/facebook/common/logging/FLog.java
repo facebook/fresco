@@ -443,13 +443,13 @@ public class FLog {
 
   public static void wtf(String tag, String msg) {
     if (sHandler.isLoggable(ERROR)) {
-      sHandler.e(tag, msg);
+      sHandler.wtf(tag, msg);
     }
   }
 
   public static void wtf(Class <?> cls, String msg) {
     if (sHandler.isLoggable(ERROR)) {
-      sHandler.e(getTag(cls), msg);
+      sHandler.wtf(getTag(cls), msg);
     }
   }
 

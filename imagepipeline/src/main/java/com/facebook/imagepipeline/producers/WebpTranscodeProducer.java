@@ -23,7 +23,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
-import com.facebook.imagepipeline.nativecode.WebpTranscoder;
+
+import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
 
 /**
  * Transcodes WebP to JPEG / PNG.
@@ -39,20 +40,20 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final Producer<EncodedImage> mNextProducer;
+  private final Producer<EncodedImage> mInputProducer;
 
   public WebpTranscodeProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Producer<EncodedImage> nextProducer) {
+      Producer<EncodedImage> inputProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
   }
 
   @Override
   public void produceResults(final Consumer<EncodedImage> consumer, final ProducerContext context) {
-    mNextProducer.produceResults(new WebpTranscodeConsumer(consumer, context), context);
+    mInputProducer.produceResults(new WebpTranscodeConsumer(consumer, context), context);
   }
 
   private class WebpTranscodeConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
@@ -110,7 +111,9 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
               CloseableReference<PooledByteBuffer> ref =
                   CloseableReference.of(outputStream.toByteBuffer());
               try {
-                return new EncodedImage(ref);
+                EncodedImage encodedImage = new EncodedImage(ref);
+                encodedImage.copyMetaDataFrom(encodedImageCopy);
+                return encodedImage;
               } finally {
                 CloseableReference.closeSafely(ref);
               }
@@ -154,7 +157,8 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
       case WEBP_LOSSLESS:
       case WEBP_EXTENDED:
       case WEBP_EXTENDED_WITH_ALPHA:
-        return TriState.valueOf(!WebpTranscoder.isWebpNativelySupported(imageFormat));
+        return TriState.valueOf(
+            !WebpTranscoderFactory.getWebpTranscoder().isWebpNativelySupported(imageFormat));
       case UNKNOWN:
         // the image format might be unknown because we haven't fetched the whole header yet,
         // in which case the decision whether to transcode or not cannot be made yet
@@ -173,14 +177,16 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     switch (imageFormat) {
       case WEBP_SIMPLE:
       case WEBP_EXTENDED:
-        WebpTranscoder.transcodeWebpToJpeg(imageInputStream, outputStream, DEFAULT_JPEG_QUALITY);
+        WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
+            imageInputStream,
+            outputStream,
+            DEFAULT_JPEG_QUALITY);
         break;
-
       case WEBP_LOSSLESS:
       case WEBP_EXTENDED_WITH_ALPHA:
-        WebpTranscoder.transcodeWebpToPng(imageInputStream, outputStream);
+        WebpTranscoderFactory.getWebpTranscoder()
+            .transcodeWebpToPng(imageInputStream, outputStream);
         break;
-
       default:
         throw new IllegalArgumentException("Wrong image format");
     }

@@ -35,7 +35,6 @@ import com.facebook.drawee.view.DraweeView;
  * DraweeView that has zoomable capabilities.
  * <p>
  * Once the image loads, pinch-to-zoom and translation gestures are enabled.
- *
  */
 public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     implements ZoomableController.Listener {
@@ -82,6 +81,33 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   private void init() {
     mZoomableController.setListener(this);
+  }
+
+  /**
+   * Returns the matrix that matches the zoom selected by user gestures,
+   * but does not include the base scaling of the image itself. Transforms
+   * from view-absolute to view-absolute coordinates.
+   */
+  public void getTransformMatrix(Matrix outMatrix) {
+    outMatrix.set(mZoomableController.getTransform());
+  }
+
+  /**
+   * Gets the bounds of the image, in view-absolute coordinates,
+   * including the effects of user gestures.
+   */
+  public void getTransformedBounds(RectF outBounds) {
+    getPlainBounds(outBounds);
+    Matrix matrix = mZoomableController.getTransform();
+    matrix.mapRect(outBounds);
+  }
+
+  /**
+   * Gets the bounds of the image, in view-absolute coordinates,
+   * but not including the effets of user gestures.
+   */
+  public void getPlainBounds(RectF outBounds) {
+    getHierarchy().getActualImageBounds(outBounds);
   }
 
   public void setZoomableController(ZoomableController zoomableController) {
@@ -192,7 +218,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   private void updateZoomableControllerBounds() {
-    getHierarchy().getActualImageBounds(mImageBounds);
+    getPlainBounds(mImageBounds);
     mViewBounds.set(0, 0, getWidth(), getHeight());
     mZoomableController.setImageBounds(mImageBounds);
     mZoomableController.setViewBounds(mViewBounds);

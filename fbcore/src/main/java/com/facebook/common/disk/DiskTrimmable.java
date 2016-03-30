@@ -16,10 +16,10 @@ public interface DiskTrimmable {
   /**
    * Called when there is very little disk space left.
    */
-  public void trimToMinimum();
+  void trimToMinimum();
 
   /**
    * Called when there is almost no disk space left and the app is likely to crash soon
    */
-  public void trimToNothing();
+  void trimToNothing();
 }

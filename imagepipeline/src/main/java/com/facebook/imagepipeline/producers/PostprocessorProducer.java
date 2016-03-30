@@ -39,15 +39,15 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
   @VisibleForTesting static final String NAME = "PostprocessorProducer";
   @VisibleForTesting static final String POSTPROCESSOR = "Postprocessor";
 
-  private final Producer<CloseableReference<CloseableImage>> mNextProducer;
+  private final Producer<CloseableReference<CloseableImage>> mInputProducer;
   private final PlatformBitmapFactory mBitmapFactory;
   private final Executor mExecutor;
 
   public PostprocessorProducer(
-      Producer<CloseableReference<CloseableImage>> nextProducer,
+      Producer<CloseableReference<CloseableImage>> inputProducer,
       PlatformBitmapFactory platformBitmapFactory,
       Executor executor) {
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
     mBitmapFactory = platformBitmapFactory;
     mExecutor = Preconditions.checkNotNull(executor);
   }
@@ -69,7 +69,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     } else {
       postprocessorConsumer = new SingleUsePostprocessorConsumer(basePostprocessorConsumer);
     }
-    mNextProducer.produceResults(postprocessorConsumer, context);
+    mInputProducer.produceResults(postprocessorConsumer, context);
   }
 
   /**
@@ -247,11 +247,13 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     }
 
     private CloseableReference<CloseableImage> postprocessInternal(CloseableImage sourceImage) {
-      Bitmap sourceBitmap = ((CloseableStaticBitmap) sourceImage).getUnderlyingBitmap();
+      CloseableStaticBitmap staticBitmap = (CloseableStaticBitmap) sourceImage;
+      Bitmap sourceBitmap = staticBitmap.getUnderlyingBitmap();
       CloseableReference<Bitmap> bitmapRef = mPostprocessor.process(sourceBitmap, mBitmapFactory);
+      int rotationAngle = staticBitmap.getRotationAngle();
       try {
         return CloseableReference.<CloseableImage>of(
-            new CloseableStaticBitmap(bitmapRef, sourceImage.getQualityInfo()));
+            new CloseableStaticBitmap(bitmapRef, sourceImage.getQualityInfo(), rotationAngle));
       } finally {
         CloseableReference.closeSafely(bitmapRef);
       }

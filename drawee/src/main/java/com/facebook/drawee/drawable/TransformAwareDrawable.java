@@ -19,5 +19,5 @@ public interface TransformAwareDrawable {
    *
    * @param transformCallback the transform callback to be set
    */
-  public void setTransformCallback(TransformCallback transformCallback);
+  void setTransformCallback(TransformCallback transformCallback);
 }

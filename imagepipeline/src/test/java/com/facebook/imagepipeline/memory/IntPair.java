@@ -9,7 +9,7 @@
 
 package com.facebook.imagepipeline.memory;
 
-import com.google.common.base.Objects;
+import com.facebook.common.internal.Objects;
 
 /**
  * Surprise! A pair of integers

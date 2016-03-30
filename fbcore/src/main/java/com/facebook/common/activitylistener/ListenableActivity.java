@@ -19,12 +19,12 @@ public interface ListenableActivity {
    *
    * @param listener
    */
-  public void addActivityListener(ActivityListener listener);
+  void addActivityListener(ActivityListener listener);
 
   /**
    * Removes ActivityListener from the activity
    *
    * @param listener
    */
-  public void removeActivityListener(ActivityListener listener);
+  void removeActivityListener(ActivityListener listener);
 }

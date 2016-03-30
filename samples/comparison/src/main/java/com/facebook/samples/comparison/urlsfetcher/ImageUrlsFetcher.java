@@ -17,7 +17,6 @@ import android.os.AsyncTask;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +70,6 @@ public class ImageUrlsFetcher {
 
   private static List<String> getImageUrls(ImageUrlsRequest request) {
     List<String> urls = new ArrayList<String>();
-    urls.add("http://pooyak.com/p/progjpeg/jpegload.cgi?o=3");
     try {
       String rawJson = downloadContentAsString(request.getEndpointUrl());
       if (rawJson == null) {
@@ -110,7 +108,7 @@ public class ImageUrlsFetcher {
       // Starts the query
       conn.connect();
       int response = conn.getResponseCode();
-      if (response != HttpStatus.SC_OK) {
+      if (response != HttpURLConnection.HTTP_OK) {
         FLog.e(TAG, "Album request returned %s", response);
         return null;
       }

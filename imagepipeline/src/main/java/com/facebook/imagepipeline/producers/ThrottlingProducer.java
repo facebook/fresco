@@ -27,7 +27,7 @@ public class ThrottlingProducer<T> implements Producer<T> {
 
   @VisibleForTesting static final String PRODUCER_NAME = "ThrottlingProducer";
 
-  private final Producer<T> mNextProducer;
+  private final Producer<T> mInputProducer;
   private final int mMaxSimultaneousRequests;
 
   @GuardedBy("this")
@@ -39,10 +39,10 @@ public class ThrottlingProducer<T> implements Producer<T> {
   public ThrottlingProducer(
       int maxSimultaneousRequests,
       Executor executor,
-      final Producer<T> nextProducer) {
+      final Producer<T> inputProducer) {
     mMaxSimultaneousRequests = maxSimultaneousRequests;
     mExecutor = Preconditions.checkNotNull(executor);
-    mNextProducer = Preconditions.checkNotNull(nextProducer);
+    mInputProducer = Preconditions.checkNotNull(inputProducer);
     mPendingRequests = new ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>>();
     mNumCurrentRequests = 0;
   }
@@ -71,7 +71,7 @@ public class ThrottlingProducer<T> implements Producer<T> {
   void produceResultsInternal(Consumer<T> consumer, ProducerContext producerContext) {
     ProducerListener producerListener = producerContext.getListener();
     producerListener.onProducerFinishWithSuccess(producerContext.getId(), PRODUCER_NAME, null);
-    mNextProducer.produceResults(new ThrottlerConsumer(consumer), producerContext);
+    mInputProducer.produceResults(new ThrottlerConsumer(consumer), producerContext);
   }
 
   private class ThrottlerConsumer extends DelegatingConsumer<T, T> {
