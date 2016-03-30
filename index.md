@@ -87,6 +87,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Facebook Groups](https://play.google.com/store/apps/details?id=com.facebook.groups)  
 * [Facebook Ads Manager](https://play.google.com/store/apps/details?id=com.facebook.adsmanager)
 * [Snapster](https://play.google.com/store/apps/details?id=com.vk.snapster)
+* [Butter Camera (黄油相机)](https://play.google.com/store/apps/details?id=com.by.butter.camera)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
