@@ -54,7 +54,7 @@ ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() 
 Uri uri;
 DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setControllerListener(controllerListener)
-    .setUri(uri);
+    .setUri(uri)
     // other setters
     .build();
 mSimpleDraweeView.setController(controller);
