@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.backends.okhttp;
+package com.facebook.imagepipeline.backends.okhttp3;
 
 import android.net.Uri;
 import android.os.Looper;
@@ -19,22 +19,19 @@ import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.FetchState;
 import com.facebook.imagepipeline.producers.ProducerContext;
-import com.squareup.okhttp.CacheControl;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import okhttp3.CacheControl;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
- * Network fetcher that uses OkHttp as a backend.
- *
- * @deprecated replaced with {@code
- * com.facebook.imagepipeline.backends.okhttp3.OkHttpNetworkFetcher}.
+ * Network fetcher that uses OkHttp 3 as a backend.
  */
 public class OkHttpNetworkFetcher extends
     BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
@@ -66,7 +63,7 @@ public class OkHttpNetworkFetcher extends
    */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
     mOkHttpClient = okHttpClient;
-    mCancellationExecutor = okHttpClient.getDispatcher().getExecutorService();
+    mCancellationExecutor = okHttpClient.dispatcher().executorService();
   }
 
   @Override
@@ -78,22 +75,13 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
-    fetchState.submitTime = SystemClock.uptimeMillis();
+    fetchState.submitTime = SystemClock.elapsedRealtime();
     final Uri uri = fetchState.getUri();
-    final Request request;
-
-    try {
-     request = new Request.Builder()
+    final Request request = new Request.Builder()
         .cacheControl(new CacheControl.Builder().noStore().build())
         .url(uri.toString())
         .get()
         .build();
-    } catch (Exception e) {
-      // handle malformed Uri
-      callback.onFailure(e);
-      return;
-    }
-
     final Call call = mOkHttpClient.newCall(request);
 
     fetchState.getContext().addCallbacks(
@@ -113,10 +101,10 @@ public class OkHttpNetworkFetcher extends
         });
 
     call.enqueue(
-        new com.squareup.okhttp.Callback() {
+        new okhttp3.Callback() {
           @Override
-          public void onResponse(Response response) {
-            fetchState.responseTime = SystemClock.uptimeMillis();
+          public void onResponse(Call call, Response response) throws IOException {
+            fetchState.responseTime = SystemClock.elapsedRealtime();
             if (!response.isSuccessful()) {
               handleException(call, new IOException("Unexpected HTTP code " + response), callback);
               return;
@@ -140,7 +128,7 @@ public class OkHttpNetworkFetcher extends
           }
 
           @Override
-          public void onFailure(final Request request, final IOException e) {
+          public void onFailure(Call call, IOException e) {
             handleException(call, e, callback);
           }
         });
@@ -148,7 +136,7 @@ public class OkHttpNetworkFetcher extends
 
   @Override
   public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
-    fetchState.fetchCompleteTime = SystemClock.uptimeMillis();
+    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
   }
 
   @Override
