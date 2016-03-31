@@ -58,6 +58,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
               try {
                 URL url = new URL(uriString);
                 connection = (HttpURLConnection) url.openConnection();
+                setConnection(connection);
                 nextUriString = connection.getHeaderField("Location");
                 nextScheme = (nextUriString == null) ? null : Uri.parse(nextUriString).getScheme();
                 if (nextUriString == null || nextScheme.equals(scheme)) {
@@ -88,5 +89,9 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
             }
           }
         });
+  }
+
+  protected void setConnection(HttpURLConnection connection){
+    //do something for the connection,for example,the ConnectTimeout、ReadTimeout、RequestProperty..etc
   }
 }
