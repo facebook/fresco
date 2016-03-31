@@ -122,6 +122,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
               ImageRequest request = producerContext.getImageRequest();
               if (mDownsampleEnabledForNetwork ||
                   !UriUtil.isNetworkUri(request.getSourceUri())) {
+                if (!EncodedImage.isMetaDataAvailable(encodedImage)) {
+                  encodedImage.parseMetaData();
+                }
                 encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
                     request, encodedImage));
               }
