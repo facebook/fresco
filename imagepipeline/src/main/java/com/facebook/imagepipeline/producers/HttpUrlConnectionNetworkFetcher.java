@@ -13,10 +13,12 @@ import android.net.Uri;
 
 import com.facebook.imagepipeline.image.EncodedImage;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Network fetcher that uses the simplest Android stack.
@@ -26,12 +28,12 @@ import java.net.URL;
  */
 public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchState> {
 
-  private final static int HTTP_CONNECT_TIMEOUT = 4000;//4s
-  private final static int HTTP_READ_TIMEOUT = 10000;//10s
-  protected static final int MAX_REDIRECT_COUNT = 5;
-    protected static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%;";
+  private static final int NUM_NETWORK_THREADS = 3;
+
+  private final ExecutorService mExecutorService;
 
   public HttpUrlConnectionNetworkFetcher() {
+    mExecutorService = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
   }
 
   @Override
@@ -41,53 +43,50 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
 
   @Override
   public void fetch(final FetchState fetchState, final Callback callback) {
-	  HttpURLConnection connection = null;
-      Uri uri = fetchState.getUri();
-      String uriString = uri.toString();
+    final Future<?> future = mExecutorService.submit(
+        new Runnable() {
+          @Override
+          public void run() {
+            HttpURLConnection connection = null;
+            Uri uri = fetchState.getUri();
+            String scheme = uri.getScheme();
+            String uriString = fetchState.getUri().toString();
+            while (true) {
+              String nextUriString;
+              String nextScheme;
+              InputStream is;
+              try {
+                URL url = new URL(uriString);
+                connection = (HttpURLConnection) url.openConnection();
+                nextUriString = connection.getHeaderField("Location");
+                nextScheme = (nextUriString == null) ? null : Uri.parse(nextUriString).getScheme();
+                if (nextUriString == null || nextScheme.equals(scheme)) {
+                  is = connection.getInputStream();
+                  callback.onResponse(is, -1);
+                  break;
+                }
+                uriString = nextUriString;
+                scheme = nextScheme;
+              } catch (Exception e) {
+                callback.onFailure(e);
+                break;
+              } finally {
+                if (connection != null) {
+                  connection.disconnect();
+                }
+              }
+          }
 
-      InputStream is;
-      try {
-          connection = createGetConnection(uriString);
-          int redirectCount = 0;
-          while (connection.getResponseCode() / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
-              uriString = connection.getHeaderField("Location");
-              connection.disconnect();
-              connection = createGetConnection(uriString);
-              ++redirectCount;
           }
-          if (redirectCount > MAX_REDIRECT_COUNT) {
-              callback.onFailure(new Exception("RedirectCount more than " + MAX_REDIRECT_COUNT));
-              return;
-          }
-          is = connection.getInputStream();
-          callback.onResponse(is, -1);//connection.getContentLength()
-      } catch (Exception e) {
-            callback.onFailure(e);
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
+        });
+    fetchState.getContext().addCallbacks(
+        new BaseProducerContextCallbacks() {
+          @Override
+          public void onCancellationRequested() {
+            if (future.cancel(false)) {
+              callback.onCancellation();
             }
-      }
+          }
+        });
   }
-
-  protected HttpURLConnection createGetConnection(String uriString) throws IOException {
-        String encodedUrl = Uri.encode(uriString, ALLOWED_URI_CHARS);
-        URL url = new URL(encodedUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
-        connection.setReadTimeout(HTTP_READ_TIMEOUT);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestMethod("GET");
-        return connection;
-  }
-
-    protected HttpURLConnection createHeadConnection(String uriString) throws IOException {
-        URL url = new URL(uriString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
-        connection.setReadTimeout(HTTP_READ_TIMEOUT);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestMethod("HEAD");
-        return connection;
-    }
 }
