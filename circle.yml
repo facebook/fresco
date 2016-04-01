@@ -1,3 +1,7 @@
+general:
+  branches:
+    ignore:
+      - gh-pages
 machine:
   environment:
     PATH: $ANDROID_NDK:$PATH
