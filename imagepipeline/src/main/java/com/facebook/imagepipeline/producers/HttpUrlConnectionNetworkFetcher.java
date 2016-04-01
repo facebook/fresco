@@ -12,7 +12,9 @@ package com.facebook.imagepipeline.producers;
 import android.net.Uri;
 
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -32,6 +34,11 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
 
   private final ExecutorService mExecutorService;
 
+  private final static int HTTP_CONNECT_TIMEOUT = 4000;//4s
+  private final static int HTTP_READ_TIMEOUT = 10000;//10s
+  protected static final int MAX_REDIRECT_COUNT = 5;
+  protected static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%;";
+
   public HttpUrlConnectionNetworkFetcher() {
     mExecutorService = Executors.newFixedThreadPool(NUM_NETWORK_THREADS);
   }
@@ -47,36 +54,32 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
         new Runnable() {
           @Override
           public void run() {
-            HttpURLConnection connection = null;
-            Uri uri = fetchState.getUri();
-            String scheme = uri.getScheme();
-            String uriString = fetchState.getUri().toString();
-            while (true) {
-              String nextUriString;
-              String nextScheme;
+              HttpURLConnection connection = null;
+              Uri uri = fetchState.getUri();
+              String uriString = uri.toString();
               InputStream is;
               try {
-                URL url = new URL(uriString);
-                connection = (HttpURLConnection) url.openConnection();
-                nextUriString = connection.getHeaderField("Location");
-                nextScheme = (nextUriString == null) ? null : Uri.parse(nextUriString).getScheme();
-                if (nextUriString == null || nextScheme.equals(scheme)) {
+                  connection = createGetConnection(uriString);
+                  int redirectCount = 0;
+                  while (connection.getResponseCode() / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
+                      uriString = connection.getHeaderField("Location");
+                      connection.disconnect();
+                      connection = createGetConnection(uriString);
+                      ++redirectCount;
+                  }
+                  if (redirectCount > MAX_REDIRECT_COUNT) {
+                      callback.onFailure(new Exception("RedirectCount more than " + MAX_REDIRECT_COUNT));
+                      return;
+                  }
                   is = connection.getInputStream();
-                  callback.onResponse(is, -1);
-                  break;
-                }
-                uriString = nextUriString;
-                scheme = nextScheme;
+                  callback.onResponse(is, -1);//connection.getContentLength()
               } catch (Exception e) {
-                callback.onFailure(e);
-                break;
+                  callback.onFailure(e);
               } finally {
-                if (connection != null) {
-                  connection.disconnect();
-                }
+                  if (connection != null) {
+                      connection.disconnect();
+                  }
               }
-          }
-
           }
         });
     fetchState.getContext().addCallbacks(
@@ -89,4 +92,16 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
           }
         });
   }
+
+
+    protected HttpURLConnection createGetConnection(String uriString) throws IOException {
+        String encodedUrl = Uri.encode(uriString, ALLOWED_URI_CHARS);
+        URL url = new URL(encodedUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
+        connection.setReadTimeout(HTTP_READ_TIMEOUT);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("GET");
+        return connection;
+    }
 }
