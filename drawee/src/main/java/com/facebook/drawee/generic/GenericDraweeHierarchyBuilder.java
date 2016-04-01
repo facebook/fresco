@@ -9,11 +9,6 @@
 
 package com.facebook.drawee.generic;
 
-import javax.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -22,6 +17,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
 import com.facebook.common.internal.Preconditions;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
@@ -63,6 +63,7 @@ public class GenericDraweeHierarchyBuilder {
   private Drawable mPressedStateOverlay;
 
   private RoundingParams mRoundingParams;
+  private boolean mCrossFadeEnabled;
 
   public GenericDraweeHierarchyBuilder(Resources resources) {
     mResources = resources;
@@ -78,6 +79,7 @@ public class GenericDraweeHierarchyBuilder {
    */
   private void init() {
     mFadeDuration = DEFAULT_FADE_DURATION;
+    mCrossFadeEnabled = true;
 
     mPlaceholderImage = null;
     mPlaceholderImageScaleType = null;
@@ -347,7 +349,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setBackground(Drawable background) {
-    mBackgrounds = Arrays.asList(background);
+    mBackgrounds = Collections.singletonList(background);
     return this;
   }
 
@@ -373,7 +375,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setOverlay(Drawable overlay) {
-    mOverlays = Arrays.asList(overlay);
+    mOverlays = Collections.singletonList(overlay);
     return this;
   }
 
@@ -410,6 +412,14 @@ public class GenericDraweeHierarchyBuilder {
 
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
+  }
+
+  public boolean getCrossFadeEnabled() {
+    return mCrossFadeEnabled;
+  }
+
+  public void setCrossFadeEnabled(boolean crossFadeEnabled) {
+    mCrossFadeEnabled = crossFadeEnabled;
   }
 
   private void validate() {

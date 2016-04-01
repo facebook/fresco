@@ -12,9 +12,6 @@
 
 package com.facebook.samples.demo;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -30,6 +27,9 @@ import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends Activity {
 

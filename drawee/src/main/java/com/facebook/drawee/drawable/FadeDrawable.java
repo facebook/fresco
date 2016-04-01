@@ -9,14 +9,14 @@
 
 package com.facebook.drawee.drawable;
 
-import java.util.Arrays;
-
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+
+import java.util.Arrays;
 
 /**
  * A drawable that fades to the specific layer.
@@ -65,6 +65,7 @@ public class FadeDrawable extends ArrayDrawable {
   @VisibleForTesting int[] mStartAlphas;
   @VisibleForTesting int[] mAlphas;
   @VisibleForTesting int mAlpha;
+  @VisibleForTesting boolean mCrossFade;
 
   /**
    * Determines whether to fade-out a layer to zero opacity (false) or to fade-in to
@@ -91,6 +92,7 @@ public class FadeDrawable extends ArrayDrawable {
     mAlpha = 255;
     mIsLayerOn = new boolean[layers.length];
     mPreventInvalidateCount = 0;
+    mCrossFade = true;
     resetInternal();
   }
 
@@ -133,6 +135,22 @@ public class FadeDrawable extends ArrayDrawable {
    */
   public int getTransitionDuration() {
     return mDurationMs;
+  }
+
+  /**
+   * Whether layer drawable should crossFade on transition
+   */
+  public void setCrossFadeEnabled(boolean crossFadeEnabled) {
+    mCrossFade = crossFadeEnabled;
+  }
+
+  /**
+   * Whether layer drawable should crossFade on transition
+   *
+   * @return crossFade enabled flag
+   */
+  public boolean isCrossFadeEnabled() {
+    return mCrossFade;
   }
 
   /**
@@ -231,15 +249,15 @@ public class FadeDrawable extends ArrayDrawable {
 
   /**
    * Updates the current alphas based on the ratio of the elapsed time and duration.
-   * @param ratio
+   * @param fraction
    * @return whether the all layers have reached their target opacity
    */
-  private boolean updateAlphas(float ratio) {
+  private boolean updateAlphas(float fraction) {
     boolean done = true;
     for (int i = 0; i < mLayers.length; i++) {
-      int dir = mIsLayerOn[i] ? +1 : -1;
+      int dir = mIsLayerOn[i] ? +1 : mCrossFade ? -1 : 0;
       // determines alpha value and clamps it to [0, 255]
-      mAlphas[i] = (int) (mStartAlphas[i] + dir * 255 * ratio);
+      mAlphas[i] = (int) (mStartAlphas[i] + dir * 255 * fraction);
       if (mAlphas[i] < 0) {
         mAlphas[i] = 0;
       }
@@ -250,8 +268,12 @@ public class FadeDrawable extends ArrayDrawable {
       if (mIsLayerOn[i] && mAlphas[i] < 255) {
         done = false;
       }
-      if (!mIsLayerOn[i] && mAlphas[i] > 0) {
+      if (mCrossFade && !mIsLayerOn[i] && mAlphas[i] > 0 || fraction < 1) {
         done = false;
+      }
+
+      if (done && !mIsLayerOn[i] && !mCrossFade) {
+        mAlphas[i] = 0;
       }
     }
     return done;
