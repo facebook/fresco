@@ -105,20 +105,35 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  protected EncodedImage getEncodedImage(
-      InputStream inputStream,
-      int length) throws IOException {
-    Runtime runTime = Runtime.getRuntime();
-    long javaMax = runTime.maxMemory();
-    long javaUsed = runTime.totalMemory() - runTime.freeMemory();
-    long javaFree = Math.min(javaMax - javaUsed, 8 * ByteConstants.MB);
-    if (mDecodeFileDescriptorEnabledForKitKat && inputStream instanceof FileInputStream &&
-        javaMax >= 64 * javaFree) {
-      return getInputStreamBackedEncodedImage(new File(inputStream.toString()), length);
-    } else {
-      return getByteBufferBackedEncodedImage(inputStream, length);
+    private boolean isMemoryEnough() {
+        Runtime runTime = Runtime.getRuntime();
+        long javaMax = runTime.maxMemory();
+        long javaUsed = runTime.totalMemory() - runTime.freeMemory();
+        long javaFree = Math.min(javaMax - javaUsed, 8 * ByteConstants.MB);
+        return (javaMax >= 64 * javaFree);
     }
-  }
+
+    protected EncodedImage getEncodedImage(
+            File file,
+            InputStream inputStream,
+            int length) throws IOException {
+        if (mDecodeFileDescriptorEnabledForKitKat && inputStream instanceof FileInputStream &&
+                isMemoryEnough()) {
+            if (file == null) {
+                file = new File(inputStream.toString());
+            }
+            //TODO: https://github.com/facebook/fresco/issues/1091
+            return getInputStreamBackedEncodedImage(file, length);
+        } else {
+            return getByteBufferBackedEncodedImage(inputStream, length);
+        }
+    }
+
+    protected EncodedImage getEncodedImage(
+            InputStream inputStream,
+            int length) throws IOException {
+        return getEncodedImage(null, inputStream, length);
+    }
 
   protected EncodedImage getInputStreamBackedEncodedImage(
       final File file,
