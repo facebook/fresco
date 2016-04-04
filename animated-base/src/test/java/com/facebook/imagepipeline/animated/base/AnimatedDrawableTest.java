@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -21,6 +22,8 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.testing.FakeClock;
+
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import com.facebook.imagepipeline.animated.testing.MyShadowBitmap;
 import com.facebook.imagepipeline.animated.testing.MyShadowCanvas;
@@ -28,11 +31,14 @@ import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsNoop;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 
-import com.nineoldandroids.animation.ValueAnimator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
+import org.robolectric.annotation.RealObject;
+import org.robolectric.shadows.ShadowValueAnimator;
+import org.robolectric.Shadows;
+import org.robolectric.util.ReflectionHelpers;
 
 import static com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend.pixelValue;
 import static org.junit.Assert.*;
@@ -80,8 +86,10 @@ public class AnimatedDrawableTest {
   @Test
   public void testValueAnimator() {
     ValueAnimator valueAnimator = mDrawable.createValueAnimator();
+    ShadowValueAnimator shadowValueAnimator = Shadows.shadowOf(valueAnimator);
+    assertEquals(ValueAnimator.INFINITE, shadowValueAnimator.getActualRepeatCount());
     assertEquals(mBackend.getDurationMs(), valueAnimator.getDuration());
-    assertEquals(ValueAnimator.INFINITE, valueAnimator.getRepeatCount());
+
   }
 
   @Test

@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.animated.base;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -28,8 +29,6 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawable.base.DrawableWithCaches;
-
-import com.nineoldandroids.animation.ValueAnimator;
 
 /**
  * A {@link Drawable} that renders a animated image. The details of the format are abstracted by the

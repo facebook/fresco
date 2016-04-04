@@ -9,9 +9,8 @@
 
 package com.facebook.imagepipeline.animated.base;
 
+import android.animation.ValueAnimator;
 import android.graphics.drawable.Animatable;
-
-import com.nineoldandroids.animation.ValueAnimator;
 
 /**
  * An interface for animatable drawables that can be asked to construct a value animator.
