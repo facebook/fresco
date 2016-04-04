@@ -37,9 +37,10 @@ import com.nineoldandroids.animation.ValueAnimator;
  * where the client calls start/stop to animate it or it can work as a level-based drawable where
  * the client drives the animation by calling {@link Drawable#setLevel}.
  */
-public class AnimatedDrawable extends AbstractAnimatedDrawable implements AnimatableDrawable {
+public class AnimatedDrawableSupport extends AbstractAnimatedDrawable
+    implements AnimatableDrawableSupport {
 
-  public AnimatedDrawable(
+  public AnimatedDrawableSupport(
       ScheduledExecutorService scheduledExecutorServiceForUiThread,
       AnimatedDrawableCachingBackend animatedDrawableBackend,
       AnimatedDrawableDiagnostics animatedDrawableDiagnostics,
@@ -49,6 +50,7 @@ public class AnimatedDrawable extends AbstractAnimatedDrawable implements Animat
         animatedDrawableDiagnostics,
         monotonicClock);
   }
+
 
   @Override
   public ValueAnimator createValueAnimator(int maxDurationMs) {
