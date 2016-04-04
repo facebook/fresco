@@ -82,7 +82,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
           }
         };
 
-    return new AnimatedDrawableFactoryImpl(
+    return createAnimatedDrawableFactory(
         animatedDrawableBackendProvider,
         animatedDrawableCachingBackendImplProvider,
         animatedDrawableUtil,
@@ -152,4 +152,17 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
     return mAnimatedImageFactory;
   }
 
+  protected AnimatedDrawableFactory createAnimatedDrawableFactory(
+      AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
+      AnimatedDrawableCachingBackendImplProvider animatedDrawableCachingBackendImplProvider,
+      AnimatedDrawableUtil animatedDrawableUtil,
+      ScheduledExecutorService scheduledExecutorService,
+      Resources resources) {
+    return new AnimatedDrawableFactoryImpl(
+        animatedDrawableBackendProvider,
+        animatedDrawableCachingBackendImplProvider,
+        animatedDrawableUtil,
+        scheduledExecutorService,
+        resources);
+  }
 }
