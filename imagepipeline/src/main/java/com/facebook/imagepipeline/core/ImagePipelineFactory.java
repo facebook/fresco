@@ -23,7 +23,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.DiskStorageCache;
-import com.facebook.cache.disk.DynamicDefaultDiskStorage;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.common.executors.DefaultSerialExecutorService;
 import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
@@ -101,13 +101,13 @@ public class ImagePipelineFactory {
   private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainBufferedDiskCache;
-  private DiskStorageCache mMainDiskStorageCache;
+  private FileCache mMainFileCache;
   private ImageDecoder mImageDecoder;
   private ImagePipeline mImagePipeline;
   private ProducerFactory mProducerFactory;
   private ProducerSequenceFactory mProducerSequenceFactory;
   private BufferedDiskCache mSmallImageBufferedDiskCache;
-  private DiskStorageCache mSmallImageDiskStorageCache;
+  private FileCache mSmallImageFileCache;
 
   private PlatformBitmapFactory mPlatformBitmapFactory;
   private PlatformDecoder mPlatformDecoder;
@@ -146,31 +146,16 @@ public class ImagePipelineFactory {
     return mBitmapMemoryCache;
   }
 
-  private static DiskStorage buildDiskStorage(DiskCacheConfig diskCacheConfig) {
-    return new DynamicDefaultDiskStorage(
-        diskCacheConfig.getVersion(),
-        diskCacheConfig.getBaseDirectoryPathSupplier(),
-        diskCacheConfig.getBaseDirectoryName(),
-        diskCacheConfig.getCacheErrorLogger());
-  }
-
   /**
    * Creates a new {@link DiskStorageCache} from the given {@link DiskCacheConfig}
+   *
+   * @deprecated use {@link DiskStorageCacheFactory.buildDiskStorageCache}
    */
+  @Deprecated
   public static DiskStorageCache buildDiskStorageCache(
       DiskCacheConfig diskCacheConfig,
       DiskStorage diskStorage) {
-    DiskStorageCache.Params params = new DiskStorageCache.Params(
-        diskCacheConfig.getMinimumSizeLimit(),
-        diskCacheConfig.getLowDiskSpaceSizeLimit(),
-        diskCacheConfig.getDefaultSizeLimit());
-    return new DiskStorageCache(
-        diskStorage,
-        diskCacheConfig.getEntryEvictionComparatorSupplier(),
-        params,
-        diskCacheConfig.getCacheEventListener(),
-        diskCacheConfig.getCacheErrorLogger(),
-        diskCacheConfig.getDiskTrimmableRegistry());
+    return DiskStorageCacheFactory.buildDiskStorageCache(diskCacheConfig, diskStorage);
   }
 
   public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
@@ -218,7 +203,7 @@ public class ImagePipelineFactory {
     if (mMainBufferedDiskCache == null) {
       mMainBufferedDiskCache =
           new BufferedDiskCache(
-              getMainDiskStorageCache(),
+              getMainFileCache(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
               mConfig.getPoolFactory().getPooledByteStreams(),
               mConfig.getExecutorSupplier().forLocalStorageRead(),
@@ -228,13 +213,20 @@ public class ImagePipelineFactory {
     return mMainBufferedDiskCache;
   }
 
-  public DiskStorageCache getMainDiskStorageCache() {
-    if (mMainDiskStorageCache == null) {
+  /**
+   * @deprecated use {@link ImagePipelineFactory.getMainFileCache}
+   */
+  @Deprecated
+  public FileCache getMainDiskStorageCache() {
+    return getMainFileCache();
+  }
+
+  public FileCache getMainFileCache() {
+    if (mMainFileCache == null) {
       DiskCacheConfig diskCacheConfig = mConfig.getMainDiskCacheConfig();
-      DiskStorage diskStorage = mConfig.getDiskStorageFactory().get(diskCacheConfig);
-      mMainDiskStorageCache = buildDiskStorageCache(diskCacheConfig, diskStorage);
+      mMainFileCache = mConfig.getFileCacheFactory().get(diskCacheConfig);
     }
-    return mMainDiskStorageCache;
+    return mMainFileCache;
   }
 
   public ImagePipeline getImagePipeline() {
@@ -357,20 +349,27 @@ public class ImagePipelineFactory {
     return mProducerSequenceFactory;
   }
 
-  public DiskStorageCache getSmallImageDiskStorageCache() {
-    if (mSmallImageDiskStorageCache == null) {
+  /**
+   * @deprecated use {@link ImagePipelineFactory.getSmallImageFileCache}
+   */
+  @Deprecated
+  public FileCache getSmallImageDiskStorageCache() {
+    return getSmallImageFileCache();
+  }
+
+  public FileCache getSmallImageFileCache() {
+    if (mSmallImageFileCache == null) {
       DiskCacheConfig diskCacheConfig = mConfig.getSmallImageDiskCacheConfig();
-      DiskStorage diskStorage = mConfig.getDiskStorageFactory().get(diskCacheConfig);
-      mSmallImageDiskStorageCache = buildDiskStorageCache(diskCacheConfig, diskStorage);
+      mSmallImageFileCache = mConfig.getFileCacheFactory().get(diskCacheConfig);
     }
-    return mSmallImageDiskStorageCache;
+    return mSmallImageFileCache;
   }
 
   private BufferedDiskCache getSmallImageBufferedDiskCache() {
     if (mSmallImageBufferedDiskCache == null) {
       mSmallImageBufferedDiskCache =
           new BufferedDiskCache(
-              getSmallImageDiskStorageCache(),
+              getSmallImageFileCache(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
               mConfig.getPoolFactory().getPooledByteStreams(),
               mConfig.getExecutorSupplier().forLocalStorageRead(),

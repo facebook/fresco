@@ -73,7 +73,7 @@ public class ImagePipelineConfig {
   private final boolean mWebpSupportEnabled;
   private final boolean mDecodeFileDescriptorEnabled;
   private final boolean mDecodeMemoryFileEnabled;
-  private final DiskStorageFactory mDiskStorageFactory;
+  private final FileCacheFactory mFileCacheFactory;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
   private final int mForceSmallCacheThresholdBytes;
@@ -109,9 +109,9 @@ public class ImagePipelineConfig {
     mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
         builder.mDecodeFileDescriptorEnabled;
     mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
-    mDiskStorageFactory = builder.mDiskStorageFactory == null ?
-        new DynamicDefaultDiskStorageFactory() :
-        builder.mDiskStorageFactory;
+    mFileCacheFactory = builder.mFileCacheFactory == null ?
+        new DiskStorageCacheFactory(new DynamicDefaultDiskStorageFactory()) :
+        builder.mFileCacheFactory;
     mDownsampleEnabled = builder.mDownsampleEnabled;
     mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
     mEncodedMemoryCacheParamsSupplier =
@@ -204,8 +204,8 @@ public class ImagePipelineConfig {
     return mDecodeMemoryFileEnabled;
   }
 
-  public DiskStorageFactory getDiskStorageFactory() {
-    return mDiskStorageFactory;
+  public FileCacheFactory getFileCacheFactory() {
+    return mFileCacheFactory;
   }
 
   public boolean isDownsampleEnabled() {
@@ -308,7 +308,7 @@ public class ImagePipelineConfig {
     private Set<RequestListener> mRequestListeners;
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
-    private DiskStorageFactory mDiskStorageFactory;
+    private FileCacheFactory mFileCacheFactory;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -347,8 +347,17 @@ public class ImagePipelineConfig {
       return this;
     }
 
+    public Builder setFileCacheFactory(FileCacheFactory fileCacheFactory) {
+      mFileCacheFactory = fileCacheFactory;
+      return this;
+    }
+
+    /**
+     * @deprecated use {@link Builder.setFileCacheFactory} instead
+     */
+    @Deprecated
     public Builder setDiskStorageFactory(DiskStorageFactory diskStorageFactory) {
-      mDiskStorageFactory = diskStorageFactory;
+      setFileCacheFactory(new DiskStorageCacheFactory(diskStorageFactory));
       return this;
     }
 

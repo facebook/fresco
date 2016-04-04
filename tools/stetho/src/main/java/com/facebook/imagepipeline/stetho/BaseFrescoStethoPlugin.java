@@ -63,8 +63,8 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
   protected void initialize(ImagePipelineFactory factory) {
     mBitmapMemoryCacheInspector = new CountingMemoryCacheInspector<>(
         factory.getBitmapCountingMemoryCache());
-    mMainFileCache = factory.getMainDiskStorageCache();
-    mSmallFileCache = factory.getSmallImageDiskStorageCache();
+    mMainFileCache = factory.getMainFileCache();
+    mSmallFileCache = factory.getSmallImageFileCache();
     mInitialized = true;
   }
 
