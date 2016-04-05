@@ -10,8 +10,6 @@ package com.facebook.imagepipeline.animated.factory;
 
 import java.lang.reflect.Constructor;
 
-import android.content.Context;
-
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 
@@ -22,7 +20,6 @@ public class AnimatedFactoryProvider {
   private static AnimatedFactory sImpl = null;
 
   public static AnimatedFactory getAnimatedFactory(
-      Context context,
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier) {
     if (!sImplLoaded) {
@@ -30,11 +27,9 @@ public class AnimatedFactoryProvider {
         final Class<?> clazz =
             Class.forName("com.facebook.imagepipeline.animated.factory.AnimatedFactoryImplSupport");
         final Constructor<?> constructor = clazz.getConstructor(
-            Context.class,
             PlatformBitmapFactory.class,
             ExecutorSupplier.class);
         sImpl = (AnimatedFactory) constructor.newInstance(
-            context,
             platformBitmapFactory,
             executorSupplier);
       } catch (Throwable e) {
@@ -48,11 +43,9 @@ public class AnimatedFactoryProvider {
         final Class<?> clazz =
             Class.forName("com.facebook.imagepipeline.animated.factory.AnimatedFactoryImpl");
         final Constructor<?> constructor = clazz.getConstructor(
-            Context.class,
             PlatformBitmapFactory.class,
             ExecutorSupplier.class);
         sImpl = (AnimatedFactory) constructor.newInstance(
-            context,
             platformBitmapFactory,
             executorSupplier);
       } catch (Throwable e) {

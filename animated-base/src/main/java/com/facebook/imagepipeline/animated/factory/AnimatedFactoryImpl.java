@@ -45,15 +45,11 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
 
   private ExecutorSupplier mExecutorSupplier;
 
-  private Context mContext;
-
   private PlatformBitmapFactory mPlatformBitmapFactory;
 
   public AnimatedFactoryImpl(
-      Context context,
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier) {
-    this.mContext = context;
     this.mPlatformBitmapFactory = platformBitmapFactory;
     this.mExecutorSupplier = executorSupplier;
   }
@@ -106,12 +102,12 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
   }
 
   @Override
-  public AnimatedDrawableFactory getAnimatedDrawableFactory() {
+  public AnimatedDrawableFactory getAnimatedDrawableFactory(Context context) {
     if (mAnimatedDrawableFactory == null) {
       SerialExecutorService serialExecutorService =
           new DefaultSerialExecutorService(mExecutorSupplier.forDecode());
       ActivityManager activityManager =
-          (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+          (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
       mAnimatedDrawableFactory = buildAnimatedDrawableFactory(
           serialExecutorService,
           activityManager,
@@ -119,7 +115,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
           getAnimatedDrawableBackendProvider(),
           UiThreadImmediateExecutorService.getInstance(),
           RealtimeSinceBootClock.get(),
-          mContext.getResources());
+          context.getResources());
     }
     return mAnimatedDrawableFactory;
   }

@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.animated.factory;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import android.content.Context;
 import android.content.res.Resources;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
@@ -28,11 +27,9 @@ import com.facebook.common.internal.DoNotStrip;
 public class AnimatedFactoryImplSupport extends AnimatedFactoryImpl {
 
   public AnimatedFactoryImplSupport(
-      Context context,
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier) {
-    super(context,
-        platformBitmapFactory,
+    super(platformBitmapFactory,
         executorSupplier);
   }
 

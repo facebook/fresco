@@ -50,7 +50,7 @@ public class PipelineDraweeControllerBuilderSupplier implements
     final AnimatedFactory animatedFactory = imagePipelineFactory.getAnimatedFactory();
     AnimatedDrawableFactory animatedDrawableFactory = null;
     if (animatedFactory != null) {
-      animatedDrawableFactory = animatedFactory.getAnimatedDrawableFactory();
+      animatedDrawableFactory = animatedFactory.getAnimatedDrawableFactory(context);
     }
 
     mPipelineDraweeControllerFactory = new PipelineDraweeControllerFactory(

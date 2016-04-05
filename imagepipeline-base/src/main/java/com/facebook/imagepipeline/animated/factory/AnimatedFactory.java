@@ -11,7 +11,7 @@ package com.facebook.imagepipeline.animated.factory;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.concurrent.ScheduledExecutorService;
 
-import android.app.ActivityManager;
+import android.content.Context;
 import android.content.res.Resources;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.executors.SerialExecutorService;
@@ -21,7 +21,7 @@ import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 @NotThreadSafe
 public interface AnimatedFactory {
 
-  AnimatedDrawableFactory getAnimatedDrawableFactory();
+  AnimatedDrawableFactory getAnimatedDrawableFactory(Context context);
 
   AnimatedImageFactory getAnimatedImageFactory();
 

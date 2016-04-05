@@ -112,6 +112,8 @@ public class ImagePipelineFactory {
   private PlatformBitmapFactory mPlatformBitmapFactory;
   private PlatformDecoder mPlatformDecoder;
 
+  private AnimatedFactory mAnimatedFactory;
+
   public ImagePipelineFactory(ImagePipelineConfig config) {
     mConfig = Preconditions.checkNotNull(config);
     mThreadHandoffProducerQueue = new ThreadHandoffProducerQueue(
@@ -119,10 +121,12 @@ public class ImagePipelineFactory {
   }
 
   public AnimatedFactory getAnimatedFactory() {
-      return AnimatedFactoryProvider.getAnimatedFactory(
-          mConfig.getContext(),
+    if (mAnimatedFactory == null) {
+      mAnimatedFactory = AnimatedFactoryProvider.getAnimatedFactory(
           getPlatformBitmapFactory(),
           mConfig.getExecutorSupplier());
+    }
+    return mAnimatedFactory;
   }
 
   public CountingMemoryCache<CacheKey, CloseableImage>
