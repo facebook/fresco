@@ -95,14 +95,7 @@ public class ArrayDrawable extends Drawable
       DrawableUtils.setCallbacks(mLayers[index], null, null);
       DrawableUtils.setCallbacks(drawable, null, null);
       DrawableUtils.setDrawableProperties(drawable, mDrawableProperties);
-
-      if (drawable != null) {
-        drawable.setBounds(getBounds());
-        drawable.setLevel(getLevel());
-        drawable.setState(getState());
-        drawable.setVisible(isVisible(), /* restart */ false);
-      }
-
+      DrawableUtils.copyProperties(drawable, this);
       DrawableUtils.setCallbacks(drawable, this, this);
       mIsStatefulCalculated = false;
       mLayers[index] = drawable;
