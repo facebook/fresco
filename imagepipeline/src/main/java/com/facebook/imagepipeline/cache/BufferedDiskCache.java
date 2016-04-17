@@ -125,6 +125,32 @@ public class BufferedDiskCache {
   }
 
   /**
+   * Performs disk cache check synchronously.
+   * @param key
+   * @return true if the key is found in disk cache else false
+   */
+  public boolean syncDiskCheck(final CacheKey key){
+    if(containsSync(key)){
+      return true;
+    }
+    EncodedImage result = mStagingArea.get(key);
+    if (result != null) {
+      result.close();
+      FLog.v(TAG, "Found image for %s in staging area", key.toString());
+      mImageCacheStatsTracker.onStagingAreaHit();
+      return true;
+    } else {
+      FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+      mImageCacheStatsTracker.onStagingAreaMiss();
+      try {
+        return mFileCache.hasKey(key);
+      } catch (Exception exception) {
+        return false;
+      }
+    }
+  }
+
+  /**
    * Performs key-value look up in disk cache. If value is not found in disk cache staging area
    * then disk cache read is scheduled on background thread. Any error manifests itself as
    * cache miss, i.e. the returned task resolves to null.
