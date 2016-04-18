@@ -116,7 +116,7 @@ public class BufferedDiskCache {
    * @return true if the key is found in disk cache else false
    */
   public boolean syncDiskCheck(final CacheKey key) {
-    if(containsSync(key)){
+    if(containsSync(key)) {
       return true;
     }
     return checkInStagingAreaAndFileCache(key);
