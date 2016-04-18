@@ -91,6 +91,7 @@ Fresco's image pipeline lets you customize the load in a variety of ways:
 * [Snapster](https://play.google.com/store/apps/details?id=com.vk.snapster)
 * [Butter Camera (黄油相机)](https://play.google.com/store/apps/details?id=com.by.butter.camera)
 * [Myntra](https://play.google.com/store/apps/details?id=com.myntra.android)
+* [Photo Safe - backup and share on the go](https://play.google.com/store/apps/details?id=com.appmattus.photobackup)
 
 *Does your app use Fresco? Add it to this list with a [pull request](https://github.com/facebook/fresco/edit/gh-pages/index.md)!*
         
