@@ -258,20 +258,34 @@ public class ImagePipeline {
           producerSequence,
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
-          callerContext);
+          callerContext,
+          Priority.LOW);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
   }
 
   /**
-   * Submits a request for prefetching to the disk cache.
+   * Submits a request for prefetching to the disk cache with a default priority
    * @param imageRequest the request to submit
    * @return a DataSource that can safely be ignored.
    */
   public DataSource<Void> prefetchToDiskCache(
       ImageRequest imageRequest,
       Object callerContext) {
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.LOW);
+  }
+
+  /**
+   * Submits a request for prefetching to the disk cache.
+   * @param imageRequest the request to submit
+   * @param priority custom priority for the fetch
+   * @return a DataSource that can safely be ignored.
+   */
+  public DataSource<Void> prefetchToDiskCache(
+      ImageRequest imageRequest,
+      Object callerContext,
+      Priority priority) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
@@ -282,7 +296,8 @@ public class ImagePipeline {
           producerSequence,
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
-          callerContext);
+          callerContext,
+          priority);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -467,7 +482,8 @@ public class ImagePipeline {
       Producer<Void> producerSequence,
       ImageRequest imageRequest,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
-      Object callerContext) {
+      Object callerContext,
+      Priority priority) {
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =
           ImageRequest.RequestLevel.getMax(
@@ -481,7 +497,7 @@ public class ImagePipeline {
           lowestPermittedRequestLevel,
         /* isPrefetch */ true,
         /* isIntermediateResultExpected */ false,
-          Priority.LOW);
+          priority);
       return ProducerToDataSourceAdapter.create(
           producerSequence,
           settableProducerContext,

@@ -113,11 +113,32 @@ public class ImagePipelineTest {
   }
 
   @Test
-  public void testPrefetchToDiskCache() {
+  public void testPrefetchToDiskCacheDefaultPriority() {
     Producer<Void> prefetchProducerSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
         .thenReturn(prefetchProducerSequence);
-    DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(mImageRequest, mCallerContext);
+    DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(
+        mImageRequest,
+        mCallerContext);
+    verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.LOW);
+  }
+
+  @Test
+  public void testPrefetchToDiskCacheCustomPriority() {
+    Producer<Void> prefetchProducerSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
+        .thenReturn(prefetchProducerSequence);
+    DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(
+        mImageRequest,
+        mCallerContext,
+        Priority.MEDIUM);
+    verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.MEDIUM);
+  }
+
+  private void verifyPrefetchToDiskCache(
+      DataSource<Void> dataSource,
+      Producer<Void> prefetchProducerSequence,
+      Priority priority) {
     assertFalse(dataSource.isFinished());
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
@@ -126,7 +147,7 @@ public class ImagePipelineTest {
     verify(prefetchProducerSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
     assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.LOW);
+    assertEquals(priority, producerContextArgumentCaptor.getValue().getPriority());
   }
 
   @Test
