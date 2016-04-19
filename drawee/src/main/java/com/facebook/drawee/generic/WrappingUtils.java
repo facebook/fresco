@@ -22,11 +22,13 @@ import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.ForwardingDrawable;
+import com.facebook.drawee.drawable.LightBitmapDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
 import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
+import com.facebook.drawee.drawable.RoundedLightBitmapDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -269,8 +271,22 @@ public class WrappingUtils {
       RoundingParams roundingParams,
       Resources resources) {
     if (drawable instanceof BitmapDrawable) {
+      final BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
       RoundedBitmapDrawable roundedBitmapDrawable =
-          RoundedBitmapDrawable.fromBitmapDrawable(resources, (BitmapDrawable) drawable);
+          new RoundedBitmapDrawable(
+              resources,
+              bitmapDrawable.getBitmap(),
+              bitmapDrawable.getPaint());
+      applyRoundingParams(roundedBitmapDrawable, roundingParams);
+      return roundedBitmapDrawable;
+    }
+    if (drawable instanceof LightBitmapDrawable) {
+      final LightBitmapDrawable lightBitmapDrawable = (LightBitmapDrawable) drawable;
+      RoundedLightBitmapDrawable roundedBitmapDrawable =
+          new RoundedLightBitmapDrawable(
+              resources,
+              lightBitmapDrawable.getBitmap(),
+              lightBitmapDrawable.getPaint());
       applyRoundingParams(roundedBitmapDrawable, roundingParams);
       return roundedBitmapDrawable;
     }

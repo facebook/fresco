@@ -43,6 +43,17 @@ public class LightBitmapDrawable extends Drawable {
    * the resources.
    */
   public LightBitmapDrawable(Resources res, Bitmap bitmap) {
+    this(res, bitmap, null);
+  }
+
+  /**
+   * Create drawable from a bitmap, setting initial target density based on the display metrics of
+   * the resources.
+   */
+  public LightBitmapDrawable(Resources res, Bitmap bitmap, Paint paint) {
+    if (paint != null) {
+      mPaint.set(paint);
+    }
     mBitmap = bitmap;
     mTargetDensity = res.getDisplayMetrics().densityDpi;
     computeBitmapSize();
@@ -51,14 +62,14 @@ public class LightBitmapDrawable extends Drawable {
   /**
    * Returns the paint used to render this drawable.
    */
-  public final Paint getPaint() {
+  public Paint getPaint() {
     return mPaint;
   }
 
   /**
    * Returns the bitmap used by this drawable to render. May be null.
    */
-  @Nullable public final Bitmap getBitmap() {
+  @Nullable public Bitmap getBitmap() {
     return mBitmap;
   }
 
