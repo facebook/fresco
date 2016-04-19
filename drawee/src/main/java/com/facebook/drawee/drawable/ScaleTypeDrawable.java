@@ -55,6 +55,14 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
     mScaleType = scaleType;
   }
 
+  @Override
+  public Drawable setCurrent(Drawable newDelegate) {
+    final Drawable previousDelegate = super.setCurrent(newDelegate);
+    configureBounds();
+
+    return previousDelegate;
+  }
+
   /**
    * Gets the current scale type.
    * @return scale type
