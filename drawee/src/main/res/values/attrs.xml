@@ -123,4 +123,12 @@
     <attr name="roundingBorderPadding" format="dimension" />
 
   </declare-styleable>
+
+  <declare-styleable name="SimpleDraweeView">
+
+    <!-- An image uri . -->
+    <attr name="actualImageUri" format="string"/>
+
+  </declare-styleable>
+
 </resources>
