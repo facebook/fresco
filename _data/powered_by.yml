@@ -58,4 +58,7 @@
     url: https://play.google.com/store/apps/details?id=com.vk.snapster
   - name: Butter Camera (黄油相机)
     url: https://play.google.com/store/apps/details?id=com.by.butter.camera
-
+  - name: Myntra
+    url: https://play.google.com/store/apps/details?id=com.myntra.android
+  - name: Photo Safe
+    url: https://play.google.com/store/apps/details?id=com.appmattus.photobackup
