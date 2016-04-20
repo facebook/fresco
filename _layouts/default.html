@@ -1,27 +1,12 @@
-{% include header.html %}
-
-{% if page.hero %}
-  {% include hero.html %}
-{% endif %}
-
-<section class='content'><div class='width'>
-
-<article>
-
-{{ content }}
-
-</article>
-
-</div></section>
-
-
-
-{% if page.hero %}
-  <header class='hero'><div class='width'>
-    <div class="buttons-unit">
-      <a href="/docs/index.html#_" class="button">Get Started</a>
+<!DOCTYPE html>
+<html>
+  {% include head.html %}
+  <body>
+    {% include nav.html alwayson=true %}
+    <div class="navPusher">
+      {{ content }}
+      {% include footer.html %}
     </div>
-{% include footer.html %}
-  </div></header>
-{% endif %}
+  </body>
 
+</html>

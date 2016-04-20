@@ -1,0 +1,116 @@
+/** Algolia Doc Search **/
+
+::-webkit-input-placeholder { /* Safari, Chrome */
+    color: $primary-overlay-special;
+}
+:-moz-placeholder { /* Mozilla Firefox <= 18 */
+   color:    $primary-overlay-special;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    $primary-overlay-special;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer */
+   color:    $primary-overlay-special;
+}
+:placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
+  color:    $primary-overlay-special;
+}
+
+[type="search"] {
+    -moz-appearance:    textfield;
+    -webkit-appearance: textfield;
+    appearance: textfield;
+}
+
+div.algolia-search-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 15px;
+}
+
+@media screen and (max-width: 960px) {
+  div.algolia-search-wrapper {
+    display: none;
+  }
+}
+
+input#algolia-doc-search {
+  font-family: $header-font-family;
+
+  background: transparent url('/static/search.png') no-repeat left center;
+  background-size: 16px 16px;
+
+  padding-left: 20px;
+  margin-left: 10px;
+  font-size: 16px;
+  line-height: 20px;
+  background-color: $primary-bg;
+  border: none;
+  color: white;
+  outline: none;
+  width: 160px;
+
+  transition: border-color .2s ease, width .2s ease;
+  -webkit-transition: border-color .2s ease, width .2s ease;
+  -moz-transition: border-color .2s ease, width .2s ease;
+  -o-transition: border-color .2s ease, width .2s ease;
+}
+
+input#algolia-doc-search:focus {
+  border-color: #05A5D1;
+  width: 240px;
+}
+
+@media screen and (max-width: 1085px) {
+  input#algolia-doc-search:focus {
+    width: 178px;
+  }
+}
+
+.algolia-autocomplete {
+  vertical-align: top;
+  font-family: $header-font-family;
+}
+
+/* Bottom border of each suggestion */
+.algolia-docsearch-suggestion {
+  border-bottom-color: #2F0A57;
+}
+/* Main category headers */
+.algolia-docsearch-suggestion--category-header {
+  background-color: #2F0A57;
+}
+/* Highlighted search terms */
+.algolia-docsearch-suggestion--text .algolia-docsearch-suggestion--highlight {
+  color: #C897FF;
+}
+.algolia-docsearch-suggestion--title .algolia-docsearch-suggestion--highlight,
+.algolia-docsearch-suggestion--subcategory-column .algolia-docsearch-suggestion--highlight {
+    color: #4A078E;
+}
+.algolia-docsearch-suggestion--category-header .algolia-docsearch-suggestion--highlight {
+  background-color: #C897FF;
+}
+/* Currently selected suggestion */
+.aa-cursor .algolia-docsearch-suggestion--content {
+  color: #151515;
+}
+.aa-cursor .algolia-docsearch-suggestion {
+  background: #F3E8FF;
+}
+
+/* For bigger screens, when displaying results in two columns */
+@media (min-width: 768px) {
+  /* Bottom border of each suggestion */
+  .algolia-docsearch-suggestion {
+    border-bottom-color: #2F0A57;
+  }
+  /* Left column, with secondary category header */
+  .algolia-docsearch-suggestion--subcategory-column {
+    border-right-color: #2F0A57;
+    background-color: #E4E4E4;
+    color: #151515;
+  }
+}

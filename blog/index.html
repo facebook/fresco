@@ -1,0 +1,11 @@
+---
+id: blog 
+title: Blog
+layout: blog 
+---
+
+<div class="posts">
+  {% for page in site.posts %}
+    {% include post.html truncate=true %}
+  {% endfor %}
+</div>

@@ -2,27 +2,44 @@
 permalink: /blog/:categories/:year/:month/:day/:title.html
 url: "http://frescolib.org"
 baseurl: ""
-name: Fresco
+title: Fresco
+tagline: An Image Management Library
 relative_permalinks: false
-description: An image management library.
+description: >
+  Fresco is a powerful system for displaying images in Android applications. It takes care of image loading and display so you don’t have to. Fresco supports Android 2.3 (Gingerbread) and later.
 timezone: America/Los_Angeles
+ghrepo: "facebook/fresco"
 
-# Build settings
+paginate: 15
+
 markdown: kramdown
-highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 
-safe: true
-lsi: false
-current_version: 0.9.0
+  syntax_highlighter_opts:
+    css_class: 'rougeHighlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
 
-gems:
-  - jekyll-sitemap
+sass:
+  style: :compressed
 
-defaults:
-  -
-    scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: post
-      is_post: true
+collections:
+  docs:
+    output: true
+    permalink: /docs/:name/
+  support:
+    output: true
+    permalink: /support/
+
+color:
+  primary: "#db6130"
+  secondary: "#f9f9f9"
+  # Use the following to specify whether the previous two colours are 'light'
+  # or 'dark'
+  primary-overlay: "dark"
+  secondary-overlay: "light"

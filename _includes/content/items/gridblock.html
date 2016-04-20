@@ -1,0 +1,9 @@
+<div class="featureBlock {{ include.gridtype }}">
+  {% if item.image %}
+  <img src="/static/{{ item.image }}" alt="{{ item.title }}" title="{{ item.title }}" />
+  {% endif %}
+  <h3>{{ item.title }}</h3>
+  {% if item.text %}
+  {{ item.text | markdownify }}
+  {% endif %}
+</div>
