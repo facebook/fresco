@@ -4,6 +4,9 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 version = VERSION_NAME
 group = GROUP
+// Set the .aar / .jar base file name to match the artifact ID
+// in case the module has a different name
+project.archivesBaseName = POM_ARTIFACT_ID
 
 install {
     repositories.mavenInstaller {
