@@ -4,6 +4,8 @@ url: "http://frescolib.org"
 baseurl: ""
 title: Fresco
 tagline: An Image Management Library
+fbappid: "1615782811974223"
+gacode: "UA-44373548-3"
 relative_permalinks: false
 description: >
   Fresco is a powerful system for displaying images in Android applications. It takes care of image loading and display so you don’t have to. Fresco supports Android 2.3 (Gingerbread) and later.
