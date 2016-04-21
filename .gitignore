@@ -13,3 +13,4 @@ local.properties
 obj/
 *.iml
 nativedeps/
+.sass-cache/

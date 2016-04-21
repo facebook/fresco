@@ -1,0 +1,118 @@
+<div class="docsNavContainer">
+  <nav class="toc" id="doc_nav"></nav>
+</div>
+<script type="text/javascript">
+  var docsevent = document.createEvent('Event');
+  docsevent.initEvent('docs_slide', true, true);
+  document.addEventListener('docs_slide', function (e) {
+    document.body.classList.toggle('docsSliderActive');
+  }, false);
+  var DocNav = React.createClass({displayName: "DocNav",
+    getInitialState: function() {
+      return {
+        activeGroup: activeGroup,
+        toggleActive: false,
+      };
+    },
+    getDefaultProps: function() {
+      return {
+        currentDoc: currentDoc,
+        currentGroup: currentGroup,
+        data: docnavData,
+        sectionTitle: sectionTitle,
+        sectionPath: sectionPath,
+      }
+    },
+    handleSlide: function(id) {
+      this.setState({
+        toggleActive: !this.state.toggleActive,
+      });
+      document.dispatchEvent(docsevent);
+    },
+    handleAccordion: function(group) {
+      this.setState({
+        activeGroup: group,
+      })
+    },
+    render: function() {
+      var classes = React.addons.classSet({
+        'navToggle': true,
+        'navToggleActive': this.state.toggleActive,
+      });
+      var navClasses = React.addons.classSet({
+        'toggleNav': true,
+        'toggleNavActive': this.state.toggleActive,
+      });
+      return (
+        React.createElement("div", {className: navClasses},
+          React.createElement("section", {className: 'navWrapper wrapper'},
+            React.createElement("div", {className: 'navBreadcrumb wrapper'},
+              React.createElement("div",
+                {
+                  className: classes,
+                  onClick: this.handleSlide
+                },
+                React.createElement("i")
+              ),
+              React.createElement("h2", null,
+                React.createElement(
+                  "a",
+                  {href: this.props.sectionPath},
+                  this.props.sectionTitle
+                ),
+                React.createElement("i", null, '›'),
+                React.createElement("span", null, this.props.currentGroup)
+              )
+            ),
+            React.createElement("div", {className: 'navGroups'},
+              this.props.data.map(this.renderNavGroups)
+            )
+          )
+        )
+      );
+    },
+    renderNavGroups: function(child, index) {
+      var classes = React.addons.classSet({
+        'navGroup': true,
+        'navGroupCurrent': this.props.currentGroup === child.group,
+        'navGroupActive': this.state.activeGroup === child.group,
+      });
+      return (
+        React.createElement("div", {className: classes, key: index, onClick: this.handleAccordion.bind(this, child.group)},
+          React.createElement("h3", null,
+            React.createElement(
+              "i",
+              null,
+              (this.state.activeGroup === child.group) ? "" : "+"
+            ),
+            React.createElement("span", null, child.group)
+          ),
+          React.createElement("ul", null,
+            child.items.map(this.renderNavItems)
+          )
+        )
+      );
+    },
+    renderNavItems: function(child, index) {
+      var itemClasses = React.addons.classSet({
+        'navListItem': true,
+        'navListItemActive': this.props.currentDoc === child.title,
+      });
+      var classes = React.addons.classSet({
+        'navItem': true,
+        'navItemActive': this.props.currentDoc === child.title,
+      });
+      return (
+        React.createElement("li", {className: itemClasses, key: index}, React.createElement("a", {className: classes, href: child.url},  child.title))
+      );
+    },
+  });
+
+  function docNavRender(docnavData) {
+    React.render(
+      React.createElement(DocNav, {data: docnavData}),
+      document.getElementById('doc_nav')
+    );
+  }
+  docNavRender(docnavData);
+</script>
