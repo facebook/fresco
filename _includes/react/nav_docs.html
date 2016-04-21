@@ -14,9 +14,9 @@
           {% endif %}
         {% endfor %}
         {
-          key : "{{ site.baseurl }}{{ doc.url }}",
+          key : "{{ site.url }}{{ site.baseurl }}{{ doc.url }}",
           title : "{{ doc.title }}",
-          url : "{{ site.baseurl }}{{ doc.url }}",
+          url : "{{ site.url }}{{ site.baseurl }}{{ doc.url }}",
         }{% unless forloop.last %},{% endunless %}
         {% endfor %}
       ],
