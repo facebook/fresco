@@ -61,7 +61,7 @@ These rules have been effective in preventing memory leaks, and have let us enjo
 
 There are many steps involved in showing an image on a mobile device:
 
-![](/static/images/blog/image-pipeline-steps.png)
+![]({{ site.url }}{{ site.baseurl }}/static/images/blog/image-pipeline-steps.png)
 
 Several excellent open source libraries exist that perform these sequences — [Picasso](http://square.github.io/picasso), [Universal Image Loader](https://github.com/nostra13/Android-Universal-Image-Loader), [Glide](https://github.com/bumptech/glide), and [Volley](https://android.googlesource.com/platform/frameworks/volley), to name a few. All of these have made important contributions to Android development. We believe our new library goes further in several important ways.
 
