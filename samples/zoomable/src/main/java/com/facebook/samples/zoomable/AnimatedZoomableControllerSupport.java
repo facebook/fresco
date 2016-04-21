@@ -13,40 +13,38 @@ package com.facebook.samples.zoomable;
 
 import javax.annotation.Nullable;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.view.animation.DecelerateInterpolator;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.gestures.TransformGestureDetector;
 
-/**
- * ZoomableController that adds animation capabilities to DefaultZoomableController using standard
- * Android animation classes
- */
-public class AnimatedZoomableController extends AbstractAnimatedZoomableController {
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ValueAnimator;
 
-  private static final Class<?> TAG = AnimatedZoomableController.class;
+/**
+ * ZoomableController that adds animation capabilities to DefaultZoomableController using
+ * nineoldandroid library
+ */
+public class AnimatedZoomableControllerSupport extends AbstractAnimatedZoomableController {
+
+  private static final Class<?> TAG = AnimatedZoomableControllerSupport.class;
 
   private final ValueAnimator mValueAnimator;
 
-  public static AnimatedZoomableController newInstance() {
-    return new AnimatedZoomableController(TransformGestureDetector.newInstance());
+  public static AnimatedZoomableControllerSupport newInstance() {
+    return new AnimatedZoomableControllerSupport(TransformGestureDetector.newInstance());
   }
 
-  @SuppressLint("NewApi")
-  public AnimatedZoomableController(TransformGestureDetector transformGestureDetector) {
+  public AnimatedZoomableControllerSupport(TransformGestureDetector transformGestureDetector) {
     super(transformGestureDetector);
     mValueAnimator = ValueAnimator.ofFloat(0, 1);
     mValueAnimator.setInterpolator(new DecelerateInterpolator());
   }
 
-  @SuppressLint("NewApi")
-  @Override
   public void setTransformAnimated(
       final Matrix newTransform,
       long durationMs,
@@ -63,7 +61,7 @@ public class AnimatedZoomableController extends AbstractAnimatedZoomableControll
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
         calculateInterpolation(getWorkingTransform(), (float) valueAnimator.getAnimatedValue());
-        AnimatedZoomableController.super.setTransform(getWorkingTransform());
+        AnimatedZoomableControllerSupport.super.setTransform(getWorkingTransform());
       }
     });
     mValueAnimator.addListener(new AnimatorListenerAdapter() {
@@ -88,8 +86,6 @@ public class AnimatedZoomableController extends AbstractAnimatedZoomableControll
     mValueAnimator.start();
   }
 
-  @SuppressLint("NewApi")
-  @Override
   public void stopAnimation() {
     if (!isAnimating()) {
       return;
