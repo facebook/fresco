@@ -10,8 +10,6 @@ description: >
 timezone: America/Los_Angeles
 ghrepo: "facebook/fresco"
 
-paginate: 15
-
 markdown: kramdown
 kramdown:
   input: GFM

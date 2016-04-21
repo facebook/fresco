@@ -20,7 +20,6 @@
     background: $secondary-bg;
     box-sizing: border-box;
     height: 0px;
-    overflow: hidden;
     padding: 0;
     position: absolute;
     right: 0px;
@@ -40,7 +39,7 @@
       padding: 10px;
 
       li {
-        margin: 0 -5px;
+        margin: 0;
         padding: 2px 0;
 
         a {

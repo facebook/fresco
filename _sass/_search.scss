@@ -1,116 +1,140 @@
-/** Algolia Doc Search **/
-
-::-webkit-input-placeholder { /* Safari, Chrome */
-    color: $primary-overlay-special;
-}
-:-moz-placeholder { /* Mozilla Firefox <= 18 */
-   color:    $primary-overlay-special;
-   opacity:  1;
-}
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    $primary-overlay-special;
-   opacity:  1;
-}
-:-ms-input-placeholder { /* Internet Explorer */
-   color:    $primary-overlay-special;
-}
-:placeholder-shown { /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
-  color:    $primary-overlay-special;
+input[type="search"] {
+    -moz-appearance:    none;
+    -webkit-appearance: none;
 }
 
-[type="search"] {
-    -moz-appearance:    textfield;
-    -webkit-appearance: textfield;
-    appearance: textfield;
+.navSearchWrapper {
+  align-self: center;
+  position: relative;
+
+  &::before {
+    border: 3px solid $primary-overlay-special;
+    border-radius: 50%;
+    content: " ";
+    display: block;
+    height: 6px;
+    left: 15px;
+    width: 6px;
+    position: absolute;
+    top: 4px;
+    z-index: 1;
+  }
+
+  &::after {
+    background: $primary-overlay-special;
+    content: " ";
+    height: 7px;
+    left: 24px;
+    position: absolute;
+    transform: rotate(-45deg);
+    top: 12px;
+    width: 3px;
+    z-index: 1;
+  }
+
+  .aa-dropdown-menu {
+    background: $secondary-bg;
+    border: 3px solid rgba($text, 0.25);
+    color: $text;
+    font-size: 14px;
+    left: auto !important;
+    line-height: 1.2em;
+    right: 0 !important;
+
+    .algolia-docsearch-suggestion--category-header {
+      background: $primary-overlay-special;
+      color: $primary-bg;
+
+      .algolia-docsearch-suggestion--highlight {
+        background-color: $primary-bg;
+        color: $primary-overlay;
+      }
+    }
+
+    .algolia-docsearch-suggestion--title .algolia-docsearch-suggestion--highlight,
+    .algolia-docsearch-suggestion--subcategory-column .algolia-docsearch-suggestion--highlight {
+        color: $primary-bg;
+    }
+
+    .algolia-docsearch-suggestion__secondary,
+    .algolia-docsearch-suggestion--subcategory-column {
+      border-color: rgba($text, 0.3);
+    }
+  }
 }
 
-div.algolia-search-wrapper {
-  display: inline-block;
-  vertical-align: top;
-  margin-left: 15px;
+input#search_input {
+  padding-left: 25px;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 20px;
+  background-color: rgba($primary-overlay-special, 0.25);
+  border: none;
+  color: rgba($primary-overlay-special, 0);
+  outline: none;
+  position: relative;
+  transition: background-color .2s cubic-bezier(0.68, -0.55, 0.265, 1.55), width .2s cubic-bezier(0.68, -0.55, 0.265, 1.55), color .2s ease;
+  width: 60px;
+
+  &:focus, &:active {
+    background-color: $secondary-bg;
+    color: $text;
+    width: 240px;
+  }
 }
 
-@media screen and (max-width: 960px) {
-  div.algolia-search-wrapper {
+.reactNavSearchWrapper {
+  &::before {
+    left: 6px;
+    top: 6px;
+  }
+
+  &::after {
+    left: 15px;
+    top: 14px;
+  }
+
+  input#search_input_react {
+    box-sizing: border-box;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 20px;
+    background-color: rgba($primary-overlay-special, 0.25);
+    border: none;
+    color: $text;
+    outline: none;
+    position: relative;
+    transition: background-color .2s cubic-bezier(0.68, -0.55, 0.265, 1.55), width .2s cubic-bezier(0.68, -0.55, 0.265, 1.55), color .2s ease;
+    width: 100%;
+
+    &:focus, &:active {
+      background-color: $primary-bg;
+      color: $primary-overlay;
+    }
+  }
+
+  .algolia-docsearch-suggestion--subcategory-inline {
     display: none;
   }
-}
 
-input#algolia-doc-search {
-  font-family: $header-font-family;
-
-  background: transparent url('/static/search.png') no-repeat left center;
-  background-size: 16px 16px;
-
-  padding-left: 20px;
-  margin-left: 10px;
-  font-size: 16px;
-  line-height: 20px;
-  background-color: $primary-bg;
-  border: none;
-  color: white;
-  outline: none;
-  width: 160px;
-
-  transition: border-color .2s ease, width .2s ease;
-  -webkit-transition: border-color .2s ease, width .2s ease;
-  -moz-transition: border-color .2s ease, width .2s ease;
-  -o-transition: border-color .2s ease, width .2s ease;
-}
-
-input#algolia-doc-search:focus {
-  border-color: #05A5D1;
-  width: 240px;
-}
-
-@media screen and (max-width: 1085px) {
-  input#algolia-doc-search:focus {
-    width: 178px;
+  & > span {
+    width: 100%;
   }
-}
 
-.algolia-autocomplete {
-  vertical-align: top;
-  font-family: $header-font-family;
-}
-
-/* Bottom border of each suggestion */
-.algolia-docsearch-suggestion {
-  border-bottom-color: #2F0A57;
-}
-/* Main category headers */
-.algolia-docsearch-suggestion--category-header {
-  background-color: #2F0A57;
-}
-/* Highlighted search terms */
-.algolia-docsearch-suggestion--text .algolia-docsearch-suggestion--highlight {
-  color: #C897FF;
-}
-.algolia-docsearch-suggestion--title .algolia-docsearch-suggestion--highlight,
-.algolia-docsearch-suggestion--subcategory-column .algolia-docsearch-suggestion--highlight {
-    color: #4A078E;
-}
-.algolia-docsearch-suggestion--category-header .algolia-docsearch-suggestion--highlight {
-  background-color: #C897FF;
-}
-/* Currently selected suggestion */
-.aa-cursor .algolia-docsearch-suggestion--content {
-  color: #151515;
-}
-.aa-cursor .algolia-docsearch-suggestion {
-  background: #F3E8FF;
-}
-
-/* For bigger screens, when displaying results in two columns */
-@media (min-width: 768px) {
-  /* Bottom border of each suggestion */
-  .algolia-docsearch-suggestion {
-    border-bottom-color: #2F0A57;
-  }
-  /* Left column, with secondary category header */
-  .algolia-docsearch-suggestion--subcategory-column {
-    border-right-color: #2F0A57;
-    background-color: #E4E4E4;
-    color: #151515;
+  .aa-dropdown-menu {
+    background: $secondary-bg;
+    border: 0px solid $secondary-bg;
+    color: $text;
+    font-size: 12px;
+    line-height: 2em;
+    max-height: 140px;
+    min-width: auto;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    padding: 0;
+    border-radius: 0;
+    position: relative !important;
+    width: 100%;
   }
 }
