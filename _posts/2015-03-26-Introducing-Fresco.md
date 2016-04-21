@@ -18,7 +18,7 @@ The ***Java*** **heap** is the one subject to the strict, per-application limits
 
 Unfortunately, this process of garbage collection is precisely the problem. To do more than basic reclamations of memory, Android must halt the application completely while it carries out the garbage collection. This is one of the most common causes of an app appearing to freeze or stall briefly while you are using it. It's frustrating for people using the app, and they may try to scroll or press a button — only to see the app wait inexplicably before responding.
 
-In contrast, the ***native***** heap** is the one used by the C++ new operator. There is much more memory available here. The app is limited only by the physical memory available on the device. There is no garbage collection and nothing to slow things down. However, C++ programs are responsible for freeing every byte of memory they allocate, or they will leak memory and eventually crash.
+In contrast, the ***native*** **heap** is the one used by the C++ new operator. There is much more memory available here. The app is limited only by the physical memory available on the device. There is no garbage collection and nothing to slow things down. However, C++ programs are responsible for freeing every byte of memory they allocate, or they will leak memory and eventually crash.
 
 Android has another region of memory, called ***ashmem***. This operates much like the native heap, but has additional system calls. Android can “unpin” the memory rather than freeing it. This is a lazy free; the memory is freed only if the system actually needs more memory. When Android “pins” the memory back, old data will still be there if it hasn't been freed.
 
@@ -137,3 +137,5 @@ With these facilities, the hard work of displaying images is gone. Calling code 
 Having built this elaborate tool set for image display and manipulation, we wanted to share it with the Android developer community. We are pleased to announce that, as of today, this project is now available as [open source](http://github.com/facebook/fresco).
 
 A [*fresco*](https://en.wikipedia.org/wiki/Fresco) is a painting technique that has been popular around the world for centuries. With this name, we honor the many great artists who have used this form, from Italian Renaissance masters like Raphael to the Sigiriya artists of Sri Lanka. We don't pretend to be on that level. We do hope that Android app developers enjoy using our library as much as we've enjoyed building it.
+
+*This post was first published on [code.facebook.com](https://code.facebook.com/posts/366199913563917).*
