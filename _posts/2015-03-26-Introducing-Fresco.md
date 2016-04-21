@@ -1,7 +1,7 @@
 ---
 layout: post
 author: tnicholas
-title: Introducing Fresco: A new image library for Android
+title: "Introducing Fresco: A new image library for Android"
 ---
 
 Displaying images quickly and efficiently on Facebook for Android is important. Yet we have had many problems storing images effectively over the years. Images are large, but devices are small. Each pixel takes up 4 bytes of data — one for each of red, green, blue, and alpha. If a phone has a screen size of 480 x 800 pixels, a single full-screen image will take up 1.5 MB of memory. Phones often have very little memory, and Android devices divide up what memory they have among multiple apps. On some devices, the Facebook app is given as little as 16 MB — and just *one* image could take up a tenth of that!
