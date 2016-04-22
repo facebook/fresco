@@ -135,6 +135,12 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
+  public void testSyncDiskCacheCheck(){
+    when(mStagingArea.containsKey(mCacheKey) || mFileCache.hasKey(mCacheKey)).thenReturn(true);
+    assertTrue(mBufferedDiskCache.syncDiskCheck(mCacheKey));
+  }
+
+  @Test
   public void testQueriesDiskCache() throws Exception {
     when(mFileCache.getResource(eq(mCacheKey))).thenReturn(mBinaryResource);
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);

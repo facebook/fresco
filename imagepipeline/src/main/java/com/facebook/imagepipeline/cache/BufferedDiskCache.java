@@ -94,21 +94,7 @@ public class BufferedDiskCache {
           new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-              EncodedImage result = mStagingArea.get(key);
-              if (result != null) {
-                result.close();
-                FLog.v(TAG, "Found image for %s in staging area", key.toString());
-                mImageCacheStatsTracker.onStagingAreaHit();
-                return true;
-              } else {
-                FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
-                mImageCacheStatsTracker.onStagingAreaMiss();
-                try {
-                  return mFileCache.hasKey(key);
-                } catch (Exception exception) {
-                  return false;
-                }
-              }
+              return checkInStagingAreaAndFileCache(key);
             }
           },
           mReadExecutor);
@@ -125,6 +111,18 @@ public class BufferedDiskCache {
   }
 
   /**
+   * Performs disk cache check synchronously.
+   * @param key
+   * @return true if the key is found in disk cache else false
+   */
+  public boolean syncDiskCheck(final CacheKey key) {
+    if(containsSync(key)) {
+      return true;
+    }
+    return checkInStagingAreaAndFileCache(key);
+  }
+
+  /**
    * Performs key-value look up in disk cache. If value is not found in disk cache staging area
    * then disk cache read is scheduled on background thread. Any error manifests itself as
    * cache miss, i.e. the returned task resolves to null.
@@ -138,6 +136,30 @@ public class BufferedDiskCache {
       return foundPinnedImage(key, pinnedImage);
     }
     return getAsync(key, isCancelled);
+  }
+
+  /**
+   * Performs key-value loop up in staging area and file cache.
+   * Any error manifests itself as a miss, i.e. returns false.
+   * @param key
+   * @return true if the image is found in staging area or File cache, false if not found
+   */
+  private boolean checkInStagingAreaAndFileCache(final CacheKey key) {
+    EncodedImage result = mStagingArea.get(key);
+    if (result != null) {
+      result.close();
+      FLog.v(TAG, "Found image for %s in staging area", key.toString());
+      mImageCacheStatsTracker.onStagingAreaHit();
+      return true;
+    } else {
+      FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+      mImageCacheStatsTracker.onStagingAreaMiss();
+      try {
+        return mFileCache.hasKey(key);
+      } catch (Exception exception) {
+        return false;
+      }
+    }
   }
 
   private Task<EncodedImage> getAsync(final CacheKey key, final AtomicBoolean isCancelled) {
