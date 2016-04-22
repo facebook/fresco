@@ -16,6 +16,9 @@ android {
     }
 
     productFlavors {
+        // TO BUILD WITH THE LOCAL MODULES, UNCOMMENT THE "internal" FLAVOR AND COMMENT THE REST
+        // OTHERWISE A CLASH OCCURS DUE TO THEM TRYING TO CREATE TASKS OF THE SAME NAME
+
 //        internal
         mavenBasic
         mavenWithWebp

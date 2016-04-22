@@ -1,75 +1,132 @@
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:baselineAligned="false"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.facebook.demo.MainActivity" >
-  <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
-      android:orientation="vertical">
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/baseline_jpeg"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter" />
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/progressive_jpeg"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter" />
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/animated_gif"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter" />
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/data_webp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter" />
-  </LinearLayout>
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:fresco="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:baselineAligned="false"
+  android:orientation="horizontal"
+  android:paddingBottom="@dimen/activity_vertical_margin"
+  android:paddingLeft="@dimen/activity_horizontal_margin"
+  android:paddingRight="@dimen/activity_horizontal_margin"
+  android:paddingTop="@dimen/activity_vertical_margin"
+  tools:context="com.facebook.demo.MainActivity"
+  >
 
   <LinearLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:orientation="vertical">
-    <com.facebook.drawee.view.SimpleDraweeView
+    android:orientation="vertical"
+    >
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/baseline_jpeg"
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_baseline_jpeg"
+        style="@style/label"
+        />
+    </FrameLayout>
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/progressive_jpeg"
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_progressive_jpeg"
+        style="@style/label"
+        />
+    </FrameLayout>
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/animated_gif"
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_animated_gif"
+        style="@style/label"
+        />
+    </FrameLayout>
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/data_webp"
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_data_webp"
+        style="@style/label"
+        />
+    </FrameLayout>
+  </LinearLayout>
+
+  <View
+    android:layout_width="@dimen/activity_horizontal_margin"
+    android:layout_height="wrap_content"
+    />
+
+  <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    >
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/static_webp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter" />
-    <com.facebook.drawee.view.SimpleDraweeView
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_static_webp"
+        style="@style/label"
+        />
+    </FrameLayout>
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/alpha_webp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter" />
-    <com.facebook.drawee.view.SimpleDraweeView
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_alpha_webp"
+        style="@style/label"
+        />
+    </FrameLayout>
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/animated_webp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter"/>
-    <com.facebook.drawee.view.SimpleDraweeView
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_animated_webp"
+        style="@style/label"
+        />
+    </FrameLayout>
+
+    <FrameLayout style="@style/sample_layout">
+      <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/one_loop_animated_webp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        fresco:actualImageScaleType="fitCenter"/>
+        style="@style/drawee"
+        />
+
+      <TextView
+        android:text="@string/label_one_loop_animated_webp"
+        style="@style/label"
+        />
+    </FrameLayout>
   </LinearLayout>
 </LinearLayout>
