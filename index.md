@@ -13,7 +13,7 @@ Fresco's image pipeline will load images from the network, local storage, or loc
 <div class="featureBlock twoByGridBlock" markdown="1">
 ### Drawees
 
-Fresco's `Drawees` show a placeholder for you until the image has loaded and automatically show to the image when it arrives. When the image goes off-screen, it automatically releases its memory.
+Fresco's `Drawee` shows a placeholder for you until the image has loaded and then automatically shows the image when it arrives. When the image goes off-screen, it automatically releases its memory.
 </div>
 </div>
 
