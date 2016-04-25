@@ -22,7 +22,7 @@ In order to use it, the `dependencies` section of your `build.gradle` file needs
 ```groovy
 dependencies {
   // your project's other dependencies
-  compile: "com.facebook.fresco:drawee-volley:{{site.current_version}}+"
+  compile: "com.facebook.fresco:drawee-volley:{{site.current_version}}"
 }
 ```
 
