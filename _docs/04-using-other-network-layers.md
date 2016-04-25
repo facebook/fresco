@@ -13,23 +13,33 @@ By default, the image pipeline uses the [HttpURLConnection](https://developer.an
 
 [OkHttp](http://square.github.io/okhttp) is a popular open-source networking library. The image pipeline has a backend that uses OkHttp instead of the Android default.
 
-#####  OkHttp in Gradle
+####  OkHttp in Gradle
 
-In order to use it, the `dependencies` section of your `build.gradle` file needs to be changed. Do **not** use the Gradle dependencies given on the [download](index.html) page. Use these instead:
+In order to use it, the `dependencies` section of your `build.gradle` file needs to be changed. Along with the Gradle dependencies given on the [download](index.html) page, add **just one** of these:
+
+For OkHttp2:
 
 ```groovy
 dependencies {
   // your project's other dependencies
-  compile "com.facebook.fresco:fresco:{{site.current_version}}+"
   compile "com.facebook.fresco:imagepipeline-okhttp:{{site.current_version}}+"
 }
 ```
 
-##### OkHttp in Eclipse
+For OkHttp3:
 
-Eclipse users should depend on **both** the `fresco` and `imagepipeline-okhttp` directories in the `frescolib` tree as described in the [Eclipse instructions](index.html#eclipse-adt).
+```groovy
+dependencies {
+  // your project's other dependencies
+  compile "com.facebook.fresco:imagepipeline-okhttp3:{{site.current_version}}+"
+}
+```
 
-##### Configuring the image pipeline with OkHttp
+#### OkHttp in Eclipse
+
+Eclipse users should depend on **either** the `imagepipeline-okhttp` and `imagepipeline-okhttp3` directories in the `frescolib` tree as described in the [Eclipse instructions](index.html#eclipse-adt).
+
+#### Configuring the image pipeline with OkHttp
 
 You must also configure the image pipeline a little differently. Instead of using `ImagePipelineConfig.newBuilder`, use `OkHttpImagePipelineConfigFactory` instead:
 
@@ -44,7 +54,7 @@ ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
 Fresco.initialize(context, config);
 ```
 
-#### Handling sessions and cookies correctly
+### Handling sessions and cookies correctly
 
 The `OkHttpClient` you pass to Fresco in the above step should be set up with interceptors needed to handle authentications to your servers. See [this bug](https://github.com/facebook/fresco/issues/385) and the solutions outlined there for some problems that have occurred with cookies.
 
