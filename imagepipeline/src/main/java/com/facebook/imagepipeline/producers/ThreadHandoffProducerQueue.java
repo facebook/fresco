@@ -11,18 +11,20 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.Executor;
 
 public class ThreadHandoffProducerQueue {
   private boolean mQueueing = false;
-  private final ArrayList<Runnable> mRunnableList;
+  private final Deque<Runnable> mRunnableList;
   private final Executor mExecutor;
 
   public ThreadHandoffProducerQueue(Executor executor) {
     mExecutor = Preconditions.checkNotNull(executor);
-    mRunnableList = new ArrayList<>();
+    mRunnableList = new ArrayDeque<>();
   }
+
 
   public synchronized void addToQueueOrExecute(Runnable runnable) {
     if (mQueueing) {
@@ -42,13 +44,12 @@ public class ThreadHandoffProducerQueue {
   }
 
   private void execInQueue() {
-    for (Runnable runnable : mRunnableList) {
-      mExecutor.execute(runnable);
-    }
+    while (!mRunnableList.isEmpty())
+      mExecutor.execute(mRunnableList.pop());
     mRunnableList.clear();
   }
 
-  public void remove(Runnable runnable) {
+  public synchronized void remove(Runnable runnable) {
     mRunnableList.remove(runnable);
   }
 
