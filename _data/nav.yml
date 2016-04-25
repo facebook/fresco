@@ -1,17 +1,17 @@
 - title: Docs
-  href: /docs/
+  href: http://frescolib.org/docs/
   category: docs
 
 - title: Support
-  href: /support.html
+  href: http://frescolib.org/support.html
   category: support
 
 - title: Blog
-  href: /blog
+  href: http://frescolib.org/blog/
   category: posts
 
 - title: API
-  href: /javadoc/
+  href: http://frescolib.org/javadoc/
   category: apidocs
 
 - title: GitHub
