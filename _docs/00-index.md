@@ -12,11 +12,29 @@ Here's how to add Fresco to your Android project.
 
 Edit your `build.gradle` file. You must add the following line to the `dependencies` section:
 
-
 ```groovy
 dependencies {
   // your app's other dependencies
-  compile 'com.facebook.fresco:fresco:{{site.current_version}}+'
+  compile 'com.facebook.fresco:fresco:{{site.current_version}}'
+}
+```
+
+The following optional modules may also be added, depending on the needs of your app.
+
+```groovy
+dependencies {
+  // If your app supports Android versions before Ice Cream Sandwich (API level 14)
+  compile 'com.facebook.fresco:animated-base-support:{{site.current_version}}'
+
+  // For animated GIF support
+  compile 'com.facebook.fresco:animated-gif:{{site.current_version}}'
+
+  // For WebP support, including animated WebP
+  compile 'com.facebook.fresco:animated-webp:{{site.current_version}}'
+  compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
+
+  // For WebP support, without animations
+  compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
 }
 ```
 
@@ -29,7 +47,7 @@ When you expand it, it will create a directory called 'frescolib'. Note the loca
 1. From the File menu, choose Import.
 2. Expand Android, select "Existing Android Code into Workspace", and click Next.
 3. Click Browse, navigate to the frescolib directory, and click OK.
-4. Five projects should be added: drawee, fbcore, fresco, imagepipeline, and imagepipeline-okhttp. Make sure the first four are checked. Click Finish.
+4. A number of projects should be added. Make sure that at least the following are checked: `drawee`, `fbcore`, `fresco`, `imagepipeline`, `imagepipeline-base`. The others are optional depending on your app's needs similar to the breakdown above for Gradle.
 5. Right-click (Ctrl-click on Mac) on your project and choose Properties, then click Android.
 6. Click the Add button in the bottom right, select Fresco, and click OK, then click OK again.
 
