@@ -53,7 +53,7 @@ By default, Fresco does not write out all its logs. You need to [configure the i
 Set<RequestListener> requestListeners = new HashSet<>();
 requestListeners.add(new RequestLoggingListener());
 ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
-   . // other setters
+   // other setters
    .setRequestListeners(requestListeners)
    .build();
 Fresco.initialize(context, config);
