@@ -13,6 +13,18 @@ def getBintrayGpgPassword() {
     return hasProperty('bintrayGpgPassword') ? property('bintrayGpgPassword') : System.getenv('BINTRAY_GPG_PASSWORD')
 }
 
+def getMavenCentralUsername() {
+    return hasProperty('mavenCentralUsername') ? property('mavenCentralUsername') : System.getenv('MAVEN_CENTRAL_USERNAME')
+}
+
+def getMavenCentralPassword() {
+    return hasProperty('mavenCentralPassword') ? property('mavenCentralPassword') : System.getenv('MAVEN_CENTRAL_PASSWORD')
+}
+
+def shouldSyncWithMavenCentral() {
+    return hasProperty('syncWithMavenCentral') ? property('syncWithMavenCentral').toBoolean() : false
+}
+
 bintray {
     user = getBintrayUsername()
     key = getBintrayApiKey()
@@ -33,6 +45,12 @@ bintray {
             gpg {
                 sign = true
                 passphrase = getBintrayGpgPassword()
+            }
+            mavenCentralSync {
+                sync = shouldSyncWithMavenCentral()
+                user = getMavenCentralUsername()
+                password = getMavenCentralPassword()
+                close = '1' // If set to 0, you have to manually click release
             }
         }
     }
