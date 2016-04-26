@@ -11,27 +11,20 @@ package com.facebook.imagepipeline.core;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import java.util.concurrent.ScheduledExecutorService;
-
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Build;
+import android.support.v4.util.Pools;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.cache.disk.FileCache;
-import com.facebook.common.executors.DefaultSerialExecutorService;
-import com.facebook.common.executors.SerialExecutorService;
-import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.time.AwakeTimeSinceBootClock;
-import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
+import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
+import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 import com.facebook.imagepipeline.bitmaps.ArtBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
 import com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory;
@@ -53,7 +46,6 @@ import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
-import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 
 /**
  * Factory class for the image pipeline.
@@ -293,9 +285,11 @@ public class ImagePipelineFactory {
       boolean decodeMemoryFileEnabled,
       boolean webpSupportEnabled) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
           poolFactory.getBitmapPool(),
-          poolFactory.getFlexByteArrayPoolMaxNumThreads());
+          maxNumThreads,
+          new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
       if (decodeMemoryFileEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
         return new GingerbreadPurgeableDecoder(webpSupportEnabled);

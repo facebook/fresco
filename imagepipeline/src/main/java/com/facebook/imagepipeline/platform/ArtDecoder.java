@@ -11,6 +11,9 @@ package com.facebook.imagepipeline.platform;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,9 +29,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
-
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 /**
  * Bitmap decoder for ART VM (Lollipop and up).
@@ -55,9 +55,9 @@ public class ArtDecoder implements PlatformDecoder {
       (byte) JfifUtil.MARKER_FIRST_BYTE,
       (byte) JfifUtil.MARKER_EOI};
 
-  public ArtDecoder(BitmapPool bitmapPool, int maxNumThreads) {
+  public ArtDecoder(BitmapPool bitmapPool, int maxNumThreads, SynchronizedPool decodeBuffers) {
     mBitmapPool = bitmapPool;
-    mDecodeBuffers = new SynchronizedPool<>(maxNumThreads);
+    mDecodeBuffers = decodeBuffers;
     for (int i = 0; i < maxNumThreads; i++) {
       mDecodeBuffers.release(ByteBuffer.allocate(DECODE_BUFFER_SIZE));
     }
@@ -126,7 +126,7 @@ public class ArtDecoder implements PlatformDecoder {
     }
   }
 
-  private CloseableReference<Bitmap> decodeStaticImageFromStream(
+  protected CloseableReference<Bitmap> decodeStaticImageFromStream(
       InputStream inputStream,
       BitmapFactory.Options options) {
     Preconditions.checkNotNull(inputStream);
