@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.android.support:appcompat-v7:${APPCOMPAT_V7_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     compile "com.mcxiaoke.volley:library:${VOLLEY_VERSION}"
     compile "com.nostra13.universalimageloader:universal-image-loader:${UIL_VERSION}"
     compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
-    compile 'com.android.support:recyclerview-v7:21.+'
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     compile "com.googlecode.android-query:android-query:${AQUERY_VERSION}"
     compile "com.facebook.stetho:stetho-okhttp:${STETHO_VERSION}"
 
@@ -28,8 +28,8 @@ android {
 
     defaultConfig {
         applicationId "com.facebook.samples.comparison"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 

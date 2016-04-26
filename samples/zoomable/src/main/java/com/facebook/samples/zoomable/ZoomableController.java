@@ -25,7 +25,7 @@ public interface ZoomableController {
   /**
    * Listener interface.
    */
-  public interface Listener {
+  interface Listener {
 
     /**
      * Notifies the view that the transform changed.
@@ -64,6 +64,11 @@ public interface ZoomableController {
    * @return the current scale factor
    */
   float getScaleFactor();
+
+  /**
+   * Returns true if the zoomable transform is identity matrix, and the controller is idle.
+   */
+  boolean isIdentity();
 
   /**
    * Gets the current transform.

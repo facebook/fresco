@@ -9,6 +9,8 @@
 
 package com.facebook.cache.common;
 
+import android.net.Uri;
+
 /**
  * Strongly typed cache key to be used instead of {@link Object}.
  *
@@ -24,4 +26,11 @@ public interface CacheKey {
 
   /** This method must be implemented with accordance to the {@link #equals} method. */
   int hashCode();
+
+  /**
+   * Returns true if this key was constructed from this {@link Uri}.
+   *
+   * Used for cases like deleting all keys for a given uri.
+   */
+  boolean containsUri(Uri uri);
 }

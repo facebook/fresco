@@ -1,0 +1,36 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:baselineAligned="false"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.facebook.demo.MainActivity">
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/animated_gif"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      fresco:actualImageScaleType="fitCenter"/>
+  <ToggleButton
+      android:id="@+id/toggle_gif"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="ToggleButton"/>
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/animated_webp"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      fresco:actualImageScaleType="fitCenter"/>
+  <ToggleButton
+      android:id="@+id/toggle_webp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="ToggleButton"/>
+</LinearLayout>

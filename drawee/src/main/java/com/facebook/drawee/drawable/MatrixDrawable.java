@@ -43,6 +43,14 @@ public class MatrixDrawable extends ForwardingDrawable {
     mMatrix = matrix;
   }
 
+  @Override
+  public Drawable setCurrent(Drawable newDelegate) {
+    final Drawable previousDelegate = super.setCurrent(newDelegate);
+    configureBounds();
+
+    return previousDelegate;
+  }
+
   /**
    * Gets the current matrix.
    * @return matrix

@@ -159,6 +159,33 @@ public class StagingArea {
   }
 
   /**
+   * Determine if an valid entry for the key exists in the staging area.
+   */
+  public synchronized boolean containsKey(CacheKey key) {
+    Preconditions.checkNotNull(key);
+    if (!mMap.containsKey(key)) {
+      return false;
+    }
+    EncodedImage storedEncodedImage = mMap.get(key);
+    synchronized (storedEncodedImage) {
+      if (!EncodedImage.isValid(storedEncodedImage)) {
+        // Reference is not valid, this means that someone cleared reference while it was still in
+        // use. Log error
+        // TODO: 3697790
+        mMap.remove(key);
+        FLog.w(
+            TAG,
+            "Found closed reference %d for key %s (%d)",
+            System.identityHashCode(storedEncodedImage),
+            key.toString(),
+            System.identityHashCode(key));
+        return false;
+      }
+      return true;
+    }
+  }
+
+  /**
    * Simple 'debug' logging of stats.
    */
   private synchronized void logStats() {

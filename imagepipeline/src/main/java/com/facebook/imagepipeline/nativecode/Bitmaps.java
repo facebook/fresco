@@ -17,6 +17,8 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageutils.BitmapUtil;
 
+import java.nio.ByteBuffer;
+
 /**
  * Utility methods for handling Bitmaps.
  */
@@ -40,6 +42,15 @@ public class Bitmaps {
     nativePinBitmap(bitmap);
   }
 
+  public static ByteBuffer getByteBuffer(Bitmap bitmap, long start, long size) {
+    Preconditions.checkNotNull(bitmap);
+    return nativeGetByteBuffer(bitmap, start, size);
+  }
+
+  public static void releaseByteBuffer(Bitmap bitmap) {
+    Preconditions.checkNotNull(bitmap);
+    nativeReleaseByteBuffer(bitmap);
+  }
 
   /**
    * This blits the pixel data from src to dest.
@@ -86,7 +97,13 @@ public class Bitmaps {
   }
 
   @DoNotStrip
+  private static native ByteBuffer nativeGetByteBuffer(Bitmap bitmap, long start, long size);
+
+  @DoNotStrip
   private static native void nativePinBitmap(Bitmap bitmap);
+
+  @DoNotStrip
+  private static native void nativeReleaseByteBuffer(Bitmap bitmap);
 
   @DoNotStrip
   private static native void nativeCopyBitmap(

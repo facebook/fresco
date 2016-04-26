@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
@@ -122,6 +124,7 @@ public class StatFsHelper {
    * @param storageType Internal or external storage type
    * @return available space in bytes, 0 if no information is available
    */
+  @SuppressLint("DeprecatedMethod")
   public long getAvailableStorageSpace(StorageType storageType) {
     ensureInitialized();
 
@@ -129,8 +132,14 @@ public class StatFsHelper {
 
     StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
     if (statFS != null) {
-      long blockSize = statFS.getBlockSize();
-      long availableBlocks = statFS.getAvailableBlocks();
+      long blockSize, availableBlocks;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFS.getBlockSizeLong();
+        availableBlocks = statFS.getAvailableBlocksLong();
+      } else {
+        blockSize = statFS.getBlockSize();
+        availableBlocks = statFS.getAvailableBlocks();
+      }
       return blockSize * availableBlocks;
     }
     return 0;
@@ -147,7 +156,7 @@ public class StatFsHelper {
     // with a frequency of once in RESTAT_INTERVAL_MS
     if (lock.tryLock()) {
       try {
-        if ((SystemClock.elapsedRealtime() - mLastRestatTime) > RESTAT_INTERVAL_MS) {
+        if ((SystemClock.uptimeMillis() - mLastRestatTime) > RESTAT_INTERVAL_MS) {
           updateStats();
         }
       } finally {
@@ -184,7 +193,7 @@ public class StatFsHelper {
   private void updateStats() {
     mInternalStatFs = updateStatsHelper(mInternalStatFs, mInternalPath);
     mExternalStatFs = updateStatsHelper(mExternalStatFs, mExternalPath);
-    mLastRestatTime = SystemClock.elapsedRealtime();
+    mLastRestatTime = SystemClock.uptimeMillis();
   }
 
   /**

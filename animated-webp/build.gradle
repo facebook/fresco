@@ -1,0 +1,153 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+apply plugin: 'de.undercouch.download'
+import de.undercouch.gradle.tasks.download.Download
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
+    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compile project(':fbcore')
+    compile project(':imagepipeline-base')
+    compile project(':animated-base')
+
+    testCompile project(':imagepipeline-base-test')
+    testCompile project(':imagepipeline-test')
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
+    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+}
+apply from: rootProject.file('release.gradle')
+
+// We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
+// We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
+
+def nativeDepsDir = new File("${projectDir}/nativedeps")
+def downloadsDir = new File("${nativeDepsDir}/downloads")
+def mergeDir = new File("${nativeDepsDir}/merge")
+
+task createNativeDepsDirectories {
+    nativeDepsDir.mkdirs()
+    downloadsDir.mkdirs()
+    mergeDir.mkdirs()
+}
+
+task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
+    src 'https://github.com/webmproject/libwebp/archive/v0.4.3.tar.gz'
+    onlyIfNewer true
+    overwrite false
+    dest downloadsDir
+}
+
+task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
+    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.3.tar.gz"))
+    into "${downloadsDir}/libwebp"
+}
+
+task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
+    from "${unpackLibwebp.destinationDir}/libwebp-0.4.3"
+    from 'src/main/jni/third-party/libwebp-0.4.3'
+    include('src/**/*.c', 'src/**/*.h', '*.mk')
+    into "${mergeDir}/libwebp-0.4.3"
+}
+
+task fetchNativeDeps(dependsOn: [copyLibwebp]) {
+}
+
+task removeNativeDeps(type: Delete) {
+    delete nativeDepsDir
+}
+allclean.dependsOn removeNativeDeps
+
+def getNdkBuildName() {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        return "ndk-build.cmd"
+    } else {
+        return "ndk-build"
+    }
+}
+
+def getNdkBuildFullPath() {
+    // we allow to provide full path to ndk-build tool
+    if (hasProperty('ndk.command')) {
+        return property('ndk.command')
+    }
+    // or just a path to the containing directiry
+    if (hasProperty('ndk.path')) {
+        def path = property('ndk.path')
+        if (!path.endsWith(File.separator)) {
+            path += File.separator
+        }
+        return path + getNdkBuildName()
+    }
+    // if none of above is provided, we assume ndk-build is already in $PATH
+    return getNdkBuildName()
+}
+
+def makeNdkTasks(String name, Object[] deps) {
+    task "ndk_build_$name"(dependsOn: deps, type: Exec) {
+        inputs.file("src/main/jni/$name")
+        outputs.dir("$buildDir/$name")
+        commandLine getNdkBuildFullPath(),
+            'NDK_PROJECT_PATH=null',
+            'NDK_APPLICATION_MK=../Application.mk',
+            'NDK_OUT=' + temporaryDir,
+            "NDK_LIBS_OUT=$buildDir/$name",
+            '-C', file("src/main/jni/$name").absolutePath,
+            '--jobs', Runtime.getRuntime().availableProcessors()
+    }
+
+    task "ndk_clean_$name"(type: Exec) {
+        ignoreExitValue true
+        commandLine getNdkBuildFullPath(),
+            'NDK_PROJECT_PATH=null',
+            'NDK_APPLICATION_MK=../Application.mk',
+            'NDK_OUT=' + temporaryDir,
+            "NDK_LIBS_OUT=$buildDir/$name",
+            '-C', file("src/main/jni/$name").absolutePath,
+            'clean'
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn "ndk_build_$name"
+    }
+    clean.dependsOn "ndk_clean_$name"
+}
+
+
+android {
+    def ndkLibs = [['webpimage', [copyLibwebp]]]
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
+        }
+    }
+    ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)

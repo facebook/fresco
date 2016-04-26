@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compile project(':drawee-backends:drawee-pipeline')
+    // Include this in order to see static Webp
+    compile project(':static-webp')
+    // Include this in order to see animated gif
+    compile project(':animated-gif')
+    // Include this in order to see animated webp
+    compile project(':animated-webp')
+    // Add this if you want to support gingerbread
+    compile project(':animated-base-support')
+}
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.facebook.samples.demo"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "${VERSION_NAME}"
+
+        testApplicationId "com.facebook.samples.demo.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro'
+        }
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            universalApk false
+        }
+    }
+}

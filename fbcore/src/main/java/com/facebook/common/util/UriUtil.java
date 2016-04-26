@@ -12,6 +12,8 @@ package com.facebook.common.util;
 import javax.annotation.Nullable;
 
 import android.net.Uri;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 
 public class UriUtil {
 
@@ -30,6 +32,12 @@ public class UriUtil {
    * Content URI scheme for URIs
    */
   public static final String LOCAL_CONTENT_SCHEME = "content";
+
+  /**
+   * URI prefix (including scheme) for contact photos
+   */
+  private static final String LOCAL_CONTACT_IMAGE_PREFIX =
+      Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo").getPath();
 
   /**
    * Asset scheme for URIs
@@ -76,6 +84,28 @@ public class UriUtil {
   public static boolean isLocalContentUri(@Nullable Uri uri) {
     final String scheme = getSchemeOrNull(uri);
     return LOCAL_CONTENT_SCHEME.equals(scheme);
+  }
+
+  /**
+   * Checks if the given URI is a general Contact URI, and not a specific display photo.
+   * @param uri the URI to check
+   * @return true if the uri is a Contact URI, and is not already specifying a display photo.
+   */
+  public static boolean isLocalContactUri(Uri uri) {
+    return isLocalContentUri(uri)
+        && ContactsContract.AUTHORITY.equals(uri.getAuthority())
+        && !uri.getPath().startsWith(LOCAL_CONTACT_IMAGE_PREFIX);
+  }
+
+  /**
+   * Checks if the given URI is for a photo from the device's local media store.
+   * @param uri the URI to check
+   * @return true if the URI points to a media store photo
+   */
+  public static boolean isLocalCameraUri(Uri uri) {
+    String uriString = uri.toString();
+    return uriString.startsWith(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString())
+        || uriString.startsWith(MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
   }
 
   /**

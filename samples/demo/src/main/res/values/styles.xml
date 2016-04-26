@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="sample_layout">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">0dp</item>
+    <item name="android:layout_weight">1</item>
+  </style>
+
+  <style name="drawee">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="actualImageScaleType">fitCenter</item>
+    <item name="failureImage">@color/failure</item>
+  </style>
+
+  <style name="label">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">bottom</item>
+    <item name="android:padding">2dp</item>
+    <item name="android:background">#99000000</item>
+    <item name="android:textColor">#cccccc</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+</resources>

@@ -20,7 +20,7 @@ Use -c armeabi-v7a for most phones. Use -c armeabi for ARM v5-6 phones, or
 
 To select a subset of the libraries, use the -s option with a
 space-separated list. Available options are fresco, fresco-okhttp,
-glide, volley, drawee-volley, uil, and picasso.
+glide, volley, drawee-volley, uil, picasso, and aquery.
 
 To see the comparison for only network or local images, use -d network or -d local.
 
@@ -56,7 +56,8 @@ TESTS = (
     'picasso',
     'uil',
     'volley',
-    'drawee-volley'
+    'drawee-volley',
+    'aquery',
 )
 
 TEST_SOURCES = (

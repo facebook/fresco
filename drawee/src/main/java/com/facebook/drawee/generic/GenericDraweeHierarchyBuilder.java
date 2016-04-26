@@ -28,8 +28,11 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 /**
  * Class to construct a {@link GenericDraweeHierarchy}.
  *
- * <p/> This class does not do deep copies of most of the input parameters. There should be one
- * instance of the hierarchy per DraweeView, so that each hierarchy has a unique set of drawables.
+ * <p/> Drawables must not be reused by multiple hierarchies. Each hierarchy needs to have its own
+ * drawable instances. Since this builder does not do deep copies of the input parameters, it is
+ * the caller's responsibility to pass a different drawable instances for each hierarchy built.
+ * Likewise, hierarchies must not be reused by multiple views. Each view needs to have its own
+ * instance of a hierarchy. The caller is responsible for building a new hierarchy for each view.
  */
 public class GenericDraweeHierarchyBuilder {
 
@@ -40,6 +43,8 @@ public class GenericDraweeHierarchyBuilder {
   private Resources mResources;
 
   private int mFadeDuration;
+
+  private float mDesiredAspectRatio;
 
   private Drawable mPlaceholderImage;
   private @Nullable ScaleType mPlaceholderImageScaleType;
@@ -79,33 +84,35 @@ public class GenericDraweeHierarchyBuilder {
   private void init() {
     mFadeDuration = DEFAULT_FADE_DURATION;
 
+    mDesiredAspectRatio = 0;
+
     mPlaceholderImage = null;
-    mPlaceholderImageScaleType = null;
+    mPlaceholderImageScaleType = DEFAULT_SCALE_TYPE;
 
     mRetryImage = null;
-    mRetryImageScaleType = null;
+    mRetryImageScaleType = DEFAULT_SCALE_TYPE;
 
     mFailureImage = null;
-    mFailureImageScaleType = null;
+    mFailureImageScaleType = DEFAULT_SCALE_TYPE;
 
     mProgressBarImage = null;
-    mProgressBarImageScaleType = null;
+    mProgressBarImageScaleType = DEFAULT_SCALE_TYPE;
 
     mActualImageScaleType = DEFAULT_ACTUAL_IMAGE_SCALE_TYPE;
     mActualImageMatrix = null;
     mActualImageFocusPoint = null;
+    mActualImageColorFilter = null;
 
     mBackgrounds = null;
     mOverlays = null;
     mPressedStateOverlay = null;
 
     mRoundingParams = null;
-
-    mActualImageColorFilter = null;
   }
 
   /**
    * Resets this builder to its initial values making it reusable.
+   *
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder reset() {
@@ -115,7 +122,8 @@ public class GenericDraweeHierarchyBuilder {
 
   /**
    * Gets resources.
-   * @return
+   *
+   * @return resources
    */
   public Resources getResources() {
     return mResources;
@@ -123,7 +131,9 @@ public class GenericDraweeHierarchyBuilder {
 
   /**
    * Sets the duration of the fade animation.
-   * If not set, default value of 300ms will be used.
+   *
+   * If not set, the default value of 300ms will be used.
+   *
    * @param fadeDuration duration in milliseconds
    * @return modified instance of this builder
    */
@@ -132,23 +142,76 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
+  /**
+   * Gets the duration of the fade animation.
+   */
   public int getFadeDuration() {
     return mFadeDuration;
   }
 
   /**
-   * Sets the placeholder image, with default scale type CENTER_INSIDE. If no placeholder is set,
-   * a transparent ColorDrawable will be used.
-   * @param placeholderDrawable drawable to be used as placeholder image
+   * Sets the desired aspect ratio.
+   *
+   * Note, the hierarchy itself cannot enforce the aspect ratio.
+   * This is merely a suggestion to the view if it supports it.
+   *
+   * @param desiredAspectRatio the desired aspect ratio
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setPlaceholderImage(Drawable placeholderDrawable) {
-    return setPlaceholderImage(placeholderDrawable, DEFAULT_SCALE_TYPE);
+  public GenericDraweeHierarchyBuilder setDesiredAspectRatio(float desiredAspectRatio) {
+    mDesiredAspectRatio = desiredAspectRatio;
+    return this;
   }
 
   /**
-   * Sets the placeholder image and scale type. If no placeholder is set, a transparent
-   * ColorDrawable will be used.
+   * Gets the desired aspect ratio.
+   */
+  public float getDesiredAspectRatio() {
+    return mDesiredAspectRatio;
+  }
+
+  /**
+   * Sets the placeholder image.
+   *
+   * @param placeholderDrawable drawable to be used as placeholder image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setPlaceholderImage(@Nullable Drawable placeholderDrawable) {
+    mPlaceholderImage = placeholderDrawable;
+    return this;
+  }
+
+  /**
+   * Gets the placeholder image.
+   */
+  public @Nullable Drawable getPlaceholderImage() {
+    return mPlaceholderImage;
+  }
+
+  /**
+   * Sets the placeholder image scale type.
+   *
+   * If not set, the default value CENTER_INSIDE will be used.
+   *
+   * @param placeholderImageScaleType scale type for the placeholder image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setPlaceholderImageScaleType(
+      @Nullable ScaleType placeholderImageScaleType) {
+    mPlaceholderImageScaleType = placeholderImageScaleType;
+    return this;
+  }
+
+  /**
+   * Gets the placeholder image scale type.
+   */
+  public @Nullable ScaleType getPlaceholderImageScaleType() {
+    return mPlaceholderImageScaleType;
+  }
+
+  /**
+   * Sets the placeholder image and its scale type.
+   *
    * @param placeholderDrawable drawable to be used as placeholder image
    * @param placeholderImageScaleType scale type for the placeholder image
    * @return modified instance of this builder
@@ -161,253 +224,364 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
-  public Drawable getPlaceholderImage() {
-    return mPlaceholderImage;
-  }
-
-  public @Nullable ScaleType getPlaceholderImageScaleType() {
-    return mPlaceholderImageScaleType;
-  }
-
   /**
-   * Sets the retry image, with default scale type CENTER_INSIDE.
+   * Sets the retry image.
+   *
    * @param retryDrawable drawable to be used as retry image
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setRetryImage(Drawable retryDrawable) {
-    return setRetryImage(retryDrawable, DEFAULT_SCALE_TYPE);
+  public GenericDraweeHierarchyBuilder setRetryImage(@Nullable Drawable retryDrawable) {
+    mRetryImage = retryDrawable;
+    return this;
   }
 
   /**
-   * Sets the retry image and scale type.
+   * Gets the retry image.
+   */
+  public @Nullable Drawable getRetryImage() {
+    return mRetryImage;
+  }
+
+  /**
+   * Sets the retry image scale type.
+   *
+   * If not set, the default value CENTER_INSIDE will be used.
+   *
+   * @param retryImageScaleType scale type for the retry image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setRetryImageScaleType(
+      @Nullable ScaleType retryImageScaleType) {
+    mRetryImageScaleType = retryImageScaleType;
+    return this;
+  }
+
+  /**
+   * Gets the retry image scale type.
+   */
+  public @Nullable ScaleType getRetryImageScaleType() {
+    return mRetryImageScaleType;
+  }
+
+  /**
+   * Sets the retry image and its scale type.
+   *
    * @param retryDrawable drawable to be used as retry image
    * @param retryImageScaleType scale type for the retry image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setRetryImage(
       Drawable retryDrawable,
-      ScaleType retryImageScaleType) {
+      @Nullable ScaleType retryImageScaleType) {
     mRetryImage = retryDrawable;
     mRetryImageScaleType = retryImageScaleType;
     return this;
   }
 
-  public Drawable getRetryImage() {
-    return mRetryImage;
-  }
-
-  public ScaleType getRetryImageScaleType() {
-    return mRetryImageScaleType;
-  }
-
   /**
-   * Sets the failure image, with default scale type CENTER_INSIDE.
+   * Sets the failure image.
+   *
    * @param failureDrawable drawable to be used as failure image
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setFailureImage(Drawable failureDrawable) {
-    return setFailureImage(failureDrawable, DEFAULT_SCALE_TYPE);
+  public GenericDraweeHierarchyBuilder setFailureImage(@Nullable Drawable failureDrawable) {
+    mFailureImage = failureDrawable;
+    return this;
   }
 
   /**
-   * Sets the failure image, and scale type.
+   * Gets the failure image.
+   */
+  public @Nullable Drawable getFailureImage() {
+    return mFailureImage;
+  }
+
+  /**
+   * Sets the failure image scale type.
+   *
+   * If not set, the default value CENTER_INSIDE will be used.
+   *
+   * @param failureImageScaleType scale type for the failure image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setFailureImageScaleType(
+      @Nullable ScaleType failureImageScaleType) {
+    mFailureImageScaleType = failureImageScaleType;
+    return this;
+  }
+
+  /**
+   * Gets the failure image scale type.
+   */
+  public @Nullable ScaleType getFailureImageScaleType() {
+    return mFailureImageScaleType;
+  }
+
+  /**
+   * Sets the failure image and its scale type.
+   *
    * @param failureDrawable drawable to be used as failure image
    * @param failureImageScaleType scale type for the failure image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setFailureImage(
       Drawable failureDrawable,
-      ScaleType failureImageScaleType) {
+      @Nullable ScaleType failureImageScaleType) {
     mFailureImage = failureDrawable;
     mFailureImageScaleType = failureImageScaleType;
     return this;
   }
 
-  public Drawable getFailureImage() {
-    return mFailureImage;
-  }
-
-  public ScaleType getFailureImageScaleType() {
-    return mFailureImageScaleType;
+  /**
+   * Sets the progress bar image.
+   *
+   * @param progressBarDrawable drawable to be used as progress bar image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setProgressBarImage(@Nullable Drawable progressBarDrawable) {
+    mProgressBarImage = progressBarDrawable;
+    return this;
   }
 
   /**
-   * Sets the progressBar image, with default scale type CENTER_INSIDE.
-   * @param progressBarImage drawable to be used as progressBar image
-   * @return modified instance of this builder
+   * Gets the progress bar image.
    */
-  public GenericDraweeHierarchyBuilder setProgressBarImage(Drawable progressBarImage) {
-    return setProgressBarImage(progressBarImage, DEFAULT_SCALE_TYPE);
+  public @Nullable Drawable getProgressBarImage() {
+    return mProgressBarImage;
   }
 
   /**
-   * Sets the progressBar image, and scale type.
-   * @param progressBarImage drawable to be used as progressBar image
-   * @param progressBarImageScaleType scale type for the progressBar image
+   * Sets the progress bar image scale type.
+   *
+   * If not set, the default value CENTER_INSIDE will be used.
+   *
+   * @param progressBarImageScaleType scale type for the progress bar image
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setProgressBarImage(
-      Drawable progressBarImage,
-      ScaleType progressBarImageScaleType) {
-    mProgressBarImage = progressBarImage;
+  public GenericDraweeHierarchyBuilder setProgressBarImageScaleType(
+      @Nullable ScaleType progressBarImageScaleType) {
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
   }
 
-  public Drawable getProgressBarImage() {
-    return mProgressBarImage;
-  }
-
-  public ScaleType getProgressBarImageScaleType() {
+  /**
+   * Gets the progress bar image scale type.
+   */
+  public @Nullable ScaleType getProgressBarImageScaleType() {
     return mProgressBarImageScaleType;
   }
 
   /**
-   * Sets the scale type, and removes the transformation matrix, for the actual image. If scale
-   * type is not set, and nor is a transformation matrix, then the actual image will be drawn
-   * with scale type CENTER_CROP.
+   * Sets the progress bar image and its scale type.
+   *
+   * @param progressBarDrawable drawable to be used as progress bar image
+   * @param progressBarImageScaleType scale type for the progress bar image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setProgressBarImage(
+      Drawable progressBarDrawable,
+      @Nullable ScaleType progressBarImageScaleType) {
+    mProgressBarImage = progressBarDrawable;
+    mProgressBarImageScaleType = progressBarImageScaleType;
+    return this;
+  }
+
+  /**
+   * Sets the scale type for the actual image.
+   *
+   * If not set, the default value CENTER_CROP will be used.
+   *
    * @param actualImageScaleType scale type for the actual image
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setActualImageScaleType(ScaleType actualImageScaleType) {
+  public GenericDraweeHierarchyBuilder setActualImageScaleType(
+      @Nullable ScaleType actualImageScaleType) {
     mActualImageScaleType = actualImageScaleType;
     mActualImageMatrix = null;
     return this;
   }
 
-  public ScaleType getActualImageScaleType() {
+  /**
+   * Gets the scale type for the actual image.
+   */
+  public @Nullable ScaleType getActualImageScaleType() {
     return mActualImageScaleType;
   }
 
   /**
-   * Sets the transformation matrix, and removes the scale type, for the actual image. If matrix
-   * is not set, then the image will be drawn without a matrix being applied to it.
+   * Sets the transformation matrix, and removes the scale type, for the actual image.
+   *
    * @param actualImageMatrix matrix for the actual image
    * @return modified instance of this builder
-   * @deprecated this is likely not something you want
+   *
+   * @deprecated implement and set a custom {@link ScaleType} instead.
    */
   @Deprecated
-  public GenericDraweeHierarchyBuilder setActualImageMatrix(Matrix actualImageMatrix) {
+  public GenericDraweeHierarchyBuilder setActualImageMatrix(@Nullable Matrix actualImageMatrix) {
     mActualImageMatrix = actualImageMatrix;
     mActualImageScaleType = null;
     return this;
   }
 
-  public Matrix getActualImageMatrix() {
+  /**
+   * Gets the matrix for the actual image.
+   */
+  public @Nullable Matrix getActualImageMatrix() {
     return mActualImageMatrix;
   }
 
   /**
    * Sets the focus point for the actual image.
-   * If scale type FOCUS_CROP is used, focus point will attempted to be centered within a view.
-   * Each coordinate is a real number in [0,1] range, in the coordinate system where top-left
+   *
+   * If a focus point aware scale type is used (e.g. FOCUS_CROP), the focus point of the image
+   * will be attempted to be centered within a view.
+   * Each coordinate is a real number in [0, 1] range, in the coordinate system where top-left
    * corner of the image corresponds to (0, 0) and the bottom-right corner corresponds to (1, 1).
+   *
    * @param focusPoint focus point of the image
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setActualImageFocusPoint(PointF focusPoint) {
+  public GenericDraweeHierarchyBuilder setActualImageFocusPoint(@Nullable PointF focusPoint) {
     mActualImageFocusPoint = focusPoint;
     return this;
   }
 
-  public PointF getActualImageFocusPoint() {
+  /**
+   * Gets the focus point for the actual image.
+   */
+  public @Nullable PointF getActualImageFocusPoint() {
     return mActualImageFocusPoint;
   }
 
   /**
-   * Sets the color filter.
+   * Sets the color filter for the actual image.
    *
    * @param colorFilter color filter to be set
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setActualImageColorFilter(ColorFilter colorFilter) {
+  public GenericDraweeHierarchyBuilder setActualImageColorFilter(@Nullable ColorFilter colorFilter) {
     mActualImageColorFilter = colorFilter;
     return this;
   }
 
-  public ColorFilter getActualImageColorFilter() {
+  /**
+   * Gets the color filter for the actual image.
+   */
+  public @Nullable ColorFilter getActualImageColorFilter() {
     return mActualImageColorFilter;
   }
 
   /**
    * Sets the backgrounds.
+   *
    * Backgrounds are drawn in list order before the rest of the hierarchy and overlays. The
    * first background will be drawn at the bottom.
+   *
    * @param backgrounds background drawables
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setBackgrounds(List<Drawable> backgrounds) {
+  public GenericDraweeHierarchyBuilder setBackgrounds(@Nullable List<Drawable> backgrounds) {
     mBackgrounds = backgrounds;
     return this;
   }
 
   /**
    * Sets a single background.
+   *
    * @param background background drawable
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setBackground(Drawable background) {
-    mBackgrounds = Arrays.asList(background);
+  public GenericDraweeHierarchyBuilder setBackground(@Nullable Drawable background) {
+    if (background == null) {
+      mBackgrounds = null;
+    } else {
+      mBackgrounds = Arrays.asList(background);
+    }
     return this;
   }
 
-  public List<Drawable> getBackgrounds() {
+  /**
+   * Gets the backgrounds.
+   */
+  public @Nullable List<Drawable> getBackgrounds() {
     return mBackgrounds;
   }
 
   /**
    * Sets the overlays.
+   *
    * Overlays are drawn in list order after the backgrounds and the rest of the hierarchy. The
    * last overlay will be drawn at the top.
+   *
    * @param overlays overlay drawables
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setOverlays(List<Drawable> overlays) {
+  public GenericDraweeHierarchyBuilder setOverlays(@Nullable List<Drawable> overlays) {
     mOverlays = overlays;
     return this;
   }
 
   /**
    * Sets a single overlay.
+   *
    * @param overlay overlay drawable
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setOverlay(Drawable overlay) {
-    mOverlays = Arrays.asList(overlay);
+  public GenericDraweeHierarchyBuilder setOverlay(@Nullable Drawable overlay) {
+    if (overlay == null) {
+      mOverlays = null;
+    } else {
+      mOverlays = Arrays.asList(overlay);
+    }
     return this;
   }
 
-  public List<Drawable> getOverlays() {
+  /**
+   * Gets the overlays.
+   */
+  public @Nullable List<Drawable> getOverlays() {
     return mOverlays;
   }
 
   /**
-   * Sets Overlay for pressed state
+   * Sets the overlay for pressed state.
+   *
    * @param drawable for pressed state
    * @return
    */
-  public GenericDraweeHierarchyBuilder setPressedStateOverlay(Drawable drawable) {
-    StateListDrawable stateListDrawable = new StateListDrawable();
-    stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawable);
-    mPressedStateOverlay = stateListDrawable;
+  public GenericDraweeHierarchyBuilder setPressedStateOverlay(@Nullable Drawable drawable) {
+    if (drawable == null) {
+      mPressedStateOverlay = null;
+    } else {
+      StateListDrawable stateListDrawable = new StateListDrawable();
+      stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, drawable);
+      mPressedStateOverlay = stateListDrawable;
+    }
     return this;
   }
 
-  public Drawable getPressedStateOverlay() {
+  /**
+   * Gets the overlay for pressed state.
+   */
+  public @Nullable Drawable getPressedStateOverlay() {
     return mPressedStateOverlay;
   }
 
   /**
-   * Sets rounding params.
+   * Sets the rounding params.
    *
    * @param roundingParams rounding params to be set
    * @return modified instance of this builder
    */
-  public GenericDraweeHierarchyBuilder setRoundingParams(RoundingParams roundingParams) {
+  public GenericDraweeHierarchyBuilder setRoundingParams(@Nullable RoundingParams roundingParams) {
     mRoundingParams = roundingParams;
     return this;
   }
 
+  /**
+   * Gets the rounding params.
+   */
+  @Nullable
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
   }
@@ -426,6 +600,9 @@ public class GenericDraweeHierarchyBuilder {
     }
   }
 
+  /**
+   * Builds the hierarchy.
+   */
   public GenericDraweeHierarchy build() {
     validate();
     return new GenericDraweeHierarchy(this);

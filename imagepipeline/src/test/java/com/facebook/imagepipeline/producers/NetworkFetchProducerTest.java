@@ -123,7 +123,7 @@ public class NetworkFetchProducerTest {
   @Test(timeout = 5000)
   public void testNoIntermediateResults() throws Exception {
     long currentTime = 86400l;
-    when(SystemClock.elapsedRealtime()).thenReturn(currentTime);
+    when(SystemClock.uptimeMillis()).thenReturn(currentTime);
     NetworkFetcher.Callback callback = performFetch();
 
     when(mNetworkFetcher.shouldPropagate(any(FetchState.class))).thenReturn(false);
@@ -161,7 +161,7 @@ public class NetworkFetchProducerTest {
   @Test(timeout = 5000)
   public void testDownloadHandler() throws Exception {
     long currentTime = 86400l;
-    when(SystemClock.elapsedRealtime()).thenReturn(currentTime);
+    when(SystemClock.uptimeMillis()).thenReturn(currentTime);
     NetworkFetcher.Callback callback = performFetch();
 
     when(mNetworkFetcher.shouldPropagate(any(FetchState.class))).thenReturn(true);
@@ -196,7 +196,7 @@ public class NetworkFetchProducerTest {
 
     // Read another 1024 bytes - this time bump timer. Consumer should be notified
     currentTime += NetworkFetchProducer.TIME_BETWEEN_PARTIAL_RESULTS_MS;
-    when(SystemClock.elapsedRealtime()).thenReturn(currentTime);
+    when(SystemClock.uptimeMillis()).thenReturn(currentTime);
     inputStream.increaseBytesToRead(1024);
     inputStream.waitUntilReadingThreadBlocked();
     verify(mProducerListener, times(2)).onProducerEvent(

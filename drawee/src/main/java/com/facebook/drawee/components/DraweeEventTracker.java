@@ -40,7 +40,10 @@ public class DraweeEventTracker {
     ON_DRAWABLE_SHOW,
     ON_DRAWABLE_HIDE,
     ON_ACTIVITY_START,
-    ON_ACTIVITY_STOP
+    ON_ACTIVITY_STOP,
+    ON_RUN_CLEAR_CONTROLLER,
+    ON_SCHEDULE_CLEAR_CONTROLLER,
+    ON_SAME_CONTROLLER_SKIPPED
   }
 
   private final Queue<Event> mEventQueue = new ArrayBlockingQueue<Event>(MAX_EVENTS_TO_TRACK);

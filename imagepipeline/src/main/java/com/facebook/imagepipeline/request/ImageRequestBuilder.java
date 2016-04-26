@@ -37,6 +37,7 @@ public class ImageRequestBuilder {
   private boolean mLocalThumbnailPreviewsEnabled = false;
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
+  private boolean mDiskCacheEnabled = true;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -206,14 +207,19 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** Returns whether the use of local thumbnails for previews is enabled */
+  /** Returns whether the use of local thumbnails for previews is enabled. */
   public boolean isLocalThumbnailPreviewsEnabled() {
     return mLocalThumbnailPreviewsEnabled;
   }
 
-  /** Returns whether the use of the disk cache is enabled */
+  /** Disables disk cache for this request, regardless where the image will come from. */
+  public void disableDiskCache() {
+    mDiskCacheEnabled = false;
+  }
+
+  /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
   public boolean isDiskCacheEnabled() {
-    return UriUtil.isNetworkUri(mSourceUri);
+    return mDiskCacheEnabled && UriUtil.isNetworkUri(mSourceUri);
   }
 
   /**
@@ -226,7 +232,7 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** Returns the request priority */
+  /** Returns the request priority. */
   public Priority getRequestPriority() {
     return mRequestPriority;
   }
