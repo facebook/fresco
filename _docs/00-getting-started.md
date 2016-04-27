@@ -66,7 +66,7 @@ Then add the ```SimpleDraweeView``` to the layout:
 To show an image, you need only do this:
 
 ```java
-Uri uri = Uri.parse("https://raw.githubusercontent.com/facebook/fresco/gh-pages/static/fresco-logo.png");
+Uri uri = Uri.parse("https://raw.githubusercontent.com/facebook/fresco/gh-pages/static/logo.png");
 SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.my_image_view);
 draweeView.setImageURI(uri);
 ```
