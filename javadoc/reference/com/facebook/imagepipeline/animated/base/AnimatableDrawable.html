@@ -483,7 +483,7 @@ Summary:
             ValueAnimator
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator(int)">createValueAnimator</a></span>(int maxDurationMs)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator()">createValueAnimator</a></span>()
         
         <div class="jd-descrdiv">An animator that will animate the drawable directly.</div>
   
@@ -501,7 +501,7 @@ Summary:
             ValueAnimator
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator()">createValueAnimator</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatableDrawable.html#createValueAnimator(int)">createValueAnimator</a></span>(int maxDurationMs)
         
         <div class="jd-descrdiv">An animator that will animate the drawable directly.</div>
   
@@ -675,6 +675,43 @@ From interface
 </div>
 
 
+<a id="createValueAnimator()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        ValueAnimator
+      </span>
+      <span class="sympad">createValueAnimator</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>An animator that will animate the drawable directly. The loop count and duration will
+ be determined by metadata in the original image. Update listener is attached automatically.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>a new animator
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="createValueAnimator(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -711,43 +748,6 @@ From interface
         </tr>
       </table>
   </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>a new animator
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="createValueAnimator()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        ValueAnimator
-      </span>
-      <span class="sympad">createValueAnimator</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>An animator that will animate the drawable directly. The loop count and duration will
- be determined by metadata in the original image. Update listener is attached automatically.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>a new animator

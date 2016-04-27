@@ -283,20 +283,6 @@
   
   
 
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
 
 <div class="sum-details-links">
 
@@ -361,10 +347,6 @@ Summary:
   
   
       implements 
-      
-        DeferredReleaser.Releasable 
-      
-        GestureDetector.ClickListener 
       
         <a href="../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> 
       
@@ -512,7 +494,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeController.html#AbstractDraweeController(com.facebook.drawee.components.DeferredReleaser, java.util.concurrent.Executor, java.lang.String, java.lang.Object)">AbstractDraweeController</a></span>(DeferredReleaser deferredReleaser, Executor uiThreadImmediateExecutor, String id, Object callerContext)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeController.html#AbstractDraweeController(DeferredReleaser, java.util.concurrent.Executor, java.lang.String, java.lang.Object)">AbstractDraweeController</a></span>(DeferredReleaser deferredReleaser, Executor uiThreadImmediateExecutor, String id, Object callerContext)
         
   </td></tr>
 
@@ -1002,7 +984,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setGestureDetector(com.facebook.drawee.gestures.GestureDetector)">setGestureDetector</a></span>(GestureDetector gestureDetector)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setGestureDetector(GestureDetector)">setGestureDetector</a></span>(GestureDetector gestureDetector)
         
         <div class="jd-descrdiv">Sets gesture detector.</div>
   
@@ -1038,7 +1020,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setRetryManager(com.facebook.drawee.components.RetryManager)">setRetryManager</a></span>(RetryManager retryManager)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setRetryManager(RetryManager)">setRetryManager</a></span>(RetryManager retryManager)
         
         <div class="jd-descrdiv">Sets retry manager.</div>
   
@@ -1250,7 +1232,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1266,7 +1248,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1282,91 +1264,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.components.DeferredReleaser.Releasable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.drawee.components.DeferredReleaser.Releasable-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  com.facebook.drawee.components.DeferredReleaser.Releasable
-
-<div id="inherited-methods-com.facebook.drawee.components.DeferredReleaser.Releasable">
-  <div id="inherited-methods-com.facebook.drawee.components.DeferredReleaser.Releasable-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.drawee.components.DeferredReleaser.Releasable-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">release</span>()
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.gestures.GestureDetector.ClickListener" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.drawee.gestures.GestureDetector.ClickListener-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  com.facebook.drawee.gestures.GestureDetector.ClickListener
-
-<div id="inherited-methods-com.facebook.drawee.gestures.GestureDetector.ClickListener">
-  <div id="inherited-methods-com.facebook.drawee.gestures.GestureDetector.ClickListener-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.drawee.gestures.GestureDetector.ClickListener-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">onClick</span>()
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1547,7 +1445,7 @@ From interface
 
 
 
-<a id="AbstractDraweeController(com.facebook.drawee.components.DeferredReleaser, java.util.concurrent.Executor, java.lang.String, java.lang.Object)"></a>
+<a id="AbstractDraweeController(DeferredReleaser, java.util.concurrent.Executor, java.lang.String, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2450,7 +2348,7 @@ From interface
 </div>
 
 
-<a id="setGestureDetector(com.facebook.drawee.gestures.GestureDetector)"></a>
+<a id="setGestureDetector(GestureDetector)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2512,7 +2410,7 @@ From interface
 </div>
 
 
-<a id="setRetryManager(com.facebook.drawee.components.RetryManager)"></a>
+<a id="setRetryManager(RetryManager)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">

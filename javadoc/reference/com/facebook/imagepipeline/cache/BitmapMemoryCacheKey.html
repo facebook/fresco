@@ -218,6 +218,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></li>
@@ -456,7 +457,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, com.facebook.imagepipeline.common.ImageDecodeOptions, com.facebook.cache.common.CacheKey, java.lang.String)">BitmapMemoryCacheKey</a></span>(String sourceString, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, boolean autoRotated, ImageDecodeOptions imageDecodeOptions, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> postprocessorCacheKey, String postprocessorName)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, ImageDecodeOptions, com.facebook.cache.common.CacheKey, java.lang.String)">BitmapMemoryCacheKey</a></span>(String sourceString, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, boolean autoRotated, ImageDecodeOptions imageDecodeOptions, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> postprocessorCacheKey, String postprocessorName)
         
   </td></tr>
 
@@ -485,13 +486,31 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#containsUri(android.net.Uri)">containsUri</a></span>(Uri uri)
+        
+        <div class="jd-descrdiv">Returns true if this key was constructed from this Uri.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html#equals(java.lang.Object)">equals</a></span>(Object o)
         
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -507,7 +526,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -523,7 +542,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -539,7 +558,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -727,7 +746,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -743,7 +762,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -759,7 +778,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -801,6 +820,24 @@ From interface
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheKey.html#containsUri(android.net.Uri)">containsUri</a></span>(Uri uri)
+        
+        <div class="jd-descrdiv">Returns true if this key was constructed from this Uri.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheKey.html#equals(java.lang.Object)">equals</a></span>(Object o)
         
         <div class="jd-descrdiv">This method must be implemented, otherwise the cache keys will be be compared by reference.</div>
@@ -809,7 +846,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -827,7 +864,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -884,7 +921,7 @@ From interface
 
 
 
-<a id="BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, com.facebook.imagepipeline.common.ImageDecodeOptions, com.facebook.cache.common.CacheKey, java.lang.String)"></a>
+<a id="BitmapMemoryCacheKey(java.lang.String, com.facebook.imagepipeline.common.ResizeOptions, boolean, ImageDecodeOptions, com.facebook.cache.common.CacheKey, java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -928,6 +965,40 @@ From interface
 
 <h2>Public Methods</h2>
 
+
+
+<a id="containsUri(android.net.Uri)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">containsUri</span>
+      <span class="normal">(Uri uri)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns true if this key was constructed from this Uri.
+
+ Used for cases like deleting all keys for a given uri.
+</p></div>
+
+    </div>
+</div>
 
 
 <a id="equals(java.lang.Object)"></a>

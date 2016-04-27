@@ -314,7 +314,7 @@ Summary:
     public
      
      
-    
+    abstract
     class
 <h1>PlatformBitmapFactory</h1>
 
@@ -432,7 +432,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#PlatformBitmapFactory(com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory, com.facebook.imagepipeline.bitmaps.DalvikBitmapFactory, com.facebook.imagepipeline.bitmaps.ArtBitmapFactory)">PlatformBitmapFactory</a></span>(GingerbreadBitmapFactory gingerbreadBitmapFactory, DalvikBitmapFactory dalvikBitmapFactory, ArtBitmapFactory artBitmapFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#PlatformBitmapFactory()">PlatformBitmapFactory</a></span>()
         
   </td></tr>
 
@@ -454,24 +454,6 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
-            synchronized
-            
-            
-            
-            List&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#associateBitmapsWithBitmapCounter(java.util.List<android.graphics.Bitmap>)">associateBitmapsWithBitmapCounter</a></span>(List&lt;Bitmap&gt; bitmaps)
-        
-        <div class="jd-descrdiv">Associates bitmaps with the bitmap counter.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
             
             
             
@@ -487,27 +469,9 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage)">decodeFromEncodedImage</a></span>(EncodedImage encodedImage)
-        
-        <div class="jd-descrdiv">Creates a bitmap from encoded bytes.</div>
-  
-  </td></tr>
-
-
-	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            
+            abstract
             
             
             
@@ -515,9 +479,9 @@ Summary:
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, int)">decodeJPEGFromEncodedImage</a></span>(EncodedImage encodedImage, int length)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#createBitmap(int, int, android.graphics.Bitmap.Config)">createBitmap</a></span>(int width, int height, Bitmap.Config bitmapConfig)
         
-        <div class="jd-descrdiv">Creates a bitmap from encoded JPEG bytes.</div>
+        <div class="jd-descrdiv">Creates a bitmap of the specified width and height.</div>
   
   </td></tr>
 
@@ -695,7 +659,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -711,7 +675,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -727,7 +691,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -772,7 +736,7 @@ From class
 
 
 
-<a id="PlatformBitmapFactory(com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory, com.facebook.imagepipeline.bitmaps.DalvikBitmapFactory, com.facebook.imagepipeline.bitmaps.ArtBitmapFactory)"></a>
+<a id="PlatformBitmapFactory()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -785,7 +749,7 @@ From class
         
       </span>
       <span class="sympad">PlatformBitmapFactory</span>
-      <span class="normal">(GingerbreadBitmapFactory gingerbreadBitmapFactory, DalvikBitmapFactory dalvikBitmapFactory, ArtBitmapFactory artBitmapFactory)</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>
@@ -818,63 +782,6 @@ From class
 
 
 
-<a id="associateBitmapsWithBitmapCounter(java.util.List<android.graphics.Bitmap>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-        synchronized 
-        List&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;&gt;
-      </span>
-      <span class="sympad">associateBitmapsWithBitmapCounter</span>
-      <span class="normal">(List&lt;Bitmap&gt; bitmaps)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Associates bitmaps with the bitmap counter.
-
- <p>If this method throws TooManyBitmapsException, the code will have called
- <code><a href="null#recycle()">recycle()</a></code> on the bitmaps.</p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>bitmaps</th>
-          <td>the bitmaps to associate</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the references to the bitmaps that are now tied to the bitmap pool</li></ul>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th></td>
-            <td>if the pool is full
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="createBitmap(int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -900,7 +807,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap of the specified width and height.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap of the specified width and height.
+ The bitmap will be created with the default ARGB_8888 configuration</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -937,7 +845,7 @@ From class
 </div>
 
 
-<a id="decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage)"></a>
+<a id="createBitmap(int, int, android.graphics.Bitmap.Config)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -945,12 +853,12 @@ From class
         public 
          
          
-         
+        abstract 
          
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
-      <span class="sympad">decodeFromEncodedImage</span>
-      <span class="normal">(EncodedImage encodedImage)</span>
+      <span class="sympad">createBitmap</span>
+      <span class="normal">(int width, int height, Bitmap.Config bitmapConfig)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -962,82 +870,27 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap from encoded bytes. Supports JPEG but callers should use
- <code><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, int)">decodeJPEGFromEncodedImage(EncodedImage, int)</a></code> for partial JPEGs.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap of the specified width and height.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>encodedImage</th>
-          <td>the reference to the encoded image with the reference to the encoded bytes</td>
+          <th>width</th>
+          <td>the width of the bitmap</td>
+        </tr>
+        <tr>
+          <th>height</th>
+          <td>the height of the bitmap</td>
+        </tr>
+        <tr>
+          <th>bitmapConfig</th>
+          <td>the Bitmap.Config used to create the Bitmap</td>
         </tr>
       </table>
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the bitmap</li></ul>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th></td>
-            <td>if the pool is full</td>
-        </tr>  
-        <tr>
-            <th>OutOfMemoryError</td>
-            <td>if the Bitmap cannot be allocated
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
-      </span>
-      <span class="sympad">decodeJPEGFromEncodedImage</span>
-      <span class="normal">(EncodedImage encodedImage, int length)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>encodedImage</th>
-          <td>the reference to the encoded image with the reference to the encoded bytes</td>
-        </tr>
-        <tr>
-          <th>length</th>
-          <td>the number of encoded bytes in the buffer</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the bitmap</li></ul>
+      <ul class="nolist"><li>a reference to the bitmap</li></ul>
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Throws</h5>

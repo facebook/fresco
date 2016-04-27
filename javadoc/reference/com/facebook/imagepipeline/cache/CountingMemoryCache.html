@@ -218,6 +218,7 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></li>
@@ -457,6 +458,18 @@ Summary:
     </tr>
     
     
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        interface</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</td>
+      <td class="jd-descrcol" width="100%">Interface used to observe the state changes of an entry.&nbsp;</td>
+    </tr>
+    
+    
 
 </table>
 
@@ -517,7 +530,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)">CountingMemoryCache</a></span>(ValueDescriptor&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#CountingMemoryCache(<any>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)">CountingMemoryCache</a></span>(<any> valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)
         
   </td></tr>
 
@@ -561,6 +574,24 @@ Summary:
             
             
             
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#cache(K, com.facebook.common.references.CloseableReference<V>, com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver<K>)">cache</a></span>(K key, <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt; valueRef, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">EntryStateObserver</a>&lt;K&gt; observer)
+        
+        <div class="jd-descrdiv">Caches the given key-value pair.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             void
         </td>
         <td class="jd-linkcol" width="100%">
@@ -572,7 +603,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -590,7 +621,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -608,7 +639,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -626,7 +657,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -644,7 +675,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -662,7 +693,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -680,7 +711,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -698,7 +729,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -716,7 +747,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -729,6 +760,24 @@ Summary:
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#removeAll(com.android.internal.util.Predicate<K>)">removeAll</a></span>(Predicate&lt;K&gt; predicate)
         
         <div class="jd-descrdiv">Removes all the items from the cache whose key matches the specified predicate.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html#reuse(K)">reuse</a></span>(K key)
+        
+        <div class="jd-descrdiv">Gets the value with the given key to be reused, or null if there is no such value.</div>
   
   </td></tr>
 
@@ -924,7 +973,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -940,7 +989,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -956,7 +1005,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1180,7 +1229,7 @@ From interface
 
 
 
-<a id="CountingMemoryCache(com.facebook.imagepipeline.cache.ValueDescriptor<V>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)"></a>
+<a id="CountingMemoryCache(<any>, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy, com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1193,7 +1242,7 @@ From interface
         
       </span>
       <span class="sympad">CountingMemoryCache</span>
-      <span class="normal">(ValueDescriptor&lt;V&gt; valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)</span>
+      <span class="normal">(<any> valueDescriptor, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> cacheTrimStrategy, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; memoryCacheParamsSupplier)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1240,6 +1289,45 @@ From interface
       </span>
       <span class="sympad">cache</span>
       <span class="normal">(K key, <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt; valueRef)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Caches the given key-value pair.
+
+ <p> Important: the client should use the returned reference instead of the original one.
+ It is the caller's responsibility to close the returned reference once not needed anymore.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the new reference to be used, null if the value cannot be cached
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="cache(K, com.facebook.common.references.CloseableReference<V>, com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver<K>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
+      </span>
+      <span class="sympad">cache</span>
+      <span class="normal">(K key, <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt; valueRef, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">EntryStateObserver</a>&lt;K&gt; observer)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1606,6 +1694,40 @@ From interface
       <ul class="nolist"><li>number of the items removed from the cache
 </li></ul>
   </div>
+
+    </div>
+</div>
+
+
+<a id="reuse(K)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;V&gt;
+      </span>
+      <span class="sympad">reuse</span>
+      <span class="normal">(K key)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the value with the given key to be reused, or null if there is no such value.
+
+ <p> The item can be reused only if it is exclusively owned by the cache.
+</p></div>
 
     </div>
 </div>

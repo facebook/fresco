@@ -218,7 +218,6 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html">GenericDraweeHierarchy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html">GenericDraweeHierarchyBuilder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a></li>
       </ul>
@@ -296,8 +295,6 @@
 
 Summary:
 
-  <a href="#nestedclasses">Nested Classes</a>
-  
 
 
 
@@ -308,8 +305,7 @@ Summary:
 
 
 
-
-  &#124; <a href="#pubmethods">Methods</a>
+  <a href="#pubmethods">Methods</a>
   
 
 
@@ -397,46 +393,51 @@ Summary:
  If provided, retry image will be used in case of failure when retrying is enabled.
  If provided, progressbar will be displayed until fully loaded.
  Each image can be displayed with a different scale type (or no scaling at all).
- Fading between the layers is supported.
+ Fading between the layers is supported. Rounding is supported.
 
  <p>
- Example hierarchy with placeholder, retry, failure and one actual image:
+ Example hierarchy with a placeholder, retry, failure and the actual image:
   <pre>
-     o FadeDrawable (top level drawable)
+  o RootDrawable (top level drawable)
+  |
+  +--o FadeDrawable
      |
-     +--o ScaleTypeDrawable
+     +--o ScaleTypeDrawable (placeholder branch, optional)
      |  |
      |  +--o Drawable (placeholder image)
      |
-     +--o ScaleTypeDrawable
+     +--o ScaleTypeDrawable (actual image branch)
      |  |
-     |  +--o SettableDrawable
+     |  +--o ForwardingDrawable (actual image wrapper)
      |     |
      |     +--o Drawable (actual image)
      |
-     +--o ScaleTypeDrawable
-     |  |
-     |  +--o Drawable (retry image)
+     +--o null (progress bar branch, optional)
      |
-     +--o ScaleTypeDrawable
+     +--o Drawable (retry image branch, optional)
+     |
+     +--o ScaleTypeDrawable (failure image branch, optional)
         |
         +--o Drawable (failure image)
   </pre>
 
  <p>
  Note:
- - ScaleType and Matrix transformations will be added only if specified. If both are unspecified,
- then the branch for that image will be attached directly.
- - It is not permitted to set both ScaleType transformation and Matrix transformation for the
- same image.
- - A Matrix transformation is only supported for actual image.
- - All branches (placeholder, failure, retry, actual image, progressBar) are optional.
- If some branch is not specified it won't be created. The exception is placeholder branch,
- which will, if not specified, be created with a transparent drawable.
- - If overlays and/or backgrounds are specified, they are added to the same fade drawable, and
- are always displayed.
- - Instance of some drawable should be used by only one DH. If more than one DH is being built
- with the same builder, different drawable instances must be specified for each DH.
+ <ul>
+ <li> RootDrawable and FadeDrawable are always created.
+ <li> All branches except the actual image branch are optional (placeholder, failure, retry,
+ progress bar). If some branch is not specified it won't be created. Index in FadeDrawable will
+ still be reserved though.
+ <li> If overlays and/or backgrounds are specified, they are added to the same fade drawable, and
+ are always being displayed.
+ <li> ScaleType and Matrix transformations will be added only if specified. If both are
+ unspecified, then the branch for that image is attached to FadeDrawable directly. Matrix
+ transformation is only supported for the actual image, and it is not recommended to be used.
+ <li> Rounding, if specified, is applied to all layers. Rounded drawable can either wrap
+ FadeDrawable, or if leaf rounding is specified, each leaf drawable will be rounded separately.
+ <li> A particular drawable instance should be used by only one DH. If more than one DH is being
+ built with the same builder, different drawable instances must be specified for each DH.
+ </ul>
 </p>
 
 
@@ -465,27 +466,6 @@ Summary:
 
 <h2>Summary</h2>
 
-
-
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
-
-
-  
-    <tr class="alt-color api apilevel-" >
-      <td class="jd-typecol">
-        
-         
-         
-        
-        class</td>
-      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></td>
-      <td class="jd-descrcol" width="100%">&nbsp;</td>
-    </tr>
-    
-    
-
-</table>
 
 
 
@@ -530,13 +510,29 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#getActualImageBounds(android.graphics.RectF)">getActualImageBounds</a></span>(RectF outBounds)
         
-        <div class="jd-descrdiv">Gets the post-scaling bounds of the actual image.</div>
+        <div class="jd-descrdiv">Gets the non-cropped post-scaling bounds of the actual image.</div>
   
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#getActualImageScaleType()">getActualImageScaleType</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -554,7 +550,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -572,7 +568,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -590,7 +586,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -608,7 +604,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -626,7 +622,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -644,7 +640,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -662,7 +658,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -674,11 +670,13 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setFadeDuration(int)">setFadeDuration</a></span>(int durationMs)
         
+        <div class="jd-descrdiv">Sets the fade duration.</div>
+  
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -696,7 +694,43 @@ Summary:
 
 
 	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setFailureImage(android.graphics.drawable.Drawable)">setFailureImage</a></span>(Drawable drawable)
+        
+        <div class="jd-descrdiv">Sets a new failure drawable with old scale type.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setFailureImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)">setFailureImage</a></span>(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)
+        
+        <div class="jd-descrdiv">Sets a new failure drawable with scale type.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -714,6 +748,24 @@ Summary:
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(android.graphics.drawable.Drawable)">setPlaceholderImage</a></span>(Drawable drawable)
+        
+        <div class="jd-descrdiv">Sets a new placeholder drawable with old scale type.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
@@ -724,9 +776,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(int)">setPlaceholderImage</a></span>(int resourceId)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)">setPlaceholderImage</a></span>(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)
         
-        <div class="jd-descrdiv">Sets a new placeholder drawable using the supplied resource ID.</div>
+        <div class="jd-descrdiv">Sets a new placeholder drawable with scale type.</div>
   
   </td></tr>
 
@@ -742,9 +794,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(android.graphics.drawable.Drawable)">setPlaceholderImage</a></span>(Drawable drawable)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImage(int)">setPlaceholderImage</a></span>(int resourceId)
         
-        <div class="jd-descrdiv">Sets a new placeholder drawable.</div>
+        <div class="jd-descrdiv">Sets a new placeholder drawable with old scale type.</div>
   
   </td></tr>
 
@@ -762,6 +814,8 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setPlaceholderImageFocusPoint(android.graphics.PointF)">setPlaceholderImageFocusPoint</a></span>(PointF focusPoint)
         
+        <div class="jd-descrdiv">Sets the placeholder image focus point.</div>
+  
   </td></tr>
 
 
@@ -794,10 +848,82 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setProgressBarImage(android.graphics.drawable.Drawable)">setProgressBarImage</a></span>(Drawable drawable)
+        
+        <div class="jd-descrdiv">Sets a new progress bar drawable with old scale type.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setProgressBarImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)">setProgressBarImage</a></span>(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)
+        
+        <div class="jd-descrdiv">Sets a new progress bar drawable with scale type.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setRetry(java.lang.Throwable)">setRetry</a></span>(Throwable throwable)
         
         <div class="jd-descrdiv">Called by controller when the future that provides the actual image completes with failure,
  but the controller is prepared to kick off a retry when the user clicks on the image.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setRetryImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)">setRetryImage</a></span>(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)
+        
+        <div class="jd-descrdiv">Sets a new retry drawable with scale type.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html#setRetryImage(android.graphics.drawable.Drawable)">setRetryImage</a></span>(Drawable drawable)
+        
+        <div class="jd-descrdiv">Sets a new retry drawable with old scale type.</div>
   
   </td></tr>
 
@@ -993,7 +1119,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -1009,7 +1135,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -1025,7 +1151,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1282,19 +1408,38 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the post-scaling bounds of the actual image.
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the non-cropped post-scaling bounds of the actual image. </p></div>
 
- <p> Note: the returned bounds are not cropped.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>outBounds</th>
-          <td>rect to fill with bounds
-</td>
-        </tr>
-      </table>
-  </div>
+    </div>
+</div>
+
+
+<a id="getActualImageScaleType()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>
+      </span>
+      <span class="sympad">getActualImageScaleType</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
@@ -1325,12 +1470,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the rounding params.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>rounding params
-</li></ul>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the rounding params. </p></div>
 
     </div>
 </div>
@@ -1565,7 +1705,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the fade duration. </p></div>
 
     </div>
 </div>
@@ -1608,6 +1748,68 @@ From interface
         </tr>
       </table>
   </div>
+
+    </div>
+</div>
+
+
+<a id="setFailureImage(android.graphics.drawable.Drawable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setFailureImage</span>
+      <span class="normal">(Drawable drawable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new failure drawable with old scale type. </p></div>
+
+    </div>
+</div>
+
+
+<a id="setFailureImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setFailureImage</span>
+      <span class="normal">(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new failure drawable with scale type. </p></div>
 
     </div>
 </div>
@@ -1663,49 +1865,6 @@ From interface
 </div>
 
 
-<a id="setPlaceholderImage(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setPlaceholderImage</span>
-      <span class="normal">(int resourceId)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable using the supplied resource ID.
-
- <p>The placeholder scale type will not be changed.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>resourceId</th>
-          <td>an identifier of an Android drawable or color resource.
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="setPlaceholderImage(android.graphics.drawable.Drawable)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1731,10 +1890,79 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable.
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable with old scale type. </p></div>
 
- <p>The placeholder scale type will not be changed.
-</p></div>
+    </div>
+</div>
+
+
+<a id="setPlaceholderImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setPlaceholderImage</span>
+      <span class="normal">(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable with scale type. </p></div>
+
+    </div>
+</div>
+
+
+<a id="setPlaceholderImage(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setPlaceholderImage</span>
+      <span class="normal">(int resourceId)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new placeholder drawable with old scale type.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>resourceId</th>
+          <td>an identifier of an Android drawable or color resource.
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -1765,7 +1993,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the placeholder image focus point. </p></div>
 
     </div>
 </div>
@@ -1817,6 +2045,68 @@ From interface
 </div>
 
 
+<a id="setProgressBarImage(android.graphics.drawable.Drawable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setProgressBarImage</span>
+      <span class="normal">(Drawable drawable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new progress bar drawable with old scale type. </p></div>
+
+    </div>
+</div>
+
+
+<a id="setProgressBarImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setProgressBarImage</span>
+      <span class="normal">(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new progress bar drawable with scale type. </p></div>
+
+    </div>
+</div>
+
+
 <a id="setRetry(java.lang.Throwable)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1860,6 +2150,68 @@ From interface
 </div>
 
 
+<a id="setRetryImage(android.graphics.drawable.Drawable, com.facebook.drawee.drawable.ScalingUtils.ScaleType)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setRetryImage</span>
+      <span class="normal">(Drawable drawable, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new retry drawable with scale type. </p></div>
+
+    </div>
+</div>
+
+
+<a id="setRetryImage(android.graphics.drawable.Drawable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setRetryImage</span>
+      <span class="normal">(Drawable drawable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets a new retry drawable with old scale type. </p></div>
+
+    </div>
+</div>
+
+
 <a id="setRoundingParams(com.facebook.drawee.generic.RoundingParams)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1885,8 +2237,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the rounding params.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the rounding params. </p></div>
 
     </div>
 </div>

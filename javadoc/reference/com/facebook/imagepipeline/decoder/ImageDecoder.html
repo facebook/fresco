@@ -456,7 +456,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#ImageDecoder(com.facebook.imagepipeline.animated.factory.AnimatedImageFactory, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">ImageDecoder</a></span>(AnimatedImageFactory animatedImageFactory, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactoryWithPool)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#ImageDecoder(AnimatedImageFactory, PlatformDecoder, android.graphics.Bitmap.Config)">ImageDecoder</a></span>(AnimatedImageFactory animatedImageFactory, PlatformDecoder platformDecoder, Bitmap.Config bitmapConfig)
         
   </td></tr>
 
@@ -485,7 +485,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeAnimatedWebp(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeAnimatedWebp</a></span>(EncodedImage encodedImage, ImageDecodeOptions options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeAnimatedWebp(EncodedImage, ImageDecodeOptions)">decodeAnimatedWebp</a></span>(EncodedImage encodedImage, ImageDecodeOptions options)
         
         <div class="jd-descrdiv">Decode a webp animated image into a CloseableImage.</div>
   
@@ -503,7 +503,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeGif(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeGif</a></span>(EncodedImage encodedImage, ImageDecodeOptions options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeGif(EncodedImage, ImageDecodeOptions)">decodeGif</a></span>(EncodedImage encodedImage, ImageDecodeOptions options)
         
         <div class="jd-descrdiv">Decodes gif into CloseableImage.</div>
   
@@ -521,7 +521,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeImage(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeImage</a></span>(EncodedImage encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo, ImageDecodeOptions options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeImage(EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, ImageDecodeOptions)">decodeImage</a></span>(EncodedImage encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo, ImageDecodeOptions options)
         
         <div class="jd-descrdiv">Decodes image.</div>
   
@@ -539,7 +539,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html">CloseableStaticBitmap</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeJpeg(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo)">decodeJpeg</a></span>(EncodedImage encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeJpeg(EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo)">decodeJpeg</a></span>(EncodedImage encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo)
         
         <div class="jd-descrdiv">Decodes a partial jpeg.</div>
   
@@ -557,7 +557,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html">CloseableStaticBitmap</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeStaticImage(com.facebook.imagepipeline.image.EncodedImage)">decodeStaticImage</a></span>(EncodedImage encodedImage)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html#decodeStaticImage(EncodedImage)">decodeStaticImage</a></span>(EncodedImage encodedImage)
         
   </td></tr>
 
@@ -735,7 +735,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -751,7 +751,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -767,7 +767,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -812,7 +812,7 @@ From class
 
 
 
-<a id="ImageDecoder(com.facebook.imagepipeline.animated.factory.AnimatedImageFactory, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)"></a>
+<a id="ImageDecoder(AnimatedImageFactory, PlatformDecoder, android.graphics.Bitmap.Config)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -825,7 +825,7 @@ From class
         
       </span>
       <span class="sympad">ImageDecoder</span>
-      <span class="normal">(AnimatedImageFactory animatedImageFactory, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactoryWithPool)</span>
+      <span class="normal">(AnimatedImageFactory animatedImageFactory, PlatformDecoder platformDecoder, Bitmap.Config bitmapConfig)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -858,7 +858,7 @@ From class
 
 
 
-<a id="decodeAnimatedWebp(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+<a id="decodeAnimatedWebp(EncodedImage, ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -905,7 +905,7 @@ From class
 </div>
 
 
-<a id="decodeGif(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+<a id="decodeGif(EncodedImage, ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -950,7 +950,7 @@ From class
 </div>
 
 
-<a id="decodeImage(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+<a id="decodeImage(EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1004,7 +1004,7 @@ From class
 </div>
 
 
-<a id="decodeJpeg(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo)"></a>
+<a id="decodeJpeg(EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1057,7 +1057,7 @@ From class
 </div>
 
 
-<a id="decodeStaticImage(com.facebook.imagepipeline.image.EncodedImage)"></a>
+<a id="decodeStaticImage(EncodedImage)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">

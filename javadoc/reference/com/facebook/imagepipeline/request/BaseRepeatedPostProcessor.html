@@ -620,12 +620,13 @@ From class
             
             
             
-            void
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process</a></span>(Bitmap bitmap)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
         
-        <div class="jd-descrdiv">Clients should override this method if the post-processing can be done in place.</div>
+        <div class="jd-descrdiv">Clients should override this method only if the post-processed bitmap has to be of a different
+ size than the source bitmap.</div>
   
   </td></tr>
 
@@ -638,13 +639,12 @@ From class
             
             
             
-            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+            void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">process</a></span>(Bitmap sourceBitmap, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> bitmapFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, android.graphics.Bitmap)">process</a></span>(Bitmap destBitmap, Bitmap sourceBitmap)
         
-        <div class="jd-descrdiv">Clients should override this method only if the post-processed bitmap has to be of a different
- size than the source bitmap.</div>
+        <div class="jd-descrdiv">Clients should override this method if the post-processing cannot be done in place.</div>
   
   </td></tr>
 
@@ -660,9 +660,9 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap, android.graphics.Bitmap)">process</a></span>(Bitmap destBitmap, Bitmap sourceBitmap)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/BasePostprocessor.html#process(android.graphics.Bitmap)">process</a></span>(Bitmap bitmap)
         
-        <div class="jd-descrdiv">Clients should override this method if the post-processing cannot be done in place.</div>
+        <div class="jd-descrdiv">Clients should override this method if the post-processing can be done in place.</div>
   
   </td></tr>
 
@@ -832,7 +832,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -848,7 +848,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -864,7 +864,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 

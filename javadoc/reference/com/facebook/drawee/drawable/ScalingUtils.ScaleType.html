@@ -214,20 +214,23 @@
           <div id="classes-nav">
             <ul>
               
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.StatefulScaleType.html">ScalingUtils.StatefulScaleType</a></li>
+      </ul>
+    </li>
               
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html">ProgressBarDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.html">ScalingUtils</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a></li>
       </ul>
     </li>
               
               
-    <li><h2>Enums</h2>
-      <ul>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
-      </ul>
-    </li>
               
               
             </ul><br/>
@@ -267,32 +270,6 @@
 
 
 
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
 
 <div class="sum-details-links">
 
@@ -302,11 +279,11 @@ Summary:
 
 
 
-  <a href="#enumconstants">Enums</a>
+
+
+
+  <a href="#lfields">Fields</a>
   
-
-
-
 
 
 
@@ -316,8 +293,6 @@ Summary:
   
 
 
-
-  &#124; <a href="#inhmethods">Inherited Methods</a>
 
 &#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
@@ -338,22 +313,12 @@ Summary:
 <div id="jd-header">
     public
     static 
-    final 
+     
     
-    enum
+    interface
 <h1>ScalingUtils.ScaleType</h1>
 
 
-
-  
-  
-  
-
-  
-    extends Enum&lt;E&nbsp;extends&nbsp;Enum&lt;E&gt;&gt;<br/>
-  
-  
-  
 
   
   
@@ -370,24 +335,6 @@ Summary:
 
     <tr>
          	
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Enum&lt;E&nbsp;extends&nbsp;java.lang.Enum&lt;E&gt;&gt;</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
         <td colspan="1" class="jd-inheritance-class-cell">com.facebook.drawee.drawable.ScalingUtils.ScaleType</td>
     </tr>
     
@@ -398,6 +345,43 @@ Summary:
 
 
 
+
+<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-indirect" class="jd-expando-trigger closed"
+          ><img id="subclasses-indirect-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>Known Indirect Subclasses
+
+  <div id="subclasses-indirect">
+      <div id="subclasses-indirect-list"
+              class="jd-inheritedlinks"
+              
+              >
+          
+            
+              <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a>,
+            
+              <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a>
+            
+          
+      </div>
+      <div id="subclasses-indirect-summary"
+              style="display: none;"
+              >
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></td>
+              <td class="jd-descrcol" width="100%">A convenience base class that has some common logic.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a></td>
+              <td class="jd-descrcol" width="100%">Scale type that interpolates transform of the two underlying scale types.&nbsp;</td>
+          </tr>
+  </table>
+      </div>
+  </div>
+</td></tr></table>
 
 
 <div class="jd-descr">
@@ -410,7 +394,6 @@ Summary:
  To use matrix scaling, use a MatrixDrawable. An additional scale type (FOCUS_CROP) is
  provided.
  <p>
- Note: The enum values should be in sync with the scaleType attribute values in attrs.xml
 </p>
 
 
@@ -449,76 +432,110 @@ Summary:
 
 
 
-<!-- =========== ENUM CONSTANT SUMMARY =========== -->
-<table id="enumconstants" class="jd-sumtable"><tr><th colspan="12">Enum Values</th></tr>
+
+
+
+
+
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
 
     
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">CENTER&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Performs no scaling.&nbsp;</td>
-    </tr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#CENTER">CENTER</a></td>
+          <td class="jd-descrcol" width="100%">Performs no scaling.</td>
+      </tr>
+      
     
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#CENTER_CROP">CENTER_CROP</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that both dimensions will be greater than or equal to the corresponding
+ dimension of the parent.</td>
+      </tr>
+      
     
-    <tr class=" api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">CENTER_CROP&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales the child so that both dimensions will be greater than or equal to the corresponding
- dimension of the parent.&nbsp;</td>
-    </tr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#CENTER_INSIDE">CENTER_INSIDE</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.</td>
+      </tr>
+      
     
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_CENTER">FIT_CENTER</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.</td>
+      </tr>
+      
     
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">CENTER_INSIDE&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.&nbsp;</td>
-    </tr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_END">FIT_END</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.</td>
+      </tr>
+      
     
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_START">FIT_START</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.</td>
+      </tr>
+      
     
-    <tr class=" api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">FIT_CENTER&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.&nbsp;</td>
-    </tr>
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_XY">FIT_XY</a></td>
+          <td class="jd-descrcol" width="100%">Scales width and height independently, so that the child matches the parent exactly.</td>
+      </tr>
+      
     
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          static
+          final
+          <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FOCUS_CROP">FOCUS_CROP</a></td>
+          <td class="jd-descrcol" width="100%">Scales the child so that both dimensions will be greater than or equal to the corresponding
+ dimension of the parent.</td>
+      </tr>
+      
     
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">FIT_END&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.&nbsp;</td>
-    </tr>
-    
-    
-    <tr class=" api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">FIT_START&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales the child so that it fits entirely inside the parent.&nbsp;</td>
-    </tr>
-    
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">FIT_XY&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales width and height independently, so that the child matches the parent exactly.&nbsp;</td>
-    </tr>
-    
-    
-    <tr class=" api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>&nbsp;</td>
-        <td class="jd-linkcol">FOCUS_CROP&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Scales the child so that both dimensions will be greater than or equal to the corresponding
- dimension of the parent.&nbsp;</td>
-    </tr>
-    
-    
+
 </table>
-
-
-
-
-
-
-
 
 
 
@@ -538,498 +555,28 @@ Summary:
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            
-            
-            
-            static
-            
-            <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#valueOf(java.lang.String)">valueOf</a></span>(String name)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            static
-            
-            <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScaleType[]</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#values()">values</a></span>()
-        
-  </td></tr>
-
-
-
-</table>
-
-
-
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="inhmethods" class="jd-sumtable"><tr><th>
-  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
-  <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Enum" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Enum-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  java.lang.Enum
-
-<div id="inherited-methods-java.lang.Enum">
-  <div id="inherited-methods-java.lang.Enum-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Enum-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Object
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">clone</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">compareTo</span>(Object arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">compareTo</span>(E arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">equals</span>(Object arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">finalize</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Class&lt;E&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getDeclaringClass</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">hashCode</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">name</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">ordinal</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">toString</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            static
-            &lt;T&nbsp;extends&nbsp;Enum&lt;T&gt;&gt;
-            T
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">valueOf</span>(Class&lt;T&gt; arg0, String arg1)
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Object-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  java.lang.Object
-
-<div id="inherited-methods-java.lang.Object">
-  <div id="inherited-methods-java.lang.Object-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            Object
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">clone</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">equals</span>(Object arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">finalize</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Class&lt;?&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getClass</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">hashCode</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">notify</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">notifyAll</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">toString</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Comparable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Comparable-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  java.lang.Comparable
-
-<div id="inherited-methods-java.lang.Comparable">
-  <div id="inherited-methods-java.lang.Comparable-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Comparable-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
             abstract
             
             
             
             
-            int
+            Matrix
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">compareTo</span>(T arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#getTransform(android.graphics.Matrix, android.graphics.Rect, int, int, float, float)">getTransform</a></span>(Matrix outTransform, Rect parentBounds, int childWidth, int childHeight, float focusX, float focusY)
         
+        <div class="jd-descrdiv">Gets transformation matrix based on the scale type.</div>
+  
   </td></tr>
 
 
-</table>
-  </div>
-</div>
-</td></tr>
-
 
 </table>
+
+
+
+
+
 
 
 </div><!-- jd-descr (summary) -->
@@ -1049,8 +596,14 @@ From interface
 <!-- Enum Values -->
 
 
-<!-- ========= ENUM CONSTANTS DETAIL ======== -->
-<h2>Enum Values</h2>
+<!-- Constants -->
+
+
+<!-- Fields -->
+
+
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
 
 
 
@@ -1321,12 +874,6 @@ From interface
 
 
 
-<!-- Constants -->
-
-
-<!-- Fields -->
-
-
 <!-- Public ctors -->
 
 
@@ -1343,20 +890,20 @@ From interface
 
 
 
-<a id="valueOf(java.lang.String)"></a>
+<a id="getTransform(android.graphics.Matrix, android.graphics.Rect, int, int, float, float)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
          
          
+        abstract 
          
-        <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a>
+        Matrix
       </span>
-      <span class="sympad">valueOf</span>
-      <span class="normal">(String name)</span>
+      <span class="sympad">getTransform</span>
+      <span class="normal">(Matrix outTransform, Rect parentBounds, int childWidth, int childHeight, float focusX, float focusY)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1368,38 +915,41 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="values()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-         
-         
-        <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScaleType[]</a>
-      </span>
-      <span class="sympad">values</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Gets transformation matrix based on the scale type.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>outTransform</th>
+          <td>out matrix to store result</td>
+        </tr>
+        <tr>
+          <th>parentBounds</th>
+          <td>parent bounds</td>
+        </tr>
+        <tr>
+          <th>childWidth</th>
+          <td>child width</td>
+        </tr>
+        <tr>
+          <th>childHeight</th>
+          <td>child height</td>
+        </tr>
+        <tr>
+          <th>focusX</th>
+          <td>focus point x coordinate, relative [0...1]</td>
+        </tr>
+        <tr>
+          <th>focusY</th>
+          <td>focus point y coordinate, relative [0...1]</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>same reference to the out matrix for convenience
+</li></ul>
+  </div>
 
     </div>
 </div>

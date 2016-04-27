@@ -218,7 +218,6 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.html">GenericDraweeHierarchy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html">GenericDraweeHierarchyBuilder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/generic/RoundingParams.html">RoundingParams</a></li>
       </ul>
@@ -448,7 +447,7 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/generic/RoundingParams.RoundingMethod.html">RoundingParams.RoundingMethod</a>&nbsp;</td>
         <td class="jd-linkcol">BITMAP_ONLY&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Uses BitmapShader to draw bitmap with rounded corners.&nbsp;</td>
+        <td class="jd-descrcol" width="100%">Uses BitmapShader to draw the bitmap with rounded corners.&nbsp;</td>
     </tr>
     
     
@@ -571,13 +570,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">compareTo</span>(Object arg0)
+        <span class="sympad">compareTo</span>(E arg0)
         
   </td></tr>
 
@@ -587,13 +586,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">compareTo</span>(E arg0)
+        <span class="sympad">compareTo</span>(Object arg0)
         
   </td></tr>
 
@@ -891,7 +890,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -907,7 +906,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -923,7 +922,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1026,10 +1025,10 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Uses BitmapShader to draw bitmap with rounded corners. Works only with BitmapDrawables and
- ColorDrawables.
- IMPORTANT: Only the actual image and the placeholder image will get rounded. Other images
- (such as retry, failure, progress bar, backgrounds, overlays, etc.) won't get rounded.
+  <div class="jd-tagdata jd-tagdescr"><p>Uses BitmapShader to draw the bitmap with rounded corners. This is the default rounding
+ method. It doesn't support animations, and it does not support any scale types other than
+ <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#CENTER_CROP">CENTER_CROP</a></code>, <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FOCUS_CROP">FOCUS_CROP</a></code> and
+ <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_XY">FIT_XY</a></code>.
 </p></div>
 
     

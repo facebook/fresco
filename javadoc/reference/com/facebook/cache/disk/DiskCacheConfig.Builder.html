@@ -288,14 +288,11 @@ Summary:
 
 
 
-  <a href="#lfields">Fields</a>
-  
 
 
 
 
-
-  &#124; <a href="#pubmethods">Methods</a>
+  <a href="#pubmethods">Methods</a>
   
 
 
@@ -413,114 +410,6 @@ Summary:
 
 
 
-
-
-<!-- =========== FIELD SUMMARY =========== -->
-<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
-
-
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          String</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mBaseDirectoryName">mBaseDirectoryName</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;File&gt;</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mBaseDirectoryPathSupplier">mBaseDirectoryPathSupplier</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          <a href="../../../../com/facebook/cache/common/CacheErrorLogger.html">CacheErrorLogger</a></td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mCacheErrorLogger">mCacheErrorLogger</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          <a href="../../../../com/facebook/cache/common/CacheEventListener.html">CacheEventListener</a></td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mCacheEventListener">mCacheEventListener</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          <a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a></td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mDiskTrimmableRegistry">mDiskTrimmableRegistry</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          long</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mMaxCacheSize">mMaxCacheSize</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          long</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mMaxCacheSizeOnLowDiskSpace">mMaxCacheSizeOnLowDiskSpace</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          long</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mMaxCacheSizeOnVeryLowDiskSpace">mMaxCacheSizeOnVeryLowDiskSpace</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol">
-          public
-          
-          
-          int</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#mVersion">mVersion</a></td>
-          <td class="jd-descrcol" width="100%"></td>
-      </tr>
-      
-    
-
-</table>
 
 
 
@@ -670,6 +559,25 @@ Summary:
             <a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html">DiskCacheConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#setEntryEvictionComparatorSupplier(EntryEvictionComparatorSupplier)">setEntryEvictionComparatorSupplier</a></span>(EntryEvictionComparatorSupplier supplier)
+        
+        <div class="jd-descrdiv">Provides the logic to determine the eviction order based on entry's access time and size
+</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html">DiskCacheConfig.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#setMaxCacheSize(long)">setMaxCacheSize</a></span>(long maxCacheSize)
         
         <div class="jd-descrdiv">This is the default maximum size of the cache.</div>
@@ -678,7 +586,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -696,7 +604,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -714,7 +622,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -904,7 +812,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -920,7 +828,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -936,7 +844,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -971,283 +879,6 @@ From class
 
 
 <!-- Fields -->
-
-
-<!-- ========= FIELD DETAIL ======== -->
-<h2>Fields</h2>
-
-
-
-
-<a id="mBaseDirectoryName"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        String
-      </span>
-        mBaseDirectoryName
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mBaseDirectoryPathSupplier"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;File&gt;
-      </span>
-        mBaseDirectoryPathSupplier
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mCacheErrorLogger"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        <a href="../../../../com/facebook/cache/common/CacheErrorLogger.html">CacheErrorLogger</a>
-      </span>
-        mCacheErrorLogger
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mCacheEventListener"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        <a href="../../../../com/facebook/cache/common/CacheEventListener.html">CacheEventListener</a>
-      </span>
-        mCacheEventListener
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mDiskTrimmableRegistry"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        <a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a>
-      </span>
-        mDiskTrimmableRegistry
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mMaxCacheSize"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        long
-      </span>
-        mMaxCacheSize
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mMaxCacheSizeOnLowDiskSpace"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        long
-      </span>
-        mMaxCacheSizeOnLowDiskSpace
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mMaxCacheSizeOnVeryLowDiskSpace"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        long
-      </span>
-        mMaxCacheSizeOnVeryLowDiskSpace
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
-
-<a id="mVersion"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        int
-      </span>
-        mVersion
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-    </div>
-</div>
-
-
 
 
 <!-- Public ctors -->
@@ -1487,6 +1118,38 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>The class that will contain a registry of caches to be trimmed in low disk space conditions.
 
  <p>See <code><a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a></code>.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="setEntryEvictionComparatorSupplier(EntryEvictionComparatorSupplier)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html">DiskCacheConfig.Builder</a>
+      </span>
+      <span class="sympad">setEntryEvictionComparatorSupplier</span>
+      <span class="normal">(EntryEvictionComparatorSupplier supplier)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Provides the logic to determine the eviction order based on entry's access time and size
 </p></div>
 
     </div>

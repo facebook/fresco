@@ -464,7 +464,7 @@ Summary:
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/view/GenericDraweeView.html">GenericDraweeView</a></td>
-              <td class="jd-descrcol" width="100%">DraweeView that creates GenericDraweeHierarchy based on XML attributes.&nbsp;</td>
+              <td class="jd-descrcol" width="100%">DraweeView that uses GenericDraweeHierarchy.&nbsp;</td>
           </tr>
   </table>
       </div>
@@ -521,7 +521,7 @@ Summary:
  support ImageView's setImageXxx, setScaleType and similar methods. Extending ImageView is a short
  term solution in order to inherit some of its implementation (padding calculations, etc.).
  This class is likely to be converted to extend View directly in the future, so avoid using
- ImageView's methods and properties (T5856175).
+ ImageView's methods and properties.
 </p>
 
 
@@ -1746,6 +1746,22 @@ android.view.View
   </td></tr>
 
 
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#DraweeView(android.content.Context, android.util.AttributeSet, int, int)">DraweeView</a></span>(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+        
+  </td></tr>
+
+
 
 </table>
 
@@ -1767,6 +1783,24 @@ android.view.View
             
             
             
+            float
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#getAspectRatio()">getAspectRatio</a></span>()
+        
+        <div class="jd-descrdiv">Gets the desired aspect ratio (w/h).</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a>
         </td>
         <td class="jd-linkcol" width="100%">
@@ -1778,7 +1812,7 @@ android.view.View
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1796,7 +1830,7 @@ android.view.View
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1814,7 +1848,7 @@ android.view.View
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1832,7 +1866,7 @@ android.view.View
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1850,7 +1884,7 @@ android.view.View
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1866,7 +1900,7 @@ android.view.View
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1882,7 +1916,7 @@ android.view.View
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1894,6 +1928,24 @@ android.view.View
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#onTouchEvent(android.view.MotionEvent)">onTouchEvent</a></span>(MotionEvent event)
         
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#setAspectRatio(float)">setAspectRatio</a></span>(float aspectRatio)
+        
+        <div class="jd-descrdiv">Sets the desired aspect ratio (w/h).</div>
+  
   </td></tr>
 
 
@@ -2076,6 +2128,22 @@ android.view.View
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#onDetachedFromWindow()">onDetachedFromWindow</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#onMeasure(int, int)">onMeasure</a></span>(int widthMeasureSpec, int heightMeasureSpec)
         
   </td></tr>
 
@@ -2645,13 +2713,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
+        <span class="sympad">setColorFilter</span>(int arg0, PorterDuff.Mode arg1)
         
   </td></tr>
 
@@ -2661,13 +2729,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(int arg0)
+        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
         
   </td></tr>
 
@@ -2683,7 +2751,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(int arg0, PorterDuff.Mode arg1)
+        <span class="sympad">setColorFilter</span>(int arg0)
         
   </td></tr>
 
@@ -3029,7 +3097,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1, int arg2)
+        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1)
         
   </td></tr>
 
@@ -3045,7 +3113,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1)
+        <span class="sympad">addFocusables</span>(ArrayList&lt;View&gt; arg0, int arg1, int arg2)
         
   </td></tr>
 
@@ -3141,7 +3209,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">awakenScrollBars</span>(int arg0)
+        <span class="sympad">awakenScrollBars</span>(int arg0, boolean arg1)
         
   </td></tr>
 
@@ -3157,7 +3225,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">awakenScrollBars</span>(int arg0, boolean arg1)
+        <span class="sympad">awakenScrollBars</span>(int arg0)
         
   </td></tr>
 
@@ -3205,7 +3273,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">buildDrawingCache</span>()
+        <span class="sympad">buildDrawingCache</span>(boolean arg0)
         
   </td></tr>
 
@@ -3221,7 +3289,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">buildDrawingCache</span>(boolean arg0)
+        <span class="sympad">buildDrawingCache</span>()
         
   </td></tr>
 
@@ -4613,7 +4681,7 @@ From class
             Bitmap
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getDrawingCache</span>(boolean arg0)
+        <span class="sympad">getDrawingCache</span>()
         
   </td></tr>
 
@@ -4629,7 +4697,7 @@ From class
             Bitmap
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getDrawingCache</span>()
+        <span class="sympad">getDrawingCache</span>(boolean arg0)
         
   </td></tr>
 
@@ -4783,13 +4851,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0, Point arg1)
+        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0)
         
   </td></tr>
 
@@ -4799,13 +4867,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0)
+        <span class="sympad">getGlobalVisibleRect</span>(Rect arg0, Point arg1)
         
   </td></tr>
 
@@ -5893,7 +5961,7 @@ From class
             Object
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getTag</span>(int arg0)
+        <span class="sympad">getTag</span>()
         
   </td></tr>
 
@@ -5909,7 +5977,7 @@ From class
             Object
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getTag</span>()
+        <span class="sympad">getTag</span>(int arg0)
         
   </td></tr>
 
@@ -6469,7 +6537,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">invalidate</span>(Rect arg0)
+        <span class="sympad">invalidate</span>()
         
   </td></tr>
 
@@ -6485,7 +6553,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">invalidate</span>(int arg0, int arg1, int arg2, int arg3)
+        <span class="sympad">invalidate</span>(Rect arg0)
         
   </td></tr>
 
@@ -6501,7 +6569,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">invalidate</span>()
+        <span class="sympad">invalidate</span>(int arg0, int arg1, int arg2, int arg3)
         
   </td></tr>
 
@@ -8197,7 +8265,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">postInvalidate</span>(int arg0, int arg1, int arg2, int arg3)
+        <span class="sympad">postInvalidate</span>()
         
   </td></tr>
 
@@ -8213,7 +8281,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">postInvalidate</span>()
+        <span class="sympad">postInvalidate</span>(int arg0, int arg1, int arg2, int arg3)
         
   </td></tr>
 
@@ -8415,13 +8483,13 @@ From class
         <td class="jd-typecol">
             
             
-            
+            final
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">requestFocus</span>(int arg0, Rect arg1)
+        <span class="sympad">requestFocus</span>(int arg0)
         
   </td></tr>
 
@@ -8437,7 +8505,7 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">requestFocus</span>(int arg0)
+        <span class="sympad">requestFocus</span>()
         
   </td></tr>
 
@@ -8447,13 +8515,13 @@ From class
         <td class="jd-typecol">
             
             
-            final
+            
             
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">requestFocus</span>()
+        <span class="sympad">requestFocus</span>(int arg0, Rect arg1)
         
   </td></tr>
 
@@ -10549,7 +10617,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">unscheduleDrawable</span>(Drawable arg0)
+        <span class="sympad">unscheduleDrawable</span>(Drawable arg0, Runnable arg1)
         
   </td></tr>
 
@@ -10565,7 +10633,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">unscheduleDrawable</span>(Drawable arg0, Runnable arg1)
+        <span class="sympad">unscheduleDrawable</span>(Drawable arg0)
         
   </td></tr>
 
@@ -10783,7 +10851,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -10799,7 +10867,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -10815,7 +10883,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -11175,6 +11243,37 @@ From interface
 </div>
 
 
+<a id="DraweeView(android.content.Context, android.util.AttributeSet, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">DraweeView</span>
+      <span class="normal">(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 
 
 
@@ -11188,6 +11287,38 @@ From interface
 
 <h2>Public Methods</h2>
 
+
+
+<a id="getAspectRatio()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        float
+      </span>
+      <span class="sympad">getAspectRatio</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the desired aspect ratio (w/h).
+</p></div>
+
+    </div>
+</div>
 
 
 <a id="getController()"></a>
@@ -11433,6 +11564,38 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setAspectRatio(float)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setAspectRatio</span>
+      <span class="normal">(float aspectRatio)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the desired aspect ratio (w/h).
+</p></div>
 
     </div>
 </div>
@@ -11729,6 +11892,37 @@ From interface
       </span>
       <span class="sympad">onDetachedFromWindow</span>
       <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="onMeasure(int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onMeasure</span>
+      <span class="normal">(int widthMeasureSpec, int heightMeasureSpec)</span>
     </h4>
       <div class="api-level">
         <div>

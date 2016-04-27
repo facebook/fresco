@@ -504,7 +504,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskStorageCache.html#DiskStorageCache(com.facebook.cache.disk.DiskStorageSupplier, com.facebook.cache.disk.DiskStorageCache.Params, com.facebook.cache.common.CacheEventListener, com.facebook.cache.common.CacheErrorLogger, com.facebook.common.disk.DiskTrimmableRegistry)">DiskStorageCache</a></span>(DiskStorageSupplier diskStorageSupplier, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.Params.html">DiskStorageCache.Params</a> params, <a href="../../../../com/facebook/cache/common/CacheEventListener.html">CacheEventListener</a> cacheEventListener, <a href="../../../../com/facebook/cache/common/CacheErrorLogger.html">CacheErrorLogger</a> cacheErrorLogger, <a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a> diskTrimmableRegistry)
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskStorageCache.html#DiskStorageCache(DiskStorage, EntryEvictionComparatorSupplier, com.facebook.cache.disk.DiskStorageCache.Params, com.facebook.cache.common.CacheEventListener, com.facebook.cache.common.CacheErrorLogger, com.facebook.common.disk.DiskTrimmableRegistry)">DiskStorageCache</a></span>(DiskStorage diskStorage, EntryEvictionComparatorSupplier entryEvictionComparatorSupplier, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.Params.html">DiskStorageCache.Params</a> params, <a href="../../../../com/facebook/cache/common/CacheEventListener.html">CacheEventListener</a> cacheEventListener, <a href="../../../../com/facebook/cache/common/CacheErrorLogger.html">CacheErrorLogger</a> cacheErrorLogger, <a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a> diskTrimmableRegistry)
         
   </td></tr>
 
@@ -630,10 +630,28 @@ Summary:
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskStorageCache.html#hasKeySync(com.facebook.cache.common.CacheKey)">hasKeySync</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key)
+        
+        <div class="jd-descrdiv">Returns true if the key is in the in-memory key index.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/binaryresource/BinaryResource.html">BinaryResource</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskStorageCache.html#insert(com.facebook.cache.common.CacheKey, com.facebook.cache.common.WriterCallback)">insert</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key, WriterCallback callback)
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskStorageCache.html#insert(com.facebook.cache.common.CacheKey, WriterCallback)">insert</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key, WriterCallback callback)
         
         <div class="jd-descrdiv">Inserts resource into file with key</div>
   
@@ -641,7 +659,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -659,7 +677,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -677,7 +695,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -695,7 +713,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -713,7 +731,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -904,7 +922,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -920,7 +938,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -936,7 +954,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1075,10 +1093,28 @@ From interface
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/FileCache.html#hasKeySync(com.facebook.cache.common.CacheKey)">hasKeySync</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key)
+        
+        <div class="jd-descrdiv">Returns true if the key is in the in-memory key index.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             <a href="../../../../com/facebook/binaryresource/BinaryResource.html">BinaryResource</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/disk/FileCache.html#insert(com.facebook.cache.common.CacheKey, com.facebook.cache.common.WriterCallback)">insert</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key, WriterCallback writer)
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/FileCache.html#insert(com.facebook.cache.common.CacheKey, WriterCallback)">insert</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key, WriterCallback writer)
         
         <div class="jd-descrdiv">Inserts resource into file with key</div>
   
@@ -1086,7 +1122,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1104,7 +1140,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1120,7 +1156,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1287,7 +1323,7 @@ From interface
 
 
 
-<a id="DiskStorageCache(com.facebook.cache.disk.DiskStorageSupplier, com.facebook.cache.disk.DiskStorageCache.Params, com.facebook.cache.common.CacheEventListener, com.facebook.cache.common.CacheErrorLogger, com.facebook.common.disk.DiskTrimmableRegistry)"></a>
+<a id="DiskStorageCache(DiskStorage, EntryEvictionComparatorSupplier, com.facebook.cache.disk.DiskStorageCache.Params, com.facebook.cache.common.CacheEventListener, com.facebook.cache.common.CacheErrorLogger, com.facebook.common.disk.DiskTrimmableRegistry)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1300,7 +1336,7 @@ From interface
         
       </span>
       <span class="sympad">DiskStorageCache</span>
-      <span class="normal">(DiskStorageSupplier diskStorageSupplier, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.Params.html">DiskStorageCache.Params</a> params, <a href="../../../../com/facebook/cache/common/CacheEventListener.html">CacheEventListener</a> cacheEventListener, <a href="../../../../com/facebook/cache/common/CacheErrorLogger.html">CacheErrorLogger</a> cacheErrorLogger, <a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a> diskTrimmableRegistry)</span>
+      <span class="normal">(DiskStorage diskStorage, EntryEvictionComparatorSupplier entryEvictionComparatorSupplier, <a href="../../../../com/facebook/cache/disk/DiskStorageCache.Params.html">DiskStorageCache.Params</a> params, <a href="../../../../com/facebook/cache/common/CacheEventListener.html">CacheEventListener</a> cacheEventListener, <a href="../../../../com/facebook/cache/common/CacheErrorLogger.html">CacheErrorLogger</a> cacheErrorLogger, <a href="../../../../com/facebook/common/disk/DiskTrimmableRegistry.html">DiskTrimmableRegistry</a> diskTrimmableRegistry)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1560,7 +1596,44 @@ From interface
 </div>
 
 
-<a id="insert(com.facebook.cache.common.CacheKey, com.facebook.cache.common.WriterCallback)"></a>
+<a id="hasKeySync(com.facebook.cache.common.CacheKey)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">hasKeySync</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> key)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns true if the key is in the in-memory key index.
+
+ Not guaranteed to be correct. The cache may yet have this key even if this returns false.
+ But if it returns true, it definitely has it.
+
+ Avoids a disk read.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="insert(com.facebook.cache.common.CacheKey, WriterCallback)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">

@@ -214,12 +214,12 @@
           <div id="classes-nav">
             <ul>
               
-              
-    <li><h2>Classes</h2>
+    <li><h2>Interfaces</h2>
       <ul>
           <li class="selected api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a></li>
       </ul>
     </li>
+              
               
               
               
@@ -261,40 +261,9 @@
 
 
 
-  
-   
-  
-  
-  
-  
-
 
 <div class="sum-details-links">
 
-
-Summary:
-
-
-
-
-
-
-
-
-
-  <a href="#pubctors">Ctors</a>
-  
-
-
-
-  &#124; <a href="#pubmethods">Methods</a>
-  
-
-
-
-  &#124; <a href="#inhmethods">Inherited Methods</a>
-
-&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
 </div><!-- end sum-details-links -->
 <div class="api-level">
@@ -315,16 +284,10 @@ Summary:
      
      
     
-    class
+    interface
 <h1>AnimatedDrawableFactory</h1>
 
 
-
-  
-    extends Object<br/>
-  
-  
-  
 
   
   
@@ -340,14 +303,6 @@ Summary:
 
 
     <tr>
-         	
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
         <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory</td>
     </tr>
@@ -365,7 +320,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Factory for instances of <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>.
+<p>Factory for instances of AnimatedDrawable.
 </p>
 
 
@@ -416,31 +371,6 @@ Summary:
 
 
 
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<table id="pubctors" class="jd-sumtable"><tr><th colspan="12">Public Constructors</th></tr>
-
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html#AnimatedDrawableFactory(com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider, com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider, com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil, java.util.concurrent.ScheduledExecutorService, android.content.res.Resources)">AnimatedDrawableFactory</a></span>(<a href="../../../../../com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a> animatedDrawableBackendProvider, AnimatedDrawableCachingBackendImplProvider animatedDrawableCachingBackendProvider, <a href="../../../../../com/facebook/imagepipeline/animated/util/AnimatedDrawableUtil.html">AnimatedDrawableUtil</a> animatedDrawableUtil, ScheduledExecutorService scheduledExecutorService, Resources resources)
-        
-  </td></tr>
-
-
-
-</table>
-
-
 
 
 
@@ -453,35 +383,17 @@ Summary:
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
+            abstract
             
             
             
             
-            
-            <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a>
+            Drawable
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html#create(com.facebook.imagepipeline.animated.base.AnimatedImageResult, com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions)">create</a></span>(<a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html">AnimatedImageResult</a> animatedImageResult, <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawableOptions.html">AnimatedDrawableOptions</a> options)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html#create(com.facebook.imagepipeline.image.CloseableImage)">create</a></span>(<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a> closeableImage)
         
-        <div class="jd-descrdiv">Creates an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code> based on an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImage.html">AnimatedImage</a></code>.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html#create(com.facebook.imagepipeline.animated.base.AnimatedImageResult)">create</a></span>(<a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html">AnimatedImageResult</a> animatedImageResult)
-        
-        <div class="jd-descrdiv">Creates an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code> based on an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImage.html">AnimatedImage</a></code>.</div>
+        <div class="jd-descrdiv">Creates an AnimatedDrawable based on an AnimatedImage.</div>
   
   </td></tr>
 
@@ -493,216 +405,6 @@ Summary:
 
 
 
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="inhmethods" class="jd-sumtable"><tr><th>
-  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
-  <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Object-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  java.lang.Object
-
-<div id="inherited-methods-java.lang.Object">
-  <div id="inherited-methods-java.lang.Object-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            Object
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">clone</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">equals</span>(Object arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">finalize</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Class&lt;?&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getClass</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">hashCode</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">notify</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">notifyAll</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">toString</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-</table>
 
 
 </div><!-- jd-descr (summary) -->
@@ -731,44 +433,6 @@ From class
 <!-- Public ctors -->
 
 
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<h2>Public Constructors</h2>
-
-
-
-<a id="AnimatedDrawableFactory(com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider, com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider, com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil, java.util.concurrent.ScheduledExecutorService, android.content.res.Resources)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        
-      </span>
-      <span class="sympad">AnimatedDrawableFactory</span>
-      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a> animatedDrawableBackendProvider, AnimatedDrawableCachingBackendImplProvider animatedDrawableCachingBackendProvider, <a href="../../../../../com/facebook/imagepipeline/animated/util/AnimatedDrawableUtil.html">AnimatedDrawableUtil</a> animatedDrawableUtil, ScheduledExecutorService scheduledExecutorService, Resources resources)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-
-
 
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <!-- Protected ctors -->
@@ -782,7 +446,7 @@ From class
 
 
 
-<a id="create(com.facebook.imagepipeline.animated.base.AnimatedImageResult, com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions)"></a>
+<a id="create(com.facebook.imagepipeline.image.CloseableImage)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -790,12 +454,12 @@ From class
         public 
          
          
+        abstract 
          
-         
-        <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a>
+        Drawable
       </span>
       <span class="sympad">create</span>
-      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html">AnimatedImageResult</a> animatedImageResult, <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawableOptions.html">AnimatedDrawableOptions</a> options)</span>
+      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a> closeableImage)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -807,68 +471,19 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code> based on an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImage.html">AnimatedImage</a></code>.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates an AnimatedDrawable based on an AnimatedImage.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>animatedImageResult</th>
-          <td>the result of the code</td>
-        </tr>
-        <tr>
-          <th>options</th>
-          <td>additional options</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>a newly constructed <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="create(com.facebook.imagepipeline.animated.base.AnimatedImageResult)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a>
-      </span>
-      <span class="sympad">create</span>
-      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImageResult.html">AnimatedImageResult</a> animatedImageResult)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Creates an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code> based on an <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedImage.html">AnimatedImage</a></code>.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>animatedImageResult</th>
+          <th>closeableImage</th>
           <td>the result of the code</td>
         </tr>
       </table>
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>a newly constructed <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>
+      <ul class="nolist"><li>a newly constructed Drawable
 </li></ul>
   </div>
 

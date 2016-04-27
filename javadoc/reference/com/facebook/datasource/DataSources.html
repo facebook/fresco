@@ -226,7 +226,6 @@
           <li class="api apilevel-"><a href="../../../com/facebook/datasource/AbstractDataSource.html">AbstractDataSource</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../com/facebook/datasource/BaseDataSubscriber.html">BaseDataSubscriber</a>&lt;T&gt;</li>
           <li class="selected api apilevel-"><a href="../../../com/facebook/datasource/DataSources.html">DataSources</a></li>
-          <li class="api apilevel-"><a href="../../../com/facebook/datasource/SettableDataSource.html">SettableDataSource</a>&lt;T&gt;</li>
       </ul>
     </li>
               
@@ -458,6 +457,22 @@ Summary:
             <a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt;
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/DataSources.html#immediateDataSource(T)">immediateDataSource</a></span>(T result)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;T&gt;
+            <a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../com/facebook/datasource/DataSources.html#immediateFailedDataSource(java.lang.Throwable)">immediateFailedDataSource</a></span>(Throwable failure)
         
   </td></tr>
@@ -636,7 +651,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -652,7 +667,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -668,7 +683,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -735,6 +750,37 @@ From class
       </span>
       <span class="sympad">getFailedDataSourceSupplier</span>
       <span class="normal">(Throwable failure)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="immediateDataSource(T)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt;
+      </span>
+      <span class="sympad">immediateDataSource</span>
+      <span class="normal">(T result)</span>
     </h4>
       <div class="api-level">
         <div>

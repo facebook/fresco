@@ -324,7 +324,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a></td>
-            <td class="jd-descrcol" width="100%">Factory for instances of <code><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Factory for instances of AnimatedDrawable.&nbsp;</td>
         </tr>
     
     
@@ -336,7 +336,7 @@
     
         <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/animated/util/AnimatedDrawableUtil.html">AnimatedDrawableUtil</a></td>
-            <td class="jd-descrcol" width="100%">Utility methods for <code><a href="./com/facebook/imagepipeline/animated/base/AnimatedDrawable.html">AnimatedDrawable</a></code>.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">Utility methods for AnimatedDrawable.&nbsp;</td>
         </tr>
     
     
@@ -533,6 +533,12 @@
         </tr>
     
     
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</td>
+            <td class="jd-descrcol" width="100%">Interface used to observe the state changes of an entry.&nbsp;</td>
+        </tr>
+    
+    
 </table>
 
 
@@ -701,20 +707,14 @@
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/drawee/generic/GenericDraweeHierarchy.RootDrawable.html">GenericDraweeHierarchy.RootDrawable</a></td>
-            <td class="jd-descrcol" width="100%">&nbsp;</td>
-        </tr>
-    
-    
-        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html">GenericDraweeHierarchyBuilder</a></td>
             <td class="jd-descrcol" width="100%">Class to construct a <code><a href="./com/facebook/drawee/generic/GenericDraweeHierarchy.html">GenericDraweeHierarchy</a></code>.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/view/GenericDraweeView.html">GenericDraweeView</a></td>
-            <td class="jd-descrcol" width="100%">DraweeView that creates GenericDraweeHierarchy based on XML attributes.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">DraweeView that uses GenericDraweeHierarchy.&nbsp;</td>
         </tr>
     
     
@@ -895,8 +895,11 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/backends/okhttp/OkHttpImagePipelineConfigFactory.html">OkHttpImagePipelineConfigFactory</a></td>
-            <td class="jd-descrcol" width="100%">Factory for getting an <code><a href="./com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></code> that uses
- com.facebook.imagepipeline.backends.okhttp.OkHttpNetworkFetcher.&nbsp;</td>
+            <td class="jd-descrcol" width="100%">
+      <em>
+  This class is deprecated.
+      replaced with <code>com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory</code>.
+</em>&nbsp;</td>
         </tr>
     
     
@@ -1112,14 +1115,26 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></td>
+            <td class="jd-descrcol" width="100%">A convenience base class that has some common logic.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a></td>
+            <td class="jd-descrcol" width="100%">Scale type that interpolates transform of the two underlying scale types.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
             <td class="jd-descrcol" width="100%">Options for scaling the child bounds to the parent bounds.&nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/datasource/SettableDataSource.html">SettableDataSource</a>&lt;T&gt;</td>
-            <td class="jd-descrcol" width="100%">Settable <code><a href="./com/facebook/datasource/DataSource.html">DataSource</a></code>.&nbsp;</td>
+            <td class="jd-linkcol"><a href="./com/facebook/drawee/drawable/ScalingUtils.StatefulScaleType.html">ScalingUtils.StatefulScaleType</a></td>
+            <td class="jd-descrcol" width="100%">Scaletypes that have some internal state and are not static.&nbsp;</td>
         </tr>
     
     

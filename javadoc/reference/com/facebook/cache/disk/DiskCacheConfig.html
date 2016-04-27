@@ -558,6 +558,22 @@ Summary:
             
             
             
+            EntryEvictionComparatorSupplier
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html#getEntryEvictionComparatorSupplier()">getEntryEvictionComparatorSupplier</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             long
         </td>
         <td class="jd-linkcol" width="100%">
@@ -567,7 +583,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -583,7 +599,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -599,7 +615,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -609,8 +625,10 @@ Summary:
             <a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html">DiskCacheConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html#newBuilder()">newBuilder</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html#newBuilder(android.content.Context)">newBuilder</a></span>(Context context)
         
+        <div class="jd-descrdiv">Create a new builder.</div>
+  
   </td></tr>
 
 
@@ -787,7 +805,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -803,7 +821,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -819,7 +837,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -1058,6 +1076,37 @@ From class
 </div>
 
 
+<a id="getEntryEvictionComparatorSupplier()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        EntryEvictionComparatorSupplier
+      </span>
+      <span class="sympad">getEntryEvictionComparatorSupplier</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="getLowDiskSpaceSizeLimit()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1151,7 +1200,7 @@ From class
 </div>
 
 
-<a id="newBuilder()"></a>
+<a id="newBuilder(android.content.Context)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1164,7 +1213,7 @@ From class
         <a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html">DiskCacheConfig.Builder</a>
       </span>
       <span class="sympad">newBuilder</span>
-      <span class="normal">()</span>
+      <span class="normal">(Context context)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1176,7 +1225,19 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Create a new builder.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>context</th>
+          <td>If this is null, you must explicitly call
+   <code><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#setBaseDirectoryPath(java.io.File)">setBaseDirectoryPath(File)</a></code> or
+   <code><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.Builder.html#setBaseDirectoryPathSupplier(com.facebook.common.internal.Supplier<java.io.File>)">setBaseDirectoryPathSupplier(Supplier)</a></code>
+   or the config won't know where to physically locate the cache.</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>

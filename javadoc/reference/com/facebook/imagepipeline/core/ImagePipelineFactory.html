@@ -472,11 +472,17 @@ Summary:
             
             static
             
-            AnimatedImageFactory
+            <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildAnimatedImageFactory(com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)">buildAnimatedImageFactory</a></span>(<a href="../../../../com/facebook/imagepipeline/animated/util/AnimatedDrawableUtil.html">AnimatedDrawableUtil</a> animatedDrawableUtil, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildDiskStorageCache(com.facebook.cache.disk.DiskCacheConfig, DiskStorage)">buildDiskStorageCache</a></span>(<a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html">DiskCacheConfig</a> diskCacheConfig, DiskStorage diskStorage)
         
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      use DiskStorageCacheFactory.buildDiskStorageCache
+</em></div>
+  
   </td></tr>
 
 
@@ -491,8 +497,11 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildPlatformBitmapFactory(com.facebook.imagepipeline.memory.PoolFactory)">buildPlatformBitmapFactory</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildPlatformBitmapFactory(com.facebook.imagepipeline.memory.PoolFactory, PlatformDecoder)">buildPlatformBitmapFactory</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, PlatformDecoder platformDecoder)
         
+        <div class="jd-descrdiv">Provide the implementation of the PlatformBitmapFactory for the current platform
+ using the provided PoolFactory</div>
+  
   </td></tr>
 
 
@@ -502,18 +511,37 @@ Summary:
             
             
             
+            static
             
-            
-            <a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a>
+            PlatformDecoder
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getAnimatedDrawableFactory()">getAnimatedDrawableFactory</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildPlatformDecoder(com.facebook.imagepipeline.memory.PoolFactory, boolean, boolean)">buildPlatformDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, boolean decodeMemoryFileEnabled, boolean webpSupportEnabled)
         
+        <div class="jd-descrdiv">Provide the implementation of the PlatformDecoder for the current platform using the
+ provided PoolFactory</div>
+  
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            AnimatedFactory
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getAnimatedFactory()">getAnimatedFactory</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -529,7 +557,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -545,7 +573,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -561,7 +589,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -577,7 +605,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -593,7 +621,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -611,6 +639,28 @@ Summary:
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getMainDiskStorageCache()">getMainDiskStorageCache</a></span>()
+        
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      use ImagePipelineFactory.getMainFileCache
+</em></div>
+  
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
@@ -618,10 +668,10 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a>
+            <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getMainDiskStorageCache()">getMainDiskStorageCache</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getMainFileCache()">getMainFileCache</a></span>()
         
   </td></tr>
 
@@ -634,16 +684,70 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a>
+            <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getSmallImageDiskStorageCache()">getSmallImageDiskStorageCache</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getPlatformBitmapFactory()">getPlatformBitmapFactory</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            PlatformDecoder
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getPlatformDecoder()">getPlatformDecoder</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getSmallImageDiskStorageCache()">getSmallImageDiskStorageCache</a></span>()
+        
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      use ImagePipelineFactory.getSmallImageFileCache
+</em></div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#getSmallImageFileCache()">getSmallImageFileCache</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -661,7 +765,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -679,7 +783,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -869,7 +973,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -885,7 +989,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -901,7 +1005,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -992,7 +1096,7 @@ From class
 
 
 
-<a id="buildAnimatedImageFactory(com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory)"></a>
+<a id="buildDiskStorageCache(com.facebook.cache.disk.DiskCacheConfig, DiskStorage)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1002,10 +1106,10 @@ From class
          
          
          
-        AnimatedImageFactory
+        <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a>
       </span>
-      <span class="sympad">buildAnimatedImageFactory</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/animated/util/AnimatedDrawableUtil.html">AnimatedDrawableUtil</a> animatedDrawableUtil, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory)</span>
+      <span class="sympad">buildDiskStorageCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html">DiskCacheConfig</a> diskCacheConfig, DiskStorage diskStorage)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1016,14 +1120,19 @@ From class
 
       </div>
     <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> use DiskStorageCacheFactory.buildDiskStorageCache
+
+  </p>
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new <code><a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a></code> from the given <code><a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html">DiskCacheConfig</a></code></p></div>
 
     </div>
 </div>
 
 
-<a id="buildPlatformBitmapFactory(com.facebook.imagepipeline.memory.PoolFactory)"></a>
+<a id="buildPlatformBitmapFactory(com.facebook.imagepipeline.memory.PoolFactory, PlatformDecoder)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1036,7 +1145,7 @@ From class
         <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a>
       </span>
       <span class="sympad">buildPlatformBitmapFactory</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, PlatformDecoder platformDecoder)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1048,13 +1157,78 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Provide the implementation of the PlatformBitmapFactory for the current platform
+ using the provided PoolFactory</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>poolFactory</th>
+          <td>The PoolFactory</td>
+        </tr>
+        <tr>
+          <th>platformDecoder</th>
+          <td>The PlatformDecoder</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The PlatformBitmapFactory implementation
+</li></ul>
+  </div>
 
     </div>
 </div>
 
 
-<a id="getAnimatedDrawableFactory()"></a>
+<a id="buildPlatformDecoder(com.facebook.imagepipeline.memory.PoolFactory, boolean, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        PlatformDecoder
+      </span>
+      <span class="sympad">buildPlatformDecoder</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, boolean decodeMemoryFileEnabled, boolean webpSupportEnabled)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Provide the implementation of the PlatformDecoder for the current platform using the
+ provided PoolFactory</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>poolFactory</th>
+          <td>The PoolFactory</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The PlatformDecoder implementation
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getAnimatedFactory()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1064,9 +1238,9 @@ From class
          
          
          
-        <a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a>
+        AnimatedFactory
       </span>
-      <span class="sympad">getAnimatedDrawableFactory</span>
+      <span class="sympad">getAnimatedFactory</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1281,9 +1455,107 @@ From class
          
          
          
-        <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a>
+        <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
       </span>
       <span class="sympad">getMainDiskStorageCache</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> use ImagePipelineFactory.getMainFileCache
+
+  </p>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getMainFileCache()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
+      </span>
+      <span class="sympad">getMainFileCache</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getPlatformBitmapFactory()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a>
+      </span>
+      <span class="sympad">getPlatformBitmapFactory</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getPlatformDecoder()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        PlatformDecoder
+      </span>
+      <span class="sympad">getPlatformDecoder</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1312,9 +1584,45 @@ From class
          
          
          
-        <a href="../../../../com/facebook/cache/disk/DiskStorageCache.html">DiskStorageCache</a>
+        <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
       </span>
       <span class="sympad">getSmallImageDiskStorageCache</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> use ImagePipelineFactory.getSmallImageFileCache
+
+  </p>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getSmallImageFileCache()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/cache/disk/FileCache.html">FileCache</a>
+      </span>
+      <span class="sympad">getSmallImageFileCache</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">

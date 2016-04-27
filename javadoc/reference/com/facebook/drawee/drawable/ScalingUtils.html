@@ -214,20 +214,23 @@
           <div id="classes-nav">
             <ul>
               
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.StatefulScaleType.html">ScalingUtils.StatefulScaleType</a></li>
+      </ul>
+    </li>
               
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ProgressBarDrawable.html">ProgressBarDrawable</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.html">ScalingUtils</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a></li>
       </ul>
     </li>
               
               
-    <li><h2>Enums</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></li>
-      </ul>
-    </li>
               
               
             </ul><br/>
@@ -416,9 +419,45 @@ Summary:
          
          
         
-        enum</td>
+        class</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></td>
+      <td class="jd-descrcol" width="100%">A convenience base class that has some common logic.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        class</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.InterpolatingScaleType.html">ScalingUtils.InterpolatingScaleType</a></td>
+      <td class="jd-descrcol" width="100%">Scale type that interpolates transform of the two underlying scale types.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        interface</td>
       <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a></td>
       <td class="jd-descrcol" width="100%">Options for scaling the child bounds to the parent bounds.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        interface</td>
+      <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.StatefulScaleType.html">ScalingUtils.StatefulScaleType</a></td>
+      <td class="jd-descrcol" width="100%">Scaletypes that have some internal state and are not static.&nbsp;</td>
     </tr>
     
     
@@ -493,7 +532,11 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.html#getTransform(android.graphics.Matrix, android.graphics.Rect, int, int, float, float, com.facebook.drawee.drawable.ScalingUtils.ScaleType)">getTransform</a></span>(Matrix transform, Rect parentBounds, int childWidth, int childHeight, float focusX, float focusY, <a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html">ScalingUtils.ScaleType</a> scaleType)
         
-        <div class="jd-descrdiv">Gets transformation based on the scale type.</div>
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      use <code>ScaleType.getTransform</code>
+</em></div>
   
   </td></tr>
 
@@ -671,7 +714,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>()
+        <span class="sympad">wait</span>(long arg0, int arg1)
         
   </td></tr>
 
@@ -687,7 +730,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0, int arg1)
+        <span class="sympad">wait</span>(long arg0)
         
   </td></tr>
 
@@ -703,7 +746,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">wait</span>(long arg0)
+        <span class="sympad">wait</span>()
         
   </td></tr>
 
@@ -818,7 +861,12 @@ From class
 
       </div>
     <div class="jd-details-descr">
-      
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> use <code>ScaleType.getTransform</code>
+
+  </p>
   <div class="jd-tagdata jd-tagdescr"><p>Gets transformation based on the scale type.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -855,8 +903,7 @@ From class
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>reference to the out matrix
-</li></ul>
+      <ul class="nolist"><li>reference to the out matrix</li></ul>
   </div>
 
     </div>
