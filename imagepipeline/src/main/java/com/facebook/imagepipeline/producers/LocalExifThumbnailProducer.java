@@ -146,7 +146,13 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     int rotationAngle = getRotationAngle(exifInterface);
     int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
     int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
-    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(imageBytes));
+    EncodedImage encodedImage;
+    CloseableReference<PooledByteBuffer> closeableByteBuffer = CloseableReference.of(imageBytes);
+    try {
+      encodedImage = new EncodedImage(closeableByteBuffer);
+    } finally {
+      CloseableReference.closeSafely(closeableByteBuffer);
+    }
     encodedImage.setImageFormat(ImageFormat.JPEG);
     encodedImage.setRotationAngle(rotationAngle);
     encodedImage.setWidth(width);
