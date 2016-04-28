@@ -158,11 +158,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
 
     this.mStorage = diskStorage;
-     try {
-      this.mDiskCacheIsExternal = mStorage.isExternal();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+
+    this.mDiskCacheIsExternal = mStorage.isExternal();
 
     this.mEntryEvictionComparatorSupplier = entryEvictionComparatorSupplier;
 
@@ -194,11 +191,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   
   @Override
   public boolean isExternal() {
-    try {
-      return mStorage.isExternal();
-    } catch (IOException e) {
-      return false;
-    }
+    return mStorage.isExternal();
   }
 
   /**
