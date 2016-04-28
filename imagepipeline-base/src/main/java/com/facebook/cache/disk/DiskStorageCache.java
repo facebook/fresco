@@ -159,7 +159,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
     this.mStorage = diskStorage;
      try {
-      this.mDiskCacheIsExternal = mStorage.get().isExternal();
+      this.mDiskCacheIsExternal = mStorage.isExternal();
     } catch (IOException e) {
       e.printStackTrace();
     }
