@@ -71,6 +71,15 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
       return false;
     }
   }
+ 
+ @Override
+  public boolean isExternal() {
+    try {
+      return get().isExternal();
+    } catch (IOException ioe) {
+      return false;
+    }
+  }
 
   @Override
   public BinaryResource getResource(String resourceId, Object debugInfo) throws IOException {
