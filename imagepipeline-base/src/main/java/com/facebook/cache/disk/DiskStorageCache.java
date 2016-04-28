@@ -195,7 +195,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @Override
   public boolean isExternal() {
     try {
-      return mStorageSupplier.get().isExternal();
+      return mStorage.isExternal();
     } catch (IOException e) {
       return false;
     }
