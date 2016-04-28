@@ -39,7 +39,7 @@ public class TransformGestureDetectorTest {
   public void setup() {
     mListener = mock(TransformGestureDetector.Listener.class);
     mMultiPointerGestureDetector = mock(MultiPointerGestureDetector.class);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(0);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(0);
     when(mMultiPointerGestureDetector.getStartX()).thenReturn(new float[] {100f, 200f});
     when(mMultiPointerGestureDetector.getStartY()).thenReturn(new float[] {500f, 600f});
     when(mMultiPointerGestureDetector.getCurrentX()).thenReturn(new float[] {10f, 20f});
@@ -97,47 +97,47 @@ public class TransformGestureDetectorTest {
 
   @Test
   public void testPivot() {
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(0);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(0);
     assertEquals(0, mGestureDetector.getPivotX(), 0);
     assertEquals(0, mGestureDetector.getPivotY(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(1);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(1);
     assertEquals(100, mGestureDetector.getPivotX(), 0);
     assertEquals(500, mGestureDetector.getPivotY(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(2);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(2);
     assertEquals(150, mGestureDetector.getPivotX(), 0);
     assertEquals(550, mGestureDetector.getPivotY(), 0);
   }
 
   @Test
   public void testTranslation() {
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(0);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(0);
     assertEquals(0, mGestureDetector.getTranslationX(), 0);
     assertEquals(0, mGestureDetector.getTranslationY(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(1);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(1);
     assertEquals(-90, mGestureDetector.getTranslationX(), 0);
     assertEquals(-450, mGestureDetector.getTranslationY(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(2);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(2);
     assertEquals(-135, mGestureDetector.getTranslationX(), 0);
     assertEquals(-505, mGestureDetector.getTranslationY(), 0);
   }
 
   @Test
   public void testScale() {
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(0);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(0);
     assertEquals(1, mGestureDetector.getScale(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(1);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(1);
     assertEquals(1, mGestureDetector.getScale(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(2);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(2);
     assertEquals(0.1f, mGestureDetector.getScale(), 1e-6);
   }
 
   @Test
   public void testRotation() {
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(0);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(0);
     assertEquals(0, mGestureDetector.getRotation(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(1);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(1);
     assertEquals(0, mGestureDetector.getRotation(), 0);
-    when(mMultiPointerGestureDetector.getCount()).thenReturn(2);
+    when(mMultiPointerGestureDetector.getPointerCount()).thenReturn(2);
     assertEquals((float)-Math.PI/2, mGestureDetector.getRotation(), 1e-6);
   }
 

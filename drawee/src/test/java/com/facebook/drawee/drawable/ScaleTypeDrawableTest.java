@@ -69,10 +69,14 @@ public class ScaleTypeDrawableTest {
 
   @Test
   public void testConfigureBounds_NoIntrinsicDimensions() {
-    for (ScaleType scaleType : ScaleType.values()) {
-      System.out.println("testConfigureBounds_NoIntrinsicDimensions: " + scaleType);
-      testConfigureBounds_NoIntrinsicDimensions(scaleType, mViewBounds);
-    }
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_XY, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_START, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_CENTER, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_END, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.CENTER, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.CENTER_INSIDE, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.CENTER_CROP, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FOCUS_CROP, mViewBounds);
   }
 
   private void testConfigureBounds_NoIntrinsicDimensions(ScaleType scaleType, Rect viewBounds) {
@@ -91,10 +95,14 @@ public class ScaleTypeDrawableTest {
 
   @Test
   public void testConfigureBounds_SameAsView() {
-    for (ScaleType scaleType : ScaleType.values()) {
-      System.out.println("testConfigureBounds_SameAsView: " + scaleType);
-      testConfigureBounds_SameAsView(scaleType, mViewBounds);
-    }
+    testConfigureBounds_SameAsView(ScaleType.FIT_XY, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FIT_START, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FIT_CENTER, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FIT_END, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.CENTER, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.CENTER_INSIDE, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.CENTER_CROP, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FOCUS_CROP, mViewBounds);
   }
 
   private void testConfigureBounds_SameAsView(ScaleType scaleType, Rect viewBounds) {

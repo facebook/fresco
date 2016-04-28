@@ -217,6 +217,6 @@ public class RequestLoggingListener implements RequestListener {
   }
 
   private static long getTime() {
-    return SystemClock.elapsedRealtime();
+    return SystemClock.uptimeMillis();
   }
 }

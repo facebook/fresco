@@ -14,6 +14,8 @@ import javax.annotation.concurrent.Immutable;
 
 import java.util.Locale;
 
+import android.net.Uri;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
@@ -75,6 +77,11 @@ public class BitmapMemoryCacheKey implements CacheKey {
   @Override
   public int hashCode() {
     return mHash;
+  }
+
+  @Override
+  public boolean containsUri(Uri uri) {
+    return getSourceUriString().contains(uri.toString());
   }
 
   public String getSourceUriString() {

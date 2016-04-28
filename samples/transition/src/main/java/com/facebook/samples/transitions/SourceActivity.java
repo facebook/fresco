@@ -12,10 +12,10 @@
 
 package com.facebook.samples.transitions;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -27,8 +27,7 @@ import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import java.util.Set;
 import java.util.HashSet;
 
-
-public class SourceActivity extends AppCompatActivity {
+public class SourceActivity extends Activity {
 
   private SimpleDraweeView mSimpleDraweeView;
 

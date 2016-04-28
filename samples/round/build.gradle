@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId "com.facebook.samples.round"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 

@@ -98,6 +98,15 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   /**
+   * Displays an image given by the uri string.
+   *
+   * @param uriString uri string of the image
+   */
+  public void setImageURI(@Nullable String uriString) {
+    setImageURI(uriString, null);
+  }
+
+  /**
    * Displays an image given by the uri.
    *
    * @param uri uri of the image
@@ -110,5 +119,16 @@ public class SimpleDraweeView extends GenericDraweeView {
         .setOldController(getController())
         .build();
     setController(controller);
+  }
+
+  /**
+   * Displays an image given by the uri string.
+   *
+   * @param uriString uri string of the image
+   * @param callerContext caller context
+   */
+  public void setImageURI(@Nullable String uriString, @Nullable Object callerContext) {
+    Uri uri = (uriString != null) ? Uri.parse(uriString) : null;
+    setImageURI(uri, callerContext);
   }
 }

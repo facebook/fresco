@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+// Set up everything required for releasing on Bintray
+ext {
+    bintrayRepo = 'maven'
+    bintrayUserOrg = 'facebook'
+    bintrayName = "${GROUP}:${POM_ARTIFACT_ID}"
+    bintrayDescription = POM_DESCRIPTION
+    projectUrl = 'https://github.com/facebook/fresco'
+    issuesUrl = 'https://github.com/facebook/fresco/issues'
+    scmUrl = 'https://github.com/facebook/fresco.git'
+    scmConnection = 'scm:git:https://github.com/facebook/fresco.git'
+    scmDeveloperConnection = 'scm:git:git@github.com:facebook/fresco.git'
+
+    publishedGroupId = GROUP
+    libraryName = 'fresco'
+    artifact = 'fresco'
+
+    developerId = 'facebook'
+    developerName = 'Facebook'
+
+    projectLicenses = {
+        license {
+            name 'BSD License'
+            url 'https://github.com/facebook/fresco/blob/master/LICENSE'
+            distribution 'repo'
+        }
+    }
+}
+
+// Set up the Android Maven publication (POM etc.)
+apply from: rootProject.file('gradle/android-maven-install.gradle')
+
+// Upload to Bintray
+apply from: rootProject.file('gradle/bintray.gradle')

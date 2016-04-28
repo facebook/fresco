@@ -39,7 +39,7 @@ import com.facebook.drawee.interfaces.DraweeController;
  * support ImageView's setImageXxx, setScaleType and similar methods. Extending ImageView is a short
  * term solution in order to inherit some of its implementation (padding calculations, etc.).
  * This class is likely to be converted to extend View directly in the future, so avoid using
- * ImageView's methods and properties (T5856175).
+ * ImageView's methods and properties.
  */
 public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 

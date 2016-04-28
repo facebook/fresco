@@ -39,6 +39,7 @@ import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
+import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProducer;
 import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
@@ -52,9 +53,11 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
 import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
-import com.facebook.imagepipeline.producers.ThrottlingProducer;
-import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
+import com.facebook.imagepipeline.producers.ThrottlingProducer;
+import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
+import com.facebook.imagepipeline.producers.ThumbnailProducer;
+import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
 public class ProducerFactory {
   // Local dependencies
@@ -80,6 +83,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
+  private final int mForceSmallCacheThresholdBytes;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -99,7 +103,9 @@ public class ProducerFactory {
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
-      boolean decodeFileDescriptorEnabled) {
+      boolean decodeFileDescriptorEnabled,
+      int forceSmallCacheThresholdBytes) {
+    mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -171,17 +177,23 @@ public class ProducerFactory {
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
-        inputProducer);
+        inputProducer,
+        mForceSmallCacheThresholdBytes);
   }
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer);
+    return new EncodedCacheKeyMultiplexProducer(
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public EncodedMemoryCacheProducer newEncodedMemoryCacheProducer(
       Producer<EncodedImage> inputProducer) {
-    return new EncodedMemoryCacheProducer(mEncodedMemoryCache, mCacheKeyFactory, inputProducer);
+    return new EncodedMemoryCacheProducer(
+        mEncodedMemoryCache,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public LocalAssetFetchProducer newLocalAssetFetchProducer() {
@@ -192,8 +204,16 @@ public class ProducerFactory {
         mDecodeFileDescriptorEnabled);
   }
 
-  public LocalContentUriFetchProducer newContentUriFetchProducer() {
+  public LocalContentUriFetchProducer newLocalContentUriFetchProducer() {
     return new LocalContentUriFetchProducer(
+        mExecutorSupplier.forLocalStorageRead(),
+        mPooledByteBufferFactory,
+        mContentResolver,
+        mDecodeFileDescriptorEnabled);
+  }
+
+    public LocalContentUriThumbnailFetchProducer newLocalContentUriThumbnailFetchProducer() {
+    return new LocalContentUriThumbnailFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
         mContentResolver,
@@ -205,6 +225,11 @@ public class ProducerFactory {
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
         mContentResolver);
+  }
+
+  public ThumbnailBranchProducer newThumbnailBranchProducer(
+      ThumbnailProducer<EncodedImage>[] thumbnailProducers) {
+    return new ThumbnailBranchProducer(thumbnailProducers);
   }
 
   public LocalFileFetchProducer newLocalFileFetchProducer() {

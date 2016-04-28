@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
+    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compile project(':fbcore')
+    compile project(':imagepipeline-base')
+
+    compile "junit:junit:${JUNIT_VERSION}"
+    compile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    compile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
+    compile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    compile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    compile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+}
+apply from: rootProject.file('release.gradle')
+
+android {
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts.add('archives', sourcesJar)

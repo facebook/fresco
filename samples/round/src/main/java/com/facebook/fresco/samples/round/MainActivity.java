@@ -12,6 +12,9 @@
 
 package com.facebook.samples.round;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -26,9 +29,6 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class MainActivity extends Activity {
 
   private static final Uri URI = Uri.parse(
@@ -38,9 +38,20 @@ public class MainActivity extends Activity {
   private static final float FOCUS_X = 0.454f;
   private static final float FOCUS_Y = 0.266f;
   private static final int RADIUS = 50;
+  private static final Set<ScaleType> SUPPORTS_BITMAP_ROUNDING;
 
   private LinearLayout mUnroundedColumn;
   private LinearLayout mRoundedColumn;
+  private LinearLayout.LayoutParams mChildLayoutParams;
+  private RoundingParams mRoundingBitmapOnly;
+  private RoundingParams mRoundingOverlayColor;
+
+  static {
+    SUPPORTS_BITMAP_ROUNDING = new HashSet<>();
+    SUPPORTS_BITMAP_ROUNDING.add(ScaleType.CENTER_CROP);
+    SUPPORTS_BITMAP_ROUNDING.add(ScaleType.CENTER);
+    SUPPORTS_BITMAP_ROUNDING.add(ScaleType.FOCUS_CROP);
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -52,41 +63,46 @@ public class MainActivity extends Activity {
 
     mUnroundedColumn = (LinearLayout) findViewById(R.id.unrounded);
     mRoundedColumn = (LinearLayout) findViewById(R.id.rounded);
-    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WIDTH, HEIGHT);
+    mChildLayoutParams = new LinearLayout.LayoutParams(WIDTH, HEIGHT);
 
-    RoundingParams bitmapOnly = RoundingParams.fromCornersRadius(RADIUS)
+    mRoundingBitmapOnly = RoundingParams.fromCornersRadius(RADIUS)
         .setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
-    RoundingParams overlayColor = RoundingParams.fromCornersRadius(RADIUS)
+    mRoundingOverlayColor = RoundingParams.fromCornersRadius(RADIUS)
         .setRoundingMethod(RoundingParams.RoundingMethod.OVERLAY_COLOR)
         .setOverlayColor(Color.WHITE);
+
     GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
 
-    Set<ScaleType> useBitmapOnly = new HashSet<>();
-    useBitmapOnly.add(ScaleType.CENTER_CROP);
-    useBitmapOnly.add(ScaleType.CENTER);
-    useBitmapOnly.add(ScaleType.FOCUS_CROP);
+    addImageWithScaleType(ScaleType.FIT_XY, builder);
+    addImageWithScaleType(ScaleType.FIT_START, builder);
+    addImageWithScaleType(ScaleType.FIT_CENTER, builder);
+    addImageWithScaleType(ScaleType.FIT_END, builder);
+    addImageWithScaleType(ScaleType.CENTER, builder);
+    addImageWithScaleType(ScaleType.CENTER_INSIDE, builder);
+    addImageWithScaleType(ScaleType.CENTER_CROP, builder);
+    addImageWithScaleType(ScaleType.FOCUS_CROP, builder);
+  }
 
-    for (ScaleType scaleType : ScaleType.values()) {
-      builder.setActualImageScaleType(scaleType);
-      if (scaleType == ScaleType.FOCUS_CROP) {
-        builder.setActualImageFocusPoint(new PointF(FOCUS_X, FOCUS_Y));
-      }
-      builder.setRoundingParams(null);
-      SimpleDraweeView unroundedImage = new SimpleDraweeView(this, builder.build());
-
-      if (useBitmapOnly.contains(scaleType)) {
-        builder.setRoundingParams(bitmapOnly);
-      } else {
-        builder.setRoundingParams(overlayColor);
-      }
-      SimpleDraweeView roundedImage = new SimpleDraweeView(this, builder.build());
-
-      unroundedImage.setLayoutParams(params);
-      roundedImage.setLayoutParams(params);
-      mUnroundedColumn.addView(unroundedImage);
-      mRoundedColumn.addView(roundedImage);
-      unroundedImage.setImageURI(URI);
-      roundedImage.setImageURI(URI);
+  private void addImageWithScaleType(ScaleType scaleType, GenericDraweeHierarchyBuilder builder) {
+    builder.setActualImageScaleType(scaleType);
+    if (scaleType == ScaleType.FOCUS_CROP) {
+      builder.setActualImageFocusPoint(new PointF(FOCUS_X, FOCUS_Y));
     }
+    builder.setRoundingParams(null);
+    SimpleDraweeView unroundedImage = new SimpleDraweeView(this, builder.build());
+
+    if (SUPPORTS_BITMAP_ROUNDING.contains(scaleType)) {
+      builder.setRoundingParams(mRoundingBitmapOnly);
+    } else {
+      builder.setRoundingParams(mRoundingOverlayColor);
+    }
+    SimpleDraweeView roundedImage = new SimpleDraweeView(this, builder.build());
+
+    unroundedImage.setLayoutParams(mChildLayoutParams);
+    roundedImage.setLayoutParams(mChildLayoutParams);
+    mUnroundedColumn.addView(unroundedImage);
+    mRoundedColumn.addView(roundedImage);
+    unroundedImage.setImageURI(URI);
+    roundedImage.setImageURI(URI);
   }
 }
