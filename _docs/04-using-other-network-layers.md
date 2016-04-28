@@ -62,7 +62,7 @@ The `OkHttpClient` you pass to Fresco in the above step should be set up with in
 
 For complete control on how the networking layer should behave, you can provide one for your app. You must subclass [NetworkFetcher](../javadoc/reference/com/facebook/imagepipeline/producers/NetworkFetcher.html), which controls communications to the network. You can also optionally subclass [FetchState](../javadoc/reference/com/facebook/imagepipeline/producers/FetchState.html), which is a data structure for request-specific information.
 
-Our default implementation for `HttpURLConnection` can be used as an example. See [its source code](https://github.com/facebook/fresco/blob/master/imagepipeline-backends/imagepipeline-okhttp/src/main/java/com/facebook/imagepipeline/backends/okhttp/OkHttpNetworkFetcher.java).
+Our default implementation for `OkHttp 3` can be used as an example. See [its source code](https://github.com/facebook/fresco/blob/master/imagepipeline-backends/imagepipeline-okhttp3/src/main/java/com/facebook/imagepipeline/backends/okhttp3/OkHttpNetworkFetcher.java).
 
 You must pass your network producer to the image pipeline when [configuring it](configuring-image-pipeline.html):
 
