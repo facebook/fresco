@@ -182,6 +182,17 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
+   * Sets the placeholder image.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setPlaceholderImage(int resourceId) {
+    mPlaceholderImage = mResources.getDrawable(resourceId);
+    return this;
+  }
+
+  /**
    * Gets the placeholder image.
    */
   public @Nullable Drawable getPlaceholderImage() {
@@ -225,6 +236,21 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
+   * Sets the placeholder image and its scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @param placeholderImageScaleType scale type for the placeholder image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setPlaceholderImage(
+      int resourceId,
+      @Nullable ScaleType placeholderImageScaleType) {
+    mPlaceholderImage = mResources.getDrawable(resourceId);
+    mPlaceholderImageScaleType = placeholderImageScaleType;
+    return this;
+  }
+
+  /**
    * Sets the retry image.
    *
    * @param retryDrawable drawable to be used as retry image
@@ -232,6 +258,17 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setRetryImage(@Nullable Drawable retryDrawable) {
     mRetryImage = retryDrawable;
+    return this;
+  }
+
+  /**
+   * Sets the retry image.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setRetryImage(int resourceId) {
+    mRetryImage = mResources.getDrawable(resourceId);
     return this;
   }
 
@@ -279,6 +316,21 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
+   * Sets the retry image and its scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @param retryImageScaleType scale type for the retry image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setRetryImage(
+      int resourceId,
+      @Nullable ScaleType retryImageScaleType) {
+    mRetryImage = mResources.getDrawable(resourceId);
+    mRetryImageScaleType = retryImageScaleType;
+    return this;
+  }
+
+  /**
    * Sets the failure image.
    *
    * @param failureDrawable drawable to be used as failure image
@@ -286,6 +338,17 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setFailureImage(@Nullable Drawable failureDrawable) {
     mFailureImage = failureDrawable;
+    return this;
+  }
+
+  /**
+   * Sets the failure image.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setFailureImage(int resourceId) {
+    mFailureImage = mResources.getDrawable(resourceId);
     return this;
   }
 
@@ -333,6 +396,21 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
+   * Sets the failure image and its scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @param failureImageScaleType scale type for the failure image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setFailureImage(
+      int resourceId,
+      @Nullable ScaleType failureImageScaleType) {
+    mFailureImage = mResources.getDrawable(resourceId);
+    mFailureImageScaleType = failureImageScaleType;
+    return this;
+  }
+
+  /**
    * Sets the progress bar image.
    *
    * @param progressBarDrawable drawable to be used as progress bar image
@@ -340,6 +418,17 @@ public class GenericDraweeHierarchyBuilder {
    */
   public GenericDraweeHierarchyBuilder setProgressBarImage(@Nullable Drawable progressBarDrawable) {
     mProgressBarImage = progressBarDrawable;
+    return this;
+  }
+
+  /**
+   * Sets the progress bar image.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setProgressBarImage(int resourceId) {
+    mProgressBarImage = mResources.getDrawable(resourceId);
     return this;
   }
 
@@ -382,6 +471,21 @@ public class GenericDraweeHierarchyBuilder {
       Drawable progressBarDrawable,
       @Nullable ScaleType progressBarImageScaleType) {
     mProgressBarImage = progressBarDrawable;
+    mProgressBarImageScaleType = progressBarImageScaleType;
+    return this;
+  }
+
+  /**
+   * Sets the progress bar image and its scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource
+   * @param progressBarImageScaleType scale type for the progress bar image
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setProgressBarImage(
+      int resourceId,
+      @Nullable ScaleType progressBarImageScaleType) {
+    mProgressBarImage = mResources.getDrawable(resourceId);
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
   }

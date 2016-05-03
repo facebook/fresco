@@ -443,6 +443,16 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setPlaceholderImage(mResources.getDrawable(resourceId));
   }
 
+  /**
+   * Sets a new placeholder drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setPlaceholderImage(int resourceId, ScaleType scaleType) {
+    setPlaceholderImage(mResources.getDrawable(resourceId), scaleType);
+  }
+
   /** Sets a new failure drawable with old scale type. */
   public void setFailureImage(@Nullable Drawable drawable) {
     setChildDrawableAtIndex(mFailureImageIndex, drawable);
@@ -452,6 +462,25 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setFailureImage(Drawable drawable, ScaleType scaleType) {
     setChildDrawableAtIndex(mFailureImageIndex, drawable);
     getScaleTypeDrawableAtIndex(mFailureImageIndex).setScaleType(scaleType);
+  }
+  
+  /**
+   * Sets a new failure drawable with old scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   */
+  public void setFailureImage(int resourceId) {
+    setFailureImage(mResources.getDrawable(resourceId));
+  }
+  
+  /**
+   * Sets a new failure drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setFailureImage(int resourceId, ScaleType scaleType) {
+    setFailureImage(mResources.getDrawable(resourceId), scaleType);
   }
 
   /** Sets a new retry drawable with old scale type. */
@@ -464,6 +493,25 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(mRetryImageIndex, drawable);
     getScaleTypeDrawableAtIndex(mRetryImageIndex).setScaleType(scaleType);
   }
+  
+  /**
+   * Sets a new retry drawable with old scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   */
+  public void setRetryImage(int resourceId) {
+    setRetryImage(mResources.getDrawable(resourceId));
+  }
+  
+  /**
+   * Sets a new retry drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setRetryImage(int resourceId, ScaleType scaleType) {
+    setRetryImage(mResources.getDrawable(resourceId), scaleType);
+  }
 
   /** Sets a new progress bar drawable with old scale type. */
   public void setProgressBarImage(@Nullable Drawable drawable) {
@@ -474,6 +522,25 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setProgressBarImage(Drawable drawable, ScaleType scaleType) {
     setChildDrawableAtIndex(mProgressBarImageIndex, drawable);
     getScaleTypeDrawableAtIndex(mProgressBarImageIndex).setScaleType(scaleType);
+  }
+  
+  /**
+   * Sets a new progress bar drawable with old scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   */
+  public void setProgressBarImage(int resourceId) {
+    setProgressBarImage(mResources.getDrawable(resourceId));
+  }
+  
+  /**
+   * Sets a new progress bar drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setProgressBarImage(int resourceId, ScaleType scaleType) {
+    setProgressBarImage(mResources.getDrawable(resourceId), scaleType);
   }
 
   /** Sets the rounding params. */
