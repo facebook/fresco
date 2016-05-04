@@ -84,7 +84,7 @@ In order to center the image we need to translate it a bit more. We can see that
 
 Congratulations! You just implemented the `FIT_CENTER` scale type:
 
-```Java
+```java
   public static abstract class AbstractScaleType implements ScaleType {
     @Override
     public Matrix getTransform(Matrix outTransform, Rect parentRect, int childWidth, int childHeight, float focusX, float focusY) {
