@@ -168,13 +168,12 @@ public class BufferedDiskCacheTest {
 
   @Test
   public void testCacheGetCancellation() throws Exception {
-    when(mFileCache.getResource(eq(mCacheKey))).thenReturn(mBinaryResource);
+    when(mFileCache.getResource(mCacheKey)).thenReturn(mBinaryResource);
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     mIsCancelled.set(true);
     mReadPriorityExecutor.runUntilIdle();
     verify(mFileCache, never()).getResource(mCacheKey);
-    assertTrue(readTask.isFaulted());
-    assertTrue(readTask.getError() instanceof CancellationException);
+    assertTrue(isTaskCancelled(readTask));
   }
 
   @Test
@@ -302,5 +301,10 @@ public class BufferedDiskCacheTest {
   public void testClearFromStagingArea() {
     mBufferedDiskCache.clearAll();
     verify(mStagingArea).clearAll();
+  }
+
+  private static boolean isTaskCancelled(Task<?> task) {
+    return task.isCancelled() ||
+        (task.isFaulted() && task.getError() instanceof CancellationException);
   }
 }
