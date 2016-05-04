@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="key_preferences_source_group"
+        android:title="@string/title_preferences_source_group"
+        >
+        <ListPreference
+            android:defaultValue="@string/value_local_uri"
+            android:dialogTitle="@string/dialog_title_data_source"
+            android:entries="@array/data_source_labels"
+            android:entryValues="@array/data_source_values"
+            android:key="@string/key_data_source"
+            android:title="@string/title_data_source"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

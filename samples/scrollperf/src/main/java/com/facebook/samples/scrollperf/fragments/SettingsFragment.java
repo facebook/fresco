@@ -11,21 +11,62 @@
  */
 package com.facebook.samples.scrollperf.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+import com.facebook.samples.scrollperf.R;
 
 /**
  * The Fragment for settings
  */
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
   /**
    * The Tag for this Fragment
    */
   public static final String TAG = SettingsFragment.class.getSimpleName();
 
+  private String mDataSourceKey;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(false);
+  }
+
   @Override
   public void onCreatePreferences(Bundle bundle, String s) {
+    addPreferencesFromResource(R.xml.preferences);
+    getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    // We read the keys
+    mDataSourceKey = getString(R.string.key_data_source);
+    // Update summaries
+    updateDataSourceSummary(findPreference(getString(R.string.key_data_source)));
+  }
 
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    Preference preference = findPreference(key);
+    if (mDataSourceKey.equals(key)) {
+      updateDataSourceSummary(preference);
+    }
+  }
+
+  private void updateDataSourceSummary(final Preference preference) {
+    ListPreference dataSourcePreference = (ListPreference) preference;
+    final int valueIndex = dataSourcePreference.findIndexOfValue(dataSourcePreference.getValue());
+    final String summary = getResources().getStringArray(R.array.data_source_summaries)[valueIndex];
+    preference.setSummary(summary);
   }
 }

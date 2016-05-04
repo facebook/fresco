@@ -14,9 +14,10 @@ package com.facebook.samples.scrollperf;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.view.MenuItem;
 
-import uk.co.maxcarli.scrollperf.R;
+import com.facebook.samples.scrollperf.fragments.MainFragment;
+import com.facebook.samples.scrollperf.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,13 +28,23 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     toolbar.setTitle(R.string.app_name);
     setSupportActionBar(toolbar);
+    if (savedInstanceState == null) {
+      final MainFragment mainFragment = new MainFragment();
+      getSupportFragmentManager().beginTransaction()
+              .add(R.id.anchor_point, mainFragment, MainFragment.TAG)
+              .commit();
+    }
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu, menu);
-    return true;
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_settings) {
+      final SettingsFragment settingsFragment = new SettingsFragment();
+      getSupportFragmentManager().beginTransaction()
+              .replace(R.id.anchor_point, settingsFragment, SettingsFragment.TAG)
+              .addToBackStack(SettingsFragment.TAG)
+              .commit();
+    }
+    return super.onOptionsItemSelected(item);
   }
-
 }
