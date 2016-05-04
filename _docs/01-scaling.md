@@ -63,6 +63,50 @@ mSimpleDraweeView
     .setActualImageFocusPoint(focusPoint);
 ```
 
+### A custom ScaleType
+
+Sometimes you need to scale the image in a way that none of the existing scale types does. Drawee allows you to do that easily by implementing your own `ScalingUtils.ScaleType`. There is only one method in that interface, `getTransform`, which is supposed to compute the transformation matrix based on:
+
+* parent bounds (rectangle where the image should be placed in the view's coordinate system)
+* child size (width and height of the actual bitmap)
+* focus point (relative coordinates in the child's coordinate system)
+
+Of course, your class can contain any additional data you might need to compute the transformation.
+
+Let's look at an example. Assume the `parentBounds` are `(100, 150, 500, 450)`, and the child dimensions are `(420,210)`. Observe that the parent width is `500 - 100 = 400`, and the height is `450 - 150 = 300`. If we don't do any transformation (i.e. we set the transformation to be the identity matrix), the image will be drawn in `(0, 0, 420, 210)`. But `ScaleTypeDrawable` has to respect the bounds imposed by the parent and will so clip the canvas to `(100, 150, 500, 450)`. That means that only the bottom-right part of the image will actually be visible: `(100, 150, 420, 210)`.
+
+We can fix that by doing a translation by `(parentBounds.left, parentBounds.top)`, which is in this case `(100, 150)`. But now the right part of the image got clipped as the image is actually wider than the parent bounds! Image is now placed at `(100, 150, 500, 360)` in the view coordinates, or equivalently `(0, 0, 400, 210)` in the child coordinates. We lost `20` pixels on the right.
+
+To avoid image to be clipped we can downscale it. Here we can scale by `400/420` which will make the image be of the size `(400,200)`.
+The image now fits exactly in the view horizontally, but it is not centered in it vertically.
+
+In order to center the image we need to translate it a bit more. We can see that the amount of emoty space in the parent bounds is `400 - 400 = 0` horizontally, and `300 - 200 = 100` vertically. If we translate by half of this empty space, we will leave equal amount of empty space on each side, effectively making the image centered in the parent bounds.
+
+Congratulations! You just implemented the `FIT_CENTER` scale type:
+
+```Java
+  public static abstract class AbstractScaleType implements ScaleType {
+    @Override
+    public Matrix getTransform(Matrix outTransform, Rect parentRect, int childWidth, int childHeight, float focusX, float focusY) {
+      // calculate scale; we take the smaller of the horizontal and vertical scale factor so that the image always fits
+      final float sX = (float) parentRect.width() / (float) childWidth;
+      final float sY = (float) parentRect.height() / (float) childHeight;
+      float scale = Math.min(scaleX, scaleY);
+      
+      // calculate translation; we offset by parent bounds, and by half of the empty space
+      // note that the child dimensions need to be adjusted by the scale factor
+      float dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
+      float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
+      
+      // finally, set and return the transform
+      outTransform.setScale(scale, scale);
+      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+      return outTransform;
+    }
+  }
+```
+
+
 ### none
 
 If you are using Drawables that make use of Android's tile mode, you need to use the `none` scale type for this to work correctly.
