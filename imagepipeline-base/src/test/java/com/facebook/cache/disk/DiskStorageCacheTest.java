@@ -13,7 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +23,7 @@ import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.common.WriterCallbacks;
@@ -157,11 +159,11 @@ public class DiskStorageCacheTest {
   private BinaryResource getResource(
       DiskStorage storage,
       final CacheKey key) throws IOException {
-     return storage.getResource(mCache.getResourceIds(key).get(0), key);
+     return storage.getResource(mCache.getFirstResourceId(key), key);
   }
 
   private BinaryResource getResource(final CacheKey key) throws IOException {
-    return mStorage.getResource(mCache.getResourceIds(key).get(0), key);
+    return mStorage.getResource(mCache.getFirstResourceId(key), key);
   }
 
   private byte[] getContents(BinaryResource resource) throws IOException {
@@ -268,6 +270,31 @@ public class DiskStorageCacheTest {
     assertFalse(unexpected3.exists());
     assertNull(getResource(key2));
     assertNull(getResource(key3));
+  }
+
+  @Test
+  public void testWithMultiCacheKeys() throws Exception {
+    CacheKey insertKey1 = new SimpleCacheKey("foo");
+    byte[] value1 = new byte[101];
+    value1[50] = 'a'; // just so it's not all zeros for the equality test below.
+    mCache.insert(insertKey1, WriterCallbacks.from(value1));
+
+    List<CacheKey> keys1 = new ArrayList<>(2);
+    keys1.add(new SimpleCacheKey("bar"));
+    keys1.add(new SimpleCacheKey("foo"));
+    MultiCacheKey matchingMultiKey = new MultiCacheKey(keys1);
+    assertArrayEquals(value1, getContents(mCache.getResource(matchingMultiKey)));
+
+    List<CacheKey> keys2 = new ArrayList<>(2);
+    keys2.add(new SimpleCacheKey("one"));
+    keys2.add(new SimpleCacheKey("two"));
+    MultiCacheKey insertKey2 = new MultiCacheKey(keys2);
+    byte[] value2 = new byte[101];
+    value1[50] = 'b'; // just so it's not all zeros for the equality test below.
+    mCache.insert(insertKey2, WriterCallbacks.from(value2));
+
+    CacheKey matchingSimpleKey = new SimpleCacheKey("one");
+    assertArrayEquals(value2, getContents(mCache.getResource(matchingSimpleKey)));
   }
 
   @Test

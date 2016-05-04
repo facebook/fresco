@@ -311,7 +311,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       if (mIndex.containsKey(key)) {
         resourceId = mIndex.get(key);
       } else {
-        resourceId = getResourceIds(key).get(0);
+        resourceId = getFirstResourceId(key);
       }
     }
     try {
@@ -686,24 +686,42 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     }
   }
 
-  @VisibleForTesting
-  static List<String> getResourceIds(final CacheKey key) {
+  private static List<String> getResourceIds(final CacheKey key) {
     try {
       final List<String> ids;
       if (key instanceof MultiCacheKey) {
         List<CacheKey> keys = ((MultiCacheKey) key).getCacheKeys();
         ids = new ArrayList<>(keys.size());
         for (int i = 0; i < keys.size(); i++) {
-           ids.add(SecureHashUtil.makeSHA1HashBase64(keys.get(i).toString().getBytes("UTF-8")));
+           ids.add(secureHashKey(keys.get(i)));
         }
       } else {
         ids = new ArrayList<>(1);
-        ids.add(SecureHashUtil.makeSHA1HashBase64(key.toString().getBytes("UTF-8")));
+        ids.add(secureHashKey(key));
       }
       return ids;
     } catch (UnsupportedEncodingException e) {
       // This should never happen. All VMs support UTF-8
       throw new RuntimeException(e);
     }
+  }
+
+  @VisibleForTesting
+  static String getFirstResourceId(final CacheKey key) {
+    try {
+      if (key instanceof MultiCacheKey) {
+        List<CacheKey> keys = ((MultiCacheKey) key).getCacheKeys();
+        return secureHashKey(keys.get(0));
+      } else {
+        return secureHashKey(key);
+      }
+    } catch (UnsupportedEncodingException e) {
+      // This should never happen. All VMs support UTF-8
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static String secureHashKey(final CacheKey key) throws UnsupportedEncodingException {
+    return SecureHashUtil.makeSHA1HashBase64(key.toString().getBytes("UTF-8"));
   }
 }
