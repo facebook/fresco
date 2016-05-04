@@ -80,7 +80,7 @@ We can fix that by doing a translation by `(parentBounds.left, parentBounds.top)
 To avoid image to be clipped we can downscale it. Here we can scale by `400/420` which will make the image be of the size `(400,200)`.
 The image now fits exactly in the view horizontally, but it is not centered in it vertically.
 
-In order to center the image we need to translate it a bit more. We can see that the amount of emoty space in the parent bounds is `400 - 400 = 0` horizontally, and `300 - 200 = 100` vertically. If we translate by half of this empty space, we will leave equal amount of empty space on each side, effectively making the image centered in the parent bounds.
+In order to center the image we need to translate it a bit more. We can see that the amount of empty space in the parent bounds is `400 - 400 = 0` horizontally, and `300 - 200 = 100` vertically. If we translate by half of this empty space, we will leave equal amount of empty space on each side, effectively making the image centered in the parent bounds.
 
 Congratulations! You just implemented the `FIT_CENTER` scale type:
 
