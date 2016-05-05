@@ -88,7 +88,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
 
   private final Resources mResources;
-  private RoundingParams mRoundingParams;
+  private @Nullable RoundingParams mRoundingParams;
 
   private final RootDrawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
@@ -387,6 +387,11 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mFadeDrawable.setTransitionDuration(durationMs);
   }
 
+  /** Gets the fade duration. */
+  public int getFadeDuration() {
+    return mFadeDrawable.getTransitionDuration();
+  }
+
   /** Sets the actual image focus point. */
   public void setActualImageFocusPoint(PointF focusPoint) {
     Preconditions.checkNotNull(focusPoint);
@@ -426,6 +431,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(mPlaceholderImageIndex, drawable);
     getScaleTypeDrawableAtIndex(mPlaceholderImageIndex).setScaleType(scaleType);
 
+  }
+
+  /**
+   * @return true if there is a placeholder image set.
+   */
+  public boolean hasPlaceholderImage() {
+    return getParentDrawableAtIndex(mPlaceholderImageIndex) != null;
   }
 
   /** Sets the placeholder image focus point. */
@@ -544,7 +556,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /** Sets the rounding params. */
-  public void setRoundingParams(RoundingParams roundingParams) {
+  public void setRoundingParams(@Nullable RoundingParams roundingParams) {
     mRoundingParams = roundingParams;
     WrappingUtils.updateOverlayColorRounding(mTopLevelDrawable, mRoundingParams);
     for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
@@ -553,6 +565,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /** Gets the rounding params. */
+  @Nullable
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
   }
