@@ -304,7 +304,7 @@ public class ImagePipelineFactory {
       mPlatformDecoder = buildPlatformDecoder(
           mConfig.getPoolFactory(),
           mConfig.isDecodeMemoryFileEnabled(),
-          mConfig.isWebpSupportEnabled());
+          mConfig.getExperiments().isWebpSupportEnabled());
     }
     return mPlatformDecoder;
   }
@@ -327,8 +327,8 @@ public class ImagePipelineFactory {
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory(),
-              mConfig.isDecodeFileDescriptorEnabled(),
-              mConfig.getForceSmallCacheThresholdBytes());
+              mConfig.getExperiments().isDecodeFileDescriptorEnabled(),
+              mConfig.getExperiments().getForceSmallCacheThresholdBytes());
     }
     return mProducerFactory;
   }
@@ -341,7 +341,7 @@ public class ImagePipelineFactory {
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.isDownsampleEnabled(),
-              mConfig.isWebpSupportEnabled(),
+              mConfig.getExperiments().isWebpSupportEnabled(),
               mThreadHandoffProducerQueue);
     }
     return mProducerSequenceFactory;

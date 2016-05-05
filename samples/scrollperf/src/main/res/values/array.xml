@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Data Source preferences keys/values-->
+    <array name="data_source_labels">
+        <item>@string/label_local_uri</item>
+        <item>@string/label_remote_uri</item>
+    </array>
+    <array name="data_source_values">
+        <item>@string/value_local_uri</item>
+        <item>@string/value_remote_uri</item>
+    </array>
+    <array name="data_source_summaries">
+        <item>@string/value_local_summary</item>
+        <item>@string/value_remote_summary</item>
+    </array>
+</resources>

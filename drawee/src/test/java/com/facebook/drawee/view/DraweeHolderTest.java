@@ -22,8 +22,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -92,8 +94,12 @@ public class DraweeHolderTest {
   @Test
   public void testLifecycle() {
     mDraweeHolder.setController(mController);
+    assertFalse(mDraweeHolder.isAttached());
     mDraweeHolder.onAttach();
+    assertTrue(mDraweeHolder.isAttached());
     mDraweeHolder.onDetach();
+    assertFalse(mDraweeHolder.isAttached());
+
     verify(mController).onAttach();
     verify(mController).onDetach();
   }

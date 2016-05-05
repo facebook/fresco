@@ -122,6 +122,18 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   }
 
   /**
+   * Checks whether the view that uses this holder is currently attached to a window.
+   *
+   * {@see #onAttach()}
+   * {@see #onDetach()}
+   *
+   * @return true if the holder is currently attached
+   */
+  public boolean isAttached() {
+    return mIsHolderAttached;
+  }
+
+  /**
    * Releases resources used to display the image.
    *
    * <p>The containing view must call this method from both {@link View#onStartTemporaryDetach()}

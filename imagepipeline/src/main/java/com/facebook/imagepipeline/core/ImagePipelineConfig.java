@@ -41,7 +41,6 @@ import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
-import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
 
 /**
  * Master configuration class for the image pipeline library.
@@ -70,13 +69,10 @@ public class ImagePipelineConfig {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
-  private final boolean mWebpSupportEnabled;
-  private final boolean mDecodeFileDescriptorEnabled;
   private final boolean mDecodeMemoryFileEnabled;
   private final FileCacheFactory mFileCacheFactory;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
-  private final int mForceSmallCacheThresholdBytes;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
   @Nullable private final ImageDecoder mImageDecoder;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
@@ -89,6 +85,7 @@ public class ImagePipelineConfig {
   private final Set<RequestListener> mRequestListeners;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
+  private final ImagePipelineExperiments mImagePipelineExperiments;
 
   private ImagePipelineConfig(Builder builder) {
     mAnimatedImageFactory = builder.mAnimatedImageFactory;
@@ -106,19 +103,15 @@ public class ImagePipelineConfig {
             DefaultCacheKeyFactory.getInstance() :
             builder.mCacheKeyFactory;
     mContext = Preconditions.checkNotNull(builder.mContext);
-    mDecodeFileDescriptorEnabled = builder.mDownsampleEnabled &&
-        builder.mDecodeFileDescriptorEnabled;
     mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
     mFileCacheFactory = builder.mFileCacheFactory == null ?
         new DiskStorageCacheFactory(new DynamicDefaultDiskStorageFactory()) :
         builder.mFileCacheFactory;
     mDownsampleEnabled = builder.mDownsampleEnabled;
-    mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
     mEncodedMemoryCacheParamsSupplier =
         builder.mEncodedMemoryCacheParamsSupplier == null ?
             new DefaultEncodedMemoryCacheParamsSupplier() :
             builder.mEncodedMemoryCacheParamsSupplier;
-    mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mImageCacheStatsTracker =
         builder.mImageCacheStatsTracker == null ?
             NoOpImageCacheStatsTracker.getInstance() :
@@ -169,6 +162,7 @@ public class ImagePipelineConfig {
     mExecutorSupplier =
         builder.mExecutorSupplier == null ?
             new DefaultExecutorSupplier(numCpuBoundThreads) : builder.mExecutorSupplier;
+    mImagePipelineExperiments = builder.mExperimentsBuilder.build();
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
@@ -196,8 +190,12 @@ public class ImagePipelineConfig {
     return mContext;
   }
 
+  /**
+   * @deprecated Use {@link #getExperiments()} and
+   * {@link ImagePipelineExperiments#isDecodeFileDescriptorEnabled()} ()}
+   */
   public boolean isDecodeFileDescriptorEnabled() {
-    return mDecodeFileDescriptorEnabled;
+    return mImagePipelineExperiments.isDecodeFileDescriptorEnabled();
   }
 
   public boolean isDecodeMemoryFileEnabled() {
@@ -212,8 +210,12 @@ public class ImagePipelineConfig {
     return mDownsampleEnabled;
   }
 
+  /**
+   * @deprecated Use {@link #getExperiments()} and
+   * {@link ImagePipelineExperiments#isWebpSupportEnabled()} ()}
+   */
   public boolean isWebpSupportEnabled() {
-    return mWebpSupportEnabled;
+    return mImagePipelineExperiments.isWebpSupportEnabled();
   }
 
   public Supplier<MemoryCacheParams> getEncodedMemoryCacheParamsSupplier() {
@@ -224,8 +226,13 @@ public class ImagePipelineConfig {
     return mExecutorSupplier;
   }
 
+  /**
+   * @deprecated Use {@link #getExperiments()} and
+   * {@link ImagePipelineExperiments#getForceSmallCacheThresholdBytes()}
+   */
+  @Deprecated
   public int getForceSmallCacheThresholdBytes() {
-    return mForceSmallCacheThresholdBytes;
+    return mImagePipelineExperiments.getForceSmallCacheThresholdBytes();
   }
 
   public ImageCacheStatsTracker getImageCacheStatsTracker() {
@@ -278,6 +285,10 @@ public class ImagePipelineConfig {
     return mSmallImageDiskCacheConfig;
   }
 
+  public ImagePipelineExperiments getExperiments() {
+    return mImagePipelineExperiments;
+  }
+
   public static Builder newBuilder(Context context) {
     return new Builder(context);
   }
@@ -290,12 +301,9 @@ public class ImagePipelineConfig {
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
-    private boolean mWebpSupportEnabled = false;
-    private boolean mDecodeFileDescriptorEnabled = mDownsampleEnabled;
     private boolean mDecodeMemoryFileEnabled;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
     private ExecutorSupplier mExecutorSupplier;
-    private int mForceSmallCacheThresholdBytes = 0;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
     private ImageDecoder mImageDecoder;
     private Supplier<Boolean> mIsPrefetchEnabledSupplier;
@@ -309,6 +317,8 @@ public class ImagePipelineConfig {
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
     private FileCacheFactory mFileCacheFactory;
+    private final ImagePipelineExperiments.Builder mExperimentsBuilder
+        = new ImagePipelineExperiments.Builder(this);
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -337,11 +347,6 @@ public class ImagePipelineConfig {
       return this;
     }
 
-    public Builder setDecodeFileDescriptorEnabled(boolean decodeFileDescriptorEnabled) {
-      mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
-      return this;
-    }
-
     public Builder setDecodeMemoryFileEnabled(boolean decodeMemoryFileEnabled) {
       mDecodeMemoryFileEnabled = decodeMemoryFileEnabled;
       return this;
@@ -353,7 +358,7 @@ public class ImagePipelineConfig {
     }
 
     /**
-     * @deprecated use {@link Builder.setFileCacheFactory} instead
+     * @deprecated use {@link Builder#setFileCacheFactory} instead
      */
     @Deprecated
     public Builder setDiskStorageFactory(DiskStorageFactory diskStorageFactory) {
@@ -361,13 +366,12 @@ public class ImagePipelineConfig {
       return this;
     }
 
-    public Builder setDownsampleEnabled(boolean downsampleEnabled) {
-      mDownsampleEnabled = downsampleEnabled;
-      return this;
+    public boolean isDownsampleEnabled() {
+      return mDownsampleEnabled;
     }
 
-    public Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
-      mWebpSupportEnabled = webpSupportEnabled;
+    public Builder setDownsampleEnabled(boolean downsampleEnabled) {
+      mDownsampleEnabled = downsampleEnabled;
       return this;
     }
 
@@ -380,18 +384,6 @@ public class ImagePipelineConfig {
 
     public Builder setExecutorSupplier(ExecutorSupplier executorSupplier) {
       mExecutorSupplier = executorSupplier;
-      return this;
-    }
-
-    /**
-     * If this value is nonnegative, then all network-downloaded images below this size
-     * will be written to the small image cache.
-     *
-     * <p>This will require the image pipeline to do up to two disk reads, instead of one, before
-     * going out to network. Use only if this pattern makes sense for your application.
-     */
-    public Builder setForceSmallCacheThresholdBytes(int forceSmallCacheThresholdBytes) {
-      mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
       return this;
     }
 
@@ -453,6 +445,10 @@ public class ImagePipelineConfig {
     public Builder setSmallImageDiskCacheConfig(DiskCacheConfig smallImageDiskCacheConfig) {
       mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
       return this;
+    }
+
+    public ImagePipelineExperiments.Builder experiment() {
+      return mExperimentsBuilder;
     }
 
     public ImagePipelineConfig build() {

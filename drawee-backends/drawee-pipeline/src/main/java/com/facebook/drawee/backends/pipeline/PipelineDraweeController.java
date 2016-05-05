@@ -22,6 +22,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.drawable.LightBitmapDrawable;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -47,6 +48,11 @@ public class PipelineDraweeController
   // Components
   private final Resources mResources;
   private final AnimatedDrawableFactory mAnimatedDrawableFactory;
+
+  private static boolean sIsLightEnabled;
+  private static boolean sIsReuseEnabled;
+
+  private LightBitmapDrawable mLightBitmapDrawable;
 
   // Constant state (non-final because controllers can be reused)
   private Supplier<DataSource<CloseableReference<CloseableImage>>> mDataSourceSupplier;
@@ -103,9 +109,21 @@ public class PipelineDraweeController
     CloseableImage closeableImage = image.get();
     if (closeableImage instanceof CloseableStaticBitmap) {
       CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-      BitmapDrawable bitmapDrawable = new BitmapDrawable(
-          mResources,
-          closeableStaticBitmap.getUnderlyingBitmap());
+      Drawable bitmapDrawable;
+      if (sIsLightEnabled) {
+        if (sIsReuseEnabled && mLightBitmapDrawable != null) {
+          mLightBitmapDrawable.setBitmap(closeableStaticBitmap.getUnderlyingBitmap());
+        } else {
+          mLightBitmapDrawable = new LightBitmapDrawable(
+              mResources,
+              closeableStaticBitmap.getUnderlyingBitmap());
+        }
+        bitmapDrawable = mLightBitmapDrawable;
+      } else {
+        bitmapDrawable = new BitmapDrawable(
+            mResources,
+            closeableStaticBitmap.getUnderlyingBitmap());
+      }
       if (closeableStaticBitmap.getRotationAngle() == 0 ||
           closeableStaticBitmap.getRotationAngle() == EncodedImage.UNKNOWN_ROTATION_ANGLE) {
         return bitmapDrawable;
@@ -148,5 +166,12 @@ public class PipelineDraweeController
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
+  }
+
+  protected static void setLightBitmapDrawableExperiment(
+      boolean lightEnabled,
+      boolean reuseEnabled) {
+    sIsLightEnabled = lightEnabled;
+    sIsReuseEnabled = reuseEnabled;
   }
 }

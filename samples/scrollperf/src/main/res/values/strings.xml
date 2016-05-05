@@ -1,0 +1,17 @@
+<resources>
+    <string translatable="false" name="app_name">ScrollPerf</string>
+    <string translatable="false" name="action_settings">Settings</string>
+
+    <!-- Data Source Preferences-->
+    <string translatable="false" name="key_preferences_source_group">Data Source</string>
+    <string translatable="false" name="title_preferences_source_group">Data Source</string>
+    <string translatable="false" name="dialog_title_data_source">Data Source for Uris</string>
+    <string translatable="false" name="title_data_source">Data Source for Uris</string>
+    <string translatable="false" name="key_data_source">uris_data_source</string>
+    <string translatable="false" name="label_local_uri">Local Uris</string>
+    <string translatable="false" name="label_remote_uri">Remote Uris</string>
+    <string translatable="false" name="value_local_uri">local_uris</string>
+    <string translatable="false" name="value_remote_uri">remote_uris</string>
+    <string translatable="false" name="value_local_summary">We get Uris from local resources</string>
+    <string translatable="false" name="value_remote_summary">We get Uri from remote source</string>
+</resources>
