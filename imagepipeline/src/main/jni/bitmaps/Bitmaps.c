@@ -186,15 +186,7 @@ static JNINativeMethod bitmaps_native_methods[] = {
     (void*) Bitmaps_releaseByteBuffer },
 };
 
-__attribute__((visibility("default")))
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-  UNUSED(reserved);
-  JNIEnv* env;
-
-  if ((*vm)->GetEnv(vm, (void**) &env, JNI_VERSION_1_6) != JNI_OK) {
-    return JNI_ERR;
-  }
-
+jint registerBitmapsMethods(JNIEnv* env) {
   jclass runtime_exception = (*env)->FindClass(
       env,
       "java/lang/RuntimeException");

@@ -9,6 +9,7 @@
 
 #include <jni.h>
 
+#include "Bitmaps.h"
 #include "exceptions.h"
 #include "java_globals.h"
 #include "logging.h"
@@ -82,6 +83,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   THROW_AND_RETURNVAL_IF(
       !registerJpegTranscoderMethods(env),
       "Could not register JpegTranscoder methods",
+      -1);
+
+  THROW_AND_RETURNVAL_IF(
+      registerBitmapsMethods(env) == JNI_ERR,
+      "Could not register Bitmaps methods",
       -1);
 
   return JNI_VERSION_1_6;
