@@ -14,6 +14,7 @@
 #include "java_globals.h"
 #include "logging.h"
 #include "JpegTranscoder.h"
+#include "NativeMemoryChunk.h"
 
 jmethodID midInputStreamRead;
 jmethodID midInputStreamSkip;
@@ -88,6 +89,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   THROW_AND_RETURNVAL_IF(
       registerBitmapsMethods(env) == JNI_ERR,
       "Could not register Bitmaps methods",
+      -1);
+
+  THROW_AND_RETURNVAL_IF(
+      registerNativeMemoryChunkMethods(env) == JNI_ERR,
+      "Could not register NativeMemoryChunk methods",
       -1);
 
   return JNI_VERSION_1_6;

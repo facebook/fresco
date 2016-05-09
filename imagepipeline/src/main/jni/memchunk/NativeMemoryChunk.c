@@ -106,21 +106,13 @@ static JNINativeMethod gNativeMemoryChunkMethods[] = {
 };
 
 /**
- * Executed when libmemchunk.so is loaded.
+ * Executed when libimagepipeline.so is loaded.
  *
  * Responsibilites:
  * - looks up and stores global references to Java classes used by native code
  * - registers native methods of NativeMemoryChunk
  */
-__attribute__((visibility("default")))
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-  UNUSED(reserved);
-
-  JNIEnv* env;
-  if ((*vm)->GetEnv(vm, (void**) &env, JNI_VERSION_1_6) != JNI_OK) {
-    return JNI_ERR;
-  }
-
+jint registerNativeMemoryChunkMethods(JNIEnv* env) {
   jclass runtimeException = (*env)->FindClass(
       env,
       "java/lang/RuntimeException");
