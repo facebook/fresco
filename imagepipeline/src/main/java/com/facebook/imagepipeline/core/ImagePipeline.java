@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.core;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import java.lang.Exception;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,26 +27,24 @@ import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSources;
 import com.facebook.datasource.SimpleDataSource;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
-import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.datasource.CloseableProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.listener.ForwardingRequestListener;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
-import com.facebook.imagepipeline.listener.ForwardingRequestListener;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.listener.RequestListener;
-
-import bolts.Continuation;
-import com.android.internal.util.Predicate;
-
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
+import bolts.Continuation;
 import bolts.Task;
-import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
+import com.android.internal.util.Predicate;
 
 /**
  * The entry point for the image pipeline.
@@ -395,7 +392,7 @@ public class ImagePipeline {
    * @return true if the image was found in the bitmap memory cache, false otherwise.
    */
   public boolean isInBitmapMemoryCache(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, null);
     CloseableReference<CloseableImage> ref = mBitmapMemoryCache.get(cacheKey);
     try {
       return CloseableReference.isValid(ref);
