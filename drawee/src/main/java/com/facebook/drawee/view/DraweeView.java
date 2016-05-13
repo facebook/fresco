@@ -234,6 +234,15 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   }
 
   @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    Drawable drawable = getTopLevelDrawable();
+    if (drawable != null) {
+      drawable.setBounds(0, 0, w, h);
+    }
+  }
+
+  @Override
   public String toString() {
     return Objects.toStringHelper(this)
         .add("holder", mDraweeHolder != null ? mDraweeHolder.toString(): "<no holder set>")
