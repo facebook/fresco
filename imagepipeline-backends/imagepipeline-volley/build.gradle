@@ -4,11 +4,11 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.android.volley:volley:${VOLLEY_VERSION}"
+  compile "com.android.volley:volley:${VOLLEY_VERSION}"
 
-    compile project(':drawee')
-    compile project(':fbcore')
+  compile project(':fbcore')
+  compile project(':imagepipeline')
+  compile project(':imagepipeline-base')
 }
 apply from: rootProject.file('release.gradle')
 
@@ -24,6 +24,9 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 }
 
 task sourcesJar(type: Jar) {
@@ -31,3 +34,4 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 artifacts.add('archives', sourcesJar)
+
