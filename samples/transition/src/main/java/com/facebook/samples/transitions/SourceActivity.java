@@ -15,6 +15,7 @@ package com.facebook.samples.transitions;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -42,6 +43,7 @@ public class SourceActivity extends Activity {
     Fresco.initialize(this, config);
     setContentView(R.layout.drawee_source);
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
+    mSimpleDraweeView.setImageURI("res:/" + R.drawable.test_image);
   }
 
   public void startTransition(View view) {

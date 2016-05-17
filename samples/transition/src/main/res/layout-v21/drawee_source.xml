@@ -16,7 +16,6 @@
     android:layout_width="@dimen/size_1"
     android:layout_height="@dimen/size_1"
     android:transitionName="@string/transition_name"
-    fresco:placeholderImage="@drawable/test_image"
-    fresco:placeholderImageScaleType="centerInside"
+    fresco:actualImageScaleType="centerCrop"
   />
 </FrameLayout>
