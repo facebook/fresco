@@ -238,7 +238,8 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
     super.onSizeChanged(w, h, oldw, oldh);
     Drawable drawable = getTopLevelDrawable();
     if (drawable != null) {
-      drawable.setBounds(0, 0, w, h);
+      drawable.setBounds(getPaddingLeft(), getPaddingTop(),
+              w - getPaddingLeft() - getPaddingRight(), h - getPaddingTop() - getPaddingBottom());
     }
   }
 
