@@ -365,15 +365,19 @@ public class ScalingUtils {
 
     private final ScaleType mScaleTypeFrom;
     private final ScaleType mScaleTypeTo;
-    private final float[] mMatrixValuesFrom = new float[9];
-    private final float[] mMatrixValuesTo = new float[9];
+    private final Rect mBoundsFrom;
+    private final Rect mBoundsTo;
+    private float[] mMatrixValuesFrom;
+    private float[] mMatrixValuesTo;
     private final float[] mMatrixValuesInterpolated = new float[9];
 
     private float mInterpolatingValue;
 
-    public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo) {
+    public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo, Rect boundsFrom, Rect boundsTo) {
       mScaleTypeFrom = scaleTypeFrom;
       mScaleTypeTo = scaleTypeTo;
+      mBoundsFrom = boundsFrom;
+      mBoundsTo = boundsTo;
     }
 
     public ScaleType getScaleTypeFrom() {
@@ -382,6 +386,14 @@ public class ScalingUtils {
 
     public ScaleType getScaleTypeTo() {
       return mScaleTypeTo;
+    }
+
+    public Rect getBoundsFrom() {
+      return mBoundsFrom;
+    }
+
+    public Rect getBoundsTo() {
+      return mBoundsTo;
     }
 
     /**
@@ -415,10 +427,16 @@ public class ScalingUtils {
         int childHeight,
         float focusX,
         float focusY) {
-      mScaleTypeFrom.getTransform(transform, parentBounds, childWidth, childHeight, focusX, focusY);
-      transform.getValues(mMatrixValuesFrom);
-      mScaleTypeTo.getTransform(transform, parentBounds, childWidth, childHeight, focusX, focusY);
-      transform.getValues(mMatrixValuesTo);
+      if (mMatrixValuesFrom == null) {
+        mMatrixValuesFrom = new float[9];
+        mScaleTypeFrom.getTransform(transform, mBoundsFrom, childWidth, childHeight, focusX, focusY);
+        transform.getValues(mMatrixValuesFrom);
+      }
+      if (mMatrixValuesTo == null) {
+        mMatrixValuesTo = new float[9];
+        mScaleTypeTo.getTransform(transform, mBoundsTo, childWidth, childHeight, focusX, focusY);
+        transform.getValues(mMatrixValuesTo);
+      }
       for (int i = 0; i < 9; i++) {
         mMatrixValuesInterpolated[i] = mMatrixValuesFrom[i] * (1 - mInterpolatingValue) +
             mMatrixValuesTo[i] * mInterpolatingValue;
