@@ -19,6 +19,7 @@ import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.common.util.HashCodeUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -37,6 +38,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
   private final @Nullable String mPostprocessorName;
   private final int mHash;
   private final Object mCallerContext;
+  private final long mCacheTime;
 
   public BitmapMemoryCacheKey(
       String sourceString,
@@ -60,6 +62,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
         mPostprocessorCacheKey,
         postprocessorName);
     mCallerContext = callerContext;
+    mCacheTime = RealtimeSinceBootClock.get().now();
   }
 
   @Override
@@ -112,5 +115,9 @@ public class BitmapMemoryCacheKey implements CacheKey {
 
   public Object getCallerContext() {
     return mCallerContext;
+  }
+
+  public long getInBitmapCacheSince() {
+    return mCacheTime;
   }
 }
