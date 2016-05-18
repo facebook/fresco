@@ -14,7 +14,7 @@ You should only build from source if you need to modify Fresco code itself. Most
 The following tools must be installed on your system in order to build Fresco:
 
 1. The Android [SDK](https://developer.android.com/sdk/index.html#Other)
-2. From the Android SDK Manager, install the Support Library **and** the Support Repository. Both are found in the Extras section.
+2. From the Android SDK Manager, install/upgrade the latest Support Library **and** the Support Repository. Both are found in the Extras section.
 2. The Android [NDK](https://developer.android.com/tools/sdk/ndk/index.html). Version 10c or later is required.
 3. The [git](http://git-scm.com/) version control system.
 
@@ -79,6 +79,14 @@ Android Studio should build Fresco automatically.
 ### Offline builds
 
 The first time you build Fresco, your computer must be connected to the Internet. Incremental builds can use Gradle's `--offline` option.
+
+### Troubleshooting
+
+````
+Could not find com.android.support:...:x.x.x.
+````
+
+Make sure your Support Repository is up to date (see Prerequisites above).
 
 ### Contributing code upstream
 
