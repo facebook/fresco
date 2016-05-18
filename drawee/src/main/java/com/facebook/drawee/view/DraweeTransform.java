@@ -6,7 +6,9 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.graphics.Rect;
 import android.os.Build;
+import android.transition.ChangeBounds;
 import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.transition.TransitionValues;
 import android.view.ViewGroup;
 
@@ -26,6 +28,13 @@ public class DraweeTransform extends Transition {
 
   private final ScalingUtils.ScaleType mFromScale;
   private final ScalingUtils.ScaleType mToScale;
+
+  public static TransitionSet createTransitionSet(ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
+    TransitionSet transitionSet = new TransitionSet();
+    transitionSet.addTransition(new ChangeBounds());
+    transitionSet.addTransition(new DraweeTransform(fromScale, toScale));
+    return transitionSet;
+  }
 
   public DraweeTransform(ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
     this.mFromScale = fromScale;

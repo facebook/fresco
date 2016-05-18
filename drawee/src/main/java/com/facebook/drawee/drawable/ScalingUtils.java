@@ -12,6 +12,8 @@ package com.facebook.drawee.drawable;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 
+import javax.annotation.Nullable;
+
 /**
  * Performs scale type calculations.
  */
@@ -365,19 +367,23 @@ public class ScalingUtils {
 
     private final ScaleType mScaleTypeFrom;
     private final ScaleType mScaleTypeTo;
-    private final Rect mBoundsFrom;
-    private final Rect mBoundsTo;
-    private float[] mMatrixValuesFrom;
-    private float[] mMatrixValuesTo;
+    private final @Nullable Rect mBoundsFrom;
+    private final @Nullable Rect mBoundsTo;
+    private final float[] mMatrixValuesFrom = new float[9];
+    private final float[] mMatrixValuesTo = new float[9];
     private final float[] mMatrixValuesInterpolated = new float[9];
 
     private float mInterpolatingValue;
 
-    public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo, Rect boundsFrom, Rect boundsTo) {
+    public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo, @Nullable Rect boundsFrom, @Nullable Rect boundsTo) {
       mScaleTypeFrom = scaleTypeFrom;
       mScaleTypeTo = scaleTypeTo;
       mBoundsFrom = boundsFrom;
       mBoundsTo = boundsTo;
+    }
+
+    public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo) {
+      this(scaleTypeFrom, scaleTypeTo, null, null);
     }
 
     public ScaleType getScaleTypeFrom() {
@@ -388,11 +394,11 @@ public class ScalingUtils {
       return mScaleTypeTo;
     }
 
-    public Rect getBoundsFrom() {
+    public @Nullable Rect getBoundsFrom() {
       return mBoundsFrom;
     }
 
-    public Rect getBoundsTo() {
+    public @Nullable Rect getBoundsTo() {
       return mBoundsTo;
     }
 
@@ -427,16 +433,14 @@ public class ScalingUtils {
         int childHeight,
         float focusX,
         float focusY) {
-      if (mMatrixValuesFrom == null) {
-        mMatrixValuesFrom = new float[9];
-        mScaleTypeFrom.getTransform(transform, mBoundsFrom, childWidth, childHeight, focusX, focusY);
-        transform.getValues(mMatrixValuesFrom);
-      }
-      if (mMatrixValuesTo == null) {
-        mMatrixValuesTo = new float[9];
-        mScaleTypeTo.getTransform(transform, mBoundsTo, childWidth, childHeight, focusX, focusY);
-        transform.getValues(mMatrixValuesTo);
-      }
+      Rect boundsFrom = (mBoundsFrom != null) ? mBoundsFrom : parentBounds;
+      Rect boundsTo = (mBoundsTo != null) ? mBoundsTo : parentBounds;
+
+      mScaleTypeFrom.getTransform(transform, boundsFrom, childWidth, childHeight, focusX, focusY);
+      transform.getValues(mMatrixValuesFrom);
+      mScaleTypeTo.getTransform(transform, boundsTo, childWidth, childHeight, focusX, focusY);
+      transform.getValues(mMatrixValuesTo);
+
       for (int i = 0; i < 9; i++) {
         mMatrixValuesInterpolated[i] = mMatrixValuesFrom[i] * (1 - mInterpolatingValue) +
             mMatrixValuesTo[i] * mInterpolatingValue;

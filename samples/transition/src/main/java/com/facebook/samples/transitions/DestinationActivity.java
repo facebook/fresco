@@ -31,21 +31,9 @@ public class DestinationActivity extends Activity {
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
     simpleDraweeView.setImageURI("res:/" + R.drawable.test_image);
 
-    setupEnterTransition();
-    setupReturnTransition();
-  }
-
-  private void setupEnterTransition() {
-    TransitionSet transitionSet = new TransitionSet();
-    transitionSet.addTransition(new ChangeBounds());
-    transitionSet.addTransition(new DraweeTransform(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_INSIDE));
-    getWindow().setSharedElementEnterTransition(transitionSet);
-  }
-
-  private void setupReturnTransition() {
-    TransitionSet transitionSet = new TransitionSet();
-    transitionSet.addTransition(new ChangeBounds());
-    transitionSet.addTransition(new DraweeTransform(ScalingUtils.ScaleType.CENTER_INSIDE, ScalingUtils.ScaleType.CENTER_CROP));
-    getWindow().setSharedElementReturnTransition(transitionSet);
+    getWindow().setSharedElementEnterTransition(DraweeTransform.createTransitionSet(
+            ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_INSIDE));
+    getWindow().setSharedElementReturnTransition(DraweeTransform.createTransitionSet(
+            ScalingUtils.ScaleType.CENTER_INSIDE, ScalingUtils.ScaleType.CENTER_CROP));
   }
 }
