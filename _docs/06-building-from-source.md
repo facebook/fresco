@@ -82,9 +82,7 @@ The first time you build Fresco, your computer must be connected to the Internet
 
 ### Troubleshooting
 
-````
-Could not find com.android.support:...:x.x.x.
-````
+> Could not find com.android.support:...:x.x.x.
 
 Make sure your Support Repository is up to date (see Prerequisites above).
 
