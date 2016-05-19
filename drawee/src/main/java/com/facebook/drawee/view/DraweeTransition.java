@@ -18,13 +18,13 @@ import com.facebook.drawee.drawable.ScalingUtils;
 /**
  * This Transition animates changes of {@link GenericDraweeView} between two ScaleTypes
  *
- * In combination with ChangeBounds, DraweeTransform allows GenericDraweeViews
+ * In combination with ChangeBounds, DraweeTransition allows GenericDraweeViews
  * that change size, shape, or {@link ScalingUtils.ScaleType} to animate contents
  * smoothly.
  */
-public class DraweeTransform extends Transition {
+public class DraweeTransition extends Transition {
 
-  private static final String PROPNAME_BOUNDS = "draweeTransform:bounds";
+  private static final String PROPNAME_BOUNDS = "draweeTransition:bounds";
 
   private final ScalingUtils.ScaleType mFromScale;
   private final ScalingUtils.ScaleType mToScale;
@@ -32,11 +32,11 @@ public class DraweeTransform extends Transition {
   public static TransitionSet createTransitionSet(ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
     TransitionSet transitionSet = new TransitionSet();
     transitionSet.addTransition(new ChangeBounds());
-    transitionSet.addTransition(new DraweeTransform(fromScale, toScale));
+    transitionSet.addTransition(new DraweeTransition(fromScale, toScale));
     return transitionSet;
   }
 
-  public DraweeTransform(ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
+  public DraweeTransition(ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
     this.mFromScale = fromScale;
     this.mToScale = toScale;
   }

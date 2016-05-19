@@ -14,11 +14,9 @@ package com.facebook.samples.transitions;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.transition.ChangeBounds;
-import android.transition.TransitionSet;
 
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.DraweeTransform;
+import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class DestinationActivity extends Activity {
@@ -31,9 +29,9 @@ public class DestinationActivity extends Activity {
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
     simpleDraweeView.setImageURI("res:/" + R.drawable.test_image);
 
-    getWindow().setSharedElementEnterTransition(DraweeTransform.createTransitionSet(
+    getWindow().setSharedElementEnterTransition(DraweeTransition.createTransitionSet(
             ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_INSIDE));
-    getWindow().setSharedElementReturnTransition(DraweeTransform.createTransitionSet(
+    getWindow().setSharedElementReturnTransition(DraweeTransition.createTransitionSet(
             ScalingUtils.ScaleType.CENTER_INSIDE, ScalingUtils.ScaleType.CENTER_CROP));
   }
 }
