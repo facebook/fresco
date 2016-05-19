@@ -578,7 +578,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /**
-   * Sets a new background image at the specified index.
+   * Sets a new overlay image at the specified index.
    *
    * This method will throw if the given index is out of bounds.
    *
