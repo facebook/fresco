@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="example_uris">
+        <item>http://frescolib.org/static/logo.png&amp;a=0</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=1</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=2</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=3</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=4</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=5</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=6</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=7</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=8</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=9</item>
+        <item>http://frescolib.org/static/logo.png&amp;a=10</item>
+    </string-array>
+</resources>
