@@ -16,7 +16,7 @@ dependencies {
     compile project(':drawee-backends:drawee-volley')
     compile project(':fbcore')
     compile project(':imagepipeline')
-    compile project(':imagepipeline-backends:imagepipeline-okhttp')
+    compile project(':imagepipeline-backends:imagepipeline-okhttp3')
     compile project(':tools:stetho')
 }
 
