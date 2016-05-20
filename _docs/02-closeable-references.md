@@ -119,3 +119,4 @@ void haa(CloseableReference<?> ref) {
   });
   // caller can now safely close its copy as we made our own clone.
 }
+```
