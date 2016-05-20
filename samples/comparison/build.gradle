@@ -9,7 +9,7 @@ dependencies {
     compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     compile "com.googlecode.android-query:android-query:${AQUERY_VERSION}"
-    compile "com.facebook.stetho:stetho-okhttp:${STETHO_VERSION}"
+    compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 
     compile project(':drawee')
     compile project(':drawee-backends:drawee-pipeline')
