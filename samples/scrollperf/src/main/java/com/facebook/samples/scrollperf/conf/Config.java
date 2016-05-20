@@ -25,18 +25,27 @@ public class Config {
 
   public final String mDataSourceType;
 
+  public final String mRecyclerLayoutType;
+
   public static Config load(final Context context) {
     // We read the DataSource type
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
+    // Data Source key
     final String dataSourceKey = context.getString(R.string.key_data_source);
     final String dataSourceType = sharedPreferences.getString(
             dataSourceKey,
             context.getString(R.string.value_local_uri));
-    return new Config(dataSourceType);
+    // The Recycler Layout key
+    final String recyclerLayoutKey = context.getString(R.string.key_recycler_layout);
+    final String recyclerLayoutType = sharedPreferences.getString(
+            recyclerLayoutKey,
+            context.getString(R.string.value_listview_recycler_layout));
+    return new Config(dataSourceType, recyclerLayoutType);
   }
 
-  private Config(final String dataSourceType) {
+  private Config(final String dataSourceType, final String recyclerLayoutType) {
     mDataSourceType = dataSourceType;
+    mRecyclerLayoutType = recyclerLayoutType;
   }
 }

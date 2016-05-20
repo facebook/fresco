@@ -209,9 +209,9 @@ public class RoundedLightBitmapDrawable extends LightBitmapDrawable
       canvas.drawBitmap(bitmap, null, bounds, paint);
       return;
     }
-
-    updatePaint(bitmap);
+    // IMPORTANT: Don't change the invocation order of the following methods
     updateTransform(bitmap, bounds);
+    updatePaint(bitmap);
     updatePath();
 
     int saveCount = canvas.save();

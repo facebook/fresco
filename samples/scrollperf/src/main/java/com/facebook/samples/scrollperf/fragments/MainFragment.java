@@ -31,8 +31,6 @@ public class MainFragment extends Fragment {
 
   private Config mConfig;
 
-  private TextView mTmpConf;
-
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,9 +42,22 @@ public class MainFragment extends Fragment {
       LayoutInflater inflater,
       ViewGroup container,
       Bundle savedInstanceState) {
-    final View fragmentLayout = inflater.inflate(R.layout.fragment_main, container, false);
-    mTmpConf = UI.findViewById(fragmentLayout, R.id.conf_debug);
-    return fragmentLayout;
+    mConfig = Config.load(getContext());
+    // We use a different layout based on the type of output
+    final View layout;
+    switch (mConfig.mRecyclerLayoutType) {
+      case "recyclerview_recycler_layout":
+        layout = inflater.inflate(R.layout.content_recyclerview, container, false);
+        initializeRecyclerView(layout);
+        break;
+      case "listview_recycler_layout":
+        layout = inflater.inflate(R.layout.content_listview, container, false);
+        initializeListView(layout);
+        break;
+      default:
+        throw new IllegalStateException("Recycler Layout not supported");
+    }
+    return layout;
   }
 
   @Override
@@ -55,10 +66,11 @@ public class MainFragment extends Fragment {
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-  @Override
-  public void onStart() {
-    super.onStart();
-    mConfig = Config.load(getContext());
-    mTmpConf.setText("DataSourceType: " + mConfig.mDataSourceType);
+  private void initializeRecyclerView(final View layout) {
+
+  }
+
+  private void initializeListView(final View layout) {
+
   }
 }

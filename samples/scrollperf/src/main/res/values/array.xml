@@ -13,4 +13,17 @@
         <item>@string/value_local_summary</item>
         <item>@string/value_remote_summary</item>
     </array>
+    <!-- Recycler Layout preferences keys/values-->
+    <array name="recycler_layout_labels">
+        <item>@string/label_listview_recycler_layout</item>
+        <item>@string/label_recyclerview_recycler_layout</item>
+    </array>
+    <array name="recycler_layout_values">
+        <item>@string/value_listview_recycler_layout</item>
+        <item>@string/value_recyclerview_recycler_layout</item>
+    </array>
+    <array name="recycler_layout_summaries">
+        <item>@string/value_listview_summary</item>
+        <item>@string/value_recycler_summary</item>
+    </array>
 </resources>

@@ -12,7 +12,7 @@ APP_STL := gnustl_static
 # Make sure every shared lib includes a .note.gnu.build-id header
 APP_LDFLAGS := -Wl,--build-id
 
-NDK_TOOLCHAIN_VERSION := 4.8
+NDK_TOOLCHAIN_VERSION := 4.9
 
 
 # We link our libs with static stl implementation. Because of that we need to
@@ -24,4 +24,4 @@ NDK_TOOLCHAIN_VERSION := 4.8
 FRESCO_CPP_CFLAGS := -fno-weak
 
 # This hides all symbols exported from libgnustl_static
-FRESCO_CPP_LDFLAGS := -Wl,--gc-sections,--exclude-libs,libgnustl_static.a
+FRESCO_CPP_LDFLAGS := -Wl,--gc-sections

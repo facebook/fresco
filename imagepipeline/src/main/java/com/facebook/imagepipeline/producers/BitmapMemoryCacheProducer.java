@@ -49,7 +49,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
     final String requestId = producerContext.getId();
     listener.onProducerStart(requestId, getProducerName());
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest);
+    final Object callerContext = producerContext.getCallerContext();
+    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
 
     CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
 

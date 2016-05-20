@@ -21,12 +21,14 @@ import java.nio.ByteBuffer;
 
 /**
  * Utility methods for handling Bitmaps.
+ *
+ * <p> Native code used by this class is shipped as part of libimagepipeline.so
  */
 @DoNotStrip
 public class Bitmaps {
 
   static {
-    SoLoaderShim.loadLibrary("bitmaps");
+    ImagePipelineNativeLoader.load();
   }
 
   /**

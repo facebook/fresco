@@ -12,7 +12,7 @@ APP_STL := gnustl_static
 # Make sure every shared lib includes a .note.gnu.build-id header
 APP_LDFLAGS := -Wl,--build-id
 
-NDK_TOOLCHAIN_VERSION := 4.8
+NDK_TOOLCHAIN_VERSION := 4.9
 
 
 # We link our libs with static stl implementation. Because of that we need to

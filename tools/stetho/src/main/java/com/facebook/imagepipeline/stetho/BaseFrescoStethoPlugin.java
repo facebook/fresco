@@ -25,6 +25,8 @@ import android.util.SparseArray;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.FileCache;
+import com.facebook.common.time.RealtimeSinceBootClock;
+import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.image.CloseableBitmap;
@@ -214,12 +216,18 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
   private void writeCacheEntry(
       PrintStream writer,
       CountingMemoryCacheInspector.DumpInfoEntry<CacheKey, CloseableImage> entry) {
+    if (!(entry.key instanceof BitmapMemoryCacheKey)) {
+      writer.println("Undefined: " + entry.key.getClass());
+    }
+    BitmapMemoryCacheKey cacheKey = (BitmapMemoryCacheKey) entry.key;
     writer.println(formatStrLocaleSafe(
-        "size: %7.2fkB (%4d x %4d) key: %s",
+        "size: %7.2fkB (%4d x %4d) key: %s, %s, duration: %dms",
         entry.value.get().getSizeInBytes() / KB,
         entry.value.get().getWidth(),
         entry.value.get().getHeight(),
-        entry.key));
+        entry.key,
+        cacheKey.getCallerContext(),
+        RealtimeSinceBootClock.get().now() - cacheKey.getInBitmapCacheSince()));
   }
 
   private void memcache(PrintStream writer, List<String> args) throws DumpException {

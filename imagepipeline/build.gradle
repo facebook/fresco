@@ -84,20 +84,31 @@ def getNdkBuildName() {
 }
 
 def getNdkBuildFullPath() {
-    // we allow to provide full path to ndk-build tool
-    if (hasProperty('ndk.command')) {
-        return property('ndk.command')
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    def ndkCommand = properties.getProperty('ndk.command')
+    if (ndkCommand != null) {
+        return ndkCommand
     }
-    // or just a path to the containing directiry
-    if (hasProperty('ndk.path')) {
-        def path = property('ndk.path')
+    def path = null
+    def ndkPath = properties.getProperty('ndk.path')
+    if (ndkPath != null) {
+        path = ndkPath
+    } else {
+        def ndkDir = properties.getProperty('ndk.dir')
+        if (ndkDir != null) {
+            path = ndkDir
+        }
+    }
+    if (path != null) {
         if (!path.endsWith(File.separator)) {
             path += File.separator
         }
         return path + getNdkBuildName()
+    } else {
+        // if none of above is provided, we assume ndk-build is already in $PATH
+        return getNdkBuildName()
     }
-    // if none of above is provided, we assume ndk-build is already in $PATH
-    return getNdkBuildName()
 }
 
 def makeNdkTasks(String name, Object[] deps) {

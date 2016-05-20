@@ -16,19 +16,19 @@ package com.facebook.samples.comparison.configs.imagepipeline;
 import android.content.Context;
 
 import com.facebook.cache.disk.DiskCacheConfig;
-import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
-import com.facebook.imagepipeline.backends.okhttp.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.samples.comparison.configs.ConfigConstants;
 import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Creates ImagePipeline configuration for the sample app

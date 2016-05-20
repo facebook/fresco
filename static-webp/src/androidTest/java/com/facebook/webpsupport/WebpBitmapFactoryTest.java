@@ -29,7 +29,6 @@ import android.os.Build;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
-import com.facebook.webpsupport.WebpBitmapFactoryImpl;
 
 import org.junit.After;
 import org.junit.Before;

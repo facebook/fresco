@@ -9,9 +9,6 @@
 
 package com.facebook.imagepipeline.cache;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
@@ -37,18 +34,19 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public CacheKey getBitmapCacheKey(ImageRequest request) {
+  public CacheKey getBitmapCacheKey(ImageRequest request, Object callerContext) {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
         request.getAutoRotateEnabled(),
         request.getImageDecodeOptions(),
         null,
-        null);
+        null,
+        callerContext);
   }
 
   @Override
-  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request) {
+  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request, Object callerContext) {
     final Postprocessor postprocessor = request.getPostprocessor();
     final CacheKey postprocessorCacheKey;
     final String postprocessorName;
@@ -65,7 +63,8 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
         request.getAutoRotateEnabled(),
         request.getImageDecodeOptions(),
         postprocessorCacheKey,
-        postprocessorName);
+        postprocessorName,
+        callerContext);
   }
 
   @Override
