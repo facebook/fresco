@@ -53,6 +53,13 @@ public class ImageDecodeOptions {
    */
   public final boolean decodeAllFrames;
 
+  /**
+   * Force image to be rendered as a static image, even if it is an animated format.
+   *
+   * This flag will force animated GIFs to be rendered as static images
+   */
+  public final boolean forceStaticImage;
+
   ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.backgroundColor = b.getBackgroundColor();
@@ -60,6 +67,7 @@ public class ImageDecodeOptions {
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
     this.decodeAllFrames = b.getDecodeAllFrames();
+    this.forceStaticImage = b.getForceStaticImage();
   }
 
   /**
@@ -92,6 +100,7 @@ public class ImageDecodeOptions {
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
+    if (forceStaticImage != that.forceStaticImage) return false;
 
     return true;
   }
@@ -107,12 +116,13 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%d-%b-%b-%b-%b",
+        "%d-%d-%b-%b-%b-%b-%b",
         minDecodeIntervalMs,
         backgroundColor,
         forceOldAnimationCode,
         decodePreviewFrame,
         useLastFrameForPreview,
-        decodeAllFrames);
+        decodeAllFrames,
+        forceStaticImage);
   }
 }

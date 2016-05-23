@@ -22,6 +22,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
+  private boolean mForceStaticImage;
 
   ImageDecodeOptionsBuilder() {
   }
@@ -38,6 +39,7 @@ public class ImageDecodeOptionsBuilder {
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     mDecodeAllFrames = options.decodeAllFrames;
+    mForceStaticImage = options.forceStaticImage;
     return this;
   }
 
@@ -170,6 +172,26 @@ public class ImageDecodeOptionsBuilder {
   public ImageDecodeOptionsBuilder setDecodeAllFrames(boolean decodeAllFrames) {
     mDecodeAllFrames = decodeAllFrames;
     return this;
+  }
+
+  /**
+   * Sets whether to force animated image formats to be decoded as static, non-animated images.
+   *
+   * @param forceStaticImage whether to force the image to be decoded as a static image
+   * @return this builder
+   */
+  public ImageDecodeOptionsBuilder setForceStaticImage(boolean forceStaticImage) {
+    mForceStaticImage = forceStaticImage;
+    return this;
+  }
+
+  /**
+   * Gets whether to force animated image formats to be decoded as static, non-animated images.
+   *
+   * @return whether to force animated image formats to be decoded as static
+   */
+  public boolean getForceStaticImage() {
+    return mForceStaticImage;
   }
 
   /**

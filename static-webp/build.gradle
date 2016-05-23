@@ -111,8 +111,12 @@ def getNdkBuildName() {
 }
 
 def getNdkBuildFullPath() {
+    File propFile = project.rootProject.file('local.properties')
+    if (!propFile.exists()) {
+        return getNdkBuildName()
+    }
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    properties.load(propFile.newDataInputStream())
     def ndkCommand = properties.getProperty('ndk.command')
     if (ndkCommand != null) {
         return ndkCommand
