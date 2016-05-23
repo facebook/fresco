@@ -97,6 +97,8 @@
       <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/alpha_webp"
         style="@style/drawee"
+        fresco:backgroundImage="@color/transparent"
+        fresco:overlayImage="@color/transparent"
         />
 
       <TextView

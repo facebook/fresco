@@ -17,6 +17,7 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -79,6 +80,7 @@ public class MainActivity extends Activity {
     mStaticWebpView.setImageURI(Uri.parse("https://www.gstatic.com/webp/gallery/2.sm.webp"));
 
     mAlphaWebpView.setImageURI(Uri.parse("http://frescolib.org/static/translucent.webp"));
+    mAlphaWebpView.getHierarchy().setBackgroundImage(new ColorDrawable(0xFF302013));
 
     DraweeController animatedGifController = Fresco.newDraweeControllerBuilder()
         .setAutoPlayAnimations(true)

@@ -555,6 +555,51 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setProgressBarImage(mResources.getDrawable(resourceId), scaleType);
   }
 
+  /**
+   * Sets a new background image at the specified index.
+   *
+   * This method will throw if the given index is out of bounds.
+   *
+   * @param drawable background image
+   */
+  public void setBackgroundImage(int index, @Nullable Drawable drawable) {
+    // Note: we do not have mNumBackgrounds to reduce the memory footprint of this class.
+    // We rely on the assumption that the first image after backgrounds is the placeholder image.
+    int numBackgrounds = mPlaceholderImageIndex;
+    Preconditions.checkArgument(
+        0 <= index && index < numBackgrounds,
+        "The given index does not correspond to a background image.");
+    setChildDrawableAtIndex(index, drawable);
+  }
+
+  /** Sets the background image if allowed. */
+  public void setBackgroundImage(@Nullable Drawable drawable) {
+    setBackgroundImage(0, drawable);
+  }
+
+  /**
+   * Sets a new overlay image at the specified index.
+   *
+   * This method will throw if the given index is out of bounds.
+   *
+   * @param drawable background image
+   */
+  public void setOverlayImage(int index, @Nullable Drawable drawable) {
+    // Note: we do not have mOverlaysIndex to reduce the memory footprint of this class.
+    // We rely on the assumption that the last image before overlays is the failure image.
+    int overlaysIndex = mFailureImageIndex + 1;
+    index += overlaysIndex;
+    Preconditions.checkArgument(
+        overlaysIndex <= index && index < mFadeDrawable.getNumberOfLayers(),
+        "The given index does not correspond to an overlay image.");
+    setChildDrawableAtIndex(index, drawable);
+  }
+
+  /** Sets the overlay image if allowed. */
+  public void setOverlayImage(@Nullable Drawable drawable) {
+    setOverlayImage(0, drawable);
+  }
+
   /** Sets the rounding params. */
   public void setRoundingParams(@Nullable RoundingParams roundingParams) {
     mRoundingParams = roundingParams;
