@@ -14,40 +14,41 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.imagepipeline.testing.FakeClock;
-
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
+import com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsNoop;
 import com.facebook.imagepipeline.animated.testing.MyShadowBitmap;
 import com.facebook.imagepipeline.animated.testing.MyShadowCanvas;
 import com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend;
-import com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsNoop;
+import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.Config;
-import org.robolectric.annotation.RealObject;
-import org.robolectric.shadows.ShadowValueAnimator;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
-import org.robolectric.util.ReflectionHelpers;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowValueAnimator;
 
 import static com.facebook.imagepipeline.animated.testing.TestAnimatedDrawableBackend.pixelValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link AnimatedDrawable}.
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(shadows = {MyShadowCanvas.class, MyShadowBitmap.class})
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AnimatedDrawableTest {
 
   private static final int WIDTH = 200;
