@@ -16,15 +16,16 @@ android {
     }
 
     productFlavors {
-        // TO BUILD WITH THE LOCAL MODULES, UNCOMMENT THE "internal" FLAVOR AND COMMENT THE REST
-        // OTHERWISE A CLASH OCCURS DUE TO THEM TRYING TO CREATE TASKS OF THE SAME NAME
+        // TO TEST THE REMOTE MODULES DURING A RELEASE, COMMENT OUT THE "internal" FLAVOR AND
+        // UNCOMMENT THE REST OTHERWISE A CLASH OCCURS DUE TO THEM TRYING TO CREATE TASKS OF THE
+        // SAME NAME
 
-//        internal
-        mavenBasic
-        mavenWithWebp
-        mavenWithAnimatedWebp
-        mavenWithAnimatedGif
-        mavenWithAllAnimations
+        internal
+//        mavenBasic
+//        mavenWithWebp
+//        mavenWithAnimatedWebp
+//        mavenWithAnimatedGif
+//        mavenWithAllAnimations
     }
 
     buildTypes {
