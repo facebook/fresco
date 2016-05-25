@@ -26,6 +26,7 @@ public class Config {
   public final String mDataSourceType;
 
   public final boolean mInfiniteDataSource;
+  public final boolean mDistinctUriDataSource;
 
   public final String mRecyclerLayoutType;
 
@@ -43,20 +44,32 @@ public class Config {
     final boolean infiniteDataSource = sharedPreferences.getBoolean(
             infiniteDataSourceKey,
             false);
+    // Distinct Uri
+    final String distinctUriDataSourceKey = context
+      .getString(R.string.key_distinct_uri_data_source);
+    final boolean distinctUriDataSource = sharedPreferences.getBoolean(
+            distinctUriDataSourceKey,
+            false);
     // The Recycler Layout key
     final String recyclerLayoutKey = context.getString(R.string.key_recycler_layout);
     final String recyclerLayoutType = sharedPreferences.getString(
             recyclerLayoutKey,
             context.getString(R.string.value_listview_recycler_layout));
-    return new Config(dataSourceType, recyclerLayoutType, infiniteDataSource);
+    return new Config(
+      dataSourceType,
+      recyclerLayoutType,
+      infiniteDataSource,
+      distinctUriDataSource);
   }
 
   private Config(
       final String dataSourceType,
       final String recyclerLayoutType,
-      final boolean infiniteDataSource) {
+      final boolean infiniteDataSource,
+      final boolean distinctUriDataSource) {
     mDataSourceType = dataSourceType;
     mRecyclerLayoutType = recyclerLayoutType;
     mInfiniteDataSource = infiniteDataSource;
+    mDistinctUriDataSource = distinctUriDataSource;
   }
 }

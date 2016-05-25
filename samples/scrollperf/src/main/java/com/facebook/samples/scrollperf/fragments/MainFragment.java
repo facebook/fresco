@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
 import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
 import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
 import com.facebook.samples.scrollperf.util.UI;
@@ -60,6 +61,10 @@ public class MainFragment extends Fragment {
                              .getEagerAdapter(getContext(), R.array.example_uris);
     if (mConfig.mInfiniteDataSource) {
       mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
+      if (mConfig.mDistinctUriDataSource) {
+        mSimpleAdapter = SimpleAdapter.Util
+          .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
+      }
     }
     // We use a different layout based on the type of output
     final View layout;

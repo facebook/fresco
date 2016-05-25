@@ -34,6 +34,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private String mDataSourceKey;
   private String mInfiniteDataSourceKey;
+  private String mDistinctUriDataSourceKey;
   private String mRecyclerLayoutKey;
 
   @Override
@@ -49,10 +50,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     // We read the keys
     mDataSourceKey = getString(R.string.key_data_source);
     mInfiniteDataSourceKey = getString(R.string.key_infinite_data_source);
+    mDistinctUriDataSourceKey = getString(R.string.key_distinct_uri_data_source);
     mRecyclerLayoutKey = getString(R.string.key_recycler_layout);
     // Update summaries
     updateDataSourceSummary(findPreference(mDataSourceKey));
     updateInfiniteDataSourceSummary(findPreference(mInfiniteDataSourceKey));
+    updateDistinctDataSourceSummary(findPreference(mDistinctUriDataSourceKey));
     updateRecyclerLayoutSummary(findPreference(mRecyclerLayoutKey));
   }
 
@@ -71,6 +74,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateRecyclerLayoutSummary(preference);
     } else if (mInfiniteDataSourceKey.equals(key)) {
       updateInfiniteDataSourceSummary(preference);
+    } else if (mDistinctUriDataSourceKey.equals(key)) {
+      updateDistinctDataSourceSummary(preference);
     }
   }
 
@@ -88,6 +93,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
       preference.setSummary(getResources().getString(R.string.checked_infinite_data_source_summary));
     } else {
       preference.setSummary(getResources().getString(R.string.unchecked_infinite_data_source_summary));
+    }
+    // We disableDistinct Uris if infinite is not enabled
+    findPreference(mDistinctUriDataSourceKey).setEnabled(isInfinite);
+  }
+
+  private void updateDistinctDataSourceSummary(final Preference preference) {
+    CheckBoxPreference distinctUriDataSourcePreference = (CheckBoxPreference) preference;
+    final boolean isDistinct = distinctUriDataSourcePreference.isChecked();
+    if (isDistinct) {
+      preference.setSummary(getResources().getString(R.string.checked_distinct_uri_data_source_summary));
+    } else {
+      preference.setSummary(getResources().getString(R.string.unchecked_distinct_uri_data_source_summary));
     }
   }
 

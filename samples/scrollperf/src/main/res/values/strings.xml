@@ -19,6 +19,12 @@
     <string translatable="false" name="key_infinite_data_source">infinite_data_source</string>
     <string translatable="false" name="checked_infinite_data_source_summary">Data Source provides infinite Uris</string>
     <string translatable="false" name="unchecked_infinite_data_source_summary">Data Source provides a finite number or Uris</string>
+    <!-- Distinct Uris-->
+    <string translatable="false" name="title_distinct_uri_data_source">Distinct Uris</string>
+    <string translatable="false" name="key_distinct_uri_data_source">distinct_uri_data_source</string>
+    <string translatable="false" name="checked_distinct_uri_data_source_summary">Recycled Uri have different address</string>
+    <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
+
     <!-- Layout Preferences-->
     <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>
     <string translatable="false" name="title_preferences_recycler_layout">Recycler Layout</string>
