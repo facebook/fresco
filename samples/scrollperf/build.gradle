@@ -28,9 +28,10 @@ android {
 }
 
 dependencies {
-    //compile project(':drawee-backends:drawee-pipeline')
+    compile project(':drawee-backends:drawee-pipeline')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:recyclerview-v7:23.2.0'
     compile 'com.android.support:preference-v7:23.2.0'
     androidTestCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
