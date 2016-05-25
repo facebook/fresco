@@ -8,4 +8,5 @@
   <string name="label_animated_webp">Animated webp</string>
   <string name="label_one_loop_animated_webp">Animated webp (1 loop)</string>
   <string name="label_data_webp">Webp (data uri)</string>
+  <string name="label_attr_image_uri">Attribute actualImageUri</string>
 </resources>
