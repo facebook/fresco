@@ -58,6 +58,9 @@ public class MainFragment extends Fragment {
     // Initialize the SimpleAdapter
     mSimpleAdapter = LocalResourceSimpleAdapter
                              .getEagerAdapter(getContext(), R.array.example_uris);
+    if (mConfig.mInfiniteDataSource) {
+      mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
+    }
     // We use a different layout based on the type of output
     final View layout;
     switch (mConfig.mRecyclerLayoutType) {

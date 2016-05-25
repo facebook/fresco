@@ -12,6 +12,10 @@
             android:key="@string/key_data_source"
             android:title="@string/title_data_source"
             />
+        <CheckBoxPreference
+            android:title="@string/title_infinite_data_source"
+            android:key="@string/key_infinite_data_source"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory

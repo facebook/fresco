@@ -22,4 +22,38 @@ public interface SimpleAdapter<E> {
   E get(int position);
 
   boolean isLazy();
+
+  /**
+   * Utility class for SimpleAdapter
+   */
+  class Util {
+
+    /**
+     * This creates an infinite version of the given SimpleAdapter setting if its lazy or not
+     * @param srcAdapter The source SimpleAdapter
+     * @param <E> The parameter type for this SimpleAdapter
+     * @return The infinite version of this SimpleAdapter
+     */
+    public static <E> SimpleAdapter<E> makeItInfinite(final SimpleAdapter<E> srcAdapter) {
+      if (srcAdapter.getSize() == Integer.MAX_VALUE) {
+        return srcAdapter;
+      }
+      return new SimpleAdapter<E>() {
+        @Override
+        public int getSize() {
+          return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public E get(int position) {
+          return srcAdapter.get(position % srcAdapter.getSize());
+        }
+
+        @Override
+        public boolean isLazy() {
+          return srcAdapter.isLazy();
+        }
+      };
+    }
+  }
 }
