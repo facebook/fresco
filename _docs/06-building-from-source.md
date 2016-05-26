@@ -86,6 +86,13 @@ The first time you build Fresco, your computer must be connected to the Internet
 
 Make sure your Support Repository is up to date (see Prerequisites above).
 
+### Windows support
+
+We try our best to support building on Windows but we can't commit to it. We do not have a Windows build set up on our CI servers and none of us is using a Windows computer so the builds can break without us noticing it.
+
+Please raise github issues if the Windows build is broken or submit a pull request with the fix. We do our best but we'd like the community's help to keep this up to date.
+
+
 ### Contributing code upstream
 
 Please see our [CONTRIBUTING](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md) page.
