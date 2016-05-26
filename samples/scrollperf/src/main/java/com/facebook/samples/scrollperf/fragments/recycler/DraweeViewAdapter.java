@@ -23,6 +23,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
 /**
@@ -38,9 +39,12 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final Context mContext;
 
-  public DraweeViewAdapter(Context context, SimpleAdapter<Uri> simpleAdapter) {
+  private final Config mConfig;
+
+  public DraweeViewAdapter(Context context, SimpleAdapter<Uri> simpleAdapter, Config config) {
     this.mContext = context;
     this.mSimpleAdapter = simpleAdapter;
+    this.mConfig = config;
   }
 
   @Override
@@ -51,7 +55,7 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
                                          .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
                                          .build();
     final SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext, gdh);
-    return new DraweeViewHolder(parent, simpleDraweeView);
+    return new DraweeViewHolder(parent, simpleDraweeView, mConfig);
   }
 
   @Override

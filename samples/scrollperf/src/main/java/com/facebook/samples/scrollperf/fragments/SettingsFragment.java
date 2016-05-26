@@ -36,6 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private String mInfiniteDataSourceKey;
   private String mDistinctUriDataSourceKey;
   private String mRecyclerLayoutKey;
+  private String mReuseOldControllerKey;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,11 +53,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
     mInfiniteDataSourceKey = getString(R.string.key_infinite_data_source);
     mDistinctUriDataSourceKey = getString(R.string.key_distinct_uri_data_source);
     mRecyclerLayoutKey = getString(R.string.key_recycler_layout);
+    mReuseOldControllerKey = getString(R.string.key_reuse_old_controller);
     // Update summaries
     updateDataSourceSummary(findPreference(mDataSourceKey));
     updateInfiniteDataSourceSummary(findPreference(mInfiniteDataSourceKey));
     updateDistinctDataSourceSummary(findPreference(mDistinctUriDataSourceKey));
     updateRecyclerLayoutSummary(findPreference(mRecyclerLayoutKey));
+    updateReuseOldControllerSummary(findPreference(mReuseOldControllerKey));
   }
 
   @Override
@@ -76,6 +79,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateInfiniteDataSourceSummary(preference);
     } else if (mDistinctUriDataSourceKey.equals(key)) {
       updateDistinctDataSourceSummary(preference);
+    } else if (mReuseOldControllerKey.equals(key)) {
+      updateReuseOldControllerSummary(preference);
     }
   }
 
@@ -115,5 +120,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final String summary = getResources()
         .getStringArray(R.array.recycler_layout_summaries)[valueIndex];
     preference.setSummary(summary);
+  }
+
+  private void updateReuseOldControllerSummary(final Preference preference) {
+    CheckBoxPreference reuseOldControllerPreference = (CheckBoxPreference) preference;
+    final boolean reuseOldController = reuseOldControllerPreference.isChecked();
+    if (reuseOldController) {
+      preference.setSummary(getResources().getString(R.string.checked_reuse_old_controller_summary));
+    } else {
+      preference.setSummary(getResources().getString(R.string.unchecked_reuse_old_controller_summary));
+    }
   }
 }

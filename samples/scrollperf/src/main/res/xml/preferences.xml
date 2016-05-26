@@ -23,6 +23,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="key_preferences_controller_group"
+        android:title="@string/title_controller_group"
+        >
+        <CheckBoxPreference
+            android:title="@string/title_reuse_old_controller"
+            android:key="@string/key_reuse_old_controller"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="key_preferences_recycler_layout"
         android:title="@string/title_preferences_recycler_layout"
         >

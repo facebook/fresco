@@ -20,10 +20,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.samples.scrollperf.conf.Config;
 
 /**
  * This is the ViewHolder for the RecyclerView in order to contain the DraweeView
@@ -36,10 +38,13 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
 
   private final SimpleDraweeView mDraweeView;
 
-  public DraweeViewHolder(View parentView, SimpleDraweeView simpleDraweeView) {
+  private final Config mConfig;
+
+  public DraweeViewHolder(View parentView, SimpleDraweeView simpleDraweeView, Config config) {
     super(simpleDraweeView);
     mParentView = parentView;
     mDraweeView = simpleDraweeView;
+    mConfig = config;
     if (mParentView != null) {
       int size = calcDesiredSize(
               mParentView.getContext(),
@@ -59,11 +64,13 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
             new ResizeOptions(
               mDraweeView.getLayoutParams().width,
               mDraweeView.getLayoutParams().height));
-    DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-                                                .setImageRequest(imageRequestBuilder.build())
-                                                .setOldController(mDraweeView.getController())
-                                                .build();
-    mDraweeView.setController(draweeController);
+    // Create the Builder
+    PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
+                                                      .setImageRequest(imageRequestBuilder.build());
+    if (mConfig.mReuseOldController) {
+      builder.setOldController(mDraweeView.getController());
+    }
+    mDraweeView.setController(builder.build());
   }
 
   private void updateViewLayoutParams(View view, int width, int height) {

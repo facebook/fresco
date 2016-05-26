@@ -98,7 +98,7 @@ public class MainFragment extends Fragment {
     layoutManager.scrollToPosition(0);
     mRecyclerView.setLayoutManager(layoutManager);
     // Create the Adapter
-    mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter);
+    mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
     mRecyclerView.setAdapter(mDraweeViewAdapter);
   }
 

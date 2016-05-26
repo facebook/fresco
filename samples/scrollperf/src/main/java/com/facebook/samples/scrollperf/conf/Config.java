@@ -30,6 +30,8 @@ public class Config {
 
   public final String mRecyclerLayoutType;
 
+  public final boolean mReuseOldController;
+
   public static Config load(final Context context) {
     // We read the DataSource type
     final SharedPreferences sharedPreferences =
@@ -55,21 +57,30 @@ public class Config {
     final String recyclerLayoutType = sharedPreferences.getString(
             recyclerLayoutKey,
             context.getString(R.string.value_listview_recycler_layout));
+    // Reuse Old Controller
+    final String reuseOldControllerKey = context.getString(R.string.key_reuse_old_controller);
+    final boolean reuseOldController = sharedPreferences.getBoolean(
+            reuseOldControllerKey,
+            false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
       infiniteDataSource,
-      distinctUriDataSource);
+      distinctUriDataSource,
+      reuseOldController);
   }
 
   private Config(
       final String dataSourceType,
       final String recyclerLayoutType,
       final boolean infiniteDataSource,
-      final boolean distinctUriDataSource) {
+      final boolean distinctUriDataSource,
+      final boolean reuseOldController
+      ) {
     mDataSourceType = dataSourceType;
     mRecyclerLayoutType = recyclerLayoutType;
     mInfiniteDataSource = infiniteDataSource;
     mDistinctUriDataSource = distinctUriDataSource;
+    mReuseOldController = reuseOldController;
   }
 }

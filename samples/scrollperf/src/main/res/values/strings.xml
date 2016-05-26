@@ -25,6 +25,17 @@
     <string translatable="false" name="checked_distinct_uri_data_source_summary">Recycled Uri have different address</string>
     <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
 
+    <!-- Controller Preferences-->
+    <string translatable="false" name="key_preferences_controller_group">Controllers</string>
+    <string translatable="false" name="title_controller_group">Controller configuration</string>
+    <!-- Reuse old controller-->
+    <string translatable="false" name="title_reuse_old_controller">Reuse old Controller</string>
+    <string translatable="false" name="key_reuse_old_controller">reuse_old_controller</string>
+    <string translatable="false" name="checked_reuse_old_controller_summary">The old Controller is reused</string>
+    <string translatable="false" name="unchecked_reuse_old_controller_summary">A controller is created for every request</string>
+
+
+
     <!-- Layout Preferences-->
     <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>
     <string translatable="false" name="title_preferences_recycler_layout">Recycler Layout</string>
