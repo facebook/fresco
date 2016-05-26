@@ -13,6 +13,9 @@
 package com.facebook.samples.zoomableapp;
 
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -30,6 +33,7 @@ class MyPagerAdapter extends PagerAdapter {
 			.setUri("https://www.gstatic.com/webp/gallery/1.sm.jpg")
 			.build();
 		zoomableDraweeView.setController(controller);
+		zoomableDraweeView.setTapListener(createTapListener(position));
 		page.requestLayout();
 		return page;
 	}
@@ -49,7 +53,13 @@ class MyPagerAdapter extends PagerAdapter {
 	public boolean isViewFromObject(View arg0, Object arg1) {
 		return arg0 == arg1;
 	}
+
+	private GestureDetector.SimpleOnGestureListener createTapListener(final int position) {
+		return new GestureDetector.SimpleOnGestureListener() {
+			@Override
+			public void onLongPress(MotionEvent e) {
+				Log.d("MyPagerAdapter", "onLongPress: " + position);
+			}
+		};
+	}
 }
-
-
-
