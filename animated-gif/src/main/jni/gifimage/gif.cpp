@@ -89,6 +89,10 @@ public:
     return m_vectorFrameByteOffsets[frameNum];
   }
 
+  size_t getFrameSize() {
+    return m_vectorFrameByteOffsets.size();
+  }
+
   uint8_t* getRasterBits() {
     return m_rasterBits.data();
   }
@@ -421,9 +425,10 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
 
   pGifFile->ExtensionBlocks = NULL;
   pGifFile->ExtensionBlockCount = 0;
+  bool isStop = false;
   do {
     if (DGifGetRecordType(pGifFile, &recordType) == GIF_ERROR) {
-      return GIF_ERROR;
+      break;
     }
 
     switch (recordType) {
@@ -436,24 +441,26 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
               pGifWrapper->get(),
               nullptr,
               false) == GIF_ERROR) {
-          return GIF_ERROR;
+          isStop = true;
         }
         break;
 
       case EXTENSION_RECORD_TYPE:
         if (decodeExtension(pGifFile) == GIF_ERROR) {
-          return GIF_ERROR;
+          isStop = true;
         }
         break;
 
       case TERMINATE_RECORD_TYPE:
+        isStop = true;
         break;
 
        default:    // Should be trapped by DGifGetRecordType.
         break;
       }
-    } while (recordType != TERMINATE_RECORD_TYPE);
-    return GIF_OK;
+    } while (!isStop);
+    isStop = false;
+    return pGifWrapper->getFrameSize() > 0 ? GIF_OK : GIF_ERROR;
 }
 
 /**
