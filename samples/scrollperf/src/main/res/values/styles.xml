@@ -11,4 +11,10 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="drawee">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="actualImageScaleType">fitCenter</item>
+        <item name="failureImage">@color/failure</item>
+    </style>
 </resources>

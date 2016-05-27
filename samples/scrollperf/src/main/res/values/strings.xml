@@ -14,6 +14,27 @@
     <string translatable="false" name="value_remote_uri">remote_uris</string>
     <string translatable="false" name="value_local_summary">We get Uris from local resources</string>
     <string translatable="false" name="value_remote_summary">We get Uri from remote source</string>
+    <!-- Infinite SimpleAdapters-->
+    <string translatable="false" name="title_infinite_data_source">Infinite Data Source</string>
+    <string translatable="false" name="key_infinite_data_source">infinite_data_source</string>
+    <string translatable="false" name="checked_infinite_data_source_summary">Data Source provides infinite Uris</string>
+    <string translatable="false" name="unchecked_infinite_data_source_summary">Data Source provides a finite number or Uris</string>
+    <!-- Distinct Uris-->
+    <string translatable="false" name="title_distinct_uri_data_source">Distinct Uris</string>
+    <string translatable="false" name="key_distinct_uri_data_source">distinct_uri_data_source</string>
+    <string translatable="false" name="checked_distinct_uri_data_source_summary">Recycled Uri have different address</string>
+    <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
+
+    <!-- Controller Preferences-->
+    <string translatable="false" name="key_preferences_controller_group">Controllers</string>
+    <string translatable="false" name="title_controller_group">Controller configuration</string>
+    <!-- Reuse old controller-->
+    <string translatable="false" name="title_reuse_old_controller">Reuse old Controller</string>
+    <string translatable="false" name="key_reuse_old_controller">reuse_old_controller</string>
+    <string translatable="false" name="checked_reuse_old_controller_summary">The old Controller is reused</string>
+    <string translatable="false" name="unchecked_reuse_old_controller_summary">A controller is created for every request</string>
+
+
 
     <!-- Layout Preferences-->
     <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>

@@ -12,6 +12,24 @@
             android:key="@string/key_data_source"
             android:title="@string/title_data_source"
             />
+        <CheckBoxPreference
+            android:title="@string/title_infinite_data_source"
+            android:key="@string/key_infinite_data_source"
+            />
+        <CheckBoxPreference
+            android:title="@string/title_distinct_uri_data_source"
+            android:key="@string/key_distinct_uri_data_source"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="key_preferences_controller_group"
+        android:title="@string/title_controller_group"
+        >
+        <CheckBoxPreference
+            android:title="@string/title_reuse_old_controller"
+            android:key="@string/key_reuse_old_controller"
+            />
     </PreferenceCategory>
 
     <PreferenceCategory

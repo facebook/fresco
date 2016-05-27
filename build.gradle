@@ -20,6 +20,7 @@ project.ext {
     compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
     minSdkVersion = MIN_SDK_VERSION;
     targetSdkVersion = TARGET_SDK_VERSION;
+    preDexLibs = !project.hasProperty('disablePreDex');
 }
 
 subprojects {
@@ -48,6 +49,14 @@ subprojects {
                 from jarList
                 into 'build/external'
             }
+        }
+    }
+
+    project.plugins.whenPluginAdded { plugin ->
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         }
     }
 }

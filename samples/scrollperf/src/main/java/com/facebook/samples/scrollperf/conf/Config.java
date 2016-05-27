@@ -25,7 +25,12 @@ public class Config {
 
   public final String mDataSourceType;
 
+  public final boolean mInfiniteDataSource;
+  public final boolean mDistinctUriDataSource;
+
   public final String mRecyclerLayoutType;
+
+  public final boolean mReuseOldController;
 
   public static Config load(final Context context) {
     // We read the DataSource type
@@ -36,16 +41,46 @@ public class Config {
     final String dataSourceType = sharedPreferences.getString(
             dataSourceKey,
             context.getString(R.string.value_local_uri));
+    // Infinite Data Source
+    final String infiniteDataSourceKey = context.getString(R.string.key_infinite_data_source);
+    final boolean infiniteDataSource = sharedPreferences.getBoolean(
+            infiniteDataSourceKey,
+            false);
+    // Distinct Uri
+    final String distinctUriDataSourceKey = context
+      .getString(R.string.key_distinct_uri_data_source);
+    final boolean distinctUriDataSource = sharedPreferences.getBoolean(
+            distinctUriDataSourceKey,
+            false);
     // The Recycler Layout key
     final String recyclerLayoutKey = context.getString(R.string.key_recycler_layout);
     final String recyclerLayoutType = sharedPreferences.getString(
             recyclerLayoutKey,
             context.getString(R.string.value_listview_recycler_layout));
-    return new Config(dataSourceType, recyclerLayoutType);
+    // Reuse Old Controller
+    final String reuseOldControllerKey = context.getString(R.string.key_reuse_old_controller);
+    final boolean reuseOldController = sharedPreferences.getBoolean(
+            reuseOldControllerKey,
+            false);
+    return new Config(
+      dataSourceType,
+      recyclerLayoutType,
+      infiniteDataSource,
+      distinctUriDataSource,
+      reuseOldController);
   }
 
-  private Config(final String dataSourceType, final String recyclerLayoutType) {
+  private Config(
+      final String dataSourceType,
+      final String recyclerLayoutType,
+      final boolean infiniteDataSource,
+      final boolean distinctUriDataSource,
+      final boolean reuseOldController
+      ) {
     mDataSourceType = dataSourceType;
     mRecyclerLayoutType = recyclerLayoutType;
+    mInfiniteDataSource = infiniteDataSource;
+    mDistinctUriDataSource = distinctUriDataSource;
+    mReuseOldController = reuseOldController;
   }
 }

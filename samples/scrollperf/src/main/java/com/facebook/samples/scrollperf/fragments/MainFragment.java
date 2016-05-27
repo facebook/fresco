@@ -11,9 +11,12 @@
  */
 package com.facebook.samples.scrollperf.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,11 +26,21 @@ import android.widget.TextView;
 
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
+import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
+import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
 import com.facebook.samples.scrollperf.util.UI;
 
 public class MainFragment extends Fragment {
 
   public static final String TAG = MainFragment.class.getSimpleName();
+
+  private RecyclerView mRecyclerView;
+
+  private DraweeViewAdapter mDraweeViewAdapter;
+
+  private SimpleAdapter<Uri> mSimpleAdapter;
 
   private Config mConfig;
 
@@ -43,6 +56,16 @@ public class MainFragment extends Fragment {
       ViewGroup container,
       Bundle savedInstanceState) {
     mConfig = Config.load(getContext());
+    // Initialize the SimpleAdapter
+    mSimpleAdapter = LocalResourceSimpleAdapter
+                             .getEagerAdapter(getContext(), R.array.example_uris);
+    if (mConfig.mInfiniteDataSource) {
+      mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
+      if (mConfig.mDistinctUriDataSource) {
+        mSimpleAdapter = SimpleAdapter.Util
+          .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
+      }
+    }
     // We use a different layout based on the type of output
     final View layout;
     switch (mConfig.mRecyclerLayoutType) {
@@ -67,7 +90,16 @@ public class MainFragment extends Fragment {
   }
 
   private void initializeRecyclerView(final View layout) {
-
+    // Get RecyclerView
+    mRecyclerView = UI.findViewById(layout, R.id.recycler_view);
+    // Choose the LayoutManager
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    layoutManager.scrollToPosition(0);
+    mRecyclerView.setLayoutManager(layoutManager);
+    // Create the Adapter
+    mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
+    mRecyclerView.setAdapter(mDraweeViewAdapter);
   }
 
   private void initializeListView(final View layout) {

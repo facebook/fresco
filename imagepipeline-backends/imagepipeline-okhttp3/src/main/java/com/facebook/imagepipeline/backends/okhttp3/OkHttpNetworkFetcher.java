@@ -105,12 +105,16 @@ public class OkHttpNetworkFetcher extends
           @Override
           public void onResponse(Call call, Response response) throws IOException {
             fetchState.responseTime = SystemClock.elapsedRealtime();
-            if (!response.isSuccessful()) {
-              handleException(call, new IOException("Unexpected HTTP code " + response), callback);
-              return;
-            }
             final ResponseBody body = response.body();
             try {
+              if (!response.isSuccessful()) {
+                handleException(
+                        call,
+                        new IOException("Unexpected HTTP code " + response),
+                        callback);
+                return;
+              }
+
               long contentLength = body.contentLength();
               if (contentLength < 0) {
                 contentLength = 0;
