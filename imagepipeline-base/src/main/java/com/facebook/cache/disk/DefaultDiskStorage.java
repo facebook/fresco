@@ -116,7 +116,7 @@ public class DefaultDiskStorage implements DiskStorage {
     mClock = SystemClock.get();
   }
 
-  private boolean isExternal(File directory) {
+  private boolean static isExternal(File directory) {
 
     boolean state = false;
     String cacheDirPath = null;
