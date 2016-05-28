@@ -260,7 +260,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       return true;
     }
     if (mZoomableController.onTouchEvent(event)) {
-      if (!mZoomableController.isIdentity()) {
+      if (!mZoomableController.wasTransformCorrected()) {
         getParent().requestDisallowInterceptTouchEvent(true);
       }
       FLog.v(
