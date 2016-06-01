@@ -25,7 +25,7 @@ Android lays out View objects, and only they get notified of system events. `Dra
 
 #### Handling attach/detach events
 
-**Your app may leak memory if these steps are not followed.**
+**Your app may leak memory, or the image may not be displayed at all, if these steps are not followed.**
 
 There is no point in images staying in memory when Android is no longer displaying the view - it may have scrolled off-screen, or otherwise not be drawing. Drawees listen for detaches and release memory when they occur. They will automatically restore the image when it comes back on-screen.
 
@@ -58,6 +58,8 @@ public void onFinishTemporaryDetach() {
   mDraweeHolder.onAttach();
 }
 ```
+
+It is important that `Holder` receives all the attach/detach events that the view itself receives. If the holder misses an attach event the image may not be displayed because Drawee will still think that the view is not visible. Likewise, if the hodler misses an detach event, the image may still remain in memory because Drawee will still think that the view is visible. Best way to ensure that is to create the holder from your view's constructor.
 
 #### Handling touch events
 
@@ -135,7 +137,7 @@ This approach guarantees that the correct initialization is called no matter wha
 
 #### Creating the Holder
 
-If possible, always create Drawees when your view gets created. Creating a hierarchy is not cheap so it's best to do it only once.
+If possible, always create Drawees when your view gets created. Creating a hierarchy is not cheap so it's best to do it only once. More importantly, `Holder's` lifecycle should be bound to the view's lifecycle for the reasons explained in the attach/detach section. Best way to ensure that is to create the holder when the view gets constructed as explained above.
 
 ```java
 class CustomView extends View {
