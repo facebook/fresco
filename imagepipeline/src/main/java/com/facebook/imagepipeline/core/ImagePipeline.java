@@ -381,6 +381,9 @@ public class ImagePipeline {
    * @return true if the image was found in the bitmap memory cache, false otherwise
    */
   public boolean isInBitmapMemoryCache(final Uri uri) {
+    if (uri == null) {
+      return false;
+    }
     Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
     return mBitmapMemoryCache.contains(bitmapCachePredicate);
  }
@@ -392,6 +395,9 @@ public class ImagePipeline {
    * @return true if the image was found in the bitmap memory cache, false otherwise.
    */
   public boolean isInBitmapMemoryCache(final ImageRequest imageRequest) {
+    if (imageRequest == null) {
+      return false;
+    }
     final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, null);
     CloseableReference<CloseableImage> ref = mBitmapMemoryCache.get(cacheKey);
     try {
