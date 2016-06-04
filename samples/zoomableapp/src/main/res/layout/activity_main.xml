@@ -1,0 +1,52 @@
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:fresco="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:baselineAligned="false"
+  android:orientation="horizontal"
+  android:paddingBottom="@dimen/activity_vertical_margin"
+  android:paddingLeft="@dimen/activity_horizontal_margin"
+  android:paddingRight="@dimen/activity_horizontal_margin"
+  android:paddingTop="@dimen/activity_vertical_margin"
+  tools:context="com.facebook.zoomableapp.MainActivity"
+  >
+  <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/page1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+          <com.facebook.samples.zoomable.ZoomableDraweeView
+          android:id="@+id/zoomableView1"
+          style="@style/drawee"
+          />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/page2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+          <com.facebook.samples.zoomable.ZoomableDraweeView
+          android:id="@+id/zoomableView2"
+          style="@style/drawee"
+          />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/page3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+          <com.facebook.samples.zoomable.ZoomableDraweeView
+          android:id="@+id/zoomableView3"
+          style="@style/drawee"
+          />
+        </FrameLayout>
+
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

@@ -260,7 +260,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       return true;
     }
     if (mZoomableController.onTouchEvent(event)) {
-      if (!mZoomableController.isIdentity()) {
+      if (!mZoomableController.wasTransformCorrected()) {
         getParent().requestDisallowInterceptTouchEvent(true);
       }
       FLog.v(
@@ -274,6 +274,16 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       FLog.v(getLogTag(), "onTouchEvent: %d, view %x, handled by the super", a, this.hashCode());
       return true;
     }
+    // None of our components reported that they handled the touch event. Upon returning false
+    // from this method, our parent won't send us any more events for this gesture. Unfortunately,
+    // some componentes may have started a delayed action, such as a long-press timer, and since we
+    // won't receive an ACTION_UP that would cancel that timer, a false event may be triggered.
+    // To prevent that we explicitly send one last cancel event when returning false.
+    MotionEvent cancelEvent = MotionEvent.obtain(event);
+    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
+    mTapGestureDetector.onTouchEvent(cancelEvent);
+    mZoomableController.onTouchEvent(cancelEvent);
+    cancelEvent.recycle();
     return false;
   }
 

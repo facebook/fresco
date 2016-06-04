@@ -74,6 +74,7 @@ public class DefaultZoomableController
   private final Matrix mActiveTransformInverse = new Matrix();
   private final float[] mTempValues = new float[9];
   private final RectF mTempRect = new RectF();
+  private boolean mWasTransformCorrected;
 
   public static DefaultZoomableController newInstance() {
     return new DefaultZoomableController(TransformGestureDetector.newInstance());
@@ -212,6 +213,14 @@ public class DefaultZoomableController
   @Override
   public boolean isIdentity() {
     return isMatrixIdentity(mActiveTransform, 1e-3f);
+  }
+
+  /**
+   * Returns true if the transform was corrected during the last update.
+   */
+  @Override
+  public boolean wasTransformCorrected() {
+    return mWasTransformCorrected;
   }
 
   /**
@@ -375,6 +384,7 @@ public class DefaultZoomableController
     if (transformCorrected) {
       mGestureDetector.restartGesture();
     }
+    mWasTransformCorrected = transformCorrected;
   }
 
   @Override

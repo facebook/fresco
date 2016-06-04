@@ -213,8 +213,9 @@ public class ImageRequestBuilder {
   }
 
   /** Disables disk cache for this request, regardless where the image will come from. */
-  public void disableDiskCache() {
+  public ImageRequestBuilder disableDiskCache() {
     mDiskCacheEnabled = false;
+    return this;
   }
 
   /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */

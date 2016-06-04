@@ -125,25 +125,33 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    mDraweeHolder.onAttach();
+    attach();
   }
 
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    mDraweeHolder.onDetach();
+    detach();
   }
 
   @Override
   public void onStartTemporaryDetach() {
     super.onStartTemporaryDetach();
-    mDraweeHolder.onDetach();
+    detach();
   }
 
   @Override
   public void onFinishTemporaryDetach() {
     super.onFinishTemporaryDetach();
+    attach();
+  }
+
+  protected void attach() {
     mDraweeHolder.onAttach();
+  }
+
+  protected void detach() {
+    mDraweeHolder.onDetach();
   }
 
   @Override

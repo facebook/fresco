@@ -71,6 +71,14 @@ public interface ZoomableController {
   boolean isIdentity();
 
   /**
+   * Returns true if the transform was corrected during the last update.
+   *
+   * This mainly happens when a gesture would cause the image to get out of limits and the
+   * transform gets corrected in order to prevent that.
+   */
+  boolean wasTransformCorrected();
+
+  /**
    * Gets the current transform.
    *
    * @return the transform
