@@ -29,6 +29,7 @@ import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.common.WriterCallbacks;
 import com.facebook.common.disk.DiskTrimmableRegistry;
 import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.SystemClock;
 
@@ -36,6 +37,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
@@ -50,6 +52,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -109,7 +113,7 @@ public class DiskStorageCacheTest {
   private static final long FILE_CACHE_MAX_SIZE_LOW_LIMIT = 200;
 
   private static DiskStorage createDiskStorage(int version) {
-    return new DynamicDefaultDiskStorage(
+    return new DiskStorageWithReadFailures(
         version,
         Suppliers.of(RuntimeEnvironment.application.getApplicationContext().getCacheDir()),
         CACHE_TYPE,
@@ -136,21 +140,26 @@ public class DiskStorageCacheTest {
   public void testCacheEventListener() throws Exception {
     // 1. Add first cache file
     CacheKey key1 = new SimpleCacheKey("foo");
-    byte[] value1 = new byte[101];
+    int value1Size = 101;
+    byte[] value1 = new byte[value1Size];
     value1[80] = 'c'; // just so it's not all zeros for the equality test below.
     BinaryResource resource1 = mCache.insert(key1, WriterCallbacks.from(value1));
-    verify(mCacheEventListener).onWriteAttempt();
+    verify(mCacheEventListener).onWriteAttempt(key1);
+
+    ArgumentCaptor<String> resourceIdCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mCacheEventListener)
+        .onWriteSuccess(eq(key1), resourceIdCaptor.capture(), eq((long) value1Size));
 
     BinaryResource resource1Again = mCache.getResource(key1);
     assertEquals(resource1, resource1Again);
-    verify(mCacheEventListener).onHit();
     BinaryResource resource1Again2 = mCache.getResource(key1);
     assertEquals(resource1, resource1Again2);
-    verify(mCacheEventListener, times(2)).onHit();
+    verify(mCacheEventListener, times(2)).onHit(key1, resourceIdCaptor.getValue());
 
-    BinaryResource res2 = mCache.getResource(new SimpleCacheKey("nonexistent_key"));
+    SimpleCacheKey missingKey = new SimpleCacheKey("nonexistent_key");
+    BinaryResource res2 = mCache.getResource(missingKey);
     assertNull(res2);
-    verify(mCacheEventListener).onMiss();
+    verify(mCacheEventListener).onMiss(eq(missingKey), anyString());
 
     verifyNoMoreInteractions(mCacheEventListener);
   }
@@ -257,7 +266,9 @@ public class DiskStorageCacheTest {
     assertArrayEquals(value3, getContents(getResource(key3)));
 
     // The cache size should be the size of the second + third files
-    assertTrue(mCache.getSize() == 205);
+    assertTrue(
+        String.format(Locale.US, "Expected cache size of %d but is %d", 205, mCache.getSize()),
+        mCache.getSize() == 205);
 
     // Write another non-cache, non-lru file in the cache directory
     File unexpected3 = new File(mCacheDirectory, "unexpected3");
@@ -305,14 +316,14 @@ public class DiskStorageCacheTest {
     final BinaryResource resource1 = getResource(key1);
     assertNull(resource1);
 
-
-    // Should not create cache files if IOException happens in the middle.
+    // 1. Should not create cache files if IOException happens in the middle.
+    final IOException writeException = new IOException();
     try {
       mCache.insert(
           key1, new WriterCallback() {
             @Override
             public void write(OutputStream os) throws IOException {
-              throw new IOException();
+              throw writeException;
             }
           });
       fail();
@@ -320,44 +331,54 @@ public class DiskStorageCacheTest {
       assertNull(getResource(key1));
     }
 
-    try {
-      // Should create cache files if everything is ok.
-      mCache.insert(key1, WriterCallbacks.from(new byte[100]));
-      assertNotNull(getResource(key1));
-    } catch (IOException e) {
-      fail();
-    }
+    verify(mCacheEventListener).onWriteAttempt(key1);
+    verify(mCacheEventListener).onWriteException(eq(key1), anyString(), eq(writeException));
 
-    // Should not create a new file if reading hits an IOException.
+    // 2. Test a read failure from DiskStorage
     CacheKey key2 = new SimpleCacheKey("bbb");
-    try {
-      mCache.insert(
-          key2, new WriterCallback() {
-            @Override
-            public void write(OutputStream os) throws IOException {
-              throw new IOException();
-            }
-          });
-      fail();
-    } catch (IOException e) {
-      assertNull(getResource(key2));
-    }
+    int value2size = 42;
+    byte[] value2 = new byte[value2size];
+    value2[25] = 'b';
+    mCache.insert(key2, WriterCallbacks.from(value2));
+
+    ArgumentCaptor<String> resourceIdCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mCacheEventListener).onWriteAttempt(key2);
+    verify(mCacheEventListener)
+        .onWriteSuccess(eq(key2), resourceIdCaptor.capture(), eq((long) value2size));
+
+    String resourceId2 = resourceIdCaptor.getValue();
+    ((DiskStorageWithReadFailures) mStorage).setPoisonResourceId(resourceId2);
+
+    assertNull(mCache.getResource(key2));
+    assertFalse(mCache.probe(key2));
+
+    verify(mCacheEventListener, times(2))
+        .onReadException(key2, resourceId2, DiskStorageWithReadFailures.POISON_EXCEPTION);
+
+    verifyNoMoreInteractions(mCacheEventListener);
   }
 
   @Test
   public void testCleanOldCache() throws IOException, NoSuchFieldException, IllegalAccessException {
     long cacheExpirationMs = TimeUnit.DAYS.toMillis(5);
-    int value1size = 41;
-    int value2size = 42;
     CacheKey key1 = new SimpleCacheKey("aaa");
+    int value1size = 41;
     byte[] value1 = new byte[value1size];
     value1[25] = 'a';
     mCache.insert(key1, WriterCallbacks.from(value1));
 
+    ArgumentCaptor<String> resourceIdCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mCacheEventListener)
+        .onWriteSuccess(eq(key1), resourceIdCaptor.capture(), eq((long) value1size));
+
     CacheKey key2 = new SimpleCacheKey("bbb");
+    int value2size = 42;
     byte[] value2 = new byte[value2size];
     value2[25] = 'b';
     mCache.insert(key2, WriterCallbacks.from(value2));
+
+    verify(mCacheEventListener)
+        .onWriteSuccess(eq(key2), resourceIdCaptor.capture(), eq((long) value2size));
 
     // Increment clock by default expiration time + 1 day
     when(mClock.now())
@@ -378,8 +399,15 @@ public class DiskStorageCacheTest {
     assertNull(getResource(key1));
     assertNull(getResource(key2));
 
-    verify(mCacheEventListener)
-        .onEviction(CacheEventListener.EvictionReason.CONTENT_STALE, 2, value1size + value2size);
+    List<String> resourceIds = resourceIdCaptor.getAllValues();
+    verify(mCacheEventListener).onEviction(
+        resourceIds.get(0),
+        CacheEventListener.EvictionReason.CONTENT_STALE,
+        value1size);
+    verify(mCacheEventListener).onEviction(
+        resourceIds.get(1),
+        CacheEventListener.EvictionReason.CONTENT_STALE,
+        value2size);
   }
 
   @Test
@@ -594,5 +622,40 @@ public class DiskStorageCacheTest {
     value1[80] = 'c';
     mCache.insert(key, WriterCallbacks.from(value1));
     return key;
+  }
+
+  private static class DiskStorageWithReadFailures extends DynamicDefaultDiskStorage {
+
+    public static final IOException POISON_EXCEPTION =
+        new IOException("Poisoned resource requested");
+
+    private String mPoisonResourceId;
+
+    public DiskStorageWithReadFailures(
+        int version,
+        Supplier<File> baseDirectoryPathSupplier,
+        String baseDirectoryName, CacheErrorLogger cacheErrorLogger) {
+      super(version, baseDirectoryPathSupplier, baseDirectoryName, cacheErrorLogger);
+    }
+
+    public void setPoisonResourceId(String poisonResourceId) {
+      mPoisonResourceId = poisonResourceId;
+    }
+
+    @Override
+    public BinaryResource getResource(String resourceId, Object debugInfo) throws IOException {
+      if (resourceId.equals(mPoisonResourceId)) {
+        throw POISON_EXCEPTION;
+      }
+      return get().getResource(resourceId, debugInfo);
+    }
+
+    @Override
+    public boolean touch(String resourceId, Object debugInfo) throws IOException {
+      if (resourceId.equals(mPoisonResourceId)) {
+        throw POISON_EXCEPTION;
+      }
+      return super.touch(resourceId, debugInfo);
+    }
   }
 }

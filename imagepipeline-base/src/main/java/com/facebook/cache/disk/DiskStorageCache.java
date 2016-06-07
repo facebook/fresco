@@ -196,9 +196,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    */
   @Override
   public BinaryResource getResource(final CacheKey key) {
+    String resourceId = null;
     try {
       synchronized (mLock) {
-        String resourceId = null;
         BinaryResource resource = null;
         if (mIndex.containsKey(key)) {
           resourceId = mIndex.get(key);
@@ -214,10 +214,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           }
         }
         if (resource == null) {
-          mCacheEventListener.onMiss();
+          mCacheEventListener.onMiss(key, resourceId);
           mIndex.remove(key);
         } else {
-          mCacheEventListener.onHit();
+          mCacheEventListener.onHit(key, resourceId);
           mIndex.put(key, resourceId);
         }
         return resource;
@@ -228,7 +228,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           TAG,
           "getResource",
           ioe);
-      mCacheEventListener.onReadException();
+      mCacheEventListener.onReadException(key, resourceId, ioe);
       return null;
     }
   }
@@ -245,9 +245,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    * @return whether the keyed mValue is in the cache
    */
   public boolean probe(final CacheKey key) {
+    String resourceId = null;
     try {
       synchronized (mLock) {
-        String resourceId = null;
         boolean retval = false;
         if (mIndex.containsKey(key)) {
           resourceId = mIndex.get(key);
@@ -268,7 +268,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         return retval;
       }
     } catch (IOException e) {
-      mCacheEventListener.onReadException();
+      mCacheEventListener.onReadException(key, resourceId, e);
       return false;
     }
   }
@@ -304,7 +304,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public BinaryResource insert(CacheKey key, WriterCallback callback) throws IOException {
     // Write to a temp file, then move it into place. This allows more parallelism
     // when writing files.
-    mCacheEventListener.onWriteAttempt();
+    mCacheEventListener.onWriteAttempt(key);
     String resourceId;
     synchronized (mLock) {
       // for multiple resource ids associated with the same image, we only write one file
@@ -320,14 +320,16 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       try {
         inserter.writeData(callback, key);
         // Committing the file is synchronized
-        return endInsert(inserter, key, resourceId);
+        BinaryResource resource = endInsert(inserter, key, resourceId);
+        mCacheEventListener.onWriteSuccess(key, resourceId, resource.size());
+        return resource;
       } finally {
         if (!inserter.cleanUp()) {
           FLog.e(TAG, "Failed to delete temp file");
         }
       }
     } catch (IOException ioe) {
-      mCacheEventListener.onWriteException();
+      mCacheEventListener.onWriteException(key, resourceId, ioe);
       FLog.e(TAG, "Failed inserting a file into the cache", ioe);
       throw ioe;
     }
@@ -382,6 +384,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
             if (entryRemovedSize > 0) {
               itemsRemovedCount++;
               itemsRemovedSize += entryRemovedSize;
+              mCacheEventListener.onEviction(
+                  entry.getId(),
+                  CacheEventListener.EvictionReason.CONTENT_STALE,
+                  entryRemovedSize);
             }
           } else {
             oldestRemainingEntryAgeMs = Math.max(oldestRemainingEntryAgeMs, entryAgeMs);
@@ -391,10 +397,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         if (itemsRemovedCount > 0) {
           maybeUpdateFileCacheSize();
           mCacheStats.increment(-itemsRemovedSize, -itemsRemovedCount);
-          reportEviction(
-              CacheEventListener.EvictionReason.CONTENT_STALE,
-              itemsRemovedCount,
-              itemsRemovedSize);
         }
       } catch (IOException ioe) {
         mCacheErrorLogger.logError(
@@ -405,13 +407,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
     }
     return oldestRemainingEntryAgeMs;
-  }
-
-  private void reportEviction(
-      CacheEventListener.EvictionReason reason,
-      int itemCount,
-      long itemSize) {
-    mCacheEventListener.onEviction(reason, itemCount, itemSize);
   }
 
   /**
@@ -470,13 +465,13 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       long deletedSize = mStorage.remove(entry);
       mIndex.values().remove(entry.getId());
       if (deletedSize > 0) {
-        itemCount ++;
+        mCacheEventListener.onEviction(entry.getId(), reason, deletedSize);
+        itemCount++;
         sumItemSizes += deletedSize;
       }
     }
     mCacheStats.increment(-sumItemSizes, -itemCount);
     mStorage.purgeUnexpectedResources();
-    reportEviction(reason, itemCount, sumItemSizes);
   }
 
   /**
