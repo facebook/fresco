@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
+import javax.annotation.Nullable;
+
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
@@ -68,7 +70,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public CacheKey getEncodedCacheKey(ImageRequest request) {
+  public CacheKey getEncodedCacheKey(ImageRequest request, @Nullable Object callerContext) {
     return new SimpleCacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
   }
 

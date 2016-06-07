@@ -49,7 +49,8 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     final ProducerListener listener = producerContext.getListener();
     listener.onProducerStart(requestId, PRODUCER_NAME);
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey =
+        mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
 
     CloseableReference<PooledByteBuffer> cachedReference = mMemoryCache.get(cacheKey);
     try {

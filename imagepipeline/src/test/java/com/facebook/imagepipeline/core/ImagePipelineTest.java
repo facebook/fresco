@@ -346,7 +346,8 @@ public class ImagePipelineTest {
     List<CacheKey> list = new ArrayList<>();
     list.add(dummyCacheKey);
     MultiCacheKey multiKey = new MultiCacheKey(list);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class))).thenReturn(multiKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
+        .thenReturn(multiKey);
     mImagePipeline.evictFromDiskCache(uri);
     verify(mMainDiskStorageCache).remove(multiKey);
     verify(mSmallImageDiskStorageCache).remove(multiKey);
