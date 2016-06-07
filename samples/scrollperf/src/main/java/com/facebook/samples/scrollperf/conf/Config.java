@@ -56,7 +56,7 @@ public class Config {
     final String recyclerLayoutKey = context.getString(R.string.key_recycler_layout);
     final String recyclerLayoutType = sharedPreferences.getString(
             recyclerLayoutKey,
-            context.getString(R.string.value_listview_recycler_layout));
+            context.getString(R.string.value_recyclerview_recycler_layout));
     // Reuse Old Controller
     final String reuseOldControllerKey = context.getString(R.string.key_reuse_old_controller);
     final boolean reuseOldController = sharedPreferences.getBoolean(

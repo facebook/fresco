@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.data.impl.ContentProviderSimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
 import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
 import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
@@ -57,15 +58,7 @@ public class MainFragment extends Fragment {
       Bundle savedInstanceState) {
     mConfig = Config.load(getContext());
     // Initialize the SimpleAdapter
-    mSimpleAdapter = LocalResourceSimpleAdapter
-                             .getEagerAdapter(getContext(), R.array.example_uris);
-    if (mConfig.mInfiniteDataSource) {
-      mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
-      if (mConfig.mDistinctUriDataSource) {
-        mSimpleAdapter = SimpleAdapter.Util
-          .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
-      }
-    }
+    mSimpleAdapter = initializeSimpleAdapter(mConfig);
     // We use a different layout based on the type of output
     final View layout;
     switch (mConfig.mRecyclerLayoutType) {
@@ -104,5 +97,32 @@ public class MainFragment extends Fragment {
 
   private void initializeListView(final View layout) {
 
+  }
+
+  private SimpleAdapter<Uri> initializeSimpleAdapter(final Config config) {
+    boolean distinctUriCompatible = true;
+    SimpleAdapter<Uri> simpleAdapter = null;
+    switch (config.mDataSourceType) {
+      case "local_resource_uris":
+        simpleAdapter = LocalResourceSimpleAdapter
+                .getEagerAdapter(getContext(), R.array.example_uris);
+        break;
+      case "local_internal_photo_uris":
+        simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getContext());
+        distinctUriCompatible = false;
+        break;
+      case "local_external_photo_uris":
+        simpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getContext());
+        distinctUriCompatible = false;
+        break;
+    }
+    if (config.mInfiniteDataSource) {
+      simpleAdapter = SimpleAdapter.Util.makeItInfinite(simpleAdapter);
+      if (distinctUriCompatible && config.mDistinctUriDataSource) {
+        simpleAdapter = SimpleAdapter.Util
+                .decorate(simpleAdapter, DistinctUriDecorator.SINGLETON);
+      }
+    }
+    return simpleAdapter;
   }
 }

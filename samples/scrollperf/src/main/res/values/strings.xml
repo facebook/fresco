@@ -8,19 +8,30 @@
     <string translatable="false" name="dialog_title_data_source">Data Source for Uris</string>
     <string translatable="false" name="title_data_source">Data Source for Uris</string>
     <string translatable="false" name="key_data_source">uris_data_source</string>
-    <string translatable="false" name="label_local_uri">Local Uris</string>
-    <string translatable="false" name="label_remote_uri">Remote Uris</string>
-    <string translatable="false" name="value_local_uri">local_uris</string>
-    <string translatable="false" name="value_remote_uri">remote_uris</string>
-    <string translatable="false" name="value_local_summary">We get Uris from local resources</string>
-    <string translatable="false" name="value_remote_summary">We get Uri from remote source</string>
+    <!-- Different types for Simple Adapter -->
+
+    <!-- SimpleAdapter from local array resource-->
+    <string translatable="false" name="label_local_uri">Local Resource Uris</string>
+    <string translatable="false" name="value_local_uri">local_resource_uris</string>
+    <string translatable="false" name="value_local_summary">Uris are into a local array resource</string>
+
+    <!-- Simple Adapter for local internal images-->
+    <string translatable="false" name="label_local_internal_photo_uri">Local Internal Photo Uris</string>
+    <string translatable="false" name="value_local_internal_photo_uri">local_internal_photo_uris</string>
+    <string translatable="false" name="value_local_internal_photo_uri_summary">We use Uris about internal local photos</string>
+
+    <!-- Simple Adapter for local external images-->
+    <string translatable="false" name="label_local_external_photo_uri">Local External Photo Uris</string>
+    <string translatable="false" name="value_local_external_photo_uri">local_external_photo_uris</string>
+    <string translatable="false" name="value_local_external_photo_uri_summary">We use Uris about external local photos</string>
+
     <!-- Infinite SimpleAdapters-->
     <string translatable="false" name="title_infinite_data_source">Infinite Data Source</string>
     <string translatable="false" name="key_infinite_data_source">infinite_data_source</string>
     <string translatable="false" name="checked_infinite_data_source_summary">Data Source provides infinite Uris</string>
     <string translatable="false" name="unchecked_infinite_data_source_summary">Data Source provides a finite number or Uris</string>
     <!-- Distinct Uris-->
-    <string translatable="false" name="title_distinct_uri_data_source">Distinct Uris</string>
+    <string translatable="false" name="title_distinct_uri_data_source">Distinct Uris (no Content Providers)</string>
     <string translatable="false" name="key_distinct_uri_data_source">distinct_uri_data_source</string>
     <string translatable="false" name="checked_distinct_uri_data_source_summary">Recycled Uri have different address</string>
     <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
