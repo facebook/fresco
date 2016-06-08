@@ -106,7 +106,7 @@ public class MainFragment extends Fragment {
     // get the ListView
     mListView = UI.findViewById(layout, R.id.list_view);
     // Create the Adapter
-    mListAdapter = new DraweeViewListAdapter(mSimpleAdapter);
+    mListAdapter = new DraweeViewListAdapter(mSimpleAdapter, mConfig);
     // Set the adapter
     mListView.setAdapter(mListAdapter);
   }

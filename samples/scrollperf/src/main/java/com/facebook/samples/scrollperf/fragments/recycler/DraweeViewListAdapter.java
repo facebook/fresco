@@ -31,6 +31,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
 /**
@@ -46,8 +47,11 @@ public class DraweeViewListAdapter extends BaseAdapter {
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
 
-  public DraweeViewListAdapter(SimpleAdapter<Uri> simpleAdapter) {
+  private final Config mConfig;
+
+  public DraweeViewListAdapter(SimpleAdapter<Uri> simpleAdapter, Config config) {
     this.mSimpleAdapter = simpleAdapter;
+    this.mConfig = config;
   }
 
   @Override
@@ -93,6 +97,9 @@ public class DraweeViewListAdapter extends BaseAdapter {
     // Create the Builder
     PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
             .setImageRequest(imageRequestBuilder.build());
+    if (mConfig.mReuseOldController) {
+      builder.setOldController(draweeView.getController());
+    }
     draweeView.setController(builder.build());
     return draweeView;
   }
