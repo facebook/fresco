@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.samples.scrollperf.R;
@@ -31,6 +33,7 @@ import com.facebook.samples.scrollperf.data.impl.ContentProviderSimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
 import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
 import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
+import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewListAdapter;
 import com.facebook.samples.scrollperf.util.UI;
 
 public class MainFragment extends Fragment {
@@ -39,7 +42,11 @@ public class MainFragment extends Fragment {
 
   private RecyclerView mRecyclerView;
 
+  private ListView mListView;
+
   private DraweeViewAdapter mDraweeViewAdapter;
+
+  private ListAdapter mListAdapter;
 
   private SimpleAdapter<Uri> mSimpleAdapter;
 
@@ -96,7 +103,12 @@ public class MainFragment extends Fragment {
   }
 
   private void initializeListView(final View layout) {
-
+    // get the ListView
+    mListView = UI.findViewById(layout, R.id.list_view);
+    // Create the Adapter
+    mListAdapter = new DraweeViewListAdapter(mSimpleAdapter);
+    // Set the adapter
+    mListView.setAdapter(mListAdapter);
   }
 
   private SimpleAdapter<Uri> initializeSimpleAdapter(final Config config) {
