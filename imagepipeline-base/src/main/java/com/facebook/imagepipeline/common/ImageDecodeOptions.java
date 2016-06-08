@@ -60,7 +60,7 @@ public class ImageDecodeOptions {
    */
   public final boolean forceStaticImage;
 
-  ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
+  public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.backgroundColor = b.getBackgroundColor();
     this.forceOldAnimationCode = b.getForceOldAnimationCode();
