@@ -26,13 +26,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.conf.Const;
+import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
  * This is the ViewHolder for the RecyclerView in order to contain the DraweeView
  */
 public class DraweeViewHolder extends RecyclerView.ViewHolder {
-
-  private static final double RATIO = 4.0 / 3.0;
 
   private final View mParentView;
 
@@ -46,11 +46,11 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
     mDraweeView = simpleDraweeView;
     mConfig = config;
     if (mParentView != null) {
-      int size = calcDesiredSize(
+      int size = SizeUtil.calcDesiredSize(
               mParentView.getContext(),
               mParentView.getWidth(),
               mParentView.getHeight());
-      updateViewLayoutParams(mDraweeView, size, (int) (size / RATIO));
+      SizeUtil.updateViewLayoutParams(mDraweeView, size, (int) (size / Const.RATIO));
     }
   }
 
@@ -71,20 +71,5 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
       builder.setOldController(mDraweeView.getController());
     }
     mDraweeView.setController(builder.build());
-  }
-
-  private void updateViewLayoutParams(View view, int width, int height) {
-    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-    if (layoutParams == null || layoutParams.height != width || layoutParams.width != height) {
-      layoutParams = new AbsListView.LayoutParams(width, height);
-      view.setLayoutParams(layoutParams);
-    }
-  }
-
-  private static int calcDesiredSize(Context context, int parentWidth, int parentHeight) {
-    int orientation = context.getResources().getConfiguration().orientation;
-    int desiredSize = (orientation == Configuration.ORIENTATION_LANDSCAPE) ?
-                              parentWidth  : parentHeight ;
-    return Math.min(desiredSize, parentWidth);
   }
 }

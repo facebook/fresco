@@ -9,6 +9,10 @@
 
 package com.facebook.cache.common;
 
+import javax.annotation.Nullable;
+
+import java.io.IOException;
+
 /**
  * Implementation of {@link CacheEventListener} that doesn't do anything.
  */
@@ -26,27 +30,31 @@ public class NoOpCacheEventListener implements CacheEventListener {
   }
 
   @Override
-  public void onHit() {
+  public void onHit(CacheKey key, String resourceId) {
 
   }
 
   @Override
-  public void onMiss() {
+  public void onMiss(CacheKey key, @Nullable String resourceId) {
   }
 
   @Override
-  public void onWriteAttempt() {
+  public void onWriteAttempt(CacheKey key) {
   }
 
   @Override
-  public void onReadException() {
+  public void onWriteSuccess(CacheKey key, String resourceId, long itemSize) {
   }
 
   @Override
-  public void onWriteException() {
+  public void onReadException(CacheKey key, @Nullable String resourceId, IOException e) {
   }
 
   @Override
-  public void onEviction(EvictionReason evictionReason, int itemCount, long itemSize) {
+  public void onWriteException(CacheKey key, String resourceId, IOException e) {
+  }
+
+  @Override
+  public void onEviction(String resourceId, EvictionReason evictionReason, long itemSize) {
   }
 }

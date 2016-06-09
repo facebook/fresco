@@ -326,7 +326,7 @@ public class ImagePipeline {
    * @param imageRequest The imageRequest for the image to evict from disk cache
    */
   public void evictFromDiskCache(final ImageRequest imageRequest) {
-    CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     mMainBufferedDiskCache.remove(cacheKey);
     mSmallImageBufferedDiskCache.remove(cacheKey);
   }
@@ -427,7 +427,7 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public boolean isInDiskCacheSync(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     return mMainBufferedDiskCache.diskCheckSync(cacheKey);
   }
 
@@ -452,7 +452,7 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public DataSource<Boolean> isInDiskCache(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     final SimpleDataSource<Boolean> dataSource = SimpleDataSource.create();
     mMainBufferedDiskCache.contains(cacheKey)
         .continueWithTask(

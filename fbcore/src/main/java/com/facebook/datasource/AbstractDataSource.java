@@ -41,7 +41,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
     SUCCESS,
 
     // data source has finished with failure
-    FAILURE,
+    FAILURE, StoredProcedureResult,
   }
 
   @GuardedBy("this")

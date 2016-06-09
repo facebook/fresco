@@ -37,7 +37,7 @@
         android:title="@string/title_preferences_recycler_layout"
         >
         <ListPreference
-            android:defaultValue="@string/value_listview_recycler_layout"
+            android:defaultValue="@string/value_recyclerview_recycler_layout"
             android:dialogTitle="@string/dialog_title_recycler_layout"
             android:entries="@array/recycler_layout_labels"
             android:entryValues="@array/recycler_layout_values"

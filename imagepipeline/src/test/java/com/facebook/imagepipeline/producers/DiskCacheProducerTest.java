@@ -62,6 +62,7 @@ public class DiskCacheProducerTest {
   @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
   @Mock public ImageRequest mImageRequest;
+  @Mock public Object mCallerContext;
   @Mock public ProducerListener mProducerListener;
   @Mock public Exception mException;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
@@ -112,7 +113,7 @@ public class DiskCacheProducerTest {
         mImageRequest,
         mRequestId,
         mProducerListener,
-        mock(Object.class),
+        mCallerContext,
         ImageRequest.RequestLevel.FULL_FETCH,
         false,
         true,
@@ -121,13 +122,13 @@ public class DiskCacheProducerTest {
         mImageRequest,
         mRequestId,
         mProducerListener,
-        mock(Object.class),
+        mCallerContext,
         ImageRequest.RequestLevel.DISK_CACHE,
         false,
         true,
         Priority.MEDIUM);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest)).thenReturn(mCacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
     when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.DEFAULT);
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
   }
