@@ -9,10 +9,13 @@
 
 package com.facebook.drawee.drawable;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -39,13 +42,20 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
      * Clips the drawable to be rounded. This option is not supported right now but is expected to
      * be made available in the future.
      */
-    CLIPPING
+    CLIPPING,
+
+    /**
+     * Achieves rounding by using a temporary bitmap. This doesn't have any limitations as other
+     * modes, but it requires extra memory.
+     */
+    TEMP_BITMAP,
   }
 
   @VisibleForTesting Type mType = Type.OVERLAY_COLOR;
   private final float[] mRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private int mAlpha = 255;
   private boolean mIsCircle = false;
   private float mBorderWidth = 0;
   private int mBorderColor = Color.TRANSPARENT;
@@ -183,6 +193,15 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
   }
 
   @Override
+  public void setAlpha(int alpha) {
+    if (mAlpha != alpha) {
+      mAlpha = alpha;
+      super.setAlpha(alpha);
+      invalidateSelf();
+    }
+  }
+
+  @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
     updatePath();
@@ -233,44 +252,66 @@ public class RoundedCornersDrawable extends ForwardingDrawable implements Rounde
         break;
       case OVERLAY_COLOR:
         super.draw(canvas);
-        mPaint.setColor(mOverlayColor);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
-        canvas.drawPath(mPath, mPaint);
-
-        if (mIsCircle) {
-          // INVERSE_EVEN_ODD will only draw inverse circle within its bounding box, so we need to
-          // fill the rest manually if the bounds are not square.
-          float paddingH = (bounds.width() - bounds.height() + mBorderWidth) / 2f;
-          float paddingV = (bounds.height() - bounds.width() + mBorderWidth) / 2f;
-          if (paddingH > 0) {
-            canvas.drawRect(bounds.left, bounds.top, bounds.left + paddingH, bounds.bottom, mPaint);
-            canvas.drawRect(
-                bounds.right - paddingH,
-                bounds.top,
-                bounds.right,
-                bounds.bottom,
-                mPaint);
-          }
-          if (paddingV > 0) {
-            canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.top + paddingV, mPaint);
-            canvas.drawRect(
-                bounds.left,
-                bounds.bottom - paddingV,
-                bounds.right,
-                bounds.bottom,
-                mPaint);
-          }
-        }
+        drawOverlay(canvas, bounds);
+        break;
+      case TEMP_BITMAP:
+        // TODO: do NOT allocate anything in draw! This is jut a playground implementation for now.
+        // We should likely just reuse a static bitmap. This will allow us to have only one
+        // temporary bitmap for all the rounding drawables, as opposed to a bitmap per drawable.
+        // We should handle bounds change and get a bigger bitmap if necessary.
+        // Note, sharing a static bitmap means that we cannot nest multiple RoundedCornersDrawable,
+        // but that's fine.
+        Bitmap tempBitmap = Bitmap.createBitmap(bounds.width(), bounds.height(), Bitmap.Config.ARGB_8888);
+        Canvas bitmapCanvas = new Canvas(tempBitmap);
+        bitmapCanvas.translate(-bounds.left, -bounds.top);
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+        super.draw(bitmapCanvas);
+        drawOverlay(bitmapCanvas, bounds);
+        mPaint.setXfermode(null);
+        mPaint.setAlpha(255); // child and overlay already accounted for alpha
+        canvas.drawBitmap(tempBitmap, bounds.left, bounds.top, mPaint);
+        tempBitmap.recycle();
         break;
     }
 
     if (mBorderColor != Color.TRANSPARENT) {
       mPaint.setStyle(Paint.Style.STROKE);
-      mPaint.setColor(mBorderColor);
+      mPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mAlpha));
       mPaint.setStrokeWidth(mBorderWidth);
       mPath.setFillType(Path.FillType.EVEN_ODD);
       canvas.drawPath(mBorderPath, mPaint);
+    }
+  }
+
+  private void drawOverlay(Canvas canvas, Rect bounds) {
+    mPaint.setColor(DrawableUtils.multiplyColorAlpha(mOverlayColor, mAlpha));
+    mPaint.setStyle(Paint.Style.FILL);
+    mPath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
+    canvas.drawPath(mPath, mPaint);
+
+    if (mIsCircle) {
+      // INVERSE_EVEN_ODD will only draw inverse circle within its bounding box, so we need to
+      // fill the rest manually if the bounds are not square.
+      float paddingH = (bounds.width() - bounds.height() + mBorderWidth) / 2f;
+      float paddingV = (bounds.height() - bounds.width() + mBorderWidth) / 2f;
+      if (paddingH > 0) {
+        canvas.drawRect(bounds.left, bounds.top, bounds.left + paddingH, bounds.bottom, mPaint);
+        canvas.drawRect(
+            bounds.right - paddingH,
+            bounds.top,
+            bounds.right,
+            bounds.bottom,
+            mPaint);
+      }
+      if (paddingV > 0) {
+        canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.top + paddingV, mPaint);
+        canvas.drawRect(
+            bounds.left,
+            bounds.bottom - paddingV,
+            bounds.right,
+            bounds.bottom,
+            mPaint);
+      }
     }
   }
 }

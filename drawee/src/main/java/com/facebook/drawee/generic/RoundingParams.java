@@ -35,7 +35,13 @@ public class RoundingParams {
      * {@link ScalingUtils.ScaleType#CENTER_CROP}, {@link ScalingUtils.ScaleType#FOCUS_CROP} and
      * {@link ScalingUtils.ScaleType#FIT_XY}.
      */
-    BITMAP_ONLY
+    BITMAP_ONLY,
+
+    /**
+     * Achieves rounding by using a temporary bitmap. This doesn't have any limitations as other
+     * modes, but it requires extra memory.
+     */
+    TEMP_BITMAP,
   }
 
   private RoundingMethod mRoundingMethod = RoundingMethod.BITMAP_ONLY;
@@ -185,7 +191,6 @@ public class RoundingParams {
 
   /**
    * Sets the border width
-   * @param color of the border
    * @param width of the width
    */
   public RoundingParams setBorderWidth(float width) {
@@ -202,7 +207,6 @@ public class RoundingParams {
   /**
    * Sets the border color
    * @param color of the border
-   * @param width of the width
    */
   public RoundingParams setBorderColor(int color) {
     mBorderColor = color;
