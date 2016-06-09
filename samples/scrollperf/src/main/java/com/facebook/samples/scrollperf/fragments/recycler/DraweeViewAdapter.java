@@ -24,16 +24,13 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
 /**
  * The RecyclerView.Adapter for the DraweeView
  */
 public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
-
-  private static final Drawable PLACEHOLDER = new ColorDrawable(Color.GRAY);
-
-  private static final Drawable FAILURE = new ColorDrawable(Color.RED);
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
 
@@ -50,8 +47,8 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
   @Override
   public DraweeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(mContext.getResources())
-                                         .setPlaceholderImage(PLACEHOLDER)
-                                         .setFailureImage(FAILURE)
+                                         .setPlaceholderImage(Const.PLACEHOLDER)
+                                         .setFailureImage(Const.FAILURE)
                                          .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
                                          .build();
     final SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext, gdh);

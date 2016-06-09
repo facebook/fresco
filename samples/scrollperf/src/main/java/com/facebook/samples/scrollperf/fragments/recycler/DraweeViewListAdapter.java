@@ -13,10 +13,6 @@
 package com.facebook.samples.scrollperf.fragments.recycler;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +28,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
@@ -39,12 +36,6 @@ import com.facebook.samples.scrollperf.util.SizeUtil;
  * This is the implementation of the Adapter for the ListView
  */
 public class DraweeViewListAdapter extends BaseAdapter {
-
-  private static final Drawable PLACEHOLDER = new ColorDrawable(Color.GRAY);
-
-  private static final Drawable FAILURE = new ColorDrawable(Color.RED);
-
-  private static final double RATIO = 4.0 / 3.0;
 
   private final SimpleAdapter<Uri> mSimpleAdapter;
 
@@ -76,8 +67,8 @@ public class DraweeViewListAdapter extends BaseAdapter {
     if (convertView == null) {
       final Context context = parent.getContext();
       GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(context.getResources())
-              .setPlaceholderImage(PLACEHOLDER)
-              .setFailureImage(FAILURE)
+              .setPlaceholderImage(Const.PLACEHOLDER)
+              .setFailureImage(Const.FAILURE)
               .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
               .build();
       draweeView = new SimpleDraweeView(context, gdh);
@@ -85,7 +76,7 @@ public class DraweeViewListAdapter extends BaseAdapter {
               parent.getContext(),
               parent.getWidth(),
               parent.getHeight());
-      SizeUtil.updateViewLayoutParams(draweeView, size, (int) (size / RATIO));
+      SizeUtil.updateViewLayoutParams(draweeView, size, (int) (size / Const.RATIO));
     } else {
       draweeView = (SimpleDraweeView) convertView;
     }

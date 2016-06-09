@@ -26,14 +26,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
  * This is the ViewHolder for the RecyclerView in order to contain the DraweeView
  */
 public class DraweeViewHolder extends RecyclerView.ViewHolder {
-
-  private static final double RATIO = 4.0 / 3.0;
 
   private final View mParentView;
 
@@ -51,7 +50,7 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
               mParentView.getContext(),
               mParentView.getWidth(),
               mParentView.getHeight());
-      SizeUtil.updateViewLayoutParams(mDraweeView, size, (int) (size / RATIO));
+      SizeUtil.updateViewLayoutParams(mDraweeView, size, (int) (size / Const.RATIO));
     }
   }
 
