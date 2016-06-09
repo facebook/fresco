@@ -69,7 +69,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   @GuardedBy("mLock")
   private long mCacheSizeLastUpdateTime;
-  
+ 
   private final long mCacheSizeLimitMinimum;
 
   private final StatFsHelper mStatFsHelper;
@@ -154,7 +154,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     this.mDefaultCacheSizeLimit = params.mDefaultCacheSizeLimit;
     this.mCacheSizeLimit = params.mDefaultCacheSizeLimit;
     this.mStatFsHelper = StatFsHelper.getInstance();
-
 
     this.mStorage = diskStorage;
 
