@@ -23,9 +23,12 @@ import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -283,6 +286,10 @@ public class RoundedBitmapDrawable extends BitmapDrawable
 
   private void updatePath() {
     if (mIsPathDirty) {
+      mBitmapBounds.set(0, 0, getBitmap().getWidth(), getBitmap().getHeight());
+      mTransform.mapRect(mBitmapBounds);
+      //mRootBounds.intersect(mBitmapBounds);
+
       mBorderPath.reset();
       mRootBounds.inset(mBorderWidth/2, mBorderWidth/2);
       if (mIsCircle) {
@@ -310,6 +317,13 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       }
       mRootBounds.inset(-(mPadding), -(mPadding));
       mPath.setFillType(Path.FillType.WINDING);
+
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+        Path rectPath = new Path(); // TODO: preallocate
+        rectPath.addRect(mBitmapBounds, Path.Direction.CCW);
+        mPath.op(rectPath, Path.Op.INTERSECT);
+      }
+
       mIsPathDirty = false;
     }
   }
