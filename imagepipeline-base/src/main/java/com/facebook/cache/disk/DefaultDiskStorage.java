@@ -9,10 +9,8 @@
 
 package com.facebook.cache.disk;
 
-
 import android.os.Environment;
 import javax.annotation.Nullable;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -117,7 +115,6 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   private static boolean isExternal(File directory) {
-
     boolean state = false;
     String cacheDirPath = null;
     File extStoragePath = Environment.getExternalStorageDirectory();
@@ -125,14 +122,13 @@ public class DefaultDiskStorage implements DiskStorage {
       cacheDirPath = extStoragePath.toString();
       try {
         String appCacheDirPath = directory.getCanonicalPath();
-        if (appCacheDirPath.contains(cacheDirPath)) state = true;
+        if (appCacheDirPath.contains(cacheDirPath)) {
+          state = true;}
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }else{
-      state = false;}
+    }
     return state;
-
   }
 
   @VisibleForTesting
