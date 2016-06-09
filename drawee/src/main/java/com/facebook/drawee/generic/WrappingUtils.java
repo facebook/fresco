@@ -125,6 +125,24 @@ public class WrappingUtils {
   }
 
   /**
+   * Converts {@link RoundingParams.RoundingMethod} to {@link RoundedCornersDrawable.Type}.
+   */
+  @Nullable
+  static RoundedCornersDrawable.Type getRoundingType(@Nullable RoundingParams params) {
+    if (params != null) {
+      switch (params.getRoundingMethod()) {
+        case OVERLAY_COLOR:
+          return RoundedCornersDrawable.Type.OVERLAY_COLOR;
+        case TEMP_BITMAP:
+          return RoundedCornersDrawable.Type.TEMP_BITMAP;
+        default:
+          return null;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Updates the overlay-color rounding of the parent's child drawable.
    *
    * <ul>
@@ -141,14 +159,14 @@ public class WrappingUtils {
       DrawableParent parent,
       @Nullable RoundingParams roundingParams) {
     Drawable child = parent.getDrawable();
-    if (roundingParams != null &&
-        roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
+    if (getRoundingType(roundingParams) != null) {
       // Overlay rounding requested - either update the overlay params or add a new
       // drawable that will do the requested rounding.
       if (child instanceof RoundedCornersDrawable) {
         RoundedCornersDrawable roundedCornersDrawable = (RoundedCornersDrawable) child;
         applyRoundingParams(roundedCornersDrawable, roundingParams);
         roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
+        roundedCornersDrawable.setType(getRoundingType(roundingParams));
       } else {
         // Important: remove the child before wrapping it with a new parent!
         child = parent.setDrawable(sEmptyDrawable);
@@ -215,13 +233,13 @@ public class WrappingUtils {
   static Drawable maybeWrapWithRoundedOverlayColor(
       @Nullable Drawable drawable,
       @Nullable RoundingParams roundingParams) {
-    if (drawable == null || roundingParams == null ||
-        roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.OVERLAY_COLOR) {
+    if (drawable == null || getRoundingType(roundingParams) == null) {
       return drawable;
     }
     RoundedCornersDrawable roundedCornersDrawable = new RoundedCornersDrawable(drawable);
     applyRoundingParams(roundedCornersDrawable, roundingParams);
     roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
+    roundedCornersDrawable.setType(getRoundingType(roundingParams));
     return roundedCornersDrawable;
   }
 

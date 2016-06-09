@@ -39,6 +39,7 @@ public class MainActivity extends Activity {
   private static final float FOCUS_X = 0.454f;
   private static final float FOCUS_Y = 0.266f;
   private static final int RADIUS = 50;
+  private static final boolean USE_TEMP_BITMAP_ROUNDING = true; // add an app setting for this
   private static final Set<ScaleType> SUPPORTS_BITMAP_ROUNDING;
 
   private LinearLayout mUnroundedColumn;
@@ -46,9 +47,11 @@ public class MainActivity extends Activity {
   private LinearLayout.LayoutParams mChildLayoutParams;
   private RoundingParams mRoundingBitmapOnly;
   private RoundingParams mRoundingOverlayColor;
+  private RoundingParams mRoundingTempBitmap;
 
   static {
     SUPPORTS_BITMAP_ROUNDING = new HashSet<>();
+    SUPPORTS_BITMAP_ROUNDING.add(ScaleType.FIT_XY);
     SUPPORTS_BITMAP_ROUNDING.add(ScaleType.CENTER_CROP);
     SUPPORTS_BITMAP_ROUNDING.add(ScaleType.FOCUS_CROP);
   }
@@ -68,8 +71,11 @@ public class MainActivity extends Activity {
     mRoundingBitmapOnly = RoundingParams.fromCornersRadius(RADIUS)
         .setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
     mRoundingOverlayColor = RoundingParams.fromCornersRadius(RADIUS)
-        .setRoundingMethod(RoundingParams.RoundingMethod.OVERLAY_COLOR)
-        .setOverlayColor(Color.WHITE);
+        .setOverlayColor(Color.WHITE)
+        .setRoundingMethod(RoundingParams.RoundingMethod.OVERLAY_COLOR);
+    mRoundingTempBitmap = RoundingParams.fromCornersRadius(RADIUS)
+        .setOverlayColor(Color.TRANSPARENT)
+        .setRoundingMethod(RoundingParams.RoundingMethod.TEMP_BITMAP);
 
     GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(getResources());
 
@@ -91,7 +97,9 @@ public class MainActivity extends Activity {
     builder.setRoundingParams(null);
     SimpleDraweeView unroundedImage = new SimpleDraweeView(this, builder.build());
 
-    if (true || SUPPORTS_BITMAP_ROUNDING.contains(scaleType)) {
+    if (USE_TEMP_BITMAP_ROUNDING) {
+      builder.setRoundingParams(mRoundingTempBitmap);
+    } else if (SUPPORTS_BITMAP_ROUNDING.contains(scaleType)) {
       builder.setRoundingParams(mRoundingBitmapOnly);
     } else {
       builder.setRoundingParams(mRoundingOverlayColor);
