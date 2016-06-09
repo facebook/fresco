@@ -33,6 +33,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
  * This is the implementation of the Adapter for the ListView
@@ -80,11 +81,11 @@ public class DraweeViewListAdapter extends BaseAdapter {
               .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
               .build();
       draweeView = new SimpleDraweeView(context, gdh);
-      int size = calcDesiredSize(
+      int size = SizeUtil.calcDesiredSize(
               parent.getContext(),
               parent.getWidth(),
               parent.getHeight());
-      updateViewLayoutParams(draweeView, size, (int) (size / RATIO));
+      SizeUtil.updateViewLayoutParams(draweeView, size, (int) (size / RATIO));
     } else {
       draweeView = (SimpleDraweeView) convertView;
     }
@@ -102,20 +103,5 @@ public class DraweeViewListAdapter extends BaseAdapter {
     }
     draweeView.setController(builder.build());
     return draweeView;
-  }
-
-  private void updateViewLayoutParams(View view, int width, int height) {
-    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-    if (layoutParams == null || layoutParams.height != width || layoutParams.width != height) {
-      layoutParams = new AbsListView.LayoutParams(width, height);
-      view.setLayoutParams(layoutParams);
-    }
-  }
-
-  private static int calcDesiredSize(Context context, int parentWidth, int parentHeight) {
-    int orientation = context.getResources().getConfiguration().orientation;
-    int desiredSize = (orientation == Configuration.ORIENTATION_LANDSCAPE) ?
-            parentWidth  : parentHeight ;
-    return Math.min(desiredSize, parentWidth);
   }
 }
