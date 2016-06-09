@@ -523,7 +523,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     } else {
       mCacheSizeLimit = mDefaultCacheSizeLimit;
     }
-  }  
+  }
 
   public long getSize() {
     if (!mCacheStats.isInitialized()){
