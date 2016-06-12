@@ -51,57 +51,57 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
   @Override
   public void fetch(final FetchState fetchState, final Callback callback) {
     final Future<?> future = mExecutorService.submit(
-        new Runnable() {
-          @Override
-          public void run() {
-              HttpURLConnection connection = null;
-              Uri uri = fetchState.getUri();
-              String uriString = uri.toString();
-              InputStream is;
-              try {
-                  connection = createGetConnection(uriString);
-                  int redirectCount = 0;
-                  while (connection.getResponseCode() / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
-                      uriString = connection.getHeaderField("Location");
-                      connection.disconnect();
-                      connection = createGetConnection(uriString);
-                      ++redirectCount;
-                  }
-                  if (redirectCount > MAX_REDIRECT_COUNT) {
-                      callback.onFailure(new Exception("RedirectCount more than " + MAX_REDIRECT_COUNT));
-                      return;
-                  }
-                  is = connection.getInputStream();
-                  callback.onResponse(is, -1);//connection.getContentLength()
-              } catch (Exception e) {
-                  callback.onFailure(e);
-              } finally {
-                  if (connection != null) {
-                      connection.disconnect();
-                  }
-              }
-          }
-        });
-    fetchState.getContext().addCallbacks(
-        new BaseProducerContextCallbacks() {
-          @Override
-          public void onCancellationRequested() {
-            if (future.cancel(false)) {
-              callback.onCancellation();
+      new Runnable() {
+        @Override
+        public void run() {
+          HttpURLConnection connection = null;
+          Uri uri = fetchState.getUri();
+          String uriString = uri.toString();
+          InputStream is;
+          try {
+            connection = createGetConnection(uriString);
+            int redirectCount = 0;
+            while (connection.getResponseCode() / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
+              uriString = connection.getHeaderField("Location");
+              connection.disconnect();
+              connection = createGetConnection(uriString);
+              ++redirectCount;
+            }
+            if (redirectCount >= MAX_REDIRECT_COUNT) {
+              callback.onFailure(new Exception("RedirectCount more than " + MAX_REDIRECT_COUNT));
+              return;
+            }
+            is = connection.getInputStream();
+            callback.onResponse(is, -1);//connection.getContentLength()
+          } catch (Exception e) {
+            callback.onFailure(e);
+          } finally {
+            if (connection != null) {
+                connection.disconnect();
             }
           }
-        });
+        }
+      });
+    fetchState.getContext().addCallbacks(
+      new BaseProducerContextCallbacks() {
+        @Override
+        public void onCancellationRequested() {
+          if (future.cancel(false)) {
+            callback.onCancellation();
+          }
+        }
+      });
   }
 
 
     protected HttpURLConnection createGetConnection(String uriString) throws IOException {
-        String encodedUrl = Uri.encode(uriString, ALLOWED_URI_CHARS);
-        URL url = new URL(encodedUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
-        connection.setReadTimeout(HTTP_READ_TIMEOUT);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestMethod("GET");
-        return connection;
+      String encodedUrl = Uri.encode(uriString, ALLOWED_URI_CHARS);
+      URL url = new URL(encodedUrl);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setConnectTimeout(HTTP_CONNECT_TIMEOUT);
+      connection.setReadTimeout(HTTP_READ_TIMEOUT);
+      connection.setInstanceFollowRedirects(false);
+      connection.setRequestMethod("GET");
+      return connection;
     }
 }
