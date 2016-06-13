@@ -20,7 +20,7 @@ import com.facebook.cache.common.CacheKey;
 /**
  * Implementation of {@link CacheEvent} that allows the values to be set.
  */
-class SettableCacheEvent implements CacheEvent {
+public class SettableCacheEvent implements CacheEvent {
 
   private CacheKey mCacheKey;
   private String mResourceId;
