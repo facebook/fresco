@@ -333,7 +333,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         inserter.writeData(callback, key);
         // Committing the file is synchronized
         BinaryResource resource = endInsert(inserter, key, resourceId);
-        cacheEvent.setItemSize(resource.size());
+        cacheEvent.setItemSize(resource.size())
+            .setCacheSize(mCacheStats.getSize());
         mCacheEventListener.onWriteSuccess(cacheEvent);
         return resource;
       } finally {
@@ -387,6 +388,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       try {
         long now = mClock.now();
         Collection<DiskStorage.Entry> allEntries = mStorage.getEntries();
+        final long cacheSizeBeforeClearance = mCacheStats.getSize();
         int itemsRemovedCount = 0;
         long itemsRemovedSize = 0L;
         for (DiskStorage.Entry entry : allEntries) {
@@ -401,7 +403,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
               mCacheEventListener.onEviction(new SettableCacheEvent()
                   .setResourceId(entry.getId())
                   .setEvictionReason(CacheEventListener.EvictionReason.CONTENT_STALE)
-                  .setItemSize(entryRemovedSize));
+                  .setItemSize(entryRemovedSize)
+                  .setCacheSize(cacheSizeBeforeClearance - itemsRemovedSize));
             }
           } else {
             oldestRemainingEntryAgeMs = Math.max(oldestRemainingEntryAgeMs, entryAgeMs);
@@ -469,7 +472,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       throw ioe;
     }
 
-    long deleteSize = mCacheStats.getSize() - desiredSize;
+    long cacheSizeBeforeClearance = mCacheStats.getSize();
+    long deleteSize = cacheSizeBeforeClearance - desiredSize;
     int itemCount = 0;
     long sumItemSizes = 0L;
     for (DiskStorage.Entry entry: entries) {
@@ -479,12 +483,14 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       long deletedSize = mStorage.remove(entry);
       mIndex.values().remove(entry.getId());
       if (deletedSize > 0) {
+        itemCount++;
+        sumItemSizes += deletedSize;
         mCacheEventListener.onEviction(new SettableCacheEvent()
             .setResourceId(entry.getId())
             .setEvictionReason(reason)
-            .setItemSize(deletedSize));
-        itemCount++;
-        sumItemSizes += deletedSize;
+            .setItemSize(deletedSize)
+            .setCacheSize(cacheSizeBeforeClearance - sumItemSizes)
+            .setCacheLimit(desiredSize));
       }
     }
     mCacheStats.increment(-sumItemSizes, -itemCount);

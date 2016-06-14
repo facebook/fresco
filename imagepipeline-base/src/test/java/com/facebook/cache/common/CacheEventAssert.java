@@ -70,6 +70,16 @@ public class CacheEventAssert extends AbstractAssert<CacheEventAssert, CacheEven
     return this;
   }
 
+  public CacheEventAssert hasCacheSize(long expected) {
+    Assertions.assertThat(actual.getCacheSize())
+        .overridingErrorMessage(
+            "Cache event mismatch - cache size <%s> does not match <%s>",
+            actual.getCacheSize(),
+            expected)
+        .isEqualTo(expected);
+    return this;
+  }
+
   public CacheEventAssert hasResourceId(String expected) {
     Assertions.assertThat(actual.getResourceId())
         .overridingErrorMessage(

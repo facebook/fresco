@@ -339,13 +339,13 @@ public class DiskStorageCacheTest {
 
     // 2. Test a read failure from DiskStorage
     CacheKey key2 = new SimpleCacheKey("bbb");
-    int value2size = 42;
-    byte[] value2 = new byte[value2size];
+    int value2Size = 42;
+    byte[] value2 = new byte[value2Size];
     value2[25] = 'b';
     mCache.insert(key2, WriterCallbacks.from(value2));
 
     verifyListenerOnWriteAttempt(key2);
-    String resourceId2 = verifyListenerOnWriteSuccessAndGetResourceId(key2, value2size);
+    String resourceId2 = verifyListenerOnWriteSuccessAndGetResourceId(key2, value2Size);
 
     ((DiskStorageWithReadFailures) mStorage).setPoisonResourceId(resourceId2);
 
@@ -362,27 +362,28 @@ public class DiskStorageCacheTest {
   public void testCleanOldCache() throws IOException, NoSuchFieldException, IllegalAccessException {
     long cacheExpirationMs = TimeUnit.DAYS.toMillis(5);
     CacheKey key1 = new SimpleCacheKey("aaa");
-    int value1size = 41;
-    byte[] value1 = new byte[value1size];
+    int value1Size = 41;
+    byte[] value1 = new byte[value1Size];
     value1[25] = 'a';
     mCache.insert(key1, WriterCallbacks.from(value1));
 
-    String resourceId1 = verifyListenerOnWriteSuccessAndGetResourceId(key1, value1size);
+    String resourceId1 = verifyListenerOnWriteSuccessAndGetResourceId(key1, value1Size);
 
     CacheKey key2 = new SimpleCacheKey("bbb");
-    int value2size = 42;
-    byte[] value2 = new byte[value2size];
+    int value2Size = 42;
+    byte[] value2 = new byte[value2Size];
     value2[25] = 'b';
     mCache.insert(key2, WriterCallbacks.from(value2));
 
-    String resourceId2 = verifyListenerOnWriteSuccessAndGetResourceId(key2, value2size);
+    String resourceId2 = verifyListenerOnWriteSuccessAndGetResourceId(key2, value2Size);
 
     // Increment clock by default expiration time + 1 day
     when(mClock.now())
         .thenReturn(cacheExpirationMs + TimeUnit.DAYS.toMillis(1));
 
     CacheKey key3 = new SimpleCacheKey("ccc");
-    byte[] value3 = new byte[43];
+    int value3Size = 43;
+    byte[] value3 = new byte[value3Size];
     value3[25] = 'c';
     mCache.insert(key3, WriterCallbacks.from(value3));
     long valueAge3 = TimeUnit.HOURS.toMillis(1);
@@ -397,11 +398,13 @@ public class DiskStorageCacheTest {
     assertNull(getResource(key2));
 
     String[] resourceIds = new String[] { resourceId1, resourceId2 };
-    long[] itemSizes = new long[] { value1size, value2size };
+    long[] itemSizes = new long[] { value1Size, value2Size };
+    long cacheSizeBeforeEviction = value1Size + value2Size + value3Size;
     verifyListenerOnEviction(
         resourceIds,
         itemSizes,
-        CacheEventListener.EvictionReason.CONTENT_STALE);
+        CacheEventListener.EvictionReason.CONTENT_STALE,
+        cacheSizeBeforeEviction);
   }
 
   @Test
@@ -693,13 +696,15 @@ public class DiskStorageCacheTest {
   private void verifyListenerOnEviction(
       String[] resourceIds,
       long[] itemSizes,
-      CacheEventListener.EvictionReason reason) {
+      CacheEventListener.EvictionReason reason,
+      long cacheSizeBeforeEviction) {
     int numberItems = resourceIds.length;
     ArgumentCaptor<CacheEvent> cacheEventCaptor = ArgumentCaptor.forClass(CacheEvent.class);
     mCacheEventListenerInOrder.verify(mCacheEventListener, times(numberItems))
         .onEviction(cacheEventCaptor.capture());
 
     boolean[] found = new boolean[numberItems];
+    long runningCacheSize = cacheSizeBeforeEviction;
 
     // The eviction order is unknown so make allowances for them coming in different orders
     for (CacheEvent event : cacheEventCaptor.getAllValues()) {
@@ -713,6 +718,10 @@ public class DiskStorageCacheTest {
               .hasEvictionReason(reason);
         }
       }
+
+      runningCacheSize -= event.getItemSize();
+      CacheEventAssert.assertThat(event)
+          .hasCacheSize(runningCacheSize);
     }
 
     // Ensure all resources were found

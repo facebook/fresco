@@ -25,6 +25,8 @@ public class SettableCacheEvent implements CacheEvent {
   private CacheKey mCacheKey;
   private String mResourceId;
   private long mItemSize;
+  private long mCacheLimit;
+  private long mCacheSize;
   private IOException mException;
   private CacheEventListener.EvictionReason mEvictionReason;
 
@@ -50,7 +52,6 @@ public class SettableCacheEvent implements CacheEvent {
     return this;
   }
 
-  @Nullable
   @Override
   public long getItemSize() {
     return mItemSize;
@@ -58,6 +59,26 @@ public class SettableCacheEvent implements CacheEvent {
 
   public SettableCacheEvent setItemSize(long itemSize) {
     mItemSize = itemSize;
+    return this;
+  }
+
+  @Override
+  public long getCacheSize() {
+    return mCacheSize;
+  }
+
+  public SettableCacheEvent setCacheSize(long cacheSize) {
+    mCacheSize = cacheSize;
+    return this;
+  }
+
+  @Override
+  public long getCacheLimit() {
+    return mCacheLimit;
+  }
+
+  public SettableCacheEvent setCacheLimit(long cacheLimit) {
+    mCacheLimit = cacheLimit;
     return this;
   }
 

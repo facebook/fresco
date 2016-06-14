@@ -45,8 +45,21 @@ public interface CacheEvent {
    *
    * <p> This is present in write success and eviction events.
    */
-  @Nullable
   long getItemSize();
+
+  /**
+   * Gets the total size of the resources currently in storage, in bytes.
+   *
+   * <p> This is present in write success and eviction events.
+   */
+  long getCacheSize();
+
+  /**
+   * Gets the current size limit for the cache, in bytes.
+   *
+   * <p> This is present in eviction events where the eviction is due to the need to trim for size.
+   */
+  long getCacheLimit();
 
   /**
    * Gets the exception which occurred to trigger a read or write exception event.
