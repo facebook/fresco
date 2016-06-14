@@ -12,20 +12,15 @@
 package com.facebook.samples.scrollperf.fragments.recycler;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.samples.scrollperf.conf.Config;
-import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.util.DraweeUtil;
 
 /**
  * The RecyclerView.Adapter for the DraweeView
@@ -46,11 +41,7 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   @Override
   public DraweeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(mContext.getResources())
-                                         .setPlaceholderImage(Const.PLACEHOLDER)
-                                         .setFailureImage(Const.FAILURE)
-                                         .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
-                                         .build();
+    GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(mContext, mConfig);
     final SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext, gdh);
     return new DraweeViewHolder(parent, simpleDraweeView, mConfig);
   }
