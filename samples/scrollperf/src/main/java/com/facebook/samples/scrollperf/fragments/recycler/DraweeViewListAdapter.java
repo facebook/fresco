@@ -16,20 +16,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
-import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.util.DraweeUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
@@ -66,11 +64,7 @@ public class DraweeViewListAdapter extends BaseAdapter {
     SimpleDraweeView draweeView;
     if (convertView == null) {
       final Context context = parent.getContext();
-      GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(context.getResources())
-              .setPlaceholderImage(Const.PLACEHOLDER)
-              .setFailureImage(Const.FAILURE)
-              .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
-              .build();
+      GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(context, mConfig);
       draweeView = new SimpleDraweeView(context, gdh);
       int size = SizeUtil.calcDesiredSize(
               parent.getContext(),
