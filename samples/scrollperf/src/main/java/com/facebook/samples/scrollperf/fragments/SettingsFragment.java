@@ -20,6 +20,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.facebook.samples.scrollperf.R;
+import com.facebook.samples.scrollperf.conf.Const;
 
 /**
  * The Fragment for settings
@@ -32,12 +33,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
    */
   public static final String TAG = SettingsFragment.class.getSimpleName();
 
-  private String mDataSourceKey;
-  private String mInfiniteDataSourceKey;
-  private String mDistinctUriDataSourceKey;
-  private String mRecyclerLayoutKey;
-  private String mReuseOldControllerKey;
-
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -48,18 +43,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public void onCreatePreferences(Bundle bundle, String s) {
     addPreferencesFromResource(R.xml.preferences);
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    // We read the keys
-    mDataSourceKey = getString(R.string.key_data_source);
-    mInfiniteDataSourceKey = getString(R.string.key_infinite_data_source);
-    mDistinctUriDataSourceKey = getString(R.string.key_distinct_uri_data_source);
-    mRecyclerLayoutKey = getString(R.string.key_recycler_layout);
-    mReuseOldControllerKey = getString(R.string.key_reuse_old_controller);
     // Update summaries
-    updateDataSourceSummary(findPreference(mDataSourceKey));
-    updateInfiniteDataSourceSummary(findPreference(mInfiniteDataSourceKey));
-    updateDistinctDataSourceSummary(findPreference(mDistinctUriDataSourceKey));
-    updateRecyclerLayoutSummary(findPreference(mRecyclerLayoutKey));
-    updateReuseOldControllerSummary(findPreference(mReuseOldControllerKey));
+    updateDataSourceSummary(findPreference(Const.DATA_SOURCE_KEY));
+    updateInfiniteDataSourceSummary(findPreference(Const.INFINITE_DATA_SOURCE_KEY));
+    updateDistinctDataSourceSummary(findPreference(Const.DISTINCT_DATA_SOURCE_KEY));
+    updateRecyclerLayoutSummary(findPreference(Const.RECYCLER_LAYOUT_KEY));
+    updateReuseOldControllerSummary(findPreference(Const.REUSE_OLD_CONTROLLER_KEY));
   }
 
   @Override
@@ -71,15 +60,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     Preference preference = findPreference(key);
-    if (mDataSourceKey.equals(key)) {
+    if (Const.DATA_SOURCE_KEY.equals(key)) {
       updateDataSourceSummary(preference);
-    } else if (mRecyclerLayoutKey.equals(key)) {
+    } else if (Const.RECYCLER_LAYOUT_KEY.equals(key)) {
       updateRecyclerLayoutSummary(preference);
-    } else if (mInfiniteDataSourceKey.equals(key)) {
+    } else if (Const.INFINITE_DATA_SOURCE_KEY.equals(key)) {
       updateInfiniteDataSourceSummary(preference);
-    } else if (mDistinctUriDataSourceKey.equals(key)) {
+    } else if (Const.DISTINCT_DATA_SOURCE_KEY.equals(key)) {
       updateDistinctDataSourceSummary(preference);
-    } else if (mReuseOldControllerKey.equals(key)) {
+    } else if (Const.REUSE_OLD_CONTROLLER_KEY.equals(key)) {
       updateReuseOldControllerSummary(preference);
     }
   }
@@ -100,7 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       preference.setSummary(getResources().getString(R.string.unchecked_infinite_data_source_summary));
     }
     // We disableDistinct Uris if infinite is not enabled
-    findPreference(mDistinctUriDataSourceKey).setEnabled(isInfinite);
+    findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(isInfinite);
   }
 
   private void updateDistinctDataSourceSummary(final Preference preference) {

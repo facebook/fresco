@@ -7,7 +7,6 @@
     <string translatable="false" name="title_preferences_source_group">Data Source</string>
     <string translatable="false" name="dialog_title_data_source">Data Source for Uris</string>
     <string translatable="false" name="title_data_source">Data Source for Uris</string>
-    <string translatable="false" name="key_data_source">uris_data_source</string>
     <!-- Different types for Simple Adapter -->
 
     <!-- SimpleAdapter from local array resource-->
@@ -27,12 +26,10 @@
 
     <!-- Infinite SimpleAdapters-->
     <string translatable="false" name="title_infinite_data_source">Infinite Data Source</string>
-    <string translatable="false" name="key_infinite_data_source">infinite_data_source</string>
     <string translatable="false" name="checked_infinite_data_source_summary">Data Source provides infinite Uris</string>
     <string translatable="false" name="unchecked_infinite_data_source_summary">Data Source provides a finite number or Uris</string>
     <!-- Distinct Uris-->
     <string translatable="false" name="title_distinct_uri_data_source">Distinct Uris (no Content Providers)</string>
-    <string translatable="false" name="key_distinct_uri_data_source">distinct_uri_data_source</string>
     <string translatable="false" name="checked_distinct_uri_data_source_summary">Recycled Uri have different address</string>
     <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
 
@@ -41,7 +38,6 @@
     <string translatable="false" name="title_controller_group">Controller configuration</string>
     <!-- Reuse old controller-->
     <string translatable="false" name="title_reuse_old_controller">Reuse old Controller</string>
-    <string translatable="false" name="key_reuse_old_controller">reuse_old_controller</string>
     <string translatable="false" name="checked_reuse_old_controller_summary">The old Controller is reused</string>
     <string translatable="false" name="unchecked_reuse_old_controller_summary">A controller is created for every request</string>
 
@@ -52,7 +48,6 @@
     <string translatable="false" name="title_preferences_recycler_layout">Recycler Layout</string>
     <string translatable="false" name="dialog_title_recycler_layout">Layout selection</string>
     <string translatable="false" name="title_recycler_layout">Layout for the list</string>
-    <string translatable="false" name="key_recycler_layout">recycler_layout</string>
     <string translatable="false" name="label_listview_recycler_layout">ListView</string>
     <string translatable="false" name="label_recyclerview_recycler_layout">RecyclerView</string>
     <string translatable="false" name="value_listview_recycler_layout">listview_recycler_layout</string>

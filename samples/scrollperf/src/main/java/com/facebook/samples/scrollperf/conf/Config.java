@@ -37,30 +37,24 @@ public class Config {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
     // Data Source key
-    final String dataSourceKey = context.getString(R.string.key_data_source);
     final String dataSourceType = sharedPreferences.getString(
-            dataSourceKey,
+            Const.DATA_SOURCE_KEY,
             context.getString(R.string.value_local_uri));
     // Infinite Data Source
-    final String infiniteDataSourceKey = context.getString(R.string.key_infinite_data_source);
     final boolean infiniteDataSource = sharedPreferences.getBoolean(
-            infiniteDataSourceKey,
+            Const.INFINITE_DATA_SOURCE_KEY,
             false);
     // Distinct Uri
-    final String distinctUriDataSourceKey = context
-      .getString(R.string.key_distinct_uri_data_source);
     final boolean distinctUriDataSource = sharedPreferences.getBoolean(
-            distinctUriDataSourceKey,
+            Const.DISTINCT_DATA_SOURCE_KEY,
             false);
     // The Recycler Layout key
-    final String recyclerLayoutKey = context.getString(R.string.key_recycler_layout);
     final String recyclerLayoutType = sharedPreferences.getString(
-            recyclerLayoutKey,
+            Const.RECYCLER_LAYOUT_KEY,
             context.getString(R.string.value_recyclerview_recycler_layout));
     // Reuse Old Controller
-    final String reuseOldControllerKey = context.getString(R.string.key_reuse_old_controller);
     final boolean reuseOldController = sharedPreferences.getBoolean(
-            reuseOldControllerKey,
+            Const.REUSE_OLD_CONTROLLER_KEY,
             false);
     return new Config(
       dataSourceType,
