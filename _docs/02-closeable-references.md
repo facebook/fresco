@@ -58,7 +58,25 @@ void gee() {
 
 The `finally` block is almost always the best way to do this.
 
-#### 3. Something other than the owner should *not* close the reference.
+#### 3. **Never** close the value.
+
+`CloseableReference` wraps a shared resource which gets released when there are no more active references pointing to it. Tracking of active references is done automatically by an internal reference counter. When the reference count drops to 0, `CloseableReference` will release the underlying resource. The very purpose of `CloseableReference` is to manage the underlying resource so that you don't have to. That said, you are responsible for closing the `CloseableReference` if you own it, but **not** the value it points to! If you explicitly close the underlying value, you will erroneously invalidate all the other active references pointing to that same resource.
+
+```java
+  CloseableReference<Val> ref = foo();
+
+  Val val = ref.get();
+  // do something with val
+  // ...
+  
+  // Do NOT close the value!
+  //// val.close();
+
+  // DO close the reference instead.
+  ref.close();
+```
+
+#### 4. Something other than the owner should *not* close the reference.
 
 Here, we are receiving the reference via argument. The caller is still the owner, so we are not supposed to close it.
 
@@ -74,7 +92,7 @@ void haa(CloseableReference<?> ref) {
 
 If we called `.close()` here by mistake, then if the caller tried to call `.get()`, an `IllegalStateException` would be thrown.
 
-#### 4. Callee should always clone the reference before assigning.
+#### 5. Callee should always clone the reference before assigning.
 
 If we need to hold onto the reference, we need to clone it.
 
