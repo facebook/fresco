@@ -131,7 +131,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
   }
 
   @VisibleForTesting ExifInterface getExifInterface(Uri uri) throws IOException {
-    final String realPath = getRealPathFromUri(uri);
+    final String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
     if (canReadAsFile(realPath)) {
         return new ExifInterface(realPath);
     }
@@ -164,33 +164,6 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
   private int getRotationAngle(final ExifInterface exifInterface) {
     return JfifUtil.getAutoRotateAngleFromOrientation(
         Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)));
-  }
-
-  /**
-   * Get the path of a file from the Uri
-   * @param srcUri The source uri
-   * @return The Path for the file or null if doesn't exists
-   */
-  private String getRealPathFromUri(final Uri srcUri) {
-    String result = null;
-    if (UriUtil.isLocalContentUri(srcUri)) {
-      Cursor cursor = null;
-      try {
-        cursor = mContentResolver.query(srcUri, null, null, null, null);
-        if (cursor != null) {
-          cursor.moveToFirst();
-          int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-          result = cursor.getString(idx);
-        }
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    } else if (UriUtil.isLocalFileUri(srcUri)) {
-      result = srcUri.getPath();
-    }
-    return result;
   }
 
   @VisibleForTesting boolean canReadAsFile(String realPath) throws IOException {
