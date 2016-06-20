@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
@@ -68,7 +67,7 @@ public class MainFragment extends Fragment {
     mSimpleAdapter = initializeSimpleAdapter(mConfig);
     // We use a different layout based on the type of output
     final View layout;
-    switch (mConfig.mRecyclerLayoutType) {
+    switch (mConfig.recyclerLayoutType) {
       case "recyclerview_recycler_layout":
         layout = inflater.inflate(R.layout.content_recyclerview, container, false);
         initializeRecyclerView(layout);
@@ -114,7 +113,7 @@ public class MainFragment extends Fragment {
   private SimpleAdapter<Uri> initializeSimpleAdapter(final Config config) {
     boolean distinctUriCompatible = true;
     SimpleAdapter<Uri> simpleAdapter = null;
-    switch (config.mDataSourceType) {
+    switch (config.dataSourceType) {
       case "local_resource_uris":
         simpleAdapter = LocalResourceSimpleAdapter
                 .getEagerAdapter(getContext(), R.array.example_uris);
@@ -128,9 +127,9 @@ public class MainFragment extends Fragment {
         distinctUriCompatible = false;
         break;
     }
-    if (config.mInfiniteDataSource) {
+    if (config.infiniteDataSource) {
       simpleAdapter = SimpleAdapter.Util.makeItInfinite(simpleAdapter);
-      if (distinctUriCompatible && config.mDistinctUriDataSource) {
+      if (distinctUriCompatible && config.distinctUriDataSource) {
         simpleAdapter = SimpleAdapter.Util
                 .decorate(simpleAdapter, DistinctUriDecorator.SINGLETON);
       }

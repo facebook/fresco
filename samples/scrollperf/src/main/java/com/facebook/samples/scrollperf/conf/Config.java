@@ -23,45 +23,45 @@ import com.facebook.samples.scrollperf.R;
  */
 public class Config {
 
-  public final String mDataSourceType;
+  public final String dataSourceType;
 
-  public final boolean mInfiniteDataSource;
-  public final boolean mDistinctUriDataSource;
+  public final boolean infiniteDataSource;
+  public final boolean distinctUriDataSource;
 
-  public final String mRecyclerLayoutType;
+  public final String recyclerLayoutType;
 
-  public final boolean mReuseOldController;
+  public final boolean reuseOldController;
+
+  public final boolean useRoundedCorners;
 
   public static Config load(final Context context) {
-    // We read the DataSource type
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
-    // Data Source key
     final String dataSourceType = sharedPreferences.getString(
             Const.DATA_SOURCE_KEY,
             context.getString(R.string.value_local_uri));
-    // Infinite Data Source
     final boolean infiniteDataSource = sharedPreferences.getBoolean(
             Const.INFINITE_DATA_SOURCE_KEY,
             false);
-    // Distinct Uri
     final boolean distinctUriDataSource = sharedPreferences.getBoolean(
             Const.DISTINCT_DATA_SOURCE_KEY,
             false);
-    // The Recycler Layout key
     final String recyclerLayoutType = sharedPreferences.getString(
             Const.RECYCLER_LAYOUT_KEY,
             context.getString(R.string.value_recyclerview_recycler_layout));
-    // Reuse Old Controller
     final boolean reuseOldController = sharedPreferences.getBoolean(
             Const.REUSE_OLD_CONTROLLER_KEY,
+            false);
+    final boolean useRoundedCorners = sharedPreferences.getBoolean(
+            Const.ROUNDED_CORNERS_KEY,
             false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
       infiniteDataSource,
       distinctUriDataSource,
-      reuseOldController);
+      reuseOldController,
+      useRoundedCorners);
   }
 
   private Config(
@@ -69,12 +69,13 @@ public class Config {
       final String recyclerLayoutType,
       final boolean infiniteDataSource,
       final boolean distinctUriDataSource,
-      final boolean reuseOldController
-      ) {
-    mDataSourceType = dataSourceType;
-    mRecyclerLayoutType = recyclerLayoutType;
-    mInfiniteDataSource = infiniteDataSource;
-    mDistinctUriDataSource = distinctUriDataSource;
-    mReuseOldController = reuseOldController;
+      final boolean reuseOldController,
+      final boolean useRoundedCorners) {
+    this.dataSourceType = dataSourceType;
+    this.recyclerLayoutType = recyclerLayoutType;
+    this.infiniteDataSource = infiniteDataSource;
+    this.distinctUriDataSource = distinctUriDataSource;
+    this.reuseOldController = reuseOldController;
+    this.useRoundedCorners = useRoundedCorners;
   }
 }

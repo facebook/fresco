@@ -31,4 +31,5 @@ public final class Const {
   public static final String DISTINCT_DATA_SOURCE_KEY ="distinct_uri_data_source";
   public static final String RECYCLER_LAYOUT_KEY = "recycler_layout";
   public static final String REUSE_OLD_CONTROLLER_KEY= "reuse_old_controller";
+  public static final String ROUNDED_CORNERS_KEY= "rounded_corners";
 }

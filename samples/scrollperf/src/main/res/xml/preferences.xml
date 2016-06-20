@@ -21,6 +21,15 @@
             android:key="distinct_uri_data_source"
             />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="key_preferences_rounded_corners"
+        android:title="@string/title_preferences_rounded_corners"
+        >
+        <CheckBoxPreference
+            android:title="@string/title_preferences_rounded_corners_enabled"
+            android:key="rounded_corners"
+            />
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:key="key_preferences_controller_group"

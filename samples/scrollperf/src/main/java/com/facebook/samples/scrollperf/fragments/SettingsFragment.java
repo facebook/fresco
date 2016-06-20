@@ -12,6 +12,7 @@
 package com.facebook.samples.scrollperf.fragments;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.CheckBoxPreference;
@@ -49,6 +50,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateDistinctDataSourceSummary(findPreference(Const.DISTINCT_DATA_SOURCE_KEY));
     updateRecyclerLayoutSummary(findPreference(Const.RECYCLER_LAYOUT_KEY));
     updateReuseOldControllerSummary(findPreference(Const.REUSE_OLD_CONTROLLER_KEY));
+    updateRoundedCornersSummary(findPreference(Const.ROUNDED_CORNERS_KEY));
   }
 
   @Override
@@ -70,6 +72,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateDistinctDataSourceSummary(preference);
     } else if (Const.REUSE_OLD_CONTROLLER_KEY.equals(key)) {
       updateReuseOldControllerSummary(preference);
+    } else if (Const.ROUNDED_CORNERS_KEY.equals(key)) {
+      updateRoundedCornersSummary(preference);
     }
   }
 
@@ -81,25 +85,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateInfiniteDataSourceSummary(final Preference preference) {
-    CheckBoxPreference infiniteDataSourcePreference = (CheckBoxPreference) preference;
-    final boolean isInfinite = infiniteDataSourcePreference.isChecked();
-    if (isInfinite) {
-      preference.setSummary(getResources().getString(R.string.checked_infinite_data_source_summary));
-    } else {
-      preference.setSummary(getResources().getString(R.string.unchecked_infinite_data_source_summary));
-    }
+    final boolean currentState = updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_infinite_data_source_summary,
+            R.string.unchecked_infinite_data_source_summary);
     // We disableDistinct Uris if infinite is not enabled
-    findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(isInfinite);
+    findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(currentState);
   }
 
   private void updateDistinctDataSourceSummary(final Preference preference) {
-    CheckBoxPreference distinctUriDataSourcePreference = (CheckBoxPreference) preference;
-    final boolean isDistinct = distinctUriDataSourcePreference.isChecked();
-    if (isDistinct) {
-      preference.setSummary(getResources().getString(R.string.checked_distinct_uri_data_source_summary));
-    } else {
-      preference.setSummary(getResources().getString(R.string.unchecked_distinct_uri_data_source_summary));
-    }
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_distinct_uri_data_source_summary,
+            R.string.unchecked_distinct_uri_data_source_summary);
   }
 
   private void updateRecyclerLayoutSummary(final Preference preference) {
@@ -112,12 +112,32 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateReuseOldControllerSummary(final Preference preference) {
-    CheckBoxPreference reuseOldControllerPreference = (CheckBoxPreference) preference;
-    final boolean reuseOldController = reuseOldControllerPreference.isChecked();
-    if (reuseOldController) {
-      preference.setSummary(getResources().getString(R.string.checked_reuse_old_controller_summary));
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_reuse_old_controller_summary,
+            R.string.unchecked_reuse_old_controller_summary);
+  }
+
+  private void updateRoundedCornersSummary(final Preference preference) {
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_rounded_corners_summary,
+            R.string.unchecked_rounded_corners_summary);
+  }
+
+  private static boolean updateCheckBoxPreference(
+          Resources resources,
+          CheckBoxPreference preference,
+          int checkedSummaryRes,
+          int uncheckedSummaryRes) {
+    final boolean checkboxState = preference.isChecked();
+    if (checkboxState) {
+      preference.setSummary(resources.getString(checkedSummaryRes));
     } else {
-      preference.setSummary(getResources().getString(R.string.unchecked_reuse_old_controller_summary));
+      preference.setSummary(resources.getString(uncheckedSummaryRes));
     }
+    return checkboxState;
   }
 }

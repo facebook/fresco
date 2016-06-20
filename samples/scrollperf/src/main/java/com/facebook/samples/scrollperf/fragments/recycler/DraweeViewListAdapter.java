@@ -83,7 +83,7 @@ public class DraweeViewListAdapter extends BaseAdapter {
     // Create the Builder
     PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
             .setImageRequest(imageRequestBuilder.build());
-    if (mConfig.mReuseOldController) {
+    if (mConfig.reuseOldController) {
       builder.setOldController(draweeView.getController());
     }
     draweeView.setController(builder.build());

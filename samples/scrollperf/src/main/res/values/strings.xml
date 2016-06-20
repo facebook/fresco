@@ -41,7 +41,11 @@
     <string translatable="false" name="checked_reuse_old_controller_summary">The old Controller is reused</string>
     <string translatable="false" name="unchecked_reuse_old_controller_summary">A controller is created for every request</string>
 
-
+    <!-- Rounded corners -->
+    <string translatable="false" name="title_preferences_rounded_corners">Rounded Corners</string>
+    <string translatable="false" name="title_preferences_rounded_corners_enabled">Rounded Corners Enabled</string>
+    <string translatable="false" name="checked_rounded_corners_summary">Rounded corners for Drawee are enabled</string>
+    <string translatable="false" name="unchecked_rounded_corners_summary">No rounded corners for Drawee</string>
 
     <!-- Layout Preferences-->
     <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>

@@ -12,10 +12,12 @@
 package com.facebook.samples.scrollperf.util;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 
@@ -34,11 +36,19 @@ public final class DraweeUtil {
   public static GenericDraweeHierarchy createDraweeHierarchy(
           final Context context,
           final Config config) {
-    GenericDraweeHierarchy gdh = new GenericDraweeHierarchyBuilder(context.getResources())
+    GenericDraweeHierarchyBuilder builder =
+            new GenericDraweeHierarchyBuilder(context.getResources())
             .setPlaceholderImage(Const.PLACEHOLDER)
             .setFailureImage(Const.FAILURE)
-            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
-            .build();
-    return gdh;
+            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+    if (config.useRoundedCorners) {
+      // Will add conf params later about this
+      builder.setRoundingParams(new RoundingParams()
+        .setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY)
+        .setBorderColor(Color.RED)
+        .setBorderWidth(2.0f)
+        .setCornersRadius(80.0f));
+    }
+    return builder.build();
   }
 }
