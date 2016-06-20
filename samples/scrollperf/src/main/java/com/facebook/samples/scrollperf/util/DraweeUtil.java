@@ -43,11 +43,13 @@ public final class DraweeUtil {
             .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
     if (config.useRoundedCorners) {
       // Will add conf params later about this
-      builder.setRoundingParams(new RoundingParams()
-        .setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY)
-        .setBorderColor(Color.RED)
-        .setBorderWidth(2.0f)
-        .setCornersRadius(80.0f));
+      final RoundingParams roundingParams = new RoundingParams()
+              .setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY)
+              .setBorderColor(Color.RED)
+              .setBorderWidth(2.0f)
+              .setCornersRadius(80.0f);
+      roundingParams.setRoundAsCircle(config.useRoundedAsCircle);
+      builder.setRoundingParams(roundingParams);
     }
     return builder.build();
   }

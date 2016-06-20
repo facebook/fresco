@@ -33,6 +33,7 @@ public class Config {
   public final boolean reuseOldController;
 
   public final boolean useRoundedCorners;
+  public final boolean useRoundedAsCircle;
 
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
@@ -55,13 +56,18 @@ public class Config {
     final boolean useRoundedCorners = sharedPreferences.getBoolean(
             Const.ROUNDED_CORNERS_KEY,
             false);
+    // Rounded as circle
+    final boolean useRoundedAsCircle = sharedPreferences.getBoolean(
+            Const.ROUNDED_AS_CIRCLE_KEY,
+            false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
       infiniteDataSource,
       distinctUriDataSource,
       reuseOldController,
-      useRoundedCorners);
+      useRoundedCorners,
+      useRoundedAsCircle);
   }
 
   private Config(
@@ -70,12 +76,14 @@ public class Config {
       final boolean infiniteDataSource,
       final boolean distinctUriDataSource,
       final boolean reuseOldController,
-      final boolean useRoundedCorners) {
+      final boolean useRoundedCorners,
+      final boolean useRoundedAsCircle) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
     this.distinctUriDataSource = distinctUriDataSource;
     this.reuseOldController = reuseOldController;
     this.useRoundedCorners = useRoundedCorners;
+    this.useRoundedAsCircle = useRoundedAsCircle;
   }
 }

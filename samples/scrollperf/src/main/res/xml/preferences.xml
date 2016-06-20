@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <PreferenceCategory
         android:key="key_preferences_source_group"
         android:title="@string/title_preferences_source_group"
@@ -28,6 +30,11 @@
         <CheckBoxPreference
             android:title="@string/title_preferences_rounded_corners_enabled"
             android:key="rounded_corners"
+            />
+        <CheckBoxPreference
+            android:title="@string/title_preferences_rounded_as_circle_enabled"
+            android:key="rounded_as_circle"
+            app:dependency="rounded_corners"
             />
     </PreferenceCategory>
 

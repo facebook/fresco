@@ -51,6 +51,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateRecyclerLayoutSummary(findPreference(Const.RECYCLER_LAYOUT_KEY));
     updateReuseOldControllerSummary(findPreference(Const.REUSE_OLD_CONTROLLER_KEY));
     updateRoundedCornersSummary(findPreference(Const.ROUNDED_CORNERS_KEY));
+    updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
   }
 
   @Override
@@ -74,6 +75,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateReuseOldControllerSummary(preference);
     } else if (Const.ROUNDED_CORNERS_KEY.equals(key)) {
       updateRoundedCornersSummary(preference);
+    } else if (Const.ROUNDED_AS_CIRCLE_KEY.equals(key)) {
+      updateRoundedAsCircleSummary(preference);
     }
   }
 
@@ -139,5 +142,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
       preference.setSummary(resources.getString(uncheckedSummaryRes));
     }
     return checkboxState;
+  }
+
+  private void updateRoundedAsCircleSummary(final Preference preference) {
+    CheckBoxPreference roundedAsCirclePreference = (CheckBoxPreference) preference;
+    final boolean roundedAsCircle = roundedAsCirclePreference.isChecked();
+    if (roundedAsCircle) {
+      preference.setSummary(getResources().getString(R.string.checked_rounded_as_circle_enabled_summary));
+    } else {
+      preference.setSummary(getResources().getString(R.string.unchecked_rounded_as_circle_enabled_summary));
+    }
   }
 }
