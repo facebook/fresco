@@ -57,7 +57,8 @@ public class PipelineDraweeControllerBuilderSupplier implements
         context.getResources(),
         DeferredReleaser.getInstance(),
         animatedDrawableFactory,
-        UiThreadImmediateExecutorService.getInstance());
+        UiThreadImmediateExecutorService.getInstance(),
+        mImagePipeline.getBitmapMemoryCache());
     mBoundControllerListeners = boundControllerListeners;
   }
 

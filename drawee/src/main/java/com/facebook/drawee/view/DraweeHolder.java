@@ -9,7 +9,6 @@
 
 package com.facebook.drawee.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;

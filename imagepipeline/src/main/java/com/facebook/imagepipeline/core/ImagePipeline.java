@@ -389,6 +389,13 @@ public class ImagePipeline {
  }
 
   /**
+   * @return The Bitmap MemoryCache
+   */
+  public MemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
+    return mBitmapMemoryCache;
+  }
+
+  /**
    * Returns whether the image is stored in the bitmap memory cache.
    *
    * @param imageRequest the imageRequest for the image to be looked up.
@@ -553,5 +560,12 @@ public class ImagePipeline {
 
   public boolean isPaused() {
     return mThreadHandoffProducerQueue.isQueueing();
+  }
+
+  /**
+   * @return The CacheKeyFactory implementation used by ImagePipeline
+   */
+  public CacheKeyFactory getCacheKeyFactory() {
+    return mCacheKeyFactory;
   }
 }
