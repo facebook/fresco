@@ -93,7 +93,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
       int length) throws IOException {
     CloseableReference<PooledByteBuffer> ref = null;
     try {
-      if (length < 0) {
+      if (length <= 0) {
         ref = CloseableReference.of(mPooledByteBufferFactory.newByteBuffer(inputStream));
       } else {
         ref = CloseableReference.of(mPooledByteBufferFactory.newByteBuffer(inputStream, length));
