@@ -256,7 +256,7 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          Priority.LOW);
+          Priority.MEDIUM);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -270,7 +270,7 @@ public class ImagePipeline {
   public DataSource<Void> prefetchToDiskCache(
       ImageRequest imageRequest,
       Object callerContext) {
-    return prefetchToDiskCache(imageRequest, callerContext, Priority.LOW);
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
   /**
