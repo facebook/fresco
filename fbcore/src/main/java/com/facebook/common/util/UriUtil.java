@@ -11,7 +11,11 @@ package com.facebook.common.util;
 
 import javax.annotation.Nullable;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 
 public class UriUtil {
 
@@ -30,6 +34,12 @@ public class UriUtil {
    * Content URI scheme for URIs
    */
   public static final String LOCAL_CONTENT_SCHEME = "content";
+
+  /**
+   * URI prefix (including scheme) for contact photos
+   */
+  private static final String LOCAL_CONTACT_IMAGE_PREFIX =
+      Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo").getPath();
 
   /**
    * Asset scheme for URIs
@@ -79,6 +89,28 @@ public class UriUtil {
   }
 
   /**
+   * Checks if the given URI is a general Contact URI, and not a specific display photo.
+   * @param uri the URI to check
+   * @return true if the uri is a Contact URI, and is not already specifying a display photo.
+   */
+  public static boolean isLocalContactUri(Uri uri) {
+    return isLocalContentUri(uri)
+        && ContactsContract.AUTHORITY.equals(uri.getAuthority())
+        && !uri.getPath().startsWith(LOCAL_CONTACT_IMAGE_PREFIX);
+  }
+
+  /**
+   * Checks if the given URI is for a photo from the device's local media store.
+   * @param uri the URI to check
+   * @return true if the URI points to a media store photo
+   */
+  public static boolean isLocalCameraUri(Uri uri) {
+    String uriString = uri.toString();
+    return uriString.startsWith(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString())
+        || uriString.startsWith(MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
+  }
+
+  /**
    * Check if uri represents local asset
    *
    * @param uri uri to check
@@ -122,5 +154,34 @@ public class UriUtil {
    */
   public static Uri parseUriOrNull(@Nullable String uriAsString) {
     return uriAsString != null ? Uri.parse(uriAsString) : null;
+  }
+
+  /**
+   * Get the path of a file from the Uri.
+   * @param contentResolver the content resolver which will query for the source file
+   * @param srcUri The source uri
+   * @return The Path for the file or null if doesn't exists
+   */
+  @Nullable
+  public static String getRealPathFromUri(ContentResolver contentResolver, final Uri srcUri) {
+    String result = null;
+    if (isLocalContentUri(srcUri)) {
+      Cursor cursor = null;
+      try {
+        cursor = contentResolver.query(srcUri, null, null, null, null);
+        if (cursor != null) {
+          cursor.moveToFirst();
+          int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+          result = cursor.getString(idx);
+        }
+      } finally {
+        if (cursor != null) {
+          cursor.close();
+        }
+      }
+    } else if (isLocalFileUri(srcUri)) {
+      result = srcUri.getPath();
+    }
+    return result;
   }
 }

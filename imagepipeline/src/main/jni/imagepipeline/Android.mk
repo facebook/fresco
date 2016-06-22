@@ -15,7 +15,6 @@ LOCAL_SRC_FILES := \
 	transformations.cpp \
 	JpegTranscoder.cpp
 
-
 CXX11_FLAGS := -std=c++11
 LOCAL_CFLAGS += $(CXX11_FLAGS)
 LOCAL_CFLAGS += -DLOG_TAG=\"libimagepipeline\"
@@ -23,19 +22,17 @@ LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_CFLAGS += $(FRESCO_CPP_CFLAGS)
 LOCAL_EXPORT_CPPFLAGS := $(CXX11_FLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-LOCAL_LDLIBS := -llog
+LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
-LOCAL_SHARED_LIBRARIES += webp
-
 LOCAL_STATIC_LIBRARIES += fb_jpegturbo
+LOCAL_STATIC_LIBRARIES += bitmaps
+LOCAL_STATIC_LIBRARIES += memchunk
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
 
-LOCAL_LDLIBS += -lz
-
-LOCAL_STATIC_LIBRARIES += fb_png
-LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
-
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libwebp-0.4.3)
 $(call import-module,libjpeg-turbo-1.3.x)
+$(call import-module,bitmaps)
+$(call import-module,memchunk)
+
+

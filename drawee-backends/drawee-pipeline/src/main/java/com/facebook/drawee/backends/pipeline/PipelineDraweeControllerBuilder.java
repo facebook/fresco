@@ -16,11 +16,13 @@ import java.util.Set;
 import android.content.Context;
 import android.net.Uri;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -68,14 +70,34 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
       controller.initialize(
           obtainDataSourceSupplier(),
           generateUniqueControllerId(),
+          getCacheKey(),
           getCallerContext());
     } else {
       controller = mPipelineDraweeControllerFactory.newController(
           obtainDataSourceSupplier(),
           generateUniqueControllerId(),
+          getCacheKey(),
           getCallerContext());
     }
     return controller;
+  }
+
+  private CacheKey getCacheKey() {
+    final ImageRequest imageRequest = getImageRequest();
+    final CacheKeyFactory cacheKeyFactory = mImagePipeline.getCacheKeyFactory();
+    CacheKey cacheKey = null;
+    if (cacheKeyFactory != null && imageRequest != null) {
+      if (imageRequest.getPostprocessor() != null) {
+        cacheKey = cacheKeyFactory.getPostprocessedBitmapCacheKey(
+            imageRequest,
+            getCallerContext());
+      } else {
+        cacheKey = cacheKeyFactory.getBitmapCacheKey(
+            imageRequest,
+            getCallerContext());
+      }
+    }
+    return cacheKey;
   }
 
   @Override

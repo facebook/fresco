@@ -1,25 +1,33 @@
 apply plugin: 'com.android.application'
 
-dependencies {
-    provided 'com.android.support:support-annotations:+'
-    compile project(':drawee-backends:drawee-pipeline')
-    compile project(':static-webp')
-}
-
 android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.facebook.samples.demo"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 
         testApplicationId "com.facebook.samples.demo.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
+
+    productFlavors {
+        // TO TEST THE REMOTE MODULES DURING A RELEASE, COMMENT OUT THE "internal" FLAVOR AND
+        // UNCOMMENT THE REST OTHERWISE A CLASH OCCURS DUE TO THEM TRYING TO CREATE TASKS OF THE
+        // SAME NAME
+
+        internal
+//        mavenBasic
+//        mavenWithWebp
+//        mavenWithAnimatedWebp
+//        mavenWithAnimatedGif
+//        mavenWithAllAnimations
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -39,4 +47,44 @@ android {
             universalApk false
         }
     }
+}
+
+configurations {
+    internalCompile
+    mavenBasicCompile
+    mavenWithWebpCompile
+    mavenWithAnimatedWebpCompile
+    mavenWithAnimatedGifCompile
+    mavenWithAllAnimationsCompile
+}
+
+dependencies {
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+
+    internalCompile project(':drawee-backends:drawee-pipeline')
+    internalCompile project(':static-webp')
+    internalCompile project(':animated-gif')
+    internalCompile project(':animated-webp')
+
+    // To get the core Fresco library only without animations or webp support
+    mavenBasicCompile 'com.facebook.fresco:fresco:0.11.0'
+
+    // To get the core Fresco library with webp support
+    mavenWithWebpCompile 'com.facebook.fresco:fresco:0.11.0'
+    mavenWithWebpCompile 'com.facebook.fresco:webpsupport:0.11.0'
+
+    // To get the core Fresco library with webp support, including animated webp
+    mavenWithAnimatedWebpCompile 'com.facebook.fresco:fresco:0.11.0'
+    mavenWithAnimatedWebpCompile 'com.facebook.fresco:animated-webp:0.11.0'
+    mavenWithAnimatedWebpCompile 'com.facebook.fresco:webpsupport:0.11.0'
+
+    // To get the core Fresco library with animated gif support
+    mavenWithAnimatedGifCompile 'com.facebook.fresco:fresco:0.11.0'
+    mavenWithAnimatedGifCompile 'com.facebook.fresco:animated-gif:0.11.0'
+
+    // To get the core Fresco library with webp, animated webp and animated gif support
+    mavenWithAllAnimationsCompile 'com.facebook.fresco:fresco:0.11.0'
+    mavenWithAllAnimationsCompile 'com.facebook.fresco:animated-gif:0.11.0'
+    mavenWithAllAnimationsCompile 'com.facebook.fresco:animated-webp:0.11.0'
+    mavenWithAllAnimationsCompile 'com.facebook.fresco:webpsupport:0.11.0'
 }

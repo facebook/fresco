@@ -1,4 +1,6 @@
-# Fresco 
+# Fresco
+
+[![Build Status](https://circleci.com/gh/facebook/fresco.svg?style=shield)](https://circleci.com/gh/facebook/fresco)
 
 Fresco is a powerful system for displaying images in Android applications.
 
@@ -17,16 +19,16 @@ Find out more at our [website](http://frescolib.org/index.html).
 
 ## Requirements
 
-Fresco can be included in any Android application. 
+Fresco can be included in any Android application.
 
-Fresco supports Android 2.3 (Gingerbread) and later. 
+Fresco supports Android 2.3 (Gingerbread) and later.
 
 ## Using Fresco in your application
 
 If you are building with Gradle, simply add the following line to the `dependencies` section of your `build.gradle` file:
 
 ```groovy
-compile 'com.facebook.fresco:fresco:0.9.0+'
+compile 'com.facebook.fresco:fresco:0.11.0'
 ```
 
 For full details, visit the documentation on our web site, available in English, Chinese, and Korean:

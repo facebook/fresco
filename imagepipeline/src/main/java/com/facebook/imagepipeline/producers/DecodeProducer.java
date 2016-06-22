@@ -157,6 +157,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
+    protected void onProgressUpdateImpl(float progress) {
+      super.onProgressUpdateImpl(progress * 0.99f);
+    }
+
+    @Override
     public void onFailureImpl(Throwable t) {
       handleError(t);
     }
@@ -258,6 +263,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         if (!shouldFinish || mIsFinished) {
           return;
         }
+        getConsumer().onProgressUpdate(1.0f);
         mIsFinished = true;
       }
       mJobScheduler.clearJob();

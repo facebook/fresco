@@ -121,25 +121,4 @@ public class LocalContentUriFetchProducerTest {
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
   }
-
-  @Test
-  public void testIsSmallerThanThumbnail() {
-    ResizeOptions resizeOptions = new ResizeOptions(400, 800);
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 50, 50)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 500, 500)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 100, 1000)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 299, 600)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 300, 599)));
-    assertTrue(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 300, 600)));
-    assertTrue(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 400, 800)));
-    assertTrue(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 1000, 1000)));
-  }
 }

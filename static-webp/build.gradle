@@ -12,9 +12,12 @@ import org.apache.tools.ant.taskdefs.condition.Os
 dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.parse.bolts:bolts-android:${BOLTS_ANDROID_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
+    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
+    androidTestCompile "junit:junit:${JUNIT_VERSION}"
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
     compile project(':fbcore')
     compile project(':imagepipeline-base')
 }
@@ -108,20 +111,35 @@ def getNdkBuildName() {
 }
 
 def getNdkBuildFullPath() {
-    // we allow to provide full path to ndk-build tool
-    if (hasProperty('ndk.command')) {
-        return property('ndk.command')
+    File propFile = project.rootProject.file('local.properties')
+    if (!propFile.exists()) {
+        return getNdkBuildName()
     }
-    // or just a path to the containing directiry
-    if (hasProperty('ndk.path')) {
-        def path = property('ndk.path')
+    Properties properties = new Properties()
+    properties.load(propFile.newDataInputStream())
+    def ndkCommand = properties.getProperty('ndk.command')
+    if (ndkCommand != null) {
+        return ndkCommand
+    }
+    def path = null
+    def ndkPath = properties.getProperty('ndk.path')
+    if (ndkPath != null) {
+        path = ndkPath
+    } else {
+        def ndkDir = properties.getProperty('ndk.dir')
+        if (ndkDir != null) {
+            path = ndkDir
+        }
+    }
+    if (path != null) {
         if (!path.endsWith(File.separator)) {
             path += File.separator
         }
         return path + getNdkBuildName()
+    } else {
+        // if none of above is provided, we assume ndk-build is already in $PATH
+        return getNdkBuildName()
     }
-    // if none of above is provided, we assume ndk-build is already in $PATH
-    return getNdkBuildName()
 }
 
 def makeNdkTasks(String name, Object[] deps) {

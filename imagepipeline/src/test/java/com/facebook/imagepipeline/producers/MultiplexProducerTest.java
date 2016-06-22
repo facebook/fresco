@@ -21,15 +21,21 @@ import org.junit.runner.*;
 import org.mockito.*;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
-import org.robolectric.*;
-import org.robolectric.annotation.*;
+
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Checks basic properties of the multiplex producer, that is:
@@ -122,8 +128,10 @@ public class MultiplexProducerTest {
     mIntermediateImageReference1 = CloseableReference.of(mIntermediateCloseableImage1);
     mIntermediateImageReference2 = CloseableReference.of(mIntermediateCloseableImage2);
 
-    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest1)).thenReturn(mBitmapMemoryCacheKey1);
-    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest2)).thenReturn(mBitmapMemoryCacheKey2);
+    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest1, mCallerContext))
+        .thenReturn(mBitmapMemoryCacheKey1);
+    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest2, mCallerContext))
+        .thenReturn(mBitmapMemoryCacheKey2);
 
     doAnswer(
         new Answer() {

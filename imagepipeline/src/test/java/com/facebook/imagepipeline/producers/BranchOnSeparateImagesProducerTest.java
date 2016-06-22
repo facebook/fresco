@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -58,6 +59,7 @@ public class BranchOnSeparateImagesProducerTest {
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
     when(mImageRequest.getPreferredWidth()).thenReturn(WIDTH);
     when(mImageRequest.getPreferredHeight()).thenReturn(HEIGHT);
+    when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(WIDTH, HEIGHT));
     when(mImageRequest.getLocalThumbnailPreviewsEnabled()).thenReturn(true);
     mIntermediateResult = mock(EncodedImage.class);
     mFirstProducerFinalResult = mock(EncodedImage.class);
@@ -116,23 +118,23 @@ public class BranchOnSeparateImagesProducerTest {
     EncodedImage firstProducerEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
     firstProducerEncodedImage.setRotationAngle(-1);
-    firstProducerEncodedImage.setWidth(WIDTH - 1);
-    firstProducerEncodedImage.setHeight(HEIGHT - 1);
+    firstProducerEncodedImage.setWidth(WIDTH / 2);
+    firstProducerEncodedImage.setHeight(HEIGHT / 2);
     mFirstProducerConsumer.onNewResult(firstProducerEncodedImage, true);
     verify(mConsumer).onNewResult(firstProducerEncodedImage, false);
 
     EncodedImage intermediateEncodedImage = new EncodedImage(
         mIntermediateResult.getByteBufferRef());
     intermediateEncodedImage.setRotationAngle(-1);
-    intermediateEncodedImage.setWidth(WIDTH - 1);
-    intermediateEncodedImage.setHeight(HEIGHT - 1);
+    intermediateEncodedImage.setWidth(WIDTH / 2);
+    intermediateEncodedImage.setHeight(HEIGHT / 2);
     mSecondProducerConsumer.onNewResult(intermediateEncodedImage, false);
     verify(mConsumer).onNewResult(intermediateEncodedImage, false);
     EncodedImage secondProducerEncodedImage = new EncodedImage(
         mSecondProducerFinalResult.getByteBufferRef());
     secondProducerEncodedImage.setRotationAngle(-1);
-    secondProducerEncodedImage.setWidth(WIDTH - 1);
-    secondProducerEncodedImage.setHeight(HEIGHT - 1);
+    secondProducerEncodedImage.setWidth(WIDTH / 2);
+    secondProducerEncodedImage.setHeight(HEIGHT / 2);
     mSecondProducerConsumer.onNewResult(secondProducerEncodedImage, true);
     verify(mConsumer).onNewResult(secondProducerEncodedImage, true);
   }
@@ -170,8 +172,8 @@ public class BranchOnSeparateImagesProducerTest {
         mIntermediateResult.getByteBufferRef());
     intermediateEncodedImage.setImageFormat(ImageFormat.JPEG);
     intermediateEncodedImage.setRotationAngle(-1);
-    intermediateEncodedImage.setWidth(WIDTH - 1);
-    intermediateEncodedImage.setHeight(HEIGHT - 1);
+    intermediateEncodedImage.setWidth(WIDTH / 2);
+    intermediateEncodedImage.setHeight(HEIGHT / 2);
     mFirstProducerConsumer.onNewResult(intermediateEncodedImage, false);
     verify(mConsumer, never()).onNewResult(intermediateEncodedImage, false);
     EncodedImage finalEncodedImage = new EncodedImage(
@@ -191,23 +193,23 @@ public class BranchOnSeparateImagesProducerTest {
     EncodedImage firstProducerEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
     firstProducerEncodedImage.setRotationAngle(-1);
-    firstProducerEncodedImage.setWidth(WIDTH - 1);
-    firstProducerEncodedImage.setHeight(HEIGHT - 1);
+    firstProducerEncodedImage.setWidth(WIDTH / 2);
+    firstProducerEncodedImage.setHeight(HEIGHT / 2);
     mFirstProducerConsumer.onNewResult(firstProducerEncodedImage, true);
     verify(mConsumer, never()).onNewResult(firstProducerEncodedImage, false);
 
     EncodedImage intermediateEncodedImage = new EncodedImage(
         mIntermediateResult.getByteBufferRef());
     intermediateEncodedImage.setRotationAngle(-1);
-    intermediateEncodedImage.setWidth(WIDTH - 1);
-    intermediateEncodedImage.setHeight(HEIGHT - 1);
+    intermediateEncodedImage.setWidth(WIDTH / 2);
+    intermediateEncodedImage.setHeight(HEIGHT / 2);
     mSecondProducerConsumer.onNewResult(intermediateEncodedImage, false);
     verify(mConsumer).onNewResult(intermediateEncodedImage, false);
     EncodedImage secondProducerEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
     secondProducerEncodedImage.setRotationAngle(-1);
-    secondProducerEncodedImage.setWidth(WIDTH - 1);
-    secondProducerEncodedImage.setHeight(HEIGHT - 1);
+    secondProducerEncodedImage.setWidth(WIDTH / 2);
+    secondProducerEncodedImage.setHeight(HEIGHT / 2);
     mSecondProducerConsumer.onNewResult(secondProducerEncodedImage, true);
     verify(mConsumer).onNewResult(secondProducerEncodedImage, true);
   }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="example_uris">
+        <item>http://blog.capterra.com/wp-content/uploads/2014/02/29-free-elearning-tools.jpg</item>
+        <item>http://www.bensound.com/bensound-img/betterdays.jpg</item>
+        <item>http://williamsinstitute.law.ucla.edu/wp-content/uploads/free.jpg</item>
+        <item>http://www.freedigitalphotos.net/images/img/homepage/394230.jpg</item>
+        <item>https://bufferblog-wpengine.netdna-ssl.com/wp-content/uploads/2014/05/6110974997_8b0dfa13a0_b.jpg</item>
+        <item>http://www.wahwah45s.com/wp-content/uploads/2011/09/free.jpg</item>
+        <item>https://www.daysoutguide.co.uk/media/426032/free-london-galleries-horniman.jpg</item>
+        <item>http://blog.coursetalk.com/wp-content/uploads/free-ed.jpg</item>
+        <item>http://whsr.webrevenueinc1.netdna-cdn.com/wp-content/uploads/2014/12/free-digital-photos.jpg</item>
+    </string-array>
+</resources>

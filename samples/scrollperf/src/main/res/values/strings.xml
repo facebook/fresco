@@ -1,0 +1,68 @@
+<resources>
+    <string translatable="false" name="app_name">ScrollPerf</string>
+    <string translatable="false" name="action_settings">Settings</string>
+
+    <!-- Data Source Preferences-->
+    <string translatable="false" name="key_preferences_source_group">Data Source</string>
+    <string translatable="false" name="title_preferences_source_group">Data Source</string>
+    <string translatable="false" name="dialog_title_data_source">Data Source for Uris</string>
+    <string translatable="false" name="title_data_source">Data Source for Uris</string>
+    <!-- Different types for Simple Adapter -->
+
+    <!-- SimpleAdapter from local array resource-->
+    <string translatable="false" name="label_local_uri">Local Resource Uris</string>
+    <string translatable="false" name="value_local_uri">local_resource_uris</string>
+    <string translatable="false" name="value_local_summary">Uris are into a local array resource</string>
+
+    <!-- Simple Adapter for local internal images-->
+    <string translatable="false" name="label_local_internal_photo_uri">Local Internal Photo Uris</string>
+    <string translatable="false" name="value_local_internal_photo_uri">local_internal_photo_uris</string>
+    <string translatable="false" name="value_local_internal_photo_uri_summary">We use Uris about internal local photos</string>
+
+    <!-- Simple Adapter for local external images-->
+    <string translatable="false" name="label_local_external_photo_uri">Local External Photo Uris</string>
+    <string translatable="false" name="value_local_external_photo_uri">local_external_photo_uris</string>
+    <string translatable="false" name="value_local_external_photo_uri_summary">We use Uris about external local photos</string>
+
+    <!-- Infinite SimpleAdapters-->
+    <string translatable="false" name="title_infinite_data_source">Infinite Data Source</string>
+    <string translatable="false" name="checked_infinite_data_source_summary">Data Source provides infinite Uris</string>
+    <string translatable="false" name="unchecked_infinite_data_source_summary">Data Source provides a finite number or Uris</string>
+    <!-- Distinct Uris-->
+    <string translatable="false" name="title_distinct_uri_data_source">Distinct Uris (no Content Providers)</string>
+    <string translatable="false" name="checked_distinct_uri_data_source_summary">Recycled Uri have different address</string>
+    <string translatable="false" name="unchecked_distinct_uri_data_source_summary">Uri are the same for repeating images</string>
+
+    <!-- Controller Preferences-->
+    <string translatable="false" name="key_preferences_controller_group">Controllers</string>
+    <string translatable="false" name="title_controller_group">Controller configuration</string>
+    <!-- Reuse old controller-->
+    <string translatable="false" name="title_reuse_old_controller">Reuse old Controller</string>
+    <string translatable="false" name="checked_reuse_old_controller_summary">The old Controller is reused</string>
+    <string translatable="false" name="unchecked_reuse_old_controller_summary">A controller is created for every request</string>
+
+    <!-- Rounded corners -->
+    <string translatable="false" name="title_preferences_rounded_corners">Rounded Corners</string>
+    <string translatable="false" name="title_preferences_rounded_corners_enabled">Rounded Corners Enabled</string>
+    <string translatable="false" name="checked_rounded_corners_summary">Rounded corners for Drawee are enabled</string>
+    <string translatable="false" name="unchecked_rounded_corners_summary">No rounded corners for Drawee</string>
+
+    <string translatable="false" name="title_preferences_rounded_as_circle_enabled">Rounded as circle</string>
+    <string translatable="false" name="checked_rounded_as_circle_enabled_summary">The images will be rounded as a circle</string>
+    <string translatable="false" name="unchecked_rounded_as_circle_enabled_summary">The images will have rounded corners</string>
+
+
+    <!-- Layout Preferences-->
+    <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>
+    <string translatable="false" name="title_preferences_recycler_layout">Recycler Layout</string>
+    <string translatable="false" name="dialog_title_recycler_layout">Layout selection</string>
+    <string translatable="false" name="title_recycler_layout">Layout for the list</string>
+    <string translatable="false" name="label_listview_recycler_layout">ListView</string>
+    <string translatable="false" name="label_recyclerview_recycler_layout">RecyclerView</string>
+    <string translatable="false" name="value_listview_recycler_layout">listview_recycler_layout</string>
+    <string translatable="false" name="value_recyclerview_recycler_layout">recyclerview_recycler_layout</string>
+    <string translatable="false" name="value_listview_summary">We use a ListView</string>
+    <string translatable="false" name="value_recycler_summary">We use a RecyclerView</string>
+
+
+</resources>

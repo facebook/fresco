@@ -43,8 +43,6 @@ import com.facebook.common.internal.VisibleForTesting;
 @NotThreadSafe
 @VisibleForTesting
 class Bucket<V> {
-  private static final String TAG = "com.facebook.imagepipeline.common.Bucket";
-
   public final int mItemSize; // size in bytes of items in this bucket
   public final int mMaxLength; // 'max' length for this bucket
   final Queue mFreeList; // the free list for this bucket, subclasses can vary type

@@ -43,6 +43,19 @@ public class StagingAreaTest {
   }
 
   @Test
+  public void testContains() {
+    assertTrue(mStagingArea.containsKey(mCacheKey));
+    assertFalse(mStagingArea.containsKey(new SimpleCacheKey("http://this.is.not.uri")));
+  }
+
+  @Test
+  public void testDoesntContainInvalid() {
+    mEncodedImage.close();
+    assertTrue(mStagingArea.containsKey(mCacheKey));
+    assertTrue(EncodedImage.isValid(mStagingArea.get(mCacheKey)));
+  }
+
+  @Test
   public void testGetValue() {
     assertSame(
         mCloseableReference.getUnderlyingReferenceTestOnly(),

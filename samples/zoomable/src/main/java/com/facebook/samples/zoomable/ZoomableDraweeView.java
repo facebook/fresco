@@ -15,11 +15,13 @@ package com.facebook.samples.zoomable;
 import javax.annotation.Nullable;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.facebook.common.internal.Preconditions;
@@ -27,7 +29,10 @@ import com.facebook.common.logging.FLog;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.GenericDraweeHierarchyInflater;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeView;
 
@@ -36,8 +41,7 @@ import com.facebook.drawee.view.DraweeView;
  * <p>
  * Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
-public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
-    implements ZoomableController.Listener {
+public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   private static final Class<?> TAG = ZoomableDraweeView.class;
 
@@ -45,6 +49,10 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
+
+  private DraweeController mHugeImageController;
+  private ZoomableController mZoomableController;
+  private GestureDetector mTapGestureDetector;
 
   private final ControllerListener mControllerListener = new BaseControllerListener<Object>() {
     @Override
@@ -61,65 +69,144 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     }
   };
 
-  private DraweeController mHugeImageController;
-  private ZoomableController mZoomableController = DefaultZoomableController.newInstance();
+  private final ZoomableController.Listener mZoomableListener = new ZoomableController.Listener() {
+    @Override
+    public void onTransformChanged(Matrix transform) {
+      ZoomableDraweeView.this.onTransformChanged(transform);
+    }
+  };
+
+  private final GestureListenerWrapper mTapListenerWrapper = new GestureListenerWrapper();
+
+  public ZoomableDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
+    super(context);
+    setHierarchy(hierarchy);
+    init();
+  }
 
   public ZoomableDraweeView(Context context) {
     super(context);
+    inflateHierarchy(context, null);
     init();
   }
 
   public ZoomableDraweeView(Context context, AttributeSet attrs) {
     super(context, attrs);
+    inflateHierarchy(context, attrs);
     init();
   }
 
   public ZoomableDraweeView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+    inflateHierarchy(context, attrs);
     init();
   }
 
+  protected void inflateHierarchy(Context context, @Nullable AttributeSet attrs) {
+    Resources resources = context.getResources();
+    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources)
+        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+    GenericDraweeHierarchyInflater.updateBuilder(builder, context, attrs);
+    setAspectRatio(builder.getDesiredAspectRatio());
+    setHierarchy(builder.build());
+  }
+
   private void init() {
-    mZoomableController.setListener(this);
+    mZoomableController = createZoomableController();
+    mZoomableController.setListener(mZoomableListener);
+    mTapGestureDetector = new GestureDetector(getContext(), mTapListenerWrapper);
   }
 
   /**
-   * Returns the matrix that matches the zoom selected by user gestures,
-   * but does not include the base scaling of the image itself. Transforms
-   * from view-absolute to view-absolute coordinates.
+   * Gets the original image bounds, in view-absolute coordinates.
+   *
+   * <p> The original image bounds are those reported by the hierarchy. The hierarchy itself may
+   * apply scaling on its own (e.g. due to scale type) so the reported bounds are not necessarily
+   * the same as the actual bitmap dimensions. In other words, the original image bounds correspond
+   * to the image bounds within this view when no zoomable transformation is applied, but including
+   * the potential scaling of the hierarchy.
+   * Having the actual bitmap dimensions abstracted away from this view greatly simplifies
+   * implementation because the actual bitmap may change (e.g. when a high-res image arrives and
+   * replaces the previously set low-res image). With proper hierarchy scaling (e.g. FIT_CENTER),
+   * this underlying change will not affect this view nor the zoomable transformation in any way.
    */
-  public void getTransformMatrix(Matrix outMatrix) {
-    outMatrix.set(mZoomableController.getTransform());
-  }
-
-  /**
-   * Gets the bounds of the image, in view-absolute coordinates,
-   * including the effects of user gestures.
-   */
-  public void getTransformedBounds(RectF outBounds) {
-    getPlainBounds(outBounds);
-    Matrix matrix = mZoomableController.getTransform();
-    matrix.mapRect(outBounds);
-  }
-
-  /**
-   * Gets the bounds of the image, in view-absolute coordinates,
-   * but not including the effets of user gestures.
-   */
-  public void getPlainBounds(RectF outBounds) {
+  protected void getImageBounds(RectF outBounds) {
     getHierarchy().getActualImageBounds(outBounds);
   }
 
+  /**
+   * Gets the bounds used to limit the translation, in view-absolute coordinates.
+   *
+   * <p> These bounds are passed to the zoomable controller in order to limit the translation. The
+   * image is attempted to be centered within the limit bounds if the transformed image is smaller.
+   * There will be no empty spaces within the limit bounds if the transformed image is bigger.
+   * This applies to each dimension (horizontal and vertical) independently.
+   * <p> Unless overridden by a subclass, these bounds are same as the view bounds.
+   */
+  protected void getLimitBounds(RectF outBounds) {
+    outBounds.set(0, 0, getWidth(), getHeight());
+  }
+
+  /**
+   * Sets a custom zoomable controller, instead of using the default one.
+   */
   public void setZoomableController(ZoomableController zoomableController) {
     Preconditions.checkNotNull(zoomableController);
     mZoomableController.setListener(null);
     mZoomableController = zoomableController;
-    mZoomableController.setListener(this);
+    mZoomableController.setListener(mZoomableListener);
   }
 
+  /**
+   * Gets the zoomable controller.
+   *
+   * <p> Zoomable controller can be used to zoom to point, or to map point from view to image
+   * coordinates for instance.
+   */
+  public ZoomableController getZoomableController() {
+    return mZoomableController;
+  }
+
+  /**
+   * Sets the tap listener.
+   */
+  public void setTapListener(GestureDetector.SimpleOnGestureListener tapListener) {
+    mTapListenerWrapper.setListener(tapListener);
+  }
+
+  /**
+   * Sets whether long-press tap detection is enabled.
+   * Unfortunately, long-press conflicts with onDoubleTapEvent.
+   */
+  public void setIsLongpressEnabled(boolean enabled) {
+    mTapGestureDetector.setIsLongpressEnabled(enabled);
+  }
+
+  /**
+   * Sets the image controller.
+   */
   @Override
   public void setController(@Nullable DraweeController controller) {
     setControllers(controller, null);
+  }
+
+  /**
+   * Sets the controllers for the normal and huge image.
+   *
+   * <p> The huge image controller is used after the image gets scaled above a certain threshold.
+   *
+   * <p> IMPORTANT: in order to avoid a flicker when switching to the huge image, the huge image
+   * controller should have the normal-image-uri set as its low-res-uri.
+   *
+   * @param controller controller to be initially used
+   * @param hugeImageController controller to be used after the client starts zooming-in
+   */
+  public void setControllers(
+      @Nullable DraweeController controller,
+      @Nullable DraweeController hugeImageController) {
+    setControllersInternal(null, null);
+    mZoomableController.setEnabled(false);
+    setControllersInternal(controller, hugeImageController);
   }
 
   private void setControllersInternal(
@@ -129,23 +216,6 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     addControllerListener(controller);
     mHugeImageController = hugeImageController;
     super.setController(controller);
-  }
-
-    /**
-     * Sets the controllers for the normal and huge image.
-     *
-     * <p> IMPORTANT: in order to avoid a flicker when switching to the huge image, the huge image
-     * controller should have the normal-image-uri set as its low-res-uri.
-     *
-     * @param controller controller to be initially used
-     * @param hugeImageController controller to be used after the client starts zooming-in
-     */
-  public void setControllers(
-      @Nullable DraweeController controller,
-      @Nullable DraweeController hugeImageController) {
-    setControllersInternal(null, null);
-    mZoomableController.setEnabled(false);
-    setControllersInternal(controller, hugeImageController);
   }
 
   private void maybeSetHugeImageController() {
@@ -179,26 +249,53 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   @Override
   public boolean onTouchEvent(MotionEvent event) {
-    if (mZoomableController.onTouchEvent(event)) {
-      if (mZoomableController.getScaleFactor() > 1.0f) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-      }
-      FLog.v(TAG, "onTouchEvent: view %x, handled by zoomable controller", this.hashCode());
+    int a = event.getActionMasked();
+    FLog.v(getLogTag(), "onTouchEvent: %d, view %x, received", a, this.hashCode());
+    if (mTapGestureDetector.onTouchEvent(event)) {
+      FLog.v(
+          getLogTag(),
+          "onTouchEvent: %d, view %x, handled by tap gesture detector",
+          a,
+          this.hashCode());
       return true;
     }
-    FLog.v(TAG, "onTouchEvent: view %x, handled by the super", this.hashCode());
-    return super.onTouchEvent(event);
+    if (mZoomableController.onTouchEvent(event)) {
+      if (!mZoomableController.isIdentity()) {
+        getParent().requestDisallowInterceptTouchEvent(true);
+      }
+      FLog.v(
+          getLogTag(),
+          "onTouchEvent: %d, view %x, handled by zoomable controller",
+          a,
+          this.hashCode());
+      return true;
+    }
+    if (super.onTouchEvent(event)) {
+      FLog.v(getLogTag(), "onTouchEvent: %d, view %x, handled by the super", a, this.hashCode());
+      return true;
+    }
+    // None of our components reported that they handled the touch event. Upon returning false
+    // from this method, our parent won't send us any more events for this gesture. Unfortunately,
+    // some componentes may have started a delayed action, such as a long-press timer, and since we
+    // won't receive an ACTION_UP that would cancel that timer, a false event may be triggered.
+    // To prevent that we explicitly send one last cancel event when returning false.
+    MotionEvent cancelEvent = MotionEvent.obtain(event);
+    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
+    mTapGestureDetector.onTouchEvent(cancelEvent);
+    mZoomableController.onTouchEvent(cancelEvent);
+    cancelEvent.recycle();
+    return false;
   }
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    FLog.v(TAG, "onLayout: view %x", this.hashCode());
+    FLog.v(getLogTag(), "onLayout: view %x", this.hashCode());
     super.onLayout(changed, left, top, right, bottom);
     updateZoomableControllerBounds();
   }
 
   private void onFinalImageSet() {
-    FLog.v(TAG, "onFinalImageSet: view %x", this.hashCode());
+    FLog.v(getLogTag(), "onFinalImageSet: view %x", this.hashCode());
     if (!mZoomableController.isEnabled()) {
       updateZoomableControllerBounds();
       mZoomableController.setEnabled(true);
@@ -206,27 +303,34 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   private void onRelease() {
-    FLog.v(TAG, "onRelease: view %x", this.hashCode());
+    FLog.v(getLogTag(), "onRelease: view %x", this.hashCode());
     mZoomableController.setEnabled(false);
   }
 
-  @Override
-  public void onTransformChanged(Matrix transform) {
-    FLog.v(TAG, "onTransformChanged: view %x", this.hashCode());
+  protected void onTransformChanged(Matrix transform) {
+    FLog.v(getLogTag(), "onTransformChanged: view %x, transform: %s", this.hashCode(), transform);
     maybeSetHugeImageController();
     invalidate();
   }
 
-  private void updateZoomableControllerBounds() {
-    getPlainBounds(mImageBounds);
-    mViewBounds.set(0, 0, getWidth(), getHeight());
+  protected void updateZoomableControllerBounds() {
+    getImageBounds(mImageBounds);
+    getLimitBounds(mViewBounds);
     mZoomableController.setImageBounds(mImageBounds);
     mZoomableController.setViewBounds(mViewBounds);
     FLog.v(
-        TAG,
+        getLogTag(),
         "updateZoomableControllerBounds: view %x, view bounds: %s, image bounds: %s",
         this.hashCode(),
         mViewBounds,
         mImageBounds);
+  }
+
+  protected Class<?> getLogTag() {
+    return TAG;
+  }
+
+  protected ZoomableController createZoomableController() {
+    return AnimatedZoomableController.newInstance();
   }
 }

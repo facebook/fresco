@@ -10,13 +10,15 @@
 package com.facebook.imagepipeline.backends.okhttp;
 
 import android.content.Context;
-
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Factory for getting an {@link com.facebook.imagepipeline.core.ImagePipelineConfig} that uses
- * {@link com.facebook.imagepipeline.backends.okhttp.OkHttpNetworkFetcher}.
+ * {@link OkHttpNetworkFetcher}.
+ *
+ * @deprecated replaced with {@code
+ * com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory}.
  */
 public class OkHttpImagePipelineConfigFactory {
 

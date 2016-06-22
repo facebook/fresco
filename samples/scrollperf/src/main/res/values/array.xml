@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Data Source preferences keys/values-->
+    <array name="data_source_labels">
+        <item>@string/label_local_uri</item>
+        <item>@string/label_local_internal_photo_uri</item>
+        <item>@string/label_local_external_photo_uri</item>
+    </array>
+    <array name="data_source_values">
+        <item>@string/value_local_uri</item>
+        <item>@string/value_local_internal_photo_uri</item>
+        <item>@string/value_local_external_photo_uri</item>
+    </array>
+    <array name="data_source_summaries">
+        <item>@string/value_local_summary</item>
+        <item>@string/value_local_internal_photo_uri_summary</item>
+        <item>@string/value_local_external_photo_uri_summary</item>
+    </array>
+    <!-- Recycler Layout preferences keys/values-->
+    <array name="recycler_layout_labels">
+        <item>@string/label_listview_recycler_layout</item>
+        <item>@string/label_recyclerview_recycler_layout</item>
+    </array>
+    <array name="recycler_layout_values">
+        <item>@string/value_listview_recycler_layout</item>
+        <item>@string/value_recyclerview_recycler_layout</item>
+    </array>
+    <array name="recycler_layout_summaries">
+        <item>@string/value_listview_summary</item>
+        <item>@string/value_recycler_summary</item>
+    </array>
+</resources>

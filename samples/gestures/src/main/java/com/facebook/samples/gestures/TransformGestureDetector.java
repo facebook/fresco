@@ -25,13 +25,13 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   /** The listener for receiving notifications when gestures occur. */
   public interface Listener {
-    /** Responds to the beginning of a gesture. */
+    /** A callback called right before the gesture is about to start. */
     public void onGestureBegin(TransformGestureDetector detector);
 
-    /** Responds to the update of a gesture in progress. */
+    /** A callback called each time the gesture gets updated. */
     public void onGestureUpdate(TransformGestureDetector detector);
 
-    /** Responds to the end of a gesture. */
+    /** A callback called right after the gesture has finished. */
     public void onGestureEnd(TransformGestureDetector detector);
   }
 
@@ -102,41 +102,51 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
     return (len > 0) ? sum / len : 0;
   }
 
-  /** Restarts the current gesture */
+  /** Restarts the current gesture (if any).  */
   public void restartGesture() {
     mDetector.restartGesture();
   }
 
-  /** Gets whether gesture is in progress or not */
+  /** Gets whether there is a gesture in progress */
   public boolean isGestureInProgress() {
     return mDetector.isGestureInProgress();
   }
 
+  /** Gets the number of pointers after the current gesture */
+  public int getNewPointerCount() {
+    return mDetector.getNewPointerCount();
+  }
+
+  /** Gets the number of pointers in the current gesture */
+  public int getPointerCount() {
+    return mDetector.getPointerCount();
+  }
+
   /** Gets the X coordinate of the pivot point */
   public float getPivotX() {
-    return calcAverage(mDetector.getStartX(), mDetector.getCount());
+    return calcAverage(mDetector.getStartX(), mDetector.getPointerCount());
   }
 
   /** Gets the Y coordinate of the pivot point */
   public float getPivotY() {
-    return calcAverage(mDetector.getStartY(), mDetector.getCount());
+    return calcAverage(mDetector.getStartY(), mDetector.getPointerCount());
   }
 
   /** Gets the X component of the translation */
   public float getTranslationX() {
-    return calcAverage(mDetector.getCurrentX(), mDetector.getCount()) -
-        calcAverage(mDetector.getStartX(), mDetector.getCount());
+    return calcAverage(mDetector.getCurrentX(), mDetector.getPointerCount()) -
+        calcAverage(mDetector.getStartX(), mDetector.getPointerCount());
   }
 
   /** Gets the Y component of the translation */
   public float getTranslationY() {
-    return calcAverage(mDetector.getCurrentY(), mDetector.getCount()) -
-        calcAverage(mDetector.getStartY(), mDetector.getCount());
+    return calcAverage(mDetector.getCurrentY(), mDetector.getPointerCount()) -
+        calcAverage(mDetector.getStartY(), mDetector.getPointerCount());
   }
 
   /** Gets the scale */
   public float getScale() {
-    if (mDetector.getCount() < 2) {
+    if (mDetector.getPointerCount() < 2) {
       return 1;
     } else {
       float startDeltaX = mDetector.getStartX()[1] - mDetector.getStartX()[0];
@@ -151,7 +161,7 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   /** Gets the rotation in radians */
   public float getRotation() {
-    if (mDetector.getCount() < 2) {
+    if (mDetector.getPointerCount() < 2) {
       return 0;
     } else {
       float startDeltaX = mDetector.getStartX()[1] - mDetector.getStartX()[0];

@@ -86,6 +86,10 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
     runScenario(MainActivity.VOLLEY_INDEX, MainActivity.NETWORK_INDEX, true);
   }
 
+  public void testAqueryNetwork() throws Exception {
+    runScenario(MainActivity.AQUERY_INDEX, MainActivity.NETWORK_INDEX, false);
+  }
+
   public void testFrescoLocal() throws Exception {
     runScenario(MainActivity.FRESCO_INDEX, MainActivity.LOCAL_INDEX, true);
   }
@@ -104,6 +108,10 @@ public class ScrollTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
   public void testUilLocal() throws Exception {
     runScenario(MainActivity.UIL_INDEX, MainActivity.LOCAL_INDEX, false);
+  }
+
+  public void testAqueryLocal() throws Exception {
+    runScenario(MainActivity.AQUERY_INDEX, MainActivity.LOCAL_INDEX, false);
   }
 
   /**

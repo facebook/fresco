@@ -13,6 +13,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -22,9 +23,11 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.drawable.LightBitmapDrawable;
 import com.facebook.drawee.drawable.OrientedDrawable;
+import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
-import com.facebook.imagepipeline.image.CloseableAnimatedImage;
+import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -35,10 +38,9 @@ import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /**
- * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}.
- * <p>
- * The hierarchy's actual image is set to the image(s) obtained by the provided data source.
- * The data source is automatically obtained and closed based on attach / detach calls.
+ * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}. <p> The
+ * hierarchy's actual image is set to the image(s) obtained by the provided data source. The data
+ * source is automatically obtained and closed based on attach / detach calls.
  */
 public class PipelineDraweeController
     extends AbstractDraweeController<CloseableReference<CloseableImage>, ImageInfo> {
@@ -49,6 +51,14 @@ public class PipelineDraweeController
   private final Resources mResources;
   private final AnimatedDrawableFactory mAnimatedDrawableFactory;
 
+  private @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
+
+  private static Experiment sExperiment;
+
+  private LightBitmapDrawable mLightBitmapDrawable;
+
+  private CacheKey mCacheKey;
+
   // Constant state (non-final because controllers can be reused)
   private Supplier<DataSource<CloseableReference<CloseableImage>>> mDataSourceSupplier;
 
@@ -57,19 +67,24 @@ public class PipelineDraweeController
       DeferredReleaser deferredReleaser,
       AnimatedDrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
+      MemoryCache<CacheKey, CloseableImage> memoryCache,
       Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
       String id,
+      CacheKey cacheKey,
       Object callerContext) {
       super(deferredReleaser, uiThreadExecutor, id, callerContext);
     mResources = resources;
     mAnimatedDrawableFactory = animatedDrawableFactory;
+    mMemoryCache = memoryCache;
+    mCacheKey = cacheKey;
     init(dataSourceSupplier);
   }
 
   /**
-   * Initializes this controller with the new data source supplier, id and caller context.
-   * This allows for reusing of the existing controller instead of instantiating a new one.
-   * This method should be called when the controller is in detached state.
+   * Initializes this controller with the new data source supplier, id and caller context. This
+   * allows for reusing of the existing controller instead of instantiating a new one. This method
+   * should be called when the controller is in detached state.
+   *
    * @param dataSourceSupplier data source supplier
    * @param id unique id for this controller
    * @param callerContext tag and context for this controller
@@ -77,9 +92,11 @@ public class PipelineDraweeController
   public void initialize(
       Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
       String id,
+      CacheKey cacheKey,
       Object callerContext) {
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
+    mCacheKey = cacheKey;
   }
 
   private void init(Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier) {
@@ -104,18 +121,30 @@ public class PipelineDraweeController
     CloseableImage closeableImage = image.get();
     if (closeableImage instanceof CloseableStaticBitmap) {
       CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-      BitmapDrawable bitmapDrawable = new BitmapDrawable(
-          mResources,
-          closeableStaticBitmap.getUnderlyingBitmap());
+      Drawable bitmapDrawable;
+      final Experiment experiment = getExperiment();
+      if (experiment.mIsLightEnabled) {
+        if (experiment.mIsReuseEnabled && mLightBitmapDrawable != null) {
+          mLightBitmapDrawable.setBitmap(closeableStaticBitmap.getUnderlyingBitmap());
+        } else {
+          mLightBitmapDrawable = new LightBitmapDrawable(
+              mResources,
+              closeableStaticBitmap.getUnderlyingBitmap());
+        }
+        bitmapDrawable = mLightBitmapDrawable;
+      } else {
+        bitmapDrawable = new BitmapDrawable(
+            mResources,
+            closeableStaticBitmap.getUnderlyingBitmap());
+      }
       if (closeableStaticBitmap.getRotationAngle() == 0 ||
           closeableStaticBitmap.getRotationAngle() == EncodedImage.UNKNOWN_ROTATION_ANGLE) {
         return bitmapDrawable;
       } else {
         return new OrientedDrawable(bitmapDrawable, closeableStaticBitmap.getRotationAngle());
       }
-    } else if (closeableImage instanceof CloseableAnimatedImage) {
-      return mAnimatedDrawableFactory.create(
-          ((CloseableAnimatedImage) closeableImage).getImageResult());
+    } else if (mAnimatedDrawableFactory != null) {
+      return mAnimatedDrawableFactory.create(closeableImage);
     } else {
       throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
     }
@@ -145,10 +174,60 @@ public class PipelineDraweeController
   }
 
   @Override
+  protected CloseableReference<CloseableImage> getCachedImage() {
+    if (!getExperiment().mIsFastCheckEnabled) {
+      return null;
+    }
+    if (mMemoryCache == null || mCacheKey == null) {
+      return null;
+    }
+    // We get the CacheKey
+    CloseableReference<CloseableImage> closeableImage = mMemoryCache.get(mCacheKey);
+    if (closeableImage != null && !closeableImage.get().getQualityInfo().isOfFullQuality()) {
+      closeableImage.close();
+      return null;
+    }
+    return closeableImage;
+  }
+
+  @Override
   public String toString() {
     return Objects.toStringHelper(this)
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
+  }
+
+  /**
+   * @return The Experiment object
+   */
+  protected static Experiment getExperiment() {
+    if (sExperiment == null) {
+      sExperiment = new Experiment();
+    }
+    return sExperiment;
+  }
+
+  protected static class Experiment {
+
+    private boolean mIsLightEnabled;
+    private boolean mIsReuseEnabled;
+
+    private boolean mIsFastCheckEnabled;
+
+    public Experiment setLightEnabled(final boolean lightEnabled) {
+      this.mIsLightEnabled = lightEnabled;
+      return this;
+    }
+
+    public Experiment setReuseEnabled(final boolean reuseEnabled) {
+      this.mIsReuseEnabled = reuseEnabled;
+      return this;
+    }
+
+    public Experiment setFastCheckEnabled(final boolean fastCheckEnabled) {
+      mIsFastCheckEnabled = fastCheckEnabled;
+      return this;
+    }
   }
 }

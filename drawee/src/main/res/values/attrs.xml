@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="GenericDraweeView">
+  <declare-styleable name="GenericDraweeHierarchy">
 
     <!-- Fade duration in milliseconds. -->
     <attr name="fadeDuration" format="integer"/>
 
-    <!-- Images -
-    Scale types must match values in ScaleType.fromString (ScalingUtils.java).
-    For drawables that should not be scaled, such as those with the android:tileMode
-    attribute set, use the value 'none'. -->
-
     <!-- Aspect ratio (width / height) of the view, not necessarily of the images. -->
     <attr name="viewAspectRatio" format="float"/>
+
+    <!-- Image branches -
+    Scale-type values must match those in GenericDraweeHierarchyInflater.getScaleTypeFromXml.
+    (GenericDraweeHierarchyInflater.java).
+    For drawables that should not be scaled, such as those with the android:tileMode
+    attribute set, use the value 'none'. -->
 
     <!-- A drawable or color to be be used as a placeholder. -->
     <attr name="placeholderImage" format="reference"/>
@@ -122,4 +123,12 @@
     <attr name="roundingBorderPadding" format="dimension" />
 
   </declare-styleable>
+
+  <declare-styleable name="SimpleDraweeView">
+
+    <!-- An image uri . -->
+    <attr name="actualImageUri" format="string"/>
+
+  </declare-styleable>
+
 </resources>
