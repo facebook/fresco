@@ -28,8 +28,8 @@ import com.facebook.imageutils.BitmapUtil;
 @Immutable
 public class ImageRequest {
 
-  /** image type */
-  private final ImageType mImageType;
+  /** Cache choice */
+  private final CacheChoice mCacheChoice;
 
   /** Source Uri */
   private final Uri mSourceUri;
@@ -73,7 +73,7 @@ public class ImageRequest {
   }
 
   protected ImageRequest(ImageRequestBuilder builder) {
-    mImageType = builder.getImageType();
+    mCacheChoice = builder.getCacheChoice();
     mSourceUri = builder.getSourceUri();
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
@@ -91,8 +91,8 @@ public class ImageRequest {
     mPostprocessor = builder.getPostprocessor();
   }
 
-  public ImageType getImageType() {
-    return mImageType;
+  public CacheChoice getCacheChoice() {
+    return mCacheChoice;
   }
 
   public Uri getSourceUri() {
@@ -157,19 +157,19 @@ public class ImageRequest {
     }
     ImageRequest request = (ImageRequest) o;
     return Objects.equal(mSourceUri, request.mSourceUri) &&
-        Objects.equal(mImageType, request.mImageType) &&
+        Objects.equal(mCacheChoice, request.mCacheChoice) &&
         Objects.equal(mSourceFile, request.mSourceFile);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(mImageType, mSourceUri, mSourceFile);
+    return Objects.hashCode(mCacheChoice, mSourceUri, mSourceFile);
   }
 
   /**
-   * An enum describing type of the image.
+   * An enum describing the cache choice.
    */
-  public enum ImageType {
+  public enum CacheChoice {
     /* Indicates that this image should go in the small disk cache, if one is being used */
     SMALL,
 

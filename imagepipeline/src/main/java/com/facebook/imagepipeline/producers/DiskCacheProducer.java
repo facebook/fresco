@@ -72,7 +72,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
 
     final CacheKey cacheKey =
         mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
-    boolean isSmallRequest = (imageRequest.getImageType() == ImageRequest.ImageType.SMALL);
+    boolean isSmallRequest = (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
     final BufferedDiskCache preferredCache = isSmallRequest ?
         mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
