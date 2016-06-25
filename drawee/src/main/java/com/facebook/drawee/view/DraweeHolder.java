@@ -16,6 +16,8 @@ import android.view.View;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.memory.MemoryUiTrimmable;
+import com.facebook.common.memory.MemoryUiTrimmableRegistry;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.drawable.VisibilityAwareDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
@@ -43,11 +45,13 @@ import static com.facebook.drawee.components.DraweeEventTracker.Event;
  * call {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and
  * {@link View#onAttachedToWindow()} methods.
  */
-public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallback {
+public class DraweeHolder<DH extends DraweeHierarchy>
+    implements VisibilityCallback, MemoryUiTrimmable {
 
   private boolean mIsControllerAttached = false;
   private boolean mIsHolderAttached = false;
   private boolean mIsVisible = true;
+  private boolean mTrimmed = false;
   private DH mHierarchy;
 
   private DraweeController mController = null;
@@ -65,6 +69,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
       Context context) {
     DraweeHolder<DH> holder = new DraweeHolder<DH>(hierarchy);
     holder.registerWithContext(context);
+    MemoryUiTrimmableRegistry.registerUiTrimmable(holder);
     return holder;
   }
 
@@ -118,6 +123,20 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     attachOrDetachController();
   }
 
+  @Override
+  public void trim() {
+    mEventTracker.recordEvent(Event.ON_HOLDER_TRIM);
+    mTrimmed = true;
+    attachOrDetachController();
+  }
+
+  @Override
+  public void untrim() {
+    mEventTracker.recordEvent(Event.ON_HOLDER_UNTRIM);
+    mTrimmed = false;
+    attachOrDetachController();
+  }
+
   /**
    * Forwards the touch event to the controller.
    * @param event touch event to handle
@@ -152,14 +171,18 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     if (mIsControllerAttached) {
       return;
     }
-    // something went wrong here; controller is not attached, yet the hierarchy has to be drawn
-    // log error and attach the controller
-    FLog.wtf(
-        DraweeEventTracker.class,
-        "%x: Draw requested for a non-attached controller %x. %s",
-        System.identityHashCode(this),
-        System.identityHashCode(mController),
-        toString());
+    // trimming events are not guaranteed to arrive before the draw
+    if (!mTrimmed) {
+      // something went wrong here; controller is not attached, yet the hierarchy has to be drawn
+      // log error and attach the controller
+      FLog.wtf(
+          DraweeEventTracker.class,
+          "%x: Draw requested for a non-attached controller %x. %s",
+          System.identityHashCode(this),
+          System.identityHashCode(mController),
+          toString());
+    }
+    mTrimmed = false;
     mIsHolderAttached = true;
     mIsVisible = true;
     attachOrDetachController();
@@ -273,7 +296,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   }
 
   private void attachOrDetachController() {
-    if (mIsHolderAttached && mIsVisible) {
+    if (mIsHolderAttached && mIsVisible && !mTrimmed) {
       attachController();
     } else {
       detachController();
@@ -286,6 +309,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
         .add("controllerAttached", mIsControllerAttached)
         .add("holderAttached", mIsHolderAttached)
         .add("drawableVisible", mIsVisible)
+        .add("trimmed", mTrimmed)
         .add("events", mEventTracker.toString())
         .toString();
   }
