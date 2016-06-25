@@ -256,7 +256,7 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          Priority.LOW);
+          Priority.MEDIUM);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -270,7 +270,7 @@ public class ImagePipeline {
   public DataSource<Void> prefetchToDiskCache(
       ImageRequest imageRequest,
       Object callerContext) {
-    return prefetchToDiskCache(imageRequest, callerContext, Priority.LOW);
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
   /**
@@ -326,7 +326,7 @@ public class ImagePipeline {
    * @param imageRequest The imageRequest for the image to evict from disk cache
    */
   public void evictFromDiskCache(final ImageRequest imageRequest) {
-    CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     mMainBufferedDiskCache.remove(cacheKey);
     mSmallImageBufferedDiskCache.remove(cacheKey);
   }
@@ -381,9 +381,19 @@ public class ImagePipeline {
    * @return true if the image was found in the bitmap memory cache, false otherwise
    */
   public boolean isInBitmapMemoryCache(final Uri uri) {
+    if (uri == null) {
+      return false;
+    }
     Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
     return mBitmapMemoryCache.contains(bitmapCachePredicate);
  }
+
+  /**
+   * @return The Bitmap MemoryCache
+   */
+  public MemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
+    return mBitmapMemoryCache;
+  }
 
   /**
    * Returns whether the image is stored in the bitmap memory cache.
@@ -392,6 +402,9 @@ public class ImagePipeline {
    * @return true if the image was found in the bitmap memory cache, false otherwise.
    */
   public boolean isInBitmapMemoryCache(final ImageRequest imageRequest) {
+    if (imageRequest == null) {
+      return false;
+    }
     final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, null);
     CloseableReference<CloseableImage> ref = mBitmapMemoryCache.get(cacheKey);
     try {
@@ -421,7 +434,7 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public boolean isInDiskCacheSync(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     return mMainBufferedDiskCache.diskCheckSync(cacheKey);
   }
 
@@ -446,7 +459,7 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public DataSource<Boolean> isInDiskCache(final ImageRequest imageRequest) {
-    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest);
+    final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     final SimpleDataSource<Boolean> dataSource = SimpleDataSource.create();
     mMainBufferedDiskCache.contains(cacheKey)
         .continueWithTask(
@@ -547,5 +560,12 @@ public class ImagePipeline {
 
   public boolean isPaused() {
     return mThreadHandoffProducerQueue.isQueueing();
+  }
+
+  /**
+   * @return The CacheKeyFactory implementation used by ImagePipeline
+   */
+  public CacheKeyFactory getCacheKeyFactory() {
+    return mCacheKeyFactory;
   }
 }

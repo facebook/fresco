@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
+import javax.annotation.Nullable;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -28,7 +30,8 @@ public interface CacheKeyFactory {
   CacheKey getPostprocessedBitmapCacheKey(ImageRequest request, Object callerContext);
 
   /**
+   * @param callerContext included for optional debugging or logging purposes only
    * @return {@link CacheKey} for doing encoded image lookups in the pipeline.
    */
-  CacheKey getEncodedCacheKey(ImageRequest request);
+  CacheKey getEncodedCacheKey(ImageRequest request, @Nullable Object callerContext);
 }

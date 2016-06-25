@@ -120,7 +120,7 @@ public class ImagePipelineTest {
     DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(
         mImageRequest,
         mCallerContext);
-    verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.LOW);
+    verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.MEDIUM);
   }
 
   @Test
@@ -165,7 +165,7 @@ public class ImagePipelineTest {
     verify(prefetchProducerSequence)
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
     assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
-    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.LOW);
+    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.MEDIUM);
   }
 
   @Test
@@ -346,7 +346,8 @@ public class ImagePipelineTest {
     List<CacheKey> list = new ArrayList<>();
     list.add(dummyCacheKey);
     MultiCacheKey multiKey = new MultiCacheKey(list);
-    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class))).thenReturn(multiKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), anyObject()))
+        .thenReturn(multiKey);
     mImagePipeline.evictFromDiskCache(uri);
     verify(mMainDiskStorageCache).remove(multiKey);
     verify(mSmallImageDiskStorageCache).remove(multiKey);

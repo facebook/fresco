@@ -23,51 +23,51 @@ import com.facebook.samples.scrollperf.R;
  */
 public class Config {
 
-  public final String mDataSourceType;
+  public final String dataSourceType;
 
-  public final boolean mInfiniteDataSource;
-  public final boolean mDistinctUriDataSource;
+  public final boolean infiniteDataSource;
+  public final boolean distinctUriDataSource;
 
-  public final String mRecyclerLayoutType;
+  public final String recyclerLayoutType;
 
-  public final boolean mReuseOldController;
+  public final boolean reuseOldController;
+
+  public final boolean useRoundedCorners;
+  public final boolean useRoundedAsCircle;
 
   public static Config load(final Context context) {
-    // We read the DataSource type
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
-    // Data Source key
-    final String dataSourceKey = context.getString(R.string.key_data_source);
     final String dataSourceType = sharedPreferences.getString(
-            dataSourceKey,
+            Const.DATA_SOURCE_KEY,
             context.getString(R.string.value_local_uri));
-    // Infinite Data Source
-    final String infiniteDataSourceKey = context.getString(R.string.key_infinite_data_source);
     final boolean infiniteDataSource = sharedPreferences.getBoolean(
-            infiniteDataSourceKey,
+            Const.INFINITE_DATA_SOURCE_KEY,
             false);
-    // Distinct Uri
-    final String distinctUriDataSourceKey = context
-      .getString(R.string.key_distinct_uri_data_source);
     final boolean distinctUriDataSource = sharedPreferences.getBoolean(
-            distinctUriDataSourceKey,
+            Const.DISTINCT_DATA_SOURCE_KEY,
             false);
-    // The Recycler Layout key
-    final String recyclerLayoutKey = context.getString(R.string.key_recycler_layout);
     final String recyclerLayoutType = sharedPreferences.getString(
-            recyclerLayoutKey,
-            context.getString(R.string.value_listview_recycler_layout));
-    // Reuse Old Controller
-    final String reuseOldControllerKey = context.getString(R.string.key_reuse_old_controller);
+            Const.RECYCLER_LAYOUT_KEY,
+            context.getString(R.string.value_recyclerview_recycler_layout));
     final boolean reuseOldController = sharedPreferences.getBoolean(
-            reuseOldControllerKey,
+            Const.REUSE_OLD_CONTROLLER_KEY,
+            false);
+    final boolean useRoundedCorners = sharedPreferences.getBoolean(
+            Const.ROUNDED_CORNERS_KEY,
+            false);
+    // Rounded as circle
+    final boolean useRoundedAsCircle = sharedPreferences.getBoolean(
+            Const.ROUNDED_AS_CIRCLE_KEY,
             false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
       infiniteDataSource,
       distinctUriDataSource,
-      reuseOldController);
+      reuseOldController,
+      useRoundedCorners,
+      useRoundedAsCircle);
   }
 
   private Config(
@@ -75,12 +75,15 @@ public class Config {
       final String recyclerLayoutType,
       final boolean infiniteDataSource,
       final boolean distinctUriDataSource,
-      final boolean reuseOldController
-      ) {
-    mDataSourceType = dataSourceType;
-    mRecyclerLayoutType = recyclerLayoutType;
-    mInfiniteDataSource = infiniteDataSource;
-    mDistinctUriDataSource = distinctUriDataSource;
-    mReuseOldController = reuseOldController;
+      final boolean reuseOldController,
+      final boolean useRoundedCorners,
+      final boolean useRoundedAsCircle) {
+    this.dataSourceType = dataSourceType;
+    this.recyclerLayoutType = recyclerLayoutType;
+    this.infiniteDataSource = infiniteDataSource;
+    this.distinctUriDataSource = distinctUriDataSource;
+    this.reuseOldController = reuseOldController;
+    this.useRoundedCorners = useRoundedCorners;
+    this.useRoundedAsCircle = useRoundedAsCircle;
   }
 }

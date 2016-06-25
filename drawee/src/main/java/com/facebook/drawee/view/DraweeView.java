@@ -125,25 +125,53 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    mDraweeHolder.onAttach();
+    onAttach();
   }
 
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    mDraweeHolder.onDetach();
+    onDetach();
   }
 
   @Override
   public void onStartTemporaryDetach() {
     super.onStartTemporaryDetach();
-    mDraweeHolder.onDetach();
+    onDetach();
   }
 
   @Override
   public void onFinishTemporaryDetach() {
     super.onFinishTemporaryDetach();
+    onAttach();
+  }
+
+  /** Called by the system to attach. Subclasses may override. */
+  protected void onAttach() {
+    doAttach();
+  }
+
+  /**  Called by the system to detach. Subclasses may override. */
+  protected void onDetach() {
+    doDetach();
+  }
+
+  /**
+   * Does the actual work of attaching.
+   *
+   * Non-test subclasses should NOT override. Use onAttach for custom code.
+   */
+  protected void doAttach() {
     mDraweeHolder.onAttach();
+  }
+
+  /**
+   * Does the actual work of detaching.
+   *
+   * Non-test subclasses should NOT override. Use onDetach for custom code.
+   */
+  protected void doDetach() {
+    mDraweeHolder.onDetach();
   }
 
   @Override

@@ -74,6 +74,7 @@ public class DefaultZoomableController
   private final Matrix mActiveTransformInverse = new Matrix();
   private final float[] mTempValues = new float[9];
   private final RectF mTempRect = new RectF();
+  private boolean mWasTransformedWithoutCorrection;
 
   public static DefaultZoomableController newInstance() {
     return new DefaultZoomableController(TransformGestureDetector.newInstance());
@@ -212,6 +213,17 @@ public class DefaultZoomableController
   @Override
   public boolean isIdentity() {
     return isMatrixIdentity(mActiveTransform, 1e-3f);
+  }
+
+  /**
+   * Returns true if the transform was corrected during the last update.
+   *
+   * We should rename this method to `wasTransformedWithoutCorrection` and just return the
+   * internal flag directly. However, this requires interface change and negation of meaning.
+   */
+  @Override
+  public boolean wasTransformCorrected() {
+    return !mWasTransformedWithoutCorrection;
   }
 
   /**
@@ -365,6 +377,8 @@ public class DefaultZoomableController
   public void onGestureBegin(TransformGestureDetector detector) {
     FLog.v(TAG, "onGestureBegin");
     mPreviousTransform.set(mActiveTransform);
+    // We started the gesture, but no transformation occurred just yet.
+    mWasTransformedWithoutCorrection = false;
   }
 
   @Override
@@ -375,6 +389,8 @@ public class DefaultZoomableController
     if (transformCorrected) {
       mGestureDetector.restartGesture();
     }
+    // A transformation happened, but was it without correction?
+    mWasTransformedWithoutCorrection = !transformCorrected;
   }
 
   @Override

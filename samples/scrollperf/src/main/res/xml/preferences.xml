@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <PreferenceCategory
         android:key="key_preferences_source_group"
         android:title="@string/title_preferences_source_group"
@@ -9,16 +11,30 @@
             android:dialogTitle="@string/dialog_title_data_source"
             android:entries="@array/data_source_labels"
             android:entryValues="@array/data_source_values"
-            android:key="@string/key_data_source"
+            android:key="uris_data_source"
             android:title="@string/title_data_source"
             />
         <CheckBoxPreference
             android:title="@string/title_infinite_data_source"
-            android:key="@string/key_infinite_data_source"
+            android:key="infinite_data_source"
             />
         <CheckBoxPreference
             android:title="@string/title_distinct_uri_data_source"
-            android:key="@string/key_distinct_uri_data_source"
+            android:key="distinct_uri_data_source"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="key_preferences_rounded_corners"
+        android:title="@string/title_preferences_rounded_corners"
+        >
+        <CheckBoxPreference
+            android:title="@string/title_preferences_rounded_corners_enabled"
+            android:key="rounded_corners"
+            />
+        <CheckBoxPreference
+            android:title="@string/title_preferences_rounded_as_circle_enabled"
+            android:key="rounded_as_circle"
+            app:dependency="rounded_corners"
             />
     </PreferenceCategory>
 
@@ -28,7 +44,7 @@
         >
         <CheckBoxPreference
             android:title="@string/title_reuse_old_controller"
-            android:key="@string/key_reuse_old_controller"
+            android:key="reuse_old_controller"
             />
     </PreferenceCategory>
 
@@ -37,11 +53,11 @@
         android:title="@string/title_preferences_recycler_layout"
         >
         <ListPreference
-            android:defaultValue="@string/value_listview_recycler_layout"
+            android:defaultValue="@string/value_recyclerview_recycler_layout"
             android:dialogTitle="@string/dialog_title_recycler_layout"
             android:entries="@array/recycler_layout_labels"
             android:entryValues="@array/recycler_layout_values"
-            android:key="@string/key_recycler_layout"
+            android:key="recycler_layout"
             android:title="@string/title_recycler_layout"
             />
     </PreferenceCategory>

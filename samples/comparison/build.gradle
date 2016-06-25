@@ -7,6 +7,7 @@ dependencies {
     compile "com.android.volley:volley:${VOLLEY_VERSION}"
     compile "com.nostra13.universalimageloader:universal-image-loader:${UIL_VERSION}"
     compile "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+    compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2"
     compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     compile "com.googlecode.android-query:android-query:${AQUERY_VERSION}"
     compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"

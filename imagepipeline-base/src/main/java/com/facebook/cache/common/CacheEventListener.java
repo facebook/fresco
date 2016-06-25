@@ -14,17 +14,42 @@ package com.facebook.cache.common;
  */
 public interface CacheEventListener {
 
-  void onHit();
+  /**
+  * Triggered by a cache hit.
+  */
+  void onHit(CacheEvent cacheEvent);
 
-  void onMiss();
+  /**
+   * Triggered by a cache miss for the given key.
+   */
+  void onMiss(CacheEvent cacheEvent);
 
-  void onWriteAttempt();
+  /**
+   * Triggered at the start of the process to save a resource in cache.
+   */
+  void onWriteAttempt(CacheEvent cacheEvent);
 
-  void onReadException();
+  /**
+   * Triggered after a resource has been successfully written to cache.
+   */
+  void onWriteSuccess(CacheEvent cacheEvent);
 
-  void onWriteException();
+  /**
+   * Triggered if a cache hit was attempted but an exception was thrown trying to read the resource
+   * from storage.
+   */
+  void onReadException(CacheEvent cacheEvent);
 
-  void onEviction(EvictionReason evictionReason, int itemCount, long itemSize);
+  /**
+   * Triggered if a cache write was attempted but an exception was thrown trying to write the
+   * exception to storage.
+   */
+  void onWriteException(CacheEvent cacheEvent);
+
+  /**
+   * Triggered by an eviction from cache.
+   */
+  void onEviction(CacheEvent cacheEvent);
 
   enum EvictionReason {
     CACHE_FULL,

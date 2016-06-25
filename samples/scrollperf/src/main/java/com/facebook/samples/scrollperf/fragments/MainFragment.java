@@ -22,14 +22,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.data.impl.ContentProviderSimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
 import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
 import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
+import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewListAdapter;
 import com.facebook.samples.scrollperf.util.UI;
 
 public class MainFragment extends Fragment {
@@ -38,7 +41,11 @@ public class MainFragment extends Fragment {
 
   private RecyclerView mRecyclerView;
 
+  private ListView mListView;
+
   private DraweeViewAdapter mDraweeViewAdapter;
+
+  private ListAdapter mListAdapter;
 
   private SimpleAdapter<Uri> mSimpleAdapter;
 
@@ -57,18 +64,10 @@ public class MainFragment extends Fragment {
       Bundle savedInstanceState) {
     mConfig = Config.load(getContext());
     // Initialize the SimpleAdapter
-    mSimpleAdapter = LocalResourceSimpleAdapter
-                             .getEagerAdapter(getContext(), R.array.example_uris);
-    if (mConfig.mInfiniteDataSource) {
-      mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
-      if (mConfig.mDistinctUriDataSource) {
-        mSimpleAdapter = SimpleAdapter.Util
-          .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
-      }
-    }
+    mSimpleAdapter = initializeSimpleAdapter(mConfig);
     // We use a different layout based on the type of output
     final View layout;
-    switch (mConfig.mRecyclerLayoutType) {
+    switch (mConfig.recyclerLayoutType) {
       case "recyclerview_recycler_layout":
         layout = inflater.inflate(R.layout.content_recyclerview, container, false);
         initializeRecyclerView(layout);
@@ -103,6 +102,38 @@ public class MainFragment extends Fragment {
   }
 
   private void initializeListView(final View layout) {
+    // get the ListView
+    mListView = UI.findViewById(layout, R.id.list_view);
+    // Create the Adapter
+    mListAdapter = new DraweeViewListAdapter(mSimpleAdapter, mConfig);
+    // Set the adapter
+    mListView.setAdapter(mListAdapter);
+  }
 
+  private SimpleAdapter<Uri> initializeSimpleAdapter(final Config config) {
+    boolean distinctUriCompatible = true;
+    SimpleAdapter<Uri> simpleAdapter = null;
+    switch (config.dataSourceType) {
+      case "local_resource_uris":
+        simpleAdapter = LocalResourceSimpleAdapter
+                .getEagerAdapter(getContext(), R.array.example_uris);
+        break;
+      case "local_internal_photo_uris":
+        simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getContext());
+        distinctUriCompatible = false;
+        break;
+      case "local_external_photo_uris":
+        simpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getContext());
+        distinctUriCompatible = false;
+        break;
+    }
+    if (config.infiniteDataSource) {
+      simpleAdapter = SimpleAdapter.Util.makeItInfinite(simpleAdapter);
+      if (distinctUriCompatible && config.distinctUriDataSource) {
+        simpleAdapter = SimpleAdapter.Util
+                .decorate(simpleAdapter, DistinctUriDecorator.SINGLETON);
+      }
+    }
+    return simpleAdapter;
   }
 }

@@ -13,6 +13,7 @@ dependencies {
     compile project(':fbcore')
 
     testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'

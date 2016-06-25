@@ -24,7 +24,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
 
-  ImageDecodeOptionsBuilder() {
+  public ImageDecodeOptionsBuilder() {
   }
 
   /**
