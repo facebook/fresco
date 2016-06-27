@@ -51,6 +51,22 @@
     <string translatable="false" name="checked_rounded_as_circle_summary">The images will be rounded as a circle</string>
     <string translatable="false" name="unchecked_rounded_as_circle_summary">The images will have rounded corners</string>
 
+    <!-- Postprocessor-->
+    <string translatable="false" name="title_preferences_postprocessor">Postprocessor</string>
+    <string translatable="false" name="title_preferences_postprocessor_type">Postprocessor type</string>
+    <string translatable="false" name="title_preferences_use_postprocessor">Use a Postprocessor</string>
+    <string translatable="false" name="dialog_title_use_postprocessor">Select a Postprocessor</string>
+    <string translatable="false" name="checked_postprocessor_summary">We use a Postprocessor</string>
+    <string translatable="false" name="unchecked_postprocessor_summary">Postprocessor not present</string>
+    <string translatable="false" name="label_postprocessor_slow">Use a Slow Postprocessor</string>
+    <string translatable="false" name="label_postprocessor_medium">Use a Medium Postprocessor</string>
+    <string translatable="false" name="label_postprocessor_fast">Use a Fast Postprocessor</string>
+    <string translatable="false" name="value_postprocessor_slow">use_slow_postprocessor</string>
+    <string translatable="false" name="value_postprocessor_medium">use_medium_postprocessor</string>
+    <string translatable="false" name="value_postprocessor_fast">use_fast_postprocessor</string>
+    <string translatable="false" name="value_postprocessor_slow_summary">Simulation of a very slow Postprocessor</string>
+    <string translatable="false" name="value_postprocessor_medium_summary">Simulation of a medium fast Postprocessor</string>
+    <string translatable="false" name="value_postprocessor_fast_summary">Simulation of a very fast Postprocessor</string>
 
     <!-- Layout Preferences-->
     <string translatable="false" name="key_preferences_recycler_layout">Recycler Layout</string>

@@ -52,6 +52,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateReuseOldControllerSummary(findPreference(Const.REUSE_OLD_CONTROLLER_KEY));
     updateRoundedCornersSummary(findPreference(Const.ROUNDED_CORNERS_KEY));
     updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
+    updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
+    updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
   }
 
   @Override
@@ -77,14 +79,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateRoundedCornersSummary(preference);
     } else if (Const.ROUNDED_AS_CIRCLE_KEY.equals(key)) {
       updateRoundedAsCircleSummary(preference);
+    } else if (Const.USE_POSTPROCESSOR_KEY.equals(key)) {
+      updateUsePostprocessorSummary(preference);
+    } else if (Const.POSTPROCESSOR_TYPE_KEY.equals(key)) {
+      updateWhatPostprocessorSummary(preference);
     }
   }
 
   private void updateDataSourceSummary(final Preference preference) {
-    ListPreference dataSourcePreference = (ListPreference) preference;
-    final int valueIndex = dataSourcePreference.findIndexOfValue(dataSourcePreference.getValue());
-    final String summary = getResources().getStringArray(R.array.data_source_summaries)[valueIndex];
-    preference.setSummary(summary);
+    updateListPreference(
+      getResources(),
+      (ListPreference) preference,
+      R.array.data_source_summaries);
   }
 
   private void updateInfiniteDataSourceSummary(final Preference preference) {
@@ -106,12 +112,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateRecyclerLayoutSummary(final Preference preference) {
-    ListPreference recyclerLayoutPreference = (ListPreference) preference;
-    final int valueIndex = recyclerLayoutPreference
-        .findIndexOfValue(recyclerLayoutPreference.getValue());
-    final String summary = getResources()
-        .getStringArray(R.array.recycler_layout_summaries)[valueIndex];
-    preference.setSummary(summary);
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.recycler_layout_summaries);
   }
 
   private void updateReuseOldControllerSummary(final Preference preference) {
@@ -138,6 +142,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
             R.string.unchecked_rounded_as_circle_summary);
   }
 
+  private void updateUsePostprocessorSummary(final Preference preference) {
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_postprocessor_summary,
+            R.string.unchecked_postprocessor_summary);
+  }
+
+  private void updateWhatPostprocessorSummary(final Preference preference) {
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.postprocessor_summaries);
+  }
+
   private static boolean updateCheckBoxPreference(
           Resources resources,
           CheckBoxPreference preference,
@@ -150,5 +169,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
       preference.setSummary(resources.getString(uncheckedSummaryRes));
     }
     return checkboxState;
+  }
+
+  private static void updateListPreference(
+          Resources resources,
+          ListPreference preference,
+          int arrayValuesId) {
+    final int valueIndex = preference.findIndexOfValue(preference.getValue());
+    final String summary = resources.getStringArray(arrayValuesId)[valueIndex];
+    preference.setSummary(summary);
   }
 }

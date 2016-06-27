@@ -35,6 +35,9 @@ public class Config {
   public final boolean useRoundedCorners;
   public final boolean useRoundedAsCircle;
 
+  public final boolean usePostprocessor;
+  public final String postprocessorType;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -56,10 +59,15 @@ public class Config {
     final boolean useRoundedCorners = sharedPreferences.getBoolean(
             Const.ROUNDED_CORNERS_KEY,
             false);
-    // Rounded as circle
     final boolean useRoundedAsCircle = sharedPreferences.getBoolean(
             Const.ROUNDED_AS_CIRCLE_KEY,
             false);
+    final boolean usePostprocessor = sharedPreferences.getBoolean(
+            Const.USE_POSTPROCESSOR_KEY,
+            false);
+    final String postprocessorType = sharedPreferences.getString(
+            Const.POSTPROCESSOR_TYPE_KEY,
+            context.getString(R.string.value_postprocessor_medium));
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -67,7 +75,9 @@ public class Config {
       distinctUriDataSource,
       reuseOldController,
       useRoundedCorners,
-      useRoundedAsCircle);
+      useRoundedAsCircle,
+      usePostprocessor,
+      postprocessorType);
   }
 
   private Config(
@@ -77,7 +87,9 @@ public class Config {
       final boolean distinctUriDataSource,
       final boolean reuseOldController,
       final boolean useRoundedCorners,
-      final boolean useRoundedAsCircle) {
+      final boolean useRoundedAsCircle,
+      final boolean usePostprocessor,
+      final String postprocessorType) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -85,5 +97,7 @@ public class Config {
     this.reuseOldController = reuseOldController;
     this.useRoundedCorners = useRoundedCorners;
     this.useRoundedAsCircle = useRoundedAsCircle;
+    this.usePostprocessor = usePostprocessor;
+    this.postprocessorType = postprocessorType;
   }
 }
