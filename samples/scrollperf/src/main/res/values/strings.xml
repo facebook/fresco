@@ -48,8 +48,8 @@
     <string translatable="false" name="unchecked_rounded_corners_summary">No rounded corners for Drawee</string>
 
     <string translatable="false" name="title_preferences_rounded_as_circle_enabled">Rounded as circle</string>
-    <string translatable="false" name="checked_rounded_as_circle_enabled_summary">The images will be rounded as a circle</string>
-    <string translatable="false" name="unchecked_rounded_as_circle_enabled_summary">The images will have rounded corners</string>
+    <string translatable="false" name="checked_rounded_as_circle_summary">The images will be rounded as a circle</string>
+    <string translatable="false" name="unchecked_rounded_as_circle_summary">The images will have rounded corners</string>
 
 
     <!-- Layout Preferences-->
