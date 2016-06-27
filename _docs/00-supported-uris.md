@@ -20,7 +20,7 @@ These are the URI schemes accepted:
 | File on device | `file://` | `FileInputStream` |
 | Content provider | `content://` | `ContentResolver` |
 | Asset in app | `asset://` | `AssetManager` |
-| Resource in app | `res://` as in `res://12345` | `Resources.openRawResource` |
+| Resource in app | `res://` as in `res:///12345` | `Resources.openRawResource` |
 | Data in URI | `data:mime/type;base64,` | Following [data URI spec](http://tools.ietf.org/html/rfc2397) (UTF-8 only) |
 
 <br/>
