@@ -14,19 +14,24 @@ package com.facebook.samples.demo;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.RetainingDataSourceSupplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -34,7 +39,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 public class MainActivity extends Activity {
 
-  private ImageView mBaselineJpegView;
+  private SimpleDraweeView mBaselineJpegView;
   private SimpleDraweeView mProgressiveJpegView;
   private SimpleDraweeView mStaticWebpView;
   private SimpleDraweeView mAlphaWebpView;
@@ -66,7 +71,34 @@ public class MainActivity extends Activity {
     mOneLoopAnimatedWebpView = (SimpleDraweeView) findViewById(R.id.one_loop_animated_webp);
     mDataWebpView = (SimpleDraweeView) findViewById(R.id.data_webp);
 
-    mBaselineJpegView.setImageURI(Uri.parse("https://www.gstatic.com/webp/gallery/1.sm.jpg"));
+
+    final AtomicInteger uriIndex = new AtomicInteger(0);
+    final String[] uris = new String[] {
+        "http://blog.capterra.com/wp-content/uploads/2014/02/29-free-elearning-tools.jpg",
+        "http://www.bensound.com/bensound-img/betterdays.jpg",
+        "http://williamsinstitute.law.ucla.edu/wp-content/uploads/free.jpg",
+        "http://www.freedigitalphotos.net/images/img/homepage/394230.jpg",
+        "https://bufferblog-wpengine.netdna-ssl.com/wp-content/uploads/2014/05/6110974997_8b0dfa13a0_b.jpg",
+        "http://www.wahwah45s.com/wp-content/uploads/2011/09/free.jpg",
+        "https://www.daysoutguide.co.uk/media/426032/free-london-galleries-horniman.jpg",
+        "http://blog.coursetalk.com/wp-content/uploads/free-ed.jpg",
+        "http://whsr.webrevenueinc1.netdna-cdn.com/wp-content/uploads/2014/12/free-digital-photos.jpg",
+    };
+
+    //mBaselineJpegView.setImageURI(Uri.parse("https://www.gstatic.com/webp/gallery/1.sm.jpg"));
+    final RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier =
+        new RetainingDataSourceSupplier<>();
+    mBaselineJpegView.setController(
+        Fresco.newDraweeControllerBuilder()
+            .setDataSourceSupplier(retainingSupplier)
+            .build());
+    mBaselineJpegView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        retainingSupplier.setSupplier(Fresco.getImagePipeline().getDataSourceSupplier(ImageRequest.fromUri(uris[uriIndex.get()]), null, false));
+        uriIndex.set((uriIndex.get() + 1) % uris.length);
+      }
+    });
 
     Uri uri = Uri.parse("http://pooyak.com/p/progjpeg/jpegload.cgi?o=1");
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
