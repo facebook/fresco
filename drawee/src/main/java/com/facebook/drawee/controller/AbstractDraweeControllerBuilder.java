@@ -178,8 +178,9 @@ public abstract class AbstractDraweeControllerBuilder <
    *
    *  <p/> Note: This is mutually exclusive with other image request setters.
    */
-  public void setDataSourceSupplier(@Nullable Supplier<DataSource<IMAGE>> dataSourceSupplier) {
+  public BUILDER setDataSourceSupplier(@Nullable Supplier<DataSource<IMAGE>> dataSourceSupplier) {
     mDataSourceSupplier = dataSourceSupplier;
+    return getThis();
   }
 
   /**
