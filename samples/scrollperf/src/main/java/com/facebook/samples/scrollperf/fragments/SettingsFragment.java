@@ -54,6 +54,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
     updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
     updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
+    updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
   }
 
   @Override
@@ -83,6 +84,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       updateUsePostprocessorSummary(preference);
     } else if (Const.POSTPROCESSOR_TYPE_KEY.equals(key)) {
       updateWhatPostprocessorSummary(preference);
+    } else if (Const.SCALE_TYPE_KEY.equals(key)) {
+      updateWhatScaleTypeSummary(preference);
     }
   }
 
@@ -155,6 +158,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
             getResources(),
             (ListPreference) preference,
             R.array.postprocessor_summaries);
+  }
+
+  private void updateWhatScaleTypeSummary(final Preference preference) {
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.scale_type_summaries);
   }
 
   private static boolean updateCheckBoxPreference(

@@ -38,6 +38,8 @@ public class Config {
   public final boolean usePostprocessor;
   public final String postprocessorType;
 
+  public final String scaleType;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -68,6 +70,9 @@ public class Config {
     final String postprocessorType = sharedPreferences.getString(
             Const.POSTPROCESSOR_TYPE_KEY,
             context.getString(R.string.value_postprocessor_medium));
+    final String scaleType = sharedPreferences.getString(
+            Const.SCALE_TYPE_KEY,
+            context.getString(R.string.value_scale_type_fit_center));
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -77,7 +82,8 @@ public class Config {
       useRoundedCorners,
       useRoundedAsCircle,
       usePostprocessor,
-      postprocessorType);
+      postprocessorType,
+      scaleType);
   }
 
   private Config(
@@ -89,7 +95,8 @@ public class Config {
       final boolean useRoundedCorners,
       final boolean useRoundedAsCircle,
       final boolean usePostprocessor,
-      final String postprocessorType) {
+      final String postprocessorType,
+      final String scaleType) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -99,5 +106,6 @@ public class Config {
     this.useRoundedAsCircle = useRoundedAsCircle;
     this.usePostprocessor = usePostprocessor;
     this.postprocessorType = postprocessorType;
+    this.scaleType = scaleType;
   }
 }
