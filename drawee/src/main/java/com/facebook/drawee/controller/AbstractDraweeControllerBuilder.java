@@ -69,6 +69,7 @@ public abstract class AbstractDraweeControllerBuilder <
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
   private boolean mRetainImageOnFailure;
+  private String mContentDescription;
   // old controller to reuse
   private @Nullable DraweeController mOldController;
 
@@ -93,6 +94,7 @@ public abstract class AbstractDraweeControllerBuilder <
     mTapToRetryEnabled = false;
     mAutoPlayAnimations = false;
     mOldController = null;
+    mContentDescription = null;
   }
 
   /** Resets this builder to its initial values making it reusable. */
@@ -238,6 +240,18 @@ public abstract class AbstractDraweeControllerBuilder <
     return mControllerListener;
   }
 
+  /** Sets the accessibility content description. */
+  public BUILDER setContentDescription(String contentDescription) {
+    mContentDescription = contentDescription;
+    return getThis();
+  }
+
+  /** Gets the accessibility content description. */
+  @Nullable
+  public String getContentDescription() {
+    return mContentDescription;
+  }
+
   /** Sets the old controller to be reused if possible. */
   @Override
   public BUILDER setOldController(@Nullable DraweeController oldController) {
@@ -280,6 +294,7 @@ public abstract class AbstractDraweeControllerBuilder <
   protected AbstractDraweeController buildController() {
     AbstractDraweeController controller = obtainController();
     controller.setRetainImageOnFailure(getRetainImageOnFailure());
+    controller.setContentDescription(getContentDescription());
     maybeBuildAndSetRetryManager(controller);
     maybeAttachListeners(controller);
     return controller;
