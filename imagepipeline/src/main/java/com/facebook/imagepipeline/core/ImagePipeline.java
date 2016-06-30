@@ -256,7 +256,7 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          Priority.LOW);
+          Priority.MEDIUM);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -270,7 +270,7 @@ public class ImagePipeline {
   public DataSource<Void> prefetchToDiskCache(
       ImageRequest imageRequest,
       Object callerContext) {
-    return prefetchToDiskCache(imageRequest, callerContext, Priority.LOW);
+    return prefetchToDiskCache(imageRequest, callerContext, Priority.MEDIUM);
   }
 
   /**
@@ -387,6 +387,13 @@ public class ImagePipeline {
     Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
     return mBitmapMemoryCache.contains(bitmapCachePredicate);
  }
+
+  /**
+   * @return The Bitmap MemoryCache
+   */
+  public MemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
+    return mBitmapMemoryCache;
+  }
 
   /**
    * Returns whether the image is stored in the bitmap memory cache.
@@ -553,5 +560,12 @@ public class ImagePipeline {
 
   public boolean isPaused() {
     return mThreadHandoffProducerQueue.isQueueing();
+  }
+
+  /**
+   * @return The CacheKeyFactory implementation used by ImagePipeline
+   */
+  public CacheKeyFactory getCacheKeyFactory() {
+    return mCacheKeyFactory;
   }
 }

@@ -11,22 +11,18 @@
  */
 package com.facebook.samples.scrollperf.fragments.recycler;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
+import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
@@ -64,10 +60,11 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
             new ResizeOptions(
               mDraweeView.getLayoutParams().width,
               mDraweeView.getLayoutParams().height));
+    PipelineUtil.addOptionalFeatures(imageRequestBuilder, mConfig);
     // Create the Builder
     PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
                                                       .setImageRequest(imageRequestBuilder.build());
-    if (mConfig.mReuseOldController) {
+    if (mConfig.reuseOldController) {
       builder.setOldController(mDraweeView.getController());
     }
     mDraweeView.setController(builder.build());

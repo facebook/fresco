@@ -6,19 +6,18 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-
 package com.facebook.drawee.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.facebook.common.activitylistener.ListenableActivity;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.memory.MemoryUiTrimmable;
+import com.facebook.common.memory.MemoryUiTrimmableRegistry;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.drawable.VisibilityAwareDrawable;
 import com.facebook.drawee.drawable.VisibilityCallback;
@@ -46,15 +45,14 @@ import static com.facebook.drawee.components.DraweeEventTracker.Event;
  * call {@link #onAttach} from its {@link View#onFinishTemporaryDetach()} and
  * {@link View#onAttachedToWindow()} methods.
  */
-public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallback {
+public class DraweeHolder<DH extends DraweeHierarchy>
+    implements VisibilityCallback, MemoryUiTrimmable {
 
   private boolean mIsControllerAttached = false;
   private boolean mIsHolderAttached = false;
   private boolean mIsVisible = true;
-  private boolean mIsActivityStarted = true;
+  private boolean mTrimmed = false;
   private DH mHierarchy;
-  // TODO(T6181423): this is not working reliably and we cannot afford photos-not-loading issues.
-  //private final ActivityListener mActivityListener;
 
   private DraweeController mController = null;
 
@@ -64,25 +62,19 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
    * Creates a new instance of DraweeHolder that detaches / attaches controller whenever context
    * notifies it about activity's onStop and onStart callbacks.
    *
-   * <p>It is strongly recommended to pass a {@link ListenableActivity} as context. The holder will
-   * then also be able to respond to onStop and onStart events from that activity, making sure the
-   * image does not waste memory when the activity is stopped.
+   * <p>It is recommended to pass a {@link ListenableActivity} as context. This will help in a future release.
    */
   public static <DH extends DraweeHierarchy> DraweeHolder<DH> create(
       @Nullable DH hierarchy,
       Context context) {
     DraweeHolder<DH> holder = new DraweeHolder<DH>(hierarchy);
     holder.registerWithContext(context);
+    MemoryUiTrimmableRegistry.registerUiTrimmable(holder);
     return holder;
   }
 
-  /**
-   * If the given context is an instance of FbListenableActivity, then listener for its onStop and
-   * onStart methods is registered that changes visibility of the holder.
-   */
+  /** For future use. */
   public void registerWithContext(Context context) {
-    // TODO(T6181423): this is not working reliably and we cannot afford photos-not-loading issues.
-    //ActivityListenerManager.register(mActivityListener, context);
   }
 
   /**
@@ -93,20 +85,6 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     if (hierarchy != null) {
       setHierarchy(hierarchy);
     }
-    /*
-    // TODO(T6181423): this is not working reliably and we cannot afford photos-not-loading issues.
-    mActivityListener = new BaseActivityListener() {
-      @Override
-      public void onStart(Activity activity) {
-        setActivityStarted(true);
-      }
-
-      @Override
-      public void onStop(Activity activity) {
-        setActivityStarted(false);
-      }
-    };
-    */
   }
 
   /**
@@ -145,6 +123,20 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     attachOrDetachController();
   }
 
+  @Override
+  public void trim() {
+    mEventTracker.recordEvent(Event.ON_HOLDER_TRIM);
+    mTrimmed = true;
+    attachOrDetachController();
+  }
+
+  @Override
+  public void untrim() {
+    mEventTracker.recordEvent(Event.ON_HOLDER_UNTRIM);
+    mTrimmed = false;
+    attachOrDetachController();
+  }
+
   /**
    * Forwards the touch event to the controller.
    * @param event touch event to handle
@@ -179,17 +171,20 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     if (mIsControllerAttached) {
       return;
     }
-    // something went wrong here; controller is not attached, yet the hierarchy has to be drawn
-    // log error and attach the controller
-    FLog.wtf(
-        DraweeEventTracker.class,
-        "%x: Draw requested for a non-attached controller %x. %s",
-        System.identityHashCode(this),
-        System.identityHashCode(mController),
-        toString());
+    // trimming events are not guaranteed to arrive before the draw
+    if (!mTrimmed) {
+      // something went wrong here; controller is not attached, yet the hierarchy has to be drawn
+      // log error and attach the controller
+      FLog.wtf(
+          DraweeEventTracker.class,
+          "%x: Draw requested for a non-attached controller %x. %s",
+          System.identityHashCode(this),
+          System.identityHashCode(mController),
+          toString());
+    }
+    mTrimmed = false;
     mIsHolderAttached = true;
     mIsVisible = true;
-    mIsActivityStarted = true;
     attachOrDetachController();
   }
 
@@ -201,15 +196,6 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     if (drawable instanceof VisibilityAwareDrawable) {
       ((VisibilityAwareDrawable) drawable).setVisibilityCallback(visibilityCallback);
     }
-  }
-
-  /**
-   * Notifies the holder of activity's visibility change
-   */
-  private void setActivityStarted(boolean isStarted) {
-    mEventTracker.recordEvent(isStarted ? Event.ON_ACTIVITY_START : Event.ON_ACTIVITY_STOP);
-    mIsActivityStarted = isStarted;
-    attachOrDetachController();
   }
 
   /**
@@ -310,7 +296,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
   }
 
   private void attachOrDetachController() {
-    if (mIsHolderAttached && mIsVisible && mIsActivityStarted) {
+    if (mIsHolderAttached && mIsVisible && !mTrimmed) {
       attachController();
     } else {
       detachController();
@@ -323,7 +309,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
         .add("controllerAttached", mIsControllerAttached)
         .add("holderAttached", mIsHolderAttached)
         .add("drawableVisible", mIsVisible)
-        .add("activityStarted", mIsActivityStarted)
+        .add("trimmed", mTrimmed)
         .add("events", mEventTracker.toString())
         .toString();
   }

@@ -25,4 +25,14 @@ public final class Const {
   public static final Drawable FAILURE = new ColorDrawable(Color.RED);
 
   public static final double RATIO = 4.0 / 3.0;
+
+  public static final String DATA_SOURCE_KEY = "uris_data_source";
+  public static final String INFINITE_DATA_SOURCE_KEY = "infinite_data_source";
+  public static final String DISTINCT_DATA_SOURCE_KEY ="distinct_uri_data_source";
+  public static final String RECYCLER_LAYOUT_KEY = "recycler_layout";
+  public static final String REUSE_OLD_CONTROLLER_KEY= "reuse_old_controller";
+  public static final String ROUNDED_CORNERS_KEY= "rounded_corners";
+  public static final String ROUNDED_AS_CIRCLE_KEY= "rounded_as_circle";
+  public static final String USE_POSTPROCESSOR_KEY= "use_postprocessor";
+  public static final String POSTPROCESSOR_TYPE_KEY= "postprocessor_type";
 }

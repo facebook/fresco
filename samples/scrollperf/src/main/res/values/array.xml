@@ -29,4 +29,20 @@
         <item>@string/value_listview_summary</item>
         <item>@string/value_recycler_summary</item>
     </array>
+    <!-- Post processor labels and values-->
+    <array name="postprocessor_labels">
+        <item>@string/label_postprocessor_slow</item>
+        <item>@string/label_postprocessor_medium</item>
+        <item>@string/label_postprocessor_fast</item>
+    </array>
+    <array name="postprocessor_values">
+        <item>@string/value_postprocessor_slow</item>
+        <item>@string/value_postprocessor_medium</item>
+        <item>@string/value_postprocessor_fast</item>
+    </array>
+    <array name="postprocessor_summaries">
+        <item>@string/value_postprocessor_slow_summary</item>
+        <item>@string/value_postprocessor_medium_summary</item>
+        <item>@string/value_postprocessor_fast_summary</item>
+    </array>
 </resources>

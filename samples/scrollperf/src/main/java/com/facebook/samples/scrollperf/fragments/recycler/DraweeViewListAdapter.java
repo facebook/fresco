@@ -28,6 +28,7 @@ import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
+import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
@@ -80,10 +81,11 @@ public class DraweeViewListAdapter extends BaseAdapter {
                     new ResizeOptions(
                             draweeView.getLayoutParams().width,
                             draweeView.getLayoutParams().height));
+    PipelineUtil.addOptionalFeatures(imageRequestBuilder, mConfig);
     // Create the Builder
     PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
             .setImageRequest(imageRequestBuilder.build());
-    if (mConfig.mReuseOldController) {
+    if (mConfig.reuseOldController) {
       builder.setOldController(draweeView.getController());
     }
     draweeView.setController(builder.build());
