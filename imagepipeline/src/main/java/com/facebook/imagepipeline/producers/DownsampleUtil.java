@@ -78,7 +78,7 @@ public class DownsampleUtil {
 
     final float widthRatio = ((float) resizeOptions.width) / widthAfterRotation;
     final float heightRatio = ((float) resizeOptions.height) / heightAfterRotation;
-    float ratio = Math.max(widthRatio, heightRatio);
+    float ratio = (Math.abs(1.0f-widthRatio) > Math.abs(1.0f-heightRatio)) ? widthRatio : heightRatio;
     FLog.v(
         "DownsampleUtil",
         "Downsample - Specified size: %dx%d, image size: %dx%d " +
