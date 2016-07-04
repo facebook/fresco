@@ -169,10 +169,11 @@ public class UriUtil {
       Cursor cursor = null;
       try {
         cursor = contentResolver.query(srcUri, null, null, null, null);
-        if (cursor != null) {
-          cursor.moveToFirst();
+        if (cursor != null && cursor.moveToFirst()) {
           int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-          result = cursor.getString(idx);
+          if (idx != -1) {
+            result = cursor.getString(idx);
+          }
         }
       } finally {
         if (cursor != null) {

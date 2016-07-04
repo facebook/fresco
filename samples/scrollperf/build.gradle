@@ -33,6 +33,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:recyclerview-v7:23.2.0'
     compile 'com.android.support:preference-v7:23.2.0'
+    testCompile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    testCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     androidTestCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
