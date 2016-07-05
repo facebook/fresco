@@ -17,7 +17,7 @@ import android.view.MotionEvent;
 /**
  * Wrapper for SimpleOnGestureListener as GestureDetector does not allow changing its listener.
  */
-class GestureListenerWrapper extends GestureDetector.SimpleOnGestureListener {
+public class GestureListenerWrapper extends GestureDetector.SimpleOnGestureListener {
 
   private GestureDetector.SimpleOnGestureListener mDelegate;
 

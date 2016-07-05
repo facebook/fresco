@@ -37,7 +37,24 @@
             app:dependency="rounded_corners"
             />
     </PreferenceCategory>
-
+    <PreferenceCategory
+        android:key="key_preferences_use_postprocessor"
+        android:title="@string/title_preferences_postprocessor"
+        >
+        <CheckBoxPreference
+            android:title="@string/title_preferences_use_postprocessor"
+            android:key="use_postprocessor"
+            />
+        <ListPreference
+            android:defaultValue="@string/value_postprocessor_medium"
+            android:dialogTitle="@string/dialog_title_use_postprocessor"
+            android:entries="@array/postprocessor_labels"
+            android:entryValues="@array/postprocessor_values"
+            android:key="postprocessor_type"
+            android:title="@string/title_preferences_postprocessor_type"
+            android:dependency="use_postprocessor"
+            />
+    </PreferenceCategory>
     <PreferenceCategory
         android:key="key_preferences_controller_group"
         android:title="@string/title_controller_group"
@@ -47,7 +64,19 @@
             android:key="reuse_old_controller"
             />
     </PreferenceCategory>
-
+    <PreferenceCategory
+        android:key="key_preferences_scale_type_group"
+        android:title="@string/title_preferences_drawee_group"
+        >
+        <ListPreference
+            android:defaultValue="@string/value_scale_type_fit_center"
+            android:dialogTitle="@string/title_preferences_scale_type"
+            android:entries="@array/scale_type_labels"
+            android:entryValues="@array/scale_type_values"
+            android:key="scale_type"
+            android:title="@string/title_preferences_scale_type"
+            />
+    </PreferenceCategory>
     <PreferenceCategory
         android:key="key_preferences_recycler_layout"
         android:title="@string/title_preferences_recycler_layout"
