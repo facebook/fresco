@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
+import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
@@ -59,6 +60,7 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
             new ResizeOptions(
               mDraweeView.getLayoutParams().width,
               mDraweeView.getLayoutParams().height));
+    PipelineUtil.addOptionalFeatures(imageRequestBuilder, mConfig);
     // Create the Builder
     PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder()
                                                       .setImageRequest(imageRequestBuilder.build());

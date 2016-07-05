@@ -52,6 +52,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateReuseOldControllerSummary(findPreference(Const.REUSE_OLD_CONTROLLER_KEY));
     updateRoundedCornersSummary(findPreference(Const.ROUNDED_CORNERS_KEY));
     updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
+    updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
+    updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
+    updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
   }
 
   @Override
@@ -63,28 +66,45 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     Preference preference = findPreference(key);
-    if (Const.DATA_SOURCE_KEY.equals(key)) {
-      updateDataSourceSummary(preference);
-    } else if (Const.RECYCLER_LAYOUT_KEY.equals(key)) {
-      updateRecyclerLayoutSummary(preference);
-    } else if (Const.INFINITE_DATA_SOURCE_KEY.equals(key)) {
-      updateInfiniteDataSourceSummary(preference);
-    } else if (Const.DISTINCT_DATA_SOURCE_KEY.equals(key)) {
-      updateDistinctDataSourceSummary(preference);
-    } else if (Const.REUSE_OLD_CONTROLLER_KEY.equals(key)) {
-      updateReuseOldControllerSummary(preference);
-    } else if (Const.ROUNDED_CORNERS_KEY.equals(key)) {
-      updateRoundedCornersSummary(preference);
-    } else if (Const.ROUNDED_AS_CIRCLE_KEY.equals(key)) {
-      updateRoundedAsCircleSummary(preference);
+    switch (key) {
+      case Const.DATA_SOURCE_KEY:
+        updateDataSourceSummary(preference);
+        break;
+      case Const.RECYCLER_LAYOUT_KEY:
+        updateRecyclerLayoutSummary(preference);
+        break;
+      case Const.INFINITE_DATA_SOURCE_KEY:
+        updateInfiniteDataSourceSummary(preference);
+        break;
+      case Const.DISTINCT_DATA_SOURCE_KEY:
+        updateDistinctDataSourceSummary(preference);
+        break;
+      case Const.REUSE_OLD_CONTROLLER_KEY:
+        updateReuseOldControllerSummary(preference);
+        break;
+      case Const.ROUNDED_CORNERS_KEY:
+        updateRoundedCornersSummary(preference);
+        break;
+      case Const.ROUNDED_AS_CIRCLE_KEY:
+        updateRoundedAsCircleSummary(preference);
+        break;
+      case Const.USE_POSTPROCESSOR_KEY:
+        updateUsePostprocessorSummary(preference);
+        break;
+      case Const.POSTPROCESSOR_TYPE_KEY:
+        updateWhatPostprocessorSummary(preference);
+        break;
+      case Const.SCALE_TYPE_KEY:
+        updateWhatScaleTypeSummary(preference);
+        break;
     }
   }
 
   private void updateDataSourceSummary(final Preference preference) {
-    ListPreference dataSourcePreference = (ListPreference) preference;
-    final int valueIndex = dataSourcePreference.findIndexOfValue(dataSourcePreference.getValue());
-    final String summary = getResources().getStringArray(R.array.data_source_summaries)[valueIndex];
-    preference.setSummary(summary);
+    updateListPreference(
+      getResources(),
+      (ListPreference) preference,
+      R.array.data_source_summaries);
   }
 
   private void updateInfiniteDataSourceSummary(final Preference preference) {
@@ -106,12 +126,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateRecyclerLayoutSummary(final Preference preference) {
-    ListPreference recyclerLayoutPreference = (ListPreference) preference;
-    final int valueIndex = recyclerLayoutPreference
-        .findIndexOfValue(recyclerLayoutPreference.getValue());
-    final String summary = getResources()
-        .getStringArray(R.array.recycler_layout_summaries)[valueIndex];
-    preference.setSummary(summary);
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.recycler_layout_summaries);
   }
 
   private void updateReuseOldControllerSummary(final Preference preference) {
@@ -130,6 +148,36 @@ public class SettingsFragment extends PreferenceFragmentCompat
             R.string.unchecked_rounded_corners_summary);
   }
 
+  private void updateRoundedAsCircleSummary(final Preference preference) {
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_rounded_as_circle_summary,
+            R.string.unchecked_rounded_as_circle_summary);
+  }
+
+  private void updateUsePostprocessorSummary(final Preference preference) {
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_postprocessor_summary,
+            R.string.unchecked_postprocessor_summary);
+  }
+
+  private void updateWhatPostprocessorSummary(final Preference preference) {
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.postprocessor_summaries);
+  }
+
+  private void updateWhatScaleTypeSummary(final Preference preference) {
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.scale_type_summaries);
+  }
+
   private static boolean updateCheckBoxPreference(
           Resources resources,
           CheckBoxPreference preference,
@@ -144,13 +192,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     return checkboxState;
   }
 
-  private void updateRoundedAsCircleSummary(final Preference preference) {
-    CheckBoxPreference roundedAsCirclePreference = (CheckBoxPreference) preference;
-    final boolean roundedAsCircle = roundedAsCirclePreference.isChecked();
-    if (roundedAsCircle) {
-      preference.setSummary(getResources().getString(R.string.checked_rounded_as_circle_enabled_summary));
-    } else {
-      preference.setSummary(getResources().getString(R.string.unchecked_rounded_as_circle_enabled_summary));
-    }
+  private static void updateListPreference(
+          Resources resources,
+          ListPreference preference,
+          int arrayValuesId) {
+    final int valueIndex = preference.findIndexOfValue(preference.getValue());
+    final String summary = resources.getStringArray(arrayValuesId)[valueIndex];
+    preference.setSummary(summary);
   }
 }

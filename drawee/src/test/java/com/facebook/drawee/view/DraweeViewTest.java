@@ -49,6 +49,15 @@ public class DraweeViewTest {
   }
 
   @Test
+  public void testSetContentDescription() {
+    String CONTENT_DESCRIPTION = "Test Photo";
+    mController.setContentDescription(CONTENT_DESCRIPTION);
+    mDraweeView.setController(mController);
+    mDraweeView.setContentDescription(mController.getContentDescription());
+    assertSame(mDraweeView.getContentDescription(), CONTENT_DESCRIPTION);
+  }
+
+  @Test
   public void testSetHierarchy() {
     mDraweeView.setHierarchy(mDraweeHierarchy);
     assertSame(mDraweeHierarchy, mDraweeView.getHierarchy());
