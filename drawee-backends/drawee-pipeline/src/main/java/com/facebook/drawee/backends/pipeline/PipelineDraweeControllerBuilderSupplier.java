@@ -17,6 +17,8 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
+import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 
 import java.util.Set;
 
@@ -44,11 +46,19 @@ public class PipelineDraweeControllerBuilderSupplier implements
       Set<ControllerListener> boundControllerListeners) {
     mContext = context;
     mImagePipeline = imagePipelineFactory.getImagePipeline();
+
+    final AnimatedFactory animatedFactory = imagePipelineFactory.getAnimatedFactory();
+    AnimatedDrawableFactory animatedDrawableFactory = null;
+    if (animatedFactory != null) {
+      animatedDrawableFactory = animatedFactory.getAnimatedDrawableFactory(context);
+    }
+
     mPipelineDraweeControllerFactory = new PipelineDraweeControllerFactory(
         context.getResources(),
         DeferredReleaser.getInstance(),
-        imagePipelineFactory.getAnimatedDrawableFactory(),
-        UiThreadImmediateExecutorService.getInstance());
+        animatedDrawableFactory,
+        UiThreadImmediateExecutorService.getInstance(),
+        mImagePipeline.getBitmapMemoryCache());
     mBoundControllerListeners = boundControllerListeners;
   }
 

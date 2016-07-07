@@ -40,6 +40,7 @@ public class DraweeMocks {
   public static DraweeController mockController() {
     DraweeController controller = mock(AbstractDraweeController.class);
     stubGetAndSetHierarchy(controller);
+    stubGetAndSetContentDescription(controller);
     return controller;
   }
 
@@ -63,6 +64,28 @@ public class DraweeMocks {
             return dhHolder[0] = (DraweeHierarchy) invocation.getArguments()[0];
           }
         }).when(controller).setHierarchy(any(DraweeHierarchy.class));
+  }
+
+  /**
+   * Stubs setContentDescription and getContentDescription methods.
+   * @param controller controller to stub methods of
+   */
+  public static void stubGetAndSetContentDescription(DraweeController controller) {
+    final String[] contentDescriptionHolder = new String[1];
+    doAnswer(
+        new Answer<Object>() {
+          @Override
+          public Object answer(InvocationOnMock invocation) throws Throwable {
+            return contentDescriptionHolder[0];
+          }
+        }).when(controller).getContentDescription();
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) throws Throwable {
+            return contentDescriptionHolder[0] = (String) invocation.getArguments()[0];
+          }
+        }).when(controller).setContentDescription(any(String.class));
   }
 
   /**

@@ -212,6 +212,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   public void setAlpha(int alpha) {
     if (alpha != mPaint.getAlpha()) {
       mPaint.setAlpha(alpha);
+      super.setAlpha(alpha);
       invalidateSelf();
     }
   }

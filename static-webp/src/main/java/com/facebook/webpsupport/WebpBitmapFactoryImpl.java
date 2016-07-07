@@ -288,7 +288,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       // Keep resulting bitmap as null
     }
 
-    if (bm == null && opts != null && opts.inBitmap != null) {
+    if (IN_BITMAP_SUPPORTED && bm == null && opts != null && opts.inBitmap != null) {
       throw new IllegalArgumentException("Problem decoding into existing bitmap");
     }
 

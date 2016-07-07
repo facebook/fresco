@@ -11,11 +11,14 @@ package com.facebook.imagepipeline.cache;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.cache.disk.FileCache;
@@ -28,20 +31,32 @@ import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 
 import bolts.Task;
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.*;
-import org.robolectric.*;
-import org.robolectric.annotation.*;
+import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.same;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
@@ -60,7 +75,7 @@ public class BufferedDiskCacheTest {
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
-  private CacheKey mCacheKey;
+  private MultiCacheKey mCacheKey;
   private AtomicBoolean mIsCancelled;
   private BufferedDiskCache mBufferedDiskCache;
   private CloseableReference<PooledByteBuffer> mCloseableReference;
@@ -73,7 +88,12 @@ public class BufferedDiskCacheTest {
     MockitoAnnotations.initMocks(this);
     mCloseableReference = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mCloseableReference);
-    mCacheKey = new SimpleCacheKey("http://test.uri");
+    List<CacheKey> keys = new ArrayList<>();
+    keys.add(new SimpleCacheKey("http://test.uri"));
+    keys.add(new SimpleCacheKey("http://tyrone.uri"));
+    keys.add(new SimpleCacheKey("http://ian.uri"));
+    mCacheKey = new MultiCacheKey(keys);
+
     mIsCancelled = new AtomicBoolean(false);
     FakeClock fakeClock = new FakeClock();
     mReadPriorityExecutor = new TestExecutorService(fakeClock);
@@ -97,6 +117,30 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
+  public void testHasKeySyncFromFileCache() {
+    when(mFileCache.hasKeySync(mCacheKey)).thenReturn(true);
+    assertTrue(mBufferedDiskCache.containsSync(mCacheKey));
+  }
+
+  @Test
+  public void testHasKeySyncFromStagingArea() {
+    when(mStagingArea.containsKey(mCacheKey)).thenReturn(true);
+    assertTrue(mBufferedDiskCache.containsSync(mCacheKey));
+  }
+
+  @Test
+  public void testDoesntAlwaysHaveKeySync() {
+    when(mFileCache.hasKey(mCacheKey)).thenReturn(true);
+    assertFalse(mBufferedDiskCache.containsSync(mCacheKey));
+  }
+
+  @Test
+  public void testSyncDiskCacheCheck() {
+    when(mStagingArea.containsKey(mCacheKey) || mFileCache.hasKey(mCacheKey)).thenReturn(true);
+    assertTrue(mBufferedDiskCache.diskCheckSync(mCacheKey));
+  }
+
+  @Test
   public void testQueriesDiskCache() throws Exception {
     when(mFileCache.getResource(eq(mCacheKey))).thenReturn(mBinaryResource);
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
@@ -110,14 +154,26 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testCacheGetCancellation() throws Exception {
+  public void testListQueriesDiskCache() throws Exception {
     when(mFileCache.getResource(eq(mCacheKey))).thenReturn(mBinaryResource);
+    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
+    mReadPriorityExecutor.runUntilIdle();
+    verify(mFileCache).getResource(eq(mCacheKey));
+    assertEquals(
+        2,
+        readTask.getResult().getByteBufferRef()
+            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertSame(mPooledByteBuffer, readTask.getResult().getByteBufferRef().get());
+  }
+
+  @Test
+  public void testCacheGetCancellation() throws Exception {
+    when(mFileCache.getResource(mCacheKey)).thenReturn(mBinaryResource);
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     mIsCancelled.set(true);
     mReadPriorityExecutor.runUntilIdle();
     verify(mFileCache, never()).getResource(mCacheKey);
-    assertTrue(readTask.isFaulted());
-    assertTrue(readTask.getError() instanceof CancellationException);
+    assertTrue(isTaskCancelled(readTask));
   }
 
   @Test
@@ -159,6 +215,14 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
+  public void testCacheMissList() throws Exception {
+    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
+    mReadPriorityExecutor.runUntilIdle();
+    verify(mFileCache).getResource(eq(mCacheKey));
+    assertNull(readTask.getResult());
+  }
+
+  @Test
   public void testPutBumpsRefCountBeforeSubmit() {
     mBufferedDiskCache.put(mCacheKey, mEncodedImage);
     assertEquals(3, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -178,7 +242,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testServesPinned() throws Exception {
+  public void testFromStagingArea() throws Exception {
     when(mStagingArea.get(mCacheKey)).thenReturn(mEncodedImage);
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
@@ -188,7 +252,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testServesPinned2() throws Exception {
+  public void testFromStagingAreaLater() throws Exception {
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     assertFalse(readTask.isCompleted());
 
@@ -219,7 +283,7 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testPins2() {
+  public void testContainsFromStagingAreaLater() {
     Task<Boolean> readTask = mBufferedDiskCache.contains(mCacheKey);
     assertFalse(readTask.isCompleted());
     when(mStagingArea.get(mCacheKey)).thenReturn(mEncodedImage);
@@ -228,14 +292,19 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testUnpins2() {
+  public void testRemoveFromStagingArea() {
     mBufferedDiskCache.remove(mCacheKey);
     verify(mStagingArea).remove(mCacheKey);
   }
 
   @Test
-  public void testUpins3() {
+  public void testClearFromStagingArea() {
     mBufferedDiskCache.clearAll();
     verify(mStagingArea).clearAll();
+  }
+
+  private static boolean isTaskCancelled(Task<?> task) {
+    return task.isCancelled() ||
+        (task.isFaulted() && task.getError() instanceof CancellationException);
   }
 }

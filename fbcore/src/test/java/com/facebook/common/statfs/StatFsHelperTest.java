@@ -66,7 +66,7 @@ public class StatFsHelperTest {
     mMockFileExternal = mock(File.class);
     mMockStatFsInternal = mock(StatFs.class);
     mMockStatFsExternal = mock(StatFs.class);
-    PowerMockito.when(SystemClock.elapsedRealtime()).thenReturn(System.currentTimeMillis());
+    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(System.currentTimeMillis());
   }
 
   private void expectInternalSetup() {

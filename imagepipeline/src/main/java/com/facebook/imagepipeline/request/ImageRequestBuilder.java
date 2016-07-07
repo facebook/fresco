@@ -19,7 +19,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 
 import javax.annotation.Nullable;
 
-import static com.facebook.imagepipeline.request.ImageRequest.ImageType;
+import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
 
 /**
@@ -32,11 +32,12 @@ public class ImageRequestBuilder {
   private boolean mAutoRotateEnabled = false;
   private @Nullable ResizeOptions mResizeOptions = null;
   private ImageDecodeOptions mImageDecodeOptions = ImageDecodeOptions.defaults();
-  private ImageType mImageType = ImageType.DEFAULT;
+  private CacheChoice mCacheChoice = CacheChoice.DEFAULT;
   private boolean mProgressiveRenderingEnabled = false;
   private boolean mLocalThumbnailPreviewsEnabled = false;
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
+  private boolean mDiskCacheEnabled = true;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -81,7 +82,7 @@ public class ImageRequestBuilder {
     return ImageRequestBuilder.newBuilderWithSource(imageRequest.getSourceUri())
         .setAutoRotateEnabled(imageRequest.getAutoRotateEnabled())
         .setImageDecodeOptions(imageRequest.getImageDecodeOptions())
-        .setImageType(imageRequest.getImageType())
+        .setCacheChoice(imageRequest.getCacheChoice())
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
         .setPostprocessor(imageRequest.getPostprocessor())
@@ -166,19 +167,19 @@ public class ImageRequestBuilder {
   }
 
   /**
-   * Sets the image type. Pipeline might use different caches and eviction policies for each
+   * Sets the cache option. Pipeline might use different caches and eviction policies for each
    * image type.
-   * @param imageType the image type to set
+   * @param cacheChoice the cache choice to set
    * @return the modified builder instance
    */
-  public ImageRequestBuilder setImageType(ImageType imageType) {
-    mImageType = imageType;
+  public ImageRequestBuilder setCacheChoice(ImageRequest.CacheChoice cacheChoice) {
+    mCacheChoice = cacheChoice;
     return this;
   }
 
-  /** Gets the image type (profile image or default). */
-  public ImageType getImageType() {
-    return mImageType;
+  /** Gets the cache choice (profile image or default). */
+  public CacheChoice getCacheChoice() {
+    return mCacheChoice;
   }
 
   /**
@@ -206,14 +207,20 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** Returns whether the use of local thumbnails for previews is enabled */
+  /** Returns whether the use of local thumbnails for previews is enabled. */
   public boolean isLocalThumbnailPreviewsEnabled() {
     return mLocalThumbnailPreviewsEnabled;
   }
 
-  /** Returns whether the use of the disk cache is enabled */
+  /** Disables disk cache for this request, regardless where the image will come from. */
+  public ImageRequestBuilder disableDiskCache() {
+    mDiskCacheEnabled = false;
+    return this;
+  }
+
+  /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
   public boolean isDiskCacheEnabled() {
-    return UriUtil.isNetworkUri(mSourceUri);
+    return mDiskCacheEnabled && UriUtil.isNetworkUri(mSourceUri);
   }
 
   /**
@@ -226,7 +233,7 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** Returns the request priority */
+  /** Returns the request priority. */
   public Priority getRequestPriority() {
     return mRequestPriority;
   }

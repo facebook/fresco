@@ -63,7 +63,7 @@ public class MultiPointerGestureDetectorTest {
     mGestureDetector.onTouchEvent(event1);
     mGestureDetector.onTouchEvent(event2);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getCount());
+    assertEquals(1, mGestureDetector.getPointerCount());
     assertEquals(100f, mGestureDetector.getStartX()[0], 0);
     assertEquals(300f, mGestureDetector.getStartY()[0], 0);
     assertEquals(150f, mGestureDetector.getCurrentX()[0], 0);
@@ -73,7 +73,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event3);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getCount());
+    assertEquals(1, mGestureDetector.getPointerCount());
     assertEquals(100f, mGestureDetector.getStartX()[0], 0);
     assertEquals(300f, mGestureDetector.getStartY()[0], 0);
     assertEquals(200f, mGestureDetector.getCurrentX()[0], 0);
@@ -82,7 +82,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event4);
     assertFalse(mGestureDetector.isGestureInProgress());
-    assertEquals(0, mGestureDetector.getCount());
+    assertEquals(0, mGestureDetector.getPointerCount());
     inOrder.verify(mListener).onGestureEnd(mGestureDetector);
     inOrder.verifyNoMoreInteractions();
 
@@ -110,7 +110,7 @@ public class MultiPointerGestureDetectorTest {
     mGestureDetector.onTouchEvent(event1);
     mGestureDetector.onTouchEvent(event2);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getCount());
+    assertEquals(1, mGestureDetector.getPointerCount());
     assertEquals(100f, mGestureDetector.getStartX()[0], 0);
     assertEquals(300f, mGestureDetector.getStartY()[0], 0);
     assertEquals(150f, mGestureDetector.getCurrentX()[0], 0);
@@ -120,7 +120,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event3);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(2, mGestureDetector.getCount());
+    assertEquals(2, mGestureDetector.getPointerCount());
     assertEquals(150f, mGestureDetector.getStartX()[0], 0);
     assertEquals(350f, mGestureDetector.getStartY()[0], 0);
     assertEquals(150f, mGestureDetector.getCurrentX()[0], 0);
@@ -134,7 +134,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event4);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(2, mGestureDetector.getCount());
+    assertEquals(2, mGestureDetector.getPointerCount());
     assertEquals(150f, mGestureDetector.getStartX()[0], 0);
     assertEquals(350f, mGestureDetector.getStartY()[0], 0);
     assertEquals(200f, mGestureDetector.getCurrentX()[0], 0);
@@ -147,7 +147,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event5);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getCount());
+    assertEquals(1, mGestureDetector.getPointerCount());
     assertEquals(550f, mGestureDetector.getStartX()[0], 0);
     assertEquals(650f, mGestureDetector.getStartY()[0], 0);
     assertEquals(550f, mGestureDetector.getCurrentX()[0], 0);
@@ -157,7 +157,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event6);
     assertTrue(mGestureDetector.isGestureInProgress());
-    assertEquals(1, mGestureDetector.getCount());
+    assertEquals(1, mGestureDetector.getPointerCount());
     assertEquals(550f, mGestureDetector.getStartX()[0], 0);
     assertEquals(650f, mGestureDetector.getStartY()[0], 0);
     assertEquals(600f, mGestureDetector.getCurrentX()[0], 0);
@@ -166,7 +166,7 @@ public class MultiPointerGestureDetectorTest {
 
     mGestureDetector.onTouchEvent(event7);
     assertFalse(mGestureDetector.isGestureInProgress());
-    assertEquals(0, mGestureDetector.getCount());
+    assertEquals(0, mGestureDetector.getPointerCount());
     inOrder.verify(mListener).onGestureEnd(mGestureDetector);
     inOrder.verifyNoMoreInteractions();
 

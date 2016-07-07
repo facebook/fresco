@@ -218,14 +218,13 @@ public class ScalingUtilsTest {
     }
 
     mActualMatrix.reset();
-    ScalingUtils.getTransform(
+    scaleType.getTransform(
         mActualMatrix,
         mParentBounds,
         childWidth,
         childHeight,
         focusX,
-        focusY,
-        scaleType);
+        focusY);
 
     AndroidGraphicsTestUtils.assertEquals(mExpectedMatrix, mActualMatrix);
   }

@@ -52,4 +52,12 @@ public interface DraweeController {
    */
   Animatable getAnimatable();
 
+  /** Sets the accessibility content description. */
+  void setContentDescription(String contentDescription);
+
+  /**
+   * Gets the accessibility content description.
+   * @return content description, or null if the image has no content description
+   */
+  String getContentDescription();
 }

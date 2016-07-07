@@ -22,8 +22,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -92,8 +94,12 @@ public class DraweeHolderTest {
   @Test
   public void testLifecycle() {
     mDraweeHolder.setController(mController);
+    assertFalse(mDraweeHolder.isAttached());
     mDraweeHolder.onAttach();
+    assertTrue(mDraweeHolder.isAttached());
     mDraweeHolder.onDetach();
+    assertFalse(mDraweeHolder.isAttached());
+
     verify(mController).onAttach();
     verify(mController).onDetach();
   }
@@ -113,6 +119,78 @@ public class DraweeHolderTest {
     mDraweeHolder.onAttach();
     mDraweeHolder.onDetach();
     mDraweeHolder.onAttach();
+  }
+
+  @Test
+  public void testAttachAndTrim() {
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.onAttach();
+    mDraweeHolder.trim();
+    mInOrderVerifier.verify(mController).onAttach();
+    mInOrderVerifier.verify(mController).onDetach();
+    assertTrue(mDraweeHolder.isAttached());
+  }
+
+  @Test
+  public void testAttachTrimUntrim() {
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.onAttach();
+    mDraweeHolder.trim();
+    mDraweeHolder.untrim();
+    mInOrderVerifier.verify(mController).onAttach();
+    mInOrderVerifier.verify(mController).onDetach();
+    mInOrderVerifier.verify(mController).onAttach();
+    assertTrue(mDraweeHolder.isAttached());
+  }
+
+  @Test
+  public void testAttachTrimDetachUntrim() {
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.onAttach();
+    mDraweeHolder.trim();
+    mDraweeHolder.onDetach();
+    mDraweeHolder.untrim();
+    mInOrderVerifier.verify(mController).onAttach();
+    mInOrderVerifier.verify(mController).onDetach();
+    assertFalse(mDraweeHolder.isAttached());
+  }
+
+  @Test
+  public void testAttachTrimUntrimDetach() {
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.onAttach();
+    mDraweeHolder.trim();
+    mDraweeHolder.untrim();
+    mDraweeHolder.onDetach();
+    mInOrderVerifier.verify(mController).onAttach();
+    mInOrderVerifier.verify(mController).onDetach();
+    mInOrderVerifier.verify(mController).onAttach();
+    mInOrderVerifier.verify(mController).onDetach();
+    assertFalse(mDraweeHolder.isAttached());
+  }
+
+  @Test
+  public void testDetachPreventsUntrim() {
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.onAttach();
+    mDraweeHolder.onDetach();
+    mDraweeHolder.trim();
+    mDraweeHolder.untrim();
+    assertFalse(mDraweeHolder.isAttached());
+  }
+
+  @Test
+  public void testReattachAfterTrim() {
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.onAttach();
+    mDraweeHolder.trim();
+    mDraweeHolder.onDetach();
+    mDraweeHolder.untrim();
+    mDraweeHolder.onAttach();
+    mInOrderVerifier.verify(mController).onAttach();
+    mInOrderVerifier.verify(mController).onDetach();
+    mInOrderVerifier.verify(mController).onAttach();
+    assertTrue(mDraweeHolder.isAttached());
   }
 
   /** There are 8 possible state transitions with two variables

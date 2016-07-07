@@ -85,10 +85,11 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
     when(mProducerContext.getListener()).thenReturn(mProducerListener);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
     when(mProducerContext.getId()).thenReturn(mRequestId);
+    when(mProducerContext.getCallerContext()).thenReturn(PRODUCER_NAME);
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     when(mPostprocessor.getPostprocessorCacheKey()).thenReturn(mPostProcessorCacheKey);
     when(mRepeatedPostprocessor.getPostprocessorCacheKey()).thenReturn(mPostProcessorCacheKey);
-    when(mCacheKeyFactory.getPostprocessedBitmapCacheKey(mImageRequest))
+    when(mCacheKeyFactory.getPostprocessedBitmapCacheKey(mImageRequest, PRODUCER_NAME))
         .thenReturn(mPostprocessedBitmapCacheKey);
   }
 

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.facebook.binaryresource.FileBinaryResource;
+import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.WriterCallback;
 
 /**
@@ -60,14 +60,7 @@ public interface DiskStorage {
    * @return the resource with the specified name. NULL if not found
    * @throws IOException for unexpected behavior.
    */
-  FileBinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
-
-  /**
-   * Get the filename of the resource with the specified name
-   * @param resourceId id of the resource
-   * @return the name of the resource
-   */
-  String getFilename(String resourceId);
+  BinaryResource getResource(String resourceId, Object debugInfo) throws IOException;
 
   /**
    * Does a resource with this name exist?
@@ -98,44 +91,10 @@ public interface DiskStorage {
    * from this method.
    * @param resourceId id of the resource
    * @param debugInfo helper object for debugging
-   * @return the temporary resource created
+   * @return the Inserter object with methods to write data, commit or cancel the insertion
    * @exception IOException on errors during this operation
    */
-  FileBinaryResource createTemporary(String resourceId, Object debugInfo) throws IOException;
-
-  /**
-   * Update the contents of the resource. Executes outside the session lock.
-   * The resource must exist. The writer callback will be provided with an
-   * OutputStream to write to. For high efficiency client should make sure that data
-   * is written in big chunks (for example by employing BufferedInputStream or writing all data
-   * at once).
-   * @param resourceId id of the resource
-   * @param resource the existing resource (which will be overwritten)
-   * @param callback the write callback
-   * @param debugInfo helper object for debugging
-   * @throws IOException
-   */
-  void updateResource(
-      String resourceId,
-      FileBinaryResource resource,
-      WriterCallback callback,
-      Object debugInfo)
-      throws IOException;
-
-  /**
-   * Commits the resource created by createTemporary() into the cache.
-   * Once this is called the entry will be available to clients of the cache.
-   * @param resourceId the id of the resource
-   * @param temporary the temporary resource
-   * @param debugInfo debug object for debugging
-   * @return the permanent resource created
-   * @exception IOException on errors during the commit
-   */
-  FileBinaryResource commit(
-      String resourceId,
-      FileBinaryResource temporary,
-      Object debugInfo)
-      throws IOException;
+  Inserter insert(String resourceId, Object debugInfo) throws IOException;
 
   /**
    * Get all entries currently in the storage
@@ -169,10 +128,49 @@ public interface DiskStorage {
   DiskDumpInfo getDumpInfo() throws IOException;
 
   interface Entry {
+    /** the id representing the resource */
+    String getId();
     /** calculated on first time and never changes so it can be used as immutable **/
     long getTimestamp();
     /** calculated on first time and never changes so it can be used as immutable **/
     long getSize();
-    FileBinaryResource getResource();
+    BinaryResource getResource();
+  }
+
+  /**
+   * This is a builder-like interface returned when calling insert.
+   * It holds all the operations carried through an {@link #insert} operation:
+   * - writing data
+   * - commiting
+   * - clean up
+   */
+  interface Inserter {
+
+    /**
+     * Update the contents of the resource to be inserted. Executes outside the session lock.
+     * The writer callback will be provided with an OutputStream to write to.
+     * For high efficiency client should make sure that data is written in big chunks
+     * (for example by employing BufferedInputStream or writing all data at once).
+     * @param callback the write callback
+     * @param debugInfo helper object for debugging
+     * @throws IOException
+     */
+    void writeData(WriterCallback callback, Object debugInfo) throws IOException;
+
+    /**
+     * Commits the insertion into the cache.
+     * Once this is called the entry will be available to clients of the cache.
+     * @param debugInfo debug object for debugging
+     * @return the final resource created
+     * @exception IOException on errors during the commit
+     */
+    BinaryResource commit(Object debugInfo) throws IOException;
+
+    /**
+     * Discards the insertion process.
+     * If resource was already committed the call is ignored.
+     * @return true if cleanUp is successful (or noop), false if something couldn't be dealt with
+     */
+    boolean cleanUp();
   }
 }

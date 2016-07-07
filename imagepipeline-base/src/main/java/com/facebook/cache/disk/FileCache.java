@@ -34,6 +34,16 @@ public interface FileCache extends DiskTrimmable {
    */
   BinaryResource getResource(CacheKey key);
 
+  /**
+   * Returns true if the key is in the in-memory key index.
+   *
+   * Not guaranteed to be correct. The cache may yet have this key even if this returns false.
+   * But if it returns true, it definitely has it.
+   *
+   * Avoids a disk read.
+   */
+  boolean hasKeySync(CacheKey key);
+
   boolean hasKey(CacheKey key);
   boolean probe(CacheKey key);
 

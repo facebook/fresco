@@ -26,6 +26,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -40,7 +41,9 @@ import com.facebook.imageutils.JfifUtil;
  * <p>At present, these thumbnails are retrieved on the java heap before being put into native
  * memory.
  */
-public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
+public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImage> {
+
+  private static final int COMMON_EXIF_THUMBNAIL_MAX_DIMENSION = 512;
 
   @VisibleForTesting static final String PRODUCER_NAME = "LocalExifThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
@@ -56,6 +59,25 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
     mContentResolver = contentResolver;
+  }
+
+  /**
+   * Checks whether the producer may be able to produce images of the specified size. This makes no
+   * promise about being able to produce images for a particular source, only generally being able
+   * to produce output of the desired resolution.
+   *
+   * <p> In this case, assumptions are made about the common size of EXIF thumbnails which is that
+   * they may be up to 512 pixels in each dimension.
+   *
+   * @param resizeOptions the resize options from the current request
+   * @return true if the producer can meet these needs
+  */
+  @Override
+  public boolean canProvideImageForSize(ResizeOptions resizeOptions) {
+    return ThumbnailSizeChecker.isImageBigEnough(
+        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION,
+        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION,
+        resizeOptions);
   }
 
   @Override
@@ -109,7 +131,7 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
   }
 
   @VisibleForTesting ExifInterface getExifInterface(Uri uri) throws IOException {
-    final String realPath = getRealPathFromUri(uri);
+    final String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
     if (canReadAsFile(realPath)) {
         return new ExifInterface(realPath);
     }
@@ -124,7 +146,13 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
     int rotationAngle = getRotationAngle(exifInterface);
     int width = dimensions != null ? dimensions.first : EncodedImage.UNKNOWN_WIDTH;
     int height = dimensions != null ? dimensions.second : EncodedImage.UNKNOWN_HEIGHT;
-    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(imageBytes));
+    EncodedImage encodedImage;
+    CloseableReference<PooledByteBuffer> closeableByteBuffer = CloseableReference.of(imageBytes);
+    try {
+      encodedImage = new EncodedImage(closeableByteBuffer);
+    } finally {
+      CloseableReference.closeSafely(closeableByteBuffer);
+    }
     encodedImage.setImageFormat(ImageFormat.JPEG);
     encodedImage.setRotationAngle(rotationAngle);
     encodedImage.setWidth(width);
@@ -138,33 +166,6 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
         Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)));
   }
 
-  /**
-   * Get the path of a file from the Uri
-   * @param srcUri The source uri
-   * @return The Path for the file or null if doesn't exists
-   */
-  private String getRealPathFromUri(final Uri srcUri) {
-    String result = null;
-    if (UriUtil.isLocalContentUri(srcUri)) {
-      Cursor cursor = null;
-      try {
-        cursor = mContentResolver.query(srcUri, null, null, null, null);
-        if (cursor != null) {
-          cursor.moveToFirst();
-          int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-          result = cursor.getString(idx);
-        }
-      } finally {
-        if (cursor != null) {
-          cursor.close();
-        }
-      }
-    } else if (UriUtil.isLocalFileUri(srcUri)) {
-      result = srcUri.getPath();
-    }
-    return result;
-  }
-
   @VisibleForTesting boolean canReadAsFile(String realPath) throws IOException {
     if (realPath == null) {
       return false;
@@ -172,5 +173,4 @@ public class LocalExifThumbnailProducer implements Producer<EncodedImage> {
     final File file = new File(realPath);
     return file.exists() && file.canRead();
   }
-
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="local_uri_test">
+        <item>http://myserver.com/file1</item>
+        <item>Uri2</item>
+        <item>Uri3</item>
+        <item>Uri4</item>
+        <item>Uri5</item>
+        <item>Uri6</item>
+        <item>Uri7</item>
+        <item>Uri8</item>
+        <item>Uri9</item>
+        <item>http://myserver.com/file10</item>
+    </string-array>
+</resources>

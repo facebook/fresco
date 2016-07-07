@@ -7,6 +7,8 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_PLUGIN_VERSION}"
         classpath "de.undercouch:gradle-download-task:${GRADLE_DOWNLOAD_TASK_VERSION}"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${GRADLE_BINTRAY_PLUGIN_VERSION}"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:${ANDROID_MAVEN_GRADLE_PLUGIN_VERSION}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -16,6 +18,9 @@ buildscript {
 project.ext {
     buildToolsVersion = "${BUILD_TOOLS_VERSION}"
     compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
+    minSdkVersion = MIN_SDK_VERSION;
+    targetSdkVersion = TARGET_SDK_VERSION;
+    preDexLibs = !project.hasProperty('disablePreDex');
 }
 
 subprojects {
@@ -44,6 +49,14 @@ subprojects {
                 from jarList
                 into 'build/external'
             }
+        }
+    }
+
+    project.plugins.whenPluginAdded { plugin ->
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         }
     }
 }

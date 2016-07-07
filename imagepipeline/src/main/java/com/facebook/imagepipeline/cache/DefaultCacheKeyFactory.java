@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
+import javax.annotation.Nullable;
+
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
@@ -34,18 +36,19 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
   }
 
   @Override
-  public CacheKey getBitmapCacheKey(ImageRequest request) {
+  public CacheKey getBitmapCacheKey(ImageRequest request, Object callerContext) {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
         request.getAutoRotateEnabled(),
         request.getImageDecodeOptions(),
         null,
-        null);
+        null,
+        callerContext);
   }
 
   @Override
-  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request) {
+  public CacheKey getPostprocessedBitmapCacheKey(ImageRequest request, Object callerContext) {
     final Postprocessor postprocessor = request.getPostprocessor();
     final CacheKey postprocessorCacheKey;
     final String postprocessorName;
@@ -62,16 +65,19 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
         request.getAutoRotateEnabled(),
         request.getImageDecodeOptions(),
         postprocessorCacheKey,
-        postprocessorName);
+        postprocessorName,
+        callerContext);
   }
 
   @Override
-  public CacheKey getEncodedCacheKey(ImageRequest request) {
+  public CacheKey getEncodedCacheKey(ImageRequest request, @Nullable Object callerContext) {
     return new SimpleCacheKey(getCacheKeySourceUri(request.getSourceUri()).toString());
   }
 
-  @Override
-  public Uri getCacheKeySourceUri(Uri sourceUri) {
+  /**
+   * @return a {@link String} that unambiguously indicates the source of the image.
+   */
+  protected Uri getCacheKeySourceUri(Uri sourceUri) {
     return sourceUri;
   }
 }

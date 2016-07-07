@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Data Source preferences keys/values-->
+    <array name="data_source_labels">
+        <item>@string/label_local_uri</item>
+        <item>@string/label_local_internal_photo_uri</item>
+        <item>@string/label_local_external_photo_uri</item>
+    </array>
+    <array name="data_source_values">
+        <item>@string/value_local_uri</item>
+        <item>@string/value_local_internal_photo_uri</item>
+        <item>@string/value_local_external_photo_uri</item>
+    </array>
+    <array name="data_source_summaries">
+        <item>@string/value_local_summary</item>
+        <item>@string/value_local_internal_photo_uri_summary</item>
+        <item>@string/value_local_external_photo_uri_summary</item>
+    </array>
+    <!-- Recycler Layout preferences keys/values-->
+    <array name="recycler_layout_labels">
+        <item>@string/label_listview_recycler_layout</item>
+        <item>@string/label_recyclerview_recycler_layout</item>
+    </array>
+    <array name="recycler_layout_values">
+        <item>@string/value_listview_recycler_layout</item>
+        <item>@string/value_recyclerview_recycler_layout</item>
+    </array>
+    <array name="recycler_layout_summaries">
+        <item>@string/value_listview_summary</item>
+        <item>@string/value_recycler_summary</item>
+    </array>
+    <!-- Post processor labels and values-->
+    <array name="postprocessor_labels">
+        <item>@string/label_postprocessor_slow</item>
+        <item>@string/label_postprocessor_medium</item>
+        <item>@string/label_postprocessor_fast</item>
+    </array>
+    <array name="postprocessor_values">
+        <item>@string/value_postprocessor_slow</item>
+        <item>@string/value_postprocessor_medium</item>
+        <item>@string/value_postprocessor_fast</item>
+    </array>
+    <array name="postprocessor_summaries">
+        <item>@string/value_postprocessor_slow_summary</item>
+        <item>@string/value_postprocessor_medium_summary</item>
+        <item>@string/value_postprocessor_fast_summary</item>
+    </array>
+    <!-- ScaleType -->
+    <array name="scale_type_labels">
+        <item>@string/label_scale_type_none</item>
+        <item>@string/label_scale_type_center</item>
+        <item>@string/label_scale_type_center_crop</item>
+        <item>@string/label_scale_type_center_inside</item>
+        <item>@string/label_scale_type_fit_center</item>
+        <item>@string/label_scale_type_fit_start</item>
+        <item>@string/label_scale_type_fit_end</item>
+        <item>@string/label_scale_type_fit_xy</item>
+    </array>
+    <array name="scale_type_values">
+        <item>@string/value_scale_type_none</item>
+        <item>@string/value_scale_type_center</item>
+        <item>@string/value_scale_type_center_crop</item>
+        <item>@string/value_scale_type_center_inside</item>
+        <item>@string/value_scale_type_fit_center</item>
+        <item>@string/value_scale_type_fit_start</item>
+        <item>@string/value_scale_type_fit_end</item>
+        <item>@string/value_scale_type_fit_xy</item>
+    </array>
+    <array name="scale_type_summaries">
+        <item>@string/label_scale_type_none_summary</item>
+        <item>@string/label_scale_type_center_summary</item>
+        <item>@string/label_scale_type_center_crop_summary</item>
+        <item>@string/label_scale_type_center_inside_summary</item>
+        <item>@string/label_scale_type_fit_center_summary</item>
+        <item>@string/label_scale_type_fit_start_summary</item>
+        <item>@string/label_scale_type_fit_end_summary</item>
+        <item>@string/label_scale_type_fit_xy_summary</item>
+    </array>
+</resources>

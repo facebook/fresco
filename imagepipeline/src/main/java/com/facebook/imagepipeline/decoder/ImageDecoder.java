@@ -109,7 +109,7 @@ public class ImageDecoder {
       return null;
     }
     try {
-      if (GifFormatChecker.isAnimated(is)) {
+      if (!options.forceStaticImage && GifFormatChecker.isAnimated(is)) {
         return mAnimatedImageFactory.decodeGif(encodedImage, options, mBitmapConfig);
       }
       return decodeStaticImage(encodedImage);

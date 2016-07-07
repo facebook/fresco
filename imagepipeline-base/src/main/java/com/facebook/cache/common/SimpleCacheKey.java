@@ -9,6 +9,8 @@
 
 package com.facebook.cache.common;
 
+import android.net.Uri;
+
 import com.facebook.common.internal.Preconditions;
 
 /**
@@ -44,5 +46,10 @@ public class SimpleCacheKey implements CacheKey {
   @Override
   public int hashCode() {
     return mKey.hashCode();
+  }
+
+  @Override
+  public boolean containsUri(Uri uri) {
+    return mKey.contains(uri.toString());
   }
 }

@@ -95,8 +95,10 @@ public class BitmapMemoryCacheProducerTest {
     when(mProducerContext.getId()).thenReturn(mRequestId);
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
+    when(mProducerContext.getCallerContext()).thenReturn(PRODUCER_NAME);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest)).thenReturn(mBitmapMemoryCacheKey);
+    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest, PRODUCER_NAME))
+        .thenReturn(mBitmapMemoryCacheKey);
   }
 
   @Test

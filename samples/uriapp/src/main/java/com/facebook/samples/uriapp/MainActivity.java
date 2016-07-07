@@ -19,7 +19,9 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -49,19 +51,26 @@ public class MainActivity extends Activity {
 
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.simple_drawee_view);
 
-    EditText editText = (EditText) findViewById(R.id.uri_edit_text);
+    final EditText editText = (EditText) findViewById(R.id.uri_edit_text);
     editText.setOnEditorActionListener(
         new TextView.OnEditorActionListener() {
           @Override
           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             final boolean isEnterKeyDown = (actionId == EditorInfo.IME_NULL) &&
-                    (event.getAction() == KeyEvent.ACTION_DOWN);
+                (event.getAction() == KeyEvent.ACTION_DOWN);
             if (isEnterKeyDown || actionId == EditorInfo.IME_ACTION_DONE) {
               updateImageUri(Uri.parse(v.getText().toString()));
             }
             return false;
           }
         });
+    final Button clearButton = (Button) findViewById(R.id.clear_uri);
+    clearButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        editText.getText().clear();
+      }
+    });
   }
 
   private void updateImageUri(Uri uri) {

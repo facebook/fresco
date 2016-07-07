@@ -116,11 +116,11 @@ public class LocalExifThumbnailProducerTest {
   public void testFindExifThumbnail() {
     mTestLocalExifThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mTestExecutorService.runUntilIdle();
-    // Should have 3 references open: The reference that is used in the producer, the cloned
-    // reference when the argument is captured and one more that is created when getByteBufferRef is
-    // called on EncodedImage
+    // Should have 2 references open: The cloned reference when the argument is
+    // captured by EncodedImage and the one that is created when
+    // getByteBufferRef is called on EncodedImage
     assertEquals(
-        3,
+        2,
         mCapturedEncodedImage.
             getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(mThumbnailByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
