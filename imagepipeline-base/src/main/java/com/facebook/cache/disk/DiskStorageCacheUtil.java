@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import android.content.SharedPreferences;
 
@@ -42,19 +43,27 @@ public final class DiskStorageCacheUtil {
   }
 
   protected synchronized static Map<Integer, String> readStoredIndex(
-      @Nullable SharedPreferences sharedPreferences) {
+      @Nullable SharedPreferences sharedPreferences,
+      Set<String> resourceIndex) {
     Map<Integer, String> index = new HashMap<>();
     if (sharedPreferences == null) {
       return index;
     }
     Map<String, ?> allEntries = sharedPreferences.getAll();
+    SharedPreferences.Editor editor = sharedPreferences.edit();
     for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
       if (entry.getValue() instanceof String) {
-        index.put(Integer.parseInt(entry.getKey()), (String) entry.getValue());
+        Integer key = Integer.parseInt(entry.getKey());
+        if (resourceIndex.contains(entry.getValue())) {
+          index.put(key, (String) entry.getValue());
+        } else {
+          editor.remove(String.valueOf(entry.getKey()));
+        }
       } else {
         FLog.e(TAG, "SharedPreference doesn't store right data type");
       }
     }
+    editor.apply();
     return index;
   }
 
