@@ -118,6 +118,7 @@ public interface DiskStorage {
    * @throws IOException
    */
   long remove(String resourceId) throws IOException;
+
   /**
    * Clear all contents of the storage
    * @exception IOException
@@ -126,6 +127,12 @@ public interface DiskStorage {
   void clearAll() throws IOException;
 
   DiskDumpInfo getDumpInfo() throws IOException;
+
+  /**
+   * Get the storage's name, which should be unique
+   * @return name of the this storage
+   */
+  String getStorageName();
 
   interface Entry {
     /** the id representing the resource */

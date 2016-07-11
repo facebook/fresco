@@ -18,10 +18,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
@@ -56,12 +58,14 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   private static final long FILECACHE_SIZE_UPDATE_PERIOD_MS = TimeUnit.MINUTES.toMillis(30);
   private static final double TRIMMING_LOWER_BOUND = 0.02;
   private static final long UNINITIALIZED = -1;
+  private static final String SHARED_PREFS_FILENAME_PREFIX = "disk_entries_list";
 
   private final long mLowDiskSpaceCacheSizeLimit;
   private final long mDefaultCacheSizeLimit;
   private long mCacheSizeLimit;
 
   private final CacheEventListener mCacheEventListener;
+  private final SharedPreferences mSharedPreferences;
 
   @GuardedBy("mLock")
   // Maps CacheKey to the resource id that is stored on disk (if any).
@@ -149,7 +153,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       Params params,
       CacheEventListener cacheEventListener,
       CacheErrorLogger cacheErrorLogger,
-      @Nullable DiskTrimmableRegistry diskTrimmableRegistry) {
+      @Nullable DiskTrimmableRegistry diskTrimmableRegistry,
+      Context context) {
     this.mLowDiskSpaceCacheSizeLimit = params.mLowDiskSpaceCacheSizeLimit;
     this.mDefaultCacheSizeLimit = params.mDefaultCacheSizeLimit;
     this.mCacheSizeLimit = params.mDefaultCacheSizeLimit;
@@ -171,7 +176,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       diskTrimmableRegistry.registerDiskTrimmable(this);
     }
     this.mClock = SystemClock.get();
-    this.mIndex = new HashMap<>();
+
+    this.mSharedPreferences = initializeSharedPreferences(context, mStorage.getStorageName());
+
+    this.mIndex = DiskStorageCacheUtil.readStoredIndex(mSharedPreferences);
   }
 
   @Override
@@ -221,10 +229,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         }
         if (resource == null) {
           mCacheEventListener.onMiss(cacheEvent);
-          mIndex.remove(hashKey);
+          removeKeyFromIndex(hashKey);
         } else {
           mCacheEventListener.onHit(cacheEvent);
-          mIndex.put(hashKey, resourceId);
+          addKeyToIndex(hashKey, resourceId);
         }
         return resource;
       }
@@ -271,7 +279,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           }
         }
         if (retval) {
-          mIndex.put(hashKey, resourceId);
+          addKeyToIndex(hashKey, resourceId);
         }
         return retval;
       }
@@ -306,7 +314,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       BinaryResource resource = inserter.commit(key);
       mCacheStats.increment(resource.size(), 1);
-      mIndex.put(key.hashCode(), resourceId);
+      addKeyToIndex(key.hashCode(), resourceId);
       return resource;
     }
   }
@@ -400,7 +408,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           long entryAgeMs = Math.max(1, Math.abs(now - entry.getTimestamp()));
           if (entryAgeMs >= cacheExpirationMs) {
             long entryRemovedSize = mStorage.remove(entry);
-            mIndex.values().remove(entry.getId());
+            removeValueFromIndex(entry.getId());
             if (entryRemovedSize > 0) {
               itemsRemovedCount++;
               itemsRemovedSize += entryRemovedSize;
@@ -485,7 +493,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         break;
       }
       long deletedSize = mStorage.remove(entry);
-      mIndex.values().remove(entry.getId());
+      removeValueFromIndex(entry.getId());
       if (deletedSize > 0) {
         itemCount++;
         sumItemSizes += deletedSize;
@@ -551,6 +559,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       try {
         mStorage.clearAll();
+        DiskStorageCacheUtil.clearDiskEntries(mSharedPreferences);
         mIndex.clear();
       } catch (IOException ioe) {
         mCacheErrorLogger.logError(
@@ -559,7 +568,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
             "clearAll: " + ioe.getMessage(),
             ioe);
       }
-
       mCacheStats.reset();
     }
   }
@@ -595,9 +603,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           }
         }
         if (retval) {
-          mIndex.put(hashKey, resourceId);
+          addKeyToIndex(hashKey, resourceId);
         } else {
-          mIndex.remove(hashKey);
+          removeKeyFromIndex(hashKey);
         }
         return retval;
       } catch (IOException e) {
@@ -746,5 +754,42 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   private static String secureHashKey(final CacheKey key) throws UnsupportedEncodingException {
     return SecureHashUtil.makeSHA1HashBase64(key.toString().getBytes("UTF-8"));
+  }
+
+  private static SharedPreferences initializeSharedPreferences(
+      Context context,
+      String directoryName) {
+    Context applicationContext = context.getApplicationContext();
+    return applicationContext.getSharedPreferences(
+        SHARED_PREFS_FILENAME_PREFIX + directoryName,
+        Context.MODE_PRIVATE);
+  }
+
+  @GuardedBy("mLock")
+  private void addKeyToIndex(Integer hashKey, String resourceId) {
+    mIndex.put(hashKey, resourceId);
+    DiskStorageCacheUtil.addDiskCacheEntry(hashKey, resourceId, mSharedPreferences);
+  }
+
+  @GuardedBy("mLock")
+  private void removeKeyFromIndex(Integer hashKey) {
+    if (mIndex.remove(hashKey) != null) {
+      DiskStorageCacheUtil.deleteDiskCacheEntry(hashKey, mSharedPreferences);
+    }
+  }
+
+  @GuardedBy("mLock")
+  private void removeValueFromIndex(String resourceId) {
+    Integer hashKey = removeKeyByValue(mIndex, resourceId);
+    removeKeyFromIndex(hashKey);
+  }
+
+  private static Integer removeKeyByValue(Map<Integer, String> index, String value) {
+    for (Map.Entry entry : index.entrySet()) {
+      if (entry.getValue().equals(value)) {
+        return (Integer) entry.getKey();
+      }
+    }
+    return Integer.valueOf(0);
   }
 }

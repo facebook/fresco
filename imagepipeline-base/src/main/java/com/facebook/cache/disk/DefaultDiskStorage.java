@@ -122,6 +122,13 @@ public class DefaultDiskStorage implements DiskStorage {
     return true;
   }
 
+  @Override
+  public String getStorageName() {
+    String directoryName = mRootDirectory.getAbsolutePath();
+    return "_" + directoryName.substring(directoryName.lastIndexOf('/') + 1, directoryName.length())
+        + "_" + directoryName.hashCode();
+  }
+
   /**
    * Checks if we have to recreate rootDirectory.
    * This is needed because old versions of this storage created too much different files
