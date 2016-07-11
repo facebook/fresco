@@ -52,6 +52,10 @@ public class RetryManager {
     mTapToRetryEnabled = tapToRetryEnabled;
   }
 
+  public void setMaxTapToRetryAttemps(int maxTapToRetryAttemps) {
+    this.mMaxTapToRetryAttempts = maxTapToRetryAttemps;
+  }
+
   public boolean shouldRetryOnTap() {
     return mTapToRetryEnabled && mTapToRetryAttempts < mMaxTapToRetryAttempts;
   }
