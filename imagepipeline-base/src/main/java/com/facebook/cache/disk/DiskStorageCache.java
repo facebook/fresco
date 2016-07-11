@@ -65,7 +65,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   @GuardedBy("mLock")
   // Maps CacheKey to the resource id that is stored on disk (if any).
-  @VisibleForTesting final Map<CacheKey, String> mIndex;
+  @VisibleForTesting final Map<Integer, String> mIndex;
 
   @GuardedBy("mLock")
   private long mCacheSizeLastUpdateTime;
@@ -199,12 +199,13 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     String resourceId = null;
     SettableCacheEvent cacheEvent = new SettableCacheEvent()
         .setCacheKey(key);
+    Integer hashKey = Integer.valueOf(key.hashCode());
 
     try {
       synchronized (mLock) {
         BinaryResource resource = null;
-        if (mIndex.containsKey(key)) {
-          resourceId = mIndex.get(key);
+        if (mIndex.containsKey(hashKey)) {
+          resourceId = mIndex.get(hashKey);
           cacheEvent.setResourceId(resourceId);
           resource = mStorage.getResource(resourceId, key);
         } else {
@@ -220,10 +221,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         }
         if (resource == null) {
           mCacheEventListener.onMiss(cacheEvent);
-          mIndex.remove(key);
+          mIndex.remove(hashKey);
         } else {
           mCacheEventListener.onHit(cacheEvent);
-          mIndex.put(key, resourceId);
+          mIndex.put(hashKey, resourceId);
         }
         return resource;
       }
@@ -255,8 +256,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     try {
       synchronized (mLock) {
         boolean retval = false;
-        if (mIndex.containsKey(key)) {
-          resourceId = mIndex.get(key);
+        Integer hashKey = Integer.valueOf(key.hashCode());
+        if (mIndex.containsKey(hashKey)) {
+          resourceId = mIndex.get(hashKey);
           retval = mStorage.touch(resourceId, key);
         } else {
           List<String> resourceIds = getResourceIds(key);
@@ -269,7 +271,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           }
         }
         if (retval) {
-          mIndex.put(key, resourceId);
+          mIndex.put(hashKey, resourceId);
         }
         return retval;
       }
@@ -304,7 +306,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       BinaryResource resource = inserter.commit(key);
       mCacheStats.increment(resource.size(), 1);
-      mIndex.put(key, resourceId);
+      mIndex.put(key.hashCode(), resourceId);
       return resource;
     }
   }
@@ -319,8 +321,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     String resourceId;
     synchronized (mLock) {
       // for multiple resource ids associated with the same image, we only write one file
-      if (mIndex.containsKey(key)) {
-        resourceId = mIndex.get(key);
+      Integer hashKey = Integer.valueOf(key.hashCode());
+      if (mIndex.containsKey(hashKey)) {
+        resourceId = mIndex.get(hashKey);
       } else {
         resourceId = getFirstResourceId(key);
       }
@@ -355,8 +358,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       try {
         String resourceId = null;
-        if (mIndex.containsKey(key)) {
-          resourceId = mIndex.get(key);
+        Integer hashKey = Integer.valueOf(key.hashCode());
+        if (mIndex.containsKey(hashKey)) {
+          resourceId = mIndex.get(hashKey);
           mStorage.remove(resourceId);
         } else {
           List<String> resourceIds = getResourceIds(key);
@@ -365,7 +369,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
             mStorage.remove(resourceId);
           }
         }
-        mIndex.remove(key);
+        mIndex.remove(hashKey);
       } catch (IOException e) {
         mCacheErrorLogger.logError(
             CacheErrorLogger.CacheErrorCategory.DELETE_FILE,
@@ -563,7 +567,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @Override
   public boolean hasKeySync(CacheKey key) {
     synchronized (mLock) {
-      return mIndex.containsKey(key);
+      return mIndex.containsKey(key.hashCode());
     }
   }
 
@@ -576,8 +580,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       try {
         String resourceId = null;
         boolean retval = false;
-        if (mIndex.containsKey(key)) {
-          resourceId = mIndex.get(key);
+        Integer hashKey = Integer.valueOf(key.hashCode());
+        if (mIndex.containsKey(hashKey)) {
+          resourceId = mIndex.get(hashKey);
           retval = mStorage.contains(resourceId, key);
         } else {
           List<String> resourceIds = getResourceIds(key);
@@ -590,9 +595,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           }
         }
         if (retval) {
-          mIndex.put(key, resourceId);
+          mIndex.put(hashKey, resourceId);
         } else {
-          mIndex.remove(key);
+          mIndex.remove(hashKey);
         }
         return retval;
       } catch (IOException e) {
