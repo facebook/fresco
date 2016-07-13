@@ -97,8 +97,9 @@ public class AnimatedImageCompositor {
 
     // Iterate from nextIndex to the frame number just preceding the one we're trying to render
     // and composite them in order according to the Disposal Method.
+    AnimatedDrawableFrameInfo frameInfo;
     for (int index = nextIndex; index < frameNumber; index++) {
-      AnimatedDrawableFrameInfo frameInfo = mAnimatedDrawableBackend.getFrameInfo(index);
+      frameInfo = mAnimatedDrawableBackend.getFrameInfo(index);
       DisposalMethod disposalMethod = frameInfo.disposalMethod;
       if (disposalMethod == DisposalMethod.DISPOSE_TO_PREVIOUS) {
         continue;
@@ -113,7 +114,7 @@ public class AnimatedImageCompositor {
       }
     }
 
-    AnimatedDrawableFrameInfo frameInfo = mAnimatedDrawableBackend.getFrameInfo(frameNumber);
+    frameInfo = mAnimatedDrawableBackend.getFrameInfo(frameNumber);
     if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
       disposeToBackground(canvas, frameInfo);
     }
