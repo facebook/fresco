@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
     final ToggleButton webpToggle = (ToggleButton) findViewById(R.id.toggle_webp);
     webpToggle.setEnabled(false);
     mAnimatedWebpView = (SimpleDraweeView) findViewById(R.id.animated_webp);
-    Uri animatedWebpUri = Uri.parse("http://www.gstatic.com/webp/animated/1.webp");
+    Uri animatedWebpUri = Uri.parse("https://dl.dropboxusercontent.com/u/11995554/11_21.webp");
     DraweeController webpController = Fresco.newDraweeControllerBuilder()
         .setUri(animatedWebpUri)
         .setControllerListener(new BaseControllerListener<ImageInfo>() {

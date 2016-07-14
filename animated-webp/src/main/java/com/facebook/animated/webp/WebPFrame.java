@@ -81,8 +81,8 @@ public class WebPFrame implements AnimatedImageFrame {
     return nativeShouldDisposeToBackgroundColor();
   }
 
-  public boolean shouldBlendWithPreviousFrame() {
-    return nativeShouldBlendWithPreviousFrame();
+  public boolean isBlendWithPreviousFrame() {
+    return nativeIsBlendWithPreviousFrame();
   }
 
   private native void nativeRenderFrame(int width, int height, Bitmap bitmap);
@@ -92,7 +92,7 @@ public class WebPFrame implements AnimatedImageFrame {
   private native int nativeGetXOffset();
   private native int nativeGetYOffset();
   private native boolean nativeShouldDisposeToBackgroundColor();
-  private native boolean nativeShouldBlendWithPreviousFrame();
+  private native boolean nativeIsBlendWithPreviousFrame();
   private native void nativeDispose();
   private native void nativeFinalize();
 }

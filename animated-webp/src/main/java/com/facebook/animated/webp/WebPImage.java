@@ -17,6 +17,7 @@ import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
@@ -156,7 +157,9 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
           frame.getYOffset(),
           frame.getWidth(),
           frame.getHeight(),
-          frame.shouldBlendWithPreviousFrame(),
+          frame.isBlendWithPreviousFrame() ?
+              BlendOperation.BLEND_WITH_PREVIOUS :
+              BlendOperation.NO_BLEND,
           frame.shouldDisposeToBackgroundColor() ?
               DisposalMethod.DISPOSE_TO_BACKGROUND :
               DisposalMethod.DISPOSE_DO_NOT);
