@@ -17,6 +17,7 @@ import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 
@@ -150,7 +151,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
           frame.getYOffset(),
           frame.getWidth(),
           frame.getHeight(),
-          true,
+          BlendOperation.BLEND_WITH_PREVIOUS,
           fromGifDisposalMethod(frame.getDisposalMode()));
     } finally {
       frame.dispose();
