@@ -20,7 +20,6 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
@@ -44,7 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
@@ -549,10 +547,21 @@ public class DiskStorageCacheTest {
   public void testHasKeyInIndex() throws Exception {
     CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
-    // Index should be updated
+    // Index should be updated.
     DiskStorageCache cache2 = createDiskCache(mStorage);
+    cache2.awaitIndex();
     assertTrue(cache2.hasKeySync(key));
     assertTrue(cache2.hasKey(key));
+  }
+
+  @Test
+  public void testHasKeyWithAwaitingIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index should be not yet updated
+    DiskStorageCache cache2 = createDiskCache(mStorage);
+    assertTrue(cache2.hasKey(key));
+    assertTrue(cache2.hasKeySync(key));
   }
 
   @Test

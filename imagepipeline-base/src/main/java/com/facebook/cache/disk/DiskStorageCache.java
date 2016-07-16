@@ -18,10 +18,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
@@ -64,6 +67,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   private final long mLowDiskSpaceCacheSizeLimit;
   private final long mDefaultCacheSizeLimit;
+  private final CountDownLatch mCountDownLatch = new CountDownLatch(1);
   private long mCacheSizeLimit;
 
   private final CacheEventListener mCacheEventListener;
@@ -71,7 +75,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   @GuardedBy("mLock")
   // Maps CacheKey to the resource id that is stored on disk (if any).
-  @VisibleForTesting Map<Integer, String> mIndex;
+  @VisibleForTesting Map<Integer, String> mIndex = new HashMap<>();
 
   @GuardedBy("mLock")
   // All resourceId stored on disk (if any).
@@ -178,6 +182,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     this.mCacheErrorLogger = cacheErrorLogger;
 
     this.mCacheStats = new CacheStats();
+
     if (diskTrimmableRegistry != null) {
       diskTrimmableRegistry.registerDiskTrimmable(this);
     }
@@ -187,7 +192,16 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
     this.mResourceIndex = new HashSet<>();
 
-    maybeUpdateFileCacheSize();
+    Executors.newSingleThreadExecutor().execute(new Runnable() {
+
+      @Override
+      public void run() {
+        synchronized (mLock) {
+          maybeUpdateFileCacheSize();
+        }
+        mCountDownLatch.countDown();
+      }
+    });
   }
 
   @Override
@@ -198,6 +212,19 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @Override
   public boolean isEnabled() {
     return mStorage.isEnabled();
+  }
+
+  /**
+   * Blocks current thread until having finished initialization in Memory Index. Call only when you
+   * need memory index in cold start.
+   */
+  @VisibleForTesting
+  protected void awaitIndex() {
+    try {
+      mCountDownLatch.await();
+    } catch (InterruptedException e) {
+      FLog.e(TAG, "Memory Index is not ready yet. ");
+    }
   }
 
   /**
