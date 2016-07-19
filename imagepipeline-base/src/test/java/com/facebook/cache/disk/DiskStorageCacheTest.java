@@ -544,7 +544,7 @@ public class DiskStorageCacheTest {
   }
 
   @Test
-  public void testHasKeyInIndex() throws Exception {
+  public void testHasKeyWithAwaitingIndex() throws Exception {
     CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index should be updated.
@@ -555,10 +555,10 @@ public class DiskStorageCacheTest {
   }
 
   @Test
-  public void testHasKeyWithAwaitingIndex() throws Exception {
+  public void testHasKeyWithoutAwaitingIndex() throws Exception {
     CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
-    // Index should be not yet updated
+    // Index may not yet updated.
     DiskStorageCache cache2 = createDiskCache(mStorage);
     assertTrue(cache2.hasKey(key));
     assertTrue(cache2.hasKeySync(key));
