@@ -67,7 +67,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private static final Class<?> TAG = AbstractDraweeController.class;
 
   // Components
-  private final DraweeEventTracker mEventTracker = new DraweeEventTracker();
+  private final DraweeEventTracker mEventTracker = DraweeEventTracker.newInstance();
   private final DeferredReleaser mDeferredReleaser;
   private final Executor mUiThreadImmediateExecutor;
 
@@ -89,6 +89,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private boolean mIsRequestSubmitted;
   private boolean mHasFetchFailed;
   private boolean mRetainImageOnFailure;
+  private @Nullable String mContentDescription;
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
   private @Nullable Drawable mDrawable;
@@ -178,6 +179,9 @@ public abstract class AbstractDraweeController<T, INFO> implements
     if (mDrawable != null) {
       releaseDrawable(mDrawable);
     }
+    if (mContentDescription != null) {
+      mContentDescription = null;
+    }
     mDrawable = null;
     if (mFetchedImage != null) {
       logMessageAndImage("release", mFetchedImage);
@@ -225,6 +229,18 @@ public abstract class AbstractDraweeController<T, INFO> implements
   /** Sets whether to display last available image in case of failure. */
   protected void setRetainImageOnFailure(boolean enabled) {
     mRetainImageOnFailure = enabled;
+  }
+
+  /** Gets accessibility content description. */
+  @Override
+  public @Nullable String getContentDescription() {
+    return mContentDescription;
+  }
+
+  /** Sets accessibility content description. */
+  @Override
+  public void setContentDescription(@Nullable String contentDescription) {
+    mContentDescription = contentDescription;
   }
 
   /** Adds controller listener. */

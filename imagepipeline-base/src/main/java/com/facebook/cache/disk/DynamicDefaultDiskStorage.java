@@ -82,6 +82,15 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
   }
 
   @Override
+  public String getStorageName() {
+    try {
+      return get().getStorageName();
+    } catch (IOException ioe) {
+      return "";
+    }
+  }
+
+  @Override
   public BinaryResource getResource(String resourceId, Object debugInfo) throws IOException {
     return get().getResource(resourceId, debugInfo);
   }

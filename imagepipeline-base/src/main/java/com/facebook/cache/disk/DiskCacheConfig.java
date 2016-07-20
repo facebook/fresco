@@ -42,6 +42,7 @@ public class DiskCacheConfig {
   private final CacheErrorLogger mCacheErrorLogger;
   private final CacheEventListener mCacheEventListener;
   private final DiskTrimmableRegistry mDiskTrimmableRegistry;
+  private final Context mContext;
 
   private DiskCacheConfig(Builder builder) {
     mVersion = builder.mVersion;
@@ -64,6 +65,7 @@ public class DiskCacheConfig {
         builder.mDiskTrimmableRegistry == null ?
             NoOpDiskTrimmableRegistry.getInstance() :
             builder.mDiskTrimmableRegistry;
+    mContext = builder.mContext;
   }
 
   public int getVersion() {
@@ -104,6 +106,10 @@ public class DiskCacheConfig {
 
   public DiskTrimmableRegistry getDiskTrimmableRegistry() {
     return mDiskTrimmableRegistry;
+  }
+
+  public Context getContext() {
+    return mContext;
   }
 
   /**

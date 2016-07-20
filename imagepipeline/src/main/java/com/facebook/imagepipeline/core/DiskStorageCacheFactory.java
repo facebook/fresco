@@ -31,13 +31,15 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
         diskCacheConfig.getMinimumSizeLimit(),
         diskCacheConfig.getLowDiskSpaceSizeLimit(),
         diskCacheConfig.getDefaultSizeLimit());
+
     return new DiskStorageCache(
         diskStorage,
         diskCacheConfig.getEntryEvictionComparatorSupplier(),
         params,
         diskCacheConfig.getCacheEventListener(),
         diskCacheConfig.getCacheErrorLogger(),
-        diskCacheConfig.getDiskTrimmableRegistry());
+        diskCacheConfig.getDiskTrimmableRegistry(),
+        diskCacheConfig.getContext());
   }
 
   @Override

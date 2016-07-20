@@ -29,12 +29,23 @@ public class AnimatedDrawableFrameInfo {
     DISPOSE_TO_PREVIOUS
   }
 
+  /**
+   * Indicates how transparent pixels of the current frame are blended
+   * with those of the previous canvas.
+   */
+  public enum BlendOperation {
+    /** Blend **/
+    BLEND_WITH_PREVIOUS,
+    /** Do not blend **/
+    NO_BLEND,
+  }
+
   public final int frameNumber;
   public final int xOffset;
   public final int yOffset;
   public final int width;
   public final int height;
-  public final boolean shouldBlendWithPreviousFrame;
+  public final BlendOperation blendOperation;
   public final DisposalMethod disposalMethod;
 
   public AnimatedDrawableFrameInfo(
@@ -43,14 +54,14 @@ public class AnimatedDrawableFrameInfo {
       int yOffset,
       int width,
       int height,
-      boolean shouldBlendWithPreviousFrame,
+      BlendOperation blendOperation,
       DisposalMethod disposalMethod) {
     this.frameNumber = frameNumber;
     this.xOffset = xOffset;
     this.yOffset = yOffset;
     this.width = width;
     this.height = height;
-    this.shouldBlendWithPreviousFrame = shouldBlendWithPreviousFrame;
+    this.blendOperation = blendOperation;
     this.disposalMethod = disposalMethod;
   }
 }

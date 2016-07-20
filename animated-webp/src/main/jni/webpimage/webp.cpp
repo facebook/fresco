@@ -750,7 +750,7 @@ jboolean WebPFrame_nativeShouldDisposeToBackgroundColor(JNIEnv* pEnv, jobject th
  *
  * @return whether the current frame should be alpha blended over the previous frame
  */
-jboolean WebPFrame_nativeShouldBlendWithPreviousFrame(JNIEnv* pEnv, jobject thiz) {
+jboolean WebPFrame_nativeIsBlendWithPreviousFrame(JNIEnv* pEnv, jobject thiz) {
   auto spNativeContext = getWebPFrameNativeContext(pEnv, thiz);
   if (!spNativeContext) {
     throwIllegalStateException(pEnv, "Already disposed");
@@ -847,9 +847,9 @@ static JNINativeMethod sWebPFrameMethods[] = {
   { "nativeShouldDisposeToBackgroundColor",
     "()Z",
     (void*)WebPFrame_nativeShouldDisposeToBackgroundColor },
-  { "nativeShouldBlendWithPreviousFrame",
+  { "nativeIsBlendWithPreviousFrame",
     "()Z",
-    (void*)WebPFrame_nativeShouldBlendWithPreviousFrame },
+    (void*)WebPFrame_nativeIsBlendWithPreviousFrame },
   { "nativeDispose",
     "()V",
     (void*)WebPFrame_nativeDispose },

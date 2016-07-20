@@ -54,6 +54,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateRoundedAsCircleSummary(findPreference(Const.ROUNDED_AS_CIRCLE_KEY));
     updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
     updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
+    updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
   }
 
   @Override
@@ -65,24 +66,37 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     Preference preference = findPreference(key);
-    if (Const.DATA_SOURCE_KEY.equals(key)) {
-      updateDataSourceSummary(preference);
-    } else if (Const.RECYCLER_LAYOUT_KEY.equals(key)) {
-      updateRecyclerLayoutSummary(preference);
-    } else if (Const.INFINITE_DATA_SOURCE_KEY.equals(key)) {
-      updateInfiniteDataSourceSummary(preference);
-    } else if (Const.DISTINCT_DATA_SOURCE_KEY.equals(key)) {
-      updateDistinctDataSourceSummary(preference);
-    } else if (Const.REUSE_OLD_CONTROLLER_KEY.equals(key)) {
-      updateReuseOldControllerSummary(preference);
-    } else if (Const.ROUNDED_CORNERS_KEY.equals(key)) {
-      updateRoundedCornersSummary(preference);
-    } else if (Const.ROUNDED_AS_CIRCLE_KEY.equals(key)) {
-      updateRoundedAsCircleSummary(preference);
-    } else if (Const.USE_POSTPROCESSOR_KEY.equals(key)) {
-      updateUsePostprocessorSummary(preference);
-    } else if (Const.POSTPROCESSOR_TYPE_KEY.equals(key)) {
-      updateWhatPostprocessorSummary(preference);
+    switch (key) {
+      case Const.DATA_SOURCE_KEY:
+        updateDataSourceSummary(preference);
+        break;
+      case Const.RECYCLER_LAYOUT_KEY:
+        updateRecyclerLayoutSummary(preference);
+        break;
+      case Const.INFINITE_DATA_SOURCE_KEY:
+        updateInfiniteDataSourceSummary(preference);
+        break;
+      case Const.DISTINCT_DATA_SOURCE_KEY:
+        updateDistinctDataSourceSummary(preference);
+        break;
+      case Const.REUSE_OLD_CONTROLLER_KEY:
+        updateReuseOldControllerSummary(preference);
+        break;
+      case Const.ROUNDED_CORNERS_KEY:
+        updateRoundedCornersSummary(preference);
+        break;
+      case Const.ROUNDED_AS_CIRCLE_KEY:
+        updateRoundedAsCircleSummary(preference);
+        break;
+      case Const.USE_POSTPROCESSOR_KEY:
+        updateUsePostprocessorSummary(preference);
+        break;
+      case Const.POSTPROCESSOR_TYPE_KEY:
+        updateWhatPostprocessorSummary(preference);
+        break;
+      case Const.SCALE_TYPE_KEY:
+        updateWhatScaleTypeSummary(preference);
+        break;
     }
   }
 
@@ -155,6 +169,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
             getResources(),
             (ListPreference) preference,
             R.array.postprocessor_summaries);
+  }
+
+  private void updateWhatScaleTypeSummary(final Preference preference) {
+    updateListPreference(
+            getResources(),
+            (ListPreference) preference,
+            R.array.scale_type_summaries);
   }
 
   private static boolean updateCheckBoxPreference(

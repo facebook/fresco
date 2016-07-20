@@ -46,7 +46,6 @@ import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 public class ProducerSequenceFactory {
-  private static final int MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
 
   private final ProducerFactory mProducerFactory;
   private final NetworkFetcher mNetworkFetcher;
@@ -54,6 +53,7 @@ public class ProducerSequenceFactory {
   private final boolean mWebpSupportEnabled;
   private final boolean mDownsampleEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  private final int mThrottlingMaxSimultaneousRequests;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -80,7 +80,8 @@ public class ProducerSequenceFactory {
       boolean resizeAndRotateEnabledForNetwork,
       boolean downsampleEnabled,
       boolean webpSupportEnabled,
-      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
+      ThreadHandoffProducerQueue threadHandoffProducerQueue,
+      int throttlingMaxSimultaneousRequests) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -89,6 +90,7 @@ public class ProducerSequenceFactory {
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
+    mThrottlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
   }
 
   /**
@@ -464,7 +466,7 @@ public class ProducerSequenceFactory {
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(
-            MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE,
+            mThrottlingMaxSimultaneousRequests,
             localImageProducer);
     return mProducerFactory.newBranchOnSeparateImagesProducer(
         newLocalThumbnailProducer(thumbnailProducers),
