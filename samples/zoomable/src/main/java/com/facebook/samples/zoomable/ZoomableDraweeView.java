@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.util.AttributeSet;
@@ -115,6 +116,33 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
     mZoomableController = createZoomableController();
     mZoomableController.setListener(mZoomableListener);
     mTapGestureDetector = new GestureDetector(getContext(), mTapListenerWrapper);
+    mTapGestureDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
+      @Override
+      public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+      }
+
+      @Override
+      public boolean onDoubleTap(MotionEvent e) {
+        float maxScaleFactor = ((DefaultZoomableController) mZoomableController).getMaxScaleFactor();
+        RectF bounds = ((DefaultZoomableController) mZoomableController).getImageBounds();
+        float x = e.getX();
+        float y = e.getY();
+        PointF imagePoint = new PointF((x - bounds.left) / bounds.width(), (y - bounds.top) / bounds.height());
+        float scaleFactor = mZoomableController.getScaleFactor() < maxScaleFactor ? maxScaleFactor : ((DefaultZoomableController) mZoomableController).getMinScaleFactor();
+        if (mZoomableController instanceof AbstractAnimatedZoomableController) {
+          ((AbstractAnimatedZoomableController) mZoomableController).zoomToPoint(scaleFactor, imagePoint, new PointF(x, y), DefaultZoomableController.LIMIT_ALL, 200, null);
+        } else {
+          ((DefaultZoomableController) mZoomableController).zoomToPoint(scaleFactor, imagePoint, new PointF(x, y));
+        }
+        return true;
+      }
+
+      @Override
+      public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
+      }
+    });
   }
 
   /**
