@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -2111,8 +2111,80 @@ android.view.View
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#doAttach()">doAttach</a></span>()
+        
+        <div class="jd-descrdiv">Does the actual work of attaching.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#doDetach()">doDetach</a></span>()
+        
+        <div class="jd-descrdiv">Does the actual work of detaching.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#onAttach()">onAttach</a></span>()
+        
+        <div class="jd-descrdiv">Called by the system to attach.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#onAttachedToWindow()">onAttachedToWindow</a></span>()
         
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/DraweeView.html#onDetach()">onDetach</a></span>()
+        
+        <div class="jd-descrdiv">Called by the system to detach.</div>
+  
   </td></tr>
 
 
@@ -11847,6 +11919,105 @@ From interface
 
 
 
+<a id="doAttach()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">doAttach</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Does the actual work of attaching.
+
+ Non-test subclasses should NOT override. Use onAttach for custom code.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="doDetach()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">doDetach</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Does the actual work of detaching.
+
+ Non-test subclasses should NOT override. Use onDetach for custom code.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="onAttach()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onAttach</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called by the system to attach. Subclasses may override. </p></div>
+
+    </div>
+</div>
+
+
 <a id="onAttachedToWindow()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -11873,6 +12044,37 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="onDetach()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onDetach</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called by the system to detach. Subclasses may override. </p></div>
 
     </div>
 </div>

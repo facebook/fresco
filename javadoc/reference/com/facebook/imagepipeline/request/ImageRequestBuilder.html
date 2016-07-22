@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -234,7 +234,7 @@
               
     <li><h2>Enums</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.ImageType.html">ImageRequest.ImageType</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a></li>
       </ul>
     </li>
@@ -496,7 +496,7 @@ Summary:
             
             
             
-            void
+            <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#disableDiskCache()">disableDiskCache</a></span>()
@@ -532,11 +532,13 @@ Summary:
             
             
             
-            ImageDecodeOptions
+            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#getImageDecodeOptions()">getImageDecodeOptions</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#getCacheChoice()">getCacheChoice</a></span>()
         
+        <div class="jd-descrdiv">Gets the cache choice (profile image or default).</div>
+  
   </td></tr>
 
 
@@ -548,13 +550,11 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.ImageType.html">ImageRequest.ImageType</a>
+            ImageDecodeOptions
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#getImageType()">getImageType</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#getImageDecodeOptions()">getImageDecodeOptions</a></span>()
         
-        <div class="jd-descrdiv">Gets the image type (profile image or default).</div>
-  
   </td></tr>
 
 
@@ -785,8 +785,10 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#setImageDecodeOptions(ImageDecodeOptions)">setImageDecodeOptions</a></span>(ImageDecodeOptions imageDecodeOptions)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#setCacheChoice(com.facebook.imagepipeline.request.ImageRequest.CacheChoice)">setCacheChoice</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a> cacheChoice)
         
+        <div class="jd-descrdiv">Sets the cache option.</div>
+  
   </td></tr>
 
 
@@ -801,10 +803,8 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#setImageType(com.facebook.imagepipeline.request.ImageRequest.ImageType)">setImageType</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.ImageType.html">ImageRequest.ImageType</a> imageType)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html#setImageDecodeOptions(ImageDecodeOptions)">setImageDecodeOptions</a></span>(ImageDecodeOptions imageDecodeOptions)
         
-        <div class="jd-descrdiv">Sets the image type.</div>
-  
   </td></tr>
 
 
@@ -1265,7 +1265,7 @@ From class
          
          
          
-        void
+        <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
       </span>
       <span class="sympad">disableDiskCache</span>
       <span class="normal">()</span>
@@ -1331,6 +1331,37 @@ From class
 </div>
 
 
+<a id="getCacheChoice()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
+      </span>
+      <span class="sympad">getCacheChoice</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the cache choice (profile image or default). </p></div>
+
+    </div>
+</div>
+
+
 <a id="getImageDecodeOptions()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1357,37 +1388,6 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="getImageType()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.ImageType.html">ImageRequest.ImageType</a>
-      </span>
-      <span class="sympad">getImageType</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the image type (profile image or default). </p></div>
 
     </div>
 </div>
@@ -1807,6 +1807,52 @@ From class
 </div>
 
 
+<a id="setCacheChoice(com.facebook.imagepipeline.request.ImageRequest.CacheChoice)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
+      </span>
+      <span class="sympad">setCacheChoice</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a> cacheChoice)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the cache option. Pipeline might use different caches and eviction policies for each
+ image type.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>cacheChoice</th>
+          <td>the cache choice to set</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the modified builder instance
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="setImageDecodeOptions(ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1833,52 +1879,6 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setImageType(com.facebook.imagepipeline.request.ImageRequest.ImageType)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/request/ImageRequestBuilder.html">ImageRequestBuilder</a>
-      </span>
-      <span class="sympad">setImageType</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.ImageType.html">ImageRequest.ImageType</a> imageType)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the image type. Pipeline might use different caches and eviction policies for each
- image type.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageType</th>
-          <td>the image type to set</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the modified builder instance
-</li></ul>
-  </div>
 
     </div>
 </div>

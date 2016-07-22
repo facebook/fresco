@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -450,6 +450,38 @@ Summary:
             
             
             
+            ImagePipelineExperiments.Builder
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#experiment()">experiment</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#isDownsampleEnabled()">isDownsampleEnabled</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
@@ -517,29 +549,13 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setDecodeFileDescriptorEnabled(boolean)">setDecodeFileDescriptorEnabled</a></span>(boolean decodeFileDescriptorEnabled)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setDecodeMemoryFileEnabled(boolean)">setDecodeMemoryFileEnabled</a></span>(boolean decodeMemoryFileEnabled)
         
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -554,14 +570,14 @@ Summary:
         <div class="jd-descrdiv">
       <em>
   This method is deprecated.
-      use Builder.setFileCacheFactory instead
+      use <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setFileCacheFactory(FileCacheFactory)">setFileCacheFactory(FileCacheFactory)</a></code> instead
 </em></div>
   
   </td></tr>
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -577,7 +593,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -593,7 +609,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -609,7 +625,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -621,25 +637,6 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setFileCacheFactory(FileCacheFactory)">setFileCacheFactory</a></span>(FileCacheFactory fileCacheFactory)
         
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setForceSmallCacheThresholdBytes(int)">setForceSmallCacheThresholdBytes</a></span>(int forceSmallCacheThresholdBytes)
-        
-        <div class="jd-descrdiv">If this value is nonnegative, then all network-downloaded images below this size
- will be written to the small image cache.</div>
-  
   </td></tr>
 
 
@@ -831,22 +828,6 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setSmallImageDiskCacheConfig(com.facebook.cache.disk.DiskCacheConfig)">setSmallImageDiskCacheConfig</a></span>(<a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html">DiskCacheConfig</a> smallImageDiskCacheConfig)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setWebpSupportEnabled(boolean)">setWebpSupportEnabled</a></span>(boolean webpSupportEnabled)
         
   </td></tr>
 
@@ -1140,6 +1121,68 @@ From class
 </div>
 
 
+<a id="experiment()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        ImagePipelineExperiments.Builder
+      </span>
+      <span class="sympad">experiment</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="isDownsampleEnabled()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isDownsampleEnabled</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="setAnimatedImageFactory(AnimatedImageFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1264,37 +1307,6 @@ From class
 </div>
 
 
-<a id="setDecodeFileDescriptorEnabled(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setDecodeFileDescriptorEnabled</span>
-      <span class="normal">(boolean decodeFileDescriptorEnabled)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
 <a id="setDecodeMemoryFileEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1353,7 +1365,7 @@ From class
       <p>
   <p class="caution">
       <strong>
-  This method is deprecated.</strong><br/> use Builder.setFileCacheFactory instead
+  This method is deprecated.</strong><br/> use <code><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html#setFileCacheFactory(FileCacheFactory)">setFileCacheFactory(FileCacheFactory)</a></code> instead
 
   </p>
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
@@ -1481,42 +1493,6 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setForceSmallCacheThresholdBytes(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setForceSmallCacheThresholdBytes</span>
-      <span class="normal">(int forceSmallCacheThresholdBytes)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>If this value is nonnegative, then all network-downloaded images below this size
- will be written to the small image cache.
-
- <p>This will require the image pipeline to do up to two disk reads, instead of one, before
- going out to network. Use only if this pattern makes sense for your application.
-</p></div>
 
     </div>
 </div>
@@ -1877,37 +1853,6 @@ From class
       </span>
       <span class="sympad">setSmallImageDiskCacheConfig</span>
       <span class="normal">(<a href="../../../../com/facebook/cache/disk/DiskCacheConfig.html">DiskCacheConfig</a> smallImageDiskCacheConfig)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setWebpSupportEnabled(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setWebpSupportEnabled</span>
-      <span class="normal">(boolean webpSupportEnabled)</span>
     </h4>
       <div class="api-level">
         <div>

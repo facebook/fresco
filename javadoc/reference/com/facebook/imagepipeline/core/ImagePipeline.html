@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -545,9 +545,10 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)">evictFromDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(android.net.Uri)">evictFromDiskCache</a></span>(Uri uri)
         
-        <div class="jd-descrdiv">Removes all images with the specified Uri from disk cache.</div>
+        <div class="jd-descrdiv"><p>If you have supplied your own cache key factory when configuring the pipeline, this method
+ may not work correctly.</div>
   
   </td></tr>
 
@@ -563,10 +564,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(android.net.Uri)">evictFromDiskCache</a></span>(Uri uri)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)">evictFromDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
         
-        <div class="jd-descrdiv"><p>If you have supplied your own cache key factory when configuring the pipeline, this method
- may not work correctly.</div>
+        <div class="jd-descrdiv">Removes all images with the specified Uri from disk cache.</div>
   
   </td></tr>
 
@@ -642,6 +642,38 @@ Summary:
         
         <div class="jd-descrdiv">Submits a request for bitmap cache lookup.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#getBitmapMemoryCache()">getBitmapMemoryCache</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#getCacheKeyFactory()">getCacheKeyFactory</a></span>()
+        
   </td></tr>
 
 
@@ -730,7 +762,7 @@ Summary:
             <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)">isInDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(android.net.Uri)">isInDiskCache</a></span>(Uri uri)
         
         <div class="jd-descrdiv">Returns whether the image is stored in the disk cache.</div>
   
@@ -748,7 +780,7 @@ Summary:
             <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(android.net.Uri)">isInDiskCache</a></span>(Uri uri)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)">isInDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
         
         <div class="jd-descrdiv">Returns whether the image is stored in the disk cache.</div>
   
@@ -766,9 +798,9 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCacheSync(android.net.Uri)">isInDiskCacheSync</a></span>(Uri uri)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCacheSync(com.facebook.imagepipeline.request.ImageRequest)">isInDiskCacheSync</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
         
-        <div class="jd-descrdiv">Returns whether the image is stored in the disk cache.</div>
+        <div class="jd-descrdiv">Performs disk cache check synchronously.</div>
   
   </td></tr>
 
@@ -784,9 +816,9 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCacheSync(com.facebook.imagepipeline.request.ImageRequest)">isInDiskCacheSync</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#isInDiskCacheSync(android.net.Uri)">isInDiskCacheSync</a></span>(Uri uri)
         
-        <div class="jd-descrdiv">Performs disk cache check synchronously.</div>
+        <div class="jd-descrdiv">Returns whether the image is stored in the disk cache.</div>
   
   </td></tr>
 
@@ -1329,47 +1361,6 @@ From class
 </div>
 
 
-<a id="evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">evictFromDiskCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Removes all images with the specified Uri from disk cache.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageRequest</th>
-          <td>The imageRequest for the image to evict from disk cache
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="evictFromDiskCache(android.net.Uri)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1404,6 +1395,47 @@ From class
         <tr>
           <th>uri</th>
           <td>The uri of the image to evict
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="evictFromDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">evictFromDiskCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Removes all images with the specified Uri from disk cache.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>The imageRequest for the image to evict from disk cache
 </td>
         </tr>
       </table>
@@ -1589,6 +1621,78 @@ From class
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>a DataSource representing the image
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getBitmapMemoryCache()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;
+      </span>
+      <span class="sympad">getBitmapMemoryCache</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The Bitmap MemoryCache
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getCacheKeyFactory()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a>
+      </span>
+      <span class="sympad">getCacheKeyFactory</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The CacheKeyFactory implementation used by ImagePipeline
 </li></ul>
   </div>
 
@@ -1782,51 +1886,6 @@ From class
 </div>
 
 
-<a id="isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
-      </span>
-      <span class="sympad">isInDiskCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the disk cache.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageRequest</th>
-          <td>the imageRequest for the image to be looked up.</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if the image was found in the disk cache, false otherwise.
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="isInDiskCache(android.net.Uri)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1876,7 +1935,7 @@ From class
 </div>
 
 
-<a id="isInDiskCacheSync(android.net.Uri)"></a>
+<a id="isInDiskCache(com.facebook.imagepipeline.request.ImageRequest)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1886,10 +1945,10 @@ From class
          
          
          
-        boolean
+        <a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Boolean&gt;
       </span>
-      <span class="sympad">isInDiskCacheSync</span>
-      <span class="normal">(Uri uri)</span>
+      <span class="sympad">isInDiskCache</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1901,16 +1960,13 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the disk cache.
- Performs disk cache check synchronously. It is not recommended to use this
- unless you know what exactly you are doing. Disk cache check is a costly operation,
- the call will block the caller thread until the cache check is completed.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the disk cache.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>uri</th>
-          <td>the uri for the image to be looked up.</td>
+          <th>imageRequest</th>
+          <td>the imageRequest for the image to be looked up.</td>
         </tr>
       </table>
   </div>
@@ -1958,6 +2014,54 @@ From class
         <tr>
           <th>imageRequest</th>
           <td>the imageRequest for the image to be looked up.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the image was found in the disk cache, false otherwise.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isInDiskCacheSync(android.net.Uri)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isInDiskCacheSync</span>
+      <span class="normal">(Uri uri)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether the image is stored in the disk cache.
+ Performs disk cache check synchronously. It is not recommended to use this
+ unless you know what exactly you are doing. Disk cache check is a costly operation,
+ the call will block the caller thread until the cache check is completed.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>uri</th>
+          <td>the uri for the image to be looked up.</td>
         </tr>
       </table>
   </div>

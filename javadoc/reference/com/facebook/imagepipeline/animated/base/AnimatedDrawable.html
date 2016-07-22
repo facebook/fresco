@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -416,7 +416,7 @@ Summary:
 <p>A Drawable that renders a animated image. The details of the format are abstracted by the
  <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawableBackend.html">AnimatedDrawableBackend</a></code> interface. The drawable can work either as an Animatable
  where the client calls start/stop to animate it or it can work as a level-based drawable where
- the client drives the animation by calling <code><a href="null#setLevel(int)">setLevel(int)</a></code>.
+ the client drives the animation by calling Drawable#setLevel.
 </p>
 
 
@@ -483,7 +483,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html#AnimatedDrawable(java.util.concurrent.ScheduledExecutorService, AnimatedDrawableCachingBackend, AnimatedDrawableDiagnostics, MonotonicClock)">AnimatedDrawable</a></span>(ScheduledExecutorService scheduledExecutorServiceForUiThread, AnimatedDrawableCachingBackend animatedDrawableBackend, AnimatedDrawableDiagnostics animatedDrawableDiagnostics, MonotonicClock monotonicClock)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawable.html#AnimatedDrawable(java.util.concurrent.ScheduledExecutorService, AnimatedDrawableCachingBackend, AnimatedDrawableDiagnostics, com.facebook.common.time.MonotonicClock)">AnimatedDrawable</a></span>(ScheduledExecutorService scheduledExecutorServiceForUiThread, AnimatedDrawableCachingBackend animatedDrawableBackend, AnimatedDrawableDiagnostics animatedDrawableDiagnostics, MonotonicClock monotonicClock)
         
   </td></tr>
 
@@ -961,7 +961,7 @@ From interface
 
 
 
-<a id="AnimatedDrawable(java.util.concurrent.ScheduledExecutorService, AnimatedDrawableCachingBackend, AnimatedDrawableDiagnostics, MonotonicClock)"></a>
+<a id="AnimatedDrawable(java.util.concurrent.ScheduledExecutorService, AnimatedDrawableCachingBackend, AnimatedDrawableDiagnostics, com.facebook.common.time.MonotonicClock)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">

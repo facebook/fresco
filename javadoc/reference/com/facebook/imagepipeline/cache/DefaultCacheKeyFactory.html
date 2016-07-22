@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="selected api apilevel-">
@@ -489,7 +489,7 @@ Summary:
             <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)
         
   </td></tr>
 
@@ -505,7 +505,7 @@ Summary:
             <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getEncodedCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getEncodedCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)
         
   </td></tr>
 
@@ -537,7 +537,7 @@ Summary:
             <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getPostprocessedBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getPostprocessedBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html#getPostprocessedBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getPostprocessedBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)
         
   </td></tr>
 
@@ -814,7 +814,7 @@ From interface
             <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)
         
   </td></tr>
 
@@ -830,7 +830,7 @@ From interface
             <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getEncodedCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getEncodedCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)
         
   </td></tr>
 
@@ -846,7 +846,7 @@ From interface
             <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getPostprocessedBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)">getPostprocessedBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html#getPostprocessedBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">getPostprocessedBitmapCacheKey</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)
         
   </td></tr>
 
@@ -935,7 +935,7 @@ From interface
 
 
 
-<a id="getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)"></a>
+<a id="getBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -948,7 +948,7 @@ From interface
         <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
       </span>
       <span class="sympad">getBitmapCacheKey</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -966,7 +966,7 @@ From interface
 </div>
 
 
-<a id="getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest)"></a>
+<a id="getEncodedCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -979,7 +979,7 @@ From interface
         <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
       </span>
       <span class="sympad">getEncodedCacheKey</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1028,7 +1028,7 @@ From interface
 </div>
 
 
-<a id="getPostprocessedBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest)"></a>
+<a id="getPostprocessedBitmapCacheKey(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1041,7 +1041,7 @@ From interface
         <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
       </span>
       <span class="sympad">getPostprocessedBitmapCacheKey</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request, Object callerContext)</span>
     </h4>
       <div class="api-level">
         <div>

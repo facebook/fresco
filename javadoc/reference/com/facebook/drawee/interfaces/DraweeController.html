@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -370,7 +370,7 @@ Summary:
           </tr>
         <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a></td>
-              <td class="jd-descrcol" width="100%">Drawee controller that bridges the image pipeline with SettableDraweeHierarchy.&nbsp;</td>
+              <td class="jd-descrcol" width="100%">Drawee controller that bridges the image pipeline with <code><a href="../../../../com/facebook/drawee/interfaces/SettableDraweeHierarchy.html">SettableDraweeHierarchy</a></code>.&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/volley/VolleyDraweeController.html">VolleyDraweeController</a></td>
@@ -474,6 +474,24 @@ Summary:
             
             
             
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/DraweeController.html#getContentDescription()">getContentDescription</a></span>()
+        
+        <div class="jd-descrdiv">Gets the accessibility content description.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             <a href="../../../../com/facebook/drawee/interfaces/DraweeHierarchy.html">DraweeHierarchy</a>
         </td>
         <td class="jd-linkcol" width="100%">
@@ -485,7 +503,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -504,7 +522,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -523,7 +541,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -536,6 +554,24 @@ Summary:
         <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/DraweeController.html#onTouchEvent(android.view.MotionEvent)">onTouchEvent</a></span>(MotionEvent event)
         
         <div class="jd-descrdiv">Called when the view containing the hierarchy receives a touch event.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/interfaces/DraweeController.html#setContentDescription(java.lang.String)">setContentDescription</a></span>(String contentDescription)
+        
+        <div class="jd-descrdiv">Sets the accessibility content description.</div>
   
   </td></tr>
 
@@ -635,6 +671,42 @@ Summary:
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>animatable, or null if the image is not animated or not loaded yet
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getContentDescription()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        String
+      </span>
+      <span class="sympad">getContentDescription</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the accessibility content description.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>content description, or null if the image has no content description
 </li></ul>
   </div>
 
@@ -770,6 +842,37 @@ Summary:
       <ul class="nolist"><li>true if the event was handled by the controller, false otherwise
 </li></ul>
   </div>
+
+    </div>
+</div>
+
+
+<a id="setContentDescription(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        void
+      </span>
+      <span class="sympad">setContentDescription</span>
+      <span class="normal">(String contentDescription)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the accessibility content description. </p></div>
 
     </div>
 </div>

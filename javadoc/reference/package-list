@@ -18,7 +18,7 @@ com.facebook.imagepipeline.animated.base
 com.facebook.imagepipeline.animated.factory
 com.facebook.imagepipeline.animated.impl
 com.facebook.imagepipeline.animated.util
-com.facebook.imagepipeline.backends.okhttp
+com.facebook.imagepipeline.backends.okhttp3
 com.facebook.imagepipeline.bitmaps
 com.facebook.imagepipeline.cache
 com.facebook.imagepipeline.common

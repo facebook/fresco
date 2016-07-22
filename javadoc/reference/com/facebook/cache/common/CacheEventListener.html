@@ -185,7 +185,7 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/backends/okhttp/package-summary.html">com.facebook.imagepipeline.backends.okhttp</a></li>
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
@@ -420,8 +420,10 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onEviction(com.facebook.cache.common.CacheEventListener.EvictionReason, int, long)">onEviction</a></span>(<a href="../../../../com/facebook/cache/common/CacheEventListener.EvictionReason.html">CacheEventListener.EvictionReason</a> evictionReason, int itemCount, long itemSize)
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onEviction(CacheEvent)">onEviction</a></span>(CacheEvent cacheEvent)
         
+        <div class="jd-descrdiv">Triggered by an eviction from cache.</div>
+  
   </td></tr>
 
 
@@ -436,8 +438,10 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onHit()">onHit</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onHit(CacheEvent)">onHit</a></span>(CacheEvent cacheEvent)
         
+        <div class="jd-descrdiv">Triggered by a cache hit.</div>
+  
   </td></tr>
 
 
@@ -452,8 +456,10 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onMiss()">onMiss</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onMiss(CacheEvent)">onMiss</a></span>(CacheEvent cacheEvent)
         
+        <div class="jd-descrdiv">Triggered by a cache miss for the given key.</div>
+  
   </td></tr>
 
 
@@ -468,8 +474,11 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onReadException()">onReadException</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onReadException(CacheEvent)">onReadException</a></span>(CacheEvent cacheEvent)
         
+        <div class="jd-descrdiv">Triggered if a cache hit was attempted but an exception was thrown trying to read the resource
+ from storage.</div>
+  
   </td></tr>
 
 
@@ -484,8 +493,10 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onWriteAttempt()">onWriteAttempt</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onWriteAttempt(CacheEvent)">onWriteAttempt</a></span>(CacheEvent cacheEvent)
         
+        <div class="jd-descrdiv">Triggered at the start of the process to save a resource in cache.</div>
+  
   </td></tr>
 
 
@@ -500,8 +511,29 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onWriteException()">onWriteException</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onWriteException(CacheEvent)">onWriteException</a></span>(CacheEvent cacheEvent)
         
+        <div class="jd-descrdiv">Triggered if a cache write was attempted but an exception was thrown trying to write the
+ exception to storage.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onWriteSuccess(CacheEvent)">onWriteSuccess</a></span>(CacheEvent cacheEvent)
+        
+        <div class="jd-descrdiv">Triggered after a resource has been successfully written to cache.</div>
+  
   </td></tr>
 
 
@@ -553,7 +585,7 @@
 
 
 
-<a id="onEviction(com.facebook.cache.common.CacheEventListener.EvictionReason, int, long)"></a>
+<a id="onEviction(CacheEvent)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -566,7 +598,7 @@
         void
       </span>
       <span class="sympad">onEviction</span>
-      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheEventListener.EvictionReason.html">CacheEventListener.EvictionReason</a> evictionReason, int itemCount, long itemSize)</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -578,13 +610,14 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered by an eviction from cache.
+</p></div>
 
     </div>
 </div>
 
 
-<a id="onHit()"></a>
+<a id="onHit(CacheEvent)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -597,7 +630,7 @@
         void
       </span>
       <span class="sympad">onHit</span>
-      <span class="normal">()</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -609,13 +642,14 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered by a cache hit.
+</p></div>
 
     </div>
 </div>
 
 
-<a id="onMiss()"></a>
+<a id="onMiss(CacheEvent)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -628,7 +662,7 @@
         void
       </span>
       <span class="sympad">onMiss</span>
-      <span class="normal">()</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -640,13 +674,14 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered by a cache miss for the given key.
+</p></div>
 
     </div>
 </div>
 
 
-<a id="onReadException()"></a>
+<a id="onReadException(CacheEvent)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -659,7 +694,7 @@
         void
       </span>
       <span class="sympad">onReadException</span>
-      <span class="normal">()</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -671,13 +706,15 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered if a cache hit was attempted but an exception was thrown trying to read the resource
+ from storage.
+</p></div>
 
     </div>
 </div>
 
 
-<a id="onWriteAttempt()"></a>
+<a id="onWriteAttempt(CacheEvent)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -690,7 +727,7 @@
         void
       </span>
       <span class="sympad">onWriteAttempt</span>
-      <span class="normal">()</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -702,13 +739,14 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered at the start of the process to save a resource in cache.
+</p></div>
 
     </div>
 </div>
 
 
-<a id="onWriteException()"></a>
+<a id="onWriteException(CacheEvent)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -721,7 +759,7 @@
         void
       </span>
       <span class="sympad">onWriteException</span>
-      <span class="normal">()</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -733,7 +771,41 @@
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered if a cache write was attempted but an exception was thrown trying to write the
+ exception to storage.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="onWriteSuccess(CacheEvent)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        void
+      </span>
+      <span class="sympad">onWriteSuccess</span>
+      <span class="normal">(CacheEvent cacheEvent)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered after a resource has been successfully written to cache.
+</p></div>
 
     </div>
 </div>
