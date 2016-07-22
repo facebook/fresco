@@ -601,16 +601,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   }
 
   public long getSize() {
-    if (!mCacheStats.isInitialized()){
-            maybeUpdateFileCacheSize();
-        }
     return mCacheStats.getSize();
   }
   
   public long getCount() {
-    if (!mCacheStats.isInitialized()){
-            maybeUpdateFileCacheSize();
-        }
     return mCacheStats.getCount();
   }
 
