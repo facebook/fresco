@@ -52,8 +52,6 @@ public class PipelineDraweeController
 
   private @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
-  private static Experiment sExperiment;
-
   private CacheKey mCacheKey;
 
   // Constant state (non-final because controllers can be reused)
@@ -159,9 +157,6 @@ public class PipelineDraweeController
 
   @Override
   protected CloseableReference<CloseableImage> getCachedImage() {
-    if (!getExperiment().mIsFastCheckEnabled) {
-      return null;
-    }
     if (mMemoryCache == null || mCacheKey == null) {
       return null;
     }
@@ -180,25 +175,5 @@ public class PipelineDraweeController
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
-  }
-
-  /**
-   * @return The Experiment object
-   */
-  protected static Experiment getExperiment() {
-    if (sExperiment == null) {
-      sExperiment = new Experiment();
-    }
-    return sExperiment;
-  }
-
-  protected static class Experiment {
-
-    private boolean mIsFastCheckEnabled;
-
-    public Experiment setFastCheckEnabled(final boolean fastCheckEnabled) {
-      mIsFastCheckEnabled = fastCheckEnabled;
-      return this;
-    }
   }
 }
