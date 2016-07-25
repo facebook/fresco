@@ -565,6 +565,15 @@ public class DiskStorageCacheTest {
   }
 
   @Test
+  public void testGetResourceWithoutAwaitingIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index may not yet updated.
+    DiskStorageCache cache2 = createDiskCache(mStorage);
+    assertNotNull(cache2.getResource(key));
+  }
+
+  @Test
   public void testClearIndex() throws Exception {
     CacheKey key = putOneThingInCache();
     mCache.clearAll();

@@ -255,9 +255,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           List<String> resourceIds = getResourceIds(key);
           for (int i = 0; i < resourceIds.size(); i++) {
             resourceId = resourceIds.get(i);
-            if (!mResourceIndex.contains(resourceId)) {
-              continue;
-            }
             cacheEvent.setResourceId(resourceId);
             resource = mStorage.getResource(resourceId, key);
             if (resource != null) {
