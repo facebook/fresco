@@ -28,6 +28,12 @@ public interface FileCache extends DiskTrimmable {
    * @return true if this cache is usable, false otherwise.
    */
   boolean isEnabled();
+  
+   /**
+   * Tells if this cache is external or internal
+   *@return true if this cache is external, false otherwise.
+   */
+  boolean isExternal();
 
   /**
    * Returns the binary resource cached with key.
@@ -66,6 +72,11 @@ public interface FileCache extends DiskTrimmable {
    * @return the in-use size of the cache
    */
   long getSize();
+
+  /**
+   * @return the count of pictures in the cache
+   */
+  long getCount();
 
   /**
    * Deletes old cache files.

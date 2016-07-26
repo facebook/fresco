@@ -9,6 +9,7 @@
 
 package com.facebook.cache.disk;
 
+import android.os.Environment;
 import javax.annotation.Nullable;
 
 import java.io.File;
@@ -68,6 +69,11 @@ public class DefaultDiskStorage implements DiskStorage {
   private final File mRootDirectory;
 
   /**
+   * True if cache is external
+   */
+  private final boolean mIsExternal;
+
+  /**
    * All the sharding occurs inside a version-directory. That allows for easy version upgrade.
    * When we find a base directory with no version-directory in it, it means that it's a different
    * version and we should delete the whole directory (including itself) for both reasons:
@@ -96,6 +102,7 @@ public class DefaultDiskStorage implements DiskStorage {
     Preconditions.checkNotNull(rootDirectory);
 
     mRootDirectory = rootDirectory;
+    mIsExternal = isExternal(rootDirectory);
     // mVersionDirectory's name identifies:
     // - the cache structure's version (sharded)
     // - the content's version (version value)
@@ -105,6 +112,23 @@ public class DefaultDiskStorage implements DiskStorage {
     mCacheErrorLogger = cacheErrorLogger;
     recreateDirectoryIfVersionChanges();
     mClock = SystemClock.get();
+  }
+
+  private static boolean isExternal(File directory) {
+    boolean state = false;
+    String cacheDirPath = null;
+    File extStoragePath = Environment.getExternalStorageDirectory();
+    if(extStoragePath != null) {
+      cacheDirPath = extStoragePath.toString();
+      try {
+        String appCacheDirPath = directory.getCanonicalPath();
+        if (appCacheDirPath.contains(cacheDirPath)) {
+          state = true;}
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return state;
   }
 
   @VisibleForTesting
@@ -120,6 +144,11 @@ public class DefaultDiskStorage implements DiskStorage {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+  
+  @Override
+  public boolean isExternal() {
+    return mIsExternal;
   }
 
   @Override
