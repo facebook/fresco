@@ -71,6 +71,10 @@ public class MainActivity extends Activity {
         editText.getText().clear();
       }
     });
+
+    //Test
+    editText.setText("http://www.stylecampaign.com/blog/blogimages/SVG/fox.svg");
+    updateImageUri(Uri.parse(editText.getText().toString()));
   }
 
   private void updateImageUri(Uri uri) {
