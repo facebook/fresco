@@ -60,6 +60,10 @@ public class ImageFormatChecker {
       return ImageFormat.BMP;
     }
 
+    if (isSvgHeader(imageHeaderBytes, headerSize)) {
+      return ImageFormat.SVG;
+    }
+
     return ImageFormat.UNKNOWN;
   }
 
@@ -317,6 +321,19 @@ public class ImageFormatChecker {
     return matchBytePattern(imageHeaderBytes, 0, BMP_HEADER);
   }
 
+  /**
+   * svg image starts with "<\?xml" and has "<svg" bytes
+   */
+  private static final byte[] SVG_HEADER = asciiBytes("<?xml");
+  private static final byte[] SVG_ALT_HEADER = asciiBytes("<svg");
+
+  private static boolean isSvgHeader(byte[] imageHeaderBytes, int headerSize) {
+    if (headerSize < SVG_ALT_HEADER.length) {
+      return false;
+    }
+    return matchBytePattern(imageHeaderBytes, 0, SVG_HEADER)
+            || matchBytePattern(imageHeaderBytes, 0, SVG_ALT_HEADER);
+  }
 
   /**
    * Maximum header size for any image type.
@@ -331,5 +348,7 @@ public class ImageFormatChecker {
       JPEG_HEADER.length,
       PNG_HEADER.length,
       GIF_HEADER_LENGTH,
-      BMP_HEADER.length);
+      BMP_HEADER.length,
+      SVG_HEADER.length,
+      SVG_ALT_HEADER.length);
 }

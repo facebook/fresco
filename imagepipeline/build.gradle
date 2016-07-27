@@ -17,6 +17,7 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
     compile project(':imagepipeline-base')
+    compile project(path: ':androidsvg')
 
     testCompile project(':imagepipeline-test')
     testCompile project(':imagepipeline-base-test')

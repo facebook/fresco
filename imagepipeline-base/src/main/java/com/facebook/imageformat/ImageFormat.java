@@ -23,6 +23,7 @@ public enum ImageFormat {
   PNG,
   GIF,
   BMP,
+  SVG,
   /**
    * Unknown image. This is needed in case we fail to detect any type for particular image.
    */
@@ -60,6 +61,8 @@ public enum ImageFormat {
         return "gif";
       case BMP:
         return "bmp";
+      case SVG:
+        return "svg";
       default:
         throw new UnsupportedOperationException("Unknown image format " + imageFormat.name());
     }

@@ -47,14 +47,17 @@ public class ImageDecoder {
   private final AnimatedImageFactory mAnimatedImageFactory;
   private final Bitmap.Config mBitmapConfig;
   private final PlatformDecoder mPlatformDecoder;
+  private final SvgDecoder mSvgDecoder;
 
   public ImageDecoder(
       final AnimatedImageFactory animatedImageFactory,
       final PlatformDecoder platformDecoder,
+      final SvgDecoder svgDecoder,
       final Bitmap.Config bitmapConfig) {
     mAnimatedImageFactory = animatedImageFactory;
     mBitmapConfig = bitmapConfig;
     mPlatformDecoder = platformDecoder;
+    mSvgDecoder = svgDecoder;
   }
 
   /**
@@ -89,6 +92,9 @@ public class ImageDecoder {
 
       case WEBP_ANIMATED:
         return decodeAnimatedWebp(encodedImage, options);
+
+      case SVG:
+        return decodeSvgImage(encodedImage, options);
 
       default:
         return decodeStaticImage(encodedImage);
@@ -175,6 +181,27 @@ public class ImageDecoder {
       final EncodedImage encodedImage,
       final ImageDecodeOptions options) {
     return mAnimatedImageFactory.decodeWebP(encodedImage, options, mBitmapConfig);
+  }
+
+  /**
+   * Decode a svg static image into a CloseableImage.
+   *
+   * <p> The image is decoded into a 'pinned' purgeable bitmap.
+   *
+   * @param encodedImage input image (encoded bytes)
+   * @param options
+   * @return a {@link CloseableImage}
+   */
+  private CloseableImage decodeSvgImage(EncodedImage encodedImage, ImageDecodeOptions options) {
+    CloseableReference<Bitmap> bitmapReference = mSvgDecoder.decodeFromEncodedImage(encodedImage, mBitmapConfig);
+    try {
+      return new CloseableStaticBitmap(
+              bitmapReference,
+              ImmutableQualityInfo.FULL_QUALITY,
+              encodedImage.getRotationAngle());
+    } finally {
+      bitmapReference.close();
+    }
   }
 
 }
