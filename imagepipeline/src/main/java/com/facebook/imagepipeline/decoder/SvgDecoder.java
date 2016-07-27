@@ -4,10 +4,6 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Picture;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Build;
 import android.support.v4.util.Pools;
 
@@ -22,10 +18,8 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imageutils.JfifUtil;
-
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-
 import javax.annotation.concurrent.ThreadSafe;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -37,12 +31,13 @@ public class SvgDecoder implements PlatformDecoder {
    */
   private static final int DECODE_BUFFER_SIZE = 16 * 1024;
 
+  /**
+   * The normal screen width for mobile devices
+   */
+  private static final int MAX_WIDTH = 1080;
+
   private final BitmapPool mBitmapPool;
 
-  /**
-   * ArtPlatformImageDecoder decodes images from InputStream - to do so we need to provide
-   * temporary buffer, otherwise framework will allocate one for us for each decode request
-   */
   @VisibleForTesting
   final Pools.SynchronizedPool<ByteBuffer> mDecodeBuffers;
 
@@ -84,16 +79,6 @@ public class SvgDecoder implements PlatformDecoder {
     }
   }
 
-  /**
-   * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
-   *
-   * @param encodedImage the encoded image with reference to the encoded bytes
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   *                     used to create the decoded Bitmap
-   * @param length       the number of encoded bytes in the buffer
-   * @return the bitmap
-   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
-   */
   @Override
   public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
           EncodedImage encodedImage,
@@ -133,9 +118,12 @@ public class SvgDecoder implements PlatformDecoder {
 
     try {
       SVG svg = SVG.getFromInputStream(inputStream);
-      Picture pic = svg.renderToPicture(options.outWidth, options.outHeight);
-      Drawable drawable = new PictureDrawable(pic);
-      decodedBitmap = drawableToBitmap(drawable);
+      float aspectRatio = svg.getDocumentAspectRatio();
+      svg.setDocumentWidth(MAX_WIDTH * aspectRatio);
+      svg.setDocumentHeight(MAX_WIDTH);
+      decodedBitmap = Bitmap.createBitmap((int) ((float) MAX_WIDTH * aspectRatio), MAX_WIDTH, Bitmap.Config.ARGB_8888);
+      Canvas canvas = new Canvas(decodedBitmap);
+      svg.renderToCanvas(canvas);
     } catch (RuntimeException re) {
       throw re;
     } catch (SVGParseException e) {
@@ -145,28 +133,11 @@ public class SvgDecoder implements PlatformDecoder {
     return CloseableReference.of(decodedBitmap, mBitmapPool);
   }
 
-  public static Bitmap drawableToBitmap(Drawable drawable) {
-    Bitmap bitmap;
-
-    if (drawable instanceof BitmapDrawable) {
-      BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-      if (bitmapDrawable.getBitmap() != null) {
-        return bitmapDrawable.getBitmap();
-      }
-    }
-
-    if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-      bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-    } else {
-      bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-    }
-
-    Canvas canvas = new Canvas(bitmap);
-    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-    drawable.draw(canvas);
-    return bitmap;
-  }
-
+  /**
+   * We will render image considering it will be shown
+   * in full screen width mode preserving aspect ratio and quality for this image
+   * Optimization will be done while caching
+   */
   private static BitmapFactory.Options getDecodeOptionsForStream(
           EncodedImage encodedImage,
           Bitmap.Config bitmapConfig) {
@@ -175,8 +146,8 @@ public class SvgDecoder implements PlatformDecoder {
     options.inSampleSize = encodedImage.getSampleSize();
     options.inJustDecodeBounds = true;
     // fill outWidth and outHeight
-    options.outWidth = 400;
-    options.outHeight = 400;
+    options.outWidth = MAX_WIDTH;
+    options.outHeight = MAX_WIDTH;
 
     options.inJustDecodeBounds = false;
     options.inDither = true;
