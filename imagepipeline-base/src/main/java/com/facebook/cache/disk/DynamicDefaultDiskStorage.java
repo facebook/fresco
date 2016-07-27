@@ -72,6 +72,15 @@ public class DynamicDefaultDiskStorage implements DiskStorage {
     }
   }
 
+ @Override
+  public boolean isExternal() {
+    try {
+      return get().isExternal();
+    } catch (IOException ioe) {
+      return false;
+    }
+  }
+
   @Override
   public String getStorageName() {
     try {

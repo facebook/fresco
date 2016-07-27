@@ -171,6 +171,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     this.mStatFsHelper = StatFsHelper.getInstance();
 
     this.mStorage = diskStorage;
+
     this.mEntryEvictionComparatorSupplier = entryEvictionComparatorSupplier;
 
     this.mCacheSizeLastUpdateTime = UNINITIALIZED;
@@ -578,9 +579,14 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   @GuardedBy("mLock")
   private void updateFileCacheSizeLimit() {
     // Test if mCacheSizeLimit can be set to the high limit
-    boolean isAvailableSpaceLowerThanHighLimit =
+    boolean isAvailableSpaceLowerThanHighLimit;
+    StatFsHelper.StorageType storageType =
+        mStorage.isExternal()
+            ? StatFsHelper.StorageType.EXTERNAL
+            : StatFsHelper.StorageType.INTERNAL;
+    isAvailableSpaceLowerThanHighLimit =
         mStatFsHelper.testLowDiskSpace(
-            StatFsHelper.StorageType.INTERNAL,
+            storageType,
             mDefaultCacheSizeLimit - mCacheStats.getSize());
     if (isAvailableSpaceLowerThanHighLimit) {
       mCacheSizeLimit = mLowDiskSpaceCacheSizeLimit;
@@ -591,6 +597,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   public long getSize() {
     return mCacheStats.getSize();
+  }
+
+  public long getCount() {
+    return mCacheStats.getCount();
   }
 
   public void clearAll() {
