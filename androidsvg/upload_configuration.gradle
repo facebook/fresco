@@ -1,0 +1,42 @@
+// Handles the upload to Sonatype.
+// Adapted from http://jedicoder.blogspot.com/2011/11/automated-gradle-project-deployment-to.html.
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+              authentication(userName: System.getenv('SONATYPE_USERNAME'), password: System.getenv('SONATYPE_PASSWORD'))
+            }
+
+            pom.project {
+               name 'androidsvg'
+               packaging 'aar'
+               description 'SVG rendering library for Android'
+               url 'https://github.com/BigBadaboom/androidsvg'
+
+               scm {
+                   url 'https://github.com/BigBadaboom/androidsvg'
+                   connection 'https://github.com/BigBadaboom/androidsvg'
+                   developerConnection 'https://github.com/BigBadaboom/androidsvg'
+               }
+
+               licenses {
+                   license {
+                       name 'The Apache Software License, Version 2.0'
+                       url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                       distribution 'repo'
+                   }
+               }
+
+               developers {
+                   developer {
+                       id 'BigBadaboom'
+                       name 'Paul LeBeau'
+                   }
+               }
+           }
+        }
+    }
+}
