@@ -53,7 +53,8 @@ public class AnimatedDrawable extends AbstractAnimatedDrawable implements Animat
     ValueAnimator animator = new ValueAnimator();
     animator.setIntValues(0, getDuration());
     animator.setDuration(getDuration());
-    animator.setRepeatCount(loopCount != 0 ? loopCount : ValueAnimator.INFINITE);
+    animator.setRepeatCount(
+        loopCount != AnimatedImage.LOOP_COUNT_INFINITE ? loopCount : ValueAnimator.INFINITE);
     animator.setRepeatMode(ValueAnimator.RESTART);
     animator.setInterpolator(new LinearInterpolator());
     animator.addUpdateListener(createAnimatorUpdateListener());

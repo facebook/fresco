@@ -59,6 +59,12 @@ public interface DiskStorage {
    */
   boolean isExternal();
 
+   /**
+   * is this storage external?
+   * @return true, if external
+   */
+  boolean isExternal();
+
   /**
    * Get the resource with the specified name
    * @param resourceId id of the resource

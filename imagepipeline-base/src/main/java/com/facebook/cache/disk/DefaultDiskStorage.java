@@ -102,7 +102,7 @@ public class DefaultDiskStorage implements DiskStorage {
     Preconditions.checkNotNull(rootDirectory);
 
     mRootDirectory = rootDirectory;
-    mIsExternal = isExternal(rootDirectory);
+    mIsExternal = isExternal(rootDirectory, cacheErrorLogger);
     // mVersionDirectory's name identifies:
     // - the cache structure's version (sharded)
     // - the content's version (version value)
@@ -114,18 +114,23 @@ public class DefaultDiskStorage implements DiskStorage {
     mClock = SystemClock.get();
   }
 
-  private static boolean isExternal(File directory) {
+  private static boolean isExternal(File directory, CacheErrorLogger cacheErrorLogger) {
     boolean state = false;
-    String cacheDirPath = null;
+    String appCacheDirPath = null;
     File extStoragePath = Environment.getExternalStorageDirectory();
-    if(extStoragePath != null) {
-      cacheDirPath = extStoragePath.toString();
+    if (extStoragePath != null) {
+      String cacheDirPath = extStoragePath.toString();
       try {
-        String appCacheDirPath = directory.getCanonicalPath();
+        appCacheDirPath = directory.getCanonicalPath();
         if (appCacheDirPath.contains(cacheDirPath)) {
-          state = true;}
+          state = true;
+        }
       } catch (IOException e) {
-        e.printStackTrace();
+        cacheErrorLogger.logError(
+            CacheErrorLogger.CacheErrorCategory.OTHER,
+            TAG,
+            "failed to read folder to check if external: " + appCacheDirPath,
+            e);
       }
     }
     return state;
@@ -146,6 +151,11 @@ public class DefaultDiskStorage implements DiskStorage {
     return true;
   }
   
+  @Override
+  public boolean isExternal() {
+    return mIsExternal;
+  }
+
   @Override
   public boolean isExternal() {
     return mIsExternal;
