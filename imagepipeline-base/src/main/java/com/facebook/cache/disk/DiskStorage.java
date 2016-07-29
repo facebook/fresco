@@ -120,7 +120,7 @@ public interface DiskStorage {
   /**
    * Remove the resource with specified id
    * @param resourceId
-   * @return size of deleted file if successfully deketed, -1 otherwise
+   * @return size of deleted file if successfully deleted, -1 otherwise
    * @throws IOException
    */
   long remove(String resourceId) throws IOException;
