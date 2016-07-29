@@ -44,7 +44,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import bolts.Continuation;
 import bolts.Task;
-
 import com.android.internal.util.Predicate;
 
 /**
