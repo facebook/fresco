@@ -157,11 +157,6 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public boolean isExternal() {
-    return mIsExternal;
-  }
-
-  @Override
   public String getStorageName() {
     String directoryName = mRootDirectory.getAbsolutePath();
     return "_" + directoryName.substring(directoryName.lastIndexOf('/') + 1, directoryName.length())
