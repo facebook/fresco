@@ -17,6 +17,10 @@
       android:layout_height="0dp"
       android:layout_weight="1"
       fresco:actualImageScaleType="fitCenter"/>
+  <TextView
+      android:id="@+id/gif_info"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
   <ToggleButton
       android:id="@+id/toggle_gif"
       android:layout_width="wrap_content"
@@ -28,6 +32,10 @@
       android:layout_height="0dp"
       android:layout_weight="1"
       fresco:actualImageScaleType="fitCenter"/>
+  <TextView
+      android:id="@+id/webp_info"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
   <ToggleButton
       android:id="@+id/toggle_webp"
       android:layout_width="wrap_content"
