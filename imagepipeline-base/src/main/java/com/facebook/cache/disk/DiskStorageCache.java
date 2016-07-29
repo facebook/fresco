@@ -261,9 +261,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           List<String> resourceIds = getResourceIds(key);
           for (int i = 0; i < resourceIds.size(); i++) {
             resourceId = resourceIds.get(i);
-            if (!mResourceIndex.contains(resourceId)) {
-              continue;
-            }
             cacheEvent.setResourceId(resourceId);
             resource = mStorage.getResource(resourceId, key);
             if (resource != null) {
@@ -586,9 +583,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    */
   @GuardedBy("mLock")
   private void updateFileCacheSizeLimit() {
-   // Test if mCacheSizeLimit can be set to the high limit
+    // Test if mCacheSizeLimit can be set to the high limit
     boolean isAvailableSpaceLowerThanHighLimit;
-    StatFsHelper.StorageType storageType = mStorage.isExternal() ? StatFsHelper.StorageType.EXTERNAL : StatFsHelper.StorageType.INTERNAL;
+    StatFsHelper.StorageType storageType =
+        mStorage.isExternal()
+            ? StatFsHelper.StorageType.EXTERNAL
+            : StatFsHelper.StorageType.INTERNAL;
     isAvailableSpaceLowerThanHighLimit =
         mStatFsHelper.testLowDiskSpace(
             storageType,
