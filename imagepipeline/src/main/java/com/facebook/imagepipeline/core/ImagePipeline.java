@@ -454,10 +454,13 @@ public class ImagePipeline {
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
     final ImageRequest.CacheChoice cacheChoice = imageRequest.getCacheChoice();
 
-    if (cacheChoice == ImageRequest.CacheChoice.SMALL) {
-      return mSmallImageBufferedDiskCache.diskCheckSync(cacheKey);
-    } else {
-      return mMainBufferedDiskCache.diskCheckSync(cacheKey);
+    switch (cacheChoice) {
+      case DEFAULT:
+        return mMainBufferedDiskCache.diskCheckSync(cacheKey);
+      case SMALL:
+        return mSmallImageBufferedDiskCache.diskCheckSync(cacheKey);
+      default:
+        return false;
     }
   }
 
