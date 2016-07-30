@@ -387,6 +387,20 @@ public class ImagePipelineTest {
   }
 
   @Test
+  public void testIsInDiskCacheFromMainDiskCache() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
+    when(mMainDiskStorageCache.diskCheckSync(any(CacheKey.class))).thenReturn(true);
+    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+  }
+
+  @Test
+  public void testIsInDiskCacheFromSmallDiskCache() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
+    when(mSmallImageDiskStorageCache.diskCheckSync(any(CacheKey.class))).thenReturn(true);
+    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+  }
+
+  @Test
   public void testClearDiskCaches() {
     mImagePipeline.clearDiskCaches();
     verify(mMainDiskStorageCache).clearAll();
