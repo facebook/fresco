@@ -67,7 +67,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private static final Class<?> TAG = AbstractDraweeController.class;
 
   // Components
-  private final DraweeEventTracker mEventTracker = new DraweeEventTracker();
+  private final DraweeEventTracker mEventTracker = DraweeEventTracker.newInstance();
   private final DeferredReleaser mDeferredReleaser;
   private final Executor mUiThreadImmediateExecutor;
 

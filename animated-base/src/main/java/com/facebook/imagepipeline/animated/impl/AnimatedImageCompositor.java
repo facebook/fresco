@@ -19,6 +19,7 @@ import android.graphics.PorterDuffXfermode;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 
@@ -86,8 +87,7 @@ public class AnimatedImageCompositor {
 
     // If blending is required, prepare the canvas with the nearest cached frame.
     int nextIndex;
-    AnimatedDrawableFrameInfo frameInfo = mAnimatedDrawableBackend.getFrameInfo(frameNumber);
-    if (frameInfo.shouldBlendWithPreviousFrame && frameNumber > 0) {
+    if (!isKeyFrame(frameNumber)) {
       // Blending is required. nextIndex points to the next index to render onto the canvas.
       nextIndex = prepareCanvasWithClosestCachedFrame(frameNumber - 1, canvas);
     } else {
@@ -98,10 +98,13 @@ public class AnimatedImageCompositor {
     // Iterate from nextIndex to the frame number just preceding the one we're trying to render
     // and composite them in order according to the Disposal Method.
     for (int index = nextIndex; index < frameNumber; index++) {
-      frameInfo = mAnimatedDrawableBackend.getFrameInfo(index);
+      AnimatedDrawableFrameInfo frameInfo = mAnimatedDrawableBackend.getFrameInfo(index);
       DisposalMethod disposalMethod = frameInfo.disposalMethod;
       if (disposalMethod == DisposalMethod.DISPOSE_TO_PREVIOUS) {
         continue;
+      }
+      if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
+        disposeToBackground(canvas, frameInfo);
       }
       mAnimatedDrawableBackend.renderFrame(index, canvas);
       mCallback.onIntermediateResult(index, bitmap);
@@ -110,6 +113,10 @@ public class AnimatedImageCompositor {
       }
     }
 
+    AnimatedDrawableFrameInfo frameInfo = mAnimatedDrawableBackend.getFrameInfo(frameNumber);
+    if (frameInfo.blendOperation == BlendOperation.NO_BLEND) {
+      disposeToBackground(canvas, frameInfo);
+    }
     // Finally, we render the current frame. We don't dispose it.
     mAnimatedDrawableBackend.renderFrame(frameNumber, canvas);
   }
@@ -159,7 +166,7 @@ public class AnimatedImageCompositor {
               startBitmap.close();
             }
           } else {
-            if (!frameInfo.shouldBlendWithPreviousFrame) {
+            if (isKeyFrame(index)) {
               return index;
             } else {
               // Keep going.
@@ -201,10 +208,7 @@ public class AnimatedImageCompositor {
       // Need this frame so keep going.
       return FrameNeededResult.REQUIRED;
     } else if (disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND) {
-      if (frameInfo.xOffset == 0 &&
-          frameInfo.yOffset == 0 &&
-          frameInfo.width == mAnimatedDrawableBackend.getRenderedWidth() &&
-          frameInfo.height == mAnimatedDrawableBackend.getRenderedHeight()) {
+      if (isFullFrame(frameInfo)) {
         // The frame covered the whole image and we're disposing to background,
         // so we don't even need to draw this frame.
         return FrameNeededResult.NOT_REQUIRED;
@@ -218,5 +222,25 @@ public class AnimatedImageCompositor {
     } else {
       return FrameNeededResult.ABORT;
     }
+  }
+
+  private boolean isKeyFrame(int index) {
+    if (index == 0) {
+      return true;
+    }
+    AnimatedDrawableFrameInfo currFrameInfo = mAnimatedDrawableBackend.getFrameInfo(index);
+    AnimatedDrawableFrameInfo prevFrameInfo = mAnimatedDrawableBackend.getFrameInfo(index - 1);
+    if (currFrameInfo.blendOperation == BlendOperation.NO_BLEND && isFullFrame(currFrameInfo)) {
+      return true;
+    } else
+      return prevFrameInfo.disposalMethod == DisposalMethod.DISPOSE_TO_BACKGROUND
+          && isFullFrame(prevFrameInfo);
+  }
+
+  private boolean isFullFrame(AnimatedDrawableFrameInfo frameInfo) {
+    return frameInfo.xOffset == 0 &&
+            frameInfo.yOffset == 0 &&
+            frameInfo.width == mAnimatedDrawableBackend.getRenderedWidth() &&
+            frameInfo.height == mAnimatedDrawableBackend.getRenderedHeight();
   }
 }

@@ -15,6 +15,8 @@ package com.facebook.imagepipeline.animated.base;
  */
 public interface AnimatedImage {
 
+  int LOOP_COUNT_INFINITE = 0;
+
   /**
    * Disposes the instance. This will free native resources held by this instance. Once called,
    * other methods on this instance may throw. Note, the underlying native resources may not

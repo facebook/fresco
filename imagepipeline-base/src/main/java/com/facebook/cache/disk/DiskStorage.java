@@ -53,6 +53,12 @@ public interface DiskStorage {
    */
   boolean isEnabled();
 
+   /**
+   * is this storage external?
+   * @return true, if external
+   */
+  boolean isExternal();
+
   /**
    * Get the resource with the specified name
    * @param resourceId id of the resource
@@ -114,10 +120,11 @@ public interface DiskStorage {
   /**
    * Remove the resource with specified id
    * @param resourceId
-   * @return size of deleted file if successfully deketed, -1 otherwise
+   * @return size of deleted file if successfully deleted, -1 otherwise
    * @throws IOException
    */
   long remove(String resourceId) throws IOException;
+
   /**
    * Clear all contents of the storage
    * @exception IOException
@@ -126,6 +133,12 @@ public interface DiskStorage {
   void clearAll() throws IOException;
 
   DiskDumpInfo getDumpInfo() throws IOException;
+
+  /**
+   * Get the storage's name, which should be unique
+   * @return name of the this storage
+   */
+  String getStorageName();
 
   interface Entry {
     /** the id representing the resource */

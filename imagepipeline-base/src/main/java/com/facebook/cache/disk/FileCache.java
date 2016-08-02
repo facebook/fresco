@@ -68,6 +68,11 @@ public interface FileCache extends DiskTrimmable {
   long getSize();
 
   /**
+   * @return the count of pictures in the cache
+   */
+  long getCount();
+
+  /**
    * Deletes old cache files.
    * @param cacheExpirationMs files older than this will be deleted.
    * @return the age in ms of the oldest file remaining in the cache.

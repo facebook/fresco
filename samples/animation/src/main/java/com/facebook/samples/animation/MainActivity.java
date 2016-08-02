@@ -15,8 +15,9 @@ package com.facebook.samples.animation;
 
 import java.util.HashSet;
 import java.util.Set;
-import android.widget.ToggleButton;
 import android.widget.CompoundButton;
+import android.widget.ToggleButton;
+import android.widget.TextView;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -28,6 +29,8 @@ import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable;
+import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
@@ -66,6 +69,8 @@ public class MainActivity extends Activity {
     Uri animatedGifUri =
         Uri.parse("http://s3.amazonaws.com/giphygifs/media/4aBQ9oNjgEQ2k/giphy.gif");
 
+    final TextView gifInfo = (TextView) findViewById(R.id.gif_info);
+
     DraweeController gifController = Fresco.newDraweeControllerBuilder()
         .setUri(animatedGifUri)
         .setControllerListener(new BaseControllerListener<ImageInfo>() {
@@ -79,6 +84,7 @@ public class MainActivity extends Activity {
               // app-specific logic to enable animation starting
               gifToggle.setEnabled(true);
             }
+            gifInfo.setText(getAnimationInformation(anim));
           }
         })
         .build();
@@ -104,6 +110,8 @@ public class MainActivity extends Activity {
     final ToggleButton webpToggle = (ToggleButton) findViewById(R.id.toggle_webp);
     webpToggle.setEnabled(false);
     mAnimatedWebpView = (SimpleDraweeView) findViewById(R.id.animated_webp);
+    final TextView webpInfo = (TextView) findViewById(R.id.webp_info);
+
     Uri animatedWebpUri = Uri.parse("http://www.gstatic.com/webp/animated/1.webp");
     DraweeController webpController = Fresco.newDraweeControllerBuilder()
         .setUri(animatedWebpUri)
@@ -118,6 +126,7 @@ public class MainActivity extends Activity {
               // app-specific logic to enable animation starting
               webpToggle.setEnabled(true);
             }
+            webpInfo.setText(getAnimationInformation(anim));
           }
         })
         .build();
@@ -136,5 +145,22 @@ public class MainActivity extends Activity {
       }
     });
 
+  }
+
+  public String getAnimationInformation(Animatable animatable) {
+    if (animatable instanceof AbstractAnimatedDrawable) {
+      AbstractAnimatedDrawable animatedDrawable = (AbstractAnimatedDrawable) animatable;
+      int animationDuration = animatedDrawable.getDuration();
+      int frameCount = animatedDrawable.getFrameCount();
+      String loopCountString = getLoopCountString(animatedDrawable);
+      return getString(R.string.animation_info, animationDuration, frameCount, loopCountString);
+    }
+    return getString(R.string.unknown_animation_info);
+  }
+
+  private String getLoopCountString(AbstractAnimatedDrawable animatedDrawable) {
+    return animatedDrawable.getLoopCount() == AnimatedImage.LOOP_COUNT_INFINITE
+            ? getString(R.string.infinite)
+            : animatedDrawable.getLoopCount() + "";
   }
 }

@@ -20,7 +20,7 @@ import com.facebook.common.internal.VisibleForTesting;
 /**
  * Drawable that automatically rotates underlying drawable.
  */
-public class AutoRotateDrawable extends ForwardingDrawable implements Runnable {
+public class AutoRotateDrawable extends ForwardingDrawable implements Runnable, CloneableDrawable {
   private static final int DEGREES_IN_FULL_ROTATION = 360;
   private static final int FRAME_INTERVAL_MS = 20;
 
@@ -102,6 +102,12 @@ public class AutoRotateDrawable extends ForwardingDrawable implements Runnable {
     mIsScheduled = false;
     mRotationAngle += getIncrement();
     invalidateSelf();
+  }
+
+  @Override
+  public AutoRotateDrawable cloneDrawable() {
+    Drawable delegateCopy = DrawableUtils.cloneDrawable(getDrawable());
+    return new AutoRotateDrawable(delegateCopy, mInterval, mClockwise);
   }
 
   /**

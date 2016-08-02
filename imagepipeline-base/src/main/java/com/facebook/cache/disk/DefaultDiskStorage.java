@@ -9,6 +9,7 @@
 
 package com.facebook.cache.disk;
 
+import android.os.Environment;
 import javax.annotation.Nullable;
 
 import java.io.File;
@@ -68,6 +69,11 @@ public class DefaultDiskStorage implements DiskStorage {
   private final File mRootDirectory;
 
   /**
+   * True if cache is external
+   */
+  private final boolean mIsExternal;
+
+  /**
    * All the sharding occurs inside a version-directory. That allows for easy version upgrade.
    * When we find a base directory with no version-directory in it, it means that it's a different
    * version and we should delete the whole directory (including itself) for both reasons:
@@ -96,6 +102,7 @@ public class DefaultDiskStorage implements DiskStorage {
     Preconditions.checkNotNull(rootDirectory);
 
     mRootDirectory = rootDirectory;
+    mIsExternal = isExternal(rootDirectory, cacheErrorLogger);
     // mVersionDirectory's name identifies:
     // - the cache structure's version (sharded)
     // - the content's version (version value)
@@ -105,6 +112,28 @@ public class DefaultDiskStorage implements DiskStorage {
     mCacheErrorLogger = cacheErrorLogger;
     recreateDirectoryIfVersionChanges();
     mClock = SystemClock.get();
+  }
+
+  private static boolean isExternal(File directory, CacheErrorLogger cacheErrorLogger) {
+    boolean state = false;
+    String appCacheDirPath = null;
+    File extStoragePath = Environment.getExternalStorageDirectory();
+    if (extStoragePath != null) {
+      String cacheDirPath = extStoragePath.toString();
+      try {
+        appCacheDirPath = directory.getCanonicalPath();
+        if (appCacheDirPath.contains(cacheDirPath)) {
+          state = true;
+        }
+      } catch (IOException e) {
+        cacheErrorLogger.logError(
+            CacheErrorLogger.CacheErrorCategory.OTHER,
+            TAG,
+            "failed to read folder to check if external: " + appCacheDirPath,
+            e);
+      }
+    }
+    return state;
   }
 
   @VisibleForTesting
@@ -120,6 +149,18 @@ public class DefaultDiskStorage implements DiskStorage {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public boolean isExternal() {
+    return mIsExternal;
+  }
+
+  @Override
+  public String getStorageName() {
+    String directoryName = mRootDirectory.getAbsolutePath();
+    return "_" + directoryName.substring(directoryName.lastIndexOf('/') + 1, directoryName.length())
+        + "_" + directoryName.hashCode();
   }
 
   /**

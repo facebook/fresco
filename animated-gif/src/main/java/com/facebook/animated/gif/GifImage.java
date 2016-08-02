@@ -17,6 +17,7 @@ import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 
@@ -28,6 +29,9 @@ import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 @ThreadSafe
 @DoNotStrip
 public class GifImage implements AnimatedImage, AnimatedImageDecoder {
+
+  private static final int LOOP_COUNT_FOREVER = 0;
+  private static final int LOOP_COUNT_MISSING = -1;
 
   private volatile static boolean sInitialized;
 
@@ -122,7 +126,20 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
 
   @Override
   public int getLoopCount() {
-    return nativeGetLoopCount();
+    // If a GIF image has no Netscape 2.0 loop extension, it is meant to play once and then stop. A
+    // loop count of 0 indicates an endless looping of the animation. Any loop count X>0 indicates
+    // that the animation shall be repeated X times, resulting in the animation to play X+1 times.
+    final int loopCount = nativeGetLoopCount();
+    switch (loopCount) {
+      case LOOP_COUNT_FOREVER:
+        return AnimatedImage.LOOP_COUNT_INFINITE;
+
+      case LOOP_COUNT_MISSING:
+        return 1;
+
+      default:
+        return loopCount + 1;
+    }
   }
 
   @Override
@@ -150,7 +167,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
           frame.getYOffset(),
           frame.getWidth(),
           frame.getHeight(),
-          true,
+          BlendOperation.BLEND_WITH_PREVIOUS,
           fromGifDisposalMethod(frame.getDisposalMode()));
     } finally {
       frame.dispose();

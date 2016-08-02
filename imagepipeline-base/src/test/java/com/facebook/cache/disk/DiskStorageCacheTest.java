@@ -19,6 +19,8 @@ import java.util.Locale;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 
+import android.content.Context;
+
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEvent;
@@ -131,13 +133,16 @@ public class DiskStorageCacheTest {
             FILE_CACHE_MAX_SIZE_LOW_LIMIT,
             FILE_CACHE_MAX_SIZE_HIGH_LIMIT);
 
+    Context context = RuntimeEnvironment.application.getApplicationContext();
+
     return new DiskStorageCache(
         diskStorage,
         new DefaultEntryEvictionComparatorSupplier(),
         diskStorageCacheParams,
         mCacheEventListener,
         mock(CacheErrorLogger.class),
-        mDiskTrimmableRegistry);
+        mDiskTrimmableRegistry,
+        context);
   }
 
   @Test
@@ -539,33 +544,33 @@ public class DiskStorageCacheTest {
   }
 
   @Test
-  public void testHasKeyNotInIndex() throws Exception {
+  public void testHasKeyWithAwaitingIndex() throws Exception {
     CacheKey key = putOneThingInCache();
-    // A new cache object in the same directory. Equivalent to a process restart
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index should be updated.
     DiskStorageCache cache2 = createDiskCache(mStorage);
-    assertFalse(cache2.hasKeySync(key));
+    cache2.awaitIndex();
+    assertTrue(cache2.hasKeySync(key));
     assertTrue(cache2.hasKey(key));
-    // Now that we checked disk, index should be updated
+  }
+
+  @Test
+  public void testHasKeyWithoutAwaitingIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index may not yet updated.
+    DiskStorageCache cache2 = createDiskCache(mStorage);
+    assertTrue(cache2.hasKey(key));
     assertTrue(cache2.hasKeySync(key));
   }
 
   @Test
-  public void testReadRestoresIndex() throws Exception {
+  public void testGetResourceWithoutAwaitingIndex() throws Exception {
     CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index may not yet updated.
     DiskStorageCache cache2 = createDiskCache(mStorage);
-    assertFalse(cache2.hasKeySync(key));
     assertNotNull(cache2.getResource(key));
-    // Now that we checked disk, index should be updated
-    assertTrue(cache2.hasKeySync(key));
-  }
-
-  @Test
-  public void testProbeRestoresIndex() throws Exception {
-    CacheKey key = putOneThingInCache();
-    DiskStorageCache cache2 = createDiskCache(mStorage);
-    assertFalse(cache2.hasKeySync(key));
-    assertTrue(cache2.probe(key));
-    assertTrue(cache2.hasKeySync(key));
   }
 
   @Test

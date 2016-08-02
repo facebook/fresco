@@ -56,7 +56,7 @@ public class DraweeHolder<DH extends DraweeHierarchy>
 
   private DraweeController mController = null;
 
-  private final DraweeEventTracker mEventTracker = new DraweeEventTracker();
+  private final DraweeEventTracker mEventTracker = DraweeEventTracker.newInstance();
 
   /**
    * Creates a new instance of DraweeHolder that detaches / attaches controller whenever context
