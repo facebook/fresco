@@ -423,7 +423,25 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public boolean isInDiskCacheSync(final Uri uri) {
-    return isInDiskCacheSync(ImageRequest.fromUri(uri));
+    return isInDiskCacheSync(uri, ImageRequest.CacheChoice.SMALL) ||
+            isInDiskCacheSync(uri, ImageRequest.CacheChoice.DEFAULT);
+  }
+
+  /**
+   * Returns whether the image is stored in the disk cache.
+   * Performs disk cache check synchronously. It is not recommended to use this
+   * unless you know what exactly you are doing. Disk cache check is a costly operation,
+   * the call will block the caller thread until the cache check is completed.
+   * @param uri the uri for the image to be looked up.
+   * @param cacheChoice the cacheChoice for the cache to be looked up.
+   * @return true if the image was found in the disk cache, false otherwise.
+   */
+  public boolean isInDiskCacheSync(final Uri uri, final ImageRequest.CacheChoice cacheChoice) {
+    ImageRequest imageRequest = ImageRequestBuilder
+            .newBuilderWithSource(uri)
+            .setCacheChoice(cacheChoice)
+            .build();
+    return isInDiskCacheSync(imageRequest);
   }
 
   /**
@@ -435,7 +453,16 @@ public class ImagePipeline {
    */
   public boolean isInDiskCacheSync(final ImageRequest imageRequest) {
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, null);
-    return mMainBufferedDiskCache.diskCheckSync(cacheKey);
+    final ImageRequest.CacheChoice cacheChoice = imageRequest.getCacheChoice();
+
+    switch (cacheChoice) {
+      case DEFAULT:
+        return mMainBufferedDiskCache.diskCheckSync(cacheKey);
+      case SMALL:
+        return mSmallImageBufferedDiskCache.diskCheckSync(cacheKey);
+      default:
+        return false;
+    }
   }
 
   /**
