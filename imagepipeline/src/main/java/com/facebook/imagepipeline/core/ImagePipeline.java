@@ -423,7 +423,8 @@ public class ImagePipeline {
    * @return true if the image was found in the disk cache, false otherwise.
    */
   public boolean isInDiskCacheSync(final Uri uri) {
-    return isInDiskCacheSync(uri, ImageRequest.CacheChoice.DEFAULT);
+    return isInDiskCacheSync(uri, ImageRequest.CacheChoice.SMALL) ||
+            isInDiskCacheSync(uri, ImageRequest.CacheChoice.DEFAULT);
   }
 
   /**
