@@ -104,16 +104,29 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   protected DataSource<CloseableReference<CloseableImage>> getDataSourceForRequest(
       ImageRequest imageRequest,
       Object callerContext,
-      boolean bitmapCacheOnly) {
-    if (bitmapCacheOnly) {
-      return mImagePipeline.fetchImageFromBitmapCache(imageRequest, callerContext);
-    } else {
-      return mImagePipeline.fetchDecodedImage(imageRequest, callerContext);
-    }
+      CacheLevel cacheLevel) {
+    return mImagePipeline.fetchDecodedImage(
+        imageRequest,
+        callerContext,
+        convertCacheLevelToRequestLevel(cacheLevel));
   }
 
   @Override
   protected PipelineDraweeControllerBuilder getThis() {
     return this;
+  }
+
+  public static ImageRequest.RequestLevel convertCacheLevelToRequestLevel(
+      AbstractDraweeControllerBuilder.CacheLevel cacheLevel) {
+    switch (cacheLevel) {
+      case FULL_FETCH:
+        return ImageRequest.RequestLevel.FULL_FETCH;
+      case DISK_CACHE:
+        return ImageRequest.RequestLevel.DISK_CACHE;
+      case BITMAP_MEMORY_CACHE:
+        return ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE;
+      default:
+        throw new RuntimeException("Cache level" + cacheLevel + "is not supported. ");
+    }
   }
 }

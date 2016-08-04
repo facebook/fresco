@@ -97,25 +97,40 @@ public class ImagePipeline {
   }
 
   /**
+   * @deprecated Use {@link #getDataSourceSupplier(ImageRequest, Object, ImageRequest.RequestLevel)}
+   * instead.
+   */
+  @Deprecated
+  public Supplier<DataSource<CloseableReference<CloseableImage>>> getDataSourceSupplier(
+      final ImageRequest imageRequest,
+      final Object callerContext,
+      final boolean bitmapCacheOnly) {
+    ImageRequest.RequestLevel requestLevel = bitmapCacheOnly ?
+        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE :
+        ImageRequest.RequestLevel.FULL_FETCH;
+    return getDataSourceSupplier(
+        imageRequest,
+        callerContext,
+        requestLevel);
+  }
+
+  /**
    * Returns a DataSource supplier that will on get submit the request for execution and return a
    * DataSource representing the pending results of the task.
    *
    * @param imageRequest the request to submit (what to execute).
-   * @param bitmapCacheOnly whether to only look for the image in the bitmap cache
+   * @param callerContext the caller context of the caller of data source supplier
+   * @param requestLevel which level to look down until for the image
    * @return a DataSource representing pending results and completion of the request
    */
   public Supplier<DataSource<CloseableReference<CloseableImage>>> getDataSourceSupplier(
       final ImageRequest imageRequest,
       final Object callerContext,
-      final boolean bitmapCacheOnly) {
+      final ImageRequest.RequestLevel requestLevel) {
     return new Supplier<DataSource<CloseableReference<CloseableImage>>>() {
       @Override
       public DataSource<CloseableReference<CloseableImage>> get() {
-        if (bitmapCacheOnly) {
-          return fetchImageFromBitmapCache(imageRequest, callerContext);
-        } else {
-          return fetchDecodedImage(imageRequest, callerContext);
-        }
+        return fetchDecodedImage(imageRequest, callerContext, requestLevel);
       }
 
       @Override
