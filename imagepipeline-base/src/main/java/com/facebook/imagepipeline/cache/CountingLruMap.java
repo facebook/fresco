@@ -66,7 +66,7 @@ public class CountingLruMap<K, V> {
   /** Gets the all matching elements. */
   public synchronized ArrayList<LinkedHashMap.Entry<K, V>> getMatchingEntries(
       @Nullable Predicate<K> predicate) {
-    ArrayList<LinkedHashMap.Entry<K, V>> matchingEntries = new ArrayList<>();
+    ArrayList<LinkedHashMap.Entry<K, V>> matchingEntries = new ArrayList<>(mMap.entrySet().size());
     for (LinkedHashMap.Entry<K, V> entry : mMap.entrySet()) {
       if (predicate == null || predicate.apply(entry.getKey())) {
         matchingEntries.add(entry);
