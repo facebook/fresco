@@ -208,7 +208,7 @@ public class ImagePipelineTest {
     DataSource<CloseableReference<CloseableImage>> dataSource =
         mImagePipeline.fetchDecodedImage(mImageRequest, mCallerContext);
     assertFalse(dataSource.isFinished());
-    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0",  false);
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
@@ -216,6 +216,30 @@ public class ImagePipelineTest {
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
     assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
     assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+  }
+
+  @Test
+  public void testFetchDecodedImageWithRequestLevel() {
+    Producer<CloseableReference<CloseableImage>> decodedSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
+        .thenReturn(decodedSequence);
+    DataSource<CloseableReference<CloseableImage>> dataSource =
+        mImagePipeline.fetchDecodedImage(
+            mImageRequest,
+            mCallerContext,
+            ImageRequest.RequestLevel.DISK_CACHE);
+    assertFalse(dataSource.isFinished());
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
+    verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
+    ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
+        ArgumentCaptor.forClass(ProducerContext.class);
+    verify(decodedSequence)
+        .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
+    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
+    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertEquals(
+        producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel(),
+        ImageRequest.RequestLevel.DISK_CACHE);
   }
 
   @Test

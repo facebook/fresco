@@ -157,22 +157,16 @@ public class ImagePipeline {
    * Submits a request for bitmap cache lookup.
    *
    * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
    * @return a DataSource representing the image
    */
   public DataSource<CloseableReference<CloseableImage>> fetchImageFromBitmapCache(
       ImageRequest imageRequest,
       Object callerContext) {
-    try {
-      Producer<CloseableReference<CloseableImage>> producerSequence =
-          mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
-      return submitFetchRequest(
-          producerSequence,
-          imageRequest,
-          ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE,
-          callerContext);
-    } catch (Exception exception) {
-      return DataSources.immediateFailedDataSource(exception);
-    }
+    return fetchDecodedImage(
+        imageRequest,
+        callerContext,
+        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
   }
 
   /**
@@ -180,18 +174,35 @@ public class ImagePipeline {
    * image(s).
    * <p>The returned DataSource must be closed once the client has finished with it.
    * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
    * @return a DataSource representing the pending decoded image(s)
    */
   public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
       ImageRequest imageRequest,
       Object callerContext) {
+    return fetchDecodedImage(imageRequest, callerContext, ImageRequest.RequestLevel.FULL_FETCH);
+  }
+
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
+   * <p>The returned DataSource must be closed once the client has finished with it.
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image request
+   * @return a DataSource representing the pending decoded image(s)
+   */
+  public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
+      ImageRequest imageRequest,
+      Object callerContext,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit) {
     try {
       Producer<CloseableReference<CloseableImage>> producerSequence =
           mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
       return submitFetchRequest(
           producerSequence,
           imageRequest,
-          ImageRequest.RequestLevel.FULL_FETCH,
+          lowestPermittedRequestLevelOnSubmit,
           callerContext);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
