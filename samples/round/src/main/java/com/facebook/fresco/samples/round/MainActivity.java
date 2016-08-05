@@ -22,8 +22,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.facebook.common.logging.FLog;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
@@ -56,10 +54,7 @@ public class MainActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    Fresco.initialize(this);
     setContentView(R.layout.activity_main);
-    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
 
     mUnroundedColumn = (LinearLayout) findViewById(R.id.unrounded);
     mRoundedColumn = (LinearLayout) findViewById(R.id.rounded);

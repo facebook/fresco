@@ -9,23 +9,21 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package com.facebook.samples.round;
 
-package com.facebook.samples.zoomableapp;
+import android.app.Application;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import com.facebook.common.logging.FLog;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
-public class MainActivity extends Activity {
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    setContentView(R.layout.activity_main);
-
-    MyPagerAdapter adapter = new MyPagerAdapter();
-    ViewPager pager = (ViewPager) findViewById(R.id.pager);
-    pager.setAdapter(adapter);
-  }
+/**
+ * Round Application implementation where we set up Fresco
+ */
+public class RoundApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+        Fresco.initialize(this);
+    }
 }
