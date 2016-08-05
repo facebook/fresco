@@ -32,7 +32,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 public class MainActivity extends Activity {
 
   private static final Uri URI = Uri.parse(
-      "http://apod.nasa.gov/apod/image/1410/20141008tleBaldridge001h990.jpg");
+      "http://cache-graphicslib.viator.com/graphicslib/3454/SITours/small-group-yosemite-tour-from-san-francisco-in-san-francisco-172092.jpg");
+      //"http://apod.nasa.gov/apod/image/1410/20141008tleBaldridge001h990.jpg");
   private static final int WIDTH = 400;
   private static final int HEIGHT = 240;
   private static final float FOCUS_X = 0.454f;
@@ -49,7 +50,6 @@ public class MainActivity extends Activity {
   static {
     SUPPORTS_BITMAP_ROUNDING = new HashSet<>();
     SUPPORTS_BITMAP_ROUNDING.add(ScaleType.CENTER_CROP);
-    SUPPORTS_BITMAP_ROUNDING.add(ScaleType.CENTER);
     SUPPORTS_BITMAP_ROUNDING.add(ScaleType.FOCUS_CROP);
   }
 
@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
     builder.setRoundingParams(null);
     SimpleDraweeView unroundedImage = new SimpleDraweeView(this, builder.build());
 
-    if (SUPPORTS_BITMAP_ROUNDING.contains(scaleType)) {
+    if (true || SUPPORTS_BITMAP_ROUNDING.contains(scaleType)) {
       builder.setRoundingParams(mRoundingBitmapOnly);
     } else {
       builder.setRoundingParams(mRoundingOverlayColor);
