@@ -179,10 +179,11 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
   private List<CloseableReference<Bitmap>> decodeAllFrames(
       AnimatedImage image,
       Bitmap.Config bitmapConfig) {
-    final List<CloseableReference<Bitmap>> bitmaps = new ArrayList<>();
     AnimatedImageResult tempResult = AnimatedImageResult.forAnimatedImage(image);
     AnimatedDrawableBackend drawableBackend =
         mAnimatedDrawableBackendProvider.get(tempResult, null);
+    final List<CloseableReference<Bitmap>> bitmaps =
+            new ArrayList<>(drawableBackend.getFrameCount());
     AnimatedImageCompositor animatedImageCompositor = new AnimatedImageCompositor(
         drawableBackend,
         new AnimatedImageCompositor.Callback() {

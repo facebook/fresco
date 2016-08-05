@@ -41,8 +41,8 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
       List<Integer> durations) {
     Preconditions.checkNotNull(bitmapReferences);
     Preconditions.checkState(bitmapReferences.size() >= 1, "Need at least 1 frame!");
-    mBitmapReferences = new ArrayList<>();
-    mBitmaps = new ArrayList<>();
+    mBitmapReferences = new ArrayList<>(bitmapReferences.size());
+    mBitmaps = new ArrayList<>(bitmapReferences.size());
     for (CloseableReference<Bitmap> bitmapReference : bitmapReferences) {
       mBitmapReferences.add(bitmapReference.clone());
       mBitmaps.add(bitmapReference.get());
@@ -64,8 +64,8 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
       ResourceReleaser<Bitmap> resourceReleaser) {
     Preconditions.checkNotNull(bitmaps);
     Preconditions.checkState(bitmaps.size() >= 1, "Need at least 1 frame!");
-    mBitmaps = new ArrayList<>();
-    mBitmapReferences = new ArrayList<>();
+    mBitmaps = new ArrayList<>(bitmaps.size());
+    mBitmapReferences = new ArrayList<>(bitmaps.size());
     for (Bitmap bitmap : bitmaps) {
       mBitmapReferences.add(CloseableReference.of(bitmap, resourceReleaser));
       mBitmaps.add(bitmap);
