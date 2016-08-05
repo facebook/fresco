@@ -66,6 +66,7 @@ public abstract class AbstractDraweeControllerBuilder <
   private boolean mTryCacheOnlyFirst;
   private @Nullable Supplier<DataSource<IMAGE>> mDataSourceSupplier;
   private @Nullable ControllerListener<? super INFO> mControllerListener;
+  private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
   private boolean mRetainImageOnFailure;
@@ -238,6 +239,19 @@ public abstract class AbstractDraweeControllerBuilder <
   @Nullable
   public ControllerListener<? super INFO> getControllerListener() {
     return mControllerListener;
+  }
+
+  /** Sets the controller viewport visibility listener. */
+  public BUILDER setControllerViewportVisibilityListener(
+      @Nullable ControllerViewportVisibilityListener controllerViewportVisibilityListener) {
+    mControllerViewportVisibilityListener = controllerViewportVisibilityListener;
+    return getThis();
+  }
+
+  /** Gets the controller viewport visibility listener. */
+  @Nullable
+  public ControllerViewportVisibilityListener getControllerViewportVisibilityListener() {
+    return mControllerViewportVisibilityListener;
   }
 
   /** Sets the accessibility content description. */

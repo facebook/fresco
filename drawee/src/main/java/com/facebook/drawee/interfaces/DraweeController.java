@@ -41,6 +41,12 @@ public interface DraweeController {
   void onDetach();
 
   /**
+   * An optional hint whether the view containing the hierarchy is currently within the visible
+   * viewport or not.
+   */
+  void onViewportVisibilityHint(boolean isVisibleInViewportHint);
+
+  /**
    * Called when the view containing the hierarchy receives a touch event.
    * @return true if the event was handled by the controller, false otherwise
    */
