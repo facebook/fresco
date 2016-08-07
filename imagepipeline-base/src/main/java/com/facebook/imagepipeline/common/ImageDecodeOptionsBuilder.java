@@ -18,6 +18,7 @@ public class ImageDecodeOptionsBuilder {
 
   private int mMinDecodeIntervalMs = 100;
   private int mBackgroundColor = Color.WHITE;
+  private boolean mForceNewAnimationCode;
   private boolean mForceOldAnimationCode;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
@@ -35,6 +36,7 @@ public class ImageDecodeOptionsBuilder {
    */
   public ImageDecodeOptionsBuilder setFrom(ImageDecodeOptions options) {
     mBackgroundColor = options.backgroundColor;
+    mForceNewAnimationCode = options.forceNewAnimationCode;
     mForceOldAnimationCode = options.forceOldAnimationCode;
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
@@ -89,8 +91,34 @@ public class ImageDecodeOptionsBuilder {
   }
 
   /**
-   * Sets whether to force use of the old animation drawable code that we're in process of
+   * Sets whether to force use of the new animation drawable code. One must not force the new and
+   * the old animation code at the same time.
+   *
+   * See: {@link #setForceOldAnimationCode(boolean)}
+   *
+   * @param forceNewAnimationCode whether to force use of the new animation drawable code
+   * @return this builder
+   */
+  public ImageDecodeOptionsBuilder setForceNewAnimationCode(boolean forceNewAnimationCode) {
+    mForceNewAnimationCode = forceNewAnimationCode;
+    return this;
+  }
+
+  /**
+   * Gets whether to force use of the new animation drawable code that we're in process of
    * deprecating.
+   *
+   * @return whether to force use of the new animation drawable code
+   */
+  public boolean getForceNewAnimationCode() {
+    return mForceNewAnimationCode;
+  }
+
+  /**
+   * Sets whether to force use of the old animation drawable code that we're in process of
+   * deprecating. One must not force the old and the new animation code at the same time.
+   *
+   * See: {@link #setForceNewAnimationCode(boolean)}
    *
    * @param forceOldAnimationCode whether to force use of the old animation drawable code
    * @return this builder

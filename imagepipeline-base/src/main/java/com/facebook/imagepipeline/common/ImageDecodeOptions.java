@@ -13,6 +13,8 @@ import javax.annotation.concurrent.Immutable;
 
 import java.util.Locale;
 
+import com.facebook.common.internal.Preconditions;
+
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
  */
@@ -30,6 +32,11 @@ public class ImageDecodeOptions {
    * Background color used when converting to image formats that don't support transparency.
    */
   public final int backgroundColor;
+
+  /**
+   * Forces use of the new animation drawable code.
+   */
+  public final boolean forceNewAnimationCode;
 
   /**
    * Forces use of the old animation drawable code that we're in process of deprecating.
@@ -61,8 +68,12 @@ public class ImageDecodeOptions {
   public final boolean forceStaticImage;
 
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
+    Preconditions.checkArgument(
+        !(b.getForceNewAnimationCode() && b.getForceOldAnimationCode()),
+        "Cannot force both old and new animation code");
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.backgroundColor = b.getBackgroundColor();
+    this.forceNewAnimationCode = b.getForceNewAnimationCode();
     this.forceOldAnimationCode = b.getForceOldAnimationCode();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
@@ -73,7 +84,7 @@ public class ImageDecodeOptions {
   /**
    * Gets the default options.
    *
-   * @return  the default options
+   * @return the default options
    */
   public static ImageDecodeOptions defaults() {
     return DEFAULTS;
