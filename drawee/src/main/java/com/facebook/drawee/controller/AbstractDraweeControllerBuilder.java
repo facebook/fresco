@@ -92,6 +92,7 @@ public abstract class AbstractDraweeControllerBuilder <
     mMultiImageRequests = null;
     mTryCacheOnlyFirst = true;
     mControllerListener = null;
+    mControllerViewportVisibilityListener = null;
     mTapToRetryEnabled = false;
     mAutoPlayAnimations = false;
     mOldController = null;
@@ -309,6 +310,7 @@ public abstract class AbstractDraweeControllerBuilder <
     AbstractDraweeController controller = obtainController();
     controller.setRetainImageOnFailure(getRetainImageOnFailure());
     controller.setContentDescription(getContentDescription());
+    controller.setControllerViewportVisibilityListener(getControllerViewportVisibilityListener());
     maybeBuildAndSetRetryManager(controller);
     maybeAttachListeners(controller);
     return controller;
