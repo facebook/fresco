@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.request;
 
+import javax.annotation.Nullable;
+
 import android.net.Uri;
 
 import com.facebook.common.internal.Preconditions;
@@ -16,8 +18,6 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
-
-import javax.annotation.Nullable;
 
 import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
@@ -147,7 +147,7 @@ public class ImageRequestBuilder {
    * @param resizeOptions resize options
    * @return the modified builder instance
    */
-  public ImageRequestBuilder setResizeOptions(ResizeOptions resizeOptions) {
+  public ImageRequestBuilder setResizeOptions(@Nullable ResizeOptions resizeOptions) {
     mResizeOptions = resizeOptions;
     return this;
   }
