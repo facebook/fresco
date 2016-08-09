@@ -1,8 +1,8 @@
 - title: Apps Using Fresco
   items:
-  - name: Vimeo
-    url: https://play.google.com/store/apps/details?id=com.vimeo.android.videoapp
-    img: static/images/vimeo.png
+  - name: Twitter
+    url: https://play.google.com/store/apps/details?id=com.twitter.android
+    img: static/images/twitter.png
   - name: Wikipedia
     url: https://play.google.com/store/apps/details?id=org.wikipedia
     img: static/images/wikipedia.png
@@ -12,4 +12,3 @@
   - name: React Native
     url: https://facebook.github.io/react-native/
     img: static/images/reactnative.png
-
