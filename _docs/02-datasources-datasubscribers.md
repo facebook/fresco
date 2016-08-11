@@ -40,7 +40,7 @@ This is a generic example of how to get a result from a data source of `Closeabl
             CloseableReference<T> ref = dataSource.getResult();
             if (ref != null) {
               try {
-                // do somethign with the result
+                // do something with the result
                 T result = ref.get();
                 ...
               } finally {
