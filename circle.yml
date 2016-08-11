@@ -8,7 +8,7 @@ machine:
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 test:
   override:
-    - ./gradlew assembleDebug -PdisablePreDex
+    - ./gradlew test assembleDebug -PdisablePreDex
   post:
     # copy test report for Circle CI to display
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
