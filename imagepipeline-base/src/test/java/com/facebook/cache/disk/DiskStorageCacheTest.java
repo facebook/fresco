@@ -111,6 +111,7 @@ public class DiskStorageCacheTest {
     }
     mStorage = createDiskStorage(TESTCACHE_VERSION_START_OF_VERSIONING);
     mCache = createDiskCache(mStorage);
+    mCache.clearAll();
     verify(mDiskTrimmableRegistry).registerDiskTrimmable(mCache);
   }
 
