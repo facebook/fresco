@@ -9,9 +9,7 @@
 
 package com.facebook.drawee.backends.pipeline;
 
-import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -31,24 +29,19 @@ public class Fresco {
 
   /** Initializes Fresco with the default config. */
   public static void initialize(Context context) {
-    Log.d("ALEX", "b initialize " + (context instanceof Application));
     context = context.getApplicationContext();
-    Log.d("ALEX", "a initialize " + (context instanceof Application));
     ImagePipelineFactory.initialize(context);
     initializeDrawee(context);
   }
 
   /** Initializes Fresco with the specified config. */
   public static void initialize(Context context, ImagePipelineConfig imagePipelineConfig) {
-    Log.d("ALEX", "b initialize " + (context instanceof Application));
     context = context.getApplicationContext();
-    Log.d("ALEX", "a initialize " + (context instanceof Application));
     ImagePipelineFactory.initialize(imagePipelineConfig);
     initializeDrawee(context);
   }
 
   private static void initializeDrawee(Context context) {
-    Log.d("ALEX", "initializeDrawee " + (context instanceof Application));
     sDraweeControllerBuilderSupplier = new PipelineDraweeControllerBuilderSupplier(context);
     SimpleDraweeView.initialize(sDraweeControllerBuilderSupplier);
   }
