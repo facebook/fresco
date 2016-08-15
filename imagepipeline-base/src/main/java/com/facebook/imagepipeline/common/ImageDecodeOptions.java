@@ -13,8 +13,6 @@ import javax.annotation.concurrent.Immutable;
 
 import java.util.Locale;
 
-import com.facebook.common.internal.Preconditions;
-
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
  */
@@ -27,21 +25,6 @@ public class ImageDecodeOptions {
    * Decoding of intermediate results for an image won't happen more often that minDecodeIntervalMs.
    */
   public final int minDecodeIntervalMs;
-
-  /**
-   * Background color used when converting to image formats that don't support transparency.
-   */
-  public final int backgroundColor;
-
-  /**
-   * Forces use of the new animation drawable code.
-   */
-  public final boolean forceNewAnimationCode;
-
-  /**
-   * Forces use of the old animation drawable code that we're in process of deprecating.
-   */
-  public final boolean forceOldAnimationCode;
 
   /**
    * Whether to decode a preview frame for animated images.
@@ -68,13 +51,7 @@ public class ImageDecodeOptions {
   public final boolean forceStaticImage;
 
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
-    Preconditions.checkArgument(
-        !(b.getForceNewAnimationCode() && b.getForceOldAnimationCode()),
-        "Cannot force both old and new animation code");
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
-    this.backgroundColor = b.getBackgroundColor();
-    this.forceNewAnimationCode = b.getForceNewAnimationCode();
-    this.forceOldAnimationCode = b.getForceOldAnimationCode();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
     this.decodeAllFrames = b.getDecodeAllFrames();
@@ -106,8 +83,6 @@ public class ImageDecodeOptions {
 
     ImageDecodeOptions that = (ImageDecodeOptions) o;
 
-    if (backgroundColor != that.backgroundColor) return false;
-    if (forceOldAnimationCode != that.forceOldAnimationCode) return false;
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
@@ -118,8 +93,11 @@ public class ImageDecodeOptions {
 
   @Override
   public int hashCode() {
-    int result = backgroundColor;
-    result = 31 * result + (forceOldAnimationCode ? 1 : 0);
+    int result = minDecodeIntervalMs;
+    result = 31 * result + (decodePreviewFrame ? 1 : 0);
+    result = 31 * result + (useLastFrameForPreview ? 1 : 0);
+    result = 31 * result + (decodeAllFrames ? 1 : 0);
+    result = 31 * result + (forceStaticImage ? 1 : 0);
     return result;
   }
 
@@ -127,10 +105,8 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%d-%b-%b-%b-%b-%b",
+        "%d-%b-%b-%b-%b",
         minDecodeIntervalMs,
-        backgroundColor,
-        forceOldAnimationCode,
         decodePreviewFrame,
         useLastFrameForPreview,
         decodeAllFrames,

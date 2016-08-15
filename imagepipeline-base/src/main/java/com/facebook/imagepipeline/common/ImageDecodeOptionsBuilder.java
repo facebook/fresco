@@ -9,17 +9,12 @@
 
 package com.facebook.imagepipeline.common;
 
-import android.graphics.Color;
-
 /**
  * Builder for {@link ImageDecodeOptions}.
  */
 public class ImageDecodeOptionsBuilder {
 
   private int mMinDecodeIntervalMs = 100;
-  private int mBackgroundColor = Color.WHITE;
-  private boolean mForceNewAnimationCode;
-  private boolean mForceOldAnimationCode;
   private boolean mDecodePreviewFrame;
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
@@ -35,9 +30,6 @@ public class ImageDecodeOptionsBuilder {
    * @return this builder
    */
   public ImageDecodeOptionsBuilder setFrom(ImageDecodeOptions options) {
-    mBackgroundColor = options.backgroundColor;
-    mForceNewAnimationCode = options.forceNewAnimationCode;
-    mForceOldAnimationCode = options.forceOldAnimationCode;
     mDecodePreviewFrame = options.decodePreviewFrame;
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     mDecodeAllFrames = options.decodeAllFrames;
@@ -66,76 +58,6 @@ public class ImageDecodeOptionsBuilder {
    */
   public int getMinDecodeIntervalMs() {
     return mMinDecodeIntervalMs;
-  }
-
-  /**
-   * Sets the background color used when converting to image formats that don't support
-   * transparency.
-   *
-   * @param backgroundColor the background color to use
-   * @return this builder
-   */
-  public ImageDecodeOptionsBuilder setBackgroundColor(int backgroundColor) {
-    mBackgroundColor = backgroundColor;
-    return this;
-  }
-
-  /**
-   * Gets the background color used when converting to image formats that don't support
-   * transparency.
-   *
-   * @return the background color to use
-   */
-  public int getBackgroundColor() {
-    return mBackgroundColor;
-  }
-
-  /**
-   * Sets whether to force use of the new animation drawable code. One must not force the new and
-   * the old animation code at the same time.
-   *
-   * See: {@link #setForceOldAnimationCode(boolean)}
-   *
-   * @param forceNewAnimationCode whether to force use of the new animation drawable code
-   * @return this builder
-   */
-  public ImageDecodeOptionsBuilder setForceNewAnimationCode(boolean forceNewAnimationCode) {
-    mForceNewAnimationCode = forceNewAnimationCode;
-    return this;
-  }
-
-  /**
-   * Gets whether to force use of the new animation drawable code that we're in process of
-   * deprecating.
-   *
-   * @return whether to force use of the new animation drawable code
-   */
-  public boolean getForceNewAnimationCode() {
-    return mForceNewAnimationCode;
-  }
-
-  /**
-   * Sets whether to force use of the old animation drawable code that we're in process of
-   * deprecating. One must not force the old and the new animation code at the same time.
-   *
-   * See: {@link #setForceNewAnimationCode(boolean)}
-   *
-   * @param forceOldAnimationCode whether to force use of the old animation drawable code
-   * @return this builder
-   */
-  public ImageDecodeOptionsBuilder setForceOldAnimationCode(boolean forceOldAnimationCode) {
-    mForceOldAnimationCode = forceOldAnimationCode;
-    return this;
-  }
-
-  /**
-   * Gets whether to force use of the old animation drawable code that we're in process of
-   * deprecating.
-   *
-   * @return whether to force use of the old animation drawable code
-   */
-  public boolean getForceOldAnimationCode() {
-    return mForceOldAnimationCode;
   }
 
   /**

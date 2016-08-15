@@ -81,7 +81,6 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
-      Preconditions.checkState(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
       AnimatedImage gifImage = sGifAnimatedImageDecoder.decode(input.getNativePtr(), input.size());
 
@@ -109,7 +108,6 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
-      Preconditions.checkArgument(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
       AnimatedImage webPImage = sWebpAnimatedImageDecoder.decode(
           input.getNativePtr(),
