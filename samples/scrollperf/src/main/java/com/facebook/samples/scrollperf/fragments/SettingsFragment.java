@@ -55,6 +55,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateUsePostprocessorSummary(findPreference(Const.USE_POSTPROCESSOR_KEY));
     updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
     updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
+    updateAutoRotateSummary(findPreference(Const.AUTO_ROTATE_KEY));
   }
 
   @Override
@@ -96,6 +97,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.SCALE_TYPE_KEY:
         updateWhatScaleTypeSummary(preference);
+        break;
+      case Const.AUTO_ROTATE_KEY:
+        updateAutoRotateSummary(preference);
         break;
     }
   }
@@ -199,5 +203,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final int valueIndex = preference.findIndexOfValue(preference.getValue());
     final String summary = resources.getStringArray(arrayValuesId)[valueIndex];
     preference.setSummary(summary);
+  }
+
+  private void updateAutoRotateSummary(final Preference preference) {
+    updateCheckBoxPreference(
+            getResources(),
+            (CheckBoxPreference) preference,
+            R.string.checked_auto_rotate_summary,
+            R.string.unchecked_auto_rotate_summary);
   }
 }
