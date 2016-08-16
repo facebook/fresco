@@ -93,13 +93,16 @@ The above example closes the reference as soon as the callback gets executed. If
     dataSource.subscribe(dataSubscriber, executor);
 ```
 
-IMPORTANT: once you don't need the result anymore, you must close the reference. Not doing so may cause memory leaks.
+IMPORTANT: once you don't need the result anymore, you **must close the reference**. Not doing so may cause memory leaks.
 See [closeable references](closeable-references.html) for more details.
 
 ```java
     CloseableReference.closeSafely(mRef);
     mRef = null;
 ```
+
+However, if you are using `BaseDataSubscriber` you do not have to manually close the `dataSource` (closing `mRef` is enough). `BaseDataSubscriber` automatically closes the `dataSource` for you right after `onNewResultImpl` is called.
+If you are not using `BaseDataSubscriber` (e.g. if you're calling `dataSource.getResult()`), make sure to close the `dataSource` as well.
 
 ### To get encoded image...
 
