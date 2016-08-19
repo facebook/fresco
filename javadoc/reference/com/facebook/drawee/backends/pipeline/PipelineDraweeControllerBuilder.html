@@ -219,7 +219,6 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/Fresco.html">Fresco</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.Experiment.html">PipelineDraweeController.Experiment</a></li>
           <li class="selected api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html">PipelineDraweeControllerBuilder</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilderSupplier.html">PipelineDraweeControllerBuilderSupplier</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html">PipelineDraweeControllerFactory</a></li>
@@ -493,6 +492,22 @@ Summary:
             
             
             
+            static
+            
+            <a href="../../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html#convertCacheLevelToRequestLevel(com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">convertCacheLevelToRequestLevel</a></span>(<a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
             
             
             <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html">PipelineDraweeControllerBuilder</a>
@@ -504,7 +519,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -541,7 +556,7 @@ Summary:
             <a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html#getDataSourceForRequest(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, boolean)">getDataSourceForRequest</a></span>(<a href="../../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, boolean bitmapCacheOnly)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html#getDataSourceForRequest(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceForRequest</a></span>(<a href="../../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
         
         <div class="jd-descrdiv">Concrete builder classes should override this method to return a data source for the request.</div>
   
@@ -761,6 +776,24 @@ From class
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
+            
+            
+            
+            
+            
+            ControllerViewportVisibilityListener
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getControllerViewportVisibilityListener()">getControllerViewportVisibilityListener</a></span>()
+        
+        <div class="jd-descrdiv">Gets the controller viewport visibility listener.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
             abstract
             
             
@@ -769,9 +802,27 @@ From class
             <a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceForRequest(REQUEST, java.lang.Object, boolean)">getDataSourceForRequest</a></span>(REQUEST imageRequest, Object callerContext, boolean bitmapCacheOnly)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceForRequest(REQUEST, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceForRequest</a></span>(REQUEST imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
         
         <div class="jd-descrdiv">Concrete builder classes should override this method to return a data source for the request.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplier()">getDataSourceSupplier</a></span>()
+        
+        <div class="jd-descrdiv">Gets the data source supplier if set.</div>
   
   </td></tr>
 
@@ -787,9 +838,9 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplier()">getDataSourceSupplier</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplierForRequest(REQUEST, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceSupplierForRequest</a></span>(REQUEST imageRequest, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
         
-        <div class="jd-descrdiv">Gets the data source supplier if set.</div>
+        <div class="jd-descrdiv">Creates a data source supplier for the given image request.</div>
   
   </td></tr>
 
@@ -823,31 +874,13 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplierForRequest(REQUEST, boolean)">getDataSourceSupplierForRequest</a></span>(REQUEST imageRequest, boolean bitmapCacheOnly)
-        
-        <div class="jd-descrdiv">Creates a data source supplier for the given image request.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(REQUEST[], boolean)">getFirstAvailableDataSourceSupplier</a></span>(REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst)
         
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -865,7 +898,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -883,7 +916,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -901,7 +934,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -919,7 +952,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -937,7 +970,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -955,7 +988,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -973,7 +1006,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -991,7 +1024,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1009,7 +1042,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1027,7 +1060,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1045,7 +1078,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1063,7 +1096,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1081,7 +1114,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1099,7 +1132,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1117,7 +1150,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1135,7 +1168,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1148,6 +1181,24 @@ From class
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setControllerListener(com.facebook.drawee.controller.ControllerListener<? super INFO>)">setControllerListener</a></span>(<a href="../../../../../com/facebook/drawee/controller/ControllerListener.html">ControllerListener</a>&lt;?&nbsp;super&nbsp;INFO&gt; controllerListener)
         
         <div class="jd-descrdiv">Sets the controller listener.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            BUILDER
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#setControllerViewportVisibilityListener(ControllerViewportVisibilityListener)">setControllerViewportVisibilityListener</a></span>(ControllerViewportVisibilityListener controllerViewportVisibilityListener)
+        
+        <div class="jd-descrdiv">Sets the controller viewport visibility listener.</div>
   
   </td></tr>
 
@@ -1718,6 +1769,37 @@ From interface
 
 
 
+<a id="convertCacheLevelToRequestLevel(com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../../com/facebook/imagepipeline/request/ImageRequest.RequestLevel.html">ImageRequest.RequestLevel</a>
+      </span>
+      <span class="sympad">convertCacheLevelToRequestLevel</span>
+      <span class="normal">(<a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="setUri(java.lang.String)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1789,7 +1871,7 @@ From interface
 
 
 
-<a id="getDataSourceForRequest(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, boolean)"></a>
+<a id="getDataSourceForRequest(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1802,7 +1884,7 @@ From interface
         <a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;
       </span>
       <span class="sympad">getDataSourceForRequest</span>
-      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, boolean bitmapCacheOnly)</span>
+      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)</span>
     </h4>
       <div class="api-level">
         <div>

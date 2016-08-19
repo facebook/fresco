@@ -1053,15 +1053,18 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#release()">release</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#onViewportVisibilityHint(boolean)">onViewportVisibilityHint</a></span>(boolean isVisibleInViewportHint)
         
+        <div class="jd-descrdiv">An optional hint whether the view containing the hierarchy is currently within the visible
+ viewport or not.</div>
+  
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
+            
             
             
             
@@ -1069,7 +1072,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseDrawable(android.graphics.drawable.Drawable)">releaseDrawable</a></span>(Drawable drawable)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#release()">release</a></span>()
         
   </td></tr>
 
@@ -1085,13 +1088,29 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseImage(T)">releaseImage</a></span>(T image)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseDrawable(android.graphics.drawable.Drawable)">releaseDrawable</a></span>(Drawable drawable)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseImage(T)">releaseImage</a></span>(T image)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1109,7 +1128,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1127,7 +1146,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1140,6 +1159,24 @@ From class
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setControllerOverlay(android.graphics.drawable.Drawable)">setControllerOverlay</a></span>(Drawable controllerOverlay)
         
         <div class="jd-descrdiv">Sets the controller overlay </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setControllerViewportVisibilityListener(ControllerViewportVisibilityListener)">setControllerViewportVisibilityListener</a></span>(ControllerViewportVisibilityListener controllerViewportVisibilityListener)
+        
+        <div class="jd-descrdiv">Sets the controller viewport visibility listener </div>
   
   </td></tr>
 
@@ -1615,6 +1652,25 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html#onViewportVisibilityHint(boolean)">onViewportVisibilityHint</a></span>(boolean isVisibleInViewportHint)
+        
+        <div class="jd-descrdiv">An optional hint whether the view containing the hierarchy is currently within the visible
+ viewport or not.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html#setContentDescription(java.lang.String)">setContentDescription</a></span>(String contentDescription)
         
         <div class="jd-descrdiv">Sets the accessibility content description.</div>
@@ -1623,7 +1679,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             

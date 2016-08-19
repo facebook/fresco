@@ -675,6 +675,17 @@
 <parameter name="cacheExpirationMs" type="long">
 </parameter>
 </method>
+<method name="getCount"
+ return="long"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getDumpInfo"
  return="DiskStorage.DiskDumpInfo"
  abstract="false"
@@ -911,6 +922,17 @@
 >
 <parameter name="cacheExpirationMs" type="long">
 </parameter>
+</method>
+<method name="getCount"
+ return="long"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 <method name="getDumpInfo"
  return="DiskStorage.DiskDumpInfo"
@@ -3623,17 +3645,6 @@
  visibility="protected"
 >
 </method>
-<method name="getExperiment"
- return="com.facebook.drawee.backends.pipeline.PipelineDraweeController.Experiment"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</method>
 <method name="getImageHash"
  return="int"
  abstract="false"
@@ -3717,36 +3728,6 @@
 </parameter>
 </method>
 </class>
-<class name="PipelineDraweeController.Experiment"
- extends="java.lang.Object"
- abstract="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<constructor name="Experiment"
- type="com.facebook.drawee.backends.pipeline.PipelineDraweeController.Experiment"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</constructor>
-<method name="setFastCheckEnabled"
- return="com.facebook.drawee.backends.pipeline.PipelineDraweeController.Experiment"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="fastCheckEnabled" type="boolean">
-</parameter>
-</method>
-</class>
 <class name="PipelineDraweeControllerBuilder"
  extends="com.facebook.drawee.controller.AbstractDraweeControllerBuilder"
  abstract="false"
@@ -3771,6 +3752,19 @@
 <parameter name="boundControllerListeners" type="java.util.Set&lt;com.facebook.drawee.controller.ControllerListener&gt;">
 </parameter>
 </constructor>
+<method name="convertCacheLevelToRequestLevel"
+ return="com.facebook.imagepipeline.request.ImageRequest.RequestLevel"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheLevel" type="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel">
+</parameter>
+</method>
 <method name="getDataSourceForRequest"
  return="com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;"
  abstract="false"
@@ -3785,7 +3779,7 @@
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
-<parameter name="bitmapCacheOnly" type="boolean">
+<parameter name="cacheLevel" type="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel">
 </parameter>
 </method>
 <method name="getThis"
@@ -4115,7 +4109,7 @@
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
-<parameter name="bitmapCacheOnly" type="boolean">
+<parameter name="cacheLevel" type="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel">
 </parameter>
 </method>
 <method name="getThis"
@@ -4531,6 +4525,19 @@
 <parameter name="event" type="android.view.MotionEvent">
 </parameter>
 </method>
+<method name="onViewportVisibilityHint"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="isVisibleInViewportHint" type="boolean">
+</parameter>
+</method>
 <method name="release"
  return="void"
  abstract="false"
@@ -4605,6 +4612,19 @@
  visibility="protected"
 >
 <parameter name="controllerOverlay" type="android.graphics.drawable.Drawable">
+</parameter>
+</method>
+<method name="setControllerViewportVisibilityListener"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="controllerViewportVisibilityListener" type="ControllerViewportVisibilityListener">
 </parameter>
 </method>
 <method name="setGestureDetector"
@@ -4792,6 +4812,17 @@
  visibility="public"
 >
 </method>
+<method name="getControllerViewportVisibilityListener"
+ return="ControllerViewportVisibilityListener"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getDataSourceForRequest"
  return="com.facebook.datasource.DataSource&lt;IMAGE&gt;"
  abstract="true"
@@ -4806,7 +4837,7 @@
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
-<parameter name="bitmapCacheOnly" type="boolean">
+<parameter name="cacheLevel" type="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel">
 </parameter>
 </method>
 <method name="getDataSourceSupplier"
@@ -4845,7 +4876,7 @@
 >
 <parameter name="imageRequest" type="REQUEST">
 </parameter>
-<parameter name="bitmapCacheOnly" type="boolean">
+<parameter name="cacheLevel" type="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel">
 </parameter>
 </method>
 <method name="getFirstAvailableDataSourceSupplier"
@@ -5064,6 +5095,19 @@
 <parameter name="controllerListener" type="com.facebook.drawee.controller.ControllerListener&lt;? super INFO&gt;">
 </parameter>
 </method>
+<method name="setControllerViewportVisibilityListener"
+ return="BUILDER"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="controllerViewportVisibilityListener" type="ControllerViewportVisibilityListener">
+</parameter>
+</method>
 <method name="setDataSourceSupplier"
  return="void"
  abstract="false"
@@ -5179,6 +5223,39 @@
  final="false"
  deprecated="not deprecated"
  visibility="protected"
+>
+</method>
+</class>
+<class name="AbstractDraweeControllerBuilder.CacheLevel"
+ extends="java.lang.Enum"
+ abstract="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="valueOf"
+ return="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="name" type="java.lang.String">
+</parameter>
+</method>
+<method name="values"
+ return="com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel[]"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
 >
 </method>
 </class>
@@ -7788,6 +7865,19 @@
 <parameter name="event" type="android.view.MotionEvent">
 </parameter>
 </method>
+<method name="onViewportVisibilityHint"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="isVisibleInViewportHint" type="boolean">
+</parameter>
+</method>
 <method name="setContentDescription"
  return="void"
  abstract="true"
@@ -9380,6 +9470,17 @@
  visibility="public"
 >
 </method>
+<field name="LOOP_COUNT_INFINITE"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="0"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 </interface>
 <interface name="AnimatedImageFrame"
  abstract="true"
@@ -10901,6 +11002,23 @@
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
 </method>
+<method name="fetchDecodedImage"
+ return="com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+<parameter name="lowestPermittedRequestLevelOnSubmit" type="com.facebook.imagepipeline.request.ImageRequest.RequestLevel">
+</parameter>
+</method>
 <method name="fetchEncodedImage"
  return="com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;"
  abstract="false"
@@ -10960,7 +11078,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
 <parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
@@ -10968,6 +11086,23 @@
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
 <parameter name="bitmapCacheOnly" type="boolean">
+</parameter>
+</method>
+<method name="getDataSourceSupplier"
+ return="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+<parameter name="requestLevel" type="com.facebook.imagepipeline.request.ImageRequest.RequestLevel">
 </parameter>
 </method>
 <method name="getEncodedImageDataSourceSupplier"
@@ -11048,6 +11183,21 @@
  visibility="public"
 >
 <parameter name="uri" type="android.net.Uri">
+</parameter>
+</method>
+<method name="isInDiskCacheSync"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
 </parameter>
 </method>
 <method name="isInDiskCacheSync"

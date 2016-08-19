@@ -219,7 +219,6 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/Fresco.html">Fresco</a></li>
           <li class="selected api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.Experiment.html">PipelineDraweeController.Experiment</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilder.html">PipelineDraweeControllerBuilder</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerBuilderSupplier.html">PipelineDraweeControllerBuilderSupplier</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html">PipelineDraweeControllerFactory</a></li>
@@ -293,8 +292,6 @@
 
 Summary:
 
-  <a href="#nestedclasses">Nested Classes</a>
-  
 
 
 
@@ -303,8 +300,7 @@ Summary:
 
 
 
-
-  &#124; <a href="#pubctors">Ctors</a>
+  <a href="#pubctors">Ctors</a>
   
 
 
@@ -435,27 +431,6 @@ Summary:
 
 <h2>Summary</h2>
 
-
-
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
-
-
-  
-    <tr class="alt-color api apilevel-" >
-      <td class="jd-typecol">
-        
-         
-         
-        
-        class</td>
-      <td class="jd-linkcol"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.Experiment.html">PipelineDraweeController.Experiment</a></td>
-      <td class="jd-descrcol" width="100%">&nbsp;</td>
-    </tr>
-    
-    
-
-</table>
 
 
 
@@ -611,22 +586,6 @@ Summary:
             
             
             
-            static
-            
-            <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.Experiment.html">PipelineDraweeController.Experiment</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html#getExperiment()">getExperiment</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
             
             
             int
@@ -638,7 +597,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -654,7 +613,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -670,7 +629,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -686,7 +645,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1110,15 +1069,18 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#release()">release</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#onViewportVisibilityHint(boolean)">onViewportVisibilityHint</a></span>(boolean isVisibleInViewportHint)
         
+        <div class="jd-descrdiv">An optional hint whether the view containing the hierarchy is currently within the visible
+ viewport or not.</div>
+  
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
+            
             
             
             
@@ -1126,7 +1088,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseDrawable(android.graphics.drawable.Drawable)">releaseDrawable</a></span>(Drawable drawable)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#release()">release</a></span>()
         
   </td></tr>
 
@@ -1142,13 +1104,29 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseImage(T)">releaseImage</a></span>(T image)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseDrawable(android.graphics.drawable.Drawable)">releaseDrawable</a></span>(Drawable drawable)
         
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#releaseImage(T)">releaseImage</a></span>(T image)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1166,7 +1144,7 @@ From class
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1184,7 +1162,7 @@ From class
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1197,6 +1175,24 @@ From class
         <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setControllerOverlay(android.graphics.drawable.Drawable)">setControllerOverlay</a></span>(Drawable controllerOverlay)
         
         <div class="jd-descrdiv">Sets the controller overlay </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeController.html#setControllerViewportVisibilityListener(ControllerViewportVisibilityListener)">setControllerViewportVisibilityListener</a></span>(ControllerViewportVisibilityListener controllerViewportVisibilityListener)
+        
+        <div class="jd-descrdiv">Sets the controller viewport visibility listener </div>
   
   </td></tr>
 
@@ -1672,6 +1668,25 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html#onViewportVisibilityHint(boolean)">onViewportVisibilityHint</a></span>(boolean isVisibleInViewportHint)
+        
+        <div class="jd-descrdiv">An optional hint whether the view containing the hierarchy is currently within the visible
+ viewport or not.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html#setContentDescription(java.lang.String)">setContentDescription</a></span>(String contentDescription)
         
         <div class="jd-descrdiv">Sets the accessibility content description.</div>
@@ -1680,7 +1695,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -1962,42 +1977,6 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="getExperiment()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        protected 
-        static 
-         
-         
-         
-        <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.Experiment.html">PipelineDraweeController.Experiment</a>
-      </span>
-      <span class="sympad">getExperiment</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>The Experiment object
-</li></ul>
-  </div>
 
     </div>
 </div>
