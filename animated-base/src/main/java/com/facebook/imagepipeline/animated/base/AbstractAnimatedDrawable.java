@@ -96,6 +96,9 @@ public abstract class AbstractAnimatedDrawable extends Drawable
   private boolean mInvalidateTaskScheduled;
   private long mNextFrameTaskMs = -1;
 
+  private boolean resumable = false;
+  private int mPauseFrameNumber = 0;
+
   private final Runnable mStartTask = new Runnable() {
     @Override
     public void run() {
@@ -221,8 +224,10 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     mAnimatedDrawableDiagnostics.onStartMethodBegin();
     try {
       mStartTimeMs = mMonotonicClock.now();
-      mScheduledFrameNumber = 0;
-      mScheduledFrameMonotonicNumber = 0;
+      mStartTimeMs -= resumable ? mAnimatedDrawableBackend.getTimestampMsForFrame(mPauseFrameNumber) : 0;
+      mScheduledFrameNumber = resumable ? mPauseFrameNumber : 0;
+      mScheduledFrameMonotonicNumber = resumable ? mPauseFrameNumber : 0;
+
       long nextFrameMs = mStartTimeMs + mAnimatedDrawableBackend.getDurationMsForFrame(0);
       scheduleSelf(mNextFrameTask, nextFrameMs);
       mNextFrameTaskMs = nextFrameMs;
@@ -519,6 +524,13 @@ public abstract class AbstractAnimatedDrawable extends Drawable
 
   @Override
   public void stop() {
+    resumable = false;
+    mIsRunning = false;
+  }
+
+  public void pause() {
+    mPauseFrameNumber = mScheduledFrameNumber;
+    resumable = true;
     mIsRunning = false;
   }
 
