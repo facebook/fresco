@@ -35,6 +35,9 @@ public class CloseableStaticBitmap extends CloseableBitmap {
 
   private final int mRotationAngle;
 
+  private int mOriginalWidth = -1;
+  private int mOriginalHeight = -1;
+
   /**
    * Creates a new instance of a CloseableStaticBitmap.
    *
@@ -55,6 +58,29 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   }
 
   /**
+   * Creates a new instance of a CloseableStaticBitmap.
+   *
+   * @param bitmap the bitmap to wrap
+   * @param resourceReleaser ResourceReleaser to release the bitmap to
+   */
+  public CloseableStaticBitmap(
+          Bitmap bitmap,
+          ResourceReleaser<Bitmap> resourceReleaser,
+          QualityInfo qualityInfo,
+          int rotationAngle,
+          int originalWidth,
+          int originalHeight) {
+    mBitmap = Preconditions.checkNotNull(bitmap);
+    mBitmapReference = CloseableReference.of(
+            mBitmap,
+            Preconditions.checkNotNull(resourceReleaser));
+    mQualityInfo = qualityInfo;
+    mRotationAngle = rotationAngle;
+    mOriginalWidth = originalWidth;
+    mOriginalHeight = originalHeight;
+  }
+
+  /**
    * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
    * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
    *
@@ -68,6 +94,26 @@ public class CloseableStaticBitmap extends CloseableBitmap {
     mBitmap = mBitmapReference.get();
     mQualityInfo = qualityInfo;
     mRotationAngle = rotationAngle;
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
+   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+   *
+   * @param bitmapReference the bitmap reference.
+   */
+  public CloseableStaticBitmap(
+          CloseableReference<Bitmap> bitmapReference,
+          QualityInfo qualityInfo,
+          int rotationAngle,
+          int originalWidth,
+          int originalHeight) {
+    mBitmapReference = Preconditions.checkNotNull(bitmapReference.cloneOrNull());
+    mBitmap = mBitmapReference.get();
+    mQualityInfo = qualityInfo;
+    mRotationAngle = rotationAngle;
+    mOriginalWidth = originalWidth;
+    mOriginalHeight = originalHeight;
   }
 
   /**
@@ -157,5 +203,15 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   @Override
   public QualityInfo getQualityInfo() {
     return mQualityInfo;
+  }
+
+  @Override
+  public int getOriginalWidth() {
+      return mOriginalWidth;
+  }
+
+  @Override
+  public int getOriginalHeight() {
+      return mOriginalHeight;
   }
 }

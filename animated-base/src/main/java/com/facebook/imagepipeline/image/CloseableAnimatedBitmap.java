@@ -160,4 +160,19 @@ public class CloseableAnimatedBitmap extends CloseableBitmap {
     return (bitmaps == null) ? 0 : bitmaps.get(0).getHeight();
   }
 
+  /**
+   * @return width of original (non-resized) image
+   */
+  @Override
+  public int getOriginalWidth() {
+      return getWidth();
+  }
+
+  /**
+   * @return height of original (non-resized) image
+   */
+  @Override
+  public int getOriginalHeight() {
+      return getHeight();
+  }
 }
