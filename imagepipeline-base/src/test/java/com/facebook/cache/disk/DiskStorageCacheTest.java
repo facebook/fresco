@@ -140,7 +140,7 @@ public class DiskStorageCacheTest {
         diskStorage,
         new DefaultEntryEvictionComparatorSupplier(),
         diskStorageCacheParams,
-        mCacheEventListener,
+        new DuplicatingCacheEventListener(mCacheEventListener),
         mock(CacheErrorLogger.class),
         mDiskTrimmableRegistry,
         context);
@@ -770,6 +770,67 @@ public class DiskStorageCacheTest {
         throw POISON_EXCEPTION;
       }
       return super.touch(resourceId, debugInfo);
+    }
+  }
+
+  /**
+   * CacheEventListener implementation which copies the data from each event into a new instance to
+   * work-around the recycling of the original event and forwards the copy so that assertions can be
+   * made afterwards.
+   */
+  private static class DuplicatingCacheEventListener implements CacheEventListener {
+
+    private final CacheEventListener mRecipientListener;
+
+    public DuplicatingCacheEventListener(CacheEventListener recipientListener) {
+      mRecipientListener = recipientListener;
+    }
+
+    @Override
+    public void onHit(CacheEvent cacheEvent) {
+      mRecipientListener.onHit(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onMiss(CacheEvent cacheEvent) {
+      mRecipientListener.onMiss(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onWriteAttempt(CacheEvent cacheEvent) {
+      mRecipientListener.onWriteAttempt(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onWriteSuccess(CacheEvent cacheEvent) {
+      mRecipientListener.onWriteSuccess(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onReadException(CacheEvent cacheEvent) {
+      mRecipientListener.onReadException(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onWriteException(CacheEvent cacheEvent) {
+      mRecipientListener.onWriteException(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onEviction(CacheEvent cacheEvent) {
+      mRecipientListener.onEviction(duplicateEvent(cacheEvent));
+    }
+
+    private static CacheEvent duplicateEvent(CacheEvent cacheEvent) {
+      SettableCacheEvent copyEvent = SettableCacheEvent.obtain();
+      copyEvent.setCacheKey(cacheEvent.getCacheKey());
+      copyEvent.setCacheLimit(cacheEvent.getCacheLimit());
+      copyEvent.setCacheSize(cacheEvent.getCacheSize());
+      copyEvent.setEvictionReason(cacheEvent.getEvictionReason());
+      copyEvent.setException(cacheEvent.getException());
+      copyEvent.setItemSize(cacheEvent.getItemSize());
+      copyEvent.setResourceId(cacheEvent.getResourceId());
+      return copyEvent;
     }
   }
 }
