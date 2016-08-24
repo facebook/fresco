@@ -543,6 +543,8 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext) {
+    final RequestListener requestListener = getRequestListenerForRequest(imageRequest);
+
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =
           ImageRequest.RequestLevel.getMax(
@@ -551,7 +553,7 @@ public class ImagePipeline {
       SettableProducerContext settableProducerContext = new SettableProducerContext(
           imageRequest,
           generateUniqueFutureId(),
-          mRequestListener,
+          requestListener,
           callerContext,
           lowestPermittedRequestLevel,
         /* isPrefetch */ false,
@@ -561,7 +563,7 @@ public class ImagePipeline {
       return CloseableProducerToDataSourceAdapter.create(
           producerSequence,
           settableProducerContext,
-          mRequestListener);
+          requestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -573,6 +575,8 @@ public class ImagePipeline {
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext,
       Priority priority) {
+    final RequestListener requestListener = getRequestListenerForRequest(imageRequest);
+
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =
           ImageRequest.RequestLevel.getMax(
@@ -581,7 +585,7 @@ public class ImagePipeline {
       SettableProducerContext settableProducerContext = new SettableProducerContext(
           imageRequest,
           generateUniqueFutureId(),
-          mRequestListener,
+          requestListener,
           callerContext,
           lowestPermittedRequestLevel,
         /* isPrefetch */ true,
@@ -590,10 +594,17 @@ public class ImagePipeline {
       return ProducerToDataSourceAdapter.create(
           producerSequence,
           settableProducerContext,
-          mRequestListener);
+          requestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
+  }
+
+  private RequestListener getRequestListenerForRequest(ImageRequest imageRequest) {
+    if (imageRequest.getRequestListener() == null) {
+      return mRequestListener;
+    }
+    return new ForwardingRequestListener(mRequestListener, imageRequest.getRequestListener());
   }
 
   private Predicate<CacheKey> predicateForUri(final Uri uri) {
