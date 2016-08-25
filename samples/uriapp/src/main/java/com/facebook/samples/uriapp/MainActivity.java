@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawable;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableSupport;
 
 public class MainActivity extends Activity {
@@ -40,7 +41,7 @@ public class MainActivity extends Activity {
     mSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        AnimatedDrawableSupport animatable = (AnimatedDrawableSupport)mSimpleDraweeView.getController().getAnimatable();
+        AnimatedDrawable animatable = (AnimatedDrawable)mSimpleDraweeView.getController().getAnimatable();
         if (animatable.isRunning()) {
           animatable.pause();
         } else {
