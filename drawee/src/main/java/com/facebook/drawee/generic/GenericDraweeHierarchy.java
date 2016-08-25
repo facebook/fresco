@@ -224,7 +224,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   private void setProgress(float progress) {
-    Drawable progressBarDrawable = getParentDrawableAtIndex(PROGRESS_BAR_IMAGE_INDEX).getDrawable();
+    Drawable progressBarDrawable = mFadeDrawable.getDrawable(PROGRESS_BAR_IMAGE_INDEX);
     if (progressBarDrawable == null) {
       return;
     }
@@ -275,6 +275,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   @Override
   public void setProgress(float progress, boolean immediate) {
+    if (mFadeDrawable.getDrawable(PROGRESS_BAR_IMAGE_INDEX) == null) {
+      return;
+    }
     mFadeDrawable.beginBatchMode();
     setProgress(progress);
     if (immediate) {
@@ -425,7 +428,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @return true if there is a placeholder image set.
    */
   public boolean hasPlaceholderImage() {
-    return getParentDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX) != null;
+    return mFadeDrawable.getDrawable(PLACEHOLDER_IMAGE_INDEX) != null;
   }
 
   /** Sets the placeholder image focus point. */
