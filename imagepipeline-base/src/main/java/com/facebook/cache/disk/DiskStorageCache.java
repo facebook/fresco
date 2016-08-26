@@ -209,7 +209,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       @Override
       public void run() {
         synchronized (mLock) {
-          maybeUpdateFileCacheSize();
+          maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
         }
       }
     });
