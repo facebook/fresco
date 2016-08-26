@@ -9,6 +9,9 @@
 
 package com.facebook.imagepipeline.core;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.DiskStorageCache;
@@ -27,6 +30,13 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
   public static DiskStorageCache buildDiskStorageCache(
       DiskCacheConfig diskCacheConfig,
       DiskStorage diskStorage) {
+    return buildDiskStorageCache(diskCacheConfig, diskStorage, Executors.newSingleThreadExecutor());
+  }
+
+  public static DiskStorageCache buildDiskStorageCache(
+      DiskCacheConfig diskCacheConfig,
+      DiskStorage diskStorage,
+      Executor executorForBackgroundInit) {
     DiskStorageCache.Params params = new DiskStorageCache.Params(
         diskCacheConfig.getMinimumSizeLimit(),
         diskCacheConfig.getLowDiskSpaceSizeLimit(),
@@ -39,7 +49,8 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
         diskCacheConfig.getCacheEventListener(),
         diskCacheConfig.getCacheErrorLogger(),
         diskCacheConfig.getDiskTrimmableRegistry(),
-        diskCacheConfig.getContext());
+        diskCacheConfig.getContext(),
+        executorForBackgroundInit);
   }
 
   @Override

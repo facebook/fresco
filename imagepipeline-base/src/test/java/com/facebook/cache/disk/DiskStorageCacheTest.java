@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
@@ -144,7 +145,8 @@ public class DiskStorageCacheTest {
         new DuplicatingCacheEventListener(mCacheEventListener),
         mock(CacheErrorLogger.class),
         mDiskTrimmableRegistry,
-        context);
+        context,
+        mock(Executor.class));
   }
 
   @Test

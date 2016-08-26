@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
@@ -158,7 +158,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       CacheEventListener cacheEventListener,
       CacheErrorLogger cacheErrorLogger,
       @Nullable DiskTrimmableRegistry diskTrimmableRegistry,
-      final Context context) {
+      final Context context,
+      final Executor executorForBackgrountInit) {
     this.mLowDiskSpaceCacheSizeLimit = params.mLowDiskSpaceCacheSizeLimit;
     this.mDefaultCacheSizeLimit = params.mDefaultCacheSizeLimit;
     this.mCacheSizeLimit = params.mDefaultCacheSizeLimit;
@@ -185,15 +186,24 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
     this.mResourceIndex = new HashSet<>();
 
-    Executors.newSingleThreadExecutor().execute(new Runnable() {
+    executorForBackgrountInit.execute(new Runnable() {
 
       @Override
       public void run() {
         synchronized (mLock) {
           maybeUpdateFileCacheSize();
-          maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
         }
         mCountDownLatch.countDown();
+      }
+    });
+
+    executorForBackgrountInit.execute(new Runnable() {
+
+      @Override
+      public void run() {
+        synchronized (mLock) {
+          maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
+        }
       }
     });
   }
