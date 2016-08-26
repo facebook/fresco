@@ -17,9 +17,12 @@ import android.app.Activity;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.CompoundButton;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -34,21 +37,15 @@ public class MainActivity extends Activity {
   private SimpleDraweeView mAnimatedGifView;
   private SimpleDraweeView mAnimatedWebpView;
 
-  private Animatable animatableGif;
-
-  private Animatable animatableWebp;
-
-
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.activity_main);
 
+    // GIF
+    final ViewGroup gifControls = (ViewGroup) findViewById(R.id.gif_controls);
+    updateAnimationControls(gifControls, null);
 
-    final ToggleButton gifToggle = (ToggleButton) findViewById(R.id.toggle_gif);
-    gifToggle.setEnabled(false);
     mAnimatedGifView = (SimpleDraweeView) findViewById(R.id.animated_gif);
     Uri animatedGifUri =
         Uri.parse("http://s3.amazonaws.com/giphygifs/media/4aBQ9oNjgEQ2k/giphy.gif");
@@ -63,36 +60,17 @@ public class MainActivity extends Activity {
               String id,
               ImageInfo imageInfo,
               Animatable anim) {
-            if (anim != null) {
-              animatableGif = anim;
-              // app-specific logic to enable animation starting
-              gifToggle.setEnabled(true);
-            }
+            updateAnimationControls(gifControls, anim);
             gifInfo.setText(getAnimationInformation(anim));
           }
         })
         .build();
     mAnimatedGifView.setController(gifController);
 
-    gifToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (animatableGif == null) {
-          return;
-        }
-        if (isChecked) {
-          animatableGif.start();
-        } else {
-          animatableGif.stop();
-        }
-      }
-    });
+    // Animated WebP
+    final ViewGroup webpControls = (ViewGroup) findViewById(R.id.webp_controls);
+    updateAnimationControls(webpControls, null);
 
-
-
-
-
-    final ToggleButton webpToggle = (ToggleButton) findViewById(R.id.toggle_webp);
-    webpToggle.setEnabled(false);
     mAnimatedWebpView = (SimpleDraweeView) findViewById(R.id.animated_webp);
     final TextView webpInfo = (TextView) findViewById(R.id.webp_info);
 
@@ -105,30 +83,12 @@ public class MainActivity extends Activity {
               String id,
               ImageInfo imageInfo,
               Animatable anim) {
-            if (anim != null) {
-              animatableWebp = anim;
-              // app-specific logic to enable animation starting
-              webpToggle.setEnabled(true);
-            }
+            updateAnimationControls(webpControls, anim);
             webpInfo.setText(getAnimationInformation(anim));
           }
         })
         .build();
     mAnimatedWebpView.setController(webpController);
-
-    webpToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (animatableWebp == null) {
-          return;
-        }
-        if (isChecked) {
-          animatableWebp.start();
-        } else {
-          animatableWebp.stop();
-        }
-      }
-    });
-
   }
 
   public String getAnimationInformation(Animatable animatable) {
@@ -140,6 +100,51 @@ public class MainActivity extends Activity {
       return getString(R.string.animation_info, animationDuration, frameCount, loopCountString);
     }
     return getString(R.string.unknown_animation_info);
+  }
+
+  public boolean tryPausing(Animatable animatable) {
+    // AbstractAnimatedDrawable supports pausing, but we could also have a different Animatable
+    if (animatable instanceof AbstractAnimatedDrawable) {
+      AbstractAnimatedDrawable animatedDrawable = (AbstractAnimatedDrawable) animatable;
+      animatedDrawable.pause();
+      return true;
+    } else {
+      Toast.makeText(this, "Could not pause animation", Toast.LENGTH_SHORT).show();
+      return false;
+    }
+  }
+
+  private void updateAnimationControls(
+          ViewGroup controlsContainer,
+          @Nullable final Animatable animatable) {
+    Button play = (Button) controlsContainer.findViewById(R.id.play);
+    Button pause = (Button) controlsContainer.findViewById(R.id.pause);
+    Button stop = (Button) controlsContainer.findViewById(R.id.stop);
+
+    play.setEnabled(animatable != null);
+    pause.setEnabled(animatable != null);
+    stop.setEnabled(animatable != null);
+
+    play.setOnClickListener(animatable == null ? null : new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        animatable.start();
+      }
+    });
+
+    pause.setOnClickListener(animatable == null ? null : new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        tryPausing(animatable);
+      }
+    });
+
+    stop.setOnClickListener(animatable == null ? null : new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        animatable.stop();
+      }
+    });
   }
 
   private String getLoopCountString(AbstractAnimatedDrawable animatedDrawable) {
