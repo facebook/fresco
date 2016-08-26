@@ -75,6 +75,7 @@ public class ImageDecoder {
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
       imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
           encodedImage.getInputStream());
+      encodedImage.setImageFormat(imageFormat);
     }
 
     switch (imageFormat) {
