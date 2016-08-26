@@ -15,7 +15,6 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +32,6 @@ import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.CacheKeyUtil;
-import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
 import com.facebook.common.disk.DiskTrimmableRegistry;
@@ -42,7 +40,6 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.statfs.StatFsHelper;
 import com.facebook.common.time.Clock;
 import com.facebook.common.time.SystemClock;
-import com.facebook.common.util.SecureHashUtil;
 
 /**
  * Cache that manages disk storage.
@@ -306,7 +303,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     String resourceId = null;
     try {
       synchronized (mLock) {
-        List<String> resourceIds = getResourceIds(key);
+        List<String> resourceIds = CacheKeyUtil.getResourceIds(key);
         for (int i = 0; i < resourceIds.size(); i++) {
           resourceId = resourceIds.get(i);
           if (mStorage.touch(resourceId, key)) {
@@ -398,7 +395,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     synchronized (mLock) {
       try {
         String resourceId = null;
-        List<String> resourceIds = getResourceIds(key);
+        List<String> resourceIds = CacheKeyUtil.getResourceIds(key);
         for (int i = 0; i < resourceIds.size(); i++) {
           resourceId = resourceIds.get(i);
           mStorage.remove(resourceId);
@@ -614,7 +611,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   public boolean hasKeySync(CacheKey key) {
     synchronized (mLock) {
       String resourceId = null;
-      List<String> resourceIds = getResourceIds(key);
+      List<String> resourceIds = CacheKeyUtil.getResourceIds(key);
       for (int i = 0; i< resourceIds.size(); i++) {
         resourceId = resourceIds.get(i);
         if (mResourceIndex.contains(resourceId)) {
@@ -633,7 +630,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
       try {
         String resourceId = null;
-        List<String> resourceIds = getResourceIds(key);
+        List<String> resourceIds = CacheKeyUtil.getResourceIds(key);
         for (int i = 0; i < resourceIds.size(); i++) {
           resourceId = resourceIds.get(i);
           if (mStorage.contains(resourceId, key)) {
@@ -765,30 +762,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           "calcFileCacheSize: " + ioe.getMessage(),
           ioe);
     }
-  }
-
-  private static List<String> getResourceIds(final CacheKey key) {
-    try {
-      final List<String> ids;
-      if (key instanceof MultiCacheKey) {
-        List<CacheKey> keys = ((MultiCacheKey) key).getCacheKeys();
-        ids = new ArrayList<>(keys.size());
-        for (int i = 0; i < keys.size(); i++) {
-           ids.add(secureHashKey(keys.get(i)));
-        }
-      } else {
-        ids = new ArrayList<>(1);
-        ids.add(secureHashKey(key));
-      }
-      return ids;
-    } catch (UnsupportedEncodingException e) {
-      // This should never happen. All VMs support UTF-8
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static String secureHashKey(final CacheKey key) throws UnsupportedEncodingException {
-    return SecureHashUtil.makeSHA1HashBase64(key.toString().getBytes("UTF-8"));
   }
 
   //TODO(t12287315): Remove the temp method for deleting created Preference in next release
