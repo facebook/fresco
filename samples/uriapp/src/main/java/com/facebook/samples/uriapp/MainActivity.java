@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable;
 
 public class MainActivity extends Activity {
   private SimpleDraweeView mSimpleDraweeView;
@@ -36,6 +37,22 @@ public class MainActivity extends Activity {
     setContentView(R.layout.activity_main);
 
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.simple_drawee_view);
+    mSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (mSimpleDraweeView.getController() == null ||
+                mSimpleDraweeView.getController().getAnimatable() == null) {
+          return;
+        }
+        AbstractAnimatedDrawable animatable =
+                (AbstractAnimatedDrawable) mSimpleDraweeView.getController().getAnimatable();
+        if (animatable.isRunning()) {
+          animatable.pause();
+        } else {
+          animatable.start();
+        }
+      }
+    });
 
     final EditText editText = (EditText) findViewById(R.id.uri_edit_text);
     editText.setOnEditorActionListener(
