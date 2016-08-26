@@ -66,7 +66,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
   private final long mLowDiskSpaceCacheSizeLimit;
   private final long mDefaultCacheSizeLimit;
-  private final CountDownLatch mCountDownLatch = new CountDownLatch(1);
+  private final CountDownLatch mCountDownLatch;
   private long mCacheSizeLimit;
 
   private final CacheEventListener mCacheEventListener;
@@ -85,6 +85,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   private final DiskStorage mStorage;
   private final EntryEvictionComparatorSupplier mEntryEvictionComparatorSupplier;
   private final CacheErrorLogger mCacheErrorLogger;
+  private final boolean mIndexPopulateAtStartupEnabled;
 
   private final CacheStats mCacheStats;
 
@@ -159,7 +160,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       CacheErrorLogger cacheErrorLogger,
       @Nullable DiskTrimmableRegistry diskTrimmableRegistry,
       final Context context,
-      final Executor executorForBackgrountInit) {
+      final Executor executorForBackgrountInit,
+      boolean indexPopulateAtStartupEnabled) {
     this.mLowDiskSpaceCacheSizeLimit = params.mLowDiskSpaceCacheSizeLimit;
     this.mDefaultCacheSizeLimit = params.mDefaultCacheSizeLimit;
     this.mCacheSizeLimit = params.mDefaultCacheSizeLimit;
@@ -184,7 +186,26 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     }
     this.mClock = SystemClock.get();
 
+    mIndexPopulateAtStartupEnabled = indexPopulateAtStartupEnabled;
+
     this.mResourceIndex = new HashSet<>();
+
+    if (mIndexPopulateAtStartupEnabled) {
+      mCountDownLatch = new CountDownLatch(1);
+
+      executorForBackgrountInit.execute(new Runnable() {
+
+        @Override
+        public void run() {
+          synchronized (mLock) {
+            maybeUpdateFileCacheSize();
+          }
+          mCountDownLatch.countDown();
+        }
+      });
+    } else {
+      mCountDownLatch = new CountDownLatch(0);
+    }
 
     executorForBackgrountInit.execute(new Runnable() {
 
@@ -192,17 +213,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       public void run() {
         synchronized (mLock) {
           maybeUpdateFileCacheSize();
-        }
-        mCountDownLatch.countDown();
-      }
-    });
-
-    executorForBackgrountInit.execute(new Runnable() {
-
-      @Override
-      public void run() {
-        synchronized (mLock) {
-          maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
         }
       }
     });
@@ -709,10 +719,12 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     long now = mClock.now();
     long timeThreshold = now + FUTURE_TIMESTAMP_THRESHOLD_MS;
     Set<String> tempResourceIndex;
-    if (mResourceIndex.isEmpty()) {
+    if (mIndexPopulateAtStartupEnabled && mResourceIndex.isEmpty()) {
       tempResourceIndex = mResourceIndex;
-    } else {
+    } else if (mIndexPopulateAtStartupEnabled) {
       tempResourceIndex = new HashSet<>();
+    } else {
+      tempResourceIndex = null;
     }
     try {
       Collection<DiskStorage.Entry> entries = mStorage.getEntries();
@@ -726,7 +738,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           numFutureFiles++;
           sizeFutureFiles += entry.getSize();
           maxTimeDelta = Math.max(entry.getTimestamp() - now, maxTimeDelta);
-        } else {
+        } else if (mIndexPopulateAtStartupEnabled) {
           tempResourceIndex.add(entry.getId());
         }
       }
@@ -740,7 +752,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
             null);
       }
       if ((mCacheStats.getCount() != count || mCacheStats.getSize() != size)) {
-        if (mResourceIndex != tempResourceIndex) {
+        if (mIndexPopulateAtStartupEnabled && mResourceIndex != tempResourceIndex) {
           mResourceIndex.clear();
           mResourceIndex.addAll(tempResourceIndex);
         }

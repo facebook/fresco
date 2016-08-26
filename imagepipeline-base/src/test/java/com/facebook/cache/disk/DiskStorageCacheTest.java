@@ -112,7 +112,7 @@ public class DiskStorageCacheTest {
               mCacheDirectory.exists() ? "already exists" : "does not exist"));
     }
     mStorage = createDiskStorage(TESTCACHE_VERSION_START_OF_VERSIONING);
-    mCache = createDiskCache(mStorage);
+    mCache = createDiskCache(mStorage, false);
     mCache.clearAll();
     verify(mDiskTrimmableRegistry).registerDiskTrimmable(mCache);
   }
@@ -129,7 +129,9 @@ public class DiskStorageCacheTest {
         mock(CacheErrorLogger.class));
   }
 
-  private DiskStorageCache createDiskCache(DiskStorage diskStorage) {
+  private DiskStorageCache createDiskCache(
+      DiskStorage diskStorage,
+      boolean indexPopulateAtStartupEnabled) {
     DiskStorageCache.Params diskStorageCacheParams =
         new DiskStorageCache.Params(
             0,
@@ -146,7 +148,8 @@ public class DiskStorageCacheTest {
         mock(CacheErrorLogger.class),
         mDiskTrimmableRegistry,
         context,
-        mock(Executor.class));
+        mock(Executor.class),
+        indexPopulateAtStartupEnabled);
   }
 
   @Test
@@ -451,7 +454,7 @@ public class DiskStorageCacheTest {
 
     // Set up cache with version == 1
     DiskStorage storage1 = createDiskStorage(TESTCACHE_CURRENT_VERSION);
-    DiskStorageCache cache1 = createDiskCache(storage1);
+    DiskStorageCache cache1 = createDiskCache(storage1, false);
 
     // Write test data to cache 1
     cache1.insert(key, WriterCallbacks.from(value));
@@ -463,7 +466,7 @@ public class DiskStorageCacheTest {
     // Set up cache with version == 2
     DiskStorage storageSupplier2 =
         createDiskStorage(TESTCACHE_NEXT_VERSION);
-    DiskStorageCache cache2 = createDiskCache(storageSupplier2);
+    DiskStorageCache cache2 = createDiskCache(storageSupplier2, false);
 
     // Write test data to cache 2
     cache2.insert(key, WriterCallbacks.from(value));
@@ -509,7 +512,7 @@ public class DiskStorageCacheTest {
     DiskStorage storageMock = mock(DiskStorage.class);
     when(storageMock.isEnabled()).thenReturn(true).thenReturn(false);
 
-    DiskStorageCache cache = createDiskCache(storageMock);
+    DiskStorageCache cache = createDiskCache(storageMock, false);
     assertTrue(cache.isEnabled());
     assertFalse(cache.isEnabled());
   }
@@ -548,22 +551,47 @@ public class DiskStorageCacheTest {
   }
 
   @Test
-  public void testHasKeyWithAwaitingIndex() throws Exception {
+  public void testHasKeyWithoutPopulateAtStartupWithoutAwaitingIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index may not yet updated.
+    DiskStorageCache cache2 = createDiskCache(mStorage, false);
+    assertFalse(cache2.hasKeySync(key));
+    assertTrue(cache2.hasKey(key));
+    // hasKey() adds item to the index
+    assertTrue(cache2.hasKeySync(key));
+  }
+
+  @Test
+  public void testHasKeyWithoutPopulateAtStartupWithAwaitingIndex() throws Exception {
+    CacheKey key = putOneThingInCache();
+    // A new cache object in the same directory. Equivalent to a process restart.
+    // Index may not yet updated.
+    DiskStorageCache cache2 = createDiskCache(mStorage, false);
+    // Wait for index populated in cache before use of cache
+    cache2.awaitIndex();
+    assertTrue(cache2.hasKey(key));
+    assertTrue(cache2.hasKeySync(key));
+  }
+
+  @Test
+  public void testHasKeyWithPopulateAtStartupWithAwaitingIndex() throws Exception {
     CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index should be updated.
-    DiskStorageCache cache2 = createDiskCache(mStorage);
+    DiskStorageCache cache2 = createDiskCache(mStorage, true);
+    // Wait for index populated in cache before use of cache
     cache2.awaitIndex();
     assertTrue(cache2.hasKeySync(key));
     assertTrue(cache2.hasKey(key));
   }
 
   @Test
-  public void testHasKeyWithoutAwaitingIndex() throws Exception {
+  public void testHasKeyWithPopulateAtStartupWithoutAwaitingIndex() throws Exception {
     CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
-    DiskStorageCache cache2 = createDiskCache(mStorage);
+    DiskStorageCache cache2 = createDiskCache(mStorage, true);
     assertTrue(cache2.hasKey(key));
     assertTrue(cache2.hasKeySync(key));
   }
@@ -573,7 +601,7 @@ public class DiskStorageCacheTest {
     CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
-    DiskStorageCache cache2 = createDiskCache(mStorage);
+    DiskStorageCache cache2 = createDiskCache(mStorage, false);
     assertNotNull(cache2.getResource(key));
   }
 

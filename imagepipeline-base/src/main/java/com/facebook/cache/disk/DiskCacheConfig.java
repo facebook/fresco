@@ -43,6 +43,7 @@ public class DiskCacheConfig {
   private final CacheEventListener mCacheEventListener;
   private final DiskTrimmableRegistry mDiskTrimmableRegistry;
   private final Context mContext;
+  private final boolean mIndexPopulateAtStartupEnabled;
 
   private DiskCacheConfig(Builder builder) {
     mVersion = builder.mVersion;
@@ -66,6 +67,7 @@ public class DiskCacheConfig {
             NoOpDiskTrimmableRegistry.getInstance() :
             builder.mDiskTrimmableRegistry;
     mContext = builder.mContext;
+    mIndexPopulateAtStartupEnabled = builder.mIndexPopulateAtStartupEnabled;
   }
 
   public int getVersion() {
@@ -112,6 +114,10 @@ public class DiskCacheConfig {
     return mContext;
   }
 
+  public boolean getIndexPopulateAtStartupEnabled() {
+    return mIndexPopulateAtStartupEnabled;
+  }
+
   /**
    * Create a new builder.
    *
@@ -138,6 +144,7 @@ public class DiskCacheConfig {
     private CacheErrorLogger mCacheErrorLogger;
     private CacheEventListener mCacheEventListener;
     private DiskTrimmableRegistry mDiskTrimmableRegistry;
+    private boolean mIndexPopulateAtStartupEnabled;
 
     private final @Nullable Context mContext;
 
@@ -238,6 +245,11 @@ public class DiskCacheConfig {
      */
     public Builder setDiskTrimmableRegistry(DiskTrimmableRegistry diskTrimmableRegistry) {
       mDiskTrimmableRegistry = diskTrimmableRegistry;
+      return this;
+    }
+
+    public Builder setIndexPopulateAtStartupEnabled(boolean indexEnabled) {
+      mIndexPopulateAtStartupEnabled = indexEnabled;
       return this;
     }
 

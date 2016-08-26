@@ -50,7 +50,8 @@ public class DiskStorageCacheFactory implements FileCacheFactory {
         diskCacheConfig.getCacheErrorLogger(),
         diskCacheConfig.getDiskTrimmableRegistry(),
         diskCacheConfig.getContext(),
-        executorForBackgroundInit);
+        executorForBackgroundInit,
+        diskCacheConfig.getIndexPopulateAtStartupEnabled());
   }
 
   @Override
