@@ -27,6 +27,7 @@ import com.facebook.cache.common.CacheEvent;
 import com.facebook.cache.common.CacheEventAssert;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.common.WriterCallback;
@@ -177,11 +178,11 @@ public class DiskStorageCacheTest {
   private BinaryResource getResource(
       DiskStorage storage,
       final CacheKey key) throws IOException {
-     return storage.getResource(mCache.getFirstResourceId(key), key);
+     return storage.getResource(CacheKeyUtil.getFirstResourceId(key), key);
   }
 
   private BinaryResource getResource(final CacheKey key) throws IOException {
-    return mStorage.getResource(mCache.getFirstResourceId(key), key);
+    return mStorage.getResource(CacheKeyUtil.getFirstResourceId(key), key);
   }
 
   private byte[] getContents(BinaryResource resource) throws IOException {

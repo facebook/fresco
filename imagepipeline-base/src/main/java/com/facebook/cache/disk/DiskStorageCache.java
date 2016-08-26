@@ -32,6 +32,7 @@ import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
@@ -238,7 +239,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     try {
       synchronized (mLock) {
         BinaryResource resource = null;
-        List<String> resourceIds = getResourceIds(key);
+        List<String> resourceIds = CacheKeyUtil.getResourceIds(key);
         for (int i = 0; i < resourceIds.size(); i++) {
           resourceId = resourceIds.get(i);
           cacheEvent.setResourceId(resourceId);
@@ -343,7 +344,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     String resourceId;
     synchronized (mLock) {
       // for multiple resource ids associated with the same image, we only write one file
-      resourceId = getFirstResourceId(key);
+      resourceId = CacheKeyUtil.getFirstResourceId(key);
     }
     cacheEvent.setResourceId(resourceId);
     try {
@@ -758,21 +759,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         ids.add(secureHashKey(key));
       }
       return ids;
-    } catch (UnsupportedEncodingException e) {
-      // This should never happen. All VMs support UTF-8
-      throw new RuntimeException(e);
-    }
-  }
-
-  @VisibleForTesting
-  static String getFirstResourceId(final CacheKey key) {
-    try {
-      if (key instanceof MultiCacheKey) {
-        List<CacheKey> keys = ((MultiCacheKey) key).getCacheKeys();
-        return secureHashKey(keys.get(0));
-      } else {
-        return secureHashKey(key);
-      }
     } catch (UnsupportedEncodingException e) {
       // This should never happen. All VMs support UTF-8
       throw new RuntimeException(e);
