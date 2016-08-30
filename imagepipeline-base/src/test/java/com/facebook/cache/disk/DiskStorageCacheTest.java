@@ -61,6 +61,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -114,6 +115,7 @@ public class DiskStorageCacheTest {
     mStorage = createDiskStorage(TESTCACHE_VERSION_START_OF_VERSIONING);
     mCache = createDiskCache(mStorage, false);
     mCache.clearAll();
+    reset(mCacheEventListener);
     verify(mDiskTrimmableRegistry).registerDiskTrimmable(mCache);
   }
 
@@ -176,6 +178,9 @@ public class DiskStorageCacheTest {
     BinaryResource res2 = mCache.getResource(missingKey);
     assertNull(res2);
     verifyListenerOnMiss(missingKey);
+
+    mCache.clearAll();
+    verify(mCacheEventListener).onCleared();
 
     verifyNoMoreInteractions(mCacheEventListener);
   }
@@ -850,6 +855,11 @@ public class DiskStorageCacheTest {
     @Override
     public void onEviction(CacheEvent cacheEvent) {
       mRecipientListener.onEviction(duplicateEvent(cacheEvent));
+    }
+
+    @Override
+    public void onCleared() {
+      mRecipientListener.onCleared();
     }
 
     private static CacheEvent duplicateEvent(CacheEvent cacheEvent) {

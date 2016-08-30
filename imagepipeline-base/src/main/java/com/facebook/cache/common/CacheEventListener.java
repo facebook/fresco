@@ -54,6 +54,11 @@ public interface CacheEventListener {
    */
   void onEviction(CacheEvent cacheEvent);
 
+  /**
+   * Triggered by a full cache clearance.
+   */
+  void onCleared();
+
   enum EvictionReason {
     CACHE_FULL,
     CONTENT_STALE,
