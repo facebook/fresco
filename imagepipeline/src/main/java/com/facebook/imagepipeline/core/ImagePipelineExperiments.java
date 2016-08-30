@@ -23,6 +23,7 @@ public class ImagePipelineExperiments {
   private final boolean mWebpSupportEnabled;
   private boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
+  private final boolean mExternalCreatedBitmapLogEnabled;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
@@ -30,10 +31,15 @@ public class ImagePipelineExperiments {
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
         builder.mDecodeFileDescriptorEnabled;
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
+    mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
     return mDecodeFileDescriptorEnabled;
+  }
+
+  public boolean isExternalCreatedBitmapLogEnabled() {
+    return mExternalCreatedBitmapLogEnabled;
   }
 
   public int getForceSmallCacheThresholdBytes() {
@@ -61,6 +67,7 @@ public class ImagePipelineExperiments {
     private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
     private boolean mDecodeFileDescriptorEnabled = false;
+    private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
@@ -70,6 +77,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setDecodeFileDescriptorEnabled(
         boolean decodeFileDescriptorEnabled) {
       mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setExternalCreatedBitmapLogEnabled(
+        boolean externalCreatedBitmapLogEnabled) {
+      mExternalCreatedBitmapLogEnabled = externalCreatedBitmapLogEnabled;
       return mConfigBuilder;
     }
 

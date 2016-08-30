@@ -12,12 +12,15 @@ package com.facebook.imagepipeline.cache;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapCountingMemoryCacheFactory {
   public static CountingMemoryCache<CacheKey, CloseableImage> get(
-      Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
-      MemoryTrimmableRegistry memoryTrimmableRegistry) {
+     Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
+     MemoryTrimmableRegistry memoryTrimmableRegistry,
+     PlatformBitmapFactory platformBitmapFactory,
+     boolean isExternalCreatedBitmapLogEnabled) {
 
     ValueDescriptor<CloseableImage> valueDescriptor =
         new ValueDescriptor<CloseableImage>() {
@@ -30,7 +33,12 @@ public class BitmapCountingMemoryCacheFactory {
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new BitmapMemoryCacheTrimStrategy();
 
     CountingMemoryCache<CacheKey, CloseableImage> countingCache =
-        new CountingMemoryCache<>(valueDescriptor, trimStrategy, bitmapMemoryCacheParamsSupplier);
+        new CountingMemoryCache<>(
+            valueDescriptor,
+            trimStrategy,
+            bitmapMemoryCacheParamsSupplier,
+            platformBitmapFactory,
+            isExternalCreatedBitmapLogEnabled);
 
      memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 

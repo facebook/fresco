@@ -211,7 +211,8 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       int width,
       int height,
       Bitmap.Config bitmapConfig) {
-    CloseableReference<Bitmap> bitmap = mBitmapFactory.createBitmap(width, height, bitmapConfig);
+    CloseableReference<Bitmap> bitmap =
+        mBitmapFactory.createBitmapInternal(width, height, bitmapConfig);
     bitmap.get().eraseColor(Color.TRANSPARENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
       bitmap.get().setHasAlpha(true);

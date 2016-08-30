@@ -50,7 +50,7 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> createBitmap(
+  public CloseableReference<Bitmap> createBitmapInternal(
       int width,
       int height,
       Bitmap.Config bitmapConfig) {

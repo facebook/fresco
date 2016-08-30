@@ -153,7 +153,7 @@ public class AnimatedImageFactoryGifImplTest {
         any(AnimatedImageResult.class),
         isNull(Rect.class)))
         .thenReturn(mockAnimatedDrawableBackend);
-    when(mMockBitmapFactory.createBitmap(50, 50, DEFAULT_BITMAP_CONFIG))
+    when(mMockBitmapFactory.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER));
     AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
     PowerMockito.whenNew(AnimatedImageCompositor.class)
@@ -183,7 +183,7 @@ public class AnimatedImageFactoryGifImplTest {
         any(AnimatedImageResult.class),
         isNull(Rect.class));
     verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
-    verify(mMockBitmapFactory).createBitmap(50, 50, DEFAULT_BITMAP_CONFIG);
+    verify(mMockBitmapFactory).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
     verifyNoMoreInteractions(mMockBitmapFactory);
     verify(mockCompositor).renderFrame(0, mockBitmap);
   }
@@ -212,7 +212,7 @@ public class AnimatedImageFactoryGifImplTest {
             isNull(Rect.class)))
         .thenReturn(mockAnimatedDrawableBackend);
 
-    when(mMockBitmapFactory.createBitmap(50, 50, DEFAULT_BITMAP_CONFIG))
+    when(mMockBitmapFactory.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap1, FAKE_BITMAP_RESOURCE_RELEASER))
         .thenReturn(CloseableReference.of(mockBitmap2, FAKE_BITMAP_RESOURCE_RELEASER));
     AnimatedImageCompositor mockCompositor = mock(AnimatedImageCompositor.class);
@@ -247,7 +247,7 @@ public class AnimatedImageFactoryGifImplTest {
         any(AnimatedImageResult.class),
         isNull(Rect.class));
     verifyNoMoreInteractions(mMockAnimatedDrawableBackendProvider);
-    verify(mMockBitmapFactory, times(2)).createBitmap(50, 50, DEFAULT_BITMAP_CONFIG);
+    verify(mMockBitmapFactory, times(2)).createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG);
     verifyNoMoreInteractions(mMockBitmapFactory);
     verify(mockCompositor).renderFrame(0, mockBitmap1);
     verify(mockCompositor).renderFrame(1, mockBitmap2);
