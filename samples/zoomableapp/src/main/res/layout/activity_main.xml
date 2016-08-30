@@ -6,7 +6,7 @@
   android:layout_height="match_parent"
   android:baselineAligned="false"
   android:orientation="horizontal"
-  tools:context="com.facebook.zoomableapp.MainActivity"
+  tools:context="com.facebook.samples.zoomableapp.MainActivity"
   >
   <android.support.v4.view.ViewPager
         android:id="@+id/pager"
