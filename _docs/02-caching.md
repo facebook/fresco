@@ -31,7 +31,11 @@ If other transformations, such as [resizing, rotating](resizing-rotating.html) o
 
 Like the encoded memory cache, this cache stores compressed image, which must be decoded and sometimes transformed before display.
 
-Unlike the others, this cache is not cleared when your app exits, or even if the device is turned off. The user can, of course, always clear it from Android's Settings menu.
+Unlike the others, this cache is not cleared when your app exits, or even if the device is turned off.
+
+When disk cache is about to be to the size limits defined by [ DiskCacheConfig](https://github.com/facebook/fresco/blob/gh-pages/_docs/02-configure-image-pipeline.md#configuring-the-disk-cache)   Fresco uses LRU logic of eviction in disk cache (see [DefaultEntryEvictionComparatorSupplier.java](https://github.com/facebook/fresco/blob/master/imagepipeline-base/src/main/java/com/facebook/cache/disk/DefaultEntryEvictionComparatorSupplier.java)).
+
+The user can, of course, always clear it from Android's Settings menu.
 
 ### Checking to see if an item is in cache
 
