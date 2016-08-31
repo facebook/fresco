@@ -17,7 +17,6 @@ import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.testing.MockBitmapFactory;
 
 import com.android.internal.util.Predicate;
 import org.junit.Before;
@@ -114,7 +113,6 @@ public class CountingMemoryCacheTest {
         CACHE_ENTRY_MAX_SIZE);
     when(mParamsSupplier.get()).thenReturn(mParams);
     mPlatformBitmapFactory = Mockito.mock(PlatformBitmapFactory.class);
-    mBitmap = MockBitmapFactory.create(50, 50, Bitmap.Config.ARGB_8888);
     mBitmapReference = CloseableReference.of(mBitmap, FAKE_BITMAP_RESOURCE_RELEASER);
     mCache = new CountingMemoryCache<>(
         mValueDescriptor,
