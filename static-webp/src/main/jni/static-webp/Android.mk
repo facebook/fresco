@@ -17,7 +17,9 @@ LOCAL_SRC_FILES := \
 	streams.cpp \
 	transformations.cpp \
 	webp/webp_codec.cpp \
-	WebpTranscoder.cpp
+	WebpTranscoder.cpp \
+  jni_helpers.cpp \
+  webp.cpp \
 
 
 CXX11_FLAGS := -std=c++11

@@ -15,12 +15,12 @@ import java.nio.ByteBuffer;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
+import static com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader.ensure;
 
 /**
  * A representation of a WebP image. An instance of this class will hold a copy of the encoded
@@ -31,24 +31,10 @@ import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
 @DoNotStrip
 public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
 
-  private volatile static boolean sInitialized;
-
   // Accessed by native methods
   @SuppressWarnings("unused")
   @DoNotStrip
   private long mNativeContext;
-
-  private static synchronized void ensure() {
-    if (!sInitialized) {
-      try {
-        SoLoaderShim.loadLibrary("webp");
-      } catch(UnsatisfiedLinkError nle) {
-        // Head in the sand
-      }
-      SoLoaderShim.loadLibrary("webpimage");
-      sInitialized = true;
-    }
-  }
 
   @DoNotStrip
   public WebPImage() {
