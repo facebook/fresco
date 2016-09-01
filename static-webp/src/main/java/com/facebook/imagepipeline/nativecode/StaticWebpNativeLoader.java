@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import android.os.Build;
+
 import com.facebook.common.soloader.SoLoaderShim;
 
 /**
@@ -20,6 +22,16 @@ public class StaticWebpNativeLoader {
 
   public static synchronized void ensure() {
     if (!sInitialized) {
+      // On Android 4.1.2 the loading of the static-webp native library can fail because
+      // of the dependency with fb_jpegturbo. In this case we have to explicitely load that
+      // library
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+        try {
+          SoLoaderShim.loadLibrary("fb_jpegturbo");
+        } catch (UnsatisfiedLinkError error) {
+          // Head in the sand
+        }
+      }
       SoLoaderShim.loadLibrary("static-webp");
       sInitialized = true;
     }
