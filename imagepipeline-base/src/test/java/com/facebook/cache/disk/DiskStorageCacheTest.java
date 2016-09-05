@@ -561,6 +561,7 @@ public class DiskStorageCacheTest {
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
     DiskStorageCache cache2 = createDiskCache(mStorage, false);
+    assertTrue(cache2.isIndexReady());
     assertFalse(cache2.hasKeySync(key));
     assertTrue(cache2.hasKey(key));
     // hasKey() adds item to the index
@@ -569,34 +570,37 @@ public class DiskStorageCacheTest {
 
   @Test
   public void testHasKeyWithoutPopulateAtStartupWithAwaitingIndex() throws Exception {
-    CacheKey key = putOneThingInCache();
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
     DiskStorageCache cache2 = createDiskCache(mStorage, false);
+    CacheKey key = putOneThingInCache();
     // Wait for index populated in cache before use of cache
     cache2.awaitIndex();
+    assertTrue(cache2.isIndexReady());
     assertTrue(cache2.hasKey(key));
     assertTrue(cache2.hasKeySync(key));
   }
 
   @Test
   public void testHasKeyWithPopulateAtStartupWithAwaitingIndex() throws Exception {
-    CacheKey key = putOneThingInCache();
+    DiskStorageCache cache2 = createDiskCache(mStorage, false);
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index should be updated.
-    DiskStorageCache cache2 = createDiskCache(mStorage, true);
+    CacheKey key = putOneThingInCache(cache2);
     // Wait for index populated in cache before use of cache
     cache2.awaitIndex();
+    assertTrue(cache2.isIndexReady());
     assertTrue(cache2.hasKeySync(key));
     assertTrue(cache2.hasKey(key));
   }
 
   @Test
   public void testHasKeyWithPopulateAtStartupWithoutAwaitingIndex() throws Exception {
-    CacheKey key = putOneThingInCache();
+    DiskStorageCache cache2 = createDiskCache(mStorage, true);
+    CacheKey key = putOneThingInCache(cache2);
     // A new cache object in the same directory. Equivalent to a process restart.
     // Index may not yet updated.
-    DiskStorageCache cache2 = createDiskCache(mStorage, true);
+    assertFalse(cache2.isIndexReady());
     assertTrue(cache2.hasKey(key));
     assertTrue(cache2.hasKeySync(key));
   }
@@ -656,10 +660,14 @@ public class DiskStorageCacheTest {
   }
 
   private CacheKey putOneThingInCache() throws IOException {
+    return putOneThingInCache(mCache);
+  }
+
+  private CacheKey putOneThingInCache(DiskStorageCache cache) throws IOException {
     CacheKey key = new SimpleCacheKey("foo");
     byte[] value1 = new byte[101];
     value1[80] = 'c';
-    mCache.insert(key, WriterCallbacks.from(value1));
+    cache.insert(key, WriterCallbacks.from(value1));
     return key;
   }
 

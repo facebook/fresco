@@ -91,6 +91,8 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   // synchronization object.
   private final Object mLock = new Object();
 
+  private boolean mIndexReady;
+
   /**
    * Stats about the cache - currently size of the cache (in bytes) and number of items in
    * the cache
@@ -236,6 +238,14 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     } catch (InterruptedException e) {
       FLog.e(TAG, "Memory Index is not ready yet. ");
     }
+  }
+
+  /**
+   * Tells if memory index is completed in initialization. Only call it when you need to know if
+   * memory index is completed in cold start.
+   */
+  public boolean isIndexReady() {
+    return mIndexReady || !mIndexPopulateAtStartupEnabled;
   }
 
   /**
@@ -749,8 +759,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
                 " bytes, and a maximum time delta of " + maxTimeDelta + "ms",
             null);
       }
-      if ((mCacheStats.getCount() != count || mCacheStats.getSize() != size)) {
+      if (mCacheStats.getCount() != count || mCacheStats.getSize() != size) {
         if (mIndexPopulateAtStartupEnabled && mResourceIndex != tempResourceIndex) {
+          mIndexReady = true;
+        } else if (mIndexPopulateAtStartupEnabled) {
           mResourceIndex.clear();
           mResourceIndex.addAll(tempResourceIndex);
         }
