@@ -37,7 +37,7 @@ task createNativeDepsDirectories {
 }
 
 task downloadLibjpeg(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/libjpeg-turbo/1.3.1/libjpeg-turbo-1.3.1.tar.gz'
+    src 'http://downloads.sourceforge.net/project/libjpeg-turbo/1.5.0/libjpeg-turbo-1.5.0.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir
@@ -51,14 +51,14 @@ task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
 }
 
 task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'https://github.com/webmproject/libwebp/archive/v0.4.3.tar.gz'
+    src 'https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir
 }
 
 task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibjpeg.dest}/libjpeg-turbo-1.3.1.tar.gz"))
+    from tarTree(resources.gzip("${downloadLibjpeg.dest}/libjpeg-turbo-1.5.0.tar.gz"))
     into "${downloadsDir}/libjpeg"
 }
 
@@ -68,15 +68,15 @@ task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
 }
 
 task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.4.3.tar.gz"))
+    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.5.1.tar.gz"))
     into "${downloadsDir}/libwebp"
 }
 
 task copyLibjpeg(dependsOn: unpackLibjpeg, type: Copy) {
-    from "${unpackLibjpeg.destinationDir}/libjpeg-turbo-1.3.1"
-    from 'src/main/jni/third-party/libjpeg-turbo-1.3.x'
+    from "${unpackLibjpeg.destinationDir}/libjpeg-turbo-1.5.0"
+    from 'src/main/jni/third-party/libjpeg-turbo-1.5.x'
     include('**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk')
-    into "${mergeDir}/libjpeg-turbo-1.3.x"
+    into "${mergeDir}/libjpeg-turbo-1.5.x"
 }
 
 task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
@@ -87,10 +87,10 @@ task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
 }
 
 task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
-    from "${unpackLibwebp.destinationDir}/libwebp-0.4.3"
-    from 'src/main/jni/third-party/libwebp-0.4.3'
+    from "${unpackLibwebp.destinationDir}/libwebp-0.5.1"
+    from 'src/main/jni/third-party/libwebp-0.5.1'
     include('src/**/*.c', 'src/**/*.h', '*.mk')
-    into "${mergeDir}/libwebp-0.4.3"
+    into "${mergeDir}/libwebp-0.5.1"
 }
 
 task fetchNativeDeps(dependsOn: [copyLibwebp, copyLibpng, copyLibjpeg]) {

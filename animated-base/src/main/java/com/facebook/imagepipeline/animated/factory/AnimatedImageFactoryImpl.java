@@ -81,7 +81,6 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
-      Preconditions.checkState(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
       AnimatedImage gifImage = sGifAnimatedImageDecoder.decode(input.getNativePtr(), input.size());
 
@@ -109,7 +108,6 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
-      Preconditions.checkArgument(!options.forceOldAnimationCode);
       final PooledByteBuffer input = bytesRef.get();
       AnimatedImage webPImage = sWebpAnimatedImageDecoder.decode(
           input.getNativePtr(),
@@ -179,10 +177,11 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
   private List<CloseableReference<Bitmap>> decodeAllFrames(
       AnimatedImage image,
       Bitmap.Config bitmapConfig) {
-    final List<CloseableReference<Bitmap>> bitmaps = new ArrayList<>();
     AnimatedImageResult tempResult = AnimatedImageResult.forAnimatedImage(image);
     AnimatedDrawableBackend drawableBackend =
         mAnimatedDrawableBackendProvider.get(tempResult, null);
+    final List<CloseableReference<Bitmap>> bitmaps =
+            new ArrayList<>(drawableBackend.getFrameCount());
     AnimatedImageCompositor animatedImageCompositor = new AnimatedImageCompositor(
         drawableBackend,
         new AnimatedImageCompositor.Callback() {
@@ -212,7 +211,8 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
       int width,
       int height,
       Bitmap.Config bitmapConfig) {
-    CloseableReference<Bitmap> bitmap = mBitmapFactory.createBitmap(width, height, bitmapConfig);
+    CloseableReference<Bitmap> bitmap =
+        mBitmapFactory.createBitmapInternal(width, height, bitmapConfig);
     bitmap.get().eraseColor(Color.TRANSPARENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
       bitmap.get().setHasAlpha(true);

@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#define LOG_TAG "WebPImage"
+#define WEBP_IMAGE_LOG_TAG "WebPImage"
 
 #include <jni.h>
 #include <array>
@@ -90,7 +90,7 @@ struct WebPImageNativeContext {
 
 #if EXTRA_LOGGING
   ~WebPImageNativeContext() {
-    __android_log_write(ANDROID_LOG_DEBUG, LOG_TAG, "WebPImageNativeContext destructor");
+    __android_log_write(ANDROID_LOG_DEBUG, WEBP_IMAGE_LOG_TAG, "WebPImageNativeContext destructor");
   }
 #endif
 };
@@ -137,7 +137,7 @@ struct WebPFrameNativeContext {
 
 #if EXTRA_LOGGING
   ~WebPFrameNativeContext() {
-    __android_log_write(ANDROID_LOG_DEBUG, LOG_TAG, "WebPFrameNativeContext destructor");
+    __android_log_write(ANDROID_LOG_DEBUG, WEBP_IMAGE_LOG_TAG, "WebPFrameNativeContext destructor");
   }
 #endif
 };
@@ -750,7 +750,7 @@ jboolean WebPFrame_nativeShouldDisposeToBackgroundColor(JNIEnv* pEnv, jobject th
  *
  * @return whether the current frame should be alpha blended over the previous frame
  */
-jboolean WebPFrame_nativeShouldBlendWithPreviousFrame(JNIEnv* pEnv, jobject thiz) {
+jboolean WebPFrame_nativeIsBlendWithPreviousFrame(JNIEnv* pEnv, jobject thiz) {
   auto spNativeContext = getWebPFrameNativeContext(pEnv, thiz);
   if (!spNativeContext) {
     throwIllegalStateException(pEnv, "Already disposed");
@@ -847,9 +847,9 @@ static JNINativeMethod sWebPFrameMethods[] = {
   { "nativeShouldDisposeToBackgroundColor",
     "()Z",
     (void*)WebPFrame_nativeShouldDisposeToBackgroundColor },
-  { "nativeShouldBlendWithPreviousFrame",
+  { "nativeIsBlendWithPreviousFrame",
     "()Z",
-    (void*)WebPFrame_nativeShouldBlendWithPreviousFrame },
+    (void*)WebPFrame_nativeIsBlendWithPreviousFrame },
   { "nativeDispose",
     "()V",
     (void*)WebPFrame_nativeDispose },

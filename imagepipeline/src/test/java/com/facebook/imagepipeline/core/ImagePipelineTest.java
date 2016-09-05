@@ -32,19 +32,29 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 import com.android.internal.util.Predicate;
-import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
-import org.robolectric.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for ImagePipeline
@@ -208,7 +218,7 @@ public class ImagePipelineTest {
     DataSource<CloseableReference<CloseableImage>> dataSource =
         mImagePipeline.fetchDecodedImage(mImageRequest, mCallerContext);
     assertFalse(dataSource.isFinished());
-    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0",  false);
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
@@ -216,6 +226,30 @@ public class ImagePipelineTest {
         .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
     assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
     assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+  }
+
+  @Test
+  public void testFetchDecodedImageWithRequestLevel() {
+    Producer<CloseableReference<CloseableImage>> decodedSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
+        .thenReturn(decodedSequence);
+    DataSource<CloseableReference<CloseableImage>> dataSource =
+        mImagePipeline.fetchDecodedImage(
+            mImageRequest,
+            mCallerContext,
+            ImageRequest.RequestLevel.DISK_CACHE);
+    assertFalse(dataSource.isFinished());
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
+    verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
+    ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
+        ArgumentCaptor.forClass(ProducerContext.class);
+    verify(decodedSequence)
+        .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
+    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
+    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+    assertEquals(
+        producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel(),
+        ImageRequest.RequestLevel.DISK_CACHE);
   }
 
   @Test
@@ -387,9 +421,38 @@ public class ImagePipelineTest {
   }
 
   @Test
+  public void testIsInDiskCacheFromMainDiskCache() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
+    when(mMainDiskStorageCache.diskCheckSync(any(CacheKey.class))).thenReturn(true);
+    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+  }
+
+  @Test
+  public void testIsInDiskCacheFromSmallDiskCache() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
+    when(mSmallImageDiskStorageCache.diskCheckSync(any(CacheKey.class))).thenReturn(true);
+    assertTrue(mImagePipeline.isInDiskCacheSync(mImageRequest));
+  }
+
+  @Test
   public void testClearDiskCaches() {
     mImagePipeline.clearDiskCaches();
     verify(mMainDiskStorageCache).clearAll();
     verify(mSmallImageDiskStorageCache).clearAll();
+  }
+
+  @Test
+  public void testLocalRequestListenerIsCalled() {
+    RequestListener localRequestListner = mock(RequestListener.class);
+    when(mImageRequest.getRequestListener()).thenReturn(localRequestListner);
+
+    Producer<CloseableReference<CloseableImage>> bitmapCacheSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
+        .thenReturn(bitmapCacheSequence);
+    mImagePipeline.fetchImageFromBitmapCache(mImageRequest, mCallerContext);
+
+    verify(localRequestListner).onRequestStart(mImageRequest, mCallerContext, "0", false);
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
+    verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
   }
 }

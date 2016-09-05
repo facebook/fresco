@@ -36,4 +36,5 @@ public final class Const {
   public static final String USE_POSTPROCESSOR_KEY= "use_postprocessor";
   public static final String POSTPROCESSOR_TYPE_KEY= "postprocessor_type";
   public static final String SCALE_TYPE_KEY= "scale_type";
+  public static final String AUTO_ROTATE_KEY= "auto_rotate";
 }

@@ -40,6 +40,8 @@ public class Config {
 
   public final String scaleType;
 
+  public final boolean autoRotateEnabled;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -73,6 +75,9 @@ public class Config {
     final String scaleType = sharedPreferences.getString(
             Const.SCALE_TYPE_KEY,
             context.getString(R.string.value_scale_type_fit_center));
+    final boolean autoRotate = sharedPreferences.getBoolean(
+            Const.AUTO_ROTATE_KEY,
+            false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -83,7 +88,8 @@ public class Config {
       useRoundedAsCircle,
       usePostprocessor,
       postprocessorType,
-      scaleType);
+      scaleType,
+      autoRotate);
   }
 
   private Config(
@@ -96,7 +102,8 @@ public class Config {
       final boolean useRoundedAsCircle,
       final boolean usePostprocessor,
       final String postprocessorType,
-      final String scaleType) {
+      final String scaleType,
+      final boolean autoRotate) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -107,5 +114,6 @@ public class Config {
     this.usePostprocessor = usePostprocessor;
     this.postprocessorType = postprocessorType;
     this.scaleType = scaleType;
+    this.autoRotateEnabled = autoRotate;
   }
 }

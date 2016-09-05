@@ -107,4 +107,12 @@
     <string translatable="false" name="value_recyclerview_recycler_layout">recyclerview_recycler_layout</string>
     <string translatable="false" name="value_listview_summary">We use a ListView</string>
     <string translatable="false" name="value_recycler_summary">We use a RecyclerView</string>
+
+    <!-- Auto Rotate Enabled-->
+    <string translatable="false" name="title_other_group">Others</string>
+
+
+    <string translatable="false" name="title_auto_rotate">Auto Rotate</string>
+    <string translatable="false" name="checked_auto_rotate_summary">Image rotation metadata are used</string>
+    <string translatable="false" name="unchecked_auto_rotate_summary">Image rotation metadata are not used</string>
 </resources>

@@ -94,7 +94,7 @@ public class TestAnimatedDrawableSupportBackend implements AnimatedDrawableBacke
         0,
         mWidth,
         mHeight,
-        false,
+        AnimatedDrawableFrameInfo.BlendOperation.NO_BLEND,
         AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_DO_NOT);
   }
 

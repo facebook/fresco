@@ -66,6 +66,7 @@ public abstract class AbstractDraweeControllerBuilder <
   private boolean mTryCacheOnlyFirst;
   private @Nullable Supplier<DataSource<IMAGE>> mDataSourceSupplier;
   private @Nullable ControllerListener<? super INFO> mControllerListener;
+  private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
   private boolean mRetainImageOnFailure;
@@ -91,6 +92,7 @@ public abstract class AbstractDraweeControllerBuilder <
     mMultiImageRequests = null;
     mTryCacheOnlyFirst = true;
     mControllerListener = null;
+    mControllerViewportVisibilityListener = null;
     mTapToRetryEnabled = false;
     mAutoPlayAnimations = false;
     mOldController = null;
@@ -240,6 +242,19 @@ public abstract class AbstractDraweeControllerBuilder <
     return mControllerListener;
   }
 
+  /** Sets the controller viewport visibility listener. */
+  public BUILDER setControllerViewportVisibilityListener(
+      @Nullable ControllerViewportVisibilityListener controllerViewportVisibilityListener) {
+    mControllerViewportVisibilityListener = controllerViewportVisibilityListener;
+    return getThis();
+  }
+
+  /** Gets the controller viewport visibility listener. */
+  @Nullable
+  public ControllerViewportVisibilityListener getControllerViewportVisibilityListener() {
+    return mControllerViewportVisibilityListener;
+  }
+
   /** Sets the accessibility content description. */
   public BUILDER setContentDescription(String contentDescription) {
     mContentDescription = contentDescription;
@@ -295,6 +310,7 @@ public abstract class AbstractDraweeControllerBuilder <
     AbstractDraweeController controller = obtainController();
     controller.setRetainImageOnFailure(getRetainImageOnFailure());
     controller.setContentDescription(getContentDescription());
+    controller.setControllerViewportVisibilityListener(getControllerViewportVisibilityListener());
     maybeBuildAndSetRetryManager(controller);
     maybeAttachListeners(controller);
     return controller;
@@ -343,7 +359,8 @@ public abstract class AbstractDraweeControllerBuilder <
     if (tryBitmapCacheOnlyFirst) {
       // we first add bitmap-cache-only suppliers, then the full-fetch ones
       for (int i = 0; i < imageRequests.length; i++) {
-        suppliers.add(getDataSourceSupplierForRequest(imageRequests[i], /*bitmapCacheOnly */ true));
+        suppliers.add(
+            getDataSourceSupplierForRequest(imageRequests[i], CacheLevel.BITMAP_MEMORY_CACHE));
       }
     }
     for (int i = 0; i < imageRequests.length; i++) {
@@ -354,18 +371,18 @@ public abstract class AbstractDraweeControllerBuilder <
 
   /** Creates a data source supplier for the given image request. */
   protected Supplier<DataSource<IMAGE>> getDataSourceSupplierForRequest(REQUEST imageRequest) {
-    return getDataSourceSupplierForRequest(imageRequest, /* bitmapCacheOnly */ false);
+    return getDataSourceSupplierForRequest(imageRequest, CacheLevel.FULL_FETCH);
   }
 
   /** Creates a data source supplier for the given image request. */
   protected Supplier<DataSource<IMAGE>> getDataSourceSupplierForRequest(
       final REQUEST imageRequest,
-      final boolean bitmapCacheOnly) {
+      final CacheLevel cacheLevel) {
     final Object callerContext = getCallerContext();
     return new Supplier<DataSource<IMAGE>>() {
       @Override
       public DataSource<IMAGE> get() {
-        return getDataSourceForRequest(imageRequest, callerContext, bitmapCacheOnly);
+        return getDataSourceForRequest(imageRequest, callerContext, cacheLevel);
       }
       @Override
       public String toString() {
@@ -436,8 +453,19 @@ public abstract class AbstractDraweeControllerBuilder <
   protected abstract DataSource<IMAGE> getDataSourceForRequest(
       final REQUEST imageRequest,
       final Object callerContext,
-      final boolean bitmapCacheOnly);
+      final CacheLevel cacheLevel);
 
   /** Concrete builder classes should override this method to return {#code this}. */
   protected abstract BUILDER getThis();
+
+  public enum CacheLevel {
+    /* Fetch (from the network or local storage) */
+    FULL_FETCH,
+
+    /* Disk caching */
+    DISK_CACHE,
+
+    /* Bitmap caching */
+    BITMAP_MEMORY_CACHE;
+  }
 }

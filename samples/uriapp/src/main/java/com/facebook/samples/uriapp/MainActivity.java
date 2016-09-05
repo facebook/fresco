@@ -12,9 +12,6 @@
 
 package com.facebook.samples.uriapp;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,13 +22,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
 
 public class MainActivity extends Activity {
   private SimpleDraweeView mSimpleDraweeView;
@@ -40,13 +33,6 @@ public class MainActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-    Set<RequestListener> listeners = new HashSet<>();
-    listeners.add(new RequestLoggingListener());
-    ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-        .setRequestListeners(listeners)
-        .build();
-    Fresco.initialize(this, config);
     setContentView(R.layout.activity_main);
 
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.simple_drawee_view);

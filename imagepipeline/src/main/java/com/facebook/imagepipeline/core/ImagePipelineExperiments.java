@@ -22,16 +22,24 @@ public class ImagePipelineExperiments {
   private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
   private boolean mDecodeFileDescriptorEnabled;
+  private final int mThrottlingMaxSimultaneousRequests;
+  private final boolean mExternalCreatedBitmapLogEnabled;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
         builder.mDecodeFileDescriptorEnabled;
+    mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
+    mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
     return mDecodeFileDescriptorEnabled;
+  }
+
+  public boolean isExternalCreatedBitmapLogEnabled() {
+    return mExternalCreatedBitmapLogEnabled;
   }
 
   public int getForceSmallCacheThresholdBytes() {
@@ -42,6 +50,10 @@ public class ImagePipelineExperiments {
     return mWebpSupportEnabled;
   }
 
+  public int getThrottlingMaxSimultaneousRequests() {
+    return mThrottlingMaxSimultaneousRequests;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);
@@ -49,10 +61,14 @@ public class ImagePipelineExperiments {
 
   public static class Builder {
 
+    private static final int DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
+
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
     private boolean mDecodeFileDescriptorEnabled = false;
+    private boolean mExternalCreatedBitmapLogEnabled = false;
+    private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -61,6 +77,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setDecodeFileDescriptorEnabled(
         boolean decodeFileDescriptorEnabled) {
       mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setExternalCreatedBitmapLogEnabled(
+        boolean externalCreatedBitmapLogEnabled) {
+      mExternalCreatedBitmapLogEnabled = externalCreatedBitmapLogEnabled;
       return mConfigBuilder;
     }
 
@@ -79,6 +101,18 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
       mWebpSupportEnabled = webpSupportEnabled;
+      return mConfigBuilder;
+    }
+
+    /**
+     * Using this method is possible to change the max number of threads for loading and sizing
+     * local images
+     * @param throttlingMaxSimultaneousRequests Max number of thread
+     * @return The Builder itself for chaining
+     */
+    public ImagePipelineConfig.Builder setThrottlingMaxSimultaneousRequests(
+        int throttlingMaxSimultaneousRequests) {
+      mThrottlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
       return mConfigBuilder;
     }
 

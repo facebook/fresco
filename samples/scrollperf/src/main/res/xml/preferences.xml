@@ -15,12 +15,12 @@
             android:title="@string/title_data_source"
             />
         <CheckBoxPreference
-            android:title="@string/title_infinite_data_source"
             android:key="infinite_data_source"
+            android:title="@string/title_infinite_data_source"
             />
         <CheckBoxPreference
-            android:title="@string/title_distinct_uri_data_source"
             android:key="distinct_uri_data_source"
+            android:title="@string/title_distinct_uri_data_source"
             />
     </PreferenceCategory>
     <PreferenceCategory
@@ -28,12 +28,12 @@
         android:title="@string/title_preferences_rounded_corners"
         >
         <CheckBoxPreference
-            android:title="@string/title_preferences_rounded_corners_enabled"
             android:key="rounded_corners"
+            android:title="@string/title_preferences_rounded_corners_enabled"
             />
         <CheckBoxPreference
-            android:title="@string/title_preferences_rounded_as_circle_enabled"
             android:key="rounded_as_circle"
+            android:title="@string/title_preferences_rounded_as_circle_enabled"
             app:dependency="rounded_corners"
             />
     </PreferenceCategory>
@@ -42,17 +42,17 @@
         android:title="@string/title_preferences_postprocessor"
         >
         <CheckBoxPreference
-            android:title="@string/title_preferences_use_postprocessor"
             android:key="use_postprocessor"
+            android:title="@string/title_preferences_use_postprocessor"
             />
         <ListPreference
             android:defaultValue="@string/value_postprocessor_medium"
+            android:dependency="use_postprocessor"
             android:dialogTitle="@string/dialog_title_use_postprocessor"
             android:entries="@array/postprocessor_labels"
             android:entryValues="@array/postprocessor_values"
             android:key="postprocessor_type"
             android:title="@string/title_preferences_postprocessor_type"
-            android:dependency="use_postprocessor"
             />
     </PreferenceCategory>
     <PreferenceCategory
@@ -60,8 +60,8 @@
         android:title="@string/title_controller_group"
         >
         <CheckBoxPreference
-            android:title="@string/title_reuse_old_controller"
             android:key="reuse_old_controller"
+            android:title="@string/title_reuse_old_controller"
             />
     </PreferenceCategory>
     <PreferenceCategory
@@ -88,6 +88,15 @@
             android:entryValues="@array/recycler_layout_values"
             android:key="recycler_layout"
             android:title="@string/title_recycler_layout"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="key_preferences_various_group"
+        android:title="@string/title_other_group"
+        >
+        <CheckBoxPreference
+            android:key="auto_rotate"
+            android:title="@string/title_auto_rotate"
             />
     </PreferenceCategory>
 </PreferenceScreen>

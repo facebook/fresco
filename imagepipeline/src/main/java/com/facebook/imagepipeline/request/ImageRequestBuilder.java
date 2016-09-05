@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.request;
 
+import javax.annotation.Nullable;
+
 import android.net.Uri;
 
 import com.facebook.common.internal.Preconditions;
@@ -16,8 +18,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
-
-import javax.annotation.Nullable;
+import com.facebook.imagepipeline.listener.RequestListener;
 
 import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
@@ -38,6 +39,7 @@ public class ImageRequestBuilder {
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
   private boolean mDiskCacheEnabled = true;
+  private @Nullable RequestListener mRequestListener;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -88,7 +90,8 @@ public class ImageRequestBuilder {
         .setPostprocessor(imageRequest.getPostprocessor())
         .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
         .setRequestPriority(imageRequest.getPriority())
-        .setResizeOptions(imageRequest.getResizeOptions());
+        .setResizeOptions(imageRequest.getResizeOptions())
+        .setRequestListener(imageRequest.getRequestListener());
   }
 
   private ImageRequestBuilder() {
@@ -147,7 +150,7 @@ public class ImageRequestBuilder {
    * @param resizeOptions resize options
    * @return the modified builder instance
    */
-  public ImageRequestBuilder setResizeOptions(ResizeOptions resizeOptions) {
+  public ImageRequestBuilder setResizeOptions(@Nullable ResizeOptions resizeOptions) {
     mResizeOptions = resizeOptions;
     return this;
   }
@@ -241,6 +244,7 @@ public class ImageRequestBuilder {
   /**
    * Sets the postprocessor.
    * @param postprocessor postprocessor to postprocess the output bitmap with.
+   * @return the modified builder instance
    */
   public ImageRequestBuilder setPostprocessor(Postprocessor postprocessor) {
     mPostprocessor = postprocessor;
@@ -250,6 +254,25 @@ public class ImageRequestBuilder {
   /** Gets postprocessor if set, null otherwise. */
   public @Nullable Postprocessor getPostprocessor() {
     return mPostprocessor;
+  }
+
+  /**
+   * Sets a request listener to use for just this image request
+   *
+   * @param requestListener a request listener to use in addition to the global ones set in the
+   * {@link com.facebook.imagepipeline.core.ImagePipelineConfig}
+   * @return the modified builder instance
+   */
+  public ImageRequestBuilder setRequestListener(RequestListener requestListener) {
+    mRequestListener = requestListener;
+    return this;
+  }
+
+  /**
+   * @return the additional request listener to use for this image request
+   */
+  public @Nullable RequestListener getRequestListener() {
+    return mRequestListener;
   }
 
   /**

@@ -11,6 +11,9 @@ package com.facebook.cache.common;
 
 /**
  * An interface for logging various cache events.
+ *
+ * <p> In all callback methods, the {@link CacheEvent} object should not be held beyond the method
+ * itself as they may be automatically recycled.
  */
 public interface CacheEventListener {
 
@@ -50,6 +53,11 @@ public interface CacheEventListener {
    * Triggered by an eviction from cache.
    */
   void onEviction(CacheEvent cacheEvent);
+
+  /**
+   * Triggered by a full cache clearance.
+   */
+  void onCleared();
 
   enum EvictionReason {
     CACHE_FULL,

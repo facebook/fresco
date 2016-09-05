@@ -127,7 +127,9 @@ public class ImagePipelineFactory {
       mBitmapCountingMemoryCache =
           BitmapCountingMemoryCacheFactory.get(
               mConfig.getBitmapMemoryCacheParamsSupplier(),
-              mConfig.getMemoryTrimmableRegistry());
+              mConfig.getMemoryTrimmableRegistry(),
+              getPlatformBitmapFactory(),
+              mConfig.getExperiments().isExternalCreatedBitmapLogEnabled());
     }
     return mBitmapCountingMemoryCache;
   }
@@ -159,7 +161,8 @@ public class ImagePipelineFactory {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
               mConfig.getEncodedMemoryCacheParamsSupplier(),
-              mConfig.getMemoryTrimmableRegistry());
+              mConfig.getMemoryTrimmableRegistry(),
+              getPlatformBitmapFactory());
     }
     return mEncodedCountingMemoryCache;
   }
@@ -342,7 +345,8 @@ public class ImagePipelineFactory {
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.isDownsampleEnabled(),
               mConfig.getExperiments().isWebpSupportEnabled(),
-              mThreadHandoffProducerQueue);
+              mThreadHandoffProducerQueue,
+              mConfig.getExperiments().getThrottlingMaxSimultaneousRequests());
     }
     return mProducerSequenceFactory;
   }

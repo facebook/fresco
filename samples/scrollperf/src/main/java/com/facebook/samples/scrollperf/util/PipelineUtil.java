@@ -42,5 +42,6 @@ public final class PipelineUtil {
       }
       imageRequestBuilder.setPostprocessor(postprocessor);
     }
+    imageRequestBuilder.setAutoRotateEnabled(config.autoRotateEnabled);
   }
 }

@@ -67,24 +67,24 @@ dependencies {
     internalCompile project(':animated-webp')
 
     // To get the core Fresco library only without animations or webp support
-    mavenBasicCompile 'com.facebook.fresco:fresco:0.11.0'
+    mavenBasicCompile "com.facebook.fresco:fresco:${VERSION_NAME}"
 
     // To get the core Fresco library with webp support
-    mavenWithWebpCompile 'com.facebook.fresco:fresco:0.11.0'
-    mavenWithWebpCompile 'com.facebook.fresco:webpsupport:0.11.0'
+    mavenWithWebpCompile "com.facebook.fresco:fresco:${VERSION_NAME}"
+    mavenWithWebpCompile "com.facebook.fresco:webpsupport:${VERSION_NAME}"
 
     // To get the core Fresco library with webp support, including animated webp
-    mavenWithAnimatedWebpCompile 'com.facebook.fresco:fresco:0.11.0'
-    mavenWithAnimatedWebpCompile 'com.facebook.fresco:animated-webp:0.11.0'
-    mavenWithAnimatedWebpCompile 'com.facebook.fresco:webpsupport:0.11.0'
+    mavenWithAnimatedWebpCompile "com.facebook.fresco:fresco:${VERSION_NAME}"
+    mavenWithAnimatedWebpCompile "com.facebook.fresco:animated-webp:${VERSION_NAME}"
+    mavenWithAnimatedWebpCompile "com.facebook.fresco:webpsupport:${VERSION_NAME}"
 
     // To get the core Fresco library with animated gif support
-    mavenWithAnimatedGifCompile 'com.facebook.fresco:fresco:0.11.0'
-    mavenWithAnimatedGifCompile 'com.facebook.fresco:animated-gif:0.11.0'
+    mavenWithAnimatedGifCompile "com.facebook.fresco:fresco:${VERSION_NAME}"
+    mavenWithAnimatedGifCompile "com.facebook.fresco:animated-gif:${VERSION_NAME}"
 
     // To get the core Fresco library with webp, animated webp and animated gif support
-    mavenWithAllAnimationsCompile 'com.facebook.fresco:fresco:0.11.0'
-    mavenWithAllAnimationsCompile 'com.facebook.fresco:animated-gif:0.11.0'
-    mavenWithAllAnimationsCompile 'com.facebook.fresco:animated-webp:0.11.0'
-    mavenWithAllAnimationsCompile 'com.facebook.fresco:webpsupport:0.11.0'
+    mavenWithAllAnimationsCompile "com.facebook.fresco:fresco:${VERSION_NAME}"
+    mavenWithAllAnimationsCompile "com.facebook.fresco:animated-gif:${VERSION_NAME}"
+    mavenWithAllAnimationsCompile "com.facebook.fresco:animated-webp:${VERSION_NAME}"
+    mavenWithAllAnimationsCompile "com.facebook.fresco:webpsupport:${VERSION_NAME}"
 }

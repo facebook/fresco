@@ -20,6 +20,7 @@ import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
 
 /**
@@ -64,6 +65,9 @@ public class ImageRequest {
   /** Postprocessor to run on the output bitmap. */
   private final Postprocessor mPostprocessor;
 
+  /** Request listener to use for this image request */
+  private final @Nullable RequestListener mRequestListener;
+
   public static ImageRequest fromUri(@Nullable Uri uri) {
     return (uri == null) ? null : ImageRequestBuilder.newBuilderWithSource(uri).build();
   }
@@ -89,6 +93,8 @@ public class ImageRequest {
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
 
     mPostprocessor = builder.getPostprocessor();
+
+    mRequestListener = builder.getRequestListener();
   }
 
   public CacheChoice getCacheChoice() {
@@ -148,6 +154,10 @@ public class ImageRequest {
 
   public @Nullable Postprocessor getPostprocessor() {
     return mPostprocessor;
+  }
+
+  public @Nullable RequestListener getRequestListener() {
+    return mRequestListener;
   }
 
   @Override

@@ -1,8 +1,10 @@
-/* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Build number */
-#define BUILD "20130528"
+/* use 8 or 12 */
+#define BITS_IN_JSAMPLE 1
+
+/* libjpeg-turbo build number */
+/* #undef BUILD */
 
 /* Support arithmetic encoding */
 #define C_ARITH_CODING_SUPPORTED 1
@@ -19,6 +21,9 @@
 /* Define to 1 if you have the <jni.h> header file. */
 /* #undef HAVE_JNI_H */
 
+/* Define to 1 if you have the <locale.h> header file. */
+#define HAVE_LOCALE_H 1
+
 /* Define to 1 if you have the `memcpy' function. */
 #define HAVE_MEMCPY 1
 
@@ -27,9 +32,6 @@
 
 /* Define to 1 if you have the `memset' function. */
 #define HAVE_MEMSET 1
-
-/* Define if your compiler supports prototypes */
-#define HAVE_PROTOTYPES 1
 
 /* Define to 1 if you have the <stddef.h> header file. */
 #define HAVE_STDDEF_H 1
@@ -71,22 +73,22 @@
 #define JPEG_LIB_VERSION 80
 
 /* libjpeg-turbo version */
-#define LIBJPEG_TURBO_VERSION 1.3.0
+#define LIBJPEG_TURBO_VERSION 1.5.0
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* libjpeg-turbo version in integer form */
+#define LIBJPEG_TURBO_VERSION_NUMBER 1
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
 
 /* Support in-memory source/destination managers */
 /* #undef MEM_SRCDST_SUPPORTED */
 
-/* Define if you have BSD-like bzero and bcopy */
+/* Define if you have BSD-like bzero and bcopy in <strings.h> rather than
+   memset/memcpy in <string.h>. */
 /* #undef NEED_BSD_STRINGS */
 
-/* Define if you need short function names */
-/* #undef NEED_SHORT_EXTERNAL_NAMES */
-
-/* Define if you have sys/types.h */
+/* Define if you need to include <sys/types.h> to get size_t. */
 #define NEED_SYS_TYPES_H 1
 
 /* Name of package */
@@ -99,7 +101,7 @@
 #define PACKAGE_NAME "libjpeg-turbo"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libjpeg-turbo 1.3.0"
+#define PACKAGE_STRING "libjpeg-turbo 1.5.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libjpeg-turbo"
@@ -108,16 +110,18 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3.0"
+#define PACKAGE_VERSION "1.5.0"
 
-/* Define if shift is unsigned */
+/* Define if your (broken) compiler shifts signed values as if they were
+   unsigned. */
 /* #undef RIGHT_SHIFT_IS_UNSIGNED */
+
+#define SIZEOF_SIZE_T 1
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
-/* Version number of package */
-#define VERSION "1.3.0"
+#define VERSION "1.5.0"
 
 /* Use accelerated SIMD routines. */
 #define WITH_SIMD 1
@@ -126,9 +130,6 @@
 #ifndef __CHAR_UNSIGNED__
 /* # undef __CHAR_UNSIGNED__ */
 #endif
-
-/* Define to empty if `const' does not conform to ANSI C. */
-/* #undef const */
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */

@@ -30,6 +30,7 @@ LOCAL_SRC_FILES := \
     src/dsp/dec_mips32.c \
     src/dsp/dec_neon.$(NEON) \
     src/dsp/dec_sse2.c \
+    src/dsp/dec_sse41.c \
     src/dec/frame.c \
     src/dec/idec.c \
     src/dec/io.c \
@@ -40,8 +41,9 @@ LOCAL_SRC_FILES := \
     src/dec/webp.c \
     src/dsp/alpha_processing.c \
     src/dsp/alpha_processing_sse2.c \
+    src/dsp/alpha_processing_sse41.c \
     src/dsp/lossless.c \
-    src/dsp/lossless_mips32.c \
+    src/dsp/lossless_enc_mips32.c \
     src/dsp/lossless_neon.$(NEON) \
     src/dsp/lossless_sse2.c \
     src/dsp/upsampling.c \
@@ -53,11 +55,18 @@ LOCAL_SRC_FILES := \
     src/demux/demux.c \
     src/utils/bit_reader.c \
     src/utils/color_cache.c \
-    src/utils/filters.c \
+    src/dsp/filters.c \
+    src/dsp/filters_sse2.c \
+    src/dsp/filters_mips_dsp_r2.c \
     src/utils/huffman.c \
     src/utils/quant_levels.c \
     src/utils/quant_levels_dec.c \
     src/utils/rescaler.c \
+    src/dsp/rescaler.c \
+    src/dsp/rescaler_neon.$(NEON) \
+    src/dsp/rescaler_sse2.c \
+    src/dsp/rescaler_mips32.c \
+    src/dsp/rescaler_mips_dsp_r2.c \
     src/utils/utils.c \
     src/utils/random.c \
     src/utils/thread.c \
@@ -103,6 +112,6 @@ LOCAL_STATIC_LIBRARIES := cpufeatures
 LOCAL_MODULE := webp
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/src
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)
 
 $(call import-module,android/cpufeatures)

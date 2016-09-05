@@ -75,6 +75,7 @@ public class ImageDecoder {
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
       imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
           encodedImage.getInputStream());
+      encodedImage.setImageFormat(imageFormat);
     }
 
     switch (imageFormat) {
@@ -109,7 +110,9 @@ public class ImageDecoder {
       return null;
     }
     try {
-      if (!options.forceStaticImage && GifFormatChecker.isAnimated(is)) {
+      if (!options.forceStaticImage
+              && mAnimatedImageFactory != null
+              && GifFormatChecker.isAnimated(is)) {
         return mAnimatedImageFactory.decodeGif(encodedImage, options, mBitmapConfig);
       }
       return decodeStaticImage(encodedImage);

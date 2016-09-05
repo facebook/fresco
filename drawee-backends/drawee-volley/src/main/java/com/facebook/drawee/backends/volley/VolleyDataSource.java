@@ -12,10 +12,12 @@ package com.facebook.drawee.backends.volley;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.facebook.datasource.AbstractDataSource;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
+
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.datasource.DataSource;
-import com.facebook.datasource.AbstractDataSource;
 
 /**
  * {@link DataSource} that wraps Volley {@link ImageLoader}.
@@ -26,14 +28,13 @@ public class VolleyDataSource extends AbstractDataSource<Bitmap> {
   public VolleyDataSource(
       final ImageLoader imageLoader,
       final Uri imageRequest,
-      final boolean bitmapCacheOnly) {
+      final AbstractDraweeControllerBuilder.CacheLevel cacheLevel) {
 
-    // TODO: add VolleyImageRequest {uri, resizeOptions, bitmapCacheOnly, ...}
     String uriString = imageRequest.toString();
     int maxWidth = 0;
     int maxHeight = 0;
 
-    if (bitmapCacheOnly) {
+    if (cacheLevel != AbstractDraweeControllerBuilder.CacheLevel.FULL_FETCH) {
       if (!imageLoader.isCached(uriString, maxWidth, maxHeight)) {
         mImageContainer = null;
         setFailure(new NullPointerException("Image not found in bitmap-cache."));

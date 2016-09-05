@@ -53,4 +53,8 @@ public class NoOpCacheEventListener implements CacheEventListener {
   @Override
   public void onEviction(CacheEvent cacheEvent) {
   }
+
+  @Override
+  public void onCleared() {
+  }
 }

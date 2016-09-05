@@ -18,6 +18,5 @@ public interface AnimatedImageDecoder {
    * @param sizeInBytes The size in byte to allocate
    * @return The AnimatedImage allocation
    */
-  public AnimatedImage decode(long nativePtr, int sizeInBytes);
-
+  AnimatedImage decode(long nativePtr, int sizeInBytes);
 }

@@ -10,27 +10,28 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.facebook.demo.MainActivity">
+    tools:context=".MainActivity">
   <com.facebook.drawee.view.SimpleDraweeView
       android:id="@+id/animated_gif"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
       fresco:actualImageScaleType="fitCenter"/>
-  <ToggleButton
-      android:id="@+id/toggle_gif"
+  <TextView
+      android:id="@+id/gif_info"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="ToggleButton"/>
+      android:layout_height="wrap_content"/>
+  <include android:id="@+id/gif_controls" layout="@layout/animation_controls"/>
+
   <com.facebook.drawee.view.SimpleDraweeView
       android:id="@+id/animated_webp"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
       fresco:actualImageScaleType="fitCenter"/>
-  <ToggleButton
-      android:id="@+id/toggle_webp"
+  <TextView
+      android:id="@+id/webp_info"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="ToggleButton"/>
+      android:layout_height="wrap_content"/>
+  <include android:id="@+id/webp_controls" layout="@layout/animation_controls"/>
 </LinearLayout>

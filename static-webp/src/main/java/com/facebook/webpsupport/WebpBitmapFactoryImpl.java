@@ -25,9 +25,9 @@ import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
 
 import static com.facebook.common.webp.WebpSupportStatus.isWebpPlatformSupported;
 import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
@@ -40,10 +40,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   public static final boolean IN_BITMAP_SUPPORTED =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-
-  static {
-    SoLoaderShim.loadLibrary("static-webp");
-  }
 
   private static InputStream wrapToMarkSupportedStream(InputStream inputStream) {
     if (!inputStream.markSupported()) {
@@ -131,6 +127,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       int offset,
       int length,
       BitmapFactory.Options opts) {
+    StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
     if (isWebpHeader(array, offset, length) && !isWebpPlatformSupported(array, offset, length)) {
       bitmap = nativeDecodeByteArray(
@@ -178,6 +175,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream inputStream,
       Rect outPadding,
       BitmapFactory.Options opts) {
+    StaticWebpNativeLoader.ensure();
     inputStream = wrapToMarkSupportedStream(inputStream);
 
     Bitmap bitmap;
@@ -368,6 +366,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       FileDescriptor fd,
       Rect outPadding,
       BitmapFactory.Options opts) {
+    StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
 
     long originalSeekPosition = nativeSeek(fd, 0, false);

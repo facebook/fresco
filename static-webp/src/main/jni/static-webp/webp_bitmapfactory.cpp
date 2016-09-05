@@ -16,6 +16,7 @@
 #include "java_globals.h"
 #include "logging.h"
 #include "WebpTranscoder.h"
+#include "webp.h"
 
 #include <memory>
 #include <vector>
@@ -353,5 +354,14 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
   if (registerWebpTranscoderMethods(env) != JNI_TRUE) {
     return -1;
   }
+
+  // We do this only if a class in animated-webp is present in the classpath
+  jclass animatedWebpClass = env->FindClass("com/facebook/animated/webp/WebPImage");
+  if (animatedWebpClass) {
+    if (initWebPImage(env) != JNI_OK) {
+      return -1;
+    }
+  }
+
   return JNI_VERSION_1_6;
 }

@@ -67,7 +67,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private static final Class<?> TAG = AbstractDraweeController.class;
 
   // Components
-  private final DraweeEventTracker mEventTracker = new DraweeEventTracker();
+  private final DraweeEventTracker mEventTracker = DraweeEventTracker.newInstance();
   private final DeferredReleaser mDeferredReleaser;
   private final Executor mUiThreadImmediateExecutor;
 
@@ -75,6 +75,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private @Nullable RetryManager mRetryManager;
   private @Nullable GestureDetector mGestureDetector;
   private @Nullable ControllerListener<INFO> mControllerListener;
+  private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
 
   // Hierarchy
   private @Nullable SettableDraweeHierarchy mSettableDraweeHierarchy;
@@ -87,6 +88,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   // Mutable state
   private boolean mIsAttached;
   private boolean mIsRequestSubmitted;
+  private boolean mIsVisibleInViewportHint;
   private boolean mHasFetchFailed;
   private boolean mRetainImageOnFailure;
   private @Nullable String mContentDescription;
@@ -123,6 +125,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     }
     // reinitialize mutable state (fetch state)
     mIsAttached = false;
+    mIsVisibleInViewportHint = false;
     releaseFetch();
     mRetainImageOnFailure = false;
     // reinitialize optional components
@@ -138,6 +141,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     } else {
       mControllerListener = null;
     }
+    mControllerViewportVisibilityListener = null;
     // clear hierarchy and controller overlay
     if (mSettableDraweeHierarchy != null) {
       mSettableDraweeHierarchy.reset();
@@ -281,6 +285,12 @@ public abstract class AbstractDraweeController<T, INFO> implements
     return mControllerListener;
   }
 
+  /** Sets the controller viewport visibility listener */
+  public void setControllerViewportVisibilityListener(
+      @Nullable ControllerViewportVisibilityListener controllerViewportVisibilityListener) {
+    mControllerViewportVisibilityListener = controllerViewportVisibilityListener;
+  }
+
   /** Gets the hierarchy */
   @Override
   public @Nullable
@@ -364,6 +374,19 @@ public abstract class AbstractDraweeController<T, INFO> implements
     mEventTracker.recordEvent(Event.ON_DETACH_CONTROLLER);
     mIsAttached = false;
     mDeferredReleaser.scheduleDeferredRelease(this);
+  }
+
+  @Override
+  public void onViewportVisibilityHint(boolean isVisibleInViewportHint) {
+    final ControllerViewportVisibilityListener listener = mControllerViewportVisibilityListener;
+    if (listener != null) {
+      if (isVisibleInViewportHint && !mIsVisibleInViewportHint) {
+        listener.onDraweeViewportEntry(mId);
+      } else if (!isVisibleInViewportHint && mIsVisibleInViewportHint) {
+        listener.onDraweeViewportExit(mId);
+      }
+    }
+    mIsVisibleInViewportHint = isVisibleInViewportHint;
   }
 
   @Override

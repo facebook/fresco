@@ -68,8 +68,8 @@ public class VolleyDraweeControllerBuilder extends AbstractDraweeControllerBuild
   protected DataSource<Bitmap> getDataSourceForRequest(
       final Uri imageRequest,
       final Object callerContext,
-      final boolean bitmapCacheOnly) {
-    return new VolleyDataSource(mImageLoader, imageRequest, bitmapCacheOnly);
+      final CacheLevel cacheLevel) {
+    return new VolleyDataSource(mImageLoader, imageRequest, cacheLevel);
   }
 
   @Override

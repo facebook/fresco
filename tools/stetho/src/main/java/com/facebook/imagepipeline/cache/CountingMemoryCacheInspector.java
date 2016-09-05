@@ -10,8 +10,12 @@
 package com.facebook.imagepipeline.cache;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
@@ -56,6 +60,7 @@ public class CountingMemoryCacheInspector<K, V> {
 
     public final List<DumpInfoEntry<K, V>> lruEntries;
     public final List<DumpInfoEntry<K, V>> sharedEntries;
+    public final Map<Bitmap, Object> otherEntries;
 
     public DumpInfo(int size, int lruSize, MemoryCacheParams params) {
       maxSize = params.maxCacheSize;
@@ -67,6 +72,7 @@ public class CountingMemoryCacheInspector<K, V> {
 
       lruEntries = new ArrayList<>();
       sharedEntries = new ArrayList<>();
+      otherEntries = new HashMap<>();
     }
 
     public void release() {
@@ -107,6 +113,12 @@ public class CountingMemoryCacheInspector<K, V> {
           dumpInfo.sharedEntries.add(dumpEntry);
         } else {
           dumpInfo.lruEntries.add(dumpEntry);
+        }
+      }
+      for (Map.Entry<Bitmap, Object> entry
+          : mCountingBitmapCache.mOtherEntries.entrySet()) {
+        if (entry != null && !entry.getKey().isRecycled()) {
+          dumpInfo.otherEntries.put(entry.getKey(), entry.getValue());
         }
       }
 

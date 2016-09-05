@@ -21,7 +21,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.view.animation.LinearInterpolator;
 
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -51,7 +50,7 @@ public abstract class AbstractAnimatedDrawable extends Drawable
   private final MonotonicClock mMonotonicClock;
   private final int mDurationMs;
   private final int mFrameCount;
-  private final int mTotalLoops;
+  private final int mLoopCount;
 
   // Paint used to draw on a Canvas
   private final Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
@@ -97,6 +96,8 @@ public abstract class AbstractAnimatedDrawable extends Drawable
   private boolean mInvalidateTaskScheduled;
   private long mNextFrameTaskMs = -1;
 
+  private boolean mIsPaused = false;
+
   private final Runnable mStartTask = new Runnable() {
     @Override
     public void run() {
@@ -141,7 +142,7 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     mDurationMs = mAnimatedDrawableBackend.getDurationMs();
     mFrameCount = mAnimatedDrawableBackend.getFrameCount();
     mAnimatedDrawableDiagnostics.setBackend(mAnimatedDrawableBackend);
-    mTotalLoops = mAnimatedDrawableBackend.getLoopCount();
+    mLoopCount = mAnimatedDrawableBackend.getLoopCount();
     mTransparentPaint = new Paint();
     mTransparentPaint.setColor(Color.TRANSPARENT);
     mTransparentPaint.setStyle(Paint.Style.FILL);
@@ -222,8 +223,14 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     mAnimatedDrawableDiagnostics.onStartMethodBegin();
     try {
       mStartTimeMs = mMonotonicClock.now();
-      mScheduledFrameNumber = 0;
-      mScheduledFrameMonotonicNumber = 0;
+
+      if (mIsPaused) {
+        mStartTimeMs -= mAnimatedDrawableBackend.getTimestampMsForFrame(mScheduledFrameNumber);
+      } else {
+        mScheduledFrameNumber = 0;
+        mScheduledFrameMonotonicNumber = 0;
+      }
+
       long nextFrameMs = mStartTimeMs + mAnimatedDrawableBackend.getDurationMsForFrame(0);
       scheduleSelf(mNextFrameTask, nextFrameMs);
       mNextFrameTaskMs = nextFrameMs;
@@ -255,7 +262,7 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     }
     long nowMs = mMonotonicClock.now();
     int loops = (int) ((nowMs - mStartTimeMs) / mDurationMs);
-    if (mTotalLoops > 0 && loops >= mTotalLoops) {
+    if (mLoopCount != AnimatedImage.LOOP_COUNT_INFINITE && loops >= mLoopCount) {
       //we stop the animation if we have exceeded the total loop count
       return;
     }
@@ -520,6 +527,12 @@ public abstract class AbstractAnimatedDrawable extends Drawable
 
   @Override
   public void stop() {
+    mIsPaused = false;
+    mIsRunning = false;
+  }
+
+  public void pause() {
+    mIsPaused = true;
     mIsRunning = false;
   }
 
@@ -563,12 +576,33 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     mAnimatedDrawableBackend.dropCaches();
   }
 
-  protected int getDuration() {
+  /**
+   * Get the animation duration of 1 loop.
+   * @return the animation duration in ms
+   */
+  public int getDuration() {
     return mDurationMs;
+  }
+
+  /**
+   * Get the number of frames for the animation.
+   * @return the number of frames of the animation
+   */
+  public int getFrameCount() {
+    return mFrameCount;
+  }
+
+  /**
+   * Get the loop count of the animation.
+   * The returned value is either {@link AnimatedImage#LOOP_COUNT_INFINITE} if the animation
+   * is repeated infinitely or a positive integer that corresponds to the number of loops.
+   * @return the loop count of the animation or {@link AnimatedImage#LOOP_COUNT_INFINITE}
+   */
+  public int getLoopCount() {
+    return mLoopCount;
   }
 
   protected AnimatedDrawableCachingBackend getAnimatedDrawableBackend() {
     return mAnimatedDrawableBackend;
   }
-
 }
