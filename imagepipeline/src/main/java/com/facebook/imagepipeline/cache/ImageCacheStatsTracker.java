@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.cache.common.CacheKey;
+
 /**
  * Interface for stats tracking for the image cache.
  *
@@ -22,7 +24,7 @@ public interface ImageCacheStatsTracker {
   void onBitmapCachePut();
 
   /** Called on a bitmap cache hit. */
-  void onBitmapCacheHit();
+  void onBitmapCacheHit(CacheKey cacheKey);
 
   /** Called on a bitmap cache miss. */
   void onBitmapCacheMiss();
@@ -31,7 +33,7 @@ public interface ImageCacheStatsTracker {
   void onMemoryCachePut();
 
   /** Called on an encoded memory cache hit. */
-  void onMemoryCacheHit();
+  void onMemoryCacheHit(CacheKey cacheKey);
 
   /** Called on an encoded memory cache hit. */
   void onMemoryCacheMiss();
@@ -42,7 +44,7 @@ public interface ImageCacheStatsTracker {
    * <p>The staging area stores encoded images. It gets the images before they are written
    * to disk cache.
    */
-  void onStagingAreaHit();
+  void onStagingAreaHit(CacheKey cacheKey);
 
   /** Called on a staging area miss hit. */
   void onStagingAreaMiss();

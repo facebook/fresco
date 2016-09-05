@@ -9,8 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
-public interface MemoryCacheTracker {
-  void onCacheHit();
+public interface MemoryCacheTracker<K> {
+  void onCacheHit(K cacheKey);
   void onCacheMiss();
   void onCachePut();
 }
