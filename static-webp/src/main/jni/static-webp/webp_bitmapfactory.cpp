@@ -104,8 +104,7 @@ jobject doDecode(
     uint8_t* encoded_image,
     unsigned encoded_image_length,
     jobject bitmapOptions,
-    jfloat scale,
-    jobject inBitmap) {
+    jfloat scale) {
 
   // Options manipulation is taken from https://github.com/android/platform_frameworks_base/blob/master/core/jni/android/graphics/BitmapFactory.cpp
   int image_width = 0;
@@ -173,11 +172,10 @@ static jobject nativeDecodeStream(
   jobject is,
   jobject bitmapOptions,
   jfloat scale,
-  jobject inBitmap,
   jbyteArray inTempStorage) {
   auto encoded_image = readStreamFully(env, is, inTempStorage);
   if (!encoded_image.empty()) {
-    return doDecode(env, encoded_image.data(), encoded_image.size(), bitmapOptions, scale, inBitmap);
+    return doDecode(env, encoded_image.data(), encoded_image.size(), bitmapOptions, scale);
   }
   return {};
 
@@ -191,7 +189,6 @@ static jobject nativeDecodeByteArray(
   jint length,
   jobject bitmapOptions,
   jfloat scale,
-  jobject inBitmap,
   jbyteArray inTempStorage) {
 
     // get image into decoded heap
@@ -204,7 +201,7 @@ static jobject nativeDecodeByteArray(
       env->ReleaseByteArrayElements(array, data, JNI_ABORT);
       RETURN_NULL_IF_EXCEPTION(env);
     }
-    jobject bitmap = doDecode(env, reinterpret_cast<uint8_t*>(data) + offset, length, bitmapOptions, scale, inBitmap);
+    jobject bitmap = doDecode(env, reinterpret_cast<uint8_t*>(data) + offset, length, bitmapOptions, scale);
     env->ReleaseByteArrayElements(array, data, JNI_ABORT);
     RETURN_NULL_IF_EXCEPTION(env);
 
@@ -226,8 +223,8 @@ static jlong nativeSeek(JNIEnv* env, jclass clazz, jobject fileDescriptor, jlong
 }
 
 static JNINativeMethod methods[] = {
-    {"nativeDecodeStream",    "(Ljava/io/InputStream;Landroid/graphics/BitmapFactory$Options;FLandroid/graphics/Bitmap;[B)Landroid/graphics/Bitmap;", (void *)&nativeDecodeStream},
-    {"nativeDecodeByteArray", "([BIILandroid/graphics/BitmapFactory$Options;FLandroid/graphics/Bitmap;[B)Landroid/graphics/Bitmap;", (void *)&nativeDecodeByteArray},
+    {"nativeDecodeStream",    "(Ljava/io/InputStream;Landroid/graphics/BitmapFactory$Options;F[B)Landroid/graphics/Bitmap;", (void *)&nativeDecodeStream},
+    {"nativeDecodeByteArray", "([BIILandroid/graphics/BitmapFactory$Options;F[B)Landroid/graphics/Bitmap;", (void *)&nativeDecodeByteArray},
     {"nativeSeek",            "(Ljava/io/FileDescriptor;JZ)J",                    (void *)&nativeSeek},
 };
 

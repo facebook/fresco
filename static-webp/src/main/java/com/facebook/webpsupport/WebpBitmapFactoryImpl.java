@@ -36,7 +36,7 @@ import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
 public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   private static final int HEADER_SIZE = 20;
 
-  private static final int IN_TEMP_BUFFER_SIZE = 8*1024;
+  private static final int IN_TEMP_BUFFER_SIZE = 8 * 1024;
 
   public static final boolean IN_BITMAP_SUPPORTED =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
@@ -136,7 +136,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
           length,
           opts,
           getScaleFromOptions(opts),
-          getInBitmapFromOptions(opts),
           getInTempStorageFromOptions(opts));
       setWebpBitmapOptions(bitmap, opts);
     } else {
@@ -186,7 +185,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
           inputStream,
           opts,
           getScaleFromOptions(opts),
-          getInBitmapFromOptions(opts),
           getInTempStorageFromOptions(opts));
       setWebpBitmapOptions(bitmap, opts);
       setPaddingDefaultValues(outPadding);
@@ -381,7 +379,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
               inputStream,
               opts,
               getScaleFromOptions(opts),
-              getInBitmapFromOptions(opts),
               getInTempStorageFromOptions(opts));
           setPaddingDefaultValues(outPadding);
           setWebpBitmapOptions(bitmap, opts);
@@ -439,6 +436,12 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   @DoNotStrip
   private static Bitmap createBitmap(int width, int height, BitmapFactory.Options options) {
+    if (IN_BITMAP_SUPPORTED &&
+        options != null &&
+        options.inBitmap != null &&
+        options.inBitmap.isMutable()) {
+      return options.inBitmap;
+    }
     return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
   }
 
@@ -447,7 +450,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream is,
       BitmapFactory.Options options,
       float scale,
-      Bitmap inBitmap,
       byte[] inTempStorage);
 
   @DoNotStrip
@@ -457,21 +459,10 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       int length,
       BitmapFactory.Options opts,
       float scale,
-      Bitmap inBitmap,
       byte[] inTempStorage);
-
 
   @DoNotStrip
   private static native long nativeSeek(FileDescriptor fd, long offset, boolean absolute);
-
-  @DoNotStrip
-  private static Bitmap getInBitmapFromOptions(final BitmapFactory.Options options) {
-    if (IN_BITMAP_SUPPORTED && options != null) {
-      return options.inBitmap;
-    } else {
-      return null;
-    }
-  }
 
   @DoNotStrip
   private static byte[] getInTempStorageFromOptions(@Nullable final BitmapFactory.Options options) {
