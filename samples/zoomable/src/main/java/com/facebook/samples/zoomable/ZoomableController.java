@@ -79,6 +79,16 @@ public interface ZoomableController {
   boolean wasTransformCorrected();
 
   /**
+   * See {@link android.support.v4.view.ScrollingView}.
+   */
+  int computeHorizontalScrollRange();
+  int computeHorizontalScrollOffset();
+  int computeHorizontalScrollExtent();
+  int computeVerticalScrollRange();
+  int computeVerticalScrollOffset();
+  int computeVerticalScrollExtent();
+
+  /**
    * Gets the current transform.
    *
    * @return the transform

@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
+import android.support.v4.view.ScrollingView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -41,7 +42,8 @@ import com.facebook.drawee.view.DraweeView;
  * <p>
  * Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
-public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
+public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
+    implements ScrollingView {
 
   private static final Class<?> TAG = ZoomableDraweeView.class;
 
@@ -285,6 +287,31 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
     mZoomableController.onTouchEvent(cancelEvent);
     cancelEvent.recycle();
     return false;
+  }
+
+  @Override
+  public int computeHorizontalScrollRange() {
+    return mZoomableController.computeHorizontalScrollRange();
+  }
+  @Override
+  public int computeHorizontalScrollOffset() {
+    return mZoomableController.computeHorizontalScrollOffset();
+  }
+  @Override
+  public int computeHorizontalScrollExtent() {
+    return mZoomableController.computeHorizontalScrollExtent();
+  }
+  @Override
+  public int computeVerticalScrollRange() {
+    return mZoomableController.computeVerticalScrollRange();
+  }
+  @Override
+  public int computeVerticalScrollOffset() {
+    return mZoomableController.computeVerticalScrollOffset();
+  }
+  @Override
+  public int computeVerticalScrollExtent() {
+    return mZoomableController.computeVerticalScrollExtent();
   }
 
   @Override
