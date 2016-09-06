@@ -26,11 +26,27 @@ import com.facebook.samples.zoomable.ZoomableDraweeView;
 
 class MyPagerAdapter extends PagerAdapter {
 
+  private static final String[] SAMPLE_URIS = {
+          "https://www.gstatic.com/webp/gallery/1.sm.jpg",
+          "https://www.gstatic.com/webp/gallery/2.sm.jpg",
+          "https://www.gstatic.com/webp/gallery/3.sm.jpg",
+          "https://www.gstatic.com/webp/gallery/4.sm.jpg",
+          "https://www.gstatic.com/webp/gallery/5.sm.jpg",
+  };
+
+  private final int mItemCount;
+
+  public MyPagerAdapter(int itemCount) {
+    mItemCount = itemCount;
+  }
+
+  @Override
   public Object instantiateItem(ViewGroup container, int position) {
     FrameLayout page = (FrameLayout) container.getChildAt(position);
-    ZoomableDraweeView zoomableDraweeView = (ZoomableDraweeView) page.getChildAt(0);
+    ZoomableDraweeView zoomableDraweeView =
+            (ZoomableDraweeView) page.findViewById(R.id.zoomableView);
     DraweeController controller = Fresco.newDraweeControllerBuilder()
-      .setUri("https://www.gstatic.com/webp/gallery/1.sm.jpg")
+      .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
       .build();
     zoomableDraweeView.setController(controller);
     zoomableDraweeView.setTapListener(createTapListener(position));
@@ -38,6 +54,7 @@ class MyPagerAdapter extends PagerAdapter {
     return page;
   }
 
+  @Override
   public void destroyItem(ViewGroup container, int position, Object object) {
     FrameLayout page = (FrameLayout) container.getChildAt(position);
     ZoomableDraweeView zoomableDraweeView = (ZoomableDraweeView) page.getChildAt(0);
@@ -46,7 +63,7 @@ class MyPagerAdapter extends PagerAdapter {
 
   @Override
   public int getCount() {
-    return 3;
+    return mItemCount;
   }
 
   @Override

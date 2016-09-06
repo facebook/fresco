@@ -23,9 +23,9 @@ public class MainActivity extends Activity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_main);
-
-    MyPagerAdapter adapter = new MyPagerAdapter();
     ViewPager pager = (ViewPager) findViewById(R.id.pager);
+
+    MyPagerAdapter adapter = new MyPagerAdapter(pager.getChildCount());
     pager.setAdapter(adapter);
   }
 }
