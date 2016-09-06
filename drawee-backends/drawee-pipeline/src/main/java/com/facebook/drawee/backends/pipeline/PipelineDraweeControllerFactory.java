@@ -14,6 +14,7 @@ import java.util.concurrent.Executor;
 import android.content.res.Resources;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -21,6 +22,8 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
+
+import javax.annotation.Nullable;
 
 /**
  * Default implementation of {@link PipelineDraweeControllerFactory}.
@@ -32,18 +35,22 @@ public class PipelineDraweeControllerFactory {
   private AnimatedDrawableFactory mAnimatedDrawableFactory;
   private Executor mUiThreadExecutor;
   private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
+  @Nullable
+  private ImmutableList<DrawableFactory> mDrawableFactories;
 
   public PipelineDraweeControllerFactory(
       Resources resources,
       DeferredReleaser deferredReleaser,
       AnimatedDrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
-      MemoryCache<CacheKey, CloseableImage> memoryCache) {
+      MemoryCache<CacheKey, CloseableImage> memoryCache,
+      @Nullable ImmutableList<DrawableFactory> drawableFactories) {
     mResources = resources;
     mDeferredReleaser = deferredReleaser;
     mAnimatedDrawableFactory = animatedDrawableFactory;
     mUiThreadExecutor = uiThreadExecutor;
     mMemoryCache = memoryCache;
+    mDrawableFactories = drawableFactories;
   }
 
   public PipelineDraweeController newController(
@@ -60,6 +67,7 @@ public class PipelineDraweeControllerFactory {
         dataSourceSupplier,
         id,
         cacheKey,
-        callerContext);
+        callerContext,
+        mDrawableFactories);
   }
 }

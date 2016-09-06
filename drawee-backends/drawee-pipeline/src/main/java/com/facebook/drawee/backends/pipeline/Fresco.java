@@ -36,13 +36,21 @@ public class Fresco {
 
   /** Initializes Fresco with the default config. */
   public static void initialize(Context context) {
-    initialize(context, null);
+    initialize(context, null, null);
+  }
+
+  /** Initializes Fresco with the default Drawee config. */
+  public static void initialize(
+      Context context,
+      @Nullable ImagePipelineConfig imagePipelineConfig) {
+    initialize(context, imagePipelineConfig, null);
   }
 
   /** Initializes Fresco with the specified config. */
   public static void initialize(
       Context context,
-      @Nullable ImagePipelineConfig imagePipelineConfig) {
+      @Nullable ImagePipelineConfig imagePipelineConfig,
+      @Nullable DraweeConfig draweeConfig) {
     if (sIsInitialized) {
       FLog.w(
           TAG,
@@ -58,11 +66,15 @@ public class Fresco {
     } else {
       ImagePipelineFactory.initialize(imagePipelineConfig);
     }
-    initializeDrawee(context);
+    initializeDrawee(context, draweeConfig);
   }
 
-  private static void initializeDrawee(Context context) {
-    sDraweeControllerBuilderSupplier = new PipelineDraweeControllerBuilderSupplier(context);
+  /** Initializes Drawee with the specified config. */
+  private static void initializeDrawee(
+      Context context,
+      @Nullable DraweeConfig draweeConfig) {
+    sDraweeControllerBuilderSupplier =
+        new PipelineDraweeControllerBuilderSupplier(context, draweeConfig);
     SimpleDraweeView.initialize(sDraweeControllerBuilderSupplier);
   }
 

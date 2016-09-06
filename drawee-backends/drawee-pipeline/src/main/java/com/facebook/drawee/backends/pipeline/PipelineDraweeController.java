@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -49,6 +50,8 @@ public class PipelineDraweeController
   // Components
   private final Resources mResources;
   private final AnimatedDrawableFactory mAnimatedDrawableFactory;
+  @Nullable
+  private final ImmutableList<DrawableFactory> mDrawableFactories;
 
   private @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
@@ -56,6 +59,56 @@ public class PipelineDraweeController
 
   // Constant state (non-final because controllers can be reused)
   private Supplier<DataSource<CloseableReference<CloseableImage>>> mDataSourceSupplier;
+
+  private final DrawableFactory mDefaultDrawableFactory = new DrawableFactory() {
+
+    @Override
+    public boolean supportsImageType(CloseableImage image) {
+      return true;
+    }
+
+    @Override
+    public Drawable createDrawable(CloseableImage closeableImage) {
+      if (closeableImage instanceof CloseableStaticBitmap) {
+        CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
+        Drawable bitmapDrawable = new BitmapDrawable(
+            mResources,
+            closeableStaticBitmap.getUnderlyingBitmap());
+        if (closeableStaticBitmap.getRotationAngle() == 0 ||
+            closeableStaticBitmap.getRotationAngle() == EncodedImage.UNKNOWN_ROTATION_ANGLE) {
+          return bitmapDrawable;
+        } else {
+          return new OrientedDrawable(bitmapDrawable, closeableStaticBitmap.getRotationAngle());
+        }
+      } else if (mAnimatedDrawableFactory != null) {
+        return mAnimatedDrawableFactory.create(closeableImage);
+      }
+      return null;
+    }
+  };
+
+  public PipelineDraweeController(
+          Resources resources,
+          DeferredReleaser deferredReleaser,
+          AnimatedDrawableFactory animatedDrawableFactory,
+          Executor uiThreadExecutor,
+          MemoryCache<CacheKey, CloseableImage> memoryCache,
+          Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
+          String id,
+          CacheKey cacheKey,
+          Object callerContext) {
+    this(
+        resources,
+        deferredReleaser,
+        animatedDrawableFactory,
+        uiThreadExecutor,
+        memoryCache,
+        dataSourceSupplier,
+        id,
+        cacheKey,
+        callerContext,
+        null);
+  }
 
   public PipelineDraweeController(
       Resources resources,
@@ -66,12 +119,14 @@ public class PipelineDraweeController
       Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
       String id,
       CacheKey cacheKey,
-      Object callerContext) {
-      super(deferredReleaser, uiThreadExecutor, id, callerContext);
+      Object callerContext,
+      @Nullable ImmutableList<DrawableFactory> drawableFactories) {
+    super(deferredReleaser, uiThreadExecutor, id, callerContext);
     mResources = resources;
     mAnimatedDrawableFactory = animatedDrawableFactory;
     mMemoryCache = memoryCache;
     mCacheKey = cacheKey;
+    mDrawableFactories = drawableFactories;
     init(dataSourceSupplier);
   }
 
@@ -114,22 +169,23 @@ public class PipelineDraweeController
   protected Drawable createDrawable(CloseableReference<CloseableImage> image) {
     Preconditions.checkState(CloseableReference.isValid(image));
     CloseableImage closeableImage = image.get();
-    if (closeableImage instanceof CloseableStaticBitmap) {
-      CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-      Drawable bitmapDrawable = new BitmapDrawable(
-        mResources,
-        closeableStaticBitmap.getUnderlyingBitmap());
-      if (closeableStaticBitmap.getRotationAngle() == 0 ||
-          closeableStaticBitmap.getRotationAngle() == EncodedImage.UNKNOWN_ROTATION_ANGLE) {
-        return bitmapDrawable;
-      } else {
-        return new OrientedDrawable(bitmapDrawable, closeableStaticBitmap.getRotationAngle());
+
+    if (mDrawableFactories != null) {
+      for (DrawableFactory factory : mDrawableFactories) {
+        if (factory.supportsImageType(closeableImage)) {
+          Drawable drawable = factory.createDrawable(closeableImage);
+          if (drawable != null) {
+            return drawable;
+          }
+        }
       }
-    } else if (mAnimatedDrawableFactory != null) {
-      return mAnimatedDrawableFactory.create(closeableImage);
-    } else {
-      throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
     }
+
+    Drawable defaultDrawable = mDefaultDrawableFactory.createDrawable(closeableImage);
+    if (defaultDrawable != null) {
+      return defaultDrawable;
+    }
+    throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
   }
 
   @Override
