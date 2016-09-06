@@ -50,5 +50,4 @@ dependencies {
 
     internalCompile project(':drawee-backends:drawee-pipeline')
     compile project(path: ':samples:zoomable')
-    compile project(path: ':samples:zoomable')
 }
