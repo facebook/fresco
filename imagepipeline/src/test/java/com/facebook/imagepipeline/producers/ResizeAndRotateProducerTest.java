@@ -297,12 +297,18 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testRoundNumerator() {
-    assertEquals(1, ResizeAndRotateProducer.roundNumerator(1.0f/8));
-    assertEquals(1, ResizeAndRotateProducer.roundNumerator(5.0f/32));
-    assertEquals(1, ResizeAndRotateProducer.roundNumerator(1.0f/6 - 0.01f));
-    assertEquals(2, ResizeAndRotateProducer.roundNumerator(1.0f/6));
-    assertEquals(2, ResizeAndRotateProducer.roundNumerator(3.0f/16));
-    assertEquals(2, ResizeAndRotateProducer.roundNumerator(2.0f/8));
+    assertEquals(1, ResizeAndRotateProducer.roundNumerator(
+        1.0f/8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(1, ResizeAndRotateProducer.roundNumerator(
+        5.0f/32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(1, ResizeAndRotateProducer.roundNumerator(
+        1.0f/6 - 0.01f, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(2, ResizeAndRotateProducer.roundNumerator(
+        1.0f/6, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(2, ResizeAndRotateProducer.roundNumerator(
+        3.0f/16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(2, ResizeAndRotateProducer.roundNumerator(
+        2.0f/8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
   }
 
   @Test

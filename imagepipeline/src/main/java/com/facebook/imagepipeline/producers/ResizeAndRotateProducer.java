@@ -243,11 +243,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return ratio;
   }
 
-  @VisibleForTesting static int roundNumerator(float maxRatio) {
-    return roundNumerator(maxRatio, ResizeOptions.DEFAULT_ROUNDUP_FRACTION);
-  }
-
-  static int roundNumerator(float maxRatio, float roundUpFraction) {
+  @VisibleForTesting static int roundNumerator(float maxRatio, float roundUpFraction) {
     return (int) (roundUpFraction + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
 
