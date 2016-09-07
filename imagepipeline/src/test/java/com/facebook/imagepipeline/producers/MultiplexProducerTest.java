@@ -28,6 +28,7 @@ import org.robolectric.annotation.Config;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -151,15 +152,32 @@ public class MultiplexProducerTest {
         }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
   }
 
+  class CloseableReferenceMatcher extends ArgumentMatcher<CloseableReference> {
+    private CloseableReference<CloseableImage> mCloseableImage;
+
+    public CloseableReferenceMatcher(CloseableReference<CloseableImage> closeableImage){
+      this.mCloseableImage = closeableImage;
+    }
+
+    @Override
+    public boolean matches(Object argument) {
+      if(argument == null){
+        return false;
+      }else {
+        return mCloseableImage.getUnderlyingReferenceTestOnly() == ((CloseableReference) argument).getUnderlyingReferenceTestOnly();
+      }
+    }
+  }
+
   @Test
   public void testSingleRequest() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mForwardingConsumer1.onNewResult(mIntermediateImageReference1, false);
-    verify(mConsumer1).onNewResult(mIntermediateImageReference1, false);
+    verify(mConsumer1).onNewResult(argThat(new CloseableReferenceMatcher(mIntermediateImageReference1)), eq(false));
     mForwardingConsumer1.onNewResult(mIntermediateImageReference2, false);
-    verify(mConsumer1).onNewResult(mIntermediateImageReference2, false);
+    verify(mConsumer1).onNewResult(argThat(new CloseableReferenceMatcher(mIntermediateImageReference2)), eq(false));
     mForwardingConsumer1.onNewResult(mFinalImageReference1, true);
-    verify(mConsumer1).onNewResult(mFinalImageReference1, true);
+    verify(mConsumer1).onNewResult(argThat(new CloseableReferenceMatcher(mFinalImageReference1)), eq(true));
     assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
   }
 
@@ -187,19 +205,19 @@ public class MultiplexProducerTest {
     verify(mConsumer3, never()).onNewResult(mIntermediateImageReference1, false);
 
     mForwardingConsumer2.onNewResult(mIntermediateImageReference2, false);
-    verify(mConsumer3).onNewResult(mIntermediateImageReference2, false);
+    verify(mConsumer3).onNewResult(argThat(new CloseableReferenceMatcher(mIntermediateImageReference2)), eq(false));
     verify(mConsumer1, never()).onNewResult(mIntermediateImageReference2, false);
     verify(mConsumer2, never()).onNewResult(mIntermediateImageReference2, false);
     assertTrue(mMultiplexProducer.mMultiplexers.size() == 2);
 
     mForwardingConsumer1.onNewResult(mFinalImageReference1, true);
-    verify(mConsumer1).onNewResult(mFinalImageReference1, true);
-    verify(mConsumer2).onNewResult(mFinalImageReference1, true);
+    verify(mConsumer1).onNewResult(argThat(new CloseableReferenceMatcher(mFinalImageReference1)), eq(true));
+    verify(mConsumer2).onNewResult(argThat(new CloseableReferenceMatcher(mFinalImageReference1)), eq(true));
     verify(mConsumer3, never()).onNewResult(mFinalImageReference1, true);
     assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
 
     mForwardingConsumer2.onNewResult(mFinalImageReference2, true);
-    verify(mConsumer3).onNewResult(mFinalImageReference2, true);
+    verify(mConsumer3).onNewResult(argThat(new CloseableReferenceMatcher(mFinalImageReference2)), eq(true));
     verify(mConsumer1, never()).onNewResult(mFinalImageReference2, true);
     verify(mConsumer2, never()).onNewResult(mFinalImageReference2, true);
     assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
@@ -223,7 +241,7 @@ public class MultiplexProducerTest {
 
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
     mForwardingConsumer2.onNewResult(mFinalImageReference2, true);
-    verify(mConsumer2).onNewResult(mFinalImageReference2, true);
+    verify(mConsumer2).onNewResult(argThat(new CloseableReferenceMatcher(mFinalImageReference2)), eq(true));
     verify(mConsumer1, never()).onNewResult(mFinalImageReference2, true);
     assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
   }
@@ -248,12 +266,12 @@ public class MultiplexProducerTest {
     mProducerContext1.cancel();
     mForwardingConsumer1.onNewResult(mIntermediateImageReference1, false);
     verify(mConsumer1, never()).onNewResult(mIntermediateImageReference1, false);
-    verify(mConsumer2).onNewResult(mIntermediateImageReference1, false);
+    verify(mConsumer2).onNewResult(argThat(new CloseableReferenceMatcher(mIntermediateImageReference1)), eq(false));
     verify(mConsumer3, never()).onNewResult(mIntermediateImageReference1, false);
     assertTrue(mMultiplexProducer.mMultiplexers.size() == 2);
 
     mForwardingConsumer2.onNewResult(mIntermediateImageReference2, false);
-    verify(mConsumer3).onNewResult(mIntermediateImageReference2, false);
+    verify(mConsumer3).onNewResult(argThat(new CloseableReferenceMatcher(mIntermediateImageReference2)), eq(false));
     verify(mConsumer1, never()).onNewResult(mIntermediateImageReference2, false);
     verify(mConsumer2, never()).onNewResult(mIntermediateImageReference2, false);
     assertTrue(mMultiplexProducer.mMultiplexers.size() == 2);
@@ -305,7 +323,7 @@ public class MultiplexProducerTest {
     assertEquals(1, mMultiplexProducer.mMultiplexers.size());
     verify(mInputProducer).produceResults(mForwardingConsumer2, mMultiplexedContext2);
     mForwardingConsumer2.onNewResult(mFinalImageReference1, true);
-    verify(mConsumer2).onNewResult(mFinalImageReference1, true);
+    verify(mConsumer2).onNewResult(argThat(new CloseableReferenceMatcher(mFinalImageReference1)), eq(true));
     assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
   }
 
