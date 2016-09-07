@@ -225,6 +225,59 @@ public abstract class PlatformBitmapFactory {
   }
 
   /**
+   * Creates a bitmap from the specified source scaled to have the height and width
+   * as specified. It is initialized with the same density as the original bitmap.
+   *
+   * @param source   The bitmap we are subsetting
+   * @param destinationWidth    The number of pixels in each row of the final bitmap
+   * @param destinationHeight   The number of rows in the final bitmap
+   * @return a reference to the bitmap
+   * @throws IllegalArgumentException if the destinationWidth is <= 0,
+   *         or destinationHeight is <= 0
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createScaledBitmap(
+      Bitmap source,
+      int destinationWidth,
+      int destinationHeight,
+      boolean filter) {
+    return createScaledBitmap(source, destinationWidth, destinationHeight, filter, null);
+  }
+
+  /**
+   * Creates a bitmap from the specified source scaled to have the height and width
+   * as specified. It is initialized with the same density as the original bitmap.
+   *
+   * @param source   The bitmap we are subsetting
+   * @param destinationWidth    The number of pixels in each row of the final bitmap
+   * @param destinationHeight   The number of rows in the final bitmap
+   * @param callerContext the Tag to track who create the Bitmap
+   * @return a reference to the bitmap
+   * @throws IllegalArgumentException if the destinationWidth is <= 0,
+   *         or destinationHeight is <= 0
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createScaledBitmap(
+      Bitmap source,
+      int destinationWidth,
+      int destinationHeight,
+      boolean filter,
+      @Nullable Object callerContext) {
+    checkWidthHeight(destinationWidth, destinationHeight);
+
+    Matrix matrix = new Matrix();
+    final int width = source.getWidth();
+    final int height = source.getHeight();
+    final float sx = destinationWidth  / (float) width;
+    final float sy = destinationHeight / (float) height;
+    matrix.setScale(sx, sy);
+
+    return createBitmap(source, 0, 0, width, height, matrix, filter, callerContext);
+  }
+
+  /**
    * Creates a bitmap from subset of the source bitmap,
    * transformed by the optional matrix. It is initialized with the same
    * density as the original bitmap.
@@ -476,6 +529,165 @@ public abstract class PlatformBitmapFactory {
     }
 
     addBitmapReference(bitmapRef.get(), callerContext);
+    return bitmapRef;
+  }
+
+  /**
+   * Creates a bitmap with the specified width and height.  Its initial density is
+   * determined from the given DisplayMetrics.
+   *
+   * @param colors The colors to write to the bitmap
+   * @param width The width of the bitmap
+   * @param height The height of the bitmap
+   * @param config The bitmap config to create
+   * @return a reference to the bitmap
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(
+      int[] colors,
+      int width,
+      int height,
+      Bitmap.Config config) {
+    return createBitmap(colors, width, height, config, null);
+  }
+
+  /**
+   * Creates a bitmap with the specified width and height.  Its initial density is
+   * determined from the given DisplayMetrics.
+   *
+   * @param colors The colors to write to the bitmap
+   * @param width The width of the bitmap
+   * @param height The height of the bitmap
+   * @param config The bitmap config to create
+   * @param callerContext the Tag to track who create the Bitmap
+   * @return a reference to the bitmap
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(
+      int[] colors,
+      int width,
+      int height,
+      Bitmap.Config config,
+      @Nullable Object callerContext) {
+    CloseableReference<Bitmap> bitmapRef = createBitmapInternal(width, height, config);
+    Bitmap bitmap = bitmapRef.get();
+    bitmap.setPixels(colors, 0, width, 0, 0, width, height);
+    addBitmapReference(bitmapRef.get(), callerContext);
+    return bitmapRef;
+  }
+
+  /**
+   * Creates a bitmap with the specified width and height.  Its initial density is
+   * determined from the given DisplayMetrics.
+   *
+   * @param display Display metrics for the display this bitmap will be drawn on
+   * @param colors The colors to write to the bitmap
+   * @param width The width of the bitmap
+   * @param height The height of the bitmap
+   * @param config The bitmap config to create
+   * @return a reference to the bitmap
+   * @throws IllegalArgumentException if the width or height are <= 0
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(
+      DisplayMetrics display,
+      int[] colors,
+      int width,
+      int height,
+      Bitmap.Config config) {
+    return createBitmap(display, colors, width, height, config, null);
+  }
+
+  /**
+   * Creates a bitmap with the specified width and height.  Its initial density is
+   * determined from the given DisplayMetrics.
+   *
+   * @param display Display metrics for the display this bitmap will be drawn on
+   * @param colors The colors to write to the bitmap
+   * @param width The width of the bitmap
+   * @param height The height of the bitmap
+   * @param config The bitmap config to create
+   * @param callerContext the Tag to track who create the Bitmap
+   * @return a reference to the bitmap
+   * @throws IllegalArgumentException if the width or height are <= 0
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(
+      DisplayMetrics display,
+      int[] colors,
+      int width,
+      int height,
+      Bitmap.Config config,
+      @Nullable Object callerContext) {
+    // Set the stride as the width of the image
+    return createBitmap(display, colors, 0, width, width, height, config, callerContext);
+  }
+
+  /**
+   * Creates a bitmap with the specified width and height.  Its initial density is
+   * determined from the given DisplayMetrics.
+   *
+   * @param display Display metrics for the display this bitmap will be drawn on
+   * @param colors The colors to write to the bitmap
+   * @param offset The index of the first color to read from colors[]
+   * @param stride The number of colors in pixels[] to skip between rows.
+   * @param width The width of the bitmap
+   * @param height The height of the bitmap
+   * @param config The bitmap config to create
+   * @return a reference to the bitmap
+   * @throws IllegalArgumentException if the width or height are <= 0
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(
+      DisplayMetrics display,
+      int[] colors,
+      int offset,
+      int stride,
+      int width,
+      int height,
+      Bitmap.Config config) {
+    return createBitmap(display, colors, offset, stride, width, height, config, null);
+  }
+
+  /**
+   * Creates a bitmap with the specified width and height.  Its initial density is
+   * determined from the given DisplayMetrics.
+   *
+   * @param display Display metrics for the display this bitmap will be drawn on
+   * @param colors The colors to write to the bitmap
+   * @param offset The index of the first color to read from colors[]
+   * @param stride The number of colors in pixels[] to skip between rows.
+   * @param width The width of the bitmap
+   * @param height The height of the bitmap
+   * @param config The bitmap config to create
+   * @param callerContext the Tag to track who create the Bitmap
+   * @return a reference to the bitmap
+   * @throws IllegalArgumentException if the width or height are <= 0
+   * @throws TooManyBitmapsException if the pool is full
+   * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
+   */
+  public CloseableReference<Bitmap> createBitmap(
+      DisplayMetrics display,
+      int[] colors,
+      int offset,
+      int stride,
+      int width,
+      int height,
+      Bitmap.Config config,
+      @Nullable Object callerContext) {
+    CloseableReference<Bitmap> bitmapRef = createBitmap(
+        display,
+        width,
+        height,
+        config,
+        callerContext);
+    Bitmap bitmap = bitmapRef.get();
+    bitmap.setPixels(colors, offset, stride, 0, 0, width, height);
     return bitmapRef;
   }
 
