@@ -35,16 +35,33 @@ class MyPagerAdapter extends PagerAdapter {
   };
 
   private final int mItemCount;
+  private boolean mAllowSwipingWhileZoomed = true;
 
   public MyPagerAdapter(int itemCount) {
     mItemCount = itemCount;
   }
 
+  public void setAllowSwipingWhileZoomed(boolean allowSwipingWhileZoomed) {
+    mAllowSwipingWhileZoomed = allowSwipingWhileZoomed;
+  }
+
+  public boolean allowsSwipingWhileZoomed() {
+    return mAllowSwipingWhileZoomed;
+  }
+
+  public void toggleAllowSwipingWhileZoomed() {
+    mAllowSwipingWhileZoomed = !mAllowSwipingWhileZoomed;
+  }
+
   @Override
   public Object instantiateItem(ViewGroup container, int position) {
     FrameLayout page = (FrameLayout) container.getChildAt(position);
+    if (page == null) {
+      return null;
+    }
     ZoomableDraweeView zoomableDraweeView =
             (ZoomableDraweeView) page.findViewById(R.id.zoomableView);
+    zoomableDraweeView.setAllowTouchInterceptionWhileZoomed(mAllowSwipingWhileZoomed);
     DraweeController controller = Fresco.newDraweeControllerBuilder()
       .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
       .build();
@@ -69,6 +86,12 @@ class MyPagerAdapter extends PagerAdapter {
   @Override
   public boolean isViewFromObject(View arg0, Object arg1) {
     return arg0 == arg1;
+  }
+
+  @Override
+  public int getItemPosition(Object object) {
+    // We want to create a new view when we call notifyDataSetChanged() to have the correct behavior
+    return POSITION_NONE;
   }
 
   private GestureDetector.SimpleOnGestureListener createTapListener(final int position) {
