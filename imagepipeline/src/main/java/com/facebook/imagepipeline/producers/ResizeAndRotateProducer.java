@@ -29,7 +29,6 @@ import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.JpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Resizes and rotates JPEG image according to the EXIF orientation data.
@@ -46,8 +45,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
-
-  private static final float ROUNDUP_FRACTION = 2.0f/3;
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
@@ -237,19 +234,21 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     final float heightRatio = ((float) resizeOptions.height) / height;
     float ratio = Math.max(widthRatio, heightRatio);
 
-    // TODO: The limit is larger than this on newer devices. The problem is to get the real limit,
-    // you have to call Canvas.getMaximumBitmapWidth/Height on a real HW-accelerated Canvas.
-    if (width * ratio > BitmapUtil.MAX_BITMAP_SIZE) {
-      ratio = BitmapUtil.MAX_BITMAP_SIZE / width;
+    if (width * ratio > resizeOptions.maxBitmapSize) {
+      ratio = resizeOptions.maxBitmapSize / width;
     }
-    if (height * ratio > BitmapUtil.MAX_BITMAP_SIZE) {
-      ratio = BitmapUtil.MAX_BITMAP_SIZE / height;
+    if (height * ratio > resizeOptions.maxBitmapSize) {
+      ratio = resizeOptions.maxBitmapSize / height;
     }
     return ratio;
   }
 
   @VisibleForTesting static int roundNumerator(float maxRatio) {
-    return (int) (ROUNDUP_FRACTION + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
+    return roundNumerator(maxRatio, ResizeOptions.DEFAULT_ROUNDUP_FRACTION);
+  }
+
+  static int roundNumerator(float maxRatio, float roundUpFraction) {
+    return (int) (roundUpFraction + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
 
   private static int getScaleNumerator(
@@ -268,7 +267,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             encodedImage.getHeight();
 
     float ratio = determineResizeRatio(resizeOptions, widthAfterRotation, heightAfterRotation);
-    int numerator = roundNumerator(ratio);
+    int numerator = roundNumerator(ratio, resizeOptions.roundUpFraction);
     if (numerator > MAX_JPEG_SCALE_NUMERATOR) {
       return MAX_JPEG_SCALE_NUMERATOR;
     }
