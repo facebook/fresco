@@ -3,6 +3,7 @@
     package="com.facebook.samples.uriapp" >
 
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
   <uses-sdk
       android:minSdkVersion="9"
