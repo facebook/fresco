@@ -57,8 +57,13 @@ public class ProducerSequenceFactory {
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
+  @VisibleForTesting Producer<EncodedImage> mBackgroundLocalFileFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<EncodedImage> mBackgroundNetworkFetchToEncodedMemorySequence;
-  @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>> mEncodedImageProducerSequence;
+  @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>>
+      mLocalFileEncodedImageProducerSequence;
+  @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>>
+      mNetworkEncodedImageProducerSequence;
+  @VisibleForTesting Producer<Void> mLocalFileFetchToEncodedMemoryPrefetchSequence;
   @VisibleForTesting Producer<Void> mNetworkFetchToEncodedMemoryPrefetchSequence;
   private Producer<EncodedImage> mCommonNetworkFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalImageFileFetchSequence;
@@ -94,7 +99,8 @@ public class ProducerSequenceFactory {
   }
 
   /**
-   * Returns a sequence that can be used for a request for an encoded image.
+   * Returns a sequence that can be used for a request for an encoded image from either network or
+   * local files.
    *
    * @param imageRequest the request that will be submitted
    * @return the sequence that should be used to process the request
@@ -102,13 +108,44 @@ public class ProducerSequenceFactory {
   public Producer<CloseableReference<PooledByteBuffer>> getEncodedImageProducerSequence(
       ImageRequest imageRequest) {
     validateEncodedImageRequest(imageRequest);
+    final Uri uri = imageRequest.getSourceUri();
+
+    if (UriUtil.isNetworkUri(uri)) {
+      return getNetworkFetchEncodedImageProducerSequence();
+    } else if (UriUtil.isLocalFileUri(uri)) {
+      return getLocalFileFetchEncodedImageProducerSequence();
+    } else {
+      throw new IllegalArgumentException(
+          "Unsupported uri scheme for encoded image fetch! Uri is: " + getShortenedUriString(uri));
+    }
+  }
+
+  /**
+   * Returns a sequence that can be used for a request for an encoded image from network.
+   */
+  public Producer<CloseableReference<PooledByteBuffer>>
+  getNetworkFetchEncodedImageProducerSequence() {
     synchronized (this) {
-      if (mEncodedImageProducerSequence == null) {
-        mEncodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
+      if (mNetworkEncodedImageProducerSequence == null) {
+        mNetworkEncodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
             getBackgroundNetworkFetchToEncodedMemorySequence());
       }
     }
-    return mEncodedImageProducerSequence;
+    return mNetworkEncodedImageProducerSequence;
+  }
+
+  /**
+   * Returns a sequence that can be used for a request for an encoded image from a local file.
+   */
+  public Producer<CloseableReference<PooledByteBuffer>>
+  getLocalFileFetchEncodedImageProducerSequence() {
+    synchronized (this) {
+      if (mLocalFileEncodedImageProducerSequence == null) {
+        mLocalFileEncodedImageProducerSequence = new RemoveImageTransformMetaDataProducer(
+            getBackgroundLocalFileFetchToEncodeMemorySequence());
+      }
+    }
+    return mLocalFileEncodedImageProducerSequence;
   }
 
   /**
@@ -122,12 +159,20 @@ public class ProducerSequenceFactory {
    */
   public Producer<Void> getEncodedImagePrefetchProducerSequence(ImageRequest imageRequest) {
     validateEncodedImageRequest(imageRequest);
-    return getNetworkFetchToEncodedMemoryPrefetchSequence();
+    final Uri uri = imageRequest.getSourceUri();
+
+    if (UriUtil.isNetworkUri(uri)) {
+      return getNetworkFetchToEncodedMemoryPrefetchSequence();
+    } else if (UriUtil.isLocalFileUri(uri)) {
+      return getLocalFileFetchToEncodedMemoryPrefetchSequence();
+    } else {
+      throw new IllegalArgumentException(
+          "Unsupported uri scheme for encoded image fetch! Uri is: " + getShortenedUriString(uri));
+    }
   }
 
   private static void validateEncodedImageRequest(ImageRequest imageRequest) {
     Preconditions.checkNotNull(imageRequest);
-    Preconditions.checkArgument(UriUtil.isNetworkUri(imageRequest.getSourceUri()));
     Preconditions.checkArgument(
         imageRequest.getLowestPermittedRequestLevel().getValue() <=
             ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.getValue());
@@ -184,11 +229,8 @@ public class ProducerSequenceFactory {
     } else if (UriUtil.isDataUri(uri)) {
       return getDataFetchSequence();
     } else {
-      String uriString = uri.toString();
-      if (uriString.length() > 30) {
-        uriString = uriString.substring(0, 30) + "...";
-      }
-      throw new RuntimeException("Unsupported uri scheme! Uri is: " + uriString);
+      throw new IllegalArgumentException(
+          "Unsupported uri scheme! Uri is: " + getShortenedUriString(uri));
     }
   }
 
@@ -209,8 +251,7 @@ public class ProducerSequenceFactory {
    * background-thread hand-off -> multiplex -> encoded cache ->
    * disk cache -> (webp transcode) -> network fetch.
    */
-  private synchronized Producer<EncodedImage>
-  getBackgroundNetworkFetchToEncodedMemorySequence() {
+  private synchronized Producer<EncodedImage> getBackgroundNetworkFetchToEncodedMemorySequence() {
     if (mBackgroundNetworkFetchToEncodedMemorySequence == null) {
       // Use hand-off producer to ensure that we don't do any unnecessary work on the UI thread.
       mBackgroundNetworkFetchToEncodedMemorySequence =
@@ -228,7 +269,7 @@ public class ProducerSequenceFactory {
   private synchronized Producer<Void> getNetworkFetchToEncodedMemoryPrefetchSequence() {
     if (mNetworkFetchToEncodedMemoryPrefetchSequence == null) {
       mNetworkFetchToEncodedMemoryPrefetchSequence =
-          mProducerFactory.newSwallowResultProducer(
+          ProducerFactory.newSwallowResultProducer(
               getBackgroundNetworkFetchToEncodedMemorySequence());
     }
     return mNetworkFetchToEncodedMemoryPrefetchSequence;
@@ -252,6 +293,39 @@ public class ProducerSequenceFactory {
       }
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
+  }
+
+  /**
+   * swallow-result -> background-thread hand-off -> multiplex -> encoded cache ->
+   * disk cache -> (webp transcode) -> local file fetch.
+   */
+  private synchronized Producer<Void> getLocalFileFetchToEncodedMemoryPrefetchSequence() {
+    if (mLocalFileFetchToEncodedMemoryPrefetchSequence == null) {
+      mLocalFileFetchToEncodedMemoryPrefetchSequence =
+          ProducerFactory.newSwallowResultProducer(
+              getBackgroundNetworkFetchToEncodedMemorySequence());
+    }
+    return mLocalFileFetchToEncodedMemoryPrefetchSequence;
+  }
+
+  /**
+   * background-thread hand-off -> multiplex -> encoded cache ->
+   * disk cache -> (webp transcode) -> local file fetch
+   */
+  private synchronized Producer<EncodedImage> getBackgroundLocalFileFetchToEncodeMemorySequence() {
+    if (mBackgroundLocalFileFetchToEncodedMemorySequence == null) {
+      final LocalFileFetchProducer localFileFetchProducer =
+          mProducerFactory.newLocalFileFetchProducer();
+
+      final Producer<EncodedImage> toEncodedMultiplexProducer =
+          newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer);
+
+      mBackgroundLocalFileFetchToEncodedMemorySequence =
+          mProducerFactory.newBackgroundThreadHandoffProducer(
+              toEncodedMultiplexProducer,
+              mThreadHandoffProducerQueue);
+    }
+    return mBackgroundLocalFileFetchToEncodedMemorySequence;
   }
 
   /**
@@ -511,5 +585,10 @@ public class ProducerSequenceFactory {
       mCloseableImagePrefetchSequences.put(inputProducer, swallowResultProducer);
     }
     return mCloseableImagePrefetchSequences.get(inputProducer);
+  }
+
+  private static String getShortenedUriString(Uri uri) {
+    final String uriString = String.valueOf(uri);
+    return uriString.length() > 30 ? uriString.substring(0, 30) + "..." : uriString;
   }
 }

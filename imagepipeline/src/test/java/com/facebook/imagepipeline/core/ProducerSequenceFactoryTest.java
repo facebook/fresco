@@ -95,11 +95,27 @@ public class ProducerSequenceFactoryTest {
   }
 
   @Test
+  public void testLocalFileFetchToEncodedMemory() {
+    PowerMockito.when(UriUtil.isLocalFileUri(mUri)).thenReturn(true);
+    Producer<CloseableReference<PooledByteBuffer>> producer =
+        mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
+    assertSame(producer, mProducerSequenceFactory.mLocalFileEncodedImageProducerSequence);
+  }
+
+  @Test
   public void testNetworkFetchToEncodedMemory() {
     PowerMockito.when(UriUtil.isNetworkUri(mUri)).thenReturn(true);
     Producer<CloseableReference<PooledByteBuffer>> producer =
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mEncodedImageProducerSequence);
+    assertSame(producer, mProducerSequenceFactory.mNetworkEncodedImageProducerSequence);
+  }
+
+  @Test
+  public void testLocalFileFetchToEncodedMemoryPrefetch() {
+    PowerMockito.when(UriUtil.isLocalFileUri(mUri)).thenReturn(true);
+    Producer<Void> producer =
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
+    assertSame(producer, mProducerSequenceFactory.mLocalFileFetchToEncodedMemoryPrefetchSequence);
   }
 
   @Test
@@ -108,12 +124,6 @@ public class ProducerSequenceFactoryTest {
     Producer<Void> producer =
         mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(producer, mProducerSequenceFactory.mNetworkFetchToEncodedMemoryPrefetchSequence);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testEncodedBytesNotAllowedForLocalFiles() {
-    PowerMockito.when(UriUtil.isLocalFileUri(mUri)).thenReturn(true);
-    mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
   }
 
   @Test
@@ -239,7 +249,7 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
     assertSame(
         encodedSequence,
-        mProducerSequenceFactory.mEncodedImageProducerSequence);
+        mProducerSequenceFactory.mNetworkEncodedImageProducerSequence);
     assertNull(
         mProducerSequenceFactory.mPostprocessorSequences.get(
             mProducerSequenceFactory.mBackgroundNetworkFetchToEncodedMemorySequence));

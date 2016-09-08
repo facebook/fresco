@@ -179,7 +179,39 @@ public class ImagePipelineTest {
   }
 
   @Test
-  public void testFetchEncodedImage() {
+  public void testFetchLocalEncodedImage() {
+    Producer<CloseableReference<PooledByteBuffer>> encodedSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest))
+        .thenReturn(encodedSequence);
+    when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("file:///local/file"));
+    DataSource<CloseableReference<PooledByteBuffer>> dataSource =
+        mImagePipeline.fetchEncodedImage(mImageRequest, mCallerContext);
+    assertFalse(dataSource.isFinished());
+    ArgumentCaptor<ImageRequest> argumentCaptor = ArgumentCaptor.forClass(ImageRequest.class);
+    verify(mRequestListener1).onRequestStart(
+        argumentCaptor.capture(),
+        eq(mCallerContext),
+        eq("0"),
+        eq(false));
+    ImageRequest capturedImageRequest = argumentCaptor.getValue();
+    assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
+    verify(mRequestListener2).onRequestStart(
+        argumentCaptor.capture(),
+        eq(mCallerContext),
+        eq("0"),
+        eq(false));
+    capturedImageRequest = argumentCaptor.getValue();
+    assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
+    ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
+        ArgumentCaptor.forClass(ProducerContext.class);
+    verify(encodedSequence)
+        .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
+    assertTrue(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
+    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.HIGH);
+  }
+
+  @Test
+  public void testFetchNetworkEncodedImage() {
     Producer<CloseableReference<PooledByteBuffer>> encodedSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest))
         .thenReturn(encodedSequence);
