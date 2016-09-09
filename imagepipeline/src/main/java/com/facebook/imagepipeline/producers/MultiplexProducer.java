@@ -439,10 +439,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       while (iterator.hasNext()) {
         Pair<Consumer<T>, ProducerContext> pair = iterator.next();
         synchronized (pair) {
-          pair.first.onNewResult(cloneOrNull(closeableObject), isFinal);
+          pair.first.onNewResult(closeableObject, isFinal);
         }
       }
-      closeSafely(closeableObject);
     }
 
     public void onCancelled(final ForwardingConsumer forwardingConsumer) {
