@@ -210,9 +210,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
       @Override
       public void run() {
-        synchronized (mLock) {
-          maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
-        }
+        maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
       }
     });
   }
@@ -704,20 +702,17 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
    */
   @GuardedBy("mLock")
   private boolean maybeUpdateFileCacheSize() {
-    boolean result = false;
     long now = mClock.now();
     if ((!mCacheStats.isInitialized()) ||
         mCacheSizeLastUpdateTime == UNINITIALIZED ||
         (now - mCacheSizeLastUpdateTime) > FILECACHE_SIZE_UPDATE_PERIOD_MS) {
-      maybeUpdateFileCacheSizeAndIndex();
-      mCacheSizeLastUpdateTime = now;
-      result = true;
+      return maybeUpdateFileCacheSizeAndIndex();
     }
-    return result;
+    return false;
   }
 
   @GuardedBy("mLock")
-  private void maybeUpdateFileCacheSizeAndIndex() {
+  private boolean maybeUpdateFileCacheSizeAndIndex() {
     long size = 0;
     int count = 0;
     boolean foundFutureTimestamp = false;
@@ -774,7 +769,10 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           TAG,
           "calcFileCacheSize: " + ioe.getMessage(),
           ioe);
+      return false;
     }
+    mCacheSizeLastUpdateTime = now;
+    return true;
   }
 
   //TODO(t12287315): Remove the temp method for deleting created Preference in next release
