@@ -24,8 +24,9 @@ import com.facebook.common.internal.VisibleForTesting;
  * Memory cache producer for the encoded memory cache.
  */
 public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
-  @VisibleForTesting static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
-  @VisibleForTesting static final String VALUE_FOUND = "cached_value_found";
+
+  public static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
+  public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
@@ -60,7 +61,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           listener.onProducerFinishWithSuccess(
               requestId,
               PRODUCER_NAME,
-              listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "true") : null);
+              listener.requiresExtraMap(requestId)
+                  ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
+                  : null);
           consumer.onProgressUpdate(1f);
           consumer.onNewResult(cachedEncodedImage, true);
           return;
@@ -74,7 +77,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         listener.onProducerFinishWithSuccess(
             requestId,
             PRODUCER_NAME,
-            listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+            listener.requiresExtraMap(requestId)
+                ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
+                : null);
         consumer.onNewResult(null, true);
         return;
       }
@@ -122,7 +127,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
       listener.onProducerFinishWithSuccess(
           requestId,
           PRODUCER_NAME,
-          listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+          listener.requiresExtraMap(requestId)
+              ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
+              : null);
       mInputProducer.produceResults(consumerOfInputProducer, producerContext);
     } finally {
       CloseableReference.closeSafely(cachedReference);

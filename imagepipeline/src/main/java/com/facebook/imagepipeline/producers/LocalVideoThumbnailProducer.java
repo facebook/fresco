@@ -34,7 +34,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 public class LocalVideoThumbnailProducer implements
     Producer<CloseableReference<CloseableImage>> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "VideoThumbnailProducer";
+  public static final String PRODUCER_NAME = "VideoThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
 
   private final Executor mExecutor;

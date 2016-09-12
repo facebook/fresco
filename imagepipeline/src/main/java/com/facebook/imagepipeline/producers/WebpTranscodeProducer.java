@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.nativecode.WebpTranscoder;
  * <p> If the image is not WebP, no transformation is applied.
  */
 public class WebpTranscodeProducer implements Producer<EncodedImage> {
-  private static final String PRODUCER_NAME = "WebpTranscodeProducer";
+  public static final String PRODUCER_NAME = "WebpTranscodeProducer";
   private static final int DEFAULT_JPEG_QUALITY = 80;
 
   private final Executor mExecutor;

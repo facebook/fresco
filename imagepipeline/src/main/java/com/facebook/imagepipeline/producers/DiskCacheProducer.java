@@ -35,8 +35,9 @@ import bolts.Task;
  * <p>This implementation delegates disk cache requests to BufferedDiskCache.
  */
 public class DiskCacheProducer implements Producer<EncodedImage> {
-  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
-  @VisibleForTesting static final String VALUE_FOUND = "cached_value_found";
+
+  public static final String PRODUCER_NAME = "DiskCacheProducer";
+  public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
@@ -181,7 +182,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     if (!listener.requiresExtraMap(requestId)) {
       return null;
     }
-    return ImmutableMap.of(VALUE_FOUND, String.valueOf(valueFound));
+    return ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, String.valueOf(valueFound));
   }
 
   private void subscribeTaskForRequestCancellation(

@@ -26,7 +26,7 @@ import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 public class PostprocessedBitmapMemoryCacheProducer
     implements Producer<CloseableReference<CloseableImage>> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "PostprocessedBitmapMemoryCacheProducer";
+  public static final String PRODUCER_NAME = "PostprocessedBitmapMemoryCacheProducer";
   @VisibleForTesting static final String VALUE_FOUND = "cached_value_found";
 
   private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;

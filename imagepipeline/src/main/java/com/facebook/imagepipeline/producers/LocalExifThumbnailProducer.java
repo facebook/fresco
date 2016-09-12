@@ -45,7 +45,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
 
   private static final int COMMON_EXIF_THUMBNAIL_MAX_DIMENSION = 512;
 
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalExifThumbnailProducer";
+  public static final String PRODUCER_NAME = "LocalExifThumbnailProducer";
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
 
   private final Executor mExecutor;

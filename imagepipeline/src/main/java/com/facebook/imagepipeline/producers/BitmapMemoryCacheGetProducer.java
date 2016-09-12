@@ -21,7 +21,7 @@ import com.facebook.common.references.CloseableReference;
  */
 public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "BitmapMemoryCacheGetProducer";
+  public static final String PRODUCER_NAME = "BitmapMemoryCacheGetProducer";
 
   public BitmapMemoryCacheGetProducer(
       MemoryCache<CacheKey, CloseableImage> memoryCache,

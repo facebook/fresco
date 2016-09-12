@@ -38,7 +38,7 @@ import com.facebook.imageutils.BitmapUtil;
  * <p>Should not be used if downsampling is in use.
  */
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
-  private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
+  public static final String PRODUCER_NAME = "ResizeAndRotateProducer";
   private static final String ORIGINAL_SIZE_KEY = "Original size";
   private static final String REQUESTED_SIZE_KEY = "Requested size";
   private static final String FRACTION_KEY = "Fraction";

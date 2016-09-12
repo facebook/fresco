@@ -53,9 +53,9 @@ import static org.mockito.Mockito.*;
 public class DiskCacheProducerTest {
   private static final String PRODUCER_NAME = DiskCacheProducer.PRODUCER_NAME;
   private static final Map EXPECTED_MAP_ON_CACHE_HIT =
-      ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "true");
+      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
   private static final Map EXPECTED_MAP_ON_CACHE_MISS =
-      ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "false");
+      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
   private static final int FORCE_SMALL_CACHE_THRESHOLD = 2048;
 
   @Mock public CacheKeyFactory mCacheKeyFactory;
@@ -335,10 +335,10 @@ public class DiskCacheProducerTest {
   @Test
   public void testGetExtraMap() {
     assertEquals(
-        ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "true"),
+        ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true"),
         DiskCacheProducer.getExtraMap(mProducerListener, mRequestId, true));
     assertEquals(
-        ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "false"),
+        ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false"),
         DiskCacheProducer.getExtraMap(mProducerListener, mRequestId, false));
   }
 

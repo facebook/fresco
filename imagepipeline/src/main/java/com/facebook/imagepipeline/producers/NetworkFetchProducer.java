@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
  */
 public class NetworkFetchProducer implements Producer<EncodedImage> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "NetworkFetchProducer";
+  public static final String PRODUCER_NAME = "NetworkFetchProducer";
   public static final String INTERMEDIATE_RESULT_PRODUCER_EVENT = "intermediate_result";
   private static final int READ_SIZE = 16 * 1024;
 

@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class DataFetchProducer extends LocalFetchProducer {
 
-  private static final String PRODUCER_NAME = "DataFetchProducer";
+  public static final String PRODUCER_NAME = "DataFetchProducer";
 
   public DataFetchProducer(
       PooledByteBufferFactory pooledByteBufferFactory,
