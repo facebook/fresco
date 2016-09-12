@@ -76,7 +76,6 @@ public class WebpDecodingTest extends InstrumentationTestCase {
     }
   }
 
-
   private InputStream getTestImageInputStream(String path) {
     try {
       return mInstrumentation.getContext().getResources().getAssets().open(path);

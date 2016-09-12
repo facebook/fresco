@@ -22,6 +22,7 @@ import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
@@ -286,7 +287,8 @@ public class ImagePipelineFactory {
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
       boolean decodeMemoryFileEnabled,
-      boolean webpSupportEnabled) {
+      boolean webpSupportEnabled,
+      WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
@@ -295,7 +297,7 @@ public class ImagePipelineFactory {
           new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
       if (decodeMemoryFileEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-        return new GingerbreadPurgeableDecoder(webpSupportEnabled);
+        return new GingerbreadPurgeableDecoder(webpSupportEnabled, webpErrorLogger);
       } else {
         return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
       }
@@ -307,7 +309,8 @@ public class ImagePipelineFactory {
       mPlatformDecoder = buildPlatformDecoder(
           mConfig.getPoolFactory(),
           mConfig.isDecodeMemoryFileEnabled(),
-          mConfig.getExperiments().isWebpSupportEnabled());
+          mConfig.getExperiments().isWebpSupportEnabled(),
+          mConfig.getExperiments().getWebpErrorLogger());
     }
     return mPlatformDecoder;
   }

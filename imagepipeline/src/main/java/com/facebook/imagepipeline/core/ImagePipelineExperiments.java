@@ -8,6 +8,8 @@
  */
 package com.facebook.imagepipeline.core;
 
+import com.facebook.common.webp.WebpBitmapFactory;
+
 import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
 
 /**
@@ -24,6 +26,7 @@ public class ImagePipelineExperiments {
   private boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
+  private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
@@ -32,6 +35,7 @@ public class ImagePipelineExperiments {
         builder.mDecodeFileDescriptorEnabled;
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
+    mWebpErrorLogger = builder.mWebpErrorLogger;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -54,6 +58,10 @@ public class ImagePipelineExperiments {
     return mThrottlingMaxSimultaneousRequests;
   }
 
+  public WebpBitmapFactory.WebpErrorLogger getWebpErrorLogger() {
+    return mWebpErrorLogger;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);
@@ -69,6 +77,7 @@ public class ImagePipelineExperiments {
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
+    private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -101,6 +110,12 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
       mWebpSupportEnabled = webpSupportEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setWebpErrorLogger(
+        WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
+      mWebpErrorLogger = webpErrorLogger;
       return mConfigBuilder;
     }
 

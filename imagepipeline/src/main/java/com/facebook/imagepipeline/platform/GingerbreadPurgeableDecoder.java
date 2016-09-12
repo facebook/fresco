@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.platform;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.MemoryFile;
 
 import javax.annotation.Nullable;
@@ -22,8 +21,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
-import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.FlexByteArrayPool;
+import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 
@@ -50,7 +48,12 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
    * Creates a GingerbreadPurgeableDecoder with optional support for webp
    * @param webpSupportEnabled If true the webpsupport library is enabled
    */
-  public GingerbreadPurgeableDecoder(boolean webpSupportEnabled) {
+  public GingerbreadPurgeableDecoder(
+      boolean webpSupportEnabled,
+      WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
+    if (sWebpBitmapFactory != null) {
+      sWebpBitmapFactory.setWebpErrorLogger(webpErrorLogger);
+    }
     this.mWebpSupportEnabled = webpSupportEnabled;
   }
 
