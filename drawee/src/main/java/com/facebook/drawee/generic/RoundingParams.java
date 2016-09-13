@@ -12,6 +12,7 @@ package com.facebook.drawee.generic;
 import java.util.Arrays;
 
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -140,7 +141,7 @@ public class RoundingParams {
    *
    * @param overlayColor overlay color
    */
-  public RoundingParams setOverlayColor(int overlayColor) {
+  public RoundingParams setOverlayColor(@ColorInt int overlayColor) {
     mOverlayColor = overlayColor;
     mRoundingMethod = RoundingMethod.OVERLAY_COLOR;
     return this;
@@ -185,7 +186,6 @@ public class RoundingParams {
 
   /**
    * Sets the border width
-   * @param color of the border
    * @param width of the width
    */
   public RoundingParams setBorderWidth(float width) {
@@ -202,9 +202,8 @@ public class RoundingParams {
   /**
    * Sets the border color
    * @param color of the border
-   * @param width of the width
    */
-  public RoundingParams setBorderColor(int color) {
+  public RoundingParams setBorderColor(@ColorInt int color) {
     mBorderColor = color;
     return this;
   }
@@ -219,7 +218,7 @@ public class RoundingParams {
    * @param color of the border
    * @param width of the width
    */
-  public RoundingParams setBorder(int color, float width) {
+  public RoundingParams setBorder(@ColorInt int color, float width) {
     Preconditions.checkArgument(width >= 0, "the border width cannot be < 0");
     mBorderWidth = width;
     mBorderColor = color;
