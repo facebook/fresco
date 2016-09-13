@@ -18,6 +18,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 
 import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
@@ -34,7 +35,8 @@ public class ImageRequestBuilder {
   private @Nullable ResizeOptions mResizeOptions = null;
   private ImageDecodeOptions mImageDecodeOptions = ImageDecodeOptions.defaults();
   private CacheChoice mCacheChoice = CacheChoice.DEFAULT;
-  private boolean mProgressiveRenderingEnabled = false;
+  private boolean mProgressiveRenderingEnabled =
+      ImagePipelineConfig.getDefaultImageRequestConfig().isProgressiveRenderingEnabled();
   private boolean mLocalThumbnailPreviewsEnabled = false;
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
