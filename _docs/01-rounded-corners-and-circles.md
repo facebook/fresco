@@ -55,8 +55,9 @@ genericDraweeHierarchyBuilder
 You can also change all of the rounding parameters after the hierarchy has been built:
 
 ```java
+int color = getResources().getColor(R.color.red);
 RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
-roundingParams.setBorder(R.color.red, 1.0);
+roundingParams.setBorder(color, 1.0f);
 roundingParams.setRoundAsCircle(true);
 mSimpleDraweeView.getHierarchy().setRoundingParams(roundingParams);
 ```
