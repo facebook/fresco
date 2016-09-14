@@ -40,7 +40,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
-        request.getAutoRotateEnabled(),
+        request.getRotationOptions(),
         request.getImageDecodeOptions(),
         null,
         null,
@@ -62,7 +62,7 @@ public class DefaultCacheKeyFactory implements CacheKeyFactory {
     return new BitmapMemoryCacheKey(
         getCacheKeySourceUri(request.getSourceUri()).toString(),
         request.getResizeOptions(),
-        request.getAutoRotateEnabled(),
+        request.getRotationOptions(),
         request.getImageDecodeOptions(),
         postprocessorCacheKey,
         postprocessorName,

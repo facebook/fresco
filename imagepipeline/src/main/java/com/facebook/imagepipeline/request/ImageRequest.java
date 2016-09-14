@@ -20,6 +20,7 @@ import com.facebook.common.internal.Objects;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
 
@@ -47,11 +48,10 @@ public class ImageRequest {
   private final ImageDecodeOptions mImageDecodeOptions;
 
   /** resize options */
-  @Nullable
-  ResizeOptions mResizeOptions = null;
+  private final @Nullable ResizeOptions mResizeOptions;
 
-  /** Is auto-rotate enabled? */
-  private final boolean mAutoRotateEnabled;
+  /** rotation options */
+  private final RotationOptions mRotationOptions;
 
   /** Priority levels of this request. */
   private final Priority mRequestPriority;
@@ -86,7 +86,8 @@ public class ImageRequest {
     mImageDecodeOptions = builder.getImageDecodeOptions();
 
     mResizeOptions = builder.getResizeOptions();
-    mAutoRotateEnabled = builder.isAutoRotateEnabled();
+    mRotationOptions = builder.getRotationOptions() == null
+        ? RotationOptions.createForImageMetadata() : builder.getRotationOptions();
 
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
@@ -117,12 +118,20 @@ public class ImageRequest {
     return mResizeOptions;
   }
 
-  public ImageDecodeOptions getImageDecodeOptions() {
-    return mImageDecodeOptions;
+  public RotationOptions getRotationOptions() {
+    return mRotationOptions;
   }
 
+  /**
+   * @deprecated Use {@link #getRotationOptions()}
+   */
+  @Deprecated
   public boolean getAutoRotateEnabled() {
-    return mAutoRotateEnabled;
+    return mRotationOptions.useImageMetadata();
+  }
+
+  public ImageDecodeOptions getImageDecodeOptions() {
+    return mImageDecodeOptions;
   }
 
   public boolean getProgressiveRenderingEnabled() {

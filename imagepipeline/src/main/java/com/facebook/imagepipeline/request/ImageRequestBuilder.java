@@ -18,6 +18,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 
@@ -31,8 +32,8 @@ public class ImageRequestBuilder {
 
   private Uri mSourceUri = null;
   private RequestLevel mLowestPermittedRequestLevel = RequestLevel.FULL_FETCH;
-  private boolean mAutoRotateEnabled = false;
   private @Nullable ResizeOptions mResizeOptions = null;
+  private @Nullable RotationOptions mRotationOptions = null;
   private ImageDecodeOptions mImageDecodeOptions = ImageDecodeOptions.defaults();
   private CacheChoice mCacheChoice = CacheChoice.DEFAULT;
   private boolean mProgressiveRenderingEnabled =
@@ -84,7 +85,6 @@ public class ImageRequestBuilder {
    */
   public static ImageRequestBuilder fromRequest(ImageRequest imageRequest) {
     return ImageRequestBuilder.newBuilderWithSource(imageRequest.getSourceUri())
-        .setAutoRotateEnabled(imageRequest.getAutoRotateEnabled())
         .setImageDecodeOptions(imageRequest.getImageDecodeOptions())
         .setCacheChoice(imageRequest.getCacheChoice())
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
@@ -93,7 +93,8 @@ public class ImageRequestBuilder {
         .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
         .setRequestPriority(imageRequest.getPriority())
         .setResizeOptions(imageRequest.getResizeOptions())
-        .setRequestListener(imageRequest.getRequestListener());
+        .setRequestListener(imageRequest.getRequestListener())
+        .setRotationOptions(imageRequest.getRotationOptions());
   }
 
   private ImageRequestBuilder() {
@@ -136,15 +137,16 @@ public class ImageRequestBuilder {
    * Enables or disables auto-rotate for the image in case image has orientation.
    * @return the updated builder instance
    * @param enabled
+   * @deprecated Use #setRotationOptions(RotationOptions)
    */
+  @Deprecated
   public ImageRequestBuilder setAutoRotateEnabled(boolean enabled) {
-    mAutoRotateEnabled = enabled;
-    return this;
-  }
-
-  /** Returns whether auto-rotate is enabled. */
-  public boolean isAutoRotateEnabled() {
-    return mAutoRotateEnabled;
+    if (enabled) {
+      return setRotationOptions(RotationOptions.createForImageMetadata(false));
+    } else {
+      return setRotationOptions(
+          RotationOptions.createForForcedRotation(RotationOptions.NO_ROTATION));
+    }
   }
 
   /**
@@ -160,6 +162,25 @@ public class ImageRequestBuilder {
   /** Gets the resize options if set, null otherwise. */
   public @Nullable ResizeOptions getResizeOptions() {
     return mResizeOptions;
+  }
+
+  /**
+   * Sets rotation options for the image, whether to rotate by a multiple of 90 degrees, use the
+   * EXIF metadata (relevant to JPEGs only) or to not rotate. This also specifies whether the
+   * rotation should be left until the bitmap is rendered (as the GPU can do this more efficiently
+   * than the effort to change the bitmap object).
+   *
+   * @param rotationOptions rotation options
+   * @return the modified builder instance
+   */
+  public ImageRequestBuilder setRotationOptions(@Nullable RotationOptions rotationOptions) {
+    mRotationOptions = rotationOptions;
+    return this;
+  }
+
+  /** Gets the rotation options if set, null otherwise. */
+  public @Nullable RotationOptions getRotationOptions() {
+    return mRotationOptions;
   }
 
   public ImageRequestBuilder setImageDecodeOptions(ImageDecodeOptions imageDecodeOptions) {
