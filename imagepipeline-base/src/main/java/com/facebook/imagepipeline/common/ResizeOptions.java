@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.HashCodeUtil;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Options for resizing.
@@ -22,19 +23,44 @@ import com.facebook.common.util.HashCodeUtil;
  */
 public class ResizeOptions {
 
+  public static final float DEFAULT_ROUNDUP_FRACTION = 2.0f/3;
+
   /* target width (in pixels) */
   public final int width;
 
   /* target height (in pixels) */
   public final int height;
 
+  /* max supported bitmap size (in pixels), defaults to BitmapUtil.MAX_BITMAP_SIZE */
+  public final float maxBitmapSize;
+
+  /* round-up fraction for resize process, defaults to DEFAULT_ROUNDUP_FRACTION */
+  public final float roundUpFraction;
+
   public ResizeOptions(
       int width,
       int height) {
+    this(width, height, BitmapUtil.MAX_BITMAP_SIZE);
+  }
+
+  public ResizeOptions(
+      int width,
+      int height,
+      float maxBitmapSize) {
+    this(width, height, maxBitmapSize, DEFAULT_ROUNDUP_FRACTION);
+  }
+
+  public ResizeOptions(
+      int width,
+      int height,
+      float maxBitmapSize,
+      float roundUpFraction) {
     Preconditions.checkArgument(width > 0);
     Preconditions.checkArgument(height > 0);
     this.width = width;
     this.height = height;
+    this.maxBitmapSize = maxBitmapSize;
+    this.roundUpFraction = roundUpFraction;
   }
 
   @Override
