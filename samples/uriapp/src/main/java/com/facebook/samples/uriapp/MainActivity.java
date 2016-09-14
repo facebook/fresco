@@ -65,5 +65,9 @@ public class MainActivity extends Activity {
             .setAutoPlayAnimations(true)
             .build();
     mSimpleDraweeView.setController(controller);
+
+    // Trigger GC to check in logs for any unclosed CloseableReferences
+    // DO NOT INCLUDE THIS IN YOUR OWN APPS: It is only intended for testing changes to the library
+    Runtime.getRuntime().gc();
   }
 }
