@@ -23,10 +23,12 @@ import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * Concrete implementation of ImagePipeline Drawee controller builder.
@@ -53,12 +55,18 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   @Override
   public PipelineDraweeControllerBuilder setUri(Uri uri) {
-    return super.setImageRequest(ImageRequest.fromUri(uri));
+    ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
+        .setRotationOptions(RotationOptions.createForImageMetadata(true))
+        .build();
+    return super.setImageRequest(imageRequest);
   }
 
   @Override
   public PipelineDraweeControllerBuilder setUri(@Nullable String uriString) {
-    return super.setImageRequest(ImageRequest.fromUri(uriString));
+    if (uriString == null || uriString.length() == 0) {
+      return super.setImageRequest(null);
+    }
+    return setUri(Uri.parse(uriString));
   }
 
   @Override

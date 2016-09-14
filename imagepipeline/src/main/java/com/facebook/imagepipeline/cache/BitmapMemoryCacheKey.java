@@ -44,7 +44,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
   public BitmapMemoryCacheKey(
       String sourceString,
       @Nullable ResizeOptions resizeOptions,
-      @Nullable RotationOptions rotationOptions,
+      RotationOptions rotationOptions,
       ImageDecodeOptions imageDecodeOptions,
       @Nullable CacheKey postprocessorCacheKey,
       @Nullable String postprocessorName,

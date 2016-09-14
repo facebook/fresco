@@ -149,48 +149,6 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testUnknownDoesNotPassOnIntermediateResultIfDownsamplingDisabled() throws Exception {
-    whenDownsamplingDisabled();
-    testUnknownDoesNotPassOnIntermediateResult();
-  }
-
-  @Test
-  public void testUnknownDoesNotPassOnIntermediateResultIfDownsamplingEnabled() throws Exception {
-    whenDownsamplingEnabled();
-    testUnknownDoesNotPassOnIntermediateResult();
-  }
-
-  private void testUnknownDoesNotPassOnIntermediateResult() throws Exception {
-    whenRequestsRotationFromMetadata();
-
-    provideIntermediateResult(
-        ImageFormat.JPEG,
-        EncodedImage.UNKNOWN_WIDTH,
-        EncodedImage.UNKNOWN_HEIGHT,
-        EncodedImage.UNKNOWN_ROTATION_ANGLE);
-    verifyNoIntermediateResultPassedThrough();
-  }
-
-  @Test
-  public void testUnknownPassesOnResultIfIsLastAndDownsamplingDisabled() throws Exception {
-    whenDownsamplingDisabled();
-    testUnknownPassesOnResultIfIsLast();
-  }
-
-  @Test
-  public void testUnknownPassesOnResultIfIsLastAndDownsamplingEnabled() throws Exception {
-    whenDownsamplingEnabled();
-    testUnknownPassesOnResultIfIsLast();
-  }
-
-  private void testUnknownPassesOnResultIfIsLast() throws Exception {
-    whenRequestsRotationFromMetadata();
-
-    provideFinalResult(ImageFormat.JPEG);
-    verifyFinalResultPassedThroughUnchanged();
-  }
-
-  @Test
   public void testDoesNotTransformIfNotRequested() {
     whenDownsamplingDisabled();
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
@@ -206,7 +164,7 @@ public class ResizeAndRotateProducerTest {
   @Test
   public void testDoesNotTransformIfNotJpeg() throws Exception {
     whenDownsamplingDisabled();
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideIntermediateResult(ImageFormat.WEBP_SIMPLE);
     verifyIntermediateResultPassedThroughUnchanged();
@@ -217,23 +175,23 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesRotateIfJpegAndDownsamplingDisabled() throws Exception {
+  public void testDoesRotateIfJpegAndCannotDeferRotationAndDownsamplingDisabled() throws Exception {
     whenDownsamplingDisabled();
-    testDoesRotateIfJpeg();
+    testDoesRotateIfJpegAndCannotDeferRotation();
   }
 
   @Test
-  public void testDoesRotateIfJpegAndDownsamplingEnabled() throws Exception {
+  public void testDoesRotateIfJpegAndCannotDeferRotationAndDownsamplingEnabled() throws Exception {
     whenDownsamplingEnabled();
-    testDoesRotateIfJpeg();
+    testDoesRotateIfJpegAndCannotDeferRotation();
   }
 
-  private void testDoesRotateIfJpeg() throws Exception {
+  private void testDoesRotateIfJpegAndCannotDeferRotation() throws Exception {
     int rotationAngle = 180;
     int sourceWidth = 10;
     int sourceHeight = 10;
     whenRequestWidthAndHeight(sourceWidth, sourceHeight);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideIntermediateResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
     verifyNoIntermediateResultPassedThrough();
@@ -245,6 +203,44 @@ public class ResizeAndRotateProducerTest {
     assertTrue(mPooledByteBuffer.isClosed());
 
     verifyJpegTranscoderInteractions(8, rotationAngle);
+  }
+
+  @Test
+  public void testDoesNotRotateIfCanDeferRotationAndResizeNotNeeded() throws Exception {
+    whenDownsamplingDisabled();
+
+    int rotationAngle = 180;
+    int sourceWidth = 10;
+    int sourceHeight = 10;
+    whenRequestWidthAndHeight(sourceWidth, sourceHeight);
+    whenRequestsRotationFromMetadataWithDeferringAllowed();
+
+    provideIntermediateResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
+    verifyIntermediateResultPassedThroughUnchanged();
+
+    provideFinalResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
+    verifyFinalResultPassedThroughUnchanged();
+
+    verifyZeroJpegTranscoderInteractions();
+  }
+
+  @Test
+  public void testDoesResizeAndRotateIfCanDeferRotationButResizeIsNeeded() throws Exception {
+    whenDownsamplingDisabled();
+
+    int rotationAngle = 90;
+    int sourceWidth = 10;
+    int sourceHeight = 10;
+    whenRequestWidthAndHeight(sourceWidth, sourceHeight);
+    whenRequestsRotationFromMetadataWithDeferringAllowed();
+
+    provideIntermediateResult(ImageFormat.JPEG, sourceWidth * 2, sourceHeight * 2, rotationAngle);
+    verifyNoIntermediateResultPassedThrough();
+
+    provideFinalResult(ImageFormat.JPEG, sourceWidth * 2, sourceHeight * 2, rotationAngle);
+    verifyAFinalResultPassedThrough();
+
+    verifyJpegTranscoderInteractions(4, rotationAngle);
   }
 
   @Test
@@ -299,7 +295,7 @@ public class ResizeAndRotateProducerTest {
   public void testDoesNotUpscaleWhenRotating() {
     whenDownsamplingDisabled();
     whenRequestWidthAndHeight(150, 150);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(ImageFormat.JPEG, 100, 100, 90);
     verifyAFinalResultPassedThrough();
@@ -310,7 +306,7 @@ public class ResizeAndRotateProducerTest {
   public void testDoesComputeRightNumeratorWhenRotating_0() {
     whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(ImageFormat.JPEG, 400, 200, 0);
     verifyAFinalResultPassedThrough();
@@ -321,7 +317,7 @@ public class ResizeAndRotateProducerTest {
   public void testDoesComputeRightNumeratorWhenRotating_90() {
     whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
     verifyAFinalResultPassedThrough();
@@ -332,7 +328,7 @@ public class ResizeAndRotateProducerTest {
   public void testDoesComputeRightNumeratorWhenRotating_180() {
     whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(ImageFormat.JPEG, 400, 200, 180);
     verifyAFinalResultPassedThrough();
@@ -343,7 +339,7 @@ public class ResizeAndRotateProducerTest {
   public void testDoesComputeRightNumeratorWhenRotating_270() {
     whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(ImageFormat.JPEG, 400, 200, 270);
     verifyAFinalResultPassedThrough();
@@ -351,14 +347,25 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesRotateWhenNoResizeOptions() {
+  public void testDoesRotateWhenNoResizeOptionsIfCannotBeDeferred() {
     whenDownsamplingDisabled();
     whenRequestWidthAndHeight(0, 0);
-    whenRequestsRotationFromMetadata();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(8, 90);
+  }
+
+  @Test
+  public void testDoesNotRotateWhenNoResizeOptionsAndCanBeDeferred() {
+    whenDownsamplingDisabled();
+    whenRequestWidthAndHeight(0, 0);
+    whenRequestsRotationFromMetadataWithDeferringAllowed();
+
+    provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
+    verifyFinalResultPassedThroughUnchanged();
+    verifyZeroJpegTranscoderInteractions();
   }
 
   @Test
@@ -526,12 +533,19 @@ public class ResizeAndRotateProducerTest {
     when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
   }
 
-  private void whenRequestSpecificRotation(@RotationOptions.RotationAngle int rotationAngle) {
+  private void whenRequestSpecificRotation(
+      @RotationOptions.RotationAngle int rotationAngle) {
     when(mImageRequest.getRotationOptions())
-        .thenReturn(RotationOptions.createForForcedRotation(rotationAngle, false));
+        .thenReturn(RotationOptions.createForForcedRotation(rotationAngle));
   }
 
-  private void whenRequestsRotationFromMetadata() {
-    when(mImageRequest.getRotationOptions()).thenReturn(RotationOptions.createForImageMetadata());
+  private void whenRequestsRotationFromMetadataWithDeferringAllowed() {
+    when(mImageRequest.getRotationOptions())
+        .thenReturn(RotationOptions.createForImageMetadata(true));
+  }
+
+  private void whenRequestsRotationFromMetadataWithoutDeferring() {
+    when(mImageRequest.getRotationOptions())
+        .thenReturn(RotationOptions.createForImageMetadata(false));
   }
 }

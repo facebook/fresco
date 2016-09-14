@@ -23,6 +23,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -157,7 +158,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         JpegTranscoder.transcodeJpeg(
             is,
             outputStream,
-            getRotationAngle(imageRequest, encodedImage),
+            getRotationAngle(imageRequest.getRotationOptions(), encodedImage),
             numerator,
             DEFAULT_JPEG_QUALITY);
         CloseableReference<PooledByteBuffer> ref =
@@ -224,7 +225,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return TriState.NO;
     }
     return TriState.valueOf(
-        getRotationAngle(request, encodedImage) != 0 ||
+        shouldRotate(request.getRotationOptions(), encodedImage) ||
             shouldResize(getScaleNumerator(request, encodedImage, downsampleEnabled)));
   }
 
@@ -268,7 +269,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return JpegTranscoder.SCALE_DENOMINATOR;
     }
 
-    final int rotationAngle = getRotationAngle(imageRequest, encodedImage);
+    final int rotationAngle = getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
     final boolean swapDimensions = rotationAngle == 90 || rotationAngle == 270;
     final int widthAfterRotation = swapDimensions ? encodedImage.getHeight() :
             encodedImage.getWidth();
@@ -283,17 +284,22 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return (numerator < 1) ? 1 : numerator;
   }
 
-  private static int getRotationAngle(ImageRequest imageRequest, EncodedImage encodedImage) {
-    if (imageRequest.getRotationOptions().useImageMetadata()) {
+  private static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
+    if (rotationOptions.useImageMetadata()) {
       int rotationAngle = encodedImage.getRotationAngle();
       Preconditions.checkArgument(rotationAngle == 0 || rotationAngle == 90
           || rotationAngle == 180 || rotationAngle == 270);
       return rotationAngle;
     }
-    return imageRequest.getRotationOptions().getForcedAngle();
+    return rotationOptions.getForcedAngle();
   }
 
   private static boolean shouldResize(int numerator) {
     return numerator < MAX_JPEG_SCALE_NUMERATOR;
+  }
+
+  private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {
+    return !rotationOptions.canDeferUntilRendered() &&
+        getRotationAngle(rotationOptions, encodedImage) != 0;
   }
 }

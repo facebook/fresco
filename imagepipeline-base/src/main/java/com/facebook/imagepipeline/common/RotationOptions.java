@@ -63,44 +63,36 @@ public class RotationOptions {
   /**
    * Creates a new set of rotation options to use the rotation angle in the image metadata.
    *
-   * <p> The rotation may be deferred until render time.
+   * <p> The rotation will not be deferred for defensiveness but that can improve performance. To
+   * defer, use {@link #createForImageMetadata(boolean)}.
    */
   public static RotationOptions createForImageMetadata() {
-    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, true);
+    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, false);
   }
 
   /**
    * Creates a new set of rotation options to use the rotation angle in the image metadata.
    *
-   * @param deferUntilRendered true if the rotation may be deferred until render time
+   * @param canDeferUntilRendered true if the rotation may be deferred until render time
    */
-  public static RotationOptions createForImageMetadata(boolean deferUntilRendered) {
-    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, deferUntilRendered);
+  public static RotationOptions createForImageMetadata(boolean canDeferUntilRendered) {
+    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, canDeferUntilRendered);
   }
 
   /**
    * Creates a new set of rotation options to use a specific rotation angle.
    *
-   * <p> The rotation may be deferred until render time.
+   * <p> The rotation will be carried out in the pipeline.
+   *
+   * @param angle the angle to rotate - valid values are 0, 90, 180 and 270
    */
   public static RotationOptions createForForcedRotation(@RotationAngle int angle) {
-    return new RotationOptions(angle, true);
+    return new RotationOptions(angle, false);
   }
 
-  /**
-   * Creates a new set of rotation options to use a specific rotation angle.
-   *
-   * @param deferUntilRendered true if the rotation may be deferred until render time
-   */
-  public static RotationOptions createForForcedRotation(
-      @RotationAngle int angle,
-      boolean deferUntilRendered) {
-    return new RotationOptions(angle, true);
-  }
-
-  private RotationOptions(@Rotation int rotation, boolean deferUntilRendered) {
+  private RotationOptions(@Rotation int rotation, boolean canDeferUntilRendered) {
     this.mRotation = rotation;
-    this.mDeferUntilRendered = deferUntilRendered;
+    this.mDeferUntilRendered = canDeferUntilRendered;
   }
 
   public boolean useImageMetadata() {
@@ -144,6 +136,6 @@ public class RotationOptions {
 
   @Override
   public String toString() {
-    return String.format((Locale) null, "%d defer:%d", mRotation, mDeferUntilRendered);
+    return String.format((Locale) null, "%d defer:%b", mRotation, mDeferUntilRendered);
   }
 }
