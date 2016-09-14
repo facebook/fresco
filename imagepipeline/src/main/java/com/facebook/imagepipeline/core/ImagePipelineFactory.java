@@ -346,7 +346,6 @@ public class ImagePipelineFactory {
               getProducerFactory(),
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
-              mConfig.isDownsampleEnabled(),
               mConfig.getExperiments().isWebpSupportEnabled(),
               mThreadHandoffProducerQueue,
               mConfig.getExperiments().getThrottlingMaxSimultaneousRequests());

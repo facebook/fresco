@@ -127,11 +127,6 @@ public class ResizeAndRotateProducerTest {
     PowerMockito.when(JpegTranscoder.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
 
-    mResizeAndRotateProducer = new ResizeAndRotateProducer(
-        mTestExecutorService,
-        mPooledByteBufferFactory,
-        mInputProducer);
-
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
     when(mProducerContext.getListener()).thenReturn(mProducerListener);
     when(mProducerListener.requiresExtraMap(anyString())).thenReturn(true);
@@ -151,11 +146,21 @@ public class ResizeAndRotateProducerTest {
     doReturn(mPooledByteBufferOutputStream).when(mPooledByteBufferFactory).newOutputStream();
     mPooledByteBuffer = new TrivialPooledByteBuffer(new byte[]{1}, 0);
     doReturn(mPooledByteBuffer).when(mPooledByteBufferOutputStream).toByteBuffer();
-    mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
   }
 
   @Test
-  public void testUnknownDoesNotPassOnIntermediateResult() throws Exception {
+  public void testUnknownDoesNotPassOnIntermediateResultIfDownsamplingDisabled() throws Exception {
+    whenDownsamplingDisabled();
+    testUnknownDoesNotPassOnIntermediateResult();
+  }
+
+  @Test
+  public void testUnknownDoesNotPassOnIntermediateResultIfDownsamplingEnabled() throws Exception {
+    whenDownsamplingEnabled();
+    testUnknownDoesNotPassOnIntermediateResult();
+  }
+
+  private void testUnknownDoesNotPassOnIntermediateResult() throws Exception {
     whenRequestsRotationFromMetadata();
 
     provideIntermediateResult(
@@ -167,7 +172,18 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testUnknownPassesOnResultIfIsLast() throws Exception {
+  public void testUnknownPassesOnResultIfIsLastAndDownsamplingDisabled() throws Exception {
+    whenDownsamplingDisabled();
+    testUnknownPassesOnResultIfIsLast();
+  }
+
+  @Test
+  public void testUnknownPassesOnResultIfIsLastAndDownsamplingEnabled() throws Exception {
+    whenDownsamplingEnabled();
+    testUnknownPassesOnResultIfIsLast();
+  }
+
+  private void testUnknownPassesOnResultIfIsLast() throws Exception {
     whenRequestsRotationFromMetadata();
 
     provideFinalResult(ImageFormat.JPEG);
@@ -176,6 +192,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotTransformIfNotRequested() {
+    whenDownsamplingDisabled();
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
     provideIntermediateResult(ImageFormat.JPEG);
@@ -188,6 +205,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotTransformIfNotJpeg() throws Exception {
+    whenDownsamplingDisabled();
     whenRequestsRotationFromMetadata();
 
     provideIntermediateResult(ImageFormat.WEBP_SIMPLE);
@@ -199,7 +217,18 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesRotateIfJpeg() throws Exception {
+  public void testDoesRotateIfJpegAndDownsamplingDisabled() throws Exception {
+    whenDownsamplingDisabled();
+    testDoesRotateIfJpeg();
+  }
+
+  @Test
+  public void testDoesRotateIfJpegAndDownsamplingEnabled() throws Exception {
+    whenDownsamplingEnabled();
+    testDoesRotateIfJpeg();
+  }
+
+  private void testDoesRotateIfJpeg() throws Exception {
     int rotationAngle = 180;
     int sourceWidth = 10;
     int sourceHeight = 10;
@@ -219,7 +248,8 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesResizeIfJpeg() throws Exception {
+  public void testDoesResizeIfJpegAndDownsamplingDisabled() throws Exception {
+    whenDownsamplingDisabled();
     final int preferredWidth = 300;
     final int preferredHeight = 600;
     whenRequestWidthAndHeight(preferredWidth, preferredHeight);
@@ -238,7 +268,25 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
+  public void testDoesNotResizeIfJpegButDownsamplingEnabled() throws Exception {
+    whenDownsamplingEnabled();
+    final int preferredWidth = 300;
+    final int preferredHeight = 600;
+    whenRequestWidthAndHeight(preferredWidth, preferredHeight);
+    whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
+
+    provideIntermediateResult(ImageFormat.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
+    verifyIntermediateResultPassedThroughUnchanged();
+
+    provideFinalResult(ImageFormat.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
+    verifyFinalResultPassedThroughUnchanged();
+
+    verifyZeroJpegTranscoderInteractions();
+  }
+
+  @Test
   public void testDoesNotUpscale() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(150, 150);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
@@ -249,6 +297,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotUpscaleWhenRotating() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(150, 150);
     whenRequestsRotationFromMetadata();
 
@@ -259,6 +308,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_0() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadata();
 
@@ -269,6 +319,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_90() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadata();
 
@@ -279,6 +330,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_180() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadata();
 
@@ -289,6 +341,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_270() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadata();
 
@@ -299,6 +352,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesRotateWhenNoResizeOptions() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(0, 0);
     whenRequestsRotationFromMetadata();
 
@@ -309,6 +363,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesRotateWhenSpecificRotationRequested() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(200, 400);
     whenRequestSpecificRotation(RotationOptions.ROTATE_270);
 
@@ -319,6 +374,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNothingWhenNotAskedToDoAnything() {
+    whenDownsamplingDisabled();
     whenRequestWidthAndHeight(0, 0);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
@@ -342,18 +398,15 @@ public class ResizeAndRotateProducerTest {
     ResizeOptions resizeOptions = new ResizeOptions(512, 512);
     assertEquals(
         0.5f,
-        ResizeAndRotateProducer.determineResizeRatio(
-            resizeOptions, 1024, 1024),
+        ResizeAndRotateProducer.determineResizeRatio(resizeOptions, 1024, 1024),
         0.01);
     assertEquals(
         0.25f,
-        ResizeAndRotateProducer.determineResizeRatio(
-            resizeOptions, 2048, 4096),
+        ResizeAndRotateProducer.determineResizeRatio(resizeOptions, 2048, 4096),
         0.01);
     assertEquals(
         0.5f,
-        ResizeAndRotateProducer.determineResizeRatio(
-            resizeOptions, 4096, 512),
+        ResizeAndRotateProducer.determineResizeRatio(resizeOptions, 4096, 512),
         0.01);
   }
 
@@ -443,6 +496,24 @@ public class ResizeAndRotateProducerTest {
     encodedImage.setWidth(width);
     encodedImage.setHeight(height);
     return encodedImage;
+  }
+
+  private void whenDownsamplingDisabled() {
+    whenDownsamplingEnabledIs(false);
+  }
+
+  private void whenDownsamplingEnabled() {
+    whenDownsamplingEnabledIs(true);
+  }
+
+  private void whenDownsamplingEnabledIs(boolean downsampleEnabled) {
+    mResizeAndRotateProducer = new ResizeAndRotateProducer(
+        mTestExecutorService,
+        mPooledByteBufferFactory,
+        downsampleEnabled,
+        mInputProducer);
+
+    mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
   }
 
   private void whenRequestWidthAndHeight(int preferredWidth, int preferredHeight) {

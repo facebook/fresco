@@ -278,6 +278,7 @@ public class ProducerFactory {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
+        mDownsampleEnabled,
         inputProducer);
   }
 
