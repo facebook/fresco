@@ -56,6 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateWhatPostprocessorSummary(findPreference(Const.POSTPROCESSOR_TYPE_KEY));
     updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
     updateAutoRotateSummary(findPreference(Const.AUTO_ROTATE_KEY));
+    updateRotationAngleSummary(findPreference(Const.FORCED_ROTATION_ANGLE_KEY));
   }
 
   @Override
@@ -100,6 +101,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.AUTO_ROTATE_KEY:
         updateAutoRotateSummary(preference);
+        break;
+      case Const.FORCED_ROTATION_ANGLE_KEY:
+        updateRotationAngleSummary(preference);
         break;
     }
   }
@@ -206,10 +210,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateAutoRotateSummary(final Preference preference) {
-    updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_auto_rotate_summary,
-            R.string.unchecked_auto_rotate_summary);
+    boolean currentState = updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_auto_rotate_summary,
+        R.string.unchecked_auto_rotate_summary);
+    findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
+  }
+
+  private void updateRotationAngleSummary(final Preference preference) {
+    updateListPreference(
+        getResources(),
+        (ListPreference) preference,
+        R.array.rotation_angle_summaries);
   }
 }

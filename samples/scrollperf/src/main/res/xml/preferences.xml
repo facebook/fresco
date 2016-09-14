@@ -98,5 +98,13 @@
             android:key="auto_rotate"
             android:title="@string/title_auto_rotate"
             />
+        <ListPreference
+            android:defaultValue="@string/value_no_rotation"
+            android:dialogTitle="@string/title_forced_rotation"
+            android:entries="@array/rotation_angle_values"
+            android:entryValues="@array/rotation_angle_values"
+            android:key="rotation_angle"
+            android:title="@string/title_forced_rotation"
+        />
     </PreferenceCategory>
 </PreferenceScreen>

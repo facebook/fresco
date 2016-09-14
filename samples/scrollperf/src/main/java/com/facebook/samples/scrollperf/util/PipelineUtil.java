@@ -11,6 +11,7 @@
  */
 package com.facebook.samples.scrollperf.util;
 
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.samples.scrollperf.conf.Config;
@@ -42,6 +43,11 @@ public final class PipelineUtil {
       }
       imageRequestBuilder.setPostprocessor(postprocessor);
     }
-    imageRequestBuilder.setAutoRotateEnabled(config.autoRotateEnabled);
+    if (config.rotateUsingMetaData) {
+      imageRequestBuilder.setRotationOptions(RotationOptions.createForImageMetadata(true));
+    } else {
+      imageRequestBuilder
+          .setRotationOptions(RotationOptions.createForForcedRotation(config.forcedRotationAngle));
+    }
   }
 }

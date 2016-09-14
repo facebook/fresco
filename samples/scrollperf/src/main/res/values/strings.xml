@@ -111,8 +111,18 @@
     <!-- Auto Rotate Enabled-->
     <string translatable="false" name="title_other_group">Others</string>
 
-
     <string translatable="false" name="title_auto_rotate">Auto Rotate</string>
     <string translatable="false" name="checked_auto_rotate_summary">Image rotation metadata are used</string>
     <string translatable="false" name="unchecked_auto_rotate_summary">Image rotation metadata are not used</string>
+
+    <!-- Forced Rotation Angles -->
+    <string name="title_forced_rotation">Forced Rotation</string>
+    <string translatable="false" name="value_no_rotation">0</string>
+    <string translatable="false" name="value_90_degree_rotation">90</string>
+    <string translatable="false" name="value_180_degree_rotation">180</string>
+    <string translatable="false" name="value_270_degree_rotation">270</string>
+    <string name="label_no_rotation">Do not rotate</string>
+    <string name="label_90_deg_rotation">Force 90\u00B0 rotation</string>
+    <string name="label_180_deg_rotation">Force 180\u00B0 rotation</string>
+    <string name="label_270_deg_rotation">Force 270\u00B0 rotation</string>
 </resources>

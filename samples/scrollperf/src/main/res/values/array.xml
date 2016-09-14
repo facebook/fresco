@@ -76,4 +76,16 @@
         <item>@string/label_scale_type_fit_end_summary</item>
         <item>@string/label_scale_type_fit_xy_summary</item>
     </array>
+    <array name="rotation_angle_values">
+        <item>@string/value_no_rotation</item>
+        <item>@string/value_90_degree_rotation</item>
+        <item>@string/value_180_degree_rotation</item>
+        <item>@string/value_270_degree_rotation</item>
+    </array>
+    <array name="rotation_angle_summaries">
+        <item>@string/label_no_rotation</item>
+        <item>@string/label_90_deg_rotation</item>
+        <item>@string/label_180_deg_rotation</item>
+        <item>@string/label_270_deg_rotation</item>
+    </array>
 </resources>

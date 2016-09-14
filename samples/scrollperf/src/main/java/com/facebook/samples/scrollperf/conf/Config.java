@@ -40,7 +40,8 @@ public class Config {
 
   public final String scaleType;
 
-  public final boolean autoRotateEnabled;
+  public final boolean rotateUsingMetaData;
+  public final int forcedRotationAngle;
 
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
@@ -75,9 +76,12 @@ public class Config {
     final String scaleType = sharedPreferences.getString(
             Const.SCALE_TYPE_KEY,
             context.getString(R.string.value_scale_type_fit_center));
-    final boolean autoRotate = sharedPreferences.getBoolean(
+    final boolean rotateUsingMetaData = sharedPreferences.getBoolean(
             Const.AUTO_ROTATE_KEY,
             false);
+    final int forcedRotationAngle = Integer.parseInt(sharedPreferences.getString(
+            Const.FORCED_ROTATION_ANGLE_KEY,
+            "0"));
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -89,7 +93,8 @@ public class Config {
       usePostprocessor,
       postprocessorType,
       scaleType,
-      autoRotate);
+      rotateUsingMetaData,
+      forcedRotationAngle);
   }
 
   private Config(
@@ -103,7 +108,8 @@ public class Config {
       final boolean usePostprocessor,
       final String postprocessorType,
       final String scaleType,
-      final boolean autoRotate) {
+      final boolean rotateUsingMetaData,
+      final int forcedRotationAngle) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -114,6 +120,7 @@ public class Config {
     this.usePostprocessor = usePostprocessor;
     this.postprocessorType = postprocessorType;
     this.scaleType = scaleType;
-    this.autoRotateEnabled = autoRotate;
+    this.rotateUsingMetaData = rotateUsingMetaData;
+    this.forcedRotationAngle = forcedRotationAngle;
   }
 }
