@@ -536,16 +536,16 @@ public class ResizeAndRotateProducerTest {
   private void whenRequestSpecificRotation(
       @RotationOptions.RotationAngle int rotationAngle) {
     when(mImageRequest.getRotationOptions())
-        .thenReturn(RotationOptions.createForForcedRotation(rotationAngle));
+        .thenReturn(RotationOptions.forceRotation(rotationAngle));
   }
 
   private void whenRequestsRotationFromMetadataWithDeferringAllowed() {
     when(mImageRequest.getRotationOptions())
-        .thenReturn(RotationOptions.createForImageMetadata(true));
+        .thenReturn(RotationOptions.autoRotateAtRenderTime());
   }
 
   private void whenRequestsRotationFromMetadataWithoutDeferring() {
     when(mImageRequest.getRotationOptions())
-        .thenReturn(RotationOptions.createForImageMetadata(false));
+        .thenReturn(RotationOptions.autoRotate());
   }
 }

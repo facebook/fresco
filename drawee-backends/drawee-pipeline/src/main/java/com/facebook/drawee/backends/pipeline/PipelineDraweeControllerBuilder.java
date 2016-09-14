@@ -54,17 +54,20 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   }
 
   @Override
-  public PipelineDraweeControllerBuilder setUri(Uri uri) {
+  public PipelineDraweeControllerBuilder setUri(@Nullable Uri uri) {
+    if (uri == null) {
+      return super.setImageRequest(null);
+    }
     ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setRotationOptions(RotationOptions.createForImageMetadata(true))
+        .setRotationOptions(RotationOptions.autoRotateAtRenderTime())
         .build();
     return super.setImageRequest(imageRequest);
   }
 
   @Override
   public PipelineDraweeControllerBuilder setUri(@Nullable String uriString) {
-    if (uriString == null || uriString.length() == 0) {
-      return super.setImageRequest(null);
+    if (uriString == null || uriString.isEmpty()) {
+      return super.setImageRequest(ImageRequest.fromUri(uriString));
     }
     return setUri(Uri.parse(uriString));
   }

@@ -142,10 +142,9 @@ public class ImageRequestBuilder {
   @Deprecated
   public ImageRequestBuilder setAutoRotateEnabled(boolean enabled) {
     if (enabled) {
-      return setRotationOptions(RotationOptions.createForImageMetadata(false));
+      return setRotationOptions(RotationOptions.autoRotate());
     } else {
-      return setRotationOptions(
-          RotationOptions.createForForcedRotation(RotationOptions.NO_ROTATION));
+      return setRotationOptions(RotationOptions.forceRotation(RotationOptions.NO_ROTATION));
     }
   }
 

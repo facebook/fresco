@@ -87,7 +87,7 @@ public class ImageRequest {
 
     mResizeOptions = builder.getResizeOptions();
     mRotationOptions = builder.getRotationOptions() == null
-        ? RotationOptions.createForImageMetadata() : builder.getRotationOptions();
+        ? RotationOptions.autoRotate() : builder.getRotationOptions();
 
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();

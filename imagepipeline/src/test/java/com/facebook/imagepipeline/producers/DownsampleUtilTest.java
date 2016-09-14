@@ -189,6 +189,6 @@ public class DownsampleUtilTest {
     when(mImageRequest.getPreferredHeight()).thenReturn(height);
     when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(width, height));
     when(mImageRequest.getRotationOptions())
-        .thenReturn(RotationOptions.createForForcedRotation(rotationAngle));
+        .thenReturn(RotationOptions.forceRotation(rotationAngle));
   }
 }

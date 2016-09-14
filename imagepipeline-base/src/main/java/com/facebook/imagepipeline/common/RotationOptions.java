@@ -20,6 +20,8 @@ import java.util.Locale;
 /**
  * Options for rotation.
  *
+ * <p> These options are applied to JPEG images only.
+ *
  * <p> Describes how the image should be rotated, whether following image meta-data or a specified
  * amount.
  *
@@ -61,22 +63,26 @@ public class RotationOptions {
   private final boolean mDeferUntilRendered;
 
   /**
-   * Creates a new set of rotation options to use the rotation angle in the image metadata.
+   * Creates a new set of rotation options for JPEG images to use the rotation angle in the image
+   * metadata.
+   *
+   * <p> This is the default option for requests which don't specify rotation options.
    *
    * <p> The rotation will not be deferred for defensiveness but that can improve performance. To
-   * defer, use {@link #createForImageMetadata(boolean)}.
+   * defer, use {@link #autoRotateAtRenderTime()}.
    */
-  public static RotationOptions createForImageMetadata() {
+  public static RotationOptions autoRotate() {
     return new RotationOptions(USE_EXIF_ROTATION_ANGLE, false);
   }
 
   /**
-   * Creates a new set of rotation options to use the rotation angle in the image metadata.
+   * Creates a new set of rotation options for JPEG images to use the rotation angle in the image
+   * metadata.
    *
-   * @param canDeferUntilRendered true if the rotation may be deferred until render time
+   * <p> The rotation may be deferred until the image is rendered.
    */
-  public static RotationOptions createForImageMetadata(boolean canDeferUntilRendered) {
-    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, canDeferUntilRendered);
+  public static RotationOptions autoRotateAtRenderTime() {
+    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, true);
   }
 
   /**
@@ -86,7 +92,7 @@ public class RotationOptions {
    *
    * @param angle the angle to rotate - valid values are 0, 90, 180 and 270
    */
-  public static RotationOptions createForForcedRotation(@RotationAngle int angle) {
+  public static RotationOptions forceRotation(@RotationAngle int angle) {
     return new RotationOptions(angle, false);
   }
 
@@ -103,7 +109,7 @@ public class RotationOptions {
    * Gets the explicit angle to rotate to, if one was set.
    *
    * @throws IllegalStateException if the instance was create using one of the
-   * {@code createForImageMetadata()} constructors.
+   * {@code autoRotate()} constructors.
    */
   public @RotationAngle int getForcedAngle() {
     if (useImageMetadata()) {

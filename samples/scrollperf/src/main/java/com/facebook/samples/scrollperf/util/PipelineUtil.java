@@ -44,10 +44,10 @@ public final class PipelineUtil {
       imageRequestBuilder.setPostprocessor(postprocessor);
     }
     if (config.rotateUsingMetaData) {
-      imageRequestBuilder.setRotationOptions(RotationOptions.createForImageMetadata(true));
+      imageRequestBuilder.setRotationOptions(RotationOptions.autoRotateAtRenderTime());
     } else {
       imageRequestBuilder
-          .setRotationOptions(RotationOptions.createForForcedRotation(config.forcedRotationAngle));
+          .setRotationOptions(RotationOptions.forceRotation(config.forcedRotationAngle));
     }
   }
 }

@@ -33,7 +33,8 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.BitmapUtil;
 
 /**
- * Resizes and rotates JPEG image according to the EXIF orientation data.
+ * Resizes and rotates JPEG image according to the EXIF orientation data or a specified rotation
+ * angle.
  *
  * <p> If the image is not JPEG, no transformation is applied.
  *
