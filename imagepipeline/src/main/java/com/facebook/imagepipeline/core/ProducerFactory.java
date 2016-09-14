@@ -274,11 +274,13 @@ public class ProducerFactory {
         inputProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackgroundTasks());
   }
 
-  public ResizeAndRotateProducer newResizeAndRotateProducer(Producer<EncodedImage> inputProducer) {
+  public ResizeAndRotateProducer newResizeAndRotateProducer(
+      Producer<EncodedImage> inputProducer,
+      boolean resizingEnabledIfNotDownsampling) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
-        mDownsampleEnabled,
+        resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
         inputProducer);
   }
 

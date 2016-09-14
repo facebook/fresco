@@ -283,11 +283,10 @@ public class ProducerSequenceFactory {
       mCommonNetworkFetchToEncodedMemorySequence =
           ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
 
-      if (mResizeAndRotateEnabledForNetwork) {
-        mCommonNetworkFetchToEncodedMemorySequence =
-            mProducerFactory.newResizeAndRotateProducer(
-                mCommonNetworkFetchToEncodedMemorySequence);
-      }
+      mCommonNetworkFetchToEncodedMemorySequence =
+          mProducerFactory.newResizeAndRotateProducer(
+              mCommonNetworkFetchToEncodedMemorySequence,
+              mResizeAndRotateEnabledForNetwork);
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
   }
@@ -435,7 +434,7 @@ public class ProducerSequenceFactory {
         inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
-      inputProducer = mProducerFactory.newResizeAndRotateProducer(inputProducer);
+      inputProducer = mProducerFactory.newResizeAndRotateProducer(inputProducer, true);
       mDataFetchSequence = newBitmapCacheGetToDecodeSequence(inputProducer);
     }
     return mDataFetchSequence;
@@ -529,7 +528,7 @@ public class ProducerSequenceFactory {
     Producer<EncodedImage> localImageProducer =
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
     localImageProducer =
-        mProducerFactory.newResizeAndRotateProducer(localImageProducer);
+        mProducerFactory.newResizeAndRotateProducer(localImageProducer, true);
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(
@@ -545,7 +544,7 @@ public class ProducerSequenceFactory {
     ThumbnailBranchProducer thumbnailBranchProducer =
         mProducerFactory.newThumbnailBranchProducer(thumbnailProducers);
 
-    return mProducerFactory.newResizeAndRotateProducer(thumbnailBranchProducer);
+    return mProducerFactory.newResizeAndRotateProducer(thumbnailBranchProducer, true);
   }
 
   /**

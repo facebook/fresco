@@ -14,6 +14,7 @@ package com.facebook.samples.scrollperf;
 import android.app.Application;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
 /**
  * Application for Fresco initialization
@@ -23,6 +24,9 @@ public class ScrollPerfApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    Fresco.initialize(this);
+    ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
+        .setResizeAndRotateEnabledForNetwork(false)
+        .build();
+    Fresco.initialize(this, imagePipelineConfig);
   }
 }

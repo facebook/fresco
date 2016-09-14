@@ -150,7 +150,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotTransformIfNotRequested() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
     provideIntermediateResult(ImageFormat.JPEG);
@@ -163,7 +163,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotTransformIfNotJpeg() throws Exception {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideIntermediateResult(ImageFormat.WEBP_SIMPLE);
@@ -175,14 +175,14 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesRotateIfJpegAndCannotDeferRotationAndDownsamplingDisabled() throws Exception {
-    whenDownsamplingDisabled();
+  public void testDoesRotateIfJpegAndCannotDeferRotationAndResizingDisabled() throws Exception {
+    whenResizingDisabled();
     testDoesRotateIfJpegAndCannotDeferRotation();
   }
 
   @Test
-  public void testDoesRotateIfJpegAndCannotDeferRotationAndDownsamplingEnabled() throws Exception {
-    whenDownsamplingEnabled();
+  public void testDoesRotateIfJpegAndCannotDeferRotationAndResizingEnabled() throws Exception {
+    whenResizingEnabled();
     testDoesRotateIfJpegAndCannotDeferRotation();
   }
 
@@ -207,7 +207,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotRotateIfCanDeferRotationAndResizeNotNeeded() throws Exception {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
 
     int rotationAngle = 180;
     int sourceWidth = 10;
@@ -226,7 +226,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesResizeAndRotateIfCanDeferRotationButResizeIsNeeded() throws Exception {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
 
     int rotationAngle = 90;
     int sourceWidth = 10;
@@ -244,8 +244,8 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesResizeIfJpegAndDownsamplingDisabled() throws Exception {
-    whenDownsamplingDisabled();
+  public void testDoesResizeIfJpegAndResizingEnabled() throws Exception {
+    whenResizingEnabled();
     final int preferredWidth = 300;
     final int preferredHeight = 600;
     whenRequestWidthAndHeight(preferredWidth, preferredHeight);
@@ -264,8 +264,8 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesNotResizeIfJpegButDownsamplingEnabled() throws Exception {
-    whenDownsamplingEnabled();
+  public void testDoesNotResizeIfJpegButResizingDisabled() throws Exception {
+    whenResizingDisabled();
     final int preferredWidth = 300;
     final int preferredHeight = 600;
     whenRequestWidthAndHeight(preferredWidth, preferredHeight);
@@ -282,7 +282,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotUpscale() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(150, 150);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
@@ -293,7 +293,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotUpscaleWhenRotating() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(150, 150);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
@@ -304,7 +304,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_0() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
@@ -315,7 +315,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_90() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
@@ -326,7 +326,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_180() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
@@ -337,7 +337,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesComputeRightNumeratorWhenRotating_270() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
@@ -348,7 +348,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesRotateWhenNoResizeOptionsIfCannotBeDeferred() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(0, 0);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
@@ -359,7 +359,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNotRotateWhenNoResizeOptionsAndCanBeDeferred() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(0, 0);
     whenRequestsRotationFromMetadataWithDeferringAllowed();
 
@@ -370,7 +370,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesRotateWhenSpecificRotationRequested() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(200, 400);
     whenRequestSpecificRotation(RotationOptions.ROTATE_270);
 
@@ -381,7 +381,7 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDoesNothingWhenNotAskedToDoAnything() {
-    whenDownsamplingDisabled();
+    whenResizingEnabled();
     whenRequestWidthAndHeight(0, 0);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
@@ -505,19 +505,19 @@ public class ResizeAndRotateProducerTest {
     return encodedImage;
   }
 
-  private void whenDownsamplingDisabled() {
-    whenDownsamplingEnabledIs(false);
+  private void whenResizingEnabled() {
+    whenResizingEnabledIs(true);
   }
 
-  private void whenDownsamplingEnabled() {
-    whenDownsamplingEnabledIs(true);
+  private void whenResizingDisabled() {
+    whenResizingEnabledIs(false);
   }
 
-  private void whenDownsamplingEnabledIs(boolean downsampleEnabled) {
+  private void whenResizingEnabledIs(boolean resizingEnabled) {
     mResizeAndRotateProducer = new ResizeAndRotateProducer(
         mTestExecutorService,
         mPooledByteBufferFactory,
-        downsampleEnabled,
+        resizingEnabled,
         mInputProducer);
 
     mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
