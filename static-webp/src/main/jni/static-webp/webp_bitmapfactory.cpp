@@ -358,7 +358,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
     if (initWebPImage(env) != JNI_OK) {
       return -1;
     }
+  } else {
+     jboolean flag = env->ExceptionCheck();
+     if (flag) {
+        env->ExceptionClear();
+     }
   }
-
   return JNI_VERSION_1_6;
 }
