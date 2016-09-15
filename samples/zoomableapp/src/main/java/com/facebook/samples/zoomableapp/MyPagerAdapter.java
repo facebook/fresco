@@ -22,6 +22,9 @@ import android.widget.FrameLayout;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.samples.zoomable.DefaultZoomableController;
+import com.facebook.samples.zoomable.ZoomDoubleTabListener;
+import com.facebook.samples.zoomable.ZoomableController;
 import com.facebook.samples.zoomable.ZoomableDraweeView;
 
 class MyPagerAdapter extends PagerAdapter {
@@ -34,6 +37,10 @@ class MyPagerAdapter extends PagerAdapter {
       .build();
     zoomableDraweeView.setController(controller);
     zoomableDraweeView.setTapListener(createTapListener(position));
+    ZoomableController zoomableController = zoomableDraweeView.getZoomableController();
+    if (zoomableController instanceof DefaultZoomableController) {
+      zoomableDraweeView.setZoomDoubleTabListener(new ZoomDoubleTabListener((DefaultZoomableController) zoomableController));
+    }
     page.requestLayout();
     return page;
   }
