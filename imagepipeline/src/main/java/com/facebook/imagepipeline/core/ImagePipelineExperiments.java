@@ -9,6 +9,7 @@
 package com.facebook.imagepipeline.core;
 
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
 import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
 
@@ -23,6 +24,7 @@ public class ImagePipelineExperiments {
 
   private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
+  private final @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
   private boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
@@ -36,6 +38,7 @@ public class ImagePipelineExperiments {
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     mWebpErrorLogger = builder.mWebpErrorLogger;
+    mEnhancedWebpTranscodingType = builder.mEnhancedWebpTranscodingType;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -52,6 +55,10 @@ public class ImagePipelineExperiments {
 
   public boolean isWebpSupportEnabled() {
     return mWebpSupportEnabled;
+  }
+
+  public @WebpTranscodeProducer.EnhancedTranscodingType int getEnhancedWebpTranscodingType() {
+    return mEnhancedWebpTranscodingType;
   }
 
   public int getThrottlingMaxSimultaneousRequests() {
@@ -74,6 +81,7 @@ public class ImagePipelineExperiments {
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
+    private @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
@@ -116,6 +124,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setWebpErrorLogger(
         WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
       mWebpErrorLogger = webpErrorLogger;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setEnhancedWebpTranscodingType(
+        @WebpTranscodeProducer.EnhancedTranscodingType int enhancedWebpTranscodingType) {
+      mEnhancedWebpTranscodingType = enhancedWebpTranscodingType;
       return mConfigBuilder;
     }
 

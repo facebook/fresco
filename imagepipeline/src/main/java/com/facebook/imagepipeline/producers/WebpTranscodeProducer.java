@@ -12,7 +12,10 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.Nullable;
 
 import java.io.InputStream;
+import java.lang.annotation.Retention;
 import java.util.concurrent.Executor;
+
+import android.support.annotation.IntDef;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
@@ -27,6 +30,8 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 /**
  * Transcodes WebP to JPEG / PNG.
  *
@@ -37,19 +42,29 @@ import com.facebook.imagepipeline.nativecode.WebpTranscoder;
  */
 public class WebpTranscodeProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "WebpTranscodeProducer";
+
+  @Retention(SOURCE)
+  @IntDef({JPEG_WEBP_ENHANCED_TYPE, PNG_WEBP_ENHANCED_TYPE})
+  public @interface EnhancedTranscodingType {}
+  public static final int JPEG_WEBP_ENHANCED_TYPE = 0;
+  public static final int PNG_WEBP_ENHANCED_TYPE = 1;
+
   private static final int DEFAULT_JPEG_QUALITY = 80;
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
   private final Producer<EncodedImage> mInputProducer;
+  private final @EnhancedTranscodingType int mEnhancedTranscodingType;
 
   public WebpTranscodeProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Producer<EncodedImage> inputProducer) {
+      Producer<EncodedImage> inputProducer,
+      @EnhancedTranscodingType int enhancedTranscodingType) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mInputProducer = Preconditions.checkNotNull(inputProducer);
+    mEnhancedTranscodingType = enhancedTranscodingType;
   }
 
   @Override
@@ -108,7 +123,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
             try {
-              doTranscode(encodedImageCopy, outputStream);
+              doTranscode(encodedImageCopy, outputStream, mEnhancedTranscodingType);
               CloseableReference<PooledByteBuffer> ref =
                   CloseableReference.of(outputStream.toByteBuffer());
               try {
@@ -176,17 +191,23 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
 
   private static void doTranscode(
       final EncodedImage encodedImage,
-      final PooledByteBufferOutputStream outputStream) throws Exception {
+      final PooledByteBufferOutputStream outputStream,
+      final @EnhancedTranscodingType int enhancedWebpTranscodingType) throws Exception {
     InputStream imageInputStream = encodedImage.getInputStream();
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
     switch (imageFormat) {
       case WEBP_SIMPLE:
       case WEBP_EXTENDED:
-        WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
-            imageInputStream,
-            outputStream,
-            DEFAULT_JPEG_QUALITY);
-        break;
+        // In case we have a JPEG value we have to transcode into a JPEG as usual. If the
+        // value is different (PNG) we have to fall into the LOSSLESS case and so transcode into
+        // a PNG
+        if (JPEG_WEBP_ENHANCED_TYPE == enhancedWebpTranscodingType) {
+          WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
+              imageInputStream,
+              outputStream,
+              DEFAULT_JPEG_QUALITY);
+          break;
+        }
       case WEBP_LOSSLESS:
       case WEBP_EXTENDED_WITH_ALPHA:
         WebpTranscoderFactory.getWebpTranscoder()

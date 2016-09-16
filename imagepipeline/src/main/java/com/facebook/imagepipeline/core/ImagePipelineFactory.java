@@ -324,6 +324,7 @@ public class ImagePipelineFactory {
               getImageDecoder(),
               mConfig.getProgressiveJpegConfig(),
               mConfig.isDownsampleEnabled(),
+              mConfig.getExperiments().getEnhancedWebpTranscodingType(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExecutorSupplier(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
