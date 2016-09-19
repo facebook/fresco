@@ -43,6 +43,8 @@ public class Config {
   public final boolean rotateUsingMetaData;
   public final int forcedRotationAngle;
 
+  public final boolean downsampling;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -82,6 +84,9 @@ public class Config {
     final int forcedRotationAngle = Integer.parseInt(sharedPreferences.getString(
             Const.FORCED_ROTATION_ANGLE_KEY,
             "0"));
+    final boolean downsampling = sharedPreferences.getBoolean(
+        Const.DOWNSAMPLING_KEY,
+        false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -94,7 +99,8 @@ public class Config {
       postprocessorType,
       scaleType,
       rotateUsingMetaData,
-      forcedRotationAngle);
+      forcedRotationAngle,
+      downsampling);
   }
 
   private Config(
@@ -109,7 +115,8 @@ public class Config {
       final String postprocessorType,
       final String scaleType,
       final boolean rotateUsingMetaData,
-      final int forcedRotationAngle) {
+      final int forcedRotationAngle,
+      final boolean downsampling) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -122,5 +129,6 @@ public class Config {
     this.scaleType = scaleType;
     this.rotateUsingMetaData = rotateUsingMetaData;
     this.forcedRotationAngle = forcedRotationAngle;
+    this.downsampling = downsampling;
   }
 }

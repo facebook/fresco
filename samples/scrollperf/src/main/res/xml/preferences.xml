@@ -65,6 +65,15 @@
             />
     </PreferenceCategory>
     <PreferenceCategory
+        android:key="key_preferences_resize_group"
+        android:title="@string/title_preferences_resize_group"
+    >
+      <CheckBoxPreference
+          android:key="downsampling"
+          android:title="@string/title_downsampling"
+      />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="key_preferences_scale_type_group"
         android:title="@string/title_preferences_drawee_group"
         >

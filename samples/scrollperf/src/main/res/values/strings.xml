@@ -125,4 +125,13 @@
     <string name="label_90_deg_rotation">Force 90\u00B0 rotation</string>
     <string name="label_180_deg_rotation">Force 180\u00B0 rotation</string>
     <string name="label_270_deg_rotation">Force 270\u00B0 rotation</string>
+
+    <!-- Resizing -->
+    <string translatable="false" name="title_preferences_resize_group">Resizing options</string>
+    <string translatable="false" name="title_downsampling">Downsampling</string>
+    <string translatable="false" name="message_restart_now">Kill Now</string>
+    <string translatable="false" name="checked_downsampling_summary">Enabled</string>
+    <string translatable="false" name="unchecked_downsampling_summary">Disabled</string>
+    <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
+
 </resources>

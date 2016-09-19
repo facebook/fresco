@@ -11,10 +11,14 @@
  */
 package com.facebook.samples.scrollperf.fragments;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -33,6 +37,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
    * The Tag for this Fragment
    */
   public static final String TAG = SettingsFragment.class.getSimpleName();
+
+  private ShowRestartMessageDialog mShowRestartMessageDialog;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateWhatScaleTypeSummary(findPreference(Const.SCALE_TYPE_KEY));
     updateAutoRotateSummary(findPreference(Const.AUTO_ROTATE_KEY));
     updateRotationAngleSummary(findPreference(Const.FORCED_ROTATION_ANGLE_KEY));
+    updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
   }
 
   @Override
@@ -104,6 +111,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.FORCED_ROTATION_ANGLE_KEY:
         updateRotationAngleSummary(preference);
+        break;
+      case Const.DOWNSAMPLING_KEY:
+        updateDownsamplingSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
     }
   }
@@ -223,5 +234,37 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getResources(),
         (ListPreference) preference,
         R.array.rotation_angle_summaries);
+  }
+
+  private void updateDownsamplingSummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_downsampling_summary,
+        R.string.unchecked_downsampling_summary);
+  }
+
+  private ShowRestartMessageDialog getShowRestartMessageDialog() {
+    if (mShowRestartMessageDialog == null) {
+      mShowRestartMessageDialog = new ShowRestartMessageDialog();
+    }
+    return mShowRestartMessageDialog;
+  }
+
+  public static class ShowRestartMessageDialog extends DialogFragment {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      // Use the Builder class for convenient dialog construction
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      builder.setMessage(R.string.message_application_needs_restart)
+          .setPositiveButton(android.R.string.ok, null)
+          .setNeutralButton(R.string.message_restart_now, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              System.exit(0);
+            }
+          });
+      return builder.create();
+    }
   }
 }
