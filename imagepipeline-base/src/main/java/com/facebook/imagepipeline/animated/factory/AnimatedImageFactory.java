@@ -26,7 +26,7 @@ public interface AnimatedImageFactory {
    * @param bitmapConfig the Bitmap.Config used to generate the output bitmaps
    * @return a {@link CloseableImage} for the GIF image
    */
-  public CloseableImage decodeGif(
+  CloseableImage decodeGif(
       final EncodedImage encodedImage,
       final ImageDecodeOptions options,
       final Bitmap.Config bitmapConfig);
@@ -38,7 +38,7 @@ public interface AnimatedImageFactory {
    * @param bitmapConfig the Bitmap.Config used to generate the output bitmaps
    * @return a {@link CloseableImage} for the WebP image
    */
-  public CloseableImage decodeWebP(
+  CloseableImage decodeWebP(
       final EncodedImage encodedImage,
       final ImageDecodeOptions options,
       final Bitmap.Config bitmapConfig);
