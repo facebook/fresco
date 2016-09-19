@@ -33,6 +33,17 @@ public class InfiniteSimpleAdapterTest extends AndroidTestCase {
   @Mock
   private Uri mUri;
 
+  public void testInfiniteAdapterWhichIsEmpty() {
+    final Context context = getContext();
+    final Resources res = context.getResources();
+    final String[] uris = new String[]{};
+    when(mSimpleAdapter.getSize()).thenReturn(0);
+    when(mSimpleAdapter.isLazy()).thenReturn(true);
+    final SimpleAdapter infinite = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
+    assertEquals(0, infinite.getSize());
+    assertTrue(infinite.isLazy());
+  }
+
   public void testInfiniteAdapter() {
     final Context context = getContext();
     final Resources res = context.getResources();

@@ -41,7 +41,7 @@ public interface SimpleAdapter<E> {
       return new SimpleAdapter<E>() {
         @Override
         public int getSize() {
-          return Integer.MAX_VALUE;
+          return (srcAdapter.getSize() == 0) ? 0 :Integer.MAX_VALUE;
         }
 
         @Override
