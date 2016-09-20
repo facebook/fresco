@@ -13,7 +13,6 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile 'com.android.support.test:runner:0.4'

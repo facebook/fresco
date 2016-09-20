@@ -7,7 +7,6 @@ version = VERSION_NAME
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':static-webp')
     compile project(':animated-base')

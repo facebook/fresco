@@ -8,7 +8,6 @@ dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
-    testCompile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

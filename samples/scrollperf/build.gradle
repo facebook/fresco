@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro'
         }
     }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
     sourceSets {
         main {
             res.srcDirs = ['src/main/res', 'src/androidTest/res']
@@ -30,10 +35,9 @@ android {
 dependencies {
     compile project(':drawee-backends:drawee-pipeline')
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:recyclerview-v7:23.2.0'
-    compile 'com.android.support:preference-v7:23.2.0'
-    testCompile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
     testCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile "junit:junit:${JUNIT_VERSION}"
     androidTestCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
