@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 
 import com.facebook.samples.scrollperf.R;
+import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
  * We use this class to keep in memory all the information from the Settings. It's a kind of
@@ -44,6 +45,10 @@ public class Config {
   public final int forcedRotationAngle;
 
   public final boolean downsampling;
+
+  public final boolean overrideSize;
+  public final int overridenWidth;
+  public final int overridenHeight;
 
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
@@ -87,6 +92,15 @@ public class Config {
     final boolean downsampling = sharedPreferences.getBoolean(
         Const.DOWNSAMPLING_KEY,
         false);
+    final boolean overrideSize = sharedPreferences.getBoolean(
+        Const.OVERRIDE_SIZE_KEY,
+        false);
+    final int overridenWidth = sharedPreferences.getInt(
+        Const.OVERRIDEN_WIDTH_KEY,
+        SizeUtil.DISPLAY_WIDTH / 2);
+    final int overridenHeight = sharedPreferences.getInt(
+        Const.OVERRIDEN_HEIGHT_KEY,
+        SizeUtil.DISPLAY_HEIGHT / 2);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -100,7 +114,10 @@ public class Config {
       scaleType,
       rotateUsingMetaData,
       forcedRotationAngle,
-      downsampling);
+      downsampling,
+      overrideSize,
+      overridenWidth,
+      overridenHeight);
   }
 
   private Config(
@@ -116,7 +133,10 @@ public class Config {
       final String scaleType,
       final boolean rotateUsingMetaData,
       final int forcedRotationAngle,
-      final boolean downsampling) {
+      final boolean downsampling,
+      final boolean overrideSize,
+      final int overridenWidth,
+      final int overridenHeight) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -130,5 +150,8 @@ public class Config {
     this.rotateUsingMetaData = rotateUsingMetaData;
     this.forcedRotationAngle = forcedRotationAngle;
     this.downsampling = downsampling;
+    this.overrideSize = overrideSize;
+    this.overridenWidth = overridenWidth;
+    this.overridenHeight = overridenHeight;
   }
 }

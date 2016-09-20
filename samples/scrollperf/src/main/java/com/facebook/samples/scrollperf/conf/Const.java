@@ -39,4 +39,7 @@ public final class Const {
   public static final String AUTO_ROTATE_KEY= "auto_rotate";
   public static final String FORCED_ROTATION_ANGLE_KEY= "rotation_angle";
   public static final String DOWNSAMPLING_KEY= "downsampling";
+  public static final String OVERRIDE_SIZE_KEY= "auto_size_override";
+  public static final String OVERRIDEN_WIDTH_KEY= "width_size_key";
+  public static final String OVERRIDEN_HEIGHT_KEY= "height_size_key";
 }

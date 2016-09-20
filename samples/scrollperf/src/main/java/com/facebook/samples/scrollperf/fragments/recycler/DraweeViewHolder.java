@@ -19,10 +19,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.conf.Config;
-import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
@@ -42,13 +40,7 @@ public class DraweeViewHolder extends RecyclerView.ViewHolder {
     mParentView = parentView;
     mDraweeView = simpleDraweeView;
     mConfig = config;
-    if (mParentView != null) {
-      int size = SizeUtil.calcDesiredSize(
-              mParentView.getContext(),
-              mParentView.getWidth(),
-              mParentView.getHeight());
-      SizeUtil.updateViewLayoutParams(mDraweeView, size, (int) (size / Const.RATIO));
-    }
+    SizeUtil.setConfiguredSize(mParentView, mDraweeView, config);
   }
 
   /**

@@ -26,6 +26,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Const;
+import com.facebook.samples.scrollperf.preferences.SizePreferences;
+import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
  * The Fragment for settings
@@ -64,6 +66,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateAutoRotateSummary(findPreference(Const.AUTO_ROTATE_KEY));
     updateRotationAngleSummary(findPreference(Const.FORCED_ROTATION_ANGLE_KEY));
     updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
+    updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
+    // Set sizes
+    SizePreferences widthPreferences =
+        (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
+    widthPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
+    SizePreferences heightPreferences =
+        (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
+    heightPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
   }
 
   @Override
@@ -115,6 +125,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       case Const.DOWNSAMPLING_KEY:
         updateDownsamplingSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.OVERRIDE_SIZE_KEY:
+        updateOverrideSizeSummary(preference);
         break;
     }
   }
@@ -242,6 +255,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) preference,
         R.string.checked_downsampling_summary,
         R.string.unchecked_downsampling_summary);
+  }
+
+  private void updateOverrideSizeSummary(final Preference preference) {
+    boolean currentState = updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_auto_size_override,
+        R.string.unchecked_auto_size_override);
+    findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
   }
 
   private ShowRestartMessageDialog getShowRestartMessageDialog() {

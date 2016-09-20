@@ -67,10 +67,26 @@
     <PreferenceCategory
         android:key="key_preferences_resize_group"
         android:title="@string/title_preferences_resize_group"
-    >
+        >
       <CheckBoxPreference
           android:key="downsampling"
           android:title="@string/title_downsampling"
+      />
+      <CheckBoxPreference
+          android:key="auto_size_override"
+          android:title="@string/title_auto_size_override"
+      />
+      <com.facebook.samples.scrollperf.preferences.SizePreferences
+          android:title="@string/title_overriden_size_width"
+          android:defaultValue="65"
+          android:dependency="auto_size_override"
+          android:key="width_size_key"
+      />
+      <com.facebook.samples.scrollperf.preferences.SizePreferences
+          android:title="@string/title_overriden_size_height"
+          android:defaultValue="@integer/default_size_value"
+          android:dependency="auto_size_override"
+          android:key="height_size_key"
       />
     </PreferenceCategory>
     <PreferenceCategory

@@ -134,4 +134,12 @@
     <string translatable="false" name="unchecked_downsampling_summary">Disabled</string>
     <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
 
+    <string translatable="false" name="title_auto_size_override">Override automatic size</string>
+    <string translatable="false" name="checked_auto_size_override">Images are resized to the given dimensions</string>
+    <string translatable="false" name="unchecked_auto_size_override">Images are automatically resized</string>
+    <string translatable="false" name="title_overriden_size_width">Image Width (px)</string>
+    <string translatable="false" name="title_overriden_size_height">Image Height (px)</string>
+    <string translatable="false" name="size_label_format">%1$d px</string>
+
+
 </resources>

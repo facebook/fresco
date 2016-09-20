@@ -12,16 +12,25 @@
 
 package com.facebook.samples.scrollperf.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+
+import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.conf.Const;
 
 /**
  * Utility class for resizing
  */
 public final class SizeUtil {
+
+  public static int DISPLAY_WIDTH;
+  public static int DISPLAY_HEIGHT;
 
   /**
    * Update the LayoutParams of the given View
@@ -51,5 +60,42 @@ public final class SizeUtil {
     int desiredSize = (orientation == Configuration.ORIENTATION_LANDSCAPE) ?
             parentWidth : parentHeight;
     return Math.min(desiredSize, parentWidth);
+  }
+
+  /**
+   * Utility method which set the size based on the parent and configurations
+   * @param parentView The parent View
+   * @param draweeView The View to resize
+   * @param config The Config object
+   */
+  public static void setConfiguredSize(
+      final View parentView,
+      final View draweeView,
+      final Config config) {
+    if (parentView != null) {
+      if (config.overrideSize) {
+        SizeUtil.updateViewLayoutParams(
+            draweeView,
+            config.overridenWidth,
+            config.overridenHeight);
+      } else {
+        int size = SizeUtil.calcDesiredSize(
+            parentView.getContext(),
+            parentView.getWidth(),
+            parentView.getHeight());
+        SizeUtil.updateViewLayoutParams(draweeView, size, (int) (size / Const.RATIO));
+      }
+    }
+  }
+
+  /**
+   * Invoke one into the Activity to get info about the Display size
+   * @param activity The Activity
+   */
+  public static void initSizeData(Activity activity) {
+    DisplayMetrics metrics = new DisplayMetrics();
+    activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    DISPLAY_WIDTH = metrics.widthPixels;
+    DISPLAY_HEIGHT = metrics.heightPixels;
   }
 }
