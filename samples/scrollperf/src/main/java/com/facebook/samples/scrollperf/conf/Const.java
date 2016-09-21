@@ -42,4 +42,5 @@ public final class Const {
   public static final String OVERRIDE_SIZE_KEY= "auto_size_override";
   public static final String OVERRIDEN_WIDTH_KEY= "width_size_key";
   public static final String OVERRIDEN_HEIGHT_KEY= "height_size_key";
+  public static final String FADE_DURATION_KEY = "fade_duration";
 }

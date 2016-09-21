@@ -74,6 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SizePreferences heightPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
     heightPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
+    updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
   }
 
   @Override
@@ -128,6 +129,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.OVERRIDE_SIZE_KEY:
         updateOverrideSizeSummary(preference);
+        break;
+      case Const.FADE_DURATION_KEY:
+        updateFadeDurationSummary(preference);
         break;
     }
   }
@@ -264,6 +268,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         R.string.checked_auto_size_override,
         R.string.unchecked_auto_size_override);
     findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
+  }
+
+  private void updateFadeDurationSummary(final Preference preference) {
+    updateListPreference(
+        getResources(),
+        (ListPreference) preference,
+        R.array.fade_duration_summaries);
   }
 
   private ShowRestartMessageDialog getShowRestartMessageDialog() {

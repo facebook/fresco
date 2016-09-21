@@ -141,5 +141,14 @@
     <string translatable="false" name="title_overriden_size_height">Image Height (px)</string>
     <string translatable="false" name="size_label_format">%1$d px</string>
 
-
+    <!-- Fade duration -->
+    <string name="title_fade_duration">Fade Duration</string>
+    <string translatable="false" name="value_no_fade_duration">0</string>
+    <string translatable="false" name="value_fast_fade_duration">150</string>
+    <string translatable="false" name="value_medium_fade_duration">300</string>
+    <string translatable="false" name="value_slow_fade_duration">600</string>
+    <string name="label_no_fade_duration">No fading</string>
+    <string name="label_fast_fade_duration">Fast fading: 150ms</string>
+    <string name="label_medium_fade_duration">Medium fading: 300ms</string>
+    <string name="label_slow_fade_duration">Slow fading: 600ms</string>
 </resources>

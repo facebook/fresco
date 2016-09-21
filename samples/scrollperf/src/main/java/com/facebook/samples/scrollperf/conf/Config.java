@@ -50,6 +50,8 @@ public class Config {
   public final int overridenWidth;
   public final int overridenHeight;
 
+  public final int fadeDurationMs;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -101,6 +103,9 @@ public class Config {
     final int overridenHeight = sharedPreferences.getInt(
         Const.OVERRIDEN_HEIGHT_KEY,
         SizeUtil.DISPLAY_HEIGHT / 2);
+    final int fadeDurationMs = Integer.parseInt(sharedPreferences.getString(
+            Const.FADE_DURATION_KEY,
+            context.getString(R.string.value_fast_fade_duration)));
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -117,7 +122,8 @@ public class Config {
       downsampling,
       overrideSize,
       overridenWidth,
-      overridenHeight);
+      overridenHeight,
+      fadeDurationMs);
   }
 
   private Config(
@@ -136,7 +142,8 @@ public class Config {
       final boolean downsampling,
       final boolean overrideSize,
       final int overridenWidth,
-      final int overridenHeight) {
+      final int overridenHeight,
+      final int fadeDurationMs) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -153,5 +160,6 @@ public class Config {
     this.overrideSize = overrideSize;
     this.overridenWidth = overridenWidth;
     this.overridenHeight = overridenHeight;
+    this.fadeDurationMs = fadeDurationMs;
   }
 }

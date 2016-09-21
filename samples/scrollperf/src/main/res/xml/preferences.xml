@@ -130,6 +130,14 @@
             android:entryValues="@array/rotation_angle_values"
             android:key="rotation_angle"
             android:title="@string/title_forced_rotation"
-        />
+            />
+        <ListPreference
+            android:defaultValue="@string/value_fast_fade_duration"
+            android:dialogTitle="@string/title_fade_duration"
+            android:entries="@array/fade_duration_summaries"
+            android:entryValues="@array/fade_duration_values"
+            android:key="fade_duration"
+            android:title="@string/title_fade_duration"
+            />
     </PreferenceCategory>
 </PreferenceScreen>

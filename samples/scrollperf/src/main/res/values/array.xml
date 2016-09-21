@@ -88,4 +88,18 @@
         <item>@string/label_180_deg_rotation</item>
         <item>@string/label_270_deg_rotation</item>
     </array>
+
+    <!-- Fade duration -->
+    <array name="fade_duration_values">
+        <item>@string/value_no_fade_duration</item>
+        <item>@string/value_fast_fade_duration</item>
+        <item>@string/value_medium_fade_duration</item>
+        <item>@string/value_slow_fade_duration</item>
+    </array>
+    <array name="fade_duration_summaries">
+        <item>@string/label_no_fade_duration</item>
+        <item>@string/label_fast_fade_duration</item>
+        <item>@string/label_medium_fade_duration</item>
+        <item>@string/label_slow_fade_duration</item>
+    </array>
 </resources>

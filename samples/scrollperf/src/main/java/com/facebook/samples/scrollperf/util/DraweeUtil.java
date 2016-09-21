@@ -38,6 +38,7 @@ public final class DraweeUtil {
           final Config config) {
     GenericDraweeHierarchyBuilder builder =
             new GenericDraweeHierarchyBuilder(context.getResources())
+            .setFadeDuration(config.fadeDurationMs)
             .setPlaceholderImage(Const.PLACEHOLDER)
             .setFailureImage(Const.FAILURE)
             .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
