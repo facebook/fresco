@@ -139,5 +139,10 @@
             android:key="fade_duration"
             android:title="@string/title_fade_duration"
             />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="draw_border"
+            android:title="@string/title_draw_border"
+            />
     </PreferenceCategory>
 </PreferenceScreen>

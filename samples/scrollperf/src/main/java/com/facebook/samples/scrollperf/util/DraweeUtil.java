@@ -12,12 +12,13 @@
 package com.facebook.samples.scrollperf.util;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.res.Resources;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
 
@@ -43,14 +44,23 @@ public final class DraweeUtil {
             .setFailureImage(Const.FAILURE)
             .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
     applyScaleType(builder, config);
-    if (config.useRoundedCorners) {
-      // Will add conf params later about this
-      final RoundingParams roundingParams = new RoundingParams()
-              .setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY)
-              .setBorderColor(Color.RED)
-              .setBorderWidth(2.0f)
-              .setCornersRadius(80.0f);
-      roundingParams.setRoundAsCircle(config.useRoundedAsCircle);
+
+    if (config.useRoundedCorners || config.drawBorder) {
+      final Resources res = context.getResources();
+      final RoundingParams roundingParams = new RoundingParams();
+
+      if (config.useRoundedCorners) {
+        roundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
+        roundingParams.setCornersRadius(res.getDimensionPixelSize(R.dimen.drawee_corner_radius));
+        roundingParams.setRoundAsCircle(config.useRoundedAsCircle);
+      }
+
+      if (config.drawBorder) {
+        //noinspection deprecation
+        roundingParams.setBorderColor(res.getColor(R.color.colorPrimary));
+        roundingParams.setBorderWidth(res.getDimensionPixelSize(R.dimen.drawee_border_width));
+      }
+
       builder.setRoundingParams(roundingParams);
     }
     return builder.build();

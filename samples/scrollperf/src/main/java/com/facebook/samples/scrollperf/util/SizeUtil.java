@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -97,5 +98,12 @@ public final class SizeUtil {
     activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
     DISPLAY_WIDTH = metrics.widthPixels;
     DISPLAY_HEIGHT = metrics.heightPixels;
+  }
+
+  public static int dpToPx(Context context, int dp) {
+    return (int) TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp,
+        context.getResources().getDisplayMetrics());
   }
 }

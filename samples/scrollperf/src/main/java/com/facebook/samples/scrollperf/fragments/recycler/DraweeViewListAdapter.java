@@ -24,6 +24,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
@@ -39,9 +40,12 @@ public class DraweeViewListAdapter extends BaseAdapter {
 
   private final Config mConfig;
 
-  public DraweeViewListAdapter(SimpleAdapter<Uri> simpleAdapter, Config config) {
+  private final int mPaddingPx;
+
+  public DraweeViewListAdapter(Context context, SimpleAdapter<Uri> simpleAdapter, Config config) {
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
+    this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
   }
 
   @Override
@@ -67,6 +71,7 @@ public class DraweeViewListAdapter extends BaseAdapter {
       GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(context, mConfig);
       draweeView = new SimpleDraweeView(context, gdh);
       SizeUtil.setConfiguredSize(parent, draweeView, mConfig);
+      draweeView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
     } else {
       draweeView = (SimpleDraweeView) convertView;
     }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
@@ -33,16 +34,20 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final Config mConfig;
 
+  private final int mPaddingPx;
+
   public DraweeViewAdapter(Context context, SimpleAdapter<Uri> simpleAdapter, Config config) {
     this.mContext = context;
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
+    this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
   }
 
   @Override
   public DraweeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(mContext, mConfig);
     final SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext, gdh);
+    simpleDraweeView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
     return new DraweeViewHolder(parent, simpleDraweeView, mConfig);
   }
 

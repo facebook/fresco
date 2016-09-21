@@ -151,4 +151,10 @@
     <string name="label_fast_fade_duration">Fast fading: 150ms</string>
     <string name="label_medium_fade_duration">Medium fading: 300ms</string>
     <string name="label_slow_fade_duration">Slow fading: 600ms</string>
+
+    <!-- Draw border -->
+    <string translatable="false" name="title_draw_border">Draw Border</string>
+    <string translatable="false" name="checked_draw_border_summary">Border is drawn around image</string>
+    <string translatable="false" name="unchecked_draw_border_summary">No border is drawn</string>
+
 </resources>

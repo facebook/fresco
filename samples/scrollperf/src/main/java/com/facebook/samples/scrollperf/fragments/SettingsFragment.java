@@ -75,6 +75,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
     heightPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
+    updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
   }
 
   @Override
@@ -132,6 +133,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.FADE_DURATION_KEY:
         updateFadeDurationSummary(preference);
+        break;
+      case Const.DRAW_BORDER_KEY:
+        updateDrawBorderSummary(preference);
         break;
     }
   }
@@ -275,6 +279,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getResources(),
         (ListPreference) preference,
         R.array.fade_duration_summaries);
+  }
+
+  private void updateDrawBorderSummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_draw_border_summary,
+        R.string.unchecked_draw_border_summary);
   }
 
   private ShowRestartMessageDialog getShowRestartMessageDialog() {

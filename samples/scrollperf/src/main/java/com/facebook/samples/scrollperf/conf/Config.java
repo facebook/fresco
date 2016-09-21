@@ -52,6 +52,8 @@ public class Config {
 
   public final int fadeDurationMs;
 
+  public final boolean drawBorder;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -106,6 +108,9 @@ public class Config {
     final int fadeDurationMs = Integer.parseInt(sharedPreferences.getString(
             Const.FADE_DURATION_KEY,
             context.getString(R.string.value_fast_fade_duration)));
+    final boolean drawBorder = sharedPreferences.getBoolean(
+            Const.DRAW_BORDER_KEY,
+            false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -123,7 +128,8 @@ public class Config {
       overrideSize,
       overridenWidth,
       overridenHeight,
-      fadeDurationMs);
+      fadeDurationMs,
+      drawBorder);
   }
 
   private Config(
@@ -143,7 +149,8 @@ public class Config {
       final boolean overrideSize,
       final int overridenWidth,
       final int overridenHeight,
-      final int fadeDurationMs) {
+      final int fadeDurationMs,
+      final boolean drawBorder) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.infiniteDataSource = infiniteDataSource;
@@ -161,5 +168,6 @@ public class Config {
     this.overridenWidth = overridenWidth;
     this.overridenHeight = overridenHeight;
     this.fadeDurationMs = fadeDurationMs;
+    this.drawBorder = drawBorder;
   }
 }
