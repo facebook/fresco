@@ -7,6 +7,8 @@ machine:
   environment:
     PATH: $ANDROID_NDK:$PATH
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+  java:
+    version: oraclejdk8
 
 dependencies:
   pre:
