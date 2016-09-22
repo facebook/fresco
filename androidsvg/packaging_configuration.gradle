@@ -1,0 +1,50 @@
+// This script sets up our pom and artifacts for deployment.
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+version = '1.2.3'
+group = 'com.caverock'
+
+def siteUrl = 'https://github.com/BigBadaboom/androidsvg'
+def gitUrl = 'https://github.com/BigBadaboom/androidsvg.git'
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+
+                name 'SVG rendering library for Android.'
+                url siteUrl
+
+                licenses {
+                    license {
+                        name 'Apache 2.0'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'BigBadaboom'
+                        name 'Paul LeBeau'
+                        email 'androidsvgfeedback@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+// By default, we will upload just our library AAR. Here we specify that we also want to upload our sources.
+artifacts {
+    archives sourcesJar
+}

@@ -39,6 +39,7 @@ import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.SvgDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -104,6 +105,8 @@ public class ImagePipelineFactory {
 
   private PlatformBitmapFactory mPlatformBitmapFactory;
   private PlatformDecoder mPlatformDecoder;
+
+  private SvgDecoder mSvgDecoder;
 
   private AnimatedFactory mAnimatedFactory;
 
@@ -193,6 +196,7 @@ public class ImagePipelineFactory {
         mImageDecoder = new ImageDecoder(
             animatedImageFactory,
             getPlatformDecoder(),
+            getSvgDecoder(),
             mConfig.getBitmapConfig());
       }
     }
@@ -313,6 +317,13 @@ public class ImagePipelineFactory {
           mConfig.getExperiments().getWebpErrorLogger());
     }
     return mPlatformDecoder;
+  }
+
+  public SvgDecoder getSvgDecoder() {
+    if (mSvgDecoder == null) {
+      mSvgDecoder =  new SvgDecoder(mConfig.getPoolFactory().getBitmapPool(), 0, null);
+    }
+    return mSvgDecoder;
   }
 
   private ProducerFactory getProducerFactory() {
