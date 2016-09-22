@@ -8,6 +8,8 @@
  */
 package com.facebook.drawee.backends.pipeline;
 
+import javax.annotation.Nullable;
+
 import com.facebook.common.internal.ImmutableList;
 
 import java.util.ArrayList;
@@ -18,12 +20,16 @@ import java.util.List;
  */
 public class DraweeConfig {
 
+  @Nullable
   private final ImmutableList<DrawableFactory> mCustomDrawableFactories;
 
   private DraweeConfig(Builder builder) {
-    mCustomDrawableFactories = ImmutableList.copyOf(builder.mCustomDrawableFactories);
+    mCustomDrawableFactories = builder.mCustomDrawableFactories != null
+        ? ImmutableList.copyOf(builder.mCustomDrawableFactories)
+        : null;
   }
 
+  @Nullable
   public ImmutableList<DrawableFactory> getCustomDrawableFactories() {
     return mCustomDrawableFactories;
   }
