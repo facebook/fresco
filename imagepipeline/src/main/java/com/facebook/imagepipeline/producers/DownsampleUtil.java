@@ -127,7 +127,7 @@ public class DownsampleUtil {
   }
 
   private static int getRotationAngle(ImageRequest imageRequest, EncodedImage encodedImage) {
-    if (!imageRequest.getAutoRotateEnabled()) {
+    if (!imageRequest.getRotationOptions().useImageMetadata()) {
       return 0;
     }
     int rotationAngle = encodedImage.getRotationAngle();

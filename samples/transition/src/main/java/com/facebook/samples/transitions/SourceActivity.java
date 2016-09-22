@@ -19,13 +19,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
-
-import java.util.Set;
-import java.util.HashSet;
 
 public class SourceActivity extends Activity {
 
@@ -34,14 +27,9 @@ public class SourceActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Set<RequestListener> listeners = new HashSet<>();
-    listeners.add(new RequestLoggingListener());
-    ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-        .setRequestListeners(listeners)
-        .build();
-    Fresco.initialize(this, config);
     setContentView(R.layout.drawee_source);
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
+    mSimpleDraweeView.setImageURI("res:/" + R.drawable.test_image);
   }
 
   public void startTransition(View view) {

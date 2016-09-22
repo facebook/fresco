@@ -67,7 +67,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private static final Class<?> TAG = AbstractDraweeController.class;
 
   // Components
-  private final DraweeEventTracker mEventTracker = new DraweeEventTracker();
+  private final DraweeEventTracker mEventTracker = DraweeEventTracker.newInstance();
   private final DeferredReleaser mDeferredReleaser;
   private final Executor mUiThreadImmediateExecutor;
 
@@ -75,6 +75,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private @Nullable RetryManager mRetryManager;
   private @Nullable GestureDetector mGestureDetector;
   private @Nullable ControllerListener<INFO> mControllerListener;
+  private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
 
   // Hierarchy
   private @Nullable SettableDraweeHierarchy mSettableDraweeHierarchy;
@@ -87,8 +88,10 @@ public abstract class AbstractDraweeController<T, INFO> implements
   // Mutable state
   private boolean mIsAttached;
   private boolean mIsRequestSubmitted;
+  private boolean mIsVisibleInViewportHint;
   private boolean mHasFetchFailed;
   private boolean mRetainImageOnFailure;
+  private @Nullable String mContentDescription;
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
   private @Nullable Drawable mDrawable;
@@ -122,6 +125,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     }
     // reinitialize mutable state (fetch state)
     mIsAttached = false;
+    mIsVisibleInViewportHint = false;
     releaseFetch();
     mRetainImageOnFailure = false;
     // reinitialize optional components
@@ -137,6 +141,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     } else {
       mControllerListener = null;
     }
+    mControllerViewportVisibilityListener = null;
     // clear hierarchy and controller overlay
     if (mSettableDraweeHierarchy != null) {
       mSettableDraweeHierarchy.reset();
@@ -177,6 +182,9 @@ public abstract class AbstractDraweeController<T, INFO> implements
     }
     if (mDrawable != null) {
       releaseDrawable(mDrawable);
+    }
+    if (mContentDescription != null) {
+      mContentDescription = null;
     }
     mDrawable = null;
     if (mFetchedImage != null) {
@@ -227,6 +235,18 @@ public abstract class AbstractDraweeController<T, INFO> implements
     mRetainImageOnFailure = enabled;
   }
 
+  /** Gets accessibility content description. */
+  @Override
+  public @Nullable String getContentDescription() {
+    return mContentDescription;
+  }
+
+  /** Sets accessibility content description. */
+  @Override
+  public void setContentDescription(@Nullable String contentDescription) {
+    mContentDescription = contentDescription;
+  }
+
   /** Adds controller listener. */
   public void addControllerListener(ControllerListener<? super INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener);
@@ -263,6 +283,12 @@ public abstract class AbstractDraweeController<T, INFO> implements
       return BaseControllerListener.getNoOpListener();
     }
     return mControllerListener;
+  }
+
+  /** Sets the controller viewport visibility listener */
+  public void setControllerViewportVisibilityListener(
+      @Nullable ControllerViewportVisibilityListener controllerViewportVisibilityListener) {
+    mControllerViewportVisibilityListener = controllerViewportVisibilityListener;
   }
 
   /** Gets the hierarchy */
@@ -351,6 +377,19 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   @Override
+  public void onViewportVisibilityHint(boolean isVisibleInViewportHint) {
+    final ControllerViewportVisibilityListener listener = mControllerViewportVisibilityListener;
+    if (listener != null) {
+      if (isVisibleInViewportHint && !mIsVisibleInViewportHint) {
+        listener.onDraweeViewportEntry(mId);
+      } else if (!isVisibleInViewportHint && mIsVisibleInViewportHint) {
+        listener.onDraweeViewportExit(mId);
+      }
+    }
+    mIsVisibleInViewportHint = isVisibleInViewportHint;
+  }
+
+  @Override
   public boolean onTouchEvent(MotionEvent event) {
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(TAG, "controller %x %s: onTouchEvent %s", System.identityHashCode(this), mId, event);
@@ -391,6 +430,16 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   protected void submitRequest() {
+    final T closeableImage = getCachedImage();
+    if (closeableImage != null) {
+      mDataSource = null;
+      mIsRequestSubmitted = true;
+      mHasFetchFailed = false;
+      mEventTracker.recordEvent(Event.ON_SUBMIT_CACHE_HIT);
+      getControllerListener().onSubmit(mId, mCallerContext);
+      onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true);
+      return;
+    }
     mEventTracker.recordEvent(Event.ON_DATASOURCE_SUBMIT);
     getControllerListener().onSubmit(mId, mCallerContext);
     mSettableDraweeHierarchy.setProgress(0, true);
@@ -543,6 +592,11 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   private boolean isExpectedDataSource(String id, DataSource<T> dataSource) {
+    if (dataSource == null && mDataSource == null) {
+      // DataSource is null when we use directly the Bitmap from the MemoryCache. In this case
+      // we don't have to close the DataSource.
+      return true;
+    }
     // There are several situations in which an old data source might return a result that we are no
     // longer interested in. To verify that the result is indeed expected, we check several things:
     return id.equals(mId) && dataSource == mDataSource && mIsRequestSubmitted;
@@ -605,5 +659,9 @@ public abstract class AbstractDraweeController<T, INFO> implements
         .add("fetchedImage", getImageHash(mFetchedImage))
         .add("events", mEventTracker.toString())
         .toString();
+  }
+
+  protected T getCachedImage() {
+    return null;
   }
 }

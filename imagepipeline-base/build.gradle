@@ -5,14 +5,15 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
 
     testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'

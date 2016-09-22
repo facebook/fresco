@@ -12,8 +12,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
-    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
     compile project(':animated-base')
@@ -83,8 +81,12 @@ def getNdkBuildName() {
 }
 
 def getNdkBuildFullPath() {
+    File propFile = project.rootProject.file('local.properties')
+    if (!propFile.exists()) {
+        return getNdkBuildName()
+    }
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    properties.load(propFile.newDataInputStream())
     def ndkCommand = properties.getProperty('ndk.command')
     if (ndkCommand != null) {
         return ndkCommand

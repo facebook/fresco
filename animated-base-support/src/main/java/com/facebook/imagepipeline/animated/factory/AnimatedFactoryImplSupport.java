@@ -26,6 +26,7 @@ import com.facebook.common.internal.DoNotStrip;
 @DoNotStrip
 public class AnimatedFactoryImplSupport extends AnimatedFactoryImpl {
 
+  @DoNotStrip
   public AnimatedFactoryImplSupport(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier) {

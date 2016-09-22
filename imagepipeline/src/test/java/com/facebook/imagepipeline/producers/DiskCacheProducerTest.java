@@ -53,15 +53,16 @@ import static org.mockito.Mockito.*;
 public class DiskCacheProducerTest {
   private static final String PRODUCER_NAME = DiskCacheProducer.PRODUCER_NAME;
   private static final Map EXPECTED_MAP_ON_CACHE_HIT =
-      ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "true");
+      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
   private static final Map EXPECTED_MAP_ON_CACHE_MISS =
-      ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "false");
+      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
   private static final int FORCE_SMALL_CACHE_THRESHOLD = 2048;
 
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
   @Mock public ImageRequest mImageRequest;
+  @Mock public Object mCallerContext;
   @Mock public ProducerListener mProducerListener;
   @Mock public Exception mException;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
@@ -112,7 +113,7 @@ public class DiskCacheProducerTest {
         mImageRequest,
         mRequestId,
         mProducerListener,
-        mock(Object.class),
+        mCallerContext,
         ImageRequest.RequestLevel.FULL_FETCH,
         false,
         true,
@@ -121,14 +122,14 @@ public class DiskCacheProducerTest {
         mImageRequest,
         mRequestId,
         mProducerListener,
-        mock(Object.class),
+        mCallerContext,
         ImageRequest.RequestLevel.DISK_CACHE,
         false,
         true,
         Priority.MEDIUM);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest)).thenReturn(mCacheKey);
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.DEFAULT);
+    when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
   }
 
@@ -170,7 +171,7 @@ public class DiskCacheProducerTest {
 
   @Test
   public void testSmallImageDiskCacheGetSuccessful() {
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetSuccess(mSmallImageBufferedDiskCache);
     mDiskCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalEncodedImage, true);
@@ -222,7 +223,7 @@ public class DiskCacheProducerTest {
 
   @Test
   public void testSmallImageDiskCacheGetFailureInputProducerSuccess() {
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetFailure(mSmallImageBufferedDiskCache);
     setupInputProducerSuccess();
     mDiskCacheProducer.produceResults(mConsumer, mProducerContext);
@@ -276,7 +277,7 @@ public class DiskCacheProducerTest {
 
   @Test
   public void testSmallImageDiskCacheGetNotFoundInputProducerSuccess() {
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetNotFound(mSmallImageBufferedDiskCache);
     setupInputProducerSuccess();
     mDiskCacheProducer.produceResults(mConsumer, mProducerContext);
@@ -334,10 +335,10 @@ public class DiskCacheProducerTest {
   @Test
   public void testGetExtraMap() {
     assertEquals(
-        ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "true"),
+        ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true"),
         DiskCacheProducer.getExtraMap(mProducerListener, mRequestId, true));
     assertEquals(
-        ImmutableMap.of(DiskCacheProducer.VALUE_FOUND, "false"),
+        ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false"),
         DiskCacheProducer.getExtraMap(mProducerListener, mRequestId, false));
   }
 
@@ -389,7 +390,7 @@ public class DiskCacheProducerTest {
 
   @Test
   public void testIgnoresSmallHintOnWrite() {
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetNotFound(mSmallImageBufferedDiskCache);
     setupDiskCacheGetNotFound(mDefaultBufferedDiskCache);
     setupInputProducerSuccess();
@@ -427,7 +428,7 @@ public class DiskCacheProducerTest {
 
   @Test
   public void testIgnoresSmallHintIndex() {
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     when(mDefaultBufferedDiskCache.containsSync(mCacheKey)).thenReturn(true);
     setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);
@@ -438,7 +439,7 @@ public class DiskCacheProducerTest {
 
   @Test
   public void testIgnoresSmallHintDisk() {
-    when(mImageRequest.getImageType()).thenReturn(ImageRequest.ImageType.SMALL);
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
     setupDiskCacheGetNotFound(mSmallImageBufferedDiskCache);
     setupDiskCacheGetSuccess(mDefaultBufferedDiskCache);
     mForceSmallCacheProducer.produceResults(mConsumer, mProducerContext);

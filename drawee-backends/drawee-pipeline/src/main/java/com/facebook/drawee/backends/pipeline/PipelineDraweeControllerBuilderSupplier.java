@@ -22,6 +22,8 @@ import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 public class PipelineDraweeControllerBuilderSupplier implements
     Supplier<PipelineDraweeControllerBuilder> {
 
@@ -31,19 +33,27 @@ public class PipelineDraweeControllerBuilderSupplier implements
   private final Set<ControllerListener> mBoundControllerListeners;
 
   public PipelineDraweeControllerBuilderSupplier(Context context) {
-    this(context, ImagePipelineFactory.getInstance());
+    this(context, null);
   }
 
   public PipelineDraweeControllerBuilderSupplier(
       Context context,
-      ImagePipelineFactory imagePipelineFactory) {
-    this(context, imagePipelineFactory, null);
+      @Nullable DraweeConfig draweeConfig) {
+    this(context, ImagePipelineFactory.getInstance(), draweeConfig);
   }
 
   public PipelineDraweeControllerBuilderSupplier(
       Context context,
       ImagePipelineFactory imagePipelineFactory,
-      Set<ControllerListener> boundControllerListeners) {
+      @Nullable DraweeConfig draweeConfig) {
+    this(context, imagePipelineFactory, null, draweeConfig);
+  }
+
+  public PipelineDraweeControllerBuilderSupplier(
+      Context context,
+      ImagePipelineFactory imagePipelineFactory,
+      Set<ControllerListener> boundControllerListeners,
+      @Nullable DraweeConfig draweeConfig) {
     mContext = context;
     mImagePipeline = imagePipelineFactory.getImagePipeline();
 
@@ -57,7 +67,11 @@ public class PipelineDraweeControllerBuilderSupplier implements
         context.getResources(),
         DeferredReleaser.getInstance(),
         animatedDrawableFactory,
-        UiThreadImmediateExecutorService.getInstance());
+        UiThreadImmediateExecutorService.getInstance(),
+        mImagePipeline.getBitmapMemoryCache(),
+        draweeConfig != null
+                ? draweeConfig.getCustomDrawableFactories()
+                : null);
     mBoundControllerListeners = boundControllerListeners;
   }
 

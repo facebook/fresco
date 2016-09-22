@@ -17,7 +17,9 @@ LOCAL_SRC_FILES := \
 	streams.cpp \
 	transformations.cpp \
 	webp/webp_codec.cpp \
-	WebpTranscoder.cpp
+	WebpTranscoder.cpp \
+  jni_helpers.cpp \
+  webp.cpp \
 
 
 CXX11_FLAGS := -std=c++11
@@ -42,5 +44,5 @@ LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 
 include $(BUILD_SHARED_LIBRARY)
 $(call import-module,libpng-1.6.10)
-$(call import-module,libwebp-0.4.3)
-$(call import-module,libjpeg-turbo-1.3.x)
+$(call import-module,libwebp-0.5.1)
+$(call import-module,libjpeg-turbo-1.5.x)

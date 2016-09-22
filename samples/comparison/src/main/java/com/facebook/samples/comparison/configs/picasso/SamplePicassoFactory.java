@@ -15,7 +15,7 @@ package com.facebook.samples.comparison.configs.picasso;
 import android.content.Context;
 
 import com.squareup.picasso.LruCache;
-import com.squareup.picasso.OkHttpDownloader;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import com.facebook.samples.comparison.configs.ConfigConstants;
@@ -30,7 +30,7 @@ public class SamplePicassoFactory {
   public static Picasso getPicasso(Context context) {
     if (sPicasso == null) {
         sPicasso = new Picasso.Builder(context)
-            .downloader(new OkHttpDownloader(context, ConfigConstants.MAX_DISK_CACHE_SIZE))
+            .downloader(new OkHttp3Downloader(context, ConfigConstants.MAX_DISK_CACHE_SIZE))
             .memoryCache(new LruCache(ConfigConstants.MAX_MEMORY_CACHE_SIZE))
             .build();
     }

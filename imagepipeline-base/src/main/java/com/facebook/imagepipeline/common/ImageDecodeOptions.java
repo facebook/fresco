@@ -27,16 +27,6 @@ public class ImageDecodeOptions {
   public final int minDecodeIntervalMs;
 
   /**
-   * Background color used when converting to image formats that don't support transparency.
-   */
-  public final int backgroundColor;
-
-  /**
-   * Forces use of the old animation drawable code that we're in process of deprecating.
-   */
-  public final boolean forceOldAnimationCode;
-
-  /**
    * Whether to decode a preview frame for animated images.
    */
   public final boolean decodePreviewFrame;
@@ -53,19 +43,25 @@ public class ImageDecodeOptions {
    */
   public final boolean decodeAllFrames;
 
-  ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
+  /**
+   * Force image to be rendered as a static image, even if it is an animated format.
+   *
+   * This flag will force animated GIFs to be rendered as static images
+   */
+  public final boolean forceStaticImage;
+
+  public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
-    this.backgroundColor = b.getBackgroundColor();
-    this.forceOldAnimationCode = b.getForceOldAnimationCode();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
     this.decodeAllFrames = b.getDecodeAllFrames();
+    this.forceStaticImage = b.getForceStaticImage();
   }
 
   /**
    * Gets the default options.
    *
-   * @return  the default options
+   * @return the default options
    */
   public static ImageDecodeOptions defaults() {
     return DEFAULTS;
@@ -87,19 +83,21 @@ public class ImageDecodeOptions {
 
     ImageDecodeOptions that = (ImageDecodeOptions) o;
 
-    if (backgroundColor != that.backgroundColor) return false;
-    if (forceOldAnimationCode != that.forceOldAnimationCode) return false;
     if (decodePreviewFrame != that.decodePreviewFrame) return false;
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
+    if (forceStaticImage != that.forceStaticImage) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = backgroundColor;
-    result = 31 * result + (forceOldAnimationCode ? 1 : 0);
+    int result = minDecodeIntervalMs;
+    result = 31 * result + (decodePreviewFrame ? 1 : 0);
+    result = 31 * result + (useLastFrameForPreview ? 1 : 0);
+    result = 31 * result + (decodeAllFrames ? 1 : 0);
+    result = 31 * result + (forceStaticImage ? 1 : 0);
     return result;
   }
 
@@ -107,12 +105,11 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%d-%b-%b-%b-%b",
+        "%d-%b-%b-%b-%b",
         minDecodeIntervalMs,
-        backgroundColor,
-        forceOldAnimationCode,
         decodePreviewFrame,
         useLastFrameForPreview,
-        decodeAllFrames);
+        decodeAllFrames,
+        forceStaticImage);
   }
 }

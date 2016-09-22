@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
+import com.facebook.drawee.drawable.ArrayDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import org.robolectric.RobolectricTestRunner;
 
@@ -63,7 +64,7 @@ public class GenericDraweeHierarchyBuilderTest {
     assertEquals(ScaleType.CENTER_CROP, builder.getActualImageScaleType());
     assertEquals(null, builder.getActualImageMatrix());
     assertEquals(null, builder.getActualImageFocusPoint());
-    assertEquals(null, builder.getBackgrounds());
+    assertEquals(null, builder.getBackground());
     assertEquals(null, builder.getOverlays());
     assertEquals(null, builder.getRoundingParams());
   }
@@ -144,21 +145,23 @@ public class GenericDraweeHierarchyBuilderTest {
     // test backgrounds & overlays
     builder.setBackgrounds(Arrays.asList(mBackgroundDrawable1, mBackgroundDrawable2));
     builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
-    assertArrayEquals(
-        builder.getBackgrounds().toArray(),
-        new Drawable[]{mBackgroundDrawable1, mBackgroundDrawable2});
+    assertEquals(builder.getBackground().getClass(), ArrayDrawable.class);
+    ArrayDrawable bgArrayDrawable = (ArrayDrawable) builder.getBackground();
+    assertEquals(2, bgArrayDrawable.getNumberOfLayers());
+    assertSame(mBackgroundDrawable1, bgArrayDrawable.getDrawable(0));
+    assertSame(mBackgroundDrawable2, bgArrayDrawable.getDrawable(1));
     assertArrayEquals(
         builder.getOverlays().toArray(),
         new Drawable[]{mOverlayDrawable1, mOverlayDrawable2});
     builder.setBackground(mBackgroundDrawable2);
     builder.setOverlay(mOverlayDrawable2);
     builder.setPressedStateOverlay(mPressedStateDrawable);
-    assertArrayEquals(builder.getBackgrounds().toArray(), new Drawable[]{mBackgroundDrawable2});
+    assertSame(builder.getBackground(), mBackgroundDrawable2);
     assertArrayEquals(builder.getOverlays().toArray(), new Drawable[] {mOverlayDrawable2});
     assertEquals(builder.getPressedStateOverlay().getClass(), StateListDrawable.class);
     // test clearing backgrounds & overlays
     builder.setBackground(null);
-    assertNull(builder.getBackgrounds());
+    assertNull(builder.getBackground());
     builder.setOverlay(null);
     assertNull(builder.getOverlays());
     builder.setPressedStateOverlay(null);

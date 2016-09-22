@@ -157,6 +157,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
+    protected void onProgressUpdateImpl(float progress) {
+      super.onProgressUpdateImpl(progress * 0.99f);
+    }
+
+    @Override
     public void onFailureImpl(Throwable t) {
       handleError(t);
     }
@@ -214,7 +219,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       String queueStr = String.valueOf(queueTime);
       String qualityStr = String.valueOf(quality.isOfGoodEnoughQuality());
       String finalStr = String.valueOf(isFinal);
-      String imageTypeStr = String.valueOf(mProducerContext.getImageRequest().getImageType());
+      String cacheChoiceStr = String.valueOf(mProducerContext.getImageRequest().getCacheChoice());
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
         String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
@@ -228,7 +233,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             IS_FINAL_KEY,
             finalStr,
             IMAGE_TYPE_KEY,
-            imageTypeStr);
+            cacheChoiceStr);
       } else {
         return ImmutableMap.of(
             JobScheduler.QUEUE_TIME_KEY,
@@ -238,7 +243,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             IS_FINAL_KEY,
             finalStr,
             IMAGE_TYPE_KEY,
-            imageTypeStr);
+            cacheChoiceStr);
       }
     }
 
@@ -258,6 +263,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         if (!shouldFinish || mIsFinished) {
           return;
         }
+        getConsumer().onProgressUpdate(1.0f);
         mIsFinished = true;
       }
       mJobScheduler.clearJob();

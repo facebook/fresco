@@ -116,7 +116,7 @@ public class WebpSupportStatus {
     return true;
   }
 
-  public static boolean isWebpPlatformSupported(
+  public static boolean isWebpSupportedByPlatform(
       final byte[] imageHeaderBytes,
       final int offset,
       final int headerSize) {

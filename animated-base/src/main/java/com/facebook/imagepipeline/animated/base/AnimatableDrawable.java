@@ -10,11 +10,14 @@
 package com.facebook.imagepipeline.animated.base;
 
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.graphics.drawable.Animatable;
+import android.os.Build;
 
 /**
  * An interface for animatable drawables that can be asked to construct a value animator.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public interface AnimatableDrawable extends Animatable {
 
   /**

@@ -17,6 +17,10 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.WriterCallback;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
@@ -24,10 +28,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteStreams;
-import com.facebook.binaryresource.BinaryResource;
-import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.common.WriterCallback;
-import com.facebook.cache.disk.FileCache;
 
 import bolts.Task;
 
@@ -149,7 +149,7 @@ public class BufferedDiskCache {
     if (result != null) {
       result.close();
       FLog.v(TAG, "Found image for %s in staging area", key.toString());
-      mImageCacheStatsTracker.onStagingAreaHit();
+      mImageCacheStatsTracker.onStagingAreaHit(key);
       return true;
     } else {
       FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
@@ -175,7 +175,7 @@ public class BufferedDiskCache {
               EncodedImage result = mStagingArea.get(key);
               if (result != null) {
                 FLog.v(TAG, "Found image for %s in staging area", key.toString());
-                mImageCacheStatsTracker.onStagingAreaHit();
+                mImageCacheStatsTracker.onStagingAreaHit(key);
               } else {
                 FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
                 mImageCacheStatsTracker.onStagingAreaMiss();
@@ -311,7 +311,7 @@ public class BufferedDiskCache {
 
   private Task<EncodedImage> foundPinnedImage(CacheKey key, EncodedImage pinnedImage) {
     FLog.v(TAG, "Found image for %s in staging area", key.toString());
-    mImageCacheStatsTracker.onStagingAreaHit();
+    mImageCacheStatsTracker.onStagingAreaHit(key);
     return Task.forResult(pinnedImage);
   }
 

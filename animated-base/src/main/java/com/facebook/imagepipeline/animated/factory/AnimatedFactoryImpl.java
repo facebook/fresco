@@ -47,6 +47,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
 
   private PlatformBitmapFactory mPlatformBitmapFactory;
 
+  @DoNotStrip
   public AnimatedFactoryImpl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier) {

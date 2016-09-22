@@ -23,7 +23,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.samples.comparison.configs.ConfigConstants;
-import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -58,8 +58,9 @@ public class ImagePipelineConfigFactory {
    */
   public static ImagePipelineConfig getOkHttpImagePipelineConfig(Context context) {
     if (sOkHttpImagePipelineConfig == null) {
-      OkHttpClient okHttpClient = new OkHttpClient();
-      okHttpClient.networkInterceptors().add(new StethoInterceptor());
+      OkHttpClient okHttpClient = new OkHttpClient.Builder()
+          .addNetworkInterceptor(new StethoInterceptor())
+          .build();
       ImagePipelineConfig.Builder configBuilder =
         OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
       configureCaches(configBuilder, context);

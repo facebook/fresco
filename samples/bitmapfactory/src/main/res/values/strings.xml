@@ -1,0 +1,19 @@
+<resources>
+  <string name="app_name">Bitmap Factory</string>
+  <string name="loaded_image">Loaded Image</string>
+
+  <string name="correct_bitmap">Correct Bitmap</string>
+  <string name="incorrect_bitmap">Incorrect Bitmap</string>
+  <string name="ignoring_check">Ignoring Check</string>
+
+  <string-array name="image_options">
+    <item>Load Basic</item>
+    <item>Load Cropped</item>
+    <item>Load Translated</item>
+    <item>Load Transformed</item>
+    <item>Load Scaled</item>
+    <item>Load from Color Array</item>
+    <item>Load from Cropped Color Array</item>
+    <item>Load from Resources</item>
+  </string-array>
+</resources>

@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile project(':drawee-backends:drawee-pipeline')
+    compile project(':animated-base')
+    compile project(':animated-base-support')
+    compile project(':animated-gif')
+    compile project(':animated-webp')
 }
 
 android {

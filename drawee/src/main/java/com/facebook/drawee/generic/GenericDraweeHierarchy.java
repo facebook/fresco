@@ -72,7 +72,7 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
  * <li> All branches except the actual image branch are optional (placeholder, failure, retry,
  * progress bar). If some branch is not specified it won't be created. Index in FadeDrawable will
  * still be reserved though.
- * <li> If overlays and/or backgrounds are specified, they are added to the same fade drawable, and
+ * <li> If overlays and/or background are specified, they are added to the same fade drawable, and
  * are always being displayed.
  * <li> ScaleType and Matrix transformations will be added only if specified. If both are
  * unspecified, then the branch for that image is attached to FadeDrawable directly. Matrix
@@ -85,6 +85,14 @@ import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
  */
 public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
+  private static final int BACKGROUND_IMAGE_INDEX = 0;
+  private static final int PLACEHOLDER_IMAGE_INDEX = 1;
+  private static final int ACTUAL_IMAGE_INDEX = 2;
+  private static final int PROGRESS_BAR_IMAGE_INDEX = 3;
+  private static final int RETRY_IMAGE_INDEX = 4;
+  private static final int FAILURE_IMAGE_INDEX = 5;
+  private static final int OVERLAY_IMAGES_INDEX = 6;
+
   private final Drawable mEmptyActualImageDrawable = new ColorDrawable(Color.TRANSPARENT);
 
   private final Resources mResources;
@@ -94,69 +102,50 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final FadeDrawable mFadeDrawable;
   private final ForwardingDrawable mActualImageWrapper;
 
-  private final int mPlaceholderImageIndex;
-  private final int mProgressBarImageIndex;
-  private final int mActualImageIndex;
-  private final int mRetryImageIndex;
-  private final int mFailureImageIndex;
-
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
     mResources = builder.getResources();
     mRoundingParams = builder.getRoundingParams();
 
     mActualImageWrapper = new ForwardingDrawable(mEmptyActualImageDrawable);
 
-    int numBackgrounds = (builder.getBackgrounds() != null) ? builder.getBackgrounds().size() : 0;
-    int numOverlays = (builder.getOverlays() != null) ? builder.getOverlays().size() : 0;
+    int numOverlays = (builder.getOverlays() != null) ? builder.getOverlays().size() : 1;
     numOverlays += (builder.getPressedStateOverlay() != null) ? 1 : 0;
 
     // layer indices and count
-    int numLayers = 0;
-    int backgroundsIndex = numLayers;
-    numLayers += numBackgrounds;
-    mPlaceholderImageIndex = numLayers++;
-    mActualImageIndex = numLayers++;
-    mProgressBarImageIndex = numLayers++;
-    mRetryImageIndex = numLayers++;
-    mFailureImageIndex = numLayers++;
-    int overlaysIndex = numLayers;
-    numLayers += numOverlays;
+    int numLayers = OVERLAY_IMAGES_INDEX + numOverlays;
 
     // array of layers
     Drawable[] layers = new Drawable[numLayers];
-    if (numBackgrounds > 0) {
-      int index = 0;
-      for (Drawable background : builder.getBackgrounds()) {
-        layers[backgroundsIndex + index++] = buildBranch(background, null);
-      }
-    }
-    layers[mPlaceholderImageIndex] = buildBranch(
+    layers[BACKGROUND_IMAGE_INDEX] = buildBranch(builder.getBackground(), null);
+    layers[PLACEHOLDER_IMAGE_INDEX] = buildBranch(
         builder.getPlaceholderImage(),
         builder.getPlaceholderImageScaleType());
-    layers[mActualImageIndex] = buildActualImageBranch(
+    layers[ACTUAL_IMAGE_INDEX] = buildActualImageBranch(
         mActualImageWrapper,
         builder.getActualImageScaleType(),
         builder.getActualImageFocusPoint(),
         builder.getActualImageMatrix(),
         builder.getActualImageColorFilter());
-    layers[mProgressBarImageIndex] = buildBranch(
+    layers[PROGRESS_BAR_IMAGE_INDEX] = buildBranch(
         builder.getProgressBarImage(),
         builder.getProgressBarImageScaleType());
-    layers[mRetryImageIndex] = buildBranch(
+    layers[RETRY_IMAGE_INDEX] = buildBranch(
         builder.getRetryImage(),
         builder.getRetryImageScaleType());
-    layers[mFailureImageIndex] = buildBranch(
+    layers[FAILURE_IMAGE_INDEX] = buildBranch(
         builder.getFailureImage(),
         builder.getFailureImageScaleType());
     if (numOverlays > 0) {
       int index = 0;
       if (builder.getOverlays() != null) {
         for (Drawable overlay : builder.getOverlays()) {
-          layers[overlaysIndex + index++] = buildBranch(overlay, null);
+          layers[OVERLAY_IMAGES_INDEX + index++] = buildBranch(overlay, null);
         }
+      } else {
+        index = 1; // reserve space for one overlay
       }
       if (builder.getPressedStateOverlay() != null) {
-        layers[overlaysIndex + index] = buildBranch(builder.getPressedStateOverlay(), null);
+        layers[OVERLAY_IMAGES_INDEX + index] = buildBranch(builder.getPressedStateOverlay(), null);
       }
     }
 
@@ -208,18 +197,18 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       // turn off branches (leaving backgrounds and overlays on)
       fadeOutBranches();
       // turn on placeholder
-      fadeInLayer(mPlaceholderImageIndex);
+      fadeInLayer(PLACEHOLDER_IMAGE_INDEX);
       mFadeDrawable.finishTransitionImmediately();
       mFadeDrawable.endBatchMode();
     }
   }
 
   private void fadeOutBranches() {
-    fadeOutLayer(mPlaceholderImageIndex);
-    fadeOutLayer(mActualImageIndex);
-    fadeOutLayer(mProgressBarImageIndex);
-    fadeOutLayer(mRetryImageIndex);
-    fadeOutLayer(mFailureImageIndex);
+    fadeOutLayer(PLACEHOLDER_IMAGE_INDEX);
+    fadeOutLayer(ACTUAL_IMAGE_INDEX);
+    fadeOutLayer(PROGRESS_BAR_IMAGE_INDEX);
+    fadeOutLayer(RETRY_IMAGE_INDEX);
+    fadeOutLayer(FAILURE_IMAGE_INDEX);
   }
 
   private void fadeInLayer(int index) {
@@ -235,7 +224,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   private void setProgress(float progress) {
-    Drawable progressBarDrawable = getParentDrawableAtIndex(mProgressBarImageIndex).getDrawable();
+    Drawable progressBarDrawable = mFadeDrawable.getDrawable(PROGRESS_BAR_IMAGE_INDEX);
     if (progressBarDrawable == null) {
       return;
     }
@@ -245,12 +234,12 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       if (progressBarDrawable instanceof Animatable) {
         ((Animatable) progressBarDrawable).stop();
       }
-      fadeOutLayer(mProgressBarImageIndex);
+      fadeOutLayer(PROGRESS_BAR_IMAGE_INDEX);
     } else {
       if (progressBarDrawable instanceof Animatable) {
         ((Animatable) progressBarDrawable).start();
       }
-      fadeInLayer(mProgressBarImageIndex);
+      fadeInLayer(PROGRESS_BAR_IMAGE_INDEX);
     }
     // set drawable level, scaled to [0, 10000] per drawable specification
     progressBarDrawable.setLevel(Math.round(progress * 10000));
@@ -276,7 +265,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mActualImageWrapper.setDrawable(drawable);
     mFadeDrawable.beginBatchMode();
     fadeOutBranches();
-    fadeInLayer(mActualImageIndex);
+    fadeInLayer(ACTUAL_IMAGE_INDEX);
     setProgress(progress);
     if (immediate) {
       mFadeDrawable.finishTransitionImmediately();
@@ -286,6 +275,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   @Override
   public void setProgress(float progress, boolean immediate) {
+    if (mFadeDrawable.getDrawable(PROGRESS_BAR_IMAGE_INDEX) == null) {
+      return;
+    }
     mFadeDrawable.beginBatchMode();
     setProgress(progress);
     if (immediate) {
@@ -298,10 +290,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setFailure(Throwable throwable) {
     mFadeDrawable.beginBatchMode();
     fadeOutBranches();
-    if (mFadeDrawable.getDrawable(mFailureImageIndex) != null) {
-      fadeInLayer(mFailureImageIndex);
+    if (mFadeDrawable.getDrawable(FAILURE_IMAGE_INDEX) != null) {
+      fadeInLayer(FAILURE_IMAGE_INDEX);
     } else {
-      fadeInLayer(mPlaceholderImageIndex);
+      fadeInLayer(PLACEHOLDER_IMAGE_INDEX);
     }
     mFadeDrawable.endBatchMode();
   }
@@ -310,10 +302,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setRetry(Throwable throwable) {
     mFadeDrawable.beginBatchMode();
     fadeOutBranches();
-    if (mFadeDrawable.getDrawable(mRetryImageIndex) != null) {
-      fadeInLayer(mRetryImageIndex);
+    if (mFadeDrawable.getDrawable(RETRY_IMAGE_INDEX) != null) {
+      fadeInLayer(RETRY_IMAGE_INDEX);
     } else {
-      fadeInLayer(mPlaceholderImageIndex);
+      fadeInLayer(PLACEHOLDER_IMAGE_INDEX);
     }
     mFadeDrawable.endBatchMode();
   }
@@ -395,20 +387,20 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /** Sets the actual image focus point. */
   public void setActualImageFocusPoint(PointF focusPoint) {
     Preconditions.checkNotNull(focusPoint);
-    getScaleTypeDrawableAtIndex(mActualImageIndex).setFocusPoint(focusPoint);
+    getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).setFocusPoint(focusPoint);
   }
 
   /** Sets the actual image scale type. */
   public void setActualImageScaleType(ScaleType scaleType) {
     Preconditions.checkNotNull(scaleType);
-    getScaleTypeDrawableAtIndex(mActualImageIndex).setScaleType(scaleType);
+    getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).setScaleType(scaleType);
   }
 
   public @Nullable ScaleType getActualImageScaleType() {
-    if (!hasScaleTypeDrawableAtIndex(mActualImageIndex)) {
+    if (!hasScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX)) {
       return null;
     }
-    return getScaleTypeDrawableAtIndex(mActualImageIndex).getScaleType();
+    return getScaleTypeDrawableAtIndex(ACTUAL_IMAGE_INDEX).getScaleType();
   }
 
   /** Sets the color filter to be applied on the actual image. */
@@ -423,27 +415,26 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets a new placeholder drawable with old scale type. */
   public void setPlaceholderImage(@Nullable Drawable drawable) {
-    setChildDrawableAtIndex(mPlaceholderImageIndex, drawable);
+    setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
   }
 
   /** Sets a new placeholder drawable with scale type. */
   public void setPlaceholderImage(Drawable drawable, ScaleType scaleType) {
-    setChildDrawableAtIndex(mPlaceholderImageIndex, drawable);
-    getScaleTypeDrawableAtIndex(mPlaceholderImageIndex).setScaleType(scaleType);
-
+    setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
+    getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }
 
   /**
    * @return true if there is a placeholder image set.
    */
   public boolean hasPlaceholderImage() {
-    return getParentDrawableAtIndex(mPlaceholderImageIndex) != null;
+    return mFadeDrawable.getDrawable(PLACEHOLDER_IMAGE_INDEX) != null;
   }
 
   /** Sets the placeholder image focus point. */
   public void setPlaceholderImageFocusPoint(PointF focusPoint) {
     Preconditions.checkNotNull(focusPoint);
-    getScaleTypeDrawableAtIndex(mPlaceholderImageIndex).setFocusPoint(focusPoint);
+    getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setFocusPoint(focusPoint);
   }
 
   /**
@@ -467,13 +458,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets a new failure drawable with old scale type. */
   public void setFailureImage(@Nullable Drawable drawable) {
-    setChildDrawableAtIndex(mFailureImageIndex, drawable);
+    setChildDrawableAtIndex(FAILURE_IMAGE_INDEX, drawable);
   }
 
   /** Sets a new failure drawable with scale type. */
   public void setFailureImage(Drawable drawable, ScaleType scaleType) {
-    setChildDrawableAtIndex(mFailureImageIndex, drawable);
-    getScaleTypeDrawableAtIndex(mFailureImageIndex).setScaleType(scaleType);
+    setChildDrawableAtIndex(FAILURE_IMAGE_INDEX, drawable);
+    getScaleTypeDrawableAtIndex(FAILURE_IMAGE_INDEX).setScaleType(scaleType);
   }
   
   /**
@@ -497,13 +488,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets a new retry drawable with old scale type. */
   public void setRetryImage(@Nullable Drawable drawable) {
-    setChildDrawableAtIndex(mRetryImageIndex, drawable);
+    setChildDrawableAtIndex(RETRY_IMAGE_INDEX, drawable);
   }
 
   /** Sets a new retry drawable with scale type. */
   public void setRetryImage(Drawable drawable, ScaleType scaleType) {
-    setChildDrawableAtIndex(mRetryImageIndex, drawable);
-    getScaleTypeDrawableAtIndex(mRetryImageIndex).setScaleType(scaleType);
+    setChildDrawableAtIndex(RETRY_IMAGE_INDEX, drawable);
+    getScaleTypeDrawableAtIndex(RETRY_IMAGE_INDEX).setScaleType(scaleType);
   }
   
   /**
@@ -527,13 +518,13 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   /** Sets a new progress bar drawable with old scale type. */
   public void setProgressBarImage(@Nullable Drawable drawable) {
-    setChildDrawableAtIndex(mProgressBarImageIndex, drawable);
+    setChildDrawableAtIndex(PROGRESS_BAR_IMAGE_INDEX, drawable);
   }
 
   /** Sets a new progress bar drawable with scale type. */
   public void setProgressBarImage(Drawable drawable, ScaleType scaleType) {
-    setChildDrawableAtIndex(mProgressBarImageIndex, drawable);
-    getScaleTypeDrawableAtIndex(mProgressBarImageIndex).setScaleType(scaleType);
+    setChildDrawableAtIndex(PROGRESS_BAR_IMAGE_INDEX, drawable);
+    getScaleTypeDrawableAtIndex(PROGRESS_BAR_IMAGE_INDEX).setScaleType(scaleType);
   }
   
   /**
@@ -553,6 +544,31 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    */
   public void setProgressBarImage(int resourceId, ScaleType scaleType) {
     setProgressBarImage(mResources.getDrawable(resourceId), scaleType);
+  }
+
+  /** Sets the background image if allowed. */
+  public void setBackgroundImage(@Nullable Drawable drawable) {
+    setChildDrawableAtIndex(BACKGROUND_IMAGE_INDEX, drawable);
+  }
+
+  /**
+   * Sets a new overlay image at the specified index.
+   *
+   * This method will throw if the given index is out of bounds.
+   *
+   * @param drawable background image
+   */
+  public void setOverlayImage(int index, @Nullable Drawable drawable) {
+    // Note that overlays are by definition top-most and therefore the last elements in the array.
+    Preconditions.checkArgument(
+        index >= 0 && OVERLAY_IMAGES_INDEX + index < mFadeDrawable.getNumberOfLayers(),
+        "The given index does not correspond to an overlay image.");
+    setChildDrawableAtIndex(OVERLAY_IMAGES_INDEX + index, drawable);
+  }
+
+  /** Sets the overlay image if allowed. */
+  public void setOverlayImage(@Nullable Drawable drawable) {
+    setOverlayImage(0, drawable);
   }
 
   /** Sets the rounding params. */

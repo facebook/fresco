@@ -23,7 +23,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -40,7 +39,8 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
 
   private static final Class<?> TAG = LocalContentUriThumbnailFetchProducer.class;
 
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalContentUriThumbnailFetchProducer";
+  public static final String PRODUCER_NAME = "LocalContentUriThumbnailFetchProducer";
+
   private static final String[] PROJECTION = new String[] {
       MediaStore.Images.Media._ID,
       MediaStore.Images.ImageColumns.DATA

@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -34,7 +33,8 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class LocalContentUriFetchProducer extends LocalFetchProducer {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
+  public static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
+
   private static final String[] PROJECTION = new String[] {
       MediaStore.Images.Media._ID,
       MediaStore.Images.ImageColumns.DATA

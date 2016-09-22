@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
+import android.support.v4.view.ScrollingView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -41,11 +42,13 @@ import com.facebook.drawee.view.DraweeView;
  * <p>
  * Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
-public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
+public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
+    implements ScrollingView {
 
   private static final Class<?> TAG = ZoomableDraweeView.class;
 
   private static final float HUGE_IMAGE_SCALE_FACTOR_THRESHOLD = 1.1f;
+  private static final boolean DEFAULT_ALLOW_TOUCH_INTERCEPTION_WHILE_ZOOMED = true;
 
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
@@ -53,6 +56,8 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   private DraweeController mHugeImageController;
   private ZoomableController mZoomableController;
   private GestureDetector mTapGestureDetector;
+  private boolean mAllowTouchInterceptionWhileZoomed =
+      DEFAULT_ALLOW_TOUCH_INTERCEPTION_WHILE_ZOOMED;
 
   private final ControllerListener mControllerListener = new BaseControllerListener<Object>() {
     @Override
@@ -168,6 +173,27 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   /**
+   * Check whether the parent view can intercept touch events while zoomed.
+   * This can be used, for example, to swipe between images in a view pager while zoomed.
+   *
+   * @return true if touch events can be intercepted
+   */
+  public boolean allowsTouchInterceptionWhileZoomed() {
+    return mAllowTouchInterceptionWhileZoomed;
+  }
+
+  /**
+   * If this is set to true, parent views can intercept touch events while the view is zoomed.
+   * For example, this can be used to swipe between images in a view pager while zoomed.
+   *
+   * @param allowTouchInterceptionWhileZoomed true if the parent needs to intercept touches
+   */
+  public void setAllowTouchInterceptionWhileZoomed(
+      boolean allowTouchInterceptionWhileZoomed) {
+    mAllowTouchInterceptionWhileZoomed = allowTouchInterceptionWhileZoomed;
+  }
+
+  /**
    * Sets the tap listener.
    */
   public void setTapListener(GestureDetector.SimpleOnGestureListener tapListener) {
@@ -260,7 +286,11 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       return true;
     }
     if (mZoomableController.onTouchEvent(event)) {
-      if (!mZoomableController.isIdentity()) {
+      // Do not allow the parent to intercept touch events if:
+      // - we do not allow swiping while zoomed and the image is zoomed
+      // - we allow swiping while zoomed and the transform was corrected
+      if ((!mAllowTouchInterceptionWhileZoomed && !mZoomableController.isIdentity()) ||
+          (mAllowTouchInterceptionWhileZoomed && !mZoomableController.wasTransformCorrected())) {
         getParent().requestDisallowInterceptTouchEvent(true);
       }
       FLog.v(
@@ -274,7 +304,42 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy> {
       FLog.v(getLogTag(), "onTouchEvent: %d, view %x, handled by the super", a, this.hashCode());
       return true;
     }
+    // None of our components reported that they handled the touch event. Upon returning false
+    // from this method, our parent won't send us any more events for this gesture. Unfortunately,
+    // some componentes may have started a delayed action, such as a long-press timer, and since we
+    // won't receive an ACTION_UP that would cancel that timer, a false event may be triggered.
+    // To prevent that we explicitly send one last cancel event when returning false.
+    MotionEvent cancelEvent = MotionEvent.obtain(event);
+    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
+    mTapGestureDetector.onTouchEvent(cancelEvent);
+    mZoomableController.onTouchEvent(cancelEvent);
+    cancelEvent.recycle();
     return false;
+  }
+
+  @Override
+  public int computeHorizontalScrollRange() {
+    return mZoomableController.computeHorizontalScrollRange();
+  }
+  @Override
+  public int computeHorizontalScrollOffset() {
+    return mZoomableController.computeHorizontalScrollOffset();
+  }
+  @Override
+  public int computeHorizontalScrollExtent() {
+    return mZoomableController.computeHorizontalScrollExtent();
+  }
+  @Override
+  public int computeVerticalScrollRange() {
+    return mZoomableController.computeVerticalScrollRange();
+  }
+  @Override
+  public int computeVerticalScrollOffset() {
+    return mZoomableController.computeVerticalScrollOffset();
+  }
+  @Override
+  public int computeVerticalScrollExtent() {
+    return mZoomableController.computeVerticalScrollExtent();
   }
 
   @Override

@@ -9,8 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 public class EncodedMemoryCacheFactory {
 
@@ -20,10 +20,10 @@ public class EncodedMemoryCacheFactory {
 
     imageCacheStatsTracker.registerEncodedMemoryCache(encodedCountingMemoryCache);
 
-    MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker() {
+    MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker<CacheKey>() {
       @Override
-      public void onCacheHit() {
-        imageCacheStatsTracker.onMemoryCacheHit();
+      public void onCacheHit(CacheKey cacheKey) {
+        imageCacheStatsTracker.onMemoryCacheHit(cacheKey);
       }
 
       @Override

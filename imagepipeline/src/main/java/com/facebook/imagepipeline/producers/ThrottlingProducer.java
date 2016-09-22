@@ -17,7 +17,6 @@ import java.util.concurrent.Executor;
 import android.util.Pair;
 
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 
 /**
  * Only permits a configurable number of requests to be kicked off simultaneously. If that number
@@ -25,7 +24,7 @@ import com.facebook.common.internal.VisibleForTesting;
  */
 public class ThrottlingProducer<T> implements Producer<T> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "ThrottlingProducer";
+  public static final String PRODUCER_NAME = "ThrottlingProducer";
 
   private final Producer<T> mInputProducer;
   private final int mMaxSimultaneousRequests;

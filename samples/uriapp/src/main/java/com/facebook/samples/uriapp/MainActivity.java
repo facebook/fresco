@@ -12,24 +12,19 @@
 
 package com.facebook.samples.uriapp;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
 
 public class MainActivity extends Activity {
   private SimpleDraweeView mSimpleDraweeView;
@@ -38,30 +33,30 @@ public class MainActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-    Set<RequestListener> listeners = new HashSet<>();
-    listeners.add(new RequestLoggingListener());
-    ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-        .setRequestListeners(listeners)
-        .build();
-    Fresco.initialize(this, config);
     setContentView(R.layout.activity_main);
 
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.simple_drawee_view);
 
-    EditText editText = (EditText) findViewById(R.id.uri_edit_text);
+    final EditText editText = (EditText) findViewById(R.id.uri_edit_text);
     editText.setOnEditorActionListener(
         new TextView.OnEditorActionListener() {
           @Override
           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             final boolean isEnterKeyDown = (actionId == EditorInfo.IME_NULL) &&
-                    (event.getAction() == KeyEvent.ACTION_DOWN);
+                (event.getAction() == KeyEvent.ACTION_DOWN);
             if (isEnterKeyDown || actionId == EditorInfo.IME_ACTION_DONE) {
               updateImageUri(Uri.parse(v.getText().toString()));
             }
             return false;
           }
         });
+    final Button clearButton = (Button) findViewById(R.id.clear_uri);
+    clearButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        editText.getText().clear();
+      }
+    });
   }
 
   private void updateImageUri(Uri uri) {
@@ -70,5 +65,9 @@ public class MainActivity extends Activity {
             .setAutoPlayAnimations(true)
             .build();
     mSimpleDraweeView.setController(controller);
+
+    // Trigger GC to check in logs for any unclosed CloseableReferences
+    // DO NOT INCLUDE THIS IN YOUR OWN APPS: It is only intended for testing changes to the library
+    Runtime.getRuntime().gc();
   }
 }

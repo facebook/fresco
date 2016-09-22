@@ -14,13 +14,19 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * This class keeps a record of internal events that take place in the Drawee.
- * <p/> Having a record of a last few events is useful for debugging purposes.
+ * <p/> Having a record of a last few events is useful for debugging purposes. If you want to
+ * disable it, call {@link DraweeEventTracker.disable()} before {@link Fresco.initialize()}.
  */
 public class DraweeEventTracker {
 
-  private static final int MAX_EVENTS_TO_TRACK = 20;
+  private final Queue<Event> mEventQueue = new ArrayBlockingQueue<>(MAX_EVENTS_TO_TRACK);
 
-  public static enum Event {
+  private static final int MAX_EVENTS_TO_TRACK = 20;
+  private static final DraweeEventTracker sInstance = new DraweeEventTracker();
+
+  private static boolean sEnabled = true;
+
+  public enum Event {
     ON_SET_HIERARCHY,
     ON_CLEAR_HIERARCHY,
     ON_SET_CONTROLLER,
@@ -37,18 +43,36 @@ public class DraweeEventTracker {
     ON_DATASOURCE_FAILURE_INT,
     ON_HOLDER_ATTACH,
     ON_HOLDER_DETACH,
+    ON_HOLDER_TRIM,
+    ON_HOLDER_UNTRIM,
     ON_DRAWABLE_SHOW,
     ON_DRAWABLE_HIDE,
     ON_ACTIVITY_START,
     ON_ACTIVITY_STOP,
     ON_RUN_CLEAR_CONTROLLER,
     ON_SCHEDULE_CLEAR_CONTROLLER,
-    ON_SAME_CONTROLLER_SKIPPED
+    ON_SAME_CONTROLLER_SKIPPED,
+    ON_SUBMIT_CACHE_HIT
   }
 
-  private final Queue<Event> mEventQueue = new ArrayBlockingQueue<Event>(MAX_EVENTS_TO_TRACK);
+  private DraweeEventTracker() {
+  }
+
+  public static DraweeEventTracker newInstance() {
+    return sEnabled ? new DraweeEventTracker() : sInstance;
+  }
+
+  /**
+   * Disable DraweeEventTracker. Need to call before initialize Fresco.
+   */
+  public static void disable() {
+    sEnabled = false;
+  }
 
   public void recordEvent(Event event) {
+    if (!sEnabled) {
+      return;
+    }
     if (mEventQueue.size() + 1 > MAX_EVENTS_TO_TRACK) {
       mEventQueue.poll();
     }

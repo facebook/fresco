@@ -46,6 +46,8 @@ public class DefaultZoomableController
   public static final int LIMIT_SCALE = 4;
   public static final int LIMIT_ALL = LIMIT_TRANSLATION_X | LIMIT_TRANSLATION_Y | LIMIT_SCALE;
 
+  private static final float EPS = 1e-3f;
+
   private static final Class<?> TAG = DefaultZoomableController.class;
 
   private static final RectF IDENTITY_RECT = new RectF(0, 0, 1, 1);
@@ -74,6 +76,7 @@ public class DefaultZoomableController
   private final Matrix mActiveTransformInverse = new Matrix();
   private final float[] mTempValues = new float[9];
   private final RectF mTempRect = new RectF();
+  private boolean mWasTransformCorrected;
 
   public static DefaultZoomableController newInstance() {
     return new DefaultZoomableController(TransformGestureDetector.newInstance());
@@ -212,6 +215,17 @@ public class DefaultZoomableController
   @Override
   public boolean isIdentity() {
     return isMatrixIdentity(mActiveTransform, 1e-3f);
+  }
+
+  /**
+   * Returns true if the transform was corrected during the last update.
+   *
+   * We should rename this method to `wasTransformedWithoutCorrection` and just return the
+   * internal flag directly. However, this requires interface change and negation of meaning.
+   */
+  @Override
+  public boolean wasTransformCorrected() {
+    return mWasTransformCorrected;
   }
 
   /**
@@ -365,6 +379,11 @@ public class DefaultZoomableController
   public void onGestureBegin(TransformGestureDetector detector) {
     FLog.v(TAG, "onGestureBegin");
     mPreviousTransform.set(mActiveTransform);
+    // We only received a touch down event so far, and so we don't know yet in which direction a
+    // future move event will follow. Therefore, if we can't scroll in all directions, we have to
+    // assume the worst case where the user tries to scroll out of edge, which would cause
+    // transformation to be corrected.
+    mWasTransformCorrected = !canScrollInAllDirection();
   }
 
   @Override
@@ -375,6 +394,8 @@ public class DefaultZoomableController
     if (transformCorrected) {
       mGestureDetector.restartGesture();
     }
+    // A transformation happened, but was it without correction?
+    mWasTransformCorrected = transformCorrected;
   }
 
   @Override
@@ -560,5 +581,40 @@ public class DefaultZoomableController
       }
     }
     return true;
+  }
+
+  /**
+   * Returns whether the scroll can happen in all directions. I.e. the image is not on any edge.
+   */
+  private boolean canScrollInAllDirection() {
+    return mTransformedImageBounds.left < mViewBounds.left - EPS &&
+        mTransformedImageBounds.top < mViewBounds.top - EPS &&
+        mTransformedImageBounds.right > mViewBounds.right + EPS &&
+        mTransformedImageBounds.bottom > mViewBounds.bottom + EPS;
+  }
+
+  @Override
+  public int computeHorizontalScrollRange() {
+    return (int)mTransformedImageBounds.width();
+  }
+  @Override
+  public int computeHorizontalScrollOffset() {
+    return (int)(mViewBounds.left - mTransformedImageBounds.left);
+  }
+  @Override
+  public int computeHorizontalScrollExtent() {
+    return (int)mViewBounds.width();
+  }
+  @Override
+  public int computeVerticalScrollRange() {
+    return (int)mTransformedImageBounds.height();
+  }
+  @Override
+  public int computeVerticalScrollOffset() {
+    return (int)(mViewBounds.top - mTransformedImageBounds.top);
+  }
+  @Override
+  public int computeVerticalScrollExtent() {
+    return (int)mViewBounds.height();
   }
 }

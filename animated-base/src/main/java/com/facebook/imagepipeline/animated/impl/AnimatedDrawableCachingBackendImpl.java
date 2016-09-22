@@ -547,7 +547,7 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
 
   @VisibleForTesting
   synchronized Set<Integer> getFramesCached() {
-    Set<Integer> set = new HashSet<Integer>();
+    Set<Integer> set = new HashSet<Integer>(mCachedBitmaps.size());
     for (int i = 0; i < mCachedBitmaps.size(); i++) {
       set.add(mCachedBitmaps.keyAt(i));
     }

@@ -22,23 +22,24 @@ import android.graphics.Bitmap;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.cache.DefaultEncodedMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.ImageCacheStatsTracker;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker;
-import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
-import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 
@@ -86,6 +87,9 @@ public class ImagePipelineConfig {
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
   private final ImagePipelineExperiments mImagePipelineExperiments;
+
+  private static DefaultImageRequestConfig
+      sDefaultImageRequestConfig = new DefaultImageRequestConfig();
 
   private ImagePipelineConfig(Builder builder) {
     mAnimatedImageFactory = builder.mAnimatedImageFactory;
@@ -169,6 +173,11 @@ public class ImagePipelineConfig {
     return DiskCacheConfig.newBuilder(context).build();
   }
 
+  @VisibleForTesting
+  static void resetDefaultRequestConfig() {
+    sDefaultImageRequestConfig = new DefaultImageRequestConfig();
+  }
+
   @Nullable
   public AnimatedImageFactory getAnimatedImageFactory() {
     return mAnimatedImageFactory;
@@ -190,9 +199,13 @@ public class ImagePipelineConfig {
     return mContext;
   }
 
+  public static DefaultImageRequestConfig getDefaultImageRequestConfig() {
+    return sDefaultImageRequestConfig;
+  }
+
   /**
    * @deprecated Use {@link #getExperiments()} and
-   * {@link ImagePipelineExperiments#isDecodeFileDescriptorEnabled()} ()}
+   * {@link ImagePipelineExperiments#isDecodeFileDescriptorEnabled()}
    */
   public boolean isDecodeFileDescriptorEnabled() {
     return mImagePipelineExperiments.isDecodeFileDescriptorEnabled();
@@ -212,7 +225,7 @@ public class ImagePipelineConfig {
 
   /**
    * @deprecated Use {@link #getExperiments()} and
-   * {@link ImagePipelineExperiments#isWebpSupportEnabled()} ()}
+   * {@link ImagePipelineExperiments#isWebpSupportEnabled()}
    */
   public boolean isWebpSupportEnabled() {
     return mImagePipelineExperiments.isWebpSupportEnabled();
@@ -291,6 +304,25 @@ public class ImagePipelineConfig {
 
   public static Builder newBuilder(Context context) {
     return new Builder(context);
+  }
+
+  /**
+   * Contains default configuration that can be personalized for all the request
+   */
+  public static class DefaultImageRequestConfig {
+
+    private boolean mProgressiveRenderingEnabled = false;
+
+    private DefaultImageRequestConfig() {
+    }
+
+    public void setProgressiveRenderingEnabled(boolean progressiveRenderingEnabled) {
+      this.mProgressiveRenderingEnabled = progressiveRenderingEnabled;
+    }
+
+    public boolean isProgressiveRenderingEnabled() {
+      return mProgressiveRenderingEnabled;
+    }
   }
 
   public static class Builder {

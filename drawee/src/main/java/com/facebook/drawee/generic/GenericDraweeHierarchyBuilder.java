@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.drawee.drawable.ArrayDrawable;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
@@ -63,7 +64,7 @@ public class GenericDraweeHierarchyBuilder {
   private PointF mActualImageFocusPoint;
   private ColorFilter mActualImageColorFilter;
 
-  private List<Drawable> mBackgrounds;
+  private Drawable mBackground;
   private List<Drawable> mOverlays;
   private Drawable mPressedStateOverlay;
 
@@ -103,7 +104,7 @@ public class GenericDraweeHierarchyBuilder {
     mActualImageFocusPoint = null;
     mActualImageColorFilter = null;
 
-    mBackgrounds = null;
+    mBackground = null;
     mOverlays = null;
     mPressedStateOverlay = null;
 
@@ -581,34 +582,36 @@ public class GenericDraweeHierarchyBuilder {
    * Backgrounds are drawn in list order before the rest of the hierarchy and overlays. The
    * first background will be drawn at the bottom.
    *
+   * @deprecated use {@code setBackground} instead
    * @param backgrounds background drawables
    * @return modified instance of this builder
    */
+  @Deprecated
   public GenericDraweeHierarchyBuilder setBackgrounds(@Nullable List<Drawable> backgrounds) {
-    mBackgrounds = backgrounds;
-    return this;
-  }
-
-  /**
-   * Sets a single background.
-   *
-   * @param background background drawable
-   * @return modified instance of this builder
-   */
-  public GenericDraweeHierarchyBuilder setBackground(@Nullable Drawable background) {
-    if (background == null) {
-      mBackgrounds = null;
+    if (backgrounds == null) {
+      mBackground = null;
     } else {
-      mBackgrounds = Arrays.asList(background);
+      mBackground = new ArrayDrawable(backgrounds.toArray(new Drawable[backgrounds.size()]));
     }
     return this;
   }
 
   /**
-   * Gets the backgrounds.
+   * Sets a background.
+   *
+   * @param background background drawable
+   * @return modified instance of this builder
    */
-  public @Nullable List<Drawable> getBackgrounds() {
-    return mBackgrounds;
+  public GenericDraweeHierarchyBuilder setBackground(@Nullable Drawable background) {
+    mBackground = background;
+    return this;
+  }
+
+  /**
+   * Gets the background.
+   */
+  public @Nullable Drawable getBackground() {
+    return mBackground;
   }
 
   /**
@@ -694,12 +697,6 @@ public class GenericDraweeHierarchyBuilder {
     if (mOverlays != null) {
       for (Drawable overlay : mOverlays) {
         Preconditions.checkNotNull(overlay);
-      }
-    }
-
-    if (mBackgrounds != null) {
-      for (Drawable background : mBackgrounds) {
-        Preconditions.checkNotNull(background);
       }
     }
   }

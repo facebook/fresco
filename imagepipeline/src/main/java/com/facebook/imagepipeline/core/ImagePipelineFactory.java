@@ -22,6 +22,7 @@ import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
@@ -127,7 +128,9 @@ public class ImagePipelineFactory {
       mBitmapCountingMemoryCache =
           BitmapCountingMemoryCacheFactory.get(
               mConfig.getBitmapMemoryCacheParamsSupplier(),
-              mConfig.getMemoryTrimmableRegistry());
+              mConfig.getMemoryTrimmableRegistry(),
+              getPlatformBitmapFactory(),
+              mConfig.getExperiments().isExternalCreatedBitmapLogEnabled());
     }
     return mBitmapCountingMemoryCache;
   }
@@ -159,7 +162,8 @@ public class ImagePipelineFactory {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
               mConfig.getEncodedMemoryCacheParamsSupplier(),
-              mConfig.getMemoryTrimmableRegistry());
+              mConfig.getMemoryTrimmableRegistry(),
+              getPlatformBitmapFactory());
     }
     return mEncodedCountingMemoryCache;
   }
@@ -283,7 +287,8 @@ public class ImagePipelineFactory {
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
       boolean decodeMemoryFileEnabled,
-      boolean webpSupportEnabled) {
+      boolean webpSupportEnabled,
+      WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
@@ -292,7 +297,7 @@ public class ImagePipelineFactory {
           new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
       if (decodeMemoryFileEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-        return new GingerbreadPurgeableDecoder(webpSupportEnabled);
+        return new GingerbreadPurgeableDecoder(webpSupportEnabled, webpErrorLogger);
       } else {
         return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
       }
@@ -304,7 +309,8 @@ public class ImagePipelineFactory {
       mPlatformDecoder = buildPlatformDecoder(
           mConfig.getPoolFactory(),
           mConfig.isDecodeMemoryFileEnabled(),
-          mConfig.getExperiments().isWebpSupportEnabled());
+          mConfig.getExperiments().isWebpSupportEnabled(),
+          mConfig.getExperiments().getWebpErrorLogger());
     }
     return mPlatformDecoder;
   }
@@ -318,6 +324,7 @@ public class ImagePipelineFactory {
               getImageDecoder(),
               mConfig.getProgressiveJpegConfig(),
               mConfig.isDownsampleEnabled(),
+              mConfig.getExperiments().getEnhancedWebpTranscodingType(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExecutorSupplier(),
               mConfig.getPoolFactory().getPooledByteBufferFactory(),
@@ -340,9 +347,9 @@ public class ImagePipelineFactory {
               getProducerFactory(),
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
-              mConfig.isDownsampleEnabled(),
               mConfig.getExperiments().isWebpSupportEnabled(),
-              mThreadHandoffProducerQueue);
+              mThreadHandoffProducerQueue,
+              mConfig.getExperiments().getThrottlingMaxSimultaneousRequests());
     }
     return mProducerSequenceFactory;
   }

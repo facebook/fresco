@@ -50,7 +50,6 @@ import static org.mockito.Mockito.*;
 public class DecodeProducerTest {
 
   private static final ImageDecodeOptions IMAGE_DECODE_OPTIONS = ImageDecodeOptions.newBuilder()
-      .setBackgroundColor(0)
       .setMinDecodeIntervalMs(100)
       .build();
   private static final int PREVIEW_SCAN = 2;

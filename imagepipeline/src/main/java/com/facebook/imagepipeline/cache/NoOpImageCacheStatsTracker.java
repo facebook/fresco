@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.cache;
 
+import com.facebook.cache.common.CacheKey;
+
 /**
  * Class that does no stats tracking at all
  */
@@ -30,7 +32,7 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   }
 
   @Override
-  public void onBitmapCacheHit() {
+  public void onBitmapCacheHit(CacheKey cacheKey) {
   }
 
   @Override
@@ -42,7 +44,7 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   }
 
   @Override
-  public void onMemoryCacheHit() {
+  public void onMemoryCacheHit(CacheKey cacheKey) {
   }
 
   @Override
@@ -50,7 +52,7 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   }
 
   @Override
-  public void onStagingAreaHit() {
+  public void onStagingAreaHit(CacheKey cacheKey) {
   }
 
   @Override

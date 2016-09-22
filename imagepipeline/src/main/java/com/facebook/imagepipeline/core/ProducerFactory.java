@@ -84,6 +84,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final int mForceSmallCacheThresholdBytes;
+  private final @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -94,6 +95,7 @@ public class ProducerFactory {
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
       boolean downsampleEnabled,
+      @WebpTranscodeProducer.EnhancedTranscodingType int enhancedWebpTranscodingType,
       boolean resizeAndRotateEnabledForNetwork,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
@@ -114,6 +116,7 @@ public class ProducerFactory {
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
     mDownsampleEnabled = downsampleEnabled;
+    mEnhancedWebpTranscodingType = enhancedWebpTranscodingType;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
 
     mExecutorSupplier = executorSupplier;
@@ -274,10 +277,13 @@ public class ProducerFactory {
         inputProducer, mPlatformBitmapFactory, mExecutorSupplier.forBackgroundTasks());
   }
 
-  public ResizeAndRotateProducer newResizeAndRotateProducer(Producer<EncodedImage> inputProducer) {
+  public ResizeAndRotateProducer newResizeAndRotateProducer(
+      Producer<EncodedImage> inputProducer,
+      boolean resizingEnabledIfNotDownsampling) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
+        resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
         inputProducer);
   }
 
@@ -306,6 +312,7 @@ public class ProducerFactory {
     return new WebpTranscodeProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
-        inputProducer);
+        inputProducer,
+        mEnhancedWebpTranscodingType);
   }
 }

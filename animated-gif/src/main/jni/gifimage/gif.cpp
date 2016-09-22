@@ -23,7 +23,12 @@
 
 using namespace facebook;
 
+#define APPLICATION_EXT_NETSCAPE "NETSCAPE2.0"
+#define APPLICATION_EXT_NETSCAPE_LEN sizeof(APPLICATION_EXT_NETSCAPE) - 1
+
 #define EXTRA_LOGGING false
+
+#define LOOP_COUNT_MISSING -1;
 
 static void DGifCloseFile2(GifFileType* pGifFile) {
   int errorCode;
@@ -89,6 +94,14 @@ public:
     return m_vectorFrameByteOffsets[frameNum];
   }
 
+  size_t getFrameSize() {
+    return m_vectorFrameByteOffsets.size();
+  }
+
+  int getLoopCount() {
+    return m_loopCount;
+  }
+
   uint8_t* getRasterBits() {
     return m_rasterBits.data();
   }
@@ -101,7 +114,12 @@ public:
     return m_rasterMutex;
   }
 
+  void setLoopCount(int pLoopCount) {
+    m_loopCount = pLoopCount;
+  }
+
 private:
+  int m_loopCount = LOOP_COUNT_MISSING;
   std::unique_ptr<GifFileType, decltype(&DGifCloseFile2)> m_spGifFile;
   std::shared_ptr<DataWrapper> m_spData;
   std::vector<int> m_vectorFrameByteOffsets;
@@ -407,6 +425,50 @@ int decodeExtension(GifFileType* pGifFile) {
 }
 
 /**
+ * Tries to parse known application extensions of a given SavedImage and adds the information
+ * to the GifWrapper accordingly. Currently, this method only parses the Netscape 2.0 looping
+ * extension which can indicate how often a GIF animation shall be played.
+ *
+ * @param pSavedImage saved image that might contain several ExtensionBlocks
+ * @param pGifWrapper gif wrapper containing the giflib struct and additional data
+ */
+void parseApplicationExtensions(SavedImage* pSavedImage, GifWrapper* pGifWrapper) {
+  const int extensionCount = pSavedImage->ExtensionBlockCount;
+  for (int j = 0; j < extensionCount; j++) {
+    const ExtensionBlock* extensionBlock = &pSavedImage->ExtensionBlocks[j];
+
+    if (extensionBlock->Function != APPLICATION_EXT_FUNC_CODE) {
+      continue;
+    }
+
+    // Check for Netscape 2.0 looping block
+    if (extensionBlock->ByteCount == APPLICATION_EXT_NETSCAPE_LEN &&
+        strncmp(
+          APPLICATION_EXT_NETSCAPE,
+          (const char*) extensionBlock->Bytes,
+          APPLICATION_EXT_NETSCAPE_LEN) == 0) {
+
+      // The data sub-block has been added as the following extension block
+      ExtensionBlock* subBlock = NULL;
+      if (j + 1 < extensionCount) {
+        subBlock = &pSavedImage->ExtensionBlocks[j + 1];
+      }
+
+      if (subBlock != NULL &&
+          subBlock->Function == CONTINUE_EXT_FUNC_CODE &&
+          subBlock->ByteCount == 3) {
+        // The loop count is stored little endian
+        const int loopCount = subBlock->Bytes[1] | subBlock->Bytes[2] << 8;
+        pGifWrapper->setLoopCount(loopCount);
+
+        // The looping extension is the only block that we are interested in
+        break;
+      }
+    }
+  }
+}
+
+/**
  * A heavily modified version of giflib's DGifSlurp. This uses some hacks to avoid caching the
  * decoded pixel data for each frame in memory. Like DGifSlurp, GifFileType will contain the
  * results of slurping the GIF but there will be no frame pixel data cached in
@@ -421,9 +483,10 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
 
   pGifFile->ExtensionBlocks = NULL;
   pGifFile->ExtensionBlockCount = 0;
+  bool isStop = false;
   do {
     if (DGifGetRecordType(pGifFile, &recordType) == GIF_ERROR) {
-      return GIF_ERROR;
+      break;
     }
 
     switch (recordType) {
@@ -436,24 +499,33 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
               pGifWrapper->get(),
               nullptr,
               false) == GIF_ERROR) {
-          return GIF_ERROR;
+          isStop = true;
         }
         break;
 
       case EXTENSION_RECORD_TYPE:
         if (decodeExtension(pGifFile) == GIF_ERROR) {
-          return GIF_ERROR;
+          isStop = true;
         }
         break;
 
       case TERMINATE_RECORD_TYPE:
+        isStop = true;
         break;
 
        default:    // Should be trapped by DGifGetRecordType.
         break;
       }
-    } while (recordType != TERMINATE_RECORD_TYPE);
-    return GIF_OK;
+  } while (!isStop);
+  isStop = false;
+
+  // parse application extensions
+  const int imageCount = pGifFile->ImageCount;
+  for (int i = 0; i < imageCount; i++) {
+    parseApplicationExtensions(&pGifFile->SavedImages[i], pGifWrapper);
+  }
+
+  return pGifWrapper->getFrameSize() > 0 ? GIF_OK : GIF_ERROR;
 }
 
 /**
@@ -532,6 +604,9 @@ jobject GifImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>& 
   }
   spNativeContext->durationMs = durationMs;
   spNativeContext->frameDurationsMs = frameDurationsMs;
+
+  // Cache loop count
+  spNativeContext->loopCount = spNativeContext->spGifWrapper->getLoopCount();
 
   // Create the GifImage with the native context.
   jobject ret = pEnv->NewObject(
