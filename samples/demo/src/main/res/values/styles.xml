@@ -4,6 +4,8 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">0dp</item>
     <item name="android:layout_weight">1</item>
+    <item name="android:layout_margin">2dp</item>
+    <item name="android:background">@android:color/white</item>
   </style>
 
   <style name="drawee">
@@ -17,9 +19,13 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">top</item>
-    <item name="android:padding">2dp</item>
-    <item name="android:background">#99000000</item>
-    <item name="android:textColor">#cccccc</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:paddingRight">16dp</item>
+    <item name="android:paddingLeft">16dp</item>
+    <item name="android:background">#8A000000</item>
+    <item name="android:textColor">@android:color/white</item>
     <item name="android:textSize">12sp</item>
   </style>
 </resources>

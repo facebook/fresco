@@ -20,6 +20,14 @@ import android.graphics.drawable.Drawable;
  */
 public final class Const {
 
+  public static final String LOCAL_RESOURCE_URIS = "local_resource_uris";
+  public static final String LOCAL_INTERNAL_PHOTO_URIS = "local_internal_photo_uris";
+  public static final String LOCAL_EXTERNAL_PHOTO_URIS = "local_external_photo_uris";
+
+  public static final String LISTVIEW_LAYOUT_VALUE = "listview_recycler_layout";
+  public static final String RECYCLER_VIEW_LAYOUT_VALUE = "recyclerview_recycler_layout";
+  public static final String GRID_RECYCLER_VIEW_LAYOUT_VALUE = "recyclerview_grid_recycler_layout";
+
   public static final Drawable PLACEHOLDER = new ColorDrawable(Color.GRAY);
 
   public static final Drawable FAILURE = new ColorDrawable(Color.RED);
@@ -44,4 +52,5 @@ public final class Const {
   public static final String OVERRIDEN_HEIGHT_KEY= "height_size_key";
   public static final String FADE_DURATION_KEY = "fade_duration";
   public static final String DRAW_BORDER_KEY = "draw_border";
+  public static final String GRID_SPAN_COUNT_KEY= "grid_span_count_key";
 }

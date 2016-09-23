@@ -94,6 +94,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       case Const.RECYCLER_LAYOUT_KEY:
         updateRecyclerLayoutSummary(preference);
         break;
+      case Const.GRID_SPAN_COUNT_KEY:
+        updateGridRecyclerLayoutSummary();
+        break;
       case Const.INFINITE_DATA_SOURCE_KEY:
         updateInfiniteDataSourceSummary(preference);
         break;
@@ -170,6 +173,24 @@ public class SettingsFragment extends PreferenceFragmentCompat
             getResources(),
             (ListPreference) preference,
             R.array.recycler_layout_summaries);
+    updateGridRecyclerLayoutSummary();
+  }
+
+  private void updateGridRecyclerLayoutSummary() {
+    final ListPreference listPreference =
+        (ListPreference) findPreference(Const.RECYCLER_LAYOUT_KEY);
+    // We have to enable the Grid settings only if the selection is the related on
+    final ListPreference gridPreference =
+        (ListPreference) findPreference(Const.GRID_SPAN_COUNT_KEY);
+    final String value = listPreference.getValue();
+    final boolean gridGroupVisible = Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE.equals(value);
+    // We update summary
+    if (gridGroupVisible) {
+      final String spanCountValue = gridPreference.getValue();
+      gridPreference.setSummary(
+          getString(R.string.label_grid_recycler_span_count_summary, spanCountValue));
+    }
+    gridPreference.setVisible(gridGroupVisible);
   }
 
   private void updateReuseOldControllerSummary(final Preference preference) {

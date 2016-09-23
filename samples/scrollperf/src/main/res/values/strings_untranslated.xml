@@ -11,4 +11,11 @@
         <item>http://blog.coursetalk.com/wp-content/uploads/free-ed.jpg</item>
         <item>http://whsr.webrevenueinc1.netdna-cdn.com/wp-content/uploads/2014/12/free-digital-photos.jpg</item>
     </string-array>
+    <string-array name="grid_recycler_layout_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>

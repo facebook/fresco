@@ -30,6 +30,7 @@ public class Config {
   public final boolean distinctUriDataSource;
 
   public final String recyclerLayoutType;
+  public final int gridSpanCount;
 
   public final boolean reuseOldController;
 
@@ -111,9 +112,13 @@ public class Config {
     final boolean drawBorder = sharedPreferences.getBoolean(
             Const.DRAW_BORDER_KEY,
             false);
+    final int gridSpanCount = Integer.parseInt(sharedPreferences.getString(
+        Const.GRID_SPAN_COUNT_KEY,
+        "3"));
     return new Config(
       dataSourceType,
       recyclerLayoutType,
+      gridSpanCount,
       infiniteDataSource,
       distinctUriDataSource,
       reuseOldController,
@@ -135,6 +140,7 @@ public class Config {
   private Config(
       final String dataSourceType,
       final String recyclerLayoutType,
+      final int gridSpanCount,
       final boolean infiniteDataSource,
       final boolean distinctUriDataSource,
       final boolean reuseOldController,
@@ -153,6 +159,7 @@ public class Config {
       final boolean drawBorder) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
+    this.gridSpanCount = gridSpanCount;
     this.infiniteDataSource = infiniteDataSource;
     this.distinctUriDataSource = distinctUriDataSource;
     this.reuseOldController = reuseOldController;
