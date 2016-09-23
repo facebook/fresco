@@ -27,6 +27,7 @@ import android.widget.ListView;
 
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.ContentProviderSimpleAdapter;
 import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
@@ -114,15 +115,15 @@ public class MainFragment extends Fragment {
     boolean distinctUriCompatible = true;
     SimpleAdapter<Uri> simpleAdapter = null;
     switch (config.dataSourceType) {
-      case "local_resource_uris":
+      case Const.LOCAL_RESOURCE_URIS:
         simpleAdapter = LocalResourceSimpleAdapter
                 .getEagerAdapter(getContext(), R.array.example_uris);
         break;
-      case "local_internal_photo_uris":
+      case Const.LOCAL_INTERNAL_PHOTO_URIS:
         simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getContext());
         distinctUriCompatible = false;
         break;
-      case "local_external_photo_uris":
+      case Const.LOCAL_EXTERNAL_PHOTO_URIS:
         simpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getContext());
         distinctUriCompatible = false;
         break;
