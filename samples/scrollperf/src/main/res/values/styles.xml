@@ -15,6 +15,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="actualImageScaleType">fitCenter</item>
-        <item name="failureImage">@color/failure</item>
+        <item name="failureImage">@color/failureColor</item>
     </style>
 </resources>
