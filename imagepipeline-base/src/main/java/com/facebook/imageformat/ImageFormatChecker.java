@@ -45,19 +45,19 @@ public class ImageFormatChecker {
     }
 
     if (isJpegHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.JPEG;
+      return DefaultImageFormats.JPEG;
     }
 
     if (isPngHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.PNG;
+      return DefaultImageFormats.PNG;
     }
 
     if (isGifHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.GIF;
+      return DefaultImageFormats.GIF;
     }
 
     if (isBmpHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.BMP;
+      return DefaultImageFormats.BMP;
     }
 
     return ImageFormat.UNKNOWN;
@@ -99,7 +99,7 @@ public class ImageFormatChecker {
    * Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and use read bytes to
    * determine type of the image contained in is. If provided input stream does not support mark,
    * then this method consumes data from is and it is not safe to read further bytes from is after
-   * this method returns. Otherwise, if mark is supported, it will be used to preserve oryginal
+   * this method returns. Otherwise, if mark is supported, it will be used to preserve original
    * content of is.
    * @param is
    * @return ImageFormat matching content of is InputStream or UNKNOWN if no type is suitable
@@ -127,7 +127,7 @@ public class ImageFormatChecker {
   /**
    * Reads image header from a file indicated by provided filename and determines
    * its format. This method does not throw IOException if one occurs. In this case,
-   * ImageFormat.UNKNOWN will be returned.
+   * {@link ImageFormat#UNKNOWN} will be returned.
    * @param filename
    * @return ImageFormat for image stored in filename
    */
@@ -208,21 +208,21 @@ public class ImageFormatChecker {
   private static ImageFormat getWebpFormat(final byte[] imageHeaderBytes, final int headerSize) {
     Preconditions.checkArgument(WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize));
     if (WebpSupportStatus.isSimpleWebpHeader(imageHeaderBytes, 0)) {
-      return ImageFormat.WEBP_SIMPLE;
+      return DefaultImageFormats.WEBP_SIMPLE;
     }
 
     if (WebpSupportStatus.isLosslessWebpHeader(imageHeaderBytes, 0)) {
-      return ImageFormat.WEBP_LOSSLESS;
+      return DefaultImageFormats.WEBP_LOSSLESS;
     }
 
     if (WebpSupportStatus.isExtendedWebpHeader(imageHeaderBytes, 0, headerSize)) {
       if (WebpSupportStatus.isAnimatedWebpHeader(imageHeaderBytes, 0)) {
-        return ImageFormat.WEBP_ANIMATED;
+        return DefaultImageFormats.WEBP_ANIMATED;
       }
       if (WebpSupportStatus.isExtendedWebpHeaderWithAlpha(imageHeaderBytes, 0)) {
-        return ImageFormat.WEBP_EXTENDED_WITH_ALPHA;
+        return DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA;
       }
-      return ImageFormat.WEBP_EXTENDED;
+      return DefaultImageFormats.WEBP_EXTENDED;
     }
 
     return ImageFormat.UNKNOWN;

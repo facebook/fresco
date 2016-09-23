@@ -16,6 +16,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -245,7 +246,7 @@ public class EncodedImage implements Closeable {
    * false otherwise.
    */
   public boolean isCompleteAt(int length) {
-    if (mImageFormat != ImageFormat.JPEG) {
+    if (mImageFormat != DefaultImageFormats.JPEG) {
       return true;
     }
     // If the image is backed by FileInputStreams return true since they will always be complete.
@@ -282,14 +283,14 @@ public class EncodedImage implements Closeable {
     // Dimensions decoding is not yet supported for WebP since BitmapUtil.decodeDimensions has a
     // bug where it will return 100x100 for some WebPs even though those are not its actual
     // dimensions
-    if (!ImageFormat.isWebpFormat(imageFormat)) {
+    if (!DefaultImageFormats.isWebpFormat(imageFormat)) {
       Pair<Integer, Integer> dimensions = BitmapUtil.decodeDimensions(getInputStream());
       if (dimensions != null) {
         mWidth = dimensions.first;
         mHeight = dimensions.second;
 
         // Load the rotation angle only if we have the dimensions
-        if (imageFormat == ImageFormat.JPEG) {
+        if (imageFormat == DefaultImageFormats.JPEG) {
           if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
             mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
                 JfifUtil.getOrientation(getInputStream()));

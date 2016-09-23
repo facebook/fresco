@@ -21,6 +21,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -165,7 +166,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             CloseableReference.of(outputStream.toByteBuffer());
         try {
           ret = new EncodedImage(ref);
-          ret.setImageFormat(ImageFormat.JPEG);
+          ret.setImageFormat(DefaultImageFormats.JPEG);
           try {
             ret.parseMetaData();
             mProducerContext.getListener().
@@ -221,7 +222,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
     }
-    if (encodedImage.getImageFormat() != ImageFormat.JPEG) {
+    if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG) {
       return TriState.NO;
     }
     return TriState.valueOf(

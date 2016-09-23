@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.GifFormatChecker;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -77,23 +78,16 @@ public class ImageDecoder {
           encodedImage.getInputStream());
       encodedImage.setImageFormat(imageFormat);
     }
-
-    switch (imageFormat) {
-      case UNKNOWN:
-        throw new IllegalArgumentException("unknown image format");
-
-      case JPEG:
-        return decodeJpeg(encodedImage, length, qualityInfo);
-
-      case GIF:
-        return decodeGif(encodedImage, options);
-
-      case WEBP_ANIMATED:
-        return decodeAnimatedWebp(encodedImage, options);
-
-      default:
-        return decodeStaticImage(encodedImage);
+    if (imageFormat == DefaultImageFormats.JPEG) {
+      return decodeJpeg(encodedImage, length, qualityInfo);
+    } else if (imageFormat == DefaultImageFormats.GIF) {
+      return decodeGif(encodedImage, options);
+    } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
+      return decodeAnimatedWebp(encodedImage, options);
+    } else if (imageFormat == ImageFormat.UNKNOWN) {
+      throw new IllegalArgumentException("unknown image format");
     }
+    return decodeStaticImage(encodedImage);
   }
 
   /**

@@ -19,6 +19,7 @@ import android.os.SystemClock;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -153,10 +154,10 @@ public class ResizeAndRotateProducerTest {
     whenResizingEnabled();
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
-    provideIntermediateResult(ImageFormat.JPEG);
+    provideIntermediateResult(DefaultImageFormats.JPEG);
     verifyIntermediateResultPassedThroughUnchanged();
 
-    provideFinalResult(ImageFormat.JPEG);
+    provideFinalResult(DefaultImageFormats.JPEG);
     verifyFinalResultPassedThroughUnchanged();
     verifyZeroJpegTranscoderInteractions();
   }
@@ -166,10 +167,10 @@ public class ResizeAndRotateProducerTest {
     whenResizingEnabled();
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideIntermediateResult(ImageFormat.WEBP_SIMPLE);
+    provideIntermediateResult(DefaultImageFormats.WEBP_SIMPLE);
     verifyIntermediateResultPassedThroughUnchanged();
 
-    provideFinalResult(ImageFormat.WEBP_SIMPLE);
+    provideFinalResult(DefaultImageFormats.WEBP_SIMPLE);
     verifyFinalResultPassedThroughUnchanged();
     verifyZeroJpegTranscoderInteractions();
   }
@@ -193,10 +194,10 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(sourceWidth, sourceHeight);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideIntermediateResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
+    provideIntermediateResult(DefaultImageFormats.JPEG, sourceWidth, sourceHeight, rotationAngle);
     verifyNoIntermediateResultPassedThrough();
 
-    provideFinalResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
+    provideFinalResult(DefaultImageFormats.JPEG, sourceWidth, sourceHeight, rotationAngle);
     verifyAFinalResultPassedThrough();
 
     assertEquals(2, mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -215,10 +216,10 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(sourceWidth, sourceHeight);
     whenRequestsRotationFromMetadataWithDeferringAllowed();
 
-    provideIntermediateResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
+    provideIntermediateResult(DefaultImageFormats.JPEG, sourceWidth, sourceHeight, rotationAngle);
     verifyIntermediateResultPassedThroughUnchanged();
 
-    provideFinalResult(ImageFormat.JPEG, sourceWidth, sourceHeight, rotationAngle);
+    provideFinalResult(DefaultImageFormats.JPEG, sourceWidth, sourceHeight, rotationAngle);
     verifyFinalResultPassedThroughUnchanged();
 
     verifyZeroJpegTranscoderInteractions();
@@ -234,10 +235,14 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(sourceWidth, sourceHeight);
     whenRequestsRotationFromMetadataWithDeferringAllowed();
 
-    provideIntermediateResult(ImageFormat.JPEG, sourceWidth * 2, sourceHeight * 2, rotationAngle);
+    provideIntermediateResult(
+        DefaultImageFormats.JPEG,
+        sourceWidth * 2,
+        sourceHeight * 2,
+        rotationAngle);
     verifyNoIntermediateResultPassedThrough();
 
-    provideFinalResult(ImageFormat.JPEG, sourceWidth * 2, sourceHeight * 2, rotationAngle);
+    provideFinalResult(DefaultImageFormats.JPEG, sourceWidth * 2, sourceHeight * 2, rotationAngle);
     verifyAFinalResultPassedThrough();
 
     verifyJpegTranscoderInteractions(4, rotationAngle);
@@ -251,10 +256,10 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(preferredWidth, preferredHeight);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
-    provideIntermediateResult(ImageFormat.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
+    provideIntermediateResult(DefaultImageFormats.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
     verifyNoIntermediateResultPassedThrough();
 
-    provideFinalResult(ImageFormat.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
+    provideFinalResult(DefaultImageFormats.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
     verifyAFinalResultPassedThrough();
 
     assertEquals(2, mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -271,10 +276,10 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(preferredWidth, preferredHeight);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
-    provideIntermediateResult(ImageFormat.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
+    provideIntermediateResult(DefaultImageFormats.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
     verifyIntermediateResultPassedThroughUnchanged();
 
-    provideFinalResult(ImageFormat.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
+    provideFinalResult(DefaultImageFormats.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
     verifyFinalResultPassedThroughUnchanged();
 
     verifyZeroJpegTranscoderInteractions();
@@ -286,7 +291,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(150, 150);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
-    provideFinalResult(ImageFormat.JPEG, 100, 100, 0);
+    provideFinalResult(DefaultImageFormats.JPEG, 100, 100, 0);
     verifyFinalResultPassedThroughUnchanged();
     verifyZeroJpegTranscoderInteractions();
   }
@@ -297,7 +302,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(150, 150);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideFinalResult(ImageFormat.JPEG, 100, 100, 90);
+    provideFinalResult(DefaultImageFormats.JPEG, 100, 100, 90);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(8, 90);
   }
@@ -308,7 +313,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 0);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 0);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(4, 0);
   }
@@ -319,7 +324,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(2, 90);
   }
@@ -330,7 +335,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 180);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 180);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(4, 180);
   }
@@ -341,7 +346,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(50, 100);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 270);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 270);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(2, 270);
   }
@@ -352,7 +357,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(0, 0);
     whenRequestsRotationFromMetadataWithoutDeferring();
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(8, 90);
   }
@@ -363,7 +368,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(0, 0);
     whenRequestsRotationFromMetadataWithDeferringAllowed();
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
     verifyFinalResultPassedThroughUnchanged();
     verifyZeroJpegTranscoderInteractions();
   }
@@ -374,7 +379,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(200, 400);
     whenRequestSpecificRotation(RotationOptions.ROTATE_270);
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 0);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 0);
     verifyAFinalResultPassedThrough();
     verifyJpegTranscoderInteractions(8, 270);
   }
@@ -385,7 +390,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(0, 0);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
-    provideFinalResult(ImageFormat.JPEG, 400, 200, 90);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
     verifyAFinalResultPassedThrough();
     verifyZeroJpegTranscoderInteractions();
   }
