@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -69,13 +70,17 @@ public class MainFragment extends Fragment {
     // We use a different layout based on the type of output
     final View layout;
     switch (mConfig.recyclerLayoutType) {
-      case "recyclerview_recycler_layout":
+      case Const.RECYCLER_VIEW_LAYOUT_VALUE:
         layout = inflater.inflate(R.layout.content_recyclerview, container, false);
         initializeRecyclerView(layout);
         break;
-      case "listview_recycler_layout":
+      case Const.LISTVIEW_LAYOUT_VALUE:
         layout = inflater.inflate(R.layout.content_listview, container, false);
         initializeListView(layout);
+        break;
+      case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
+        layout = inflater.inflate(R.layout.content_recyclerview, container, false);
+        initializeGridRecyclerView(layout);
         break;
       default:
         throw new IllegalStateException("Recycler Layout not supported");
@@ -94,6 +99,19 @@ public class MainFragment extends Fragment {
     mRecyclerView = UI.findViewById(layout, R.id.recycler_view);
     // Choose the LayoutManager
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    layoutManager.scrollToPosition(0);
+    mRecyclerView.setLayoutManager(layoutManager);
+    // Create the Adapter
+    mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
+    mRecyclerView.setAdapter(mDraweeViewAdapter);
+  }
+
+  private void initializeGridRecyclerView(final View layout) {
+    // Get RecyclerView
+    mRecyclerView = UI.findViewById(layout, R.id.recycler_view);
+    // Choose the LayoutManager
+    GridLayoutManager layoutManager = new GridLayoutManager(getContext(), mConfig.gridSpanCount);
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     layoutManager.scrollToPosition(0);
     mRecyclerView.setLayoutManager(layoutManager);

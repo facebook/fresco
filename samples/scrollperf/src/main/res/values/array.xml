@@ -20,14 +20,25 @@
     <array name="recycler_layout_labels">
         <item>@string/label_listview_recycler_layout</item>
         <item>@string/label_recyclerview_recycler_layout</item>
+        <item>@string/label_grid_recyclerview_recycler_layout</item>
     </array>
     <array name="recycler_layout_values">
         <item>@string/value_listview_recycler_layout</item>
         <item>@string/value_recyclerview_recycler_layout</item>
+        <item>@string/value_grid_recyclerview_recycler_layout</item>
     </array>
     <array name="recycler_layout_summaries">
         <item>@string/value_listview_summary</item>
         <item>@string/value_recycler_summary</item>
+        <item>@string/value_grid_recycler_summary</item>
+    </array>
+    <!-- Grid configurations -->
+    <array name="grid_recycler_layout_labels">
+        <item>@string/label_grid_recycler_span_count_1</item>
+        <item>@string/label_grid_recycler_span_count_2</item>
+        <item>@string/label_grid_recycler_span_count_3</item>
+        <item>@string/label_grid_recycler_span_count_4</item>
+        <item>@string/label_grid_recycler_span_count_5</item>
     </array>
     <!-- Post processor labels and values-->
     <array name="postprocessor_labels">

@@ -103,10 +103,24 @@
     <string translatable="false" name="title_recycler_layout">Layout for the list</string>
     <string translatable="false" name="label_listview_recycler_layout">ListView</string>
     <string translatable="false" name="label_recyclerview_recycler_layout">RecyclerView</string>
+    <string translatable="false" name="label_grid_recyclerview_recycler_layout">RecyclerView with Grid layout</string>
     <string translatable="false" name="value_listview_recycler_layout">listview_recycler_layout</string>
     <string translatable="false" name="value_recyclerview_recycler_layout">recyclerview_recycler_layout</string>
+    <string translatable="false" name="value_grid_recyclerview_recycler_layout">recyclerview_grid_recycler_layout</string>
     <string translatable="false" name="value_listview_summary">We use a ListView</string>
     <string translatable="false" name="value_recycler_summary">We use a RecyclerView</string>
+    <string translatable="false" name="value_grid_recycler_summary">We use a RecyclerView with Grid Layout</string>
+
+    <!-- Grid Preferences-->
+    <string translatable="false" name="key_preferences_grid_recycler_layout">Recycler with Grid layout</string>
+    <string translatable="false" name="title_grid_recycler_layout">Grid info</string>
+    <string translatable="false" name="dialog_title_grid_recycler_span_count">Span Count</string>
+    <string translatable="false" name="label_grid_recycler_span_count_1">1 Column</string>
+    <string translatable="false" name="label_grid_recycler_span_count_2">2 Columns</string>
+    <string translatable="false" name="label_grid_recycler_span_count_3">3 Columns</string>
+    <string translatable="false" name="label_grid_recycler_span_count_4">4 Columns</string>
+    <string translatable="false" name="label_grid_recycler_span_count_5">5 Columns</string>
+    <string translatable="false" name="label_grid_recycler_span_count_summary">We\'re using a Grid with span count %1$s</string>
 
     <!-- Auto Rotate Enabled-->
     <string translatable="false" name="title_other_group">Others</string>
