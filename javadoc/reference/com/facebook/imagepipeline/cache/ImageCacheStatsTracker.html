@@ -221,7 +221,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
       </ul>
     </li>
               
@@ -408,7 +408,7 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCacheHit()">onBitmapCacheHit</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onBitmapCacheHit(com.facebook.cache.common.CacheKey)">onBitmapCacheHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on a bitmap cache hit.</div>
   
@@ -516,7 +516,7 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheHit()">onMemoryCacheHit</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onMemoryCacheHit(com.facebook.cache.common.CacheKey)">onMemoryCacheHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on an encoded memory cache hit.</div>
   
@@ -570,7 +570,7 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onStagingAreaHit()">onStagingAreaHit</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html#onStagingAreaHit(com.facebook.cache.common.CacheKey)">onStagingAreaHit</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
         
         <div class="jd-descrdiv">Called on an staging area hit.</div>
   
@@ -679,7 +679,7 @@
 
 
 
-<a id="onBitmapCacheHit()"></a>
+<a id="onBitmapCacheHit(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -692,7 +692,7 @@
         void
       </span>
       <span class="sympad">onBitmapCacheHit</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -865,7 +865,7 @@
 </div>
 
 
-<a id="onMemoryCacheHit()"></a>
+<a id="onMemoryCacheHit(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -878,7 +878,7 @@
         void
       </span>
       <span class="sympad">onMemoryCacheHit</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -958,7 +958,7 @@
 </div>
 
 
-<a id="onStagingAreaHit()"></a>
+<a id="onStagingAreaHit(com.facebook.cache.common.CacheKey)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -971,7 +971,7 @@
         void
       </span>
       <span class="sympad">onStagingAreaHit</span>
-      <span class="normal">()</span>
+      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>

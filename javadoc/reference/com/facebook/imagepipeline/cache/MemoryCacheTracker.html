@@ -221,7 +221,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
       </ul>
     </li>
               
@@ -317,7 +317,7 @@
 
     <tr>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.MemoryCacheTracker</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.MemoryCacheTracker&lt;K&gt;</td>
     </tr>
     
 
@@ -400,7 +400,7 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html#onCacheHit()">onCacheHit</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html#onCacheHit(K)">onCacheHit</a></span>(K cacheKey)
         
   </td></tr>
 
@@ -485,7 +485,7 @@
 
 
 
-<a id="onCacheHit()"></a>
+<a id="onCacheHit(K)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -498,7 +498,7 @@
         void
       </span>
       <span class="sympad">onCacheHit</span>
-      <span class="normal">()</span>
+      <span class="normal">(K cacheKey)</span>
     </h4>
       <div class="api-level">
         <div>

@@ -116,6 +116,17 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<method name="onCleared"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="onEviction"
  return="void"
  abstract="true"
@@ -396,6 +407,17 @@
  visibility="public"
 >
 </method>
+<method name="getIndexPopulateAtStartupEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getLowDiskSpaceSizeLimit"
  return="long"
  abstract="false"
@@ -553,6 +575,19 @@
 <parameter name="supplier" type="EntryEvictionComparatorSupplier">
 </parameter>
 </method>
+<method name="setIndexPopulateAtStartupEnabled"
+ return="com.facebook.cache.disk.DiskCacheConfig.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="indexEnabled" type="boolean">
+</parameter>
+</method>
 <method name="setMaxCacheSize"
  return="com.facebook.cache.disk.DiskCacheConfig.Builder"
  abstract="false"
@@ -638,6 +673,10 @@
 <parameter name="diskTrimmableRegistry" type="com.facebook.common.disk.DiskTrimmableRegistry">
 </parameter>
 <parameter name="context" type="android.content.Context">
+</parameter>
+<parameter name="executorForBackgrountInit" type="java.util.concurrent.Executor">
+</parameter>
+<parameter name="indexPopulateAtStartupEnabled" type="boolean">
 </parameter>
 </constructor>
 <method name="awaitIndex"
@@ -767,6 +806,17 @@
 </exception>
 </method>
 <method name="isEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isIndexReady"
  return="boolean"
  abstract="false"
  native="false"
@@ -3536,6 +3586,17 @@
  visibility="public"
 >
 </method>
+<method name="hasBeenInitialized"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="initialize"
  return="void"
  abstract="false"
@@ -3562,6 +3623,23 @@
 <parameter name="context" type="android.content.Context">
 </parameter>
 <parameter name="imagePipelineConfig" type="com.facebook.imagepipeline.core.ImagePipelineConfig">
+</parameter>
+</method>
+<method name="initialize"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="context" type="android.content.Context">
+</parameter>
+<parameter name="imagePipelineConfig" type="com.facebook.imagepipeline.core.ImagePipelineConfig">
+</parameter>
+<parameter name="draweeConfig" type="DraweeConfig">
 </parameter>
 </method>
 <method name="newDraweeControllerBuilder"
@@ -3619,6 +3697,34 @@
 <parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</constructor>
+<constructor name="PipelineDraweeController"
+ type="com.facebook.drawee.backends.pipeline.PipelineDraweeController"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resources" type="android.content.res.Resources">
+</parameter>
+<parameter name="deferredReleaser" type="DeferredReleaser">
+</parameter>
+<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
+</parameter>
+<parameter name="uiThreadExecutor" type="java.util.concurrent.Executor">
+</parameter>
+<parameter name="memoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
+</parameter>
+<parameter name="dataSourceSupplier" type="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;&gt;">
+</parameter>
+<parameter name="id" type="java.lang.String">
+</parameter>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+<parameter name="drawableFactories" type="com.facebook.common.internal.ImmutableList&lt;DrawableFactory&gt;">
 </parameter>
 </constructor>
 <method name="createDrawable"
@@ -3860,7 +3966,21 @@
 >
 <parameter name="context" type="android.content.Context">
 </parameter>
+<parameter name="draweeConfig" type="DraweeConfig">
+</parameter>
+</constructor>
+<constructor name="PipelineDraweeControllerBuilderSupplier"
+ type="com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilderSupplier"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="context" type="android.content.Context">
+</parameter>
 <parameter name="imagePipelineFactory" type="com.facebook.imagepipeline.core.ImagePipelineFactory">
+</parameter>
+<parameter name="draweeConfig" type="DraweeConfig">
 </parameter>
 </constructor>
 <constructor name="PipelineDraweeControllerBuilderSupplier"
@@ -3875,6 +3995,8 @@
 <parameter name="imagePipelineFactory" type="com.facebook.imagepipeline.core.ImagePipelineFactory">
 </parameter>
 <parameter name="boundControllerListeners" type="java.util.Set&lt;com.facebook.drawee.controller.ControllerListener&gt;">
+</parameter>
+<parameter name="draweeConfig" type="DraweeConfig">
 </parameter>
 </constructor>
 <method name="get"
@@ -3913,6 +4035,8 @@
 <parameter name="uiThreadExecutor" type="java.util.concurrent.Executor">
 </parameter>
 <parameter name="memoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
+</parameter>
+<parameter name="drawableFactories" type="com.facebook.common.internal.ImmutableList&lt;DrawableFactory&gt;">
 </parameter>
 </constructor>
 <method name="newController"
@@ -9901,9 +10025,24 @@
  visibility="public"
 >
 </constructor>
+<method name="addBitmapReference"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmap" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
 <method name="createBitmap"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
- abstract="true"
+ abstract="false"
  native="false"
  synchronized="false"
  static="false"
@@ -9933,7 +10072,436 @@
 <parameter name="height" type="int">
 </parameter>
 </method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="x" type="int">
+</parameter>
+<parameter name="y" type="int">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="x" type="int">
+</parameter>
+<parameter name="y" type="int">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="x" type="int">
+</parameter>
+<parameter name="y" type="int">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="matrix" type="android.graphics.Matrix">
+</parameter>
+<parameter name="filter" type="boolean">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="x" type="int">
+</parameter>
+<parameter name="y" type="int">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="matrix" type="android.graphics.Matrix">
+</parameter>
+<parameter name="filter" type="boolean">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="display" type="android.util.DisplayMetrics">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="display" type="android.util.DisplayMetrics">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="colors" type="int[]">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="colors" type="int[]">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="display" type="android.util.DisplayMetrics">
+</parameter>
+<parameter name="colors" type="int[]">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="display" type="android.util.DisplayMetrics">
+</parameter>
+<parameter name="colors" type="int[]">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="display" type="android.util.DisplayMetrics">
+</parameter>
+<parameter name="colors" type="int[]">
+</parameter>
+<parameter name="offset" type="int">
+</parameter>
+<parameter name="stride" type="int">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="createBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="display" type="android.util.DisplayMetrics">
+</parameter>
+<parameter name="colors" type="int[]">
+</parameter>
+<parameter name="offset" type="int">
+</parameter>
+<parameter name="stride" type="int">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="createBitmapInternal"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="createScaledBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="destinationWidth" type="int">
+</parameter>
+<parameter name="destinationHeight" type="int">
+</parameter>
+<parameter name="filter" type="boolean">
+</parameter>
+</method>
+<method name="createScaledBitmap"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="destinationWidth" type="int">
+</parameter>
+<parameter name="destinationHeight" type="int">
+</parameter>
+<parameter name="filter" type="boolean">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="setCreationListener"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapCreationObserver" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory.BitmapCreationObserver">
+</parameter>
+</method>
 </class>
+<interface name="PlatformBitmapFactory.BitmapCreationObserver"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="onBitmapCreated"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmap" type="android.graphics.Bitmap">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+</interface>
 </package>
 <package name="com.facebook.imagepipeline.cache"
 >
@@ -9958,7 +10526,7 @@
 </parameter>
 <parameter name="resizeOptions" type="com.facebook.imagepipeline.common.ResizeOptions">
 </parameter>
-<parameter name="autoRotated" type="boolean">
+<parameter name="rotationOptions" type="RotationOptions">
 </parameter>
 <parameter name="imageDecodeOptions" type="ImageDecodeOptions">
 </parameter>
@@ -10104,6 +10672,10 @@
 <parameter name="cacheTrimStrategy" type="com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy">
 </parameter>
 <parameter name="memoryCacheParamsSupplier" type="com.facebook.common.internal.Supplier&lt;com.facebook.imagepipeline.cache.MemoryCacheParams&gt;">
+</parameter>
+<parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
+</parameter>
+<parameter name="isExternalCreatedBitmapLogEnabled" type="boolean">
 </parameter>
 </constructor>
 <method name="cache"
@@ -10440,6 +11012,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
 </method>
 <method name="onBitmapCacheMiss"
  return="void"
@@ -10506,6 +11080,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
 </method>
 <method name="onMemoryCacheMiss"
  return="void"
@@ -10539,6 +11115,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
 </method>
 <method name="onStagingAreaMiss"
  return="void"
@@ -10734,6 +11312,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="cacheKey" type="K">
+</parameter>
 </method>
 <method name="onCacheMiss"
  return="void"
@@ -10781,8 +11361,69 @@
 <parameter name="height" type="int">
 </parameter>
 </constructor>
+<constructor name="ResizeOptions"
+ type="com.facebook.imagepipeline.common.ResizeOptions"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="maxBitmapSize" type="float">
+</parameter>
+</constructor>
+<constructor name="ResizeOptions"
+ type="com.facebook.imagepipeline.common.ResizeOptions"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="maxBitmapSize" type="float">
+</parameter>
+<parameter name="roundUpFraction" type="float">
+</parameter>
+</constructor>
+<field name="DEFAULT_ROUNDUP_FRACTION"
+ type="float"
+ transient="false"
+ volatile="false"
+ value="0.6666667f"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 <field name="height"
  type="int"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="maxBitmapSize"
+ type="float"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="roundUpFraction"
+ type="float"
  transient="false"
  volatile="false"
  static="false"
@@ -11352,6 +11993,17 @@
  native="false"
  synchronized="false"
  static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getDefaultImageRequestConfig"
+ return="com.facebook.imagepipeline.core.ImagePipelineConfig.DefaultImageRequestConfig"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
  final="false"
  deprecated="not deprecated"
  visibility="public"
@@ -11930,6 +12582,39 @@
 </parameter>
 </method>
 </class>
+<class name="ImagePipelineConfig.DefaultImageRequestConfig"
+ extends="java.lang.Object"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="isProgressiveRenderingEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setProgressiveRenderingEnabled"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="progressiveRenderingEnabled" type="boolean">
+</parameter>
+</method>
+</class>
 <class name="ImagePipelineFactory"
  extends="java.lang.Object"
  abstract="false"
@@ -11993,6 +12678,8 @@
 <parameter name="decodeMemoryFileEnabled" type="boolean">
 </parameter>
 <parameter name="webpSupportEnabled" type="boolean">
+</parameter>
+<parameter name="webpErrorLogger" type="com.facebook.common.webp.WebpBitmapFactory.WebpErrorLogger">
 </parameter>
 </method>
 <method name="getAnimatedFactory"
@@ -13436,6 +14123,16 @@
  visibility="public"
 >
 <parameter name="requestListeners" type="java.util.Set&lt;com.facebook.imagepipeline.listener.RequestListener&gt;">
+</parameter>
+</constructor>
+<constructor name="ForwardingRequestListener"
+ type="com.facebook.imagepipeline.listener.ForwardingRequestListener"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="requestListeners" type="com.facebook.imagepipeline.listener.RequestListener...">
 </parameter>
 </constructor>
 <method name="onProducerEvent"
@@ -15362,7 +16059,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
 </method>
@@ -15465,8 +16162,30 @@
  visibility="public"
 >
 </method>
+<method name="getRequestListener"
+ return="com.facebook.imagepipeline.listener.RequestListener"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getResizeOptions"
  return="com.facebook.imagepipeline.common.ResizeOptions"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getRotationOptions"
+ return="RotationOptions"
  abstract="false"
  native="false"
  synchronized="false"
@@ -15689,6 +16408,17 @@
  visibility="public"
 >
 </method>
+<method name="getRequestListener"
+ return="com.facebook.imagepipeline.listener.RequestListener"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getRequestPriority"
  return="Priority"
  abstract="false"
@@ -15711,8 +16441,8 @@
  visibility="public"
 >
 </method>
-<method name="getSourceUri"
- return="android.net.Uri"
+<method name="getRotationOptions"
+ return="RotationOptions"
  abstract="false"
  native="false"
  synchronized="false"
@@ -15722,8 +16452,8 @@
  visibility="public"
 >
 </method>
-<method name="isAutoRotateEnabled"
- return="boolean"
+<method name="getSourceUri"
+ return="android.net.Uri"
  abstract="false"
  native="false"
  synchronized="false"
@@ -15799,7 +16529,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
 <parameter name="enabled" type="boolean">
@@ -15883,6 +16613,19 @@
 <parameter name="enabled" type="boolean">
 </parameter>
 </method>
+<method name="setRequestListener"
+ return="com.facebook.imagepipeline.request.ImageRequestBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="requestListener" type="com.facebook.imagepipeline.listener.RequestListener">
+</parameter>
+</method>
 <method name="setRequestPriority"
  return="com.facebook.imagepipeline.request.ImageRequestBuilder"
  abstract="false"
@@ -15907,6 +16650,19 @@
  visibility="public"
 >
 <parameter name="resizeOptions" type="com.facebook.imagepipeline.common.ResizeOptions">
+</parameter>
+</method>
+<method name="setRotationOptions"
+ return="com.facebook.imagepipeline.request.ImageRequestBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="rotationOptions" type="RotationOptions">
 </parameter>
 </method>
 <method name="setSource"

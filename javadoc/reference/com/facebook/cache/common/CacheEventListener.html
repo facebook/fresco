@@ -329,6 +329,9 @@
 
 <h2>Class Overview</h2>
 <p>An interface for logging various cache events.
+
+ <p> In all callback methods, the CacheEvent object should not be held beyond the method
+ itself as they may be automatically recycled.
 </p>
 
 
@@ -420,6 +423,24 @@
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onCleared()">onCleared</a></span>()
+        
+        <div class="jd-descrdiv">Triggered by a full cache clearance.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/cache/common/CacheEventListener.html#onEviction(CacheEvent)">onEviction</a></span>(CacheEvent cacheEvent)
         
         <div class="jd-descrdiv">Triggered by an eviction from cache.</div>
@@ -428,7 +449,7 @@
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -446,7 +467,7 @@
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -464,7 +485,7 @@
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -483,7 +504,7 @@
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -501,7 +522,7 @@
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -520,7 +541,7 @@
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -583,6 +604,38 @@
 
 <h2>Public Methods</h2>
 
+
+
+<a id="onCleared()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        void
+      </span>
+      <span class="sympad">onCleared</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Triggered by a full cache clearance.
+</p></div>
+
+    </div>
+</div>
 
 
 <a id="onEviction(CacheEvent)"></a>

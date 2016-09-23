@@ -225,6 +225,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html">ImagePipeline</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.DefaultImageRequestConfig.html">ImagePipelineConfig.DefaultImageRequestConfig</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></li>
       </ul>
     </li>
@@ -516,7 +517,7 @@ Summary:
             PlatformDecoder
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildPlatformDecoder(com.facebook.imagepipeline.memory.PoolFactory, boolean, boolean)">buildPlatformDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, boolean decodeMemoryFileEnabled, boolean webpSupportEnabled)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html#buildPlatformDecoder(com.facebook.imagepipeline.memory.PoolFactory, boolean, boolean, com.facebook.common.webp.WebpBitmapFactory.WebpErrorLogger)">buildPlatformDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, boolean decodeMemoryFileEnabled, boolean webpSupportEnabled, WebpBitmapFactory.WebpErrorLogger webpErrorLogger)
         
         <div class="jd-descrdiv">Provide the implementation of the PlatformDecoder for the current platform using the
  provided PoolFactory</div>
@@ -1182,7 +1183,7 @@ From class
 </div>
 
 
-<a id="buildPlatformDecoder(com.facebook.imagepipeline.memory.PoolFactory, boolean, boolean)"></a>
+<a id="buildPlatformDecoder(com.facebook.imagepipeline.memory.PoolFactory, boolean, boolean, com.facebook.common.webp.WebpBitmapFactory.WebpErrorLogger)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1195,7 +1196,7 @@ From class
         PlatformDecoder
       </span>
       <span class="sympad">buildPlatformDecoder</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, boolean decodeMemoryFileEnabled, boolean webpSupportEnabled)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a> poolFactory, boolean decodeMemoryFileEnabled, boolean webpSupportEnabled, WebpBitmapFactory.WebpErrorLogger webpErrorLogger)</span>
     </h4>
       <div class="api-level">
         <div>
