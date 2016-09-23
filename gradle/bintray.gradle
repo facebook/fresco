@@ -25,6 +25,10 @@ def shouldSyncWithMavenCentral() {
     return hasProperty('syncWithMavenCentral') ? property('syncWithMavenCentral').toBoolean() : false
 }
 
+def dryRunOnly() {
+    return hasProperty('dryRun') ? property('dryRun').toBoolean() : false
+}
+
 bintray {
     user = getBintrayUsername()
     key = getBintrayApiKey()
@@ -38,6 +42,7 @@ bintray {
         issueTrackerUrl = issuesUrl
         vcsUrl = scmUrl
         licenses = projectLicenses
+        dryRun = dryRunOnly()
         publish = true
         publicDownloadNumbers = true
         version {
