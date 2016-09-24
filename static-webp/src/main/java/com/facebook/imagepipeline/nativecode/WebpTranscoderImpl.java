@@ -42,8 +42,7 @@ public class WebpTranscoderImpl implements WebpTranscoder {
     } else if (webpFormat == DefaultImageFormats.WEBP_ANIMATED) {
       return false;
     }
-    Preconditions.checkArgument(false);
-    return false;
+    throw new IllegalArgumentException("Image format is not a WebP.");
   }
 
   /**
