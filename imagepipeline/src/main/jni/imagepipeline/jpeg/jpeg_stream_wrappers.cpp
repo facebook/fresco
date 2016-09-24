@@ -109,7 +109,7 @@ static void isSkipInputData(j_decompress_ptr dinfo, long num_bytes) {
  * Terminate source --- called by jpeg_finish_decompress
  * after all data has been read.  Often a no-op.
  */
-static void isTermSource(j_decompress_ptr dinfo) {
+static void isTermSource(j_decompress_ptr /* dinfo */) {
   /* no work necessary here */
 }
 
