@@ -34,7 +34,7 @@
         <CheckBoxPreference
             android:key="rounded_as_circle"
             android:title="@string/title_preferences_rounded_as_circle_enabled"
-            app:dependency="rounded_corners"
+            android:dependency="rounded_corners"
             />
     </PreferenceCategory>
     <PreferenceCategory
