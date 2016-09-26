@@ -26,42 +26,49 @@ import com.facebook.common.webp.WebpSupportStatus;
  */
 public class ImageFormatChecker {
 
-  private ImageFormatChecker() {}
+  private static final ImageFormat.FormatChecker DEFAULT_FORMAT_CHECKER =
+      new ImageFormat.FormatChecker() {
+        @Override
+        public int getHeaderSize() {
+          return MAX_HEADER_LENGTH;
+        }
 
-  /**
-   * Tries to match imageHeaderByte and headerSize against every known image format.
-   * If any match succeeds, corresponding ImageFormat is returned.
-   * @param imageHeaderBytes
-   * @param headerSize
-   * @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
-   */
-  private static ImageFormat doGetImageFormat(
-      final byte[] imageHeaderBytes,
-      final int headerSize) {
-    Preconditions.checkNotNull(imageHeaderBytes);
+        /**
+     * Tries to match imageHeaderByte and headerSize against every known image format.
+     * If any match succeeds, corresponding ImageFormat is returned.
+     * @param headerBytes
+     * @param headerSize
+     * @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
+     */
+    @Override
+    public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
+      Preconditions.checkNotNull(headerBytes);
 
-    if (WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize)) {
-      return getWebpFormat(imageHeaderBytes, headerSize);
-    }
+      if (WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
+        return getWebpFormat(headerBytes, headerSize);
+      }
 
-    if (isJpegHeader(imageHeaderBytes, headerSize)) {
-      return DefaultImageFormats.JPEG;
-    }
+      if (isJpegHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.JPEG;
+      }
 
-    if (isPngHeader(imageHeaderBytes, headerSize)) {
-      return DefaultImageFormats.PNG;
-    }
+      if (isPngHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.PNG;
+      }
 
-    if (isGifHeader(imageHeaderBytes, headerSize)) {
-      return DefaultImageFormats.GIF;
-    }
+      if (isGifHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.GIF;
+      }
 
-    if (isBmpHeader(imageHeaderBytes, headerSize)) {
-      return DefaultImageFormats.BMP;
-    }
+      if (isBmpHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.BMP;
+      }
 
     return ImageFormat.UNKNOWN;
-  }
+    }
+  };
+
+  private ImageFormatChecker() {}
 
   /**
    * Reads up to MAX_HEADER_LENGTH bytes from is InputStream. If mark is supported by is, it is
@@ -109,7 +116,7 @@ public class ImageFormatChecker {
     Preconditions.checkNotNull(is);
     final byte[] imageHeaderBytes = new byte[MAX_HEADER_LENGTH];
     final int headerSize = readHeaderFromStream(is, imageHeaderBytes);
-    return doGetImageFormat(imageHeaderBytes, headerSize);
+    return DEFAULT_FORMAT_CHECKER.determineFormat(imageHeaderBytes, headerSize);
   }
 
   /*

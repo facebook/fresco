@@ -16,6 +16,25 @@ import javax.annotation.Nullable;
  */
 public class ImageFormat {
 
+  public interface FormatChecker {
+
+    /**
+     * Get the number of header bytes the format checker requires
+     * @return the number of header bytes needed
+     */
+    int getHeaderSize();
+
+    /**
+     * Returns an {@link ImageFormat} if the checker is able to determine the format
+     * or null otherwise.
+     * @param headerBytes the header bytes to check
+     * @param headerSize the size of the header in bytes
+     * @return the image format or null if unknown
+     */
+    @Nullable
+    ImageFormat determineFormat(byte[] headerBytes, int headerSize);
+  }
+
   // Unknown image format
   public static final ImageFormat UNKNOWN = new ImageFormat("UNKNOWN", null);
 
