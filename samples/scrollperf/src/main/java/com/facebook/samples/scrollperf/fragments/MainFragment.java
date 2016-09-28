@@ -11,9 +11,12 @@
  */
 package com.facebook.samples.scrollperf.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +44,8 @@ public class MainFragment extends Fragment {
 
   public static final String TAG = MainFragment.class.getSimpleName();
 
+  private static final int REQUEST_READ_EXTERNAL_ID = 1;
+
   private RecyclerView mRecyclerView;
 
   private ListView mListView;
@@ -52,6 +57,8 @@ public class MainFragment extends Fragment {
   private SimpleAdapter<Uri> mSimpleAdapter;
 
   private Config mConfig;
+
+  boolean mDistinctUriCompatible = true;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +92,7 @@ public class MainFragment extends Fragment {
       default:
         throw new IllegalStateException("Recycler Layout not supported");
     }
+    updateAdapter();
     return layout;
   }
 
@@ -102,9 +110,6 @@ public class MainFragment extends Fragment {
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     layoutManager.scrollToPosition(0);
     mRecyclerView.setLayoutManager(layoutManager);
-    // Create the Adapter
-    mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
-    mRecyclerView.setAdapter(mDraweeViewAdapter);
   }
 
   private void initializeGridRecyclerView(final View layout) {
@@ -115,22 +120,14 @@ public class MainFragment extends Fragment {
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     layoutManager.scrollToPosition(0);
     mRecyclerView.setLayoutManager(layoutManager);
-    // Create the Adapter
-    mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
-    mRecyclerView.setAdapter(mDraweeViewAdapter);
   }
 
   private void initializeListView(final View layout) {
     // get the ListView
     mListView = UI.findViewById(layout, R.id.list_view);
-    // Create the Adapter
-    mListAdapter = new DraweeViewListAdapter(getContext(), mSimpleAdapter, mConfig);
-    // Set the adapter
-    mListView.setAdapter(mListAdapter);
   }
 
   private SimpleAdapter<Uri> initializeSimpleAdapter(final Config config) {
-    boolean distinctUriCompatible = true;
     SimpleAdapter<Uri> simpleAdapter = null;
     switch (config.dataSourceType) {
       case Const.LOCAL_RESOURCE_URIS:
@@ -138,21 +135,66 @@ public class MainFragment extends Fragment {
                 .getEagerAdapter(getContext(), R.array.example_uris);
         break;
       case Const.LOCAL_INTERNAL_PHOTO_URIS:
-        simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getContext());
-        distinctUriCompatible = false;
+        simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getActivity());
+        mDistinctUriCompatible = false;
         break;
       case Const.LOCAL_EXTERNAL_PHOTO_URIS:
-        simpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getContext());
-        distinctUriCompatible = false;
+        simpleAdapter = getExternalPhotoSimpleAdapter();
+        mDistinctUriCompatible = false;
         break;
     }
-    if (config.infiniteDataSource) {
-      simpleAdapter = SimpleAdapter.Util.makeItInfinite(simpleAdapter);
-      if (distinctUriCompatible && config.distinctUriDataSource) {
-        simpleAdapter = SimpleAdapter.Util
-                .decorate(simpleAdapter, DistinctUriDecorator.SINGLETON);
+    return simpleAdapter;
+  }
+
+  private void updateAdapter() {
+    if (mSimpleAdapter == null) {
+      return;
+    }
+    if (mConfig.infiniteDataSource) {
+      mSimpleAdapter = SimpleAdapter.Util.makeItInfinite(mSimpleAdapter);
+      if (mDistinctUriCompatible && mConfig.distinctUriDataSource) {
+        mSimpleAdapter = SimpleAdapter.Util
+            .decorate(mSimpleAdapter, DistinctUriDecorator.SINGLETON);
       }
     }
-    return simpleAdapter;
+    switch (mConfig.recyclerLayoutType) {
+      case Const.RECYCLER_VIEW_LAYOUT_VALUE:
+      case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
+        // Create the Adapter
+        mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
+        mRecyclerView.setAdapter(mDraweeViewAdapter);
+        break;
+      case Const.LISTVIEW_LAYOUT_VALUE:
+        // Create the Adapter
+        mListAdapter = new DraweeViewListAdapter(getContext(), mSimpleAdapter, mConfig);
+        // Set the adapter
+        mListView.setAdapter(mListAdapter);
+        break;
+      default:
+        throw new IllegalStateException("Recycler Layout not supported");
+    }
+  }
+
+  private SimpleAdapter<Uri> getExternalPhotoSimpleAdapter() {
+    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+        == PackageManager.PERMISSION_GRANTED) {
+      return ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
+    } else {
+      requestPermissions(
+          new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+          REQUEST_READ_EXTERNAL_ID);
+    }
+    return SimpleAdapter.Util.EMPTY_ADAPTER;
+  }
+
+  @Override
+  public void onRequestPermissionsResult(
+      int requestCode, String[] permissions, int[] grantResults) {
+    if (requestCode == REQUEST_READ_EXTERNAL_ID &&
+        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      mSimpleAdapter = ContentProviderSimpleAdapter.getExternalPhotoSimpleAdapter(getActivity());
+      updateAdapter();
+    }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 }

@@ -28,6 +28,23 @@ public interface SimpleAdapter<E> {
    */
   class Util {
 
+    public static SimpleAdapter EMPTY_ADAPTER = new SimpleAdapter() {
+      @Override
+      public int getSize() {
+        return 0;
+      }
+
+      @Override
+      public Object get(int position) {
+        return null;
+      }
+
+      @Override
+      public boolean isLazy() {
+        return false;
+      }
+    };
+
     /**
      * This creates an infinite version of the given SimpleAdapter setting
      * @param srcAdapter The source SimpleAdapter
