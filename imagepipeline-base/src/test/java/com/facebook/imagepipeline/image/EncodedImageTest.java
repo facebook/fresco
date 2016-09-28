@@ -157,6 +157,7 @@ public class EncodedImageTest {
     assertSame(DefaultImageFormats.JPEG, encodedImage.getImageFormat());
     assertEquals(550, encodedImage.getWidth());
     assertEquals(468, encodedImage.getHeight());
+    assertEquals(0, encodedImage.getRotationAngle());
   }
 
   @Test
@@ -168,6 +169,7 @@ public class EncodedImageTest {
     assertSame(DefaultImageFormats.PNG, encodedImage.getImageFormat());
     assertEquals(800, encodedImage.getWidth());
     assertEquals(600, encodedImage.getHeight());
+    assertEquals(0, encodedImage.getRotationAngle());
   }
 
   @Test

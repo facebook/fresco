@@ -94,7 +94,7 @@ public class AddImageTransformMetaDataProducerTest {
     EncodedImage encodedImage = argumentCaptor.getValue();
     assertTrue(EncodedImage.isValid(encodedImage));
     assertEquals(DefaultImageFormats.WEBP_SIMPLE, encodedImage.getImageFormat());
-    assertEquals(-1, encodedImage.getRotationAngle());
+    assertEquals(0, encodedImage.getRotationAngle());
     assertEquals(-1, encodedImage.getWidth());
     assertEquals(-1, encodedImage.getHeight());
   }
@@ -110,7 +110,7 @@ public class AddImageTransformMetaDataProducerTest {
     EncodedImage encodedImage = argumentCaptor.getValue();
     assertTrue(EncodedImage.isValid(encodedImage));
     assertEquals(DefaultImageFormats.WEBP_SIMPLE, encodedImage.getImageFormat());
-    assertEquals(-1, encodedImage.getRotationAngle());
+    assertEquals(0, encodedImage.getRotationAngle());
     assertEquals(-1, encodedImage.getWidth());
     assertEquals(-1, encodedImage.getHeight());
   }

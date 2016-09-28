@@ -150,9 +150,26 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesNotTransformIfNotRequested() {
+  public void testDoesNotTransformIfImageRotationAngleUnkown() {
     whenResizingEnabled();
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
+
+    provideIntermediateResult(
+        DefaultImageFormats.JPEG,
+        800,
+        800,
+        EncodedImage.UNKNOWN_ROTATION_ANGLE);
+    verifyIntermediateResultPassedThroughUnchanged();
+
+    provideFinalResult(DefaultImageFormats.JPEG, 800, 800, EncodedImage.UNKNOWN_ROTATION_ANGLE);
+    verifyFinalResultPassedThroughUnchanged();
+    verifyZeroJpegTranscoderInteractions();
+  }
+
+  @Test
+  public void testDoesNotTransformIfNotRequested() {
+    whenResizingEnabled();
+    whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideIntermediateResult(DefaultImageFormats.JPEG);
     verifyIntermediateResultPassedThroughUnchanged();

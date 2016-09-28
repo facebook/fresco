@@ -280,25 +280,26 @@ public class EncodedImage implements Closeable {
     final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
         getInputStream());
     mImageFormat = imageFormat;
-    // Dimensions decoding is not yet supported for WebP since BitmapUtil.decodeDimensions has a
-    // bug where it will return 100x100 for some WebPs even though those are not its actual
-    // dimensions
+    // TODO 13604868 Dimensions decoding is not yet supported for WebP since
+    // BitmapUtil.decodeDimensions has a bug where it will return 100x100 for some WebPs even though
+    // those are not its actual dimensions
+    Pair<Integer, Integer> dimensions = null;
     if (!DefaultImageFormats.isWebpFormat(imageFormat)) {
-      Pair<Integer, Integer> dimensions = BitmapUtil.decodeDimensions(getInputStream());
+      dimensions = BitmapUtil.decodeDimensions(getInputStream());
       if (dimensions != null) {
         mWidth = dimensions.first;
         mHeight = dimensions.second;
-
-        // Load the rotation angle only if we have the dimensions
-        if (imageFormat == DefaultImageFormats.JPEG) {
-          if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
-            mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
-                JfifUtil.getOrientation(getInputStream()));
-          }
-        } else {
-          mRotationAngle = 0;
-        }
       }
+    }
+
+    if (imageFormat == DefaultImageFormats.JPEG && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
+      // Load the JPEG rotation angle only if we have the dimensions
+      if (dimensions != null) {
+        mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
+            JfifUtil.getOrientation(getInputStream()));
+      }
+    } else {
+      mRotationAngle = 0;
     }
   }
 
