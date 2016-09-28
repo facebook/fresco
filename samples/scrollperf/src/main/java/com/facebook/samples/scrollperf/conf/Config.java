@@ -53,6 +53,8 @@ public class Config {
 
   public final int fadeDurationMs;
 
+  public final int decodingThreadCount;
+
   public final boolean drawBorder;
 
   public static Config load(final Context context) {
@@ -115,6 +117,9 @@ public class Config {
     final int gridSpanCount = Integer.parseInt(sharedPreferences.getString(
         Const.GRID_SPAN_COUNT_KEY,
         "3"));
+    final int decodingThreadCount = Integer.parseInt(sharedPreferences.getString(
+        Const.DECODING_THREAD_KEY,
+        "0"));
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -134,7 +139,8 @@ public class Config {
       overridenWidth,
       overridenHeight,
       fadeDurationMs,
-      drawBorder);
+      drawBorder,
+        decodingThreadCount);
   }
 
   private Config(
@@ -156,7 +162,8 @@ public class Config {
       final int overridenWidth,
       final int overridenHeight,
       final int fadeDurationMs,
-      final boolean drawBorder) {
+      final boolean drawBorder,
+      final int decodingThreadNumber) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.gridSpanCount = gridSpanCount;
@@ -176,5 +183,6 @@ public class Config {
     this.overridenHeight = overridenHeight;
     this.fadeDurationMs = fadeDurationMs;
     this.drawBorder = drawBorder;
+    this.decodingThreadCount = decodingThreadNumber;
   }
 }

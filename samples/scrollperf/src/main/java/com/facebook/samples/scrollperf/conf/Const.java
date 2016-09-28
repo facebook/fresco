@@ -34,6 +34,8 @@ public final class Const {
 
   public static final double RATIO = 4.0 / 3.0;
 
+  public static final int NUMBER_OF_PROCESSORS = Runtime.getRuntime().availableProcessors();
+
   public static final String DATA_SOURCE_KEY = "uris_data_source";
   public static final String INFINITE_DATA_SOURCE_KEY = "infinite_data_source";
   public static final String DISTINCT_DATA_SOURCE_KEY ="distinct_uri_data_source";
@@ -53,4 +55,6 @@ public final class Const {
   public static final String FADE_DURATION_KEY = "fade_duration";
   public static final String DRAW_BORDER_KEY = "draw_border";
   public static final String GRID_SPAN_COUNT_KEY= "grid_span_count_key";
+
+  public static final String DECODING_THREAD_KEY= "decoding_thread_key";
 }
