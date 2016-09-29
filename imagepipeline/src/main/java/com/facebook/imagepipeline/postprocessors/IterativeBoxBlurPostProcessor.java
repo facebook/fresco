@@ -9,8 +9,14 @@
 
 package com.facebook.imagepipeline.postprocessors;
 
+import javax.annotation.Nullable;
+
+import java.util.Locale;
+
 import android.graphics.Bitmap;
 
+import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.facebook.imagepipeline.request.BasePostprocessor;
@@ -23,8 +29,10 @@ public class IterativeBoxBlurPostProcessor extends BasePostprocessor {
 
   private static final int DEFAULT_ITERATIONS = 3;
 
-  final int mIterations;
-  final int mBlurRadius;
+  private final int mIterations;
+  private final int mBlurRadius;
+
+  private CacheKey mCacheKey;
 
   public IterativeBoxBlurPostProcessor(int blurRadius) {
     this(DEFAULT_ITERATIONS, blurRadius);
@@ -40,5 +48,15 @@ public class IterativeBoxBlurPostProcessor extends BasePostprocessor {
   @Override
   public void process(Bitmap bitmap) {
     NativeBlurFilter.iterativeBoxBlur(bitmap, mIterations, mBlurRadius);
+  }
+
+  @Nullable
+  @Override
+  public CacheKey getPostprocessorCacheKey() {
+    if (mCacheKey == null) {
+      final String key = String.format((Locale) null, "i%dr%d", mIterations, mBlurRadius);
+      mCacheKey = new SimpleCacheKey(key);
+    }
+    return mCacheKey;
   }
 }
