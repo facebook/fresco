@@ -23,7 +23,7 @@ public class DraweeConfig {
   @Nullable
   private final ImmutableList<DrawableFactory> mCustomDrawableFactories;
 
-  private DraweeConfig(Builder builder) {
+  /* PACKAGE */ DraweeConfig(Builder builder) {
     mCustomDrawableFactories = builder.mCustomDrawableFactories != null
         ? ImmutableList.copyOf(builder.mCustomDrawableFactories)
         : null;
@@ -40,7 +40,7 @@ public class DraweeConfig {
 
   public static class Builder {
 
-    private List<DrawableFactory> mCustomDrawableFactories;
+    /* PACKAGE */ List<DrawableFactory> mCustomDrawableFactories;
 
     /**
      * Add a custom drawable factory that will be used to create

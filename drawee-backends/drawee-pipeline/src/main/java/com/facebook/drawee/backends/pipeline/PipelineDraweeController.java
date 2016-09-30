@@ -48,8 +48,8 @@ public class PipelineDraweeController
   private static final Class<?> TAG = PipelineDraweeController.class;
 
   // Components
-  private final Resources mResources;
-  private final AnimatedDrawableFactory mAnimatedDrawableFactory;
+  /* PACKAGE */ final Resources mResources;
+  /* PACKAGE */ final AnimatedDrawableFactory mAnimatedDrawableFactory;
   @Nullable
   private final ImmutableList<DrawableFactory> mDrawableFactories;
 
