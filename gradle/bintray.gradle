@@ -43,6 +43,7 @@ bintray {
         vcsUrl = scmUrl
         licenses = projectLicenses
         dryRun = dryRunOnly()
+        override = true
         publish = true
         publicDownloadNumbers = true
         version {
