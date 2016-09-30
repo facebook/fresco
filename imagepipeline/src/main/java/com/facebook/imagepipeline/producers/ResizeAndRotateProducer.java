@@ -43,17 +43,17 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "ResizeAndRotateProducer";
-  private static final String ORIGINAL_SIZE_KEY = "Original size";
-  private static final String REQUESTED_SIZE_KEY = "Requested size";
-  private static final String FRACTION_KEY = "Fraction";
+  /* PACKAGE */ static final String ORIGINAL_SIZE_KEY = "Original size";
+  /* PACKAGE */ static final String REQUESTED_SIZE_KEY = "Requested size";
+  /* PACKAGE */ static final String FRACTION_KEY = "Fraction";
 
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
 
-  private final Executor mExecutor;
-  private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final boolean mResizingEnabled;
+  /* PACKAGE */ final Executor mExecutor;
+  /* PACKAGE */ final PooledByteBufferFactory mPooledByteBufferFactory;
+  /* PACKAGE */ final boolean mResizingEnabled;
   private final Producer<EncodedImage> mInputProducer;
 
   public ResizeAndRotateProducer(
@@ -76,10 +76,10 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private class TransformingConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
-    private final ProducerContext mProducerContext;
-    private boolean mIsCancelled;
+    /* PACKAGE */ final ProducerContext mProducerContext;
+    /* PACKAGE */ boolean mIsCancelled;
 
-    private final JobScheduler mJobScheduler;
+    /* PACKAGE */ final JobScheduler mJobScheduler;
 
     public TransformingConsumer(
         final Consumer<EncodedImage> consumer,
@@ -145,7 +145,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       }
     }
 
-    private void doTransform(EncodedImage encodedImage, boolean isLast) {
+    /* PACKAGE */ void doTransform(EncodedImage encodedImage, boolean isLast) {
       mProducerContext.getListener().onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
       ImageRequest imageRequest = mProducerContext.getImageRequest();
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
@@ -215,7 +215,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     }
   }
 
-  private static TriState shouldTransform(
+  /* PACKAGE */ static TriState shouldTransform(
       ImageRequest request,
       EncodedImage encodedImage,
       boolean resizingEnabled) {
@@ -256,7 +256,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return (int) (roundUpFraction + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
 
-  private static int getScaleNumerator(
+  /* PACKAGE */ static int getScaleNumerator(
       ImageRequest imageRequest,
       EncodedImage encodedImage,
       boolean resizingEnabled) {
@@ -283,7 +283,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return (numerator < 1) ? 1 : numerator;
   }
 
-  private static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
+  /* PACKAGE */ static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
     if (rotationOptions.useImageMetadata()) {
       int rotationAngle = encodedImage.getRotationAngle();
       switch (rotationAngle) {

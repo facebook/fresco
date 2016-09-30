@@ -36,15 +36,15 @@ import bolts.Task;
  * read/writes.
  */
 public class BufferedDiskCache {
-  private static final Class<?> TAG = BufferedDiskCache.class;
+  /* PACKAGE */ static final Class<?> TAG = BufferedDiskCache.class;
 
-  private final FileCache mFileCache;
-  private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final PooledByteStreams mPooledByteStreams;
-  private final Executor mReadExecutor;
-  private final Executor mWriteExecutor;
-  private final StagingArea mStagingArea;
-  private final ImageCacheStatsTracker mImageCacheStatsTracker;
+  /* PACKAGE */ final FileCache mFileCache;
+  /* PACKAGE */ final PooledByteBufferFactory mPooledByteBufferFactory;
+  /* PACKAGE */ final PooledByteStreams mPooledByteStreams;
+  /* PACKAGE */ final Executor mReadExecutor;
+  /* PACKAGE */ final Executor mWriteExecutor;
+  /* PACKAGE */ final StagingArea mStagingArea;
+  /* PACKAGE */ final ImageCacheStatsTracker mImageCacheStatsTracker;
 
   public BufferedDiskCache(
       FileCache fileCache,
@@ -144,7 +144,7 @@ public class BufferedDiskCache {
    * @param key
    * @return true if the image is found in staging area or File cache, false if not found
    */
-  private boolean checkInStagingAreaAndFileCache(final CacheKey key) {
+  /* PACKAGE */ boolean checkInStagingAreaAndFileCache(final CacheKey key) {
     EncodedImage result = mStagingArea.get(key);
     if (result != null) {
       result.close();
@@ -318,7 +318,7 @@ public class BufferedDiskCache {
   /**
    * Performs disk cache read. In case of any exception null is returned.
    */
-  private PooledByteBuffer readFromDiskCache(final CacheKey key) throws IOException {
+  /* PACKAGE */ PooledByteBuffer readFromDiskCache(final CacheKey key) throws IOException {
     try {
       FLog.v(TAG, "Disk cache read for %s", key.toString());
 
@@ -356,7 +356,7 @@ public class BufferedDiskCache {
    * Writes to disk cache
    * @throws IOException
    */
-  private void writeToDiskCache(
+  /* PACKAGE */ void writeToDiskCache(
       final CacheKey key,
       final EncodedImage encodedImage) {
     FLog.v(TAG, "About to write to disk-cache for key %s", key.toString());

@@ -39,12 +39,12 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "DiskCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
-  private final BufferedDiskCache mDefaultBufferedDiskCache;
-  private final BufferedDiskCache mSmallImageBufferedDiskCache;
+  /* PACKAGE */ final BufferedDiskCache mDefaultBufferedDiskCache;
+  /* PACKAGE */ final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final boolean mChooseCacheByImageSize;
-  private final int mForceSmallCacheThresholdBytes;
+  /* PACKAGE */ final boolean mChooseCacheByImageSize;
+  /* PACKAGE */ final int mForceSmallCacheThresholdBytes;
 
   public DiskCacheProducer(
       BufferedDiskCache defaultBufferedDiskCache,
@@ -156,12 +156,12 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     };
   }
 
-  private static boolean isTaskCancelled(Task<?> task) {
+  /* PACKAGE */ static boolean isTaskCancelled(Task<?> task) {
     return task.isCancelled() ||
         (task.isFaulted() && task.getError() instanceof CancellationException);
   }
 
-  private void maybeStartInputProducer(
+  /* PACKAGE */ void maybeStartInputProducer(
       Consumer<EncodedImage> consumerOfDiskCacheProducer,
       Consumer<EncodedImage> consumerOfInputProducer,
       ProducerContext producerContext) {
@@ -208,7 +208,7 @@ public class DiskCacheProducer implements Producer<EncodedImage> {
     private final BufferedDiskCache mCache;
     private final CacheKey mCacheKey;
 
-    private DiskCacheConsumer(
+    /* PACKAGE */ DiskCacheConsumer(
         final Consumer<EncodedImage> consumer,
         final BufferedDiskCache cache,
         final CacheKey cacheKey) {

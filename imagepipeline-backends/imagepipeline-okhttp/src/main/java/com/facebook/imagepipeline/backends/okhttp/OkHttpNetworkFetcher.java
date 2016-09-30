@@ -51,7 +51,7 @@ public class OkHttpNetworkFetcher extends
     }
   }
 
-  private static final String TAG = "OkHttpNetworkFetchProducer";
+  /* PACKAGE */ static final String TAG = "OkHttpNetworkFetchProducer";
   private static final String QUEUE_TIME = "queue_time";
   private static final String FETCH_TIME = "fetch_time";
   private static final String TOTAL_TIME = "total_time";
@@ -59,7 +59,7 @@ public class OkHttpNetworkFetcher extends
 
   private final OkHttpClient mOkHttpClient;
 
-  private Executor mCancellationExecutor;
+  /* PACKAGE */ Executor mCancellationExecutor;
 
   /**
    * @param okHttpClient client to use
@@ -172,7 +172,7 @@ public class OkHttpNetworkFetcher extends
    * after request cancellation, then the exception is interpreted as successful cancellation
    * and onCancellation is called. Otherwise onFailure is called.
    */
-  private void handleException(final Call call, final Exception e, final Callback callback) {
+  /* PACKAGE */ void handleException(final Call call, final Exception e, final Callback callback) {
     if (call.isCanceled()) {
       callback.onCancellation();
     } else {

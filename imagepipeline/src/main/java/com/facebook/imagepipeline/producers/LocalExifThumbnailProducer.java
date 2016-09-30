@@ -49,7 +49,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
 
   private final Executor mExecutor;
-  private final PooledByteBufferFactory mPooledByteBufferFactory;
+  /* PACKAGE */ final PooledByteBufferFactory mPooledByteBufferFactory;
   private final ContentResolver mContentResolver;
 
   public LocalExifThumbnailProducer(
@@ -138,7 +138,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     return null;
   }
 
-  private EncodedImage buildEncodedImage(
+  /* PACKAGE */ EncodedImage buildEncodedImage(
       PooledByteBuffer imageBytes,
       ExifInterface exifInterface) {
     Pair<Integer, Integer> dimensions =

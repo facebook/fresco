@@ -35,7 +35,7 @@ public class DraweeTransition extends Transition {
   private static final String PROPNAME_BOUNDS = "draweeTransition:bounds";
 
   private final ScalingUtils.ScaleType mFromScale;
-  private final ScalingUtils.ScaleType mToScale;
+  /* PACKAGE */ final ScalingUtils.ScaleType mToScale;
 
   public static TransitionSet createTransitionSet(
       ScalingUtils.ScaleType fromScale,

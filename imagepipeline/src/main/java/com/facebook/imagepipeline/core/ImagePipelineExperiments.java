@@ -30,7 +30,7 @@ public class ImagePipelineExperiments {
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
 
-  private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
+  /* PACKAGE */ ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
@@ -78,14 +78,14 @@ public class ImagePipelineExperiments {
 
     private static final int DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
 
-    private final ImagePipelineConfig.Builder mConfigBuilder;
-    private int mForceSmallCacheThresholdBytes = 0;
-    private boolean mWebpSupportEnabled = false;
-    private @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
-    private boolean mDecodeFileDescriptorEnabled = false;
-    private boolean mExternalCreatedBitmapLogEnabled = false;
-    private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
-    private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
+    /* PACKAGE */ final ImagePipelineConfig.Builder mConfigBuilder;
+    /* PACKAGE */ int mForceSmallCacheThresholdBytes = 0;
+    /* PACKAGE */ boolean mWebpSupportEnabled = false;
+    /* PACKAGE */ @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
+    /* PACKAGE */ boolean mDecodeFileDescriptorEnabled = false;
+    /* PACKAGE */ boolean mExternalCreatedBitmapLogEnabled = false;
+    /* PACKAGE */ int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
+    /* PACKAGE */ WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;

@@ -53,7 +53,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
    */
   @GuardedBy("this")
   @VisibleForTesting final Map<K, Multiplexer> mMultiplexers;
-  private final Producer<T> mInputProducer;
+  /* PACKAGE */ final Producer<T> mInputProducer;
 
   protected MultiplexProducer(Producer<T> inputProducer) {
     mInputProducer = inputProducer;
@@ -88,7 +88,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
   }
 
-  private synchronized Multiplexer getExistingMultiplexer(K key) {
+  /* PACKAGE */ synchronized Multiplexer getExistingMultiplexer(K key) {
     return mMultiplexers.get(key);
   }
 
@@ -98,7 +98,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     return multiplexer;
   }
 
-  private synchronized void removeMultiplexer(K key, Multiplexer multiplexer) {
+  /* PACKAGE */ synchronized void removeMultiplexer(K key, Multiplexer multiplexer) {
     if (mMultiplexers.get(key) == multiplexer) {
       mMultiplexers.remove(key);
     }
@@ -140,7 +140,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      *   <li> cancellation notification is received and mConsumerContextPairs is empty </li>
      * </ul>
      */
-    private final CopyOnWriteArraySet<Pair<Consumer<T>, ProducerContext>> mConsumerContextPairs;
+    /* PACKAGE */ final CopyOnWriteArraySet<Pair<Consumer<T>, ProducerContext>> mConsumerContextPairs;
 
     @GuardedBy("Multiplexer.this")
     @Nullable
@@ -157,7 +157,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      */
     @GuardedBy("Multiplexer.this")
     @Nullable
-    private BaseProducerContext mMultiplexProducerContext;
+    /* PACKAGE */ BaseProducerContext mMultiplexProducerContext;
 
     /**
      * Currently used consumer of next producer.
@@ -305,7 +305,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
      * the data. If all consumers are cancelled, then this multiplexer is removed from mRequest
      * map to clean up.
      */
-    private void startInputProducerIfHasAttachedConsumers() {
+    /* PACKAGE */ void startInputProducerIfHasAttachedConsumers() {
       BaseProducerContext multiplexProducerContext;
       ForwardingConsumer forwardingConsumer;
       synchronized (Multiplexer.this) {
@@ -339,7 +339,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
 
     @Nullable
-    private synchronized List<ProducerContextCallbacks> updateIsPrefetch() {
+    /* PACKAGE */ synchronized List<ProducerContextCallbacks> updateIsPrefetch() {
       if (mMultiplexProducerContext == null) {
         return null;
       }
@@ -356,7 +356,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
 
     @Nullable
-    private synchronized List<ProducerContextCallbacks> updateIsIntermediateResultExpected() {
+    /* PACKAGE */ synchronized List<ProducerContextCallbacks> updateIsIntermediateResultExpected() {
       if (mMultiplexProducerContext == null) {
         return null;
       }
@@ -374,7 +374,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     }
 
     @Nullable
-    private synchronized List<ProducerContextCallbacks> updatePriority() {
+    /* PACKAGE */ synchronized List<ProducerContextCallbacks> updatePriority() {
       if (mMultiplexProducerContext == null) {
         return null;
       }
@@ -493,7 +493,7 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     /**
      * Forwards {@link Consumer} methods to Multiplexer.
      */
-    private class ForwardingConsumer extends BaseConsumer<T> {
+    /* PACKAGE */ class ForwardingConsumer extends BaseConsumer<T> {
       @Override
       protected void onNewResultImpl(T newResult, boolean isLast) {
         Multiplexer.this.onNextResult(this, newResult, isLast);

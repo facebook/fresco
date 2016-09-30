@@ -184,11 +184,11 @@ public class JobScheduler {
     }
   }
 
-  private void submitJob() {
+  /* PACKAGE */ void submitJob() {
     mExecutor.execute(mDoJobRunnable);
   }
 
-  private void doJob() {
+  /* PACKAGE */ void doJob() {
     long now = SystemClock.uptimeMillis();
     EncodedImage input;
     boolean isLast;

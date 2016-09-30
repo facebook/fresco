@@ -32,7 +32,7 @@ public class PoolConfig {
   private final PoolParams mSmallByteArrayPoolParams;
   private final PoolStatsTracker mSmallByteArrayPoolStatsTracker;
 
-  private PoolConfig(Builder builder) {
+  /* PACKAGE */ PoolConfig(Builder builder) {
     mBitmapPoolParams =
         builder.mBitmapPoolParams == null ?
             DefaultBitmapPoolParams.get() :
@@ -105,16 +105,16 @@ public class PoolConfig {
 
   public static class Builder {
 
-    private PoolParams mBitmapPoolParams;
-    private PoolStatsTracker mBitmapPoolStatsTracker;
-    private PoolParams mFlexByteArrayPoolParams;
-    private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-    private PoolParams mNativeMemoryChunkPoolParams;
-    private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
-    private PoolParams mSmallByteArrayPoolParams;
-    private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
+    /* PACKAGE */ PoolParams mBitmapPoolParams;
+    /* PACKAGE */ PoolStatsTracker mBitmapPoolStatsTracker;
+    /* PACKAGE */ PoolParams mFlexByteArrayPoolParams;
+    /* PACKAGE */ MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+    /* PACKAGE */ PoolParams mNativeMemoryChunkPoolParams;
+    /* PACKAGE */ PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
+    /* PACKAGE */ PoolParams mSmallByteArrayPoolParams;
+    /* PACKAGE */ PoolStatsTracker mSmallByteArrayPoolStatsTracker;
 
-    private Builder() {
+    /* PACKAGE */ Builder() {
     }
 
     public Builder setBitmapPoolParams(PoolParams bitmapPoolParams) {

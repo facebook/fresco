@@ -95,7 +95,7 @@ public class LocalVideoThumbnailProducer implements
     mExecutor.execute(cancellableProducerRunnable);
   }
 
-  private static int calculateKind(ImageRequest imageRequest) {
+    /* PACKAGE */ static int calculateKind(ImageRequest imageRequest) {
     if (imageRequest.getPreferredWidth() > 96 || imageRequest.getPreferredHeight() > 96) {
       return MediaStore.Images.Thumbnails.MINI_KIND;
     }

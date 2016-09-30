@@ -47,7 +47,7 @@ public class DeferredReleaser {
     public void release();
   }
 
-  private final Set<Releasable> mPendingReleasables;
+  /* PACKAGE */ final Set<Releasable> mPendingReleasables;
   private final Handler mUiHandler;
 
   public DeferredReleaser() {
@@ -99,7 +99,7 @@ public class DeferredReleaser {
     mPendingReleasables.remove(releasable);
   }
 
-  private static void ensureOnUiThread() {
+  /* PACKAGE */ static void ensureOnUiThread() {
     Preconditions.checkState(Looper.getMainLooper().getThread() == Thread.currentThread());
   }
 }
