@@ -45,18 +45,18 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   public static final String PRODUCER_NAME = "DecodeProducer";
 
   // keys for extra map
-  private static final String BITMAP_SIZE_KEY = "bitmapSize";
-  private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
-  private static final String IMAGE_TYPE_KEY = "imageType";
-  private static final String IS_FINAL_KEY = "isFinal";
+  /* PACKAGE */ static final String BITMAP_SIZE_KEY = "bitmapSize";
+  /* PACKAGE */ static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
+  /* PACKAGE */ static final String IMAGE_TYPE_KEY = "imageType";
+  /* PACKAGE */ static final String IS_FINAL_KEY = "isFinal";
 
   private final ByteArrayPool mByteArrayPool;
-  private final Executor mExecutor;
-  private final ImageDecoder mImageDecoder;
+  /* PACKAGE */ final Executor mExecutor;
+  /* PACKAGE */ final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final Producer<EncodedImage> mInputProducer;
-  private final boolean mDownsampleEnabled;
-  private final boolean mDownsampleEnabledForNetwork;
+  /* PACKAGE */ final boolean mDownsampleEnabled;
+  /* PACKAGE */ final boolean mDownsampleEnabledForNetwork;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -97,14 +97,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private abstract class ProgressiveDecoder extends DelegatingConsumer<
       EncodedImage, CloseableReference<CloseableImage>> {
 
-    private final ProducerContext mProducerContext;
+    /* PACKAGE */ final ProducerContext mProducerContext;
     private final ProducerListener mProducerListener;
     private final ImageDecodeOptions mImageDecodeOptions;
 
     @GuardedBy("this")
     private boolean mIsFinished;
 
-    private final JobScheduler mJobScheduler;
+    /* PACKAGE */ final JobScheduler mJobScheduler;
 
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
@@ -177,7 +177,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     /** Performs the decode synchronously. */
-    private void doDecode(EncodedImage encodedImage, boolean isLast) {
+    /* PACKAGE */ void doDecode(EncodedImage encodedImage, boolean isLast) {
       if (isFinished() || !EncodedImage.isValid(encodedImage)) {
         return;
       }
