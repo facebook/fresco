@@ -32,7 +32,7 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
   private static class AddImageTransformMetaDataConsumer extends DelegatingConsumer<
       EncodedImage, EncodedImage> {
 
-    private AddImageTransformMetaDataConsumer(Consumer<EncodedImage> consumer) {
+    /* PACKAGE */ AddImageTransformMetaDataConsumer(Consumer<EncodedImage> consumer) {
       super(consumer);
     }
 
