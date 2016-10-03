@@ -11,6 +11,8 @@ package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
 
+import javax.annotation.Nullable;
+
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -27,6 +29,7 @@ import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Decodes images.
@@ -57,11 +60,6 @@ public class DefaultImageDecoder implements ImageDecoder {
         QualityInfo qualityInfo,
         ImageDecodeOptions options) {
       ImageFormat imageFormat = encodedImage.getImageFormat();
-      if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
-        imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
-            encodedImage.getInputStream());
-        encodedImage.setImageFormat(imageFormat);
-      }
       if (imageFormat == DefaultImageFormats.JPEG) {
         return decodeJpeg(encodedImage, length, qualityInfo);
       } else if (imageFormat == DefaultImageFormats.GIF) {
@@ -75,13 +73,25 @@ public class DefaultImageDecoder implements ImageDecoder {
     }
   };
 
+  @Nullable
+  private final Map<ImageFormat, ImageDecoder> mCustomDecoders;
+
   public DefaultImageDecoder(
       final AnimatedImageFactory animatedImageFactory,
       final PlatformDecoder platformDecoder,
       final Bitmap.Config bitmapConfig) {
+    this(animatedImageFactory, platformDecoder, bitmapConfig, null);
+  }
+
+  public DefaultImageDecoder(
+      final AnimatedImageFactory animatedImageFactory,
+      final PlatformDecoder platformDecoder,
+      final Bitmap.Config bitmapConfig,
+      @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
     mAnimatedImageFactory = animatedImageFactory;
     mBitmapConfig = bitmapConfig;
     mPlatformDecoder = platformDecoder;
+    mCustomDecoders = customDecoders;
   }
 
   /**
@@ -99,6 +109,18 @@ public class DefaultImageDecoder implements ImageDecoder {
       final int length,
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
+    ImageFormat imageFormat = encodedImage.getImageFormat();
+    if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
+      imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
+          encodedImage.getInputStream());
+      encodedImage.setImageFormat(imageFormat);
+    }
+    if (mCustomDecoders != null) {
+      ImageDecoder decoder = mCustomDecoders.get(imageFormat);
+      if (decoder != null) {
+        return decoder.decode(encodedImage, length, qualityInfo, options);
+      }
+    }
     return mDefaultDecoder.decode(encodedImage, length, qualityInfo, options);
   }
 
