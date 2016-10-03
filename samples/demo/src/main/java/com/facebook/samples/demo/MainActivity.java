@@ -17,6 +17,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
@@ -72,6 +75,28 @@ public class MainActivity extends AppCompatActivity {
         "hvMMmQ4o6d8aMTGuv/4wZxogl/n/k3g83NO3bBnf7/TL8Baf97pQw43+FVR0hXfpvD0k51yE35e2jNF/" +
         "98Uv3fAfPXw0T8irZQR4r1/ktG5xrypg/aKDooBtoI5aQAAA";
     findViewAndLoadUri(R.id.data_webp, dataUri);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.debug_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    menu.findItem(R.id.debug_overlay).setChecked(DebugOverlayHelper.isDebugOverlayEnabled(this));
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.debug_overlay) {
+      DebugOverlayHelper.toggleDebugOverlayEnabled(this);
+      DebugOverlayHelper.showRestartDialogFragment(this);
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private SimpleDraweeView findAndPrepare(@IdRes int viewId) {
