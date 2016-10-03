@@ -38,6 +38,7 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PoolFactory;
@@ -190,7 +191,7 @@ public class ImagePipelineFactory {
         } else {
           animatedImageFactory = null;
         }
-        mImageDecoder = new ImageDecoder(
+        mImageDecoder = new DefaultImageDecoder(
             animatedImageFactory,
             getPlatformDecoder(),
             mConfig.getBitmapConfig());

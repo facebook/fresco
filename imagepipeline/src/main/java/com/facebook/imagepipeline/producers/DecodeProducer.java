@@ -191,7 +191,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
         CloseableImage image = null;
         try {
-          image = mImageDecoder.decodeImage(encodedImage, length, quality, mImageDecodeOptions);
+          image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
         } catch (Exception e) {
           Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
           mProducerListener.

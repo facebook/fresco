@@ -294,7 +294,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decodeImage(
+    inOrder.verify(mImageDecoder).decode(
         mEncodedImage,
         IMAGE_SIZE,
         ImmutableQualityInfo.FULL_QUALITY,
@@ -318,7 +318,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decodeImage(
+    inOrder.verify(mImageDecoder).decode(
         mEncodedImage,
         200,
         ImmutableQualityInfo.of(PREVIEW_SCAN, false, false),
@@ -337,7 +337,7 @@ public class DecodeProducerTest {
     JobScheduler.JobRunnable jobRunnable = getJobRunnable();
 
     Exception exception = new RuntimeException();
-    when(mImageDecoder.decodeImage(
+    when(mImageDecoder.decode(
         mEncodedImage,
         IMAGE_SIZE,
         ImmutableQualityInfo.FULL_QUALITY,
@@ -347,7 +347,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decodeImage(
+    inOrder.verify(mImageDecoder).decode(
         mEncodedImage,
         IMAGE_SIZE,
         ImmutableQualityInfo.FULL_QUALITY,
