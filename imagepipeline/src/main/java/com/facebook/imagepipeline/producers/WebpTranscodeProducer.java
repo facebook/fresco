@@ -193,19 +193,21 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
     if (imageFormat == DefaultImageFormats.WEBP_SIMPLE ||
         imageFormat == DefaultImageFormats.WEBP_EXTENDED) {
-        // In case we have a JPEG value we have to transcode into a JPEG as usual. If the
-        // value is different (PNG) we have to fall into the LOSSLESS case and so transcode into
-        // a PNG
-        if (JPEG_WEBP_ENHANCED_TYPE == enhancedWebpTranscodingType) {
-          WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
-              imageInputStream,
-              outputStream,
-              DEFAULT_JPEG_QUALITY);
-        }
+      // In this case we transcode to JPG or PNG depending on the experiment value
+      if (PNG_WEBP_ENHANCED_TYPE == enhancedWebpTranscodingType) {
+        WebpTranscoderFactory.getWebpTranscoder()
+            .transcodeWebpToPng(imageInputStream, outputStream);
+      } else {
+        WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
+            imageInputStream,
+            outputStream,
+            DEFAULT_JPEG_QUALITY);
+      }
     } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS ||
-               imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
+        imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
+      // In this case we always transcode to PNG
       WebpTranscoderFactory.getWebpTranscoder()
-              .transcodeWebpToPng(imageInputStream, outputStream);
+          .transcodeWebpToPng(imageInputStream, outputStream);
     } else {
       throw new IllegalArgumentException("Wrong image format");
     }
