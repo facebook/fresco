@@ -22,16 +22,22 @@ public class DraweeConfig {
 
   @Nullable
   private final ImmutableList<DrawableFactory> mCustomDrawableFactories;
+  private final boolean mDrawDebugOverlay;
 
   private DraweeConfig(Builder builder) {
     mCustomDrawableFactories = builder.mCustomDrawableFactories != null
         ? ImmutableList.copyOf(builder.mCustomDrawableFactories)
         : null;
+    mDrawDebugOverlay = builder.mDrawDebugOverlay;
   }
 
   @Nullable
   public ImmutableList<DrawableFactory> getCustomDrawableFactories() {
     return mCustomDrawableFactories;
+  }
+
+  public boolean shouldDrawDebugOverlay() {
+    return mDrawDebugOverlay;
   }
 
   public static Builder newBuilder() {
@@ -41,6 +47,7 @@ public class DraweeConfig {
   public static class Builder {
 
     private List<DrawableFactory> mCustomDrawableFactories;
+    private boolean mDrawDebugOverlay;
 
     /**
      * Add a custom drawable factory that will be used to create
@@ -54,6 +61,18 @@ public class DraweeConfig {
         mCustomDrawableFactories = new ArrayList<>();
       }
       mCustomDrawableFactories.add(factory);
+      return this;
+    }
+
+    /**
+     * Set whether a debug overlay that displays image information, like dimensions and size
+     * should be drawn on top of a Drawee view.
+     *
+     * @param drawDebugOverlay true if the debug overlay should be drawn
+     * @return the builder
+     */
+    public Builder setDrawDebugOverlay(boolean drawDebugOverlay) {
+      mDrawDebugOverlay = drawDebugOverlay;
       return this;
     }
 
