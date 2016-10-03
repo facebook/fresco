@@ -28,7 +28,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "EncodedMemoryCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
-  private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
+  /* PACKAGE */ final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
 

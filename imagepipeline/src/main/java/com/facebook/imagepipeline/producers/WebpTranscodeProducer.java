@@ -53,9 +53,9 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
   private static final int DEFAULT_JPEG_QUALITY = 80;
 
   private final Executor mExecutor;
-  private final PooledByteBufferFactory mPooledByteBufferFactory;
+  /* PACKAGE */ final PooledByteBufferFactory mPooledByteBufferFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final @EnhancedTranscodingType int mEnhancedTranscodingType;
+  /* PACKAGE */ final @EnhancedTranscodingType int mEnhancedTranscodingType;
 
   public WebpTranscodeProducer(
       Executor executor,
@@ -108,7 +108,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     }
   }
 
-  private void transcodeLastResult(
+  /* PACKAGE */ void transcodeLastResult(
       final EncodedImage originalResult,
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
@@ -165,7 +165,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     mExecutor.execute(runnable);
   }
 
-  private static TriState shouldTranscode(final EncodedImage encodedImage) {
+  /* PACKAGE */ static TriState shouldTranscode(final EncodedImage encodedImage) {
     Preconditions.checkNotNull(encodedImage);
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
         encodedImage.getInputStream());
@@ -185,7 +185,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     return TriState.NO;
   }
 
-  private static void doTranscode(
+  /* PACKAGE */ static void doTranscode(
       final EncodedImage encodedImage,
       final PooledByteBufferOutputStream outputStream,
       final @EnhancedTranscodingType int enhancedWebpTranscodingType) throws Exception {

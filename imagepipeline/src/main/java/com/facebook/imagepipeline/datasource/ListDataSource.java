@@ -112,7 +112,7 @@ public class ListDataSource<T> extends AbstractDataSource<List<CloseableReferenc
     setProgress(progress / mDataSources.length);
   }
 
-  private class InternalDataSubscriber implements DataSubscriber<CloseableReference<T>> {
+  /* PACKAGE */ class InternalDataSubscriber implements DataSubscriber<CloseableReference<T>> {
     @GuardedBy("InternalDataSubscriber.this")
     boolean mFinished = false;
 

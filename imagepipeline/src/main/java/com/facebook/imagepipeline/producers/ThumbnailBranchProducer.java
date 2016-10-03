@@ -90,7 +90,7 @@ public class ThumbnailBranchProducer implements Producer<EncodedImage> {
     }
   }
 
-  private boolean produceResultsFromThumbnailProducer(
+  /* PACKAGE */ boolean produceResultsFromThumbnailProducer(
       int startIndex,
       Consumer<EncodedImage> consumer,
       ProducerContext context) {

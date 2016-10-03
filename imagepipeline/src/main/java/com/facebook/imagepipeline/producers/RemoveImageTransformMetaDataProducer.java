@@ -38,7 +38,7 @@ public class RemoveImageTransformMetaDataProducer
   private class RemoveImageTransformMetaDataConsumer extends DelegatingConsumer<EncodedImage,
           CloseableReference<PooledByteBuffer>> {
 
-    private RemoveImageTransformMetaDataConsumer(
+    /* PACKAGE */ RemoveImageTransformMetaDataConsumer(
         Consumer<CloseableReference<PooledByteBuffer>> consumer) {
       super(consumer);
     }

@@ -485,7 +485,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     mDataSource.subscribe(dataSubscriber, mUiThreadImmediateExecutor);
   }
 
-  private void onNewResultInternal(
+  /* PACKAGE */ void onNewResultInternal(
       String id,
       DataSource<T> dataSource,
       @Nullable T image,
@@ -540,7 +540,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     }
   }
 
-  private void onFailureInternal(
+  /* PACKAGE */ void onFailureInternal(
       String id,
       DataSource<T> dataSource,
       Throwable throwable,
@@ -575,7 +575,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     }
   }
 
-  private void onProgressUpdateInternal(
+  /* PACKAGE */ void onProgressUpdateInternal(
       String id,
       DataSource<T> dataSource,
       float progress,

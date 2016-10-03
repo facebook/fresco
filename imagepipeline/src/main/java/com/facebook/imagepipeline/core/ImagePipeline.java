@@ -60,7 +60,7 @@ public class ImagePipeline {
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final BufferedDiskCache mMainBufferedDiskCache;
-  private final BufferedDiskCache mSmallImageBufferedDiskCache;
+  /* PACKAGE */ final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private AtomicLong mIdCounter;

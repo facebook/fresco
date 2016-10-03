@@ -19,8 +19,8 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
 
   public static final String PRODUCER_NAME = "BackgroundThreadHandoffProducer";
 
-  private final Producer<T> mInputProducer;
-  private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  /* PACKAGE */ final Producer<T> mInputProducer;
+  /* PACKAGE */ final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
   public ThreadHandoffProducer(final Producer<T> inputProducer,
                                final  ThreadHandoffProducerQueue inputThreadHandoffProducerQueue) {

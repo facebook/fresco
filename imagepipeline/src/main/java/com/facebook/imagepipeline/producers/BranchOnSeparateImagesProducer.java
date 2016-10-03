@@ -21,7 +21,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 public class BranchOnSeparateImagesProducer
     implements Producer<EncodedImage> {
   private final Producer<EncodedImage> mInputProducer1;
-  private final Producer<EncodedImage> mInputProducer2;
+  /* PACKAGE */ final Producer<EncodedImage> mInputProducer2;
 
   public BranchOnSeparateImagesProducer(
       Producer<EncodedImage> inputProducer1, Producer<EncodedImage> inputProducer2) {
@@ -41,7 +41,7 @@ public class BranchOnSeparateImagesProducer
 
     private ProducerContext mProducerContext;
 
-    private OnFirstImageConsumer(
+    /* PACKAGE */ OnFirstImageConsumer(
         Consumer<EncodedImage> consumer,
         ProducerContext producerContext) {
       super(consumer);

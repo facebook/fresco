@@ -91,7 +91,7 @@ public class ImagePipelineConfig {
   private static DefaultImageRequestConfig
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
 
-  private ImagePipelineConfig(Builder builder) {
+  /* PACKAGE */ ImagePipelineConfig(Builder builder) {
     mAnimatedImageFactory = builder.mAnimatedImageFactory;
     mBitmapMemoryCacheParamsSupplier =
         builder.mBitmapMemoryCacheParamsSupplier == null ?
@@ -313,7 +313,7 @@ public class ImagePipelineConfig {
 
     private boolean mProgressiveRenderingEnabled = false;
 
-    private DefaultImageRequestConfig() {
+    /* PACKAGE */ DefaultImageRequestConfig() {
     }
 
     public void setProgressiveRenderingEnabled(boolean progressiveRenderingEnabled) {
@@ -327,32 +327,32 @@ public class ImagePipelineConfig {
 
   public static class Builder {
 
-    private AnimatedImageFactory mAnimatedImageFactory;
-    private Bitmap.Config mBitmapConfig;
-    private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
-    private CacheKeyFactory mCacheKeyFactory;
-    private final Context mContext;
-    private boolean mDownsampleEnabled = false;
-    private boolean mDecodeMemoryFileEnabled;
-    private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
-    private ExecutorSupplier mExecutorSupplier;
-    private ImageCacheStatsTracker mImageCacheStatsTracker;
-    private ImageDecoder mImageDecoder;
-    private Supplier<Boolean> mIsPrefetchEnabledSupplier;
-    private DiskCacheConfig mMainDiskCacheConfig;
-    private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-    private NetworkFetcher mNetworkFetcher;
-    private PlatformBitmapFactory mPlatformBitmapFactory;
-    private PoolFactory mPoolFactory;
-    private ProgressiveJpegConfig mProgressiveJpegConfig;
-    private Set<RequestListener> mRequestListeners;
-    private boolean mResizeAndRotateEnabledForNetwork = true;
-    private DiskCacheConfig mSmallImageDiskCacheConfig;
-    private FileCacheFactory mFileCacheFactory;
-    private final ImagePipelineExperiments.Builder mExperimentsBuilder
+    /* PACKAGE */ AnimatedImageFactory mAnimatedImageFactory;
+    /* PACKAGE */ Bitmap.Config mBitmapConfig;
+    /* PACKAGE */ Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+    /* PACKAGE */ CacheKeyFactory mCacheKeyFactory;
+    /* PACKAGE */ final Context mContext;
+    /* PACKAGE */ boolean mDownsampleEnabled = false;
+    /* PACKAGE */ boolean mDecodeMemoryFileEnabled;
+    /* PACKAGE */ Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
+    /* PACKAGE */ ExecutorSupplier mExecutorSupplier;
+    /* PACKAGE */ ImageCacheStatsTracker mImageCacheStatsTracker;
+    /* PACKAGE */ ImageDecoder mImageDecoder;
+    /* PACKAGE */ Supplier<Boolean> mIsPrefetchEnabledSupplier;
+    /* PACKAGE */ DiskCacheConfig mMainDiskCacheConfig;
+    /* PACKAGE */ MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+    /* PACKAGE */ NetworkFetcher mNetworkFetcher;
+    /* PACKAGE */ PlatformBitmapFactory mPlatformBitmapFactory;
+    /* PACKAGE */ PoolFactory mPoolFactory;
+    /* PACKAGE */ ProgressiveJpegConfig mProgressiveJpegConfig;
+    /* PACKAGE */ Set<RequestListener> mRequestListeners;
+    /* PACKAGE */ boolean mResizeAndRotateEnabledForNetwork = true;
+    /* PACKAGE */ DiskCacheConfig mSmallImageDiskCacheConfig;
+    /* PACKAGE */ FileCacheFactory mFileCacheFactory;
+    /* PACKAGE */ final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
 
-    private Builder(Context context) {
+    /* PACKAGE */ Builder(Context context) {
       // Doesn't use a setter as always required.
       mContext = Preconditions.checkNotNull(context);
     }

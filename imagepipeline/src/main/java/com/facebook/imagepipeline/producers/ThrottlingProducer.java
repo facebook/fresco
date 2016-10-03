@@ -30,10 +30,10 @@ public class ThrottlingProducer<T> implements Producer<T> {
   private final int mMaxSimultaneousRequests;
 
   @GuardedBy("this")
-  private int mNumCurrentRequests;
+  /* PACKAGE */ int mNumCurrentRequests;
   @GuardedBy("this")
-  private final ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>> mPendingRequests;
-  private final Executor mExecutor;
+  /* PACKAGE */ final ConcurrentLinkedQueue<Pair<Consumer<T>, ProducerContext>> mPendingRequests;
+  /* PACKAGE */ final Executor mExecutor;
 
   public ThrottlingProducer(
       int maxSimultaneousRequests,
@@ -75,7 +75,7 @@ public class ThrottlingProducer<T> implements Producer<T> {
 
   private class ThrottlerConsumer extends DelegatingConsumer<T, T> {
 
-    private ThrottlerConsumer(Consumer<T> consumer) {
+    /* PACKAGE */ ThrottlerConsumer(Consumer<T> consumer) {
       super(consumer);
     }
 

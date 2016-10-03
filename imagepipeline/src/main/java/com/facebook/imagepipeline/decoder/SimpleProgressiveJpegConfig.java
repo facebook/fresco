@@ -27,7 +27,7 @@ public class SimpleProgressiveJpegConfig implements ProgressiveJpegConfig {
     int getGoodEnoughScanNumber();
   }
 
-  private static class DefaultDynamicValueConfig implements DynamicValueConfig {
+  /* PACKAGE */ static class DefaultDynamicValueConfig implements DynamicValueConfig {
     public List<Integer> getScansToDecode() {
       return Collections.EMPTY_LIST;
     }

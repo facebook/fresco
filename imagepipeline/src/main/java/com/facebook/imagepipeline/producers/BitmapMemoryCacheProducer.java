@@ -27,7 +27,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
   public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
-  private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
+  /* PACKAGE */ final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
 

@@ -40,8 +40,8 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
   @VisibleForTesting static final String POSTPROCESSOR = "Postprocessor";
 
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
-  private final PlatformBitmapFactory mBitmapFactory;
-  private final Executor mExecutor;
+  /* PACKAGE */ final PlatformBitmapFactory mBitmapFactory;
+  /* PACKAGE */ final Executor mExecutor;
 
   public PostprocessorProducer(
       Producer<CloseableReference<CloseableImage>> inputProducer,
@@ -87,11 +87,11 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     private boolean mIsClosed;
     @GuardedBy("PostprocessorConsumer.this")
     @Nullable
-    private CloseableReference<CloseableImage> mSourceImageRef = null;
+    /* PACKAGE */ CloseableReference<CloseableImage> mSourceImageRef = null;
     @GuardedBy("PostprocessorConsumer.this")
-    private boolean mIsLast = false;
+    /* PACKAGE */ boolean mIsLast = false;
     @GuardedBy("PostprocessorConsumer.this")
-    private boolean mIsDirty = false;
+    /* PACKAGE */ boolean mIsDirty = false;
     @GuardedBy("PostprocessorConsumer.this")
     private boolean mIsPostProcessingRunning = false;
 
@@ -185,7 +185,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
           });
     }
 
-    private void clearRunningAndStartIfDirty() {
+    /* PACKAGE */ void clearRunningAndStartIfDirty() {
       boolean shouldExecuteAgain;
       synchronized (PostprocessorConsumer.this) {
         mIsPostProcessingRunning = false;
@@ -205,7 +205,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       return false;
     }
 
-    private void doPostprocessing(
+    /* PACKAGE */ void doPostprocessing(
         CloseableReference<CloseableImage> sourceImageRef,
         boolean isLast) {
       Preconditions.checkArgument(CloseableReference.isValid(sourceImageRef));
@@ -271,7 +271,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       }
     }
 
-    private void maybeNotifyOnCancellation() {
+    /* PACKAGE */ void maybeNotifyOnCancellation() {
       if (close()) {
         getConsumer().onCancellation();
       }
@@ -303,7 +303,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       CloseableReference<CloseableImage>,
       CloseableReference<CloseableImage>> {
 
-    private SingleUsePostprocessorConsumer(PostprocessorConsumer postprocessorConsumer) {
+    /* PACKAGE */ SingleUsePostprocessorConsumer(PostprocessorConsumer postprocessorConsumer) {
       super(postprocessorConsumer);
     }
 
@@ -338,7 +338,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     @Nullable
     private CloseableReference<CloseableImage> mSourceImageRef = null;
 
-    private RepeatedPostprocessorConsumer(
+    /* PACKAGE */ RepeatedPostprocessorConsumer(
         PostprocessorConsumer postprocessorConsumer,
         RepeatedPostprocessor repeatedPostprocessor,
         ProducerContext context) {
@@ -411,7 +411,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       CloseableReference.closeSafely(oldSourceImageRef);
     }
 
-    private boolean close() {
+    /* PACKAGE */ boolean close() {
       CloseableReference<CloseableImage> oldSourceImageRef;
       synchronized (RepeatedPostprocessorConsumer.this) {
         if (mIsClosed) {

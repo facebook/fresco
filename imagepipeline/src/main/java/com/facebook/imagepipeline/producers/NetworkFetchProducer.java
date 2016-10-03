@@ -84,7 +84,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         });
   }
 
-  private void onResponse(
+  /* PACKAGE */ void onResponse(
       FetchState fetchState,
       InputStream responseData,
       int responseContentLength)
@@ -172,13 +172,13 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  private void onFailure(FetchState fetchState, Throwable e) {
+  /* PACKAGE */ void onFailure(FetchState fetchState, Throwable e) {
     fetchState.getListener()
         .onProducerFinishWithFailure(fetchState.getId(), PRODUCER_NAME, e, null);
     fetchState.getConsumer().onFailure(e);
   }
 
-  private void onCancellation(FetchState fetchState) {
+  /* PACKAGE */ void onCancellation(FetchState fetchState) {
     fetchState.getListener()
         .onProducerFinishWithCancellation(fetchState.getId(), PRODUCER_NAME, null);
     fetchState.getConsumer().onCancellation();

@@ -80,7 +80,7 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     }
   }
 
-  private void onFailureImpl(Throwable throwable) {
+  /* PACKAGE */ void onFailureImpl(Throwable throwable) {
     if (super.setFailure(throwable)) {
       mRequestListener.onRequestFailure(
           mSettableProducerContext.getImageRequest(),
@@ -90,7 +90,7 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     }
   }
 
-  private synchronized void onCancellationImpl() {
+  /* PACKAGE */ synchronized void onCancellationImpl() {
     Preconditions.checkState(isClosed());
   }
 
