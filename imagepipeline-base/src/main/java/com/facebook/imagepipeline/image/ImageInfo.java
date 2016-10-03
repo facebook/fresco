@@ -28,4 +28,15 @@ public interface ImageInfo {
    * @return quality information for the image
    */
   QualityInfo getQualityInfo();
+
+  /**
+   * @return width of original (non-resized) image
+   */
+  int getOriginalWidth();
+
+  /**
+   * @return height of original (non-resized) image
+   */
+  int getOriginalHeight();
+
 }

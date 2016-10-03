@@ -127,7 +127,9 @@ public class ImageDecoder {
       return new CloseableStaticBitmap(
           bitmapReference,
           ImmutableQualityInfo.FULL_QUALITY,
-          encodedImage.getRotationAngle());
+          encodedImage.getRotationAngle(),
+          encodedImage.getWidth(),
+          encodedImage.getHeight());
     } finally {
       bitmapReference.close();
     }
@@ -151,7 +153,9 @@ public class ImageDecoder {
       return new CloseableStaticBitmap(
           bitmapReference,
           qualityInfo,
-          encodedImage.getRotationAngle());
+          encodedImage.getRotationAngle(),
+          encodedImage.getWidth(),
+          encodedImage.getHeight());
     } finally {
       bitmapReference.close();
     }

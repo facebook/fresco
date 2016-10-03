@@ -253,7 +253,7 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       int rotationAngle = staticBitmap.getRotationAngle();
       try {
         return CloseableReference.<CloseableImage>of(
-            new CloseableStaticBitmap(bitmapRef, sourceImage.getQualityInfo(), rotationAngle));
+            new CloseableStaticBitmap(bitmapRef, sourceImage.getQualityInfo(), rotationAngle, sourceImage.getWidth(), sourceImage.getHeight()));
       } finally {
         CloseableReference.closeSafely(bitmapRef);
       }

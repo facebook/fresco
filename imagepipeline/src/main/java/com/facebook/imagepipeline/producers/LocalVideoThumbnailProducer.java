@@ -71,7 +71,9 @@ public class LocalVideoThumbnailProducer implements
                     thumbnailBitmap,
                     SimpleBitmapReleaser.getInstance(),
                     ImmutableQualityInfo.FULL_QUALITY,
-                    0));
+                    0,
+                    thumbnailBitmap.getWidth(),
+                    thumbnailBitmap.getHeight()));
           }
 
           @Override

@@ -69,4 +69,20 @@ public class CloseableAnimatedImage extends CloseableImage {
   public synchronized AnimatedImage getImage() {
     return isClosed() ? null : mImageResult.getImage();
   }
+
+  /**
+   * @return width of original (non-resized) image
+   */
+  @Override
+  public int getOriginalWidth() {
+      return getWidth();
+  }
+
+  /**
+   * @return height of original (non-resized) image
+   */
+  @Override
+  public int getOriginalHeight() {
+      return getHeight();
+  }
 }
