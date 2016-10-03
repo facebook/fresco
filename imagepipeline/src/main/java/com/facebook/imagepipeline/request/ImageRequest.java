@@ -185,6 +185,19 @@ public class ImageRequest {
     return Objects.hashCode(mCacheChoice, mSourceUri, mSourceFile);
   }
 
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this)
+        .add("uri", mSourceUri)
+        .add("cacheChoice", mCacheChoice)
+        .add("decodeOptions", mImageDecodeOptions)
+        .add("postprocessor", mPostprocessor)
+        .add("priority", mRequestPriority)
+        .add("resizeOptions", mResizeOptions)
+        .add("rotationOptions", mRotationOptions)
+        .toString();
+  }
+
   /**
    * An enum describing the cache choice.
    */
