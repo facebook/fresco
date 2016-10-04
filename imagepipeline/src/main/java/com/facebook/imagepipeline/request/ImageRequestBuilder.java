@@ -43,6 +43,7 @@ public class ImageRequestBuilder {
   private @Nullable Postprocessor mPostprocessor = null;
   private boolean mDiskCacheEnabled = true;
   private @Nullable RequestListener mRequestListener;
+  private @Nullable MediaVariations mMediaVariations = null;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -116,6 +117,23 @@ public class ImageRequestBuilder {
   /** Gets the source Uri. */
   public Uri getSourceUri() {
     return mSourceUri;
+  }
+
+  /**
+   * Sets details of variations of the piece of media which might allow the request to be satisfied
+   * (either as a placeholder or ultimate result) by a cached image at another size.
+   *
+   * <p><i>In development. Not yet functional.</i>
+   * @param mediaVariations the variations of image which relate to the same original media
+   * @return the updated builder instance
+   */
+  public ImageRequestBuilder setMediaVariations(MediaVariations mediaVariations) {
+    mMediaVariations = mediaVariations;
+    return this;
+  }
+
+  public @Nullable MediaVariations getMediaVariations() {
+    return mMediaVariations;
   }
 
   /**
