@@ -28,6 +28,9 @@ import com.facebook.common.internal.Objects;
  *
  * <p> Even without explicitly including the variants, by using the same media ID across multiple
  * image requests, the pipeline may build up a knowledge of these and fulfil requests accordingly.
+ *
+ * <p> This will be ignored unless {@link com.facebook.imagepipeline.core.ImagePipelineExperiments#isMediaVariationsEnabled()} is true in the image
+ * pipeline config.
  */
 @Immutable
 public final class MediaVariations {

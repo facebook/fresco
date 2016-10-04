@@ -25,20 +25,22 @@ public class ImagePipelineExperiments {
   private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
   private final @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
-  private boolean mDecodeFileDescriptorEnabled;
+  private final boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
+  private final boolean mMediaVariationsEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
+    mEnhancedWebpTranscodingType = builder.mEnhancedWebpTranscodingType;
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
         builder.mDecodeFileDescriptorEnabled;
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
+    mMediaVariationsEnabled = builder.mMediaVariationsEnabled;
     mWebpErrorLogger = builder.mWebpErrorLogger;
-    mEnhancedWebpTranscodingType = builder.mEnhancedWebpTranscodingType;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -51,6 +53,10 @@ public class ImagePipelineExperiments {
 
   public int getForceSmallCacheThresholdBytes() {
     return mForceSmallCacheThresholdBytes;
+  }
+
+  public boolean isMediaVariationsEnabled() {
+    return mMediaVariationsEnabled;
   }
 
   public boolean isWebpSupportEnabled() {
@@ -85,6 +91,7 @@ public class ImagePipelineExperiments {
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
+    private boolean mMediaVariationsEnabled = false;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
@@ -113,6 +120,16 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setForceSmallCacheThresholdBytes(
         int forceSmallCacheThresholdBytes) {
       mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
+      return mConfigBuilder;
+    }
+
+    /**
+     * If true, this will allow the image pipeline to look at each request's
+     * {@link com.facebook.imagepipeline.request.MediaVariations} object to possibly provide
+     * fallback images which are present in cache.
+     */
+    public ImagePipelineConfig.Builder setMediaVariationsEnabled(boolean mediaVariationsEnabled) {
+      mMediaVariationsEnabled = mediaVariationsEnabled;
       return mConfigBuilder;
     }
 
