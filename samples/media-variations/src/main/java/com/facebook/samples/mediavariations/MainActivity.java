@@ -20,11 +20,13 @@ import android.support.annotation.IdRes;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.MediaVariations;
@@ -62,11 +64,7 @@ public class MainActivity extends Activity {
 
     setContentView(R.layout.activity_main);
 
-    for (Size size : Size.values()) {
-      populateThumb(size.thumbViewId, size);
-    }
-
-    populateMainImage();
+    populateImagesAfterInitialLayout();
   }
 
   @Override
@@ -91,6 +89,26 @@ public class MainActivity extends Activity {
     return super.onOptionsItemSelected(item);
   }
 
+  private void populateImagesAfterInitialLayout() {
+    final View rootView = findViewById(R.id.layout_root);
+    rootView.getViewTreeObserver()
+        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+          @Override
+          public void onGlobalLayout() {
+            populateMainImage();
+            for (Size size : Size.values()) {
+              populateThumb(size.thumbViewId, size);
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+              rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            } else {
+              rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            }
+          }
+        });
+  }
+
   private void populateThumb(@IdRes int viewId, final Size size) {
     final SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(viewId);
 
@@ -110,6 +128,7 @@ public class MainActivity extends Activity {
       ImageRequest.RequestLevel requestLevel) {
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(size.uri)
         .setLowestPermittedRequestLevel(requestLevel)
+        .setResizeOptions(new ResizeOptions(draweeView.getWidth(), draweeView.getHeight()))
         .build();
     DraweeController controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
@@ -142,6 +161,7 @@ public class MainActivity extends Activity {
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Size.XL.uri)
         .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
         .setMediaVariations(variationsBuilder.build())
+        .setResizeOptions(new ResizeOptions(draweeView.getWidth(), draweeView.getHeight()))
         .build();
     DraweeController controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
