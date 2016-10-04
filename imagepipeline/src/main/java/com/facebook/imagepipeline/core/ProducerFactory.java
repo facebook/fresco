@@ -211,12 +211,7 @@ public class ProducerFactory {
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(
       Producer<EncodedImage> inputProducer) {
-    return new DiskCacheWriteProducer(
-        mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache,
-        mCacheKeyFactory,
-        inputProducer,
-        mForceSmallCacheThresholdBytes);
+    return new DiskCacheWriteProducer(inputProducer, mMainDiskCachePolicy);
   }
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
