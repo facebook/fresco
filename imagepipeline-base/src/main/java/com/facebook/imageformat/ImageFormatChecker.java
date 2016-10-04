@@ -26,42 +26,49 @@ import com.facebook.common.webp.WebpSupportStatus;
  */
 public class ImageFormatChecker {
 
-  private ImageFormatChecker() {}
+  private static final ImageFormat.FormatChecker DEFAULT_FORMAT_CHECKER =
+      new ImageFormat.FormatChecker() {
+        @Override
+        public int getHeaderSize() {
+          return MAX_HEADER_LENGTH;
+        }
 
-  /**
-   * Tries to match imageHeaderByte and headerSize against every known image format.
-   * If any match succeeds, corresponding ImageFormat is returned.
-   * @param imageHeaderBytes
-   * @param headerSize
-   * @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
-   */
-  private static ImageFormat doGetImageFormat(
-      final byte[] imageHeaderBytes,
-      final int headerSize) {
-    Preconditions.checkNotNull(imageHeaderBytes);
+        /**
+     * Tries to match imageHeaderByte and headerSize against every known image format.
+     * If any match succeeds, corresponding ImageFormat is returned.
+     * @param headerBytes
+     * @param headerSize
+     * @return ImageFormat for given imageHeaderBytes or UNKNOWN if no such type could be recognized
+     */
+    @Override
+    public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
+      Preconditions.checkNotNull(headerBytes);
 
-    if (WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize)) {
-      return getWebpFormat(imageHeaderBytes, headerSize);
-    }
+      if (WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
+        return getWebpFormat(headerBytes, headerSize);
+      }
 
-    if (isJpegHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.JPEG;
-    }
+      if (isJpegHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.JPEG;
+      }
 
-    if (isPngHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.PNG;
-    }
+      if (isPngHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.PNG;
+      }
 
-    if (isGifHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.GIF;
-    }
+      if (isGifHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.GIF;
+      }
 
-    if (isBmpHeader(imageHeaderBytes, headerSize)) {
-      return ImageFormat.BMP;
-    }
+      if (isBmpHeader(headerBytes, headerSize)) {
+        return DefaultImageFormats.BMP;
+      }
 
     return ImageFormat.UNKNOWN;
-  }
+    }
+  };
+
+  private ImageFormatChecker() {}
 
   /**
    * Reads up to MAX_HEADER_LENGTH bytes from is InputStream. If mark is supported by is, it is
@@ -99,7 +106,7 @@ public class ImageFormatChecker {
    * Tries to read up to MAX_HEADER_LENGTH bytes from InputStream is and use read bytes to
    * determine type of the image contained in is. If provided input stream does not support mark,
    * then this method consumes data from is and it is not safe to read further bytes from is after
-   * this method returns. Otherwise, if mark is supported, it will be used to preserve oryginal
+   * this method returns. Otherwise, if mark is supported, it will be used to preserve original
    * content of is.
    * @param is
    * @return ImageFormat matching content of is InputStream or UNKNOWN if no type is suitable
@@ -109,7 +116,7 @@ public class ImageFormatChecker {
     Preconditions.checkNotNull(is);
     final byte[] imageHeaderBytes = new byte[MAX_HEADER_LENGTH];
     final int headerSize = readHeaderFromStream(is, imageHeaderBytes);
-    return doGetImageFormat(imageHeaderBytes, headerSize);
+    return DEFAULT_FORMAT_CHECKER.determineFormat(imageHeaderBytes, headerSize);
   }
 
   /*
@@ -127,7 +134,7 @@ public class ImageFormatChecker {
   /**
    * Reads image header from a file indicated by provided filename and determines
    * its format. This method does not throw IOException if one occurs. In this case,
-   * ImageFormat.UNKNOWN will be returned.
+   * {@link ImageFormat#UNKNOWN} will be returned.
    * @param filename
    * @return ImageFormat for image stored in filename
    */
@@ -208,21 +215,21 @@ public class ImageFormatChecker {
   private static ImageFormat getWebpFormat(final byte[] imageHeaderBytes, final int headerSize) {
     Preconditions.checkArgument(WebpSupportStatus.isWebpHeader(imageHeaderBytes, 0, headerSize));
     if (WebpSupportStatus.isSimpleWebpHeader(imageHeaderBytes, 0)) {
-      return ImageFormat.WEBP_SIMPLE;
+      return DefaultImageFormats.WEBP_SIMPLE;
     }
 
     if (WebpSupportStatus.isLosslessWebpHeader(imageHeaderBytes, 0)) {
-      return ImageFormat.WEBP_LOSSLESS;
+      return DefaultImageFormats.WEBP_LOSSLESS;
     }
 
     if (WebpSupportStatus.isExtendedWebpHeader(imageHeaderBytes, 0, headerSize)) {
       if (WebpSupportStatus.isAnimatedWebpHeader(imageHeaderBytes, 0)) {
-        return ImageFormat.WEBP_ANIMATED;
+        return DefaultImageFormats.WEBP_ANIMATED;
       }
       if (WebpSupportStatus.isExtendedWebpHeaderWithAlpha(imageHeaderBytes, 0)) {
-        return ImageFormat.WEBP_EXTENDED_WITH_ALPHA;
+        return DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA;
       }
-      return ImageFormat.WEBP_EXTENDED;
+      return DefaultImageFormats.WEBP_EXTENDED;
     }
 
     return ImageFormat.UNKNOWN;

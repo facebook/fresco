@@ -25,7 +25,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -153,7 +153,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     } finally {
       CloseableReference.closeSafely(closeableByteBuffer);
     }
-    encodedImage.setImageFormat(ImageFormat.JPEG);
+    encodedImage.setImageFormat(DefaultImageFormats.JPEG);
     encodedImage.setRotationAngle(rotationAngle);
     encodedImage.setWidth(width);
     encodedImage.setHeight(height);

@@ -37,63 +37,63 @@ public class ImageFormatCheckerTest {
   public void testSimpleWebps() throws Exception {
     singleImageTypeTest(
         getNames(2, "webps/%d_webp_plain.webp"),
-        ImageFormat.WEBP_SIMPLE);
+        DefaultImageFormats.WEBP_SIMPLE);
   }
 
   @Test
   public void testLosslessWebps() throws Exception {
     singleImageTypeTest(
         getNames(5, "webps/%d_webp_ll.webp"),
-        ImageFormat.WEBP_LOSSLESS);
+        DefaultImageFormats.WEBP_LOSSLESS);
   }
 
   @Test
   public void testExtendedWebpsWithAlpha() throws Exception {
     singleImageTypeTest(
         getNames(5, "webps/%d_webp_ea.webp"),
-        ImageFormat.WEBP_EXTENDED_WITH_ALPHA);
+        DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA);
   }
 
   @Test
   public void testExtendedWebpsWithoutAlpha() throws Exception {
     singleImageTypeTest(
         getName("webps/1_webp_e.webp"),
-        ImageFormat.WEBP_EXTENDED);
+        DefaultImageFormats.WEBP_EXTENDED);
   }
 
   @Test
   public void testAnimatedWebps() throws Exception {
     singleImageTypeTest(
         getName("webps/1_webp_anim.webp"),
-        ImageFormat.WEBP_ANIMATED);
+        DefaultImageFormats.WEBP_ANIMATED);
   }
 
   @Test
   public void testJpegs() throws Exception {
     singleImageTypeTest(
         getNames(5, "jpegs/%d.jpeg"),
-        ImageFormat.JPEG);
+        DefaultImageFormats.JPEG);
   }
 
   @Test
   public void testPngs() throws Exception {
     singleImageTypeTest(
         getNames(5, "pngs/%d.png"),
-        ImageFormat.PNG);
+        DefaultImageFormats.PNG);
   }
 
   @Test
   public void testGifs() throws Exception {
     singleImageTypeTest(
         getNames(5, "gifs/%d.gif"),
-        ImageFormat.GIF);
+        DefaultImageFormats.GIF);
   }
 
   @Test
   public void testBmps() throws Exception {
     singleImageTypeTest(
         getNames(5, "bmps/%d.bmp"),
-        ImageFormat.BMP);
+        DefaultImageFormats.BMP);
   }
 
   private void singleImageTypeTest(

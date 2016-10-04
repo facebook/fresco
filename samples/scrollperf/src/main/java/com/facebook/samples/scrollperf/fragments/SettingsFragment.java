@@ -76,6 +76,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     heightPreferences.setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
+    updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
   }
 
   @Override
@@ -129,6 +130,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.DOWNSAMPLING_KEY:
         updateDownsamplingSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.DECODING_THREAD_KEY:
+        updateNumberOfDecodingThreadSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.OVERRIDE_SIZE_KEY:
@@ -300,6 +305,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getResources(),
         (ListPreference) preference,
         R.array.fade_duration_summaries);
+  }
+
+  private void updateNumberOfDecodingThreadSummary(final Preference preference) {
+    final ListPreference listPreference = (ListPreference) preference;
+    final int valueIndex = listPreference.findIndexOfValue(listPreference.getValue());
+    String summary = getResources().getStringArray(R.array.decoding_thread_summaries)[valueIndex];
+    if (valueIndex == 0) {
+      summary += Const.NUMBER_OF_PROCESSORS;
+    }
+    preference.setSummary(summary);
   }
 
   private void updateDrawBorderSummary(final Preference preference) {

@@ -24,6 +24,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
@@ -59,6 +60,8 @@ public class PipelineDraweeController
 
   // Constant state (non-final because controllers can be reused)
   private Supplier<DataSource<CloseableReference<CloseableImage>>> mDataSourceSupplier;
+
+  private boolean mDrawDebugOverlay;
 
   private final DrawableFactory mDefaultDrawableFactory = new DrawableFactory() {
 
@@ -149,8 +152,14 @@ public class PipelineDraweeController
     mCacheKey = cacheKey;
   }
 
+  public void setDrawDebugOverlay(boolean drawDebugOverlay) {
+    mDrawDebugOverlay = drawDebugOverlay;
+  }
+
   private void init(Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier) {
     mDataSourceSupplier = dataSourceSupplier;
+
+    maybeUpdateDebugOverlay(null);
   }
 
   protected Resources getResources() {
@@ -170,6 +179,8 @@ public class PipelineDraweeController
     Preconditions.checkState(CloseableReference.isValid(image));
     CloseableImage closeableImage = image.get();
 
+    maybeUpdateDebugOverlay(closeableImage);
+
     if (mDrawableFactories != null) {
       for (DrawableFactory factory : mDrawableFactories) {
         if (factory.supportsImageType(closeableImage)) {
@@ -186,6 +197,28 @@ public class PipelineDraweeController
       return defaultDrawable;
     }
     throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+  }
+
+  private void maybeUpdateDebugOverlay(@Nullable CloseableImage image) {
+    if (!mDrawDebugOverlay) {
+      return;
+    }
+    Drawable controllerOverlay = getControllerOverlay();
+    if (controllerOverlay == null) {
+      controllerOverlay = new DebugControllerOverlayDrawable();
+      setControllerOverlay(controllerOverlay);
+    }
+    if (controllerOverlay instanceof DebugControllerOverlayDrawable) {
+      DebugControllerOverlayDrawable debugOverlay =
+          (DebugControllerOverlayDrawable) controllerOverlay;
+      debugOverlay.setControllerId(getId());
+      if (image != null) {
+        debugOverlay.setDimensions(image.getWidth(), image.getHeight());
+        debugOverlay.setImageSize(image.getSizeInBytes());
+      } else {
+        debugOverlay.reset();
+      }
+    }
   }
 
   @Override

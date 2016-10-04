@@ -10,7 +10,7 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -96,7 +96,7 @@ public class BranchOnSeparateImagesProducerTest {
   public void testFirstProducerReturnsIntermediateResultThenGoodEnoughResult() {
     EncodedImage intermediateEncodedImage = new EncodedImage(
         mIntermediateResult.getByteBufferRef());
-    intermediateEncodedImage.setImageFormat(ImageFormat.JPEG);
+    intermediateEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     intermediateEncodedImage.setRotationAngle(-1);
     intermediateEncodedImage.setWidth(WIDTH);
     intermediateEncodedImage.setHeight(HEIGHT);
@@ -104,7 +104,7 @@ public class BranchOnSeparateImagesProducerTest {
     verify(mConsumer).onNewResult(intermediateEncodedImage, false);
     EncodedImage finalEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
-    finalEncodedImage.setImageFormat(ImageFormat.JPEG);
+    finalEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     finalEncodedImage.setRotationAngle(-1);
     finalEncodedImage.setWidth(WIDTH);
     finalEncodedImage.setHeight(HEIGHT);
@@ -170,7 +170,7 @@ public class BranchOnSeparateImagesProducerTest {
     when(mImageRequest.getLocalThumbnailPreviewsEnabled()).thenReturn(false);
     EncodedImage intermediateEncodedImage = new EncodedImage(
         mIntermediateResult.getByteBufferRef());
-    intermediateEncodedImage.setImageFormat(ImageFormat.JPEG);
+    intermediateEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     intermediateEncodedImage.setRotationAngle(-1);
     intermediateEncodedImage.setWidth(WIDTH / 2);
     intermediateEncodedImage.setHeight(HEIGHT / 2);
@@ -178,7 +178,7 @@ public class BranchOnSeparateImagesProducerTest {
     verify(mConsumer, never()).onNewResult(intermediateEncodedImage, false);
     EncodedImage finalEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
-    finalEncodedImage.setImageFormat(ImageFormat.JPEG);
+    finalEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     finalEncodedImage.setRotationAngle(-1);
     finalEncodedImage.setWidth(WIDTH);
     finalEncodedImage.setHeight(HEIGHT);

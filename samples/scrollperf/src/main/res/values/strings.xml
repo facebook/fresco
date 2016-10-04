@@ -143,11 +143,12 @@
     <!-- Resizing -->
     <string translatable="false" name="title_preferences_resize_group">Resizing options</string>
     <string translatable="false" name="title_downsampling">Downsampling</string>
-    <string translatable="false" name="message_restart_now">Kill Now</string>
+    <string translatable="false" name="title_decoding_thread_count">Thread number for decoding</string>
+
     <string translatable="false" name="checked_downsampling_summary">Enabled</string>
     <string translatable="false" name="unchecked_downsampling_summary">Disabled</string>
     <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
-
+    <string translatable="false" name="message_restart_now">Kill Now</string>
     <string translatable="false" name="title_auto_size_override">Override automatic size</string>
     <string translatable="false" name="checked_auto_size_override">Images are resized to the given dimensions</string>
     <string translatable="false" name="unchecked_auto_size_override">Images are automatically resized</string>

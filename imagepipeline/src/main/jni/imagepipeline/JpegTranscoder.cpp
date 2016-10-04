@@ -25,7 +25,7 @@ using facebook::imagepipeline::jpeg::transformJpeg;
 
 static void JpegTranscoder_transcodeJpeg(
     JNIEnv* env,
-    jclass clzz,
+    jclass /* clzz */,
     jobject is,
     jobject os,
     jint rotation_degrees,

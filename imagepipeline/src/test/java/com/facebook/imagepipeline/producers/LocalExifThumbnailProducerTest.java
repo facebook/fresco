@@ -19,7 +19,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
 
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -124,7 +124,7 @@ public class LocalExifThumbnailProducerTest {
         mCapturedEncodedImage.
             getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(mThumbnailByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    assertEquals(ImageFormat.JPEG, mCapturedEncodedImage.getImageFormat());
+    assertEquals(DefaultImageFormats.JPEG, mCapturedEncodedImage.getImageFormat());
     assertEquals(WIDTH, mCapturedEncodedImage.getWidth());
     assertEquals(HEIGHT, mCapturedEncodedImage.getHeight());
     assertEquals(ANGLE, mCapturedEncodedImage.getRotationAngle());

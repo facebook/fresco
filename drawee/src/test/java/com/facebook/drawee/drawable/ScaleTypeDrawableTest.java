@@ -266,6 +266,21 @@ public class ScaleTypeDrawableTest {
     testConfigureBounds(bounds, width, height, ScaleType.FOCUS_CROP, focusPoint, expectedMatrix);
   }
 
+  @Test
+  public void testConfigureBoundsNoOpWhenScaleTypeNotChanged() {
+    Rect bounds = new Rect(10, 10, 410, 310);
+    int width = 200;
+    int height = 300;
+    PointF focusPoint = new PointF(0.5f, 0.9f);
+    Matrix expectedMatrix = new Matrix();
+    expectedMatrix.setScale(2.0f, 2.0f);
+    expectedMatrix.postTranslate(10, -289);
+    testConfigureBounds(bounds, width, height, ScaleType.FOCUS_CROP, focusPoint, expectedMatrix);
+
+    mScaleTypeDrawable.setScaleType(ScaleType.FOCUS_CROP);
+    verifyNoMoreInteractions(mUnderlyingDrawable);
+  }
+
   private void testConfigureBounds(
       Rect viewBounds,
       int underlyingWidth,

@@ -12,7 +12,7 @@ package com.facebook.imagepipeline.producers;
 import android.net.Uri;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -76,7 +76,7 @@ public class DownsampleUtilTest {
   @Test
   public void testDetermineSampleSize_PNG() {
     whenImageWidthAndHeight(150, 150);
-    mEncodedImage.setImageFormat(ImageFormat.PNG);
+    mEncodedImage.setImageFormat(DefaultImageFormats.PNG);
     whenRequestResizeWidthAndHeightWithExifRotation(50, 50);
     assertEquals(3, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }

@@ -37,6 +37,7 @@ public class PipelineDraweeControllerFactory {
   private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   @Nullable
   private ImmutableList<DrawableFactory> mDrawableFactories;
+  private boolean mDrawDebugOverlay;
 
   public PipelineDraweeControllerFactory(
       Resources resources,
@@ -44,13 +45,15 @@ public class PipelineDraweeControllerFactory {
       AnimatedDrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
       MemoryCache<CacheKey, CloseableImage> memoryCache,
-      @Nullable ImmutableList<DrawableFactory> drawableFactories) {
+      @Nullable ImmutableList<DrawableFactory> drawableFactories,
+      boolean drawDebugOverlay) {
     mResources = resources;
     mDeferredReleaser = deferredReleaser;
     mAnimatedDrawableFactory = animatedDrawableFactory;
     mUiThreadExecutor = uiThreadExecutor;
     mMemoryCache = memoryCache;
     mDrawableFactories = drawableFactories;
+    mDrawDebugOverlay = drawDebugOverlay;
   }
 
   public PipelineDraweeController newController(
@@ -58,7 +61,7 @@ public class PipelineDraweeControllerFactory {
       String id,
       CacheKey cacheKey,
       Object callerContext) {
-    return new PipelineDraweeController(
+    PipelineDraweeController controller = new PipelineDraweeController(
         mResources,
         mDeferredReleaser,
         mAnimatedDrawableFactory,
@@ -69,5 +72,9 @@ public class PipelineDraweeControllerFactory {
         cacheKey,
         callerContext,
         mDrawableFactories);
+    if (mDrawDebugOverlay) {
+      controller.setDrawDebugOverlay(true);
+    }
+    return controller;
   }
 }
