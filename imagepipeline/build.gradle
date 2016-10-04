@@ -20,6 +20,7 @@ dependencies {
     testCompile project(':imagepipeline-test')
     testCompile project(':imagepipeline-base-test')
     testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
