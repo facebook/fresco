@@ -13,11 +13,9 @@ import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.imagepipeline.cache.BufferedDiskCache;
-import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.DiskCachePolicy;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -31,81 +29,42 @@ import bolts.Task;
  * is passed to the consumer. If the image is not found, then the request is passed to the next
  * producer in the sequence. Any results that the producer returns are passed to the consumer.
  *
- * <p>This implementation delegates disk cache requests to BufferedDiskCache.
+ * <p>This implementation delegates disk cache interactions to a provided {@link DiskCachePolicy}.
  *
  * <p>This producer is currently used only if the media variations experiment is turned on, to
  * enable another producer to sit between cache read and write.
  */
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
-  // PRODUCER_NAME doesn't exactly match class name as it matches name in historic data instead
-  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
-  private final BufferedDiskCache mDefaultBufferedDiskCache;
-  private final BufferedDiskCache mSmallImageBufferedDiskCache;
-  private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final boolean mChooseCacheByImageSize;
+  private final DiskCachePolicy mDiskCachePolicy;
+  private final String mName;
 
   public DiskCacheReadProducer(
-      BufferedDiskCache defaultBufferedDiskCache,
-      BufferedDiskCache smallImageBufferedDiskCache,
-      CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer,
-      int forceSmallCacheThresholdBytes) {
-    mDefaultBufferedDiskCache = defaultBufferedDiskCache;
-    mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
-    mCacheKeyFactory = cacheKeyFactory;
+      DiskCachePolicy diskCachePolicy,
+      String name) {
     mInputProducer = inputProducer;
-    mChooseCacheByImageSize = (forceSmallCacheThresholdBytes > 0);
+    mDiskCachePolicy = diskCachePolicy;
+    mName = name;
   }
 
   public void produceResults(
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
-    ImageRequest imageRequest = producerContext.getImageRequest();
+    final ImageRequest imageRequest = producerContext.getImageRequest();
     if (!imageRequest.isDiskCacheEnabled()) {
       maybeStartInputProducer(consumer, producerContext);
       return;
     }
 
-    producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
+    producerContext.getListener().onProducerStart(producerContext.getId(), mName);
 
-    final CacheKey cacheKey =
-        mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
-    boolean isSmallRequest = (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL);
-    final BufferedDiskCache preferredCache = isSmallRequest ?
-        mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
-    Task<EncodedImage> diskLookupTask;
-    if (mChooseCacheByImageSize) {
-      boolean alreadyInSmall = mSmallImageBufferedDiskCache.containsSync(cacheKey);
-      boolean alreadyInMain = mDefaultBufferedDiskCache.containsSync(cacheKey);
-      final BufferedDiskCache firstCache;
-      final BufferedDiskCache secondCache ;
-      if (alreadyInSmall || !alreadyInMain) {
-        firstCache = mSmallImageBufferedDiskCache;
-        secondCache = mDefaultBufferedDiskCache;
-      } else {
-        firstCache = mDefaultBufferedDiskCache;
-        secondCache = mSmallImageBufferedDiskCache;
-      }
-      diskLookupTask = firstCache.get(cacheKey, isCancelled);
-      diskLookupTask = diskLookupTask.continueWithTask(
-          new Continuation<EncodedImage, Task<EncodedImage>>() {
-        @Override
-        public Task<EncodedImage> then(Task<EncodedImage> task) throws Exception {
-          if (isTaskCancelled(task) || (!task.isFaulted() && task.getResult() != null)) {
-            return task;
-          }
-          return secondCache.get(cacheKey, isCancelled);
-        }
-      });
-    } else {
-      diskLookupTask = preferredCache.get(cacheKey, isCancelled);
-    }
-    Continuation<EncodedImage, Void> continuation =
-        onFinishDiskReads(consumer, producerContext);
+    Task<EncodedImage> diskLookupTask = mDiskCachePolicy
+        .createAndStartCacheReadTask(imageRequest, producerContext.getCallerContext(), isCancelled);
+    Continuation<EncodedImage, Void> continuation = onFinishDiskReads(consumer, producerContext);
     diskLookupTask.continueWith(continuation);
     subscribeTaskForRequestCancellation(isCancelled, producerContext);
   }
@@ -120,17 +79,17 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       public Void then(Task<EncodedImage> task)
           throws Exception {
         if (isTaskCancelled(task)) {
-          listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
+          listener.onProducerFinishWithCancellation(requestId, mName, null);
           consumer.onCancellation();
         } else if (task.isFaulted()) {
-          listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
+          listener.onProducerFinishWithFailure(requestId, mName, task.getError(), null);
           mInputProducer.produceResults(consumer, producerContext);
         } else {
           EncodedImage cachedReference = task.getResult();
           if (cachedReference != null) {
             listener.onProducerFinishWithSuccess(
                 requestId,
-                PRODUCER_NAME,
+                mName,
                 getExtraMap(listener, requestId, true));
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, true);
@@ -138,7 +97,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
           } else {
             listener.onProducerFinishWithSuccess(
                 requestId,
-                PRODUCER_NAME,
+                mName,
                 getExtraMap(listener, requestId, false));
             mInputProducer.produceResults(consumer, producerContext);
           }

@@ -19,7 +19,9 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.DiskCachePolicy;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.cache.SmallCacheIfRequestedDiskCachePolicy;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -59,6 +61,7 @@ import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
+import com.facebook.imagepipeline.cache.SplitCachesByImageSizeDiskCachePolicy;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
 public class ProducerFactory {
@@ -82,6 +85,7 @@ public class ProducerFactory {
   // Cache dependencies
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
+  private final DiskCachePolicy mMainDiskCachePolicy;
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
@@ -133,6 +137,20 @@ public class ProducerFactory {
     mPlatformBitmapFactory = platformBitmapFactory;
 
     mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
+
+    if (forceSmallCacheThresholdBytes > 0) {
+      mMainDiskCachePolicy =
+          new SplitCachesByImageSizeDiskCachePolicy(
+              defaultBufferedDiskCache,
+              smallImageBufferedDiskCache,
+              cacheKeyFactory,
+              forceSmallCacheThresholdBytes);
+    } else {
+      mMainDiskCachePolicy = new SmallCacheIfRequestedDiskCachePolicy(
+          defaultBufferedDiskCache,
+          smallImageBufferedDiskCache,
+          cacheKeyFactory);
+    }
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -188,12 +206,7 @@ public class ProducerFactory {
 
   public DiskCacheReadProducer newDiskCacheReadProducer(
       Producer<EncodedImage> inputProducer) {
-    return new DiskCacheReadProducer(
-        mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache,
-        mCacheKeyFactory,
-        inputProducer,
-        mForceSmallCacheThresholdBytes);
+    return new DiskCacheReadProducer(inputProducer, mMainDiskCachePolicy, "DiskCacheProducer");
   }
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(
