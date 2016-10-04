@@ -350,7 +350,8 @@ public class ImagePipelineFactory {
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExperiments().isWebpSupportEnabled(),
               mThreadHandoffProducerQueue,
-              mConfig.getExperiments().getThrottlingMaxSimultaneousRequests());
+              mConfig.getExperiments().getThrottlingMaxSimultaneousRequests(),
+              mConfig.getExperiments().isMediaVariationsEnabled());
     }
     return mProducerSequenceFactory;
   }

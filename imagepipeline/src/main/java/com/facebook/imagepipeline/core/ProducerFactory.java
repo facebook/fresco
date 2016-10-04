@@ -35,6 +35,8 @@ import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
 import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.DiskCacheProducer;
+import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
+import com.facebook.imagepipeline.producers.DiskCacheWriteProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
@@ -177,6 +179,26 @@ public class ProducerFactory {
   public DiskCacheProducer newDiskCacheProducer(
       Producer<EncodedImage> inputProducer) {
     return new DiskCacheProducer(
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mCacheKeyFactory,
+        inputProducer,
+        mForceSmallCacheThresholdBytes);
+  }
+
+  public DiskCacheReadProducer newDiskCacheReadProducer(
+      Producer<EncodedImage> inputProducer) {
+    return new DiskCacheReadProducer(
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mCacheKeyFactory,
+        inputProducer,
+        mForceSmallCacheThresholdBytes);
+  }
+
+  public DiskCacheWriteProducer newDiskCacheWriteProducer(
+      Producer<EncodedImage> inputProducer) {
+    return new DiskCacheWriteProducer(
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,

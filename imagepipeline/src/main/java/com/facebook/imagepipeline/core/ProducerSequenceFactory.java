@@ -53,6 +53,7 @@ public class ProducerSequenceFactory {
   private final boolean mWebpSupportEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private final int mThrottlingMaxSimultaneousRequests;
+  private final boolean mMediaVariationsEnabled;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -84,7 +85,8 @@ public class ProducerSequenceFactory {
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
-      int throttlingMaxSimultaneousRequests) {
+      int throttlingMaxSimultaneousRequests,
+      boolean mediaVariationsEnabled) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -93,6 +95,7 @@ public class ProducerSequenceFactory {
     mCloseableImagePrefetchSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
     mThrottlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
+    mMediaVariationsEnabled = mediaVariationsEnabled;
   }
 
   /**
@@ -489,10 +492,20 @@ public class ProducerSequenceFactory {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && !mWebpSupportEnabled) {
       inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
     }
-    inputProducer = mProducerFactory.newDiskCacheProducer(inputProducer);
+    inputProducer = newDiskCacheSequence(inputProducer);
     EncodedMemoryCacheProducer encodedMemoryCacheProducer =
         mProducerFactory.newEncodedMemoryCacheProducer(inputProducer);
     return mProducerFactory.newEncodedCacheKeyMultiplexProducer(encodedMemoryCacheProducer);
+  }
+
+  private Producer<EncodedImage> newDiskCacheSequence(Producer<EncodedImage> inputProducer) {
+    if (mMediaVariationsEnabled) {
+      Producer<EncodedImage> cacheWriteProducer =
+          mProducerFactory.newDiskCacheWriteProducer(inputProducer);
+      return mProducerFactory.newDiskCacheReadProducer(cacheWriteProducer);
+    } else {
+      return mProducerFactory.newDiskCacheProducer(inputProducer);
+    }
   }
 
   /**
