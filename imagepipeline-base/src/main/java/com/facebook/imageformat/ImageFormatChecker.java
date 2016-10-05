@@ -9,10 +9,13 @@
 
 package com.facebook.imageformat;
 
+import javax.annotation.Nullable;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Closeables;
@@ -26,14 +29,37 @@ import com.facebook.common.webp.WebpSupportStatus;
  */
 public class ImageFormatChecker {
 
-  private static final ImageFormat.FormatChecker DEFAULT_FORMAT_CHECKER =
+  private static ImageFormatChecker sInstance;
+
+  private int mMaxHeaderLength;
+
+  @Nullable
+  private List<ImageFormat.FormatChecker> mCustomImageFormatCheckers;
+
+  private final ImageFormat.FormatChecker mDefaultFormatChecker =
       new ImageFormat.FormatChecker() {
+
+        /**
+         * Maximum header size for any image type.
+         *
+         * <p>This determines how much data {@link ImageFormatChecker#getImageFormat(InputStream)
+         * reads from a stream. After changing any of the type detection algorithms,
+         * or adding a new one, this value should be edited.
+         */
+        final int MAX_HEADER_LENGTH = Ints.max(
+            EXTENDED_WEBP_HEADER_LENGTH,
+            SIMPLE_WEBP_HEADER_LENGTH,
+            JPEG_HEADER.length,
+            PNG_HEADER.length,
+            GIF_HEADER_LENGTH,
+            BMP_HEADER.length);
+
         @Override
         public int getHeaderSize() {
           return MAX_HEADER_LENGTH;
         }
 
-        /**
+    /**
      * Tries to match imageHeaderByte and headerSize against every known image format.
      * If any match succeeds, corresponding ImageFormat is returned.
      * @param headerBytes
@@ -68,38 +94,84 @@ public class ImageFormatChecker {
     }
   };
 
-  private ImageFormatChecker() {}
+  private ImageFormatChecker() {
+    updateMaxHeaderLength();
+  }
+
+  public void setCustomImageFormatCheckers(
+      @Nullable List<ImageFormat.FormatChecker> customImageFormatCheckers) {
+    mCustomImageFormatCheckers = customImageFormatCheckers;
+    updateMaxHeaderLength();
+  }
+
+  public ImageFormat determineImageFormat(final InputStream is) throws IOException {
+    Preconditions.checkNotNull(is);
+    final byte[] imageHeaderBytes = new byte[mMaxHeaderLength];
+    final int headerSize = readHeaderFromStream(mMaxHeaderLength, is, imageHeaderBytes);
+
+    if (mCustomImageFormatCheckers != null) {
+      for (ImageFormat.FormatChecker formatChecker : mCustomImageFormatCheckers) {
+        ImageFormat format = formatChecker.determineFormat(imageHeaderBytes, headerSize);
+        if (format != null && format != ImageFormat.UNKNOWN) {
+          return format;
+        }
+      }
+    }
+    return mDefaultFormatChecker.determineFormat(imageHeaderBytes, headerSize);
+  }
+
+  private void updateMaxHeaderLength() {
+    mMaxHeaderLength = mDefaultFormatChecker.getHeaderSize();
+    if (mCustomImageFormatCheckers != null) {
+      for (ImageFormat.FormatChecker checker : mCustomImageFormatCheckers) {
+        mMaxHeaderLength = Math.max(mMaxHeaderLength, checker.getHeaderSize());
+      }
+    }
+  }
 
   /**
-   * Reads up to MAX_HEADER_LENGTH bytes from is InputStream. If mark is supported by is, it is
+   * Reads up to maxHeaderLength bytes from is InputStream. If mark is supported by is, it is
    * used to restore content of the stream after appropriate amount of data is read.
    * Read bytes are stored in imageHeaderBytes, which should be capable of storing
-   * MAX_HEADER_LENGTH bytes.
+   * maxHeaderLength bytes.
+   * @param maxHeaderLength the maximum header length
    * @param is
    * @param imageHeaderBytes
    * @return number of bytes read from is
    * @throws IOException
    */
   private static int readHeaderFromStream(
+      int maxHeaderLength,
       final InputStream is,
       final byte[] imageHeaderBytes)
       throws IOException {
     Preconditions.checkNotNull(is);
     Preconditions.checkNotNull(imageHeaderBytes);
-    Preconditions.checkArgument(imageHeaderBytes.length >= MAX_HEADER_LENGTH);
+    Preconditions.checkArgument(imageHeaderBytes.length >= maxHeaderLength);
 
     // If mark is supported by the stream, use it to let the owner of the stream re-read the same
     // data. Otherwise, just consume some data.
     if (is.markSupported()) {
       try {
-        is.mark(MAX_HEADER_LENGTH);
-        return ByteStreams.read(is, imageHeaderBytes, 0, MAX_HEADER_LENGTH);
+        is.mark(maxHeaderLength);
+        return ByteStreams.read(is, imageHeaderBytes, 0, maxHeaderLength);
       } finally {
         is.reset();
       }
     } else {
-      return ByteStreams.read(is, imageHeaderBytes, 0, MAX_HEADER_LENGTH);
+      return ByteStreams.read(is, imageHeaderBytes, 0, maxHeaderLength);
     }
+  }
+
+  /**
+   * Get the currently used instance of the image format checker
+   * @return the image format checker to use
+   */
+  public static synchronized ImageFormatChecker getInstance() {
+    if (sInstance == null) {
+      sInstance = new ImageFormatChecker();
+    }
+    return sInstance;
   }
 
   /**
@@ -113,10 +185,7 @@ public class ImageFormatChecker {
    * @throws IOException if exception happens during read
    */
   public static ImageFormat getImageFormat(final InputStream is) throws IOException {
-    Preconditions.checkNotNull(is);
-    final byte[] imageHeaderBytes = new byte[MAX_HEADER_LENGTH];
-    final int headerSize = readHeaderFromStream(is, imageHeaderBytes);
-    return DEFAULT_FORMAT_CHECKER.determineFormat(imageHeaderBytes, headerSize);
+    return getInstance().determineImageFormat(is);
   }
 
   /*
@@ -196,7 +265,7 @@ public class ImageFormatChecker {
 
 
   /**
-   * Each WebP header should cosist of at least 20 bytes and start
+   * Each WebP header should consist of at least 20 bytes and start
    * with "RIFF" bytes followed by some 4 bytes and "WEBP" bytes.
    * More detailed description if WebP can be found here:
    * <a href="https://developers.google.com/speed/webp/docs/riff_container">
@@ -323,20 +392,4 @@ public class ImageFormatChecker {
     }
     return matchBytePattern(imageHeaderBytes, 0, BMP_HEADER);
   }
-
-
-  /**
-   * Maximum header size for any image type.
-   *
-   * <p>This determines how much data {@link #getImageFormat(InputStream)
-   * reads from a stream. After changing any of the type detection algorithms, or adding a new one,
-   * this value should be edited.
-   */
-  private static final int MAX_HEADER_LENGTH = Ints.max(
-      EXTENDED_WEBP_HEADER_LENGTH,
-      SIMPLE_WEBP_HEADER_LENGTH,
-      JPEG_HEADER.length,
-      PNG_HEADER.length,
-      GIF_HEADER_LENGTH,
-      BMP_HEADER.length);
 }
