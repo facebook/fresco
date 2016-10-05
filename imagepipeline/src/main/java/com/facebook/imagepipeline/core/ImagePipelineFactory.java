@@ -23,6 +23,7 @@ import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
@@ -191,10 +192,22 @@ public class ImagePipelineFactory {
         } else {
           animatedImageFactory = null;
         }
-        mImageDecoder = new DefaultImageDecoder(
-            animatedImageFactory,
-            getPlatformDecoder(),
-            mConfig.getBitmapConfig());
+        if (mConfig.getImageDecoderConfig() == null) {
+          mImageDecoder = new DefaultImageDecoder(
+              animatedImageFactory,
+              getPlatformDecoder(),
+              mConfig.getBitmapConfig());
+        } else {
+          mImageDecoder = new DefaultImageDecoder(
+              animatedImageFactory,
+              getPlatformDecoder(),
+              mConfig.getBitmapConfig(),
+              mConfig.getImageDecoderConfig().getCustomImageDecoders());
+          // Add custom image formats if needed
+          ImageFormatChecker.getInstance()
+              .setCustomImageFormatCheckers(
+                  mConfig.getImageDecoderConfig().getCustomImageFormats());
+        }
       }
     }
     return mImageDecoder;

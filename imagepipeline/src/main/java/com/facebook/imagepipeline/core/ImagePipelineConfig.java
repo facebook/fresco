@@ -35,6 +35,7 @@ import com.facebook.imagepipeline.cache.ImageCacheStatsTracker;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -86,6 +87,7 @@ public class ImagePipelineConfig {
   private final Set<RequestListener> mRequestListeners;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
+  @Nullable private final ImageDecoderConfig mImageDecoderConfig;
   private final ImagePipelineExperiments mImagePipelineExperiments;
 
   private static DefaultImageRequestConfig
@@ -160,6 +162,7 @@ public class ImagePipelineConfig {
         builder.mSmallImageDiskCacheConfig == null ?
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
+    mImageDecoderConfig = builder.mImageDecoderConfig;
 
     // Below this comment can't be built in alphabetical order, because of dependencies
     int numCpuBoundThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
@@ -298,6 +301,11 @@ public class ImagePipelineConfig {
     return mSmallImageDiskCacheConfig;
   }
 
+  @Nullable
+  public ImageDecoderConfig getImageDecoderConfig() {
+    return mImageDecoderConfig;
+  }
+
   public ImagePipelineExperiments getExperiments() {
     return mImagePipelineExperiments;
   }
@@ -349,6 +357,7 @@ public class ImagePipelineConfig {
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
     private FileCacheFactory mFileCacheFactory;
+    private ImageDecoderConfig mImageDecoderConfig;
     private final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
 
@@ -476,6 +485,11 @@ public class ImagePipelineConfig {
 
     public Builder setSmallImageDiskCacheConfig(DiskCacheConfig smallImageDiskCacheConfig) {
       mSmallImageDiskCacheConfig = smallImageDiskCacheConfig;
+      return this;
+    }
+
+    public Builder setImageDecoderConfig(ImageDecoderConfig imageDecoderConfig) {
+      mImageDecoderConfig = imageDecoderConfig;
       return this;
     }
 
