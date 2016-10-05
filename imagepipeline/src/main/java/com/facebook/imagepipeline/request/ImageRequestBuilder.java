@@ -71,12 +71,7 @@ public class ImageRequestBuilder {
    * @return a new request builder instance.
    */
   public static ImageRequestBuilder newBuilderWithResourceId(int resId) {
-    Uri uri = new Uri.Builder()
-        .scheme(UriUtil.LOCAL_RESOURCE_SCHEME)
-        .path(String.valueOf(resId))
-        .build();
-
-    return newBuilderWithSource(uri);
+    return newBuilderWithSource(UriUtil.getUriForResourceId(resId));
   }
 
   /**
