@@ -14,6 +14,11 @@
     <string translatable="false" name="value_local_uri">local_resource_uris</string>
     <string translatable="false" name="value_local_summary">Uris are into a local array resource</string>
 
+    <!-- SimpleAdapter from local array resource for WebP -->
+    <string translatable="false" name="label_local_webp_uri">Local Resource Uris for Webp</string>
+    <string translatable="false" name="value_local_webp_uri">local_resource_webp_uris</string>
+    <string translatable="false" name="value_local_webp_summary">Uris for WebP images are into a local array resource</string>
+
     <!-- Simple Adapter for local internal images-->
     <string translatable="false" name="label_local_internal_photo_uri">Local Internal Photo Uris</string>
     <string translatable="false" name="value_local_internal_photo_uri">local_internal_photo_uris</string>

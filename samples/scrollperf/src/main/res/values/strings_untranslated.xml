@@ -11,6 +11,23 @@
         <item>http://blog.coursetalk.com/wp-content/uploads/free-ed.jpg</item>
         <item>http://whsr.webrevenueinc1.netdna-cdn.com/wp-content/uploads/2014/12/free-digital-photos.jpg</item>
     </string-array>
+    <string-array name="example_webp_uris">
+        <item>https://www.gstatic.com/webp/gallery3/1_webp_ll.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/1_webp_a.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/2_webp_ll.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/2_webp_a.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/3_webp_ll.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/3_webp_a.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/4_webp_ll.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/4_webp_a.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/5_webp_ll.webp</item>
+        <item>https://www.gstatic.com/webp/gallery3/5_webp_a.webp</item>
+        <item>http://www.gstatic.com/webp/gallery/1.webp</item>
+        <item>http://www.gstatic.com/webp/gallery/2.webp</item>
+        <item>http://www.gstatic.com/webp/gallery/3.webp</item>
+        <item>http://www.gstatic.com/webp/gallery/4.webp</item>
+        <item>http://www.gstatic.com/webp/gallery/5.webp</item>
+    </string-array>
     <string-array name="grid_recycler_layout_values">
         <item>1</item>
         <item>2</item>

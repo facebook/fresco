@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable;
 public final class Const {
 
   public static final String LOCAL_RESOURCE_URIS = "local_resource_uris";
+  public static final String LOCAL_RESOURCE_WEBP_URIS = "local_resource_webp_uris";
   public static final String LOCAL_INTERNAL_PHOTO_URIS = "local_internal_photo_uris";
   public static final String LOCAL_EXTERNAL_PHOTO_URIS = "local_external_photo_uris";
 
