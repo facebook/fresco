@@ -220,51 +220,6 @@ public class ImageFormatChecker {
   }
 
   /**
-   * Checks if byteArray interpreted as sequence of bytes has a subsequence equal to pattern
-   * starting at position equal to offset.
-   * @param byteArray
-   * @param offset
-   * @param pattern
-   * @return true if match succeeds, false otherwise
-   */
-  private static boolean matchBytePattern(
-      final byte[] byteArray,
-      final int offset,
-      final byte[] pattern) {
-    Preconditions.checkNotNull(byteArray);
-    Preconditions.checkNotNull(pattern);
-    Preconditions.checkArgument(offset >= 0);
-    if (pattern.length + offset > byteArray.length) {
-      return false;
-    }
-
-    for (int i = 0; i < pattern.length; ++i) {
-      if (byteArray[i + offset] != pattern[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * Helper method that transforms provided string into it's byte representation
-   * using ASCII encoding
-   * @param value
-   * @return byte array representing ascii encoded value
-   */
-  private static byte[] asciiBytes(String value) {
-    Preconditions.checkNotNull(value);
-    try {
-      return value.getBytes("ASCII");
-    } catch (UnsupportedEncodingException uee) {
-      // won't happen
-      throw new RuntimeException("ASCII not found!", uee);
-    }
-  }
-
-
-  /**
    * Each WebP header should consist of at least 20 bytes and start
    * with "RIFF" bytes followed by some 4 bytes and "WEBP" bytes.
    * More detailed description if WebP can be found here:
@@ -322,7 +277,8 @@ public class ImageFormatChecker {
    * @return true if imageHeaderBytes starts with SOI_BYTES and headerSize >= 3
    */
   private static boolean isJpegHeader(final byte[] imageHeaderBytes, final int headerSize) {
-    return headerSize >= JPEG_HEADER.length && matchBytePattern(imageHeaderBytes, 0, JPEG_HEADER);
+    return headerSize >= JPEG_HEADER.length &&
+        ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, JPEG_HEADER);
   }
 
 
@@ -345,7 +301,8 @@ public class ImageFormatChecker {
    * @return true if imageHeaderBytes starts with PNG_HEADER
    */
   private static boolean isPngHeader(final byte[] imageHeaderBytes, final int headerSize) {
-    return headerSize >= PNG_HEADER.length && matchBytePattern(imageHeaderBytes, 0, PNG_HEADER);
+    return headerSize >= PNG_HEADER.length &&
+        ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, PNG_HEADER);
   }
 
 
@@ -353,8 +310,8 @@ public class ImageFormatChecker {
    * Every gif image starts with "GIF" bytes followed by
    * bytes indicating version of gif standard
    */
-  private static final byte[] GIF_HEADER_87A = asciiBytes("GIF87a");
-  private static final byte[] GIF_HEADER_89A = asciiBytes("GIF89a");
+  private static final byte[] GIF_HEADER_87A = ImageFormatCheckerUtils.asciiBytes("GIF87a");
+  private static final byte[] GIF_HEADER_89A = ImageFormatCheckerUtils.asciiBytes("GIF89a");
   private static final int GIF_HEADER_LENGTH = 6;
 
   /**
@@ -369,14 +326,14 @@ public class ImageFormatChecker {
     if (headerSize < GIF_HEADER_LENGTH) {
       return false;
     }
-    return matchBytePattern(imageHeaderBytes, 0, GIF_HEADER_87A) ||
-        matchBytePattern(imageHeaderBytes, 0, GIF_HEADER_89A);
+    return ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, GIF_HEADER_87A) ||
+        ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, GIF_HEADER_89A);
   }
 
   /**
    * Every bmp image starts with "BM" bytes
    */
-  private static final byte[] BMP_HEADER = asciiBytes("BM");
+  private static final byte[] BMP_HEADER = ImageFormatCheckerUtils.asciiBytes("BM");
 
   /**
    * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a bmp image.
@@ -390,6 +347,6 @@ public class ImageFormatChecker {
     if (headerSize < BMP_HEADER.length) {
       return false;
     }
-    return matchBytePattern(imageHeaderBytes, 0, BMP_HEADER);
+    return ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, BMP_HEADER);
   }
 }
