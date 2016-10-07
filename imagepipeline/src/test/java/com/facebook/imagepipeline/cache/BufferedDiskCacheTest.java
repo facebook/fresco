@@ -154,19 +154,6 @@ public class BufferedDiskCacheTest {
   }
 
   @Test
-  public void testListQueriesDiskCache() throws Exception {
-    when(mFileCache.getResource(eq(mCacheKey))).thenReturn(mBinaryResource);
-    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
-    mReadPriorityExecutor.runUntilIdle();
-    verify(mFileCache).getResource(eq(mCacheKey));
-    assertEquals(
-        2,
-        readTask.getResult().getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertSame(mPooledByteBuffer, readTask.getResult().getByteBufferRef().get());
-  }
-
-  @Test
   public void testCacheGetCancellation() throws Exception {
     when(mFileCache.getResource(mCacheKey)).thenReturn(mBinaryResource);
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
@@ -208,14 +195,6 @@ public class BufferedDiskCacheTest {
 
   @Test
   public void testCacheMiss() throws Exception {
-    Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
-    mReadPriorityExecutor.runUntilIdle();
-    verify(mFileCache).getResource(eq(mCacheKey));
-    assertNull(readTask.getResult());
-  }
-
-  @Test
-  public void testCacheMissList() throws Exception {
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     mReadPriorityExecutor.runUntilIdle();
     verify(mFileCache).getResource(eq(mCacheKey));
