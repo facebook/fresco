@@ -77,6 +77,7 @@ public class ProducerFactory {
   private final boolean mDownsampleEnabled;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final boolean mDecodeFileDescriptorEnabled;
+  private final boolean mDecodeCancellationEnabled;
 
   // Dependencies used by multiple steps
   private final ExecutorSupplier mExecutorSupplier;
@@ -103,6 +104,7 @@ public class ProducerFactory {
       boolean downsampleEnabled,
       @WebpTranscodeProducer.EnhancedTranscodingType int enhancedWebpTranscodingType,
       boolean resizeAndRotateEnabledForNetwork,
+      boolean decodeCancellationEnabled,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
@@ -124,6 +126,7 @@ public class ProducerFactory {
     mDownsampleEnabled = downsampleEnabled;
     mEnhancedWebpTranscodingType = enhancedWebpTranscodingType;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
+    mDecodeCancellationEnabled = decodeCancellationEnabled;
 
     mExecutorSupplier = executorSupplier;
     mPooledByteBufferFactory = pooledByteBufferFactory;
@@ -191,6 +194,7 @@ public class ProducerFactory {
         mProgressiveJpegConfig,
         mDownsampleEnabled,
         mResizeAndRotateEnabledForNetwork,
+        mDecodeCancellationEnabled,
         inputProducer);
   }
 

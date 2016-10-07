@@ -107,6 +107,7 @@ public class DecodeProducerTest {
         mProgressiveJpegConfig,
         false, /* Set downsampleEnabled to false */
         false, /* Set resizeAndRotateForNetwork to false */
+        false, /* We don't cancel when the request is cancelled */
         mInputProducer);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);

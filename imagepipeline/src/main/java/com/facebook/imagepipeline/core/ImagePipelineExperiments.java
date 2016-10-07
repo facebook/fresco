@@ -30,6 +30,7 @@ public class ImagePipelineExperiments {
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final boolean mMediaVariationsEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
+  private final boolean mDecodeCancellationEnabled;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
@@ -41,6 +42,7 @@ public class ImagePipelineExperiments {
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     mMediaVariationsEnabled = builder.mMediaVariationsEnabled;
     mWebpErrorLogger = builder.mWebpErrorLogger;
+    mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -61,6 +63,10 @@ public class ImagePipelineExperiments {
 
   public boolean isWebpSupportEnabled() {
     return mWebpSupportEnabled;
+  }
+
+  public boolean isDecodeCancellationEnabled() {
+    return mDecodeCancellationEnabled;
   }
 
   public @WebpTranscodeProducer.EnhancedTranscodingType int getEnhancedWebpTranscodingType() {
@@ -93,6 +99,7 @@ public class ImagePipelineExperiments {
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
     private boolean mMediaVariationsEnabled = false;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
+    private boolean mDecodeCancellationEnabled = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -135,6 +142,17 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
       mWebpSupportEnabled = webpSupportEnabled;
+      return mConfigBuilder;
+    }
+
+    /**
+     * If true we cancel decoding jobs when the related request has been cancelled
+     * @param decodeCancellationEnabled If true the decoding of cancelled requests are cancelled
+     * @return The Builder itself for chaining
+     */
+    public ImagePipelineConfig.Builder setDecodeCancellationEnabled(
+        boolean decodeCancellationEnabled) {
+      mDecodeCancellationEnabled = decodeCancellationEnabled;
       return mConfigBuilder;
     }
 

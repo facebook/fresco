@@ -59,6 +59,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final Producer<EncodedImage> mInputProducer;
   private final boolean mDownsampleEnabled;
   private final boolean mDownsampleEnabledForNetwork;
+  private final boolean mDecodeCancellationEnabled;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -67,6 +68,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final ProgressiveJpegConfig progressiveJpegConfig,
       final boolean downsampleEnabled,
       final boolean downsampleEnabledForNetwork,
+      final boolean decodeCancellationEnabled,
       final Producer<EncodedImage> inputProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
@@ -75,6 +77,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mDownsampleEnabled = downsampleEnabled;
     mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
+    mDecodeCancellationEnabled = decodeCancellationEnabled;
   }
 
   @Override
@@ -84,14 +87,18 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     final ImageRequest imageRequest = producerContext.getImageRequest();
     ProgressiveDecoder progressiveDecoder;
     if (!UriUtil.isNetworkUri(imageRequest.getSourceUri())) {
-      progressiveDecoder = new LocalImagesProgressiveDecoder(consumer, producerContext);
+      progressiveDecoder = new LocalImagesProgressiveDecoder(
+          consumer,
+          producerContext,
+          mDecodeCancellationEnabled);
     } else {
       ProgressiveJpegParser jpegParser = new ProgressiveJpegParser(mByteArrayPool);
       progressiveDecoder = new NetworkImagesProgressiveDecoder(
           consumer,
           producerContext,
           jpegParser,
-          mProgressiveJpegConfig);
+          mProgressiveJpegConfig,
+          mDecodeCancellationEnabled);
     }
     mInputProducer.produceResults(progressiveDecoder, producerContext);
   }
@@ -110,7 +117,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
-        final ProducerContext producerContext) {
+        final ProducerContext producerContext,
+        final boolean decodeCancellationEnabled) {
       super(consumer);
       mProducerContext = producerContext;
       mProducerListener = producerContext.getListener();
@@ -139,6 +147,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             public void onIsIntermediateResultExpectedChanged() {
               if (mProducerContext.isIntermediateResultExpected()) {
                 mJobScheduler.scheduleJob();
+              }
+            }
+
+            @Override
+            public void onCancellationRequested() {
+              if (decodeCancellationEnabled) {
+                handleCancellation();
               }
             }
           });
@@ -332,8 +347,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     public LocalImagesProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
-        final ProducerContext producerContext) {
-      super(consumer, producerContext);
+        final ProducerContext producerContext,
+        final boolean decodeCancellationEnabled) {
+      super(consumer, producerContext, decodeCancellationEnabled);
     }
 
     @Override
@@ -365,8 +381,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext,
         final ProgressiveJpegParser progressiveJpegParser,
-        final ProgressiveJpegConfig progressiveJpegConfig) {
-      super(consumer, producerContext);
+        final ProgressiveJpegConfig progressiveJpegConfig,
+        final boolean decodeCancellationEnabled) {
+      super(consumer, producerContext, decodeCancellationEnabled);
       mProgressiveJpegParser = Preconditions.checkNotNull(progressiveJpegParser);
       mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
       mLastScheduledScanNumber = 0;
