@@ -13,6 +13,7 @@ package com.facebook.samples.scrollperf;
 
 import android.app.Application;
 
+import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -38,6 +39,9 @@ public class ScrollPerfApplication extends Application {
     } else {
       imagePipelineConfigBuilder.setExecutorSupplier(
           new ScrollPerfExecutorSupplier(Const.NUMBER_OF_PROCESSORS, config.decodingThreadCount));
+    }
+    if (WebpSupportStatus.sIsWebpSupportRequired) {
+      imagePipelineConfigBuilder.experiment().setWebpSupportEnabled(config.webpSupportEnabled);
     }
     Fresco.initialize(this, imagePipelineConfigBuilder.build());
   }

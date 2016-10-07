@@ -136,6 +136,10 @@
         android:title="@string/title_other_group"
         >
         <CheckBoxPreference
+            android:key="webp_support_key"
+            android:title="@string/title_webp_support"
+        />
+        <CheckBoxPreference
             android:key="auto_rotate"
             android:title="@string/title_auto_rotate"
             />

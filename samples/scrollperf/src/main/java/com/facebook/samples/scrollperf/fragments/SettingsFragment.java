@@ -24,6 +24,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Const;
 import com.facebook.samples.scrollperf.preferences.SizePreferences;
@@ -77,6 +78,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
+    // This has no meaning for Android > JELLY_BEAN_MR1 because it already supports WebP
+    if (WebpSupportStatus.sIsWebpSupportRequired) {
+      updateWebpSupportSummary(findPreference(Const.WEBP_SUPPORT_KEY));
+    } else {
+      findPreference(Const.WEBP_SUPPORT_KEY).setVisible(false);
+    }
   }
 
   @Override
@@ -134,6 +141,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.DECODING_THREAD_KEY:
         updateNumberOfDecodingThreadSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.WEBP_SUPPORT_KEY:
+        updateWebpSupportSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.OVERRIDE_SIZE_KEY:
@@ -242,6 +253,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
             getResources(),
             (ListPreference) preference,
             R.array.scale_type_summaries);
+  }
+
+  private void updateWebpSupportSummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_webp_support_summary,
+        R.string.unchecked_webp_support_summary);
   }
 
   private static boolean updateCheckBoxPreference(

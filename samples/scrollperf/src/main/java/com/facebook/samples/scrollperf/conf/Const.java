@@ -58,4 +58,5 @@ public final class Const {
   public static final String GRID_SPAN_COUNT_KEY= "grid_span_count_key";
 
   public static final String DECODING_THREAD_KEY= "decoding_thread_key";
+  public static final String WEBP_SUPPORT_KEY = "webp_support_key";
 }

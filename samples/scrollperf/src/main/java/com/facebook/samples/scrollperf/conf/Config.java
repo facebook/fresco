@@ -54,6 +54,7 @@ public class Config {
   public final int fadeDurationMs;
 
   public final int decodingThreadCount;
+  public final boolean webpSupportEnabled;
 
   public final boolean drawBorder;
 
@@ -120,6 +121,9 @@ public class Config {
     final int decodingThreadCount = Integer.parseInt(sharedPreferences.getString(
         Const.DECODING_THREAD_KEY,
         "0"));
+    final boolean webpSupportEnabled = sharedPreferences.getBoolean(
+        Const.WEBP_SUPPORT_KEY,
+        false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -140,7 +144,8 @@ public class Config {
       overridenHeight,
       fadeDurationMs,
       drawBorder,
-        decodingThreadCount);
+      decodingThreadCount,
+      webpSupportEnabled);
   }
 
   private Config(
@@ -163,7 +168,8 @@ public class Config {
       final int overridenHeight,
       final int fadeDurationMs,
       final boolean drawBorder,
-      final int decodingThreadNumber) {
+      final int decodingThreadNumber,
+      final boolean webpSupportEnabled) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.gridSpanCount = gridSpanCount;
@@ -184,5 +190,6 @@ public class Config {
     this.fadeDurationMs = fadeDurationMs;
     this.drawBorder = drawBorder;
     this.decodingThreadCount = decodingThreadNumber;
+    this.webpSupportEnabled = webpSupportEnabled;
   }
 }
