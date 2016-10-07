@@ -21,6 +21,7 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -49,6 +50,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
   private static final String IMAGE_TYPE_KEY = "imageType";
   private static final String IS_FINAL_KEY = "isFinal";
+  private static final String IMAGE_FORMAT_NAME_KEY = "imageFormat";
 
   private final ByteArrayPool mByteArrayPool;
   private final Executor mExecutor;
@@ -181,7 +183,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       if (isFinished() || !EncodedImage.isValid(encodedImage)) {
         return;
       }
-
+      final String imageFormatStr;
+      ImageFormat imageFormat = encodedImage.getImageFormat();
+      if (imageFormat != null) {
+        imageFormatStr = imageFormat.getName();
+      } else {
+        imageFormatStr = "unknown";
+      }
       try {
         long queueTime = mJobScheduler.getQueuedTime();
         int length = isLast ?
@@ -193,13 +201,23 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         try {
           image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
         } catch (Exception e) {
-          Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
+          Map<String, String> extraMap = getExtraMap(
+              image,
+              queueTime,
+              quality,
+              isLast,
+              imageFormatStr);
           mProducerListener.
               onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
           handleError(e);
           return;
         }
-        Map<String, String> extraMap = getExtraMap(image, queueTime, quality, isLast);
+        Map<String, String> extraMap = getExtraMap(
+            image,
+            queueTime,
+            quality,
+            isLast,
+            imageFormatStr);
         mProducerListener.
             onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
         handleResult(image, isLast);
@@ -212,7 +230,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         @Nullable CloseableImage image,
         long queueTime,
         QualityInfo quality,
-        boolean isFinal) {
+        boolean isFinal,
+        String imageFormatName) {
       if (!mProducerListener.requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
@@ -223,6 +242,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
         String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
+        // We need this because the of() utility method doesn't have a proper overload method
+        // for all these parameters
         return ImmutableMap.of(
             BITMAP_SIZE_KEY,
             sizeStr,
@@ -233,7 +254,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             IS_FINAL_KEY,
             finalStr,
             IMAGE_TYPE_KEY,
-            cacheChoiceStr);
+            cacheChoiceStr,
+            IMAGE_FORMAT_NAME_KEY,
+            imageFormatName);
       } else {
         return ImmutableMap.of(
             JobScheduler.QUEUE_TIME_KEY,
@@ -243,7 +266,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             IS_FINAL_KEY,
             finalStr,
             IMAGE_TYPE_KEY,
-            cacheChoiceStr);
+            cacheChoiceStr,
+            IMAGE_FORMAT_NAME_KEY,
+            imageFormatName);
       }
     }
 
