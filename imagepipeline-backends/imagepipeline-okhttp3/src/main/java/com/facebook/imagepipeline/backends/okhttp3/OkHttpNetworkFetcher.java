@@ -73,7 +73,36 @@ public class OkHttpNetworkFetcher extends
     return new OkHttpNetworkFetchState(consumer, context);
   }
 
-  protected void fetchWithRequest(final OkHttpNetworkFetchState fetchState, final Callback callback,
+  @Override
+  public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
+    fetchState.submitTime = SystemClock.elapsedRealtime();
+    final Uri uri = fetchState.getUri();
+    final Request request = new Request.Builder()
+        .cacheControl(new CacheControl.Builder().noStore().build())
+        .url(uri.toString())
+        .get()
+        .build();
+    fetchWithRequest(fetchState, callback, request);
+  }
+
+  @Override
+  public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
+    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
+  }
+
+  @Override
+  public Map<String, String> getExtraMap(OkHttpNetworkFetchState fetchState, int byteSize) {
+    Map<String, String> extraMap = new HashMap<>(4);
+    extraMap.put(QUEUE_TIME, Long.toString(fetchState.responseTime - fetchState.submitTime));
+    extraMap.put(FETCH_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.responseTime));
+    extraMap.put(TOTAL_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.submitTime));
+    extraMap.put(IMAGE_SIZE, Integer.toString(byteSize));
+    return extraMap;
+  }
+
+  protected void fetchWithRequest(
+      final OkHttpNetworkFetchState fetchState,
+      final Callback callback,
       final Request request) {
     final Call call = mOkHttpClient.newCall(request);
 
@@ -129,33 +158,6 @@ public class OkHttpNetworkFetcher extends
             handleException(call, e, callback);
           }
         });
-  }
-
-  @Override
-  public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
-    fetchState.submitTime = SystemClock.elapsedRealtime();
-    final Uri uri = fetchState.getUri();
-    final Request request = new Request.Builder()
-        .cacheControl(new CacheControl.Builder().noStore().build())
-        .url(uri.toString())
-        .get()
-        .build();
-    fetchWithRequest(fetchState, callback, request);
-  }
-
-  @Override
-  public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
-    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
-  }
-
-  @Override
-  public Map<String, String> getExtraMap(OkHttpNetworkFetchState fetchState, int byteSize) {
-    Map<String, String> extraMap = new HashMap<>(4);
-    extraMap.put(QUEUE_TIME, Long.toString(fetchState.responseTime - fetchState.submitTime));
-    extraMap.put(FETCH_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.responseTime));
-    extraMap.put(TOTAL_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.submitTime));
-    extraMap.put(IMAGE_SIZE, Integer.toString(byteSize));
-    return extraMap;
   }
 
   /**
