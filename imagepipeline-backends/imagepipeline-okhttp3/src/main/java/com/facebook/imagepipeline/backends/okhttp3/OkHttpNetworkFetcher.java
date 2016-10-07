@@ -73,15 +73,8 @@ public class OkHttpNetworkFetcher extends
     return new OkHttpNetworkFetchState(consumer, context);
   }
 
-  @Override
-  public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
-    fetchState.submitTime = SystemClock.elapsedRealtime();
-    final Uri uri = fetchState.getUri();
-    final Request request = new Request.Builder()
-        .cacheControl(new CacheControl.Builder().noStore().build())
-        .url(uri.toString())
-        .get()
-        .build();
+  protected void fetchWithRequest(final OkHttpNetworkFetchState fetchState, final Callback callback,
+      final Request request) {
     final Call call = mOkHttpClient.newCall(request);
 
     fetchState.getContext().addCallbacks(
@@ -109,9 +102,9 @@ public class OkHttpNetworkFetcher extends
             try {
               if (!response.isSuccessful()) {
                 handleException(
-                        call,
-                        new IOException("Unexpected HTTP code " + response),
-                        callback);
+                    call,
+                    new IOException("Unexpected HTTP code " + response),
+                    callback);
                 return;
               }
 
@@ -136,6 +129,18 @@ public class OkHttpNetworkFetcher extends
             handleException(call, e, callback);
           }
         });
+  }
+
+  @Override
+  public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
+    fetchState.submitTime = SystemClock.elapsedRealtime();
+    final Uri uri = fetchState.getUri();
+    final Request request = new Request.Builder()
+        .cacheControl(new CacheControl.Builder().noStore().build())
+        .url(uri.toString())
+        .get()
+        .build();
+    fetchWithRequest(fetchState, callback, request);
   }
 
   @Override
