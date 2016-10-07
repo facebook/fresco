@@ -182,4 +182,8 @@
     <string translatable="false" name="checked_webp_support_summary">We\'re using direct WebP decoding</string>
     <string translatable="false" name="unchecked_webp_support_summary">We\'re not using WebP direct decoding on pre-4.3 devices</string>
 
+    <!-- Memory File Descriptor-->
+    <string translatable="false" name="title_memory_file_descriptor">Memory File Descriptor</string>
+    <string translatable="false" name="checked_memory_file_descriptor_summary">Decoding from File Descriptor enabled</string>
+    <string translatable="false" name="unchecked_memory_file_descriptor_summary">Decoding from File Descriptor disabled</string>
 </resources>

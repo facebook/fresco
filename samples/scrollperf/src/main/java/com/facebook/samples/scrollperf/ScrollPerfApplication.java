@@ -32,6 +32,7 @@ public class ScrollPerfApplication extends Application {
     final Config config = Config.load(this);
     ImagePipelineConfig.Builder imagePipelineConfigBuilder = ImagePipelineConfig.newBuilder(this)
         .setResizeAndRotateEnabledForNetwork(false)
+        .setDecodeMemoryFileEnabled(config.memoryFileDescriptorEnabled)
         .setDownsampleEnabled(config.downsampling);
     if (config.decodingThreadCount == 0) {
       imagePipelineConfigBuilder.setExecutorSupplier(

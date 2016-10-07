@@ -78,6 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
+    updateMemoryFileDescriptorSummary(findPreference(Const.MEMORY_FILE_DESCRIPTOR_KEY));
     // This has no meaning for Android > JELLY_BEAN_MR1 because it already supports WebP
     if (WebpSupportStatus.sIsWebpSupportRequired) {
       updateWebpSupportSummary(findPreference(Const.WEBP_SUPPORT_KEY));
@@ -145,6 +146,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.WEBP_SUPPORT_KEY:
         updateWebpSupportSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.MEMORY_FILE_DESCRIPTOR_KEY:
+        updateMemoryFileDescriptorSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.OVERRIDE_SIZE_KEY:
@@ -261,6 +266,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) preference,
         R.string.checked_webp_support_summary,
         R.string.unchecked_webp_support_summary);
+  }
+
+  private void updateMemoryFileDescriptorSummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_memory_file_descriptor_summary,
+        R.string.unchecked_memory_file_descriptor_summary);
   }
 
   private static boolean updateCheckBoxPreference(
