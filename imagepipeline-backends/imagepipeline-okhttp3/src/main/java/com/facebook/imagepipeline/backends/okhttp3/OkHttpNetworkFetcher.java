@@ -82,6 +82,28 @@ public class OkHttpNetworkFetcher extends
         .url(uri.toString())
         .get()
         .build();
+    fetchWithRequest(fetchState, callback, request);
+  }
+
+  @Override
+  public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
+    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
+  }
+
+  @Override
+  public Map<String, String> getExtraMap(OkHttpNetworkFetchState fetchState, int byteSize) {
+    Map<String, String> extraMap = new HashMap<>(4);
+    extraMap.put(QUEUE_TIME, Long.toString(fetchState.responseTime - fetchState.submitTime));
+    extraMap.put(FETCH_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.responseTime));
+    extraMap.put(TOTAL_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.submitTime));
+    extraMap.put(IMAGE_SIZE, Integer.toString(byteSize));
+    return extraMap;
+  }
+
+  protected void fetchWithRequest(
+      final OkHttpNetworkFetchState fetchState,
+      final Callback callback,
+      final Request request) {
     final Call call = mOkHttpClient.newCall(request);
 
     fetchState.getContext().addCallbacks(
@@ -109,9 +131,9 @@ public class OkHttpNetworkFetcher extends
             try {
               if (!response.isSuccessful()) {
                 handleException(
-                        call,
-                        new IOException("Unexpected HTTP code " + response),
-                        callback);
+                    call,
+                    new IOException("Unexpected HTTP code " + response),
+                    callback);
                 return;
               }
 
@@ -136,21 +158,6 @@ public class OkHttpNetworkFetcher extends
             handleException(call, e, callback);
           }
         });
-  }
-
-  @Override
-  public void onFetchCompletion(OkHttpNetworkFetchState fetchState, int byteSize) {
-    fetchState.fetchCompleteTime = SystemClock.elapsedRealtime();
-  }
-
-  @Override
-  public Map<String, String> getExtraMap(OkHttpNetworkFetchState fetchState, int byteSize) {
-    Map<String, String> extraMap = new HashMap<>(4);
-    extraMap.put(QUEUE_TIME, Long.toString(fetchState.responseTime - fetchState.submitTime));
-    extraMap.put(FETCH_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.responseTime));
-    extraMap.put(TOTAL_TIME, Long.toString(fetchState.fetchCompleteTime - fetchState.submitTime));
-    extraMap.put(IMAGE_SIZE, Integer.toString(byteSize));
-    return extraMap;
   }
 
   /**
