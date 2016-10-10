@@ -46,6 +46,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String ORIGINAL_SIZE_KEY = "Original size";
   private static final String REQUESTED_SIZE_KEY = "Requested size";
   private static final String FRACTION_KEY = "Fraction";
+  private static final int FULL_ROUND = 360;
 
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
@@ -284,13 +285,16 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   private static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
+    if (!rotationOptions.rotationEnabled()) {
+      return RotationOptions.NO_ROTATION;
+    }
     int rotationFromMetadata = extractOrientationFromMetadata(encodedImage);
     if (rotationOptions.useImageMetadata()) {
       return rotationFromMetadata;
     }
     int angle = rotationFromMetadata + rotationOptions.getForcedAngle();
-    while (angle >= 360) {
-      angle -= 360;
+    while (angle >= FULL_ROUND) {
+      angle -= FULL_ROUND;
     }
     return angle;
   }

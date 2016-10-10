@@ -39,7 +39,8 @@ public class RotationOptions {
       ROTATE_90,
       ROTATE_180,
       ROTATE_270,
-      USE_EXIF_ROTATION_ANGLE
+      USE_EXIF_ROTATION_ANGLE,
+      DISABLE_ROTATION
   })
   @Retention(RetentionPolicy.SOURCE)
   private @interface Rotation {}
@@ -58,6 +59,7 @@ public class RotationOptions {
   public static final int ROTATE_180 = 180;
   public static final int ROTATE_270 = 270;
   private static final int USE_EXIF_ROTATION_ANGLE = -1;
+  private static final int DISABLE_ROTATION = -2;
 
   private final @Rotation int mRotation;
   private final boolean mDeferUntilRendered;
@@ -73,6 +75,14 @@ public class RotationOptions {
    */
   public static RotationOptions autoRotate() {
     return new RotationOptions(USE_EXIF_ROTATION_ANGLE, false);
+  }
+
+  /**
+   * Creates a new set of rotation options for JPEG images to load image without any rotation.
+   *
+   */
+  public static RotationOptions disableRotation() {
+    return new RotationOptions(DISABLE_ROTATION, false);
   }
 
   /**
@@ -103,6 +113,10 @@ public class RotationOptions {
 
   public boolean useImageMetadata() {
     return mRotation == USE_EXIF_ROTATION_ANGLE;
+  }
+
+  public boolean rotationEnabled() {
+    return mRotation != DISABLE_ROTATION;
   }
 
   /**
