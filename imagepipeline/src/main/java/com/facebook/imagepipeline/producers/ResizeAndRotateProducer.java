@@ -284,18 +284,26 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   private static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
+    int rotationFromMetadata = extractOrientationFromMetadata(encodedImage);
     if (rotationOptions.useImageMetadata()) {
-      int rotationAngle = encodedImage.getRotationAngle();
-      switch (rotationAngle) {
-        case RotationOptions.ROTATE_90:
-        case RotationOptions.ROTATE_180:
-        case RotationOptions.ROTATE_270:
-          return rotationAngle;
-        default:
-          return 0;
-      }
+      return rotationFromMetadata;
     }
-    return rotationOptions.getForcedAngle();
+    int angle = rotationFromMetadata + rotationOptions.getForcedAngle();
+    while (angle >= 360) {
+      angle -= 360;
+    }
+    return angle;
+  }
+
+  private static int extractOrientationFromMetadata(EncodedImage encodedImage) {
+    switch (encodedImage.getRotationAngle()) {
+      case RotationOptions.ROTATE_90:
+      case RotationOptions.ROTATE_180:
+      case RotationOptions.ROTATE_270:
+        return encodedImage.getRotationAngle();
+      default:
+        return 0;
+    }
   }
 
   private static boolean shouldResize(int numerator) {

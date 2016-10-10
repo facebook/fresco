@@ -407,7 +407,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestWidthAndHeight(0, 0);
     whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
 
-    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 0);
     verifyAFinalResultPassedThrough();
     verifyZeroJpegTranscoderInteractions();
   }
