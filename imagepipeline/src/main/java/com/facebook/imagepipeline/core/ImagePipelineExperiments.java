@@ -31,6 +31,7 @@ public class ImagePipelineExperiments {
   private final boolean mMediaVariationsEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
+  private final WebpBitmapFactory mWebpBitmapFactory;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
@@ -43,6 +44,7 @@ public class ImagePipelineExperiments {
     mMediaVariationsEnabled = builder.mMediaVariationsEnabled;
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
+    mWebpBitmapFactory = builder.mWebpBitmapFactory;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -81,6 +83,10 @@ public class ImagePipelineExperiments {
     return mWebpErrorLogger;
   }
 
+  public WebpBitmapFactory getWebpBitmapFactory() {
+    return mWebpBitmapFactory;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);
@@ -100,6 +106,7 @@ public class ImagePipelineExperiments {
     private boolean mMediaVariationsEnabled = false;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
+    private WebpBitmapFactory mWebpBitmapFactory;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -159,6 +166,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setWebpErrorLogger(
         WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
       mWebpErrorLogger = webpErrorLogger;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setWebpBitmapFactory(
+        WebpBitmapFactory webpBitmapFactory) {
+      mWebpBitmapFactory = webpBitmapFactory;
       return mConfigBuilder;
     }
 

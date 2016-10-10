@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.net.Uri;
-import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -433,7 +433,7 @@ public class ProducerSequenceFactory {
   private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
     if (mDataFetchSequence == null) {
       Producer<EncodedImage> inputProducer = mProducerFactory.newDataFetchProducer();
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && !mWebpSupportEnabled) {
+      if (WebpSupportStatus.sIsWebpSupportRequired && !mWebpSupportEnabled) {
         inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
@@ -489,7 +489,7 @@ public class ProducerSequenceFactory {
    */
   private Producer<EncodedImage> newEncodedCacheMultiplexToTranscodeSequence(
       Producer<EncodedImage> inputProducer) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && !mWebpSupportEnabled) {
+    if (WebpSupportStatus.sIsWebpSupportRequired && !mWebpSupportEnabled) {
       inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
     }
     inputProducer = newDiskCacheSequence(inputProducer);
