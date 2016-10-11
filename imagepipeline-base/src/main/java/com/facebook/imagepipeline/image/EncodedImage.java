@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.image;
 
 import android.util.Pair;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
@@ -63,6 +64,7 @@ public class EncodedImage implements Closeable {
   private int mHeight = UNKNOWN_HEIGHT;
   private int mSampleSize = DEFAULT_SAMPLE_SIZE;
   private int mStreamSize = UNKNOWN_STREAM_SIZE;
+  private @Nullable CacheKey mEncodedCacheKey;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -202,6 +204,14 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Sets the key related to this image for encoded caches
+   * @param encodedCacheKey
+   */
+  public void setEncodedCacheKey(@Nullable CacheKey encodedCacheKey) {
+    mEncodedCacheKey = encodedCacheKey;
+  }
+
+  /**
    * Returns the image format if known, otherwise ImageFormat.UNKNOWN.
    */
   public ImageFormat getImageFormat() {
@@ -239,6 +249,15 @@ public class EncodedImage implements Closeable {
    */
   public int getSampleSize() {
     return mSampleSize;
+  }
+
+  /**
+   * Gets the key to use when storing this image in encoded caches
+   * @return the encoded cache key
+   */
+  @Nullable
+  public CacheKey getEncodedCacheKey() {
+    return mEncodedCacheKey;
   }
 
   /**
@@ -315,6 +334,7 @@ public class EncodedImage implements Closeable {
     mRotationAngle = encodedImage.getRotationAngle();
     mSampleSize = encodedImage.getSampleSize();
     mStreamSize = encodedImage.getSize();
+    mEncodedCacheKey = encodedImage.getEncodedCacheKey();
   }
 
   /**

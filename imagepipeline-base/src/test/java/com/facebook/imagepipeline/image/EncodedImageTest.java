@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.Override;
 
+import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -75,6 +76,7 @@ public class EncodedImageTest {
     encodedImage.setWidth(1);
     encodedImage.setHeight(2);
     encodedImage.setSampleSize(4);
+    encodedImage.setEncodedCacheKey(new SimpleCacheKey("key"));
     EncodedImage encodedImage2 = EncodedImage.cloneOrNull(encodedImage);
     assertEquals(3, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
@@ -85,6 +87,7 @@ public class EncodedImageTest {
     assertEquals(encodedImage.getHeight(), encodedImage2.getHeight());
     assertEquals(encodedImage.getWidth(), encodedImage2.getWidth());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
+    assertEquals(encodedImage.getEncodedCacheKey(), encodedImage2.getEncodedCacheKey());
 
     encodedImage = new EncodedImage(mInputStreamSupplier, 100);
     encodedImage.setImageFormat(DefaultImageFormats.JPEG);

@@ -146,11 +146,12 @@ public class BufferedDiskCacheTest {
     Task<EncodedImage> readTask = mBufferedDiskCache.get(mCacheKey, mIsCancelled);
     mReadPriorityExecutor.runUntilIdle();
     verify(mFileCache).getResource(eq(mCacheKey));
+    EncodedImage result = readTask.getResult();
     assertEquals(
         2,
-        readTask.getResult().getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertSame(mPooledByteBuffer, readTask.getResult().getByteBufferRef().get());
+        result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertSame(mPooledByteBuffer, result.getByteBufferRef().get());
+    assertEquals(mCacheKey, result.getEncodedCacheKey());
   }
 
   @Test
@@ -191,6 +192,7 @@ public class BufferedDiskCacheTest {
     // Ref count should be equal to 2 ('owned' by the mCloseableReference and other 'owned' by
     // mEncodedImage)
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertEquals(mCacheKey, mEncodedImage.getEncodedCacheKey());
   }
 
   @Test
@@ -238,15 +240,16 @@ public class BufferedDiskCacheTest {
     when(mStagingArea.get(mCacheKey)).thenReturn(mEncodedImage);
     mReadPriorityExecutor.runUntilIdle();
 
-    assertSame(readTask.getResult(), mEncodedImage);
+    EncodedImage result = readTask.getResult();
+    assertSame(result, mEncodedImage);
     verify(mFileCache, never()).getResource(eq(mCacheKey));
     // Ref count should be equal to 3 (One for mCloseableReference, one that is cloned when
     // mEncodedImage is created and a third one that is cloned when the method getByteBufferRef is
     // called in EncodedImage).
     assertEquals(
         3,
-        mEncodedImage.getByteBufferRef()
-            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertEquals(mCacheKey, result.getEncodedCacheKey());
   }
 
   @Test
