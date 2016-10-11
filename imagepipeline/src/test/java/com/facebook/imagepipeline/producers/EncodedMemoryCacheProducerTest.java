@@ -34,6 +34,7 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
@@ -112,6 +113,7 @@ public class EncodedMemoryCacheProducerTest {
     Assert.assertSame(
         mFinalEncodedImage.getUnderlyingReferenceTestOnly(),
         encodedImage.getUnderlyingReferenceTestOnly());
+    assertEquals(mCacheKey, encodedImage.getEncodedCacheKey());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
