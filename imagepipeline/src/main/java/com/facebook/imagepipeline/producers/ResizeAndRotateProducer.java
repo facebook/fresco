@@ -292,11 +292,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     if (rotationOptions.useImageMetadata()) {
       return rotationFromMetadata;
     }
-    int angle = rotationFromMetadata + rotationOptions.getForcedAngle();
-    while (angle >= FULL_ROUND) {
-      angle -= FULL_ROUND;
-    }
-    return angle;
+    return (rotationFromMetadata + rotationOptions.getForcedAngle()) % FULL_ROUND;
   }
 
   private static int extractOrientationFromMetadata(EncodedImage encodedImage) {
