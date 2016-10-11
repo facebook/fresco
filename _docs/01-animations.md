@@ -11,6 +11,8 @@ Fresco supports animated GIF and WebP images.
 
 We support WebP animations, even in the extended WebP format, on versions of Android going back to 2.3, even those that don't have built-in native support.
 
+For adding this optional modules in your build.gradle please visit [here](index.html):
+
 ### Playing animations automatically
 
 If you want your animated image to start playing automatically when it comes on-screen, and stop when it goes off, just say so in your [image request](image-requests.html):
