@@ -62,8 +62,7 @@ public class OkHttpNetworkFetcher extends
    * @param okHttpClient client to use
    */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
-    mCallFactory = okHttpClient;
-    mCancellationExecutor = okHttpClient.dispatcher().executorService();
+    this(okHttpClient, okHttpClient.dispatcher().executorService());
   }
 
   /**
