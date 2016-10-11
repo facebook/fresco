@@ -52,7 +52,7 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
 public class DiskCacheReadProducerTest {
-  private static final String PRODUCER_NAME = "DiskCacheProducer";
+  private static final String PRODUCER_NAME = DiskCacheReadProducer.PRODUCER_NAME;
   private static final Map EXPECTED_MAP_ON_CACHE_HIT =
       ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
   private static final Map EXPECTED_MAP_ON_CACHE_MISS =
@@ -84,7 +84,7 @@ public class DiskCacheReadProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     mDiskCacheReadProducer =
-        new DiskCacheReadProducer(mInputProducer, mDiskCachePolicy, PRODUCER_NAME);
+        new DiskCacheReadProducer(mInputProducer, mDiskCachePolicy);
     List<CacheKey> keys = new ArrayList<>(1);
     keys.add(new SimpleCacheKey("http://dummy.uri"));
     mCacheKey = new MultiCacheKey(keys);

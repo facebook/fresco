@@ -35,19 +35,17 @@ import bolts.Task;
  * enable another producer to sit between cache read and write.
  */
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
+  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private final Producer<EncodedImage> mInputProducer;
   private final DiskCachePolicy mDiskCachePolicy;
-  private final String mName;
 
   public DiskCacheReadProducer(
       Producer<EncodedImage> inputProducer,
-      DiskCachePolicy diskCachePolicy,
-      String name) {
+      DiskCachePolicy diskCachePolicy) {
     mInputProducer = inputProducer;
     mDiskCachePolicy = diskCachePolicy;
-    mName = name;
   }
 
   public void produceResults(
@@ -59,7 +57,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       return;
     }
 
-    producerContext.getListener().onProducerStart(producerContext.getId(), mName);
+    producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
 
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
     Task<EncodedImage> diskLookupTask = mDiskCachePolicy
@@ -79,17 +77,17 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       public Void then(Task<EncodedImage> task)
           throws Exception {
         if (isTaskCancelled(task)) {
-          listener.onProducerFinishWithCancellation(requestId, mName, null);
+          listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
           consumer.onCancellation();
         } else if (task.isFaulted()) {
-          listener.onProducerFinishWithFailure(requestId, mName, task.getError(), null);
+          listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
           mInputProducer.produceResults(consumer, producerContext);
         } else {
           EncodedImage cachedReference = task.getResult();
           if (cachedReference != null) {
             listener.onProducerFinishWithSuccess(
                 requestId,
-                mName,
+                PRODUCER_NAME,
                 getExtraMap(listener, requestId, true));
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, true);
@@ -97,7 +95,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
           } else {
             listener.onProducerFinishWithSuccess(
                 requestId,
-                mName,
+                PRODUCER_NAME,
                 getExtraMap(listener, requestId, false));
             mInputProducer.produceResults(consumer, producerContext);
           }

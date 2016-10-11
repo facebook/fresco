@@ -210,7 +210,7 @@ public class ProducerFactory {
 
   public DiskCacheReadProducer newDiskCacheReadProducer(
       Producer<EncodedImage> inputProducer) {
-    return new DiskCacheReadProducer(inputProducer, mMainDiskCachePolicy, "DiskCacheProducer");
+    return new DiskCacheReadProducer(inputProducer, mMainDiskCachePolicy);
   }
 
   public DiskCacheWriteProducer newDiskCacheWriteProducer(
