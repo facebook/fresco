@@ -54,7 +54,7 @@ public class OkHttpNetworkFetcher extends
   private static final String TOTAL_TIME = "total_time";
   private static final String IMAGE_SIZE = "image_size";
 
-  private final OkHttpClient mOkHttpClient;
+  private final Call.Factory mCallFactory;
 
   private Executor mCancellationExecutor;
 
@@ -62,8 +62,16 @@ public class OkHttpNetworkFetcher extends
    * @param okHttpClient client to use
    */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
-    mOkHttpClient = okHttpClient;
+    mCallFactory = okHttpClient;
     mCancellationExecutor = okHttpClient.dispatcher().executorService();
+  }
+
+  /**
+   * @param callFactory client to use
+   */
+  public OkHttpNetworkFetcher(Call.Factory callFactory, Executor cancellationExecutor) {
+    mCallFactory = callFactory;
+    mCancellationExecutor = cancellationExecutor;
   }
 
   @Override
@@ -104,7 +112,7 @@ public class OkHttpNetworkFetcher extends
       final OkHttpNetworkFetchState fetchState,
       final Callback callback,
       final Request request) {
-    final Call call = mOkHttpClient.newCall(request);
+    final Call call = mCallFactory.newCall(request);
 
     fetchState.getContext().addCallbacks(
         new BaseProducerContextCallbacks() {
