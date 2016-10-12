@@ -66,7 +66,9 @@ public class OkHttpNetworkFetcher extends
   }
 
   /**
-   * @param callFactory client to use
+   * @param callFactory custom {@link Call.Factory} for fetching image from the network
+   * @param cancellationExecutor executor on which fetching cancellation is performed if
+   * cancellation is requested from the UI Thread
    */
   public OkHttpNetworkFetcher(Call.Factory callFactory, Executor cancellationExecutor) {
     mCallFactory = callFactory;
