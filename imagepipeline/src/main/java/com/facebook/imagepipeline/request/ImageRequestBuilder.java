@@ -157,7 +157,7 @@ public class ImageRequestBuilder {
     if (enabled) {
       return setRotationOptions(RotationOptions.autoRotate());
     } else {
-      return setRotationOptions(RotationOptions.forceRotation(RotationOptions.NO_ROTATION));
+      return setRotationOptions(RotationOptions.disableRotation());
     }
   }
 

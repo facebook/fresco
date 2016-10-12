@@ -167,8 +167,31 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testDoesNotTransformIfNotRequested() {
+  public void testDoesNotTransformIfRotationDisabled() {
     whenResizingEnabled();
+    whenDisableRotation();
+
+    provideIntermediateResult(DefaultImageFormats.JPEG);
+    verifyIntermediateResultPassedThroughUnchanged();
+
+    provideFinalResult(DefaultImageFormats.JPEG);
+    verifyFinalResultPassedThroughUnchanged();
+    verifyZeroJpegTranscoderInteractions();
+  }
+
+  @Test
+  public void testDoesNotTransformIfMetadataAngleAndRequestedRotationHaveOppositeValues() {
+    whenResizingEnabled();
+    whenRequestSpecificRotation(RotationOptions.ROTATE_270);
+
+    provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
+    verifyFinalResultPassedThroughUnchanged();
+    verifyZeroJpegTranscoderInteractions();
+  }
+
+  @Test
+  public void testDoesNotTransformIfNotRequested() {
+    whenResizingDisabled();
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideIntermediateResult(DefaultImageFormats.JPEG);
@@ -405,7 +428,7 @@ public class ResizeAndRotateProducerTest {
   public void testDoesNothingWhenNotAskedToDoAnything() {
     whenResizingEnabled();
     whenRequestWidthAndHeight(0, 0);
-    whenRequestSpecificRotation(RotationOptions.NO_ROTATION);
+    whenDisableRotation();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
     verifyAFinalResultPassedThrough();
@@ -565,6 +588,11 @@ public class ResizeAndRotateProducerTest {
       @RotationOptions.RotationAngle int rotationAngle) {
     when(mImageRequest.getRotationOptions())
         .thenReturn(RotationOptions.forceRotation(rotationAngle));
+  }
+
+  private void whenDisableRotation() {
+    when(mImageRequest.getRotationOptions())
+        .thenReturn(RotationOptions.disableRotation());
   }
 
   private void whenRequestsRotationFromMetadataWithDeferringAllowed() {

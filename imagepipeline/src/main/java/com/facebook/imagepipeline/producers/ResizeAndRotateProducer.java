@@ -46,6 +46,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String ORIGINAL_SIZE_KEY = "Original size";
   private static final String REQUESTED_SIZE_KEY = "Requested size";
   private static final String FRACTION_KEY = "Fraction";
+  private static final int FULL_ROUND = 360;
 
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
@@ -284,18 +285,25 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   private static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
-    if (rotationOptions.useImageMetadata()) {
-      int rotationAngle = encodedImage.getRotationAngle();
-      switch (rotationAngle) {
-        case RotationOptions.ROTATE_90:
-        case RotationOptions.ROTATE_180:
-        case RotationOptions.ROTATE_270:
-          return rotationAngle;
-        default:
-          return 0;
-      }
+    if (!rotationOptions.rotationEnabled()) {
+      return RotationOptions.NO_ROTATION;
     }
-    return rotationOptions.getForcedAngle();
+    int rotationFromMetadata = extractOrientationFromMetadata(encodedImage);
+    if (rotationOptions.useImageMetadata()) {
+      return rotationFromMetadata;
+    }
+    return (rotationFromMetadata + rotationOptions.getForcedAngle()) % FULL_ROUND;
+  }
+
+  private static int extractOrientationFromMetadata(EncodedImage encodedImage) {
+    switch (encodedImage.getRotationAngle()) {
+      case RotationOptions.ROTATE_90:
+      case RotationOptions.ROTATE_180:
+      case RotationOptions.ROTATE_270:
+        return encodedImage.getRotationAngle();
+      default:
+        return 0;
+    }
   }
 
   private static boolean shouldResize(int numerator) {
