@@ -11,8 +11,6 @@ package com.facebook.imagepipeline.core;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
-import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
-
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
  * experimental state.
@@ -35,7 +33,7 @@ public class ImagePipelineExperiments {
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
-    mWebpSupportEnabled = builder.mWebpSupportEnabled && sWebpLibraryPresent;
+    mWebpSupportEnabled = builder.mWebpSupportEnabled;
     mEnhancedWebpTranscodingType = builder.mEnhancedWebpTranscodingType;
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
         builder.mDecodeFileDescriptorEnabled;

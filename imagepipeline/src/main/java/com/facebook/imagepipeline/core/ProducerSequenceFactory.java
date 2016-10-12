@@ -433,7 +433,8 @@ public class ProducerSequenceFactory {
   private synchronized Producer<CloseableReference<CloseableImage>> getDataFetchSequence() {
     if (mDataFetchSequence == null) {
       Producer<EncodedImage> inputProducer = mProducerFactory.newDataFetchProducer();
-      if (WebpSupportStatus.sIsWebpSupportRequired && !mWebpSupportEnabled) {
+      if (WebpSupportStatus.sIsWebpSupportRequired &&
+          (!mWebpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
         inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
@@ -489,7 +490,8 @@ public class ProducerSequenceFactory {
    */
   private Producer<EncodedImage> newEncodedCacheMultiplexToTranscodeSequence(
       Producer<EncodedImage> inputProducer) {
-    if (WebpSupportStatus.sIsWebpSupportRequired && !mWebpSupportEnabled) {
+    if (WebpSupportStatus.sIsWebpSupportRequired &&
+        (!mWebpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
       inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
     }
     inputProducer = newDiskCacheSequence(inputProducer);

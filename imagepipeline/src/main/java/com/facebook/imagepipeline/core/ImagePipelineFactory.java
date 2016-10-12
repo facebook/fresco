@@ -23,6 +23,7 @@ import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -309,7 +310,9 @@ public class ImagePipelineFactory {
           maxNumThreads,
           new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
-      if (webpSupportEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+      if (webpSupportEnabled &&
+          WebpSupportStatus.sWebpBitmapFactory != null
+          && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
         return new GingerbreadPurgeableDecoder(webpErrorLogger);
       } else {
         return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());

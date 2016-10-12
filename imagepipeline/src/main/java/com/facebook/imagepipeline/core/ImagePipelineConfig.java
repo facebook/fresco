@@ -187,7 +187,6 @@ public class ImagePipelineConfig {
       final WebpBitmapFactory webpBitmapFactory,
       final ImagePipelineExperiments imagePipelineExperiments) {
     WebpSupportStatus.sWebpBitmapFactory = webpBitmapFactory;
-    WebpSupportStatus.sWebpLibraryPresent = true;
     final WebpBitmapFactory.WebpErrorLogger webpErrorLogger =
         imagePipelineExperiments.getWebpErrorLogger();
     if (webpErrorLogger != null) {
