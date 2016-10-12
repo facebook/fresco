@@ -48,6 +48,7 @@ import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
+import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
@@ -216,6 +217,15 @@ public class ProducerFactory {
   public DiskCacheWriteProducer newDiskCacheWriteProducer(
       Producer<EncodedImage> inputProducer) {
     return new DiskCacheWriteProducer(inputProducer, mMainDiskCachePolicy);
+  }
+
+  public MediaVariationsFallbackProducer newMediaVariationsProducer(
+      Producer<EncodedImage> inputProducer) {
+    return new MediaVariationsFallbackProducer(
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache,
+        mCacheKeyFactory,
+        inputProducer);
   }
 
   public EncodedCacheKeyMultiplexProducer newEncodedCacheKeyMultiplexProducer(
