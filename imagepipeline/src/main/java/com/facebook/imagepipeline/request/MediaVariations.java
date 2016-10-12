@@ -98,29 +98,11 @@ public final class MediaVariations {
 
   public final static class Variant {
 
-    private static final int UNKNOWN_SIZE = -1;
-
     private final Uri mUri;
     private final int mWidth;
     private final int mHeight;
 
-    /**
-     * Creates a variant of unknown size.
-     * @param uri the image URI
-     * @return the new variant
-     */
-    public static Variant withoutSize(Uri uri) {
-      return new Variant(uri, UNKNOWN_SIZE, UNKNOWN_SIZE);
-    }
-
-    /**
-     * Creates a variant with its size. This is greatly preferred unless size data is unknown.
-     */
-    public static Variant withSize(Uri uri, int width, int height) {
-      return new Variant(uri, width, height);
-    }
-
-    private Variant(Uri uri, int width, int height) {
+    public Variant(Uri uri, int width, int height) {
       mUri = uri;
       mWidth = width;
       mHeight = height;
@@ -158,22 +140,22 @@ public final class MediaVariations {
     }
   }
 
+  /**
+   * Creates a builder for a new MediaVariations.
+   *
+   * @param mediaId the unique ID for this piece of media. This must be non-null and unique for
+   *                this piece of media (i.e. another request for the same picture at a different
+   *                size should share the ID but not an unrelated image and not the same media at
+   *                a different orientation).
+   */
+  public static Builder newBuilderForMediaId(String mediaId) {
+    return new Builder(mediaId);
+  }
+
   public static class Builder {
     private final String mMediaId;
     private Variant mPreferredVariant;
     private List<Variant> mVariants;
-
-    /**
-     * Creates a builder for a new MediaVariations.
-     *
-     * @param mediaId the unique ID for this piece of media. This must be non-null and unique for
-     *                this piece of media (i.e. another request for the same picture at a different
-     *                size should share the ID but not an unrelated image and not the same media at
-     *                a different orientation).
-     */
-    public static Builder newBuilderForMediaId(String mediaId) {
-      return new Builder(mediaId);
-    }
 
     private Builder(String mediaId) {
       mMediaId = mediaId;
@@ -189,11 +171,11 @@ public final class MediaVariations {
       return this;
     }
 
-    public Builder addVariant(Variant variant) {
+    public Builder addVariant(Uri uri, int width, int height) {
       if (mVariants == null) {
         mVariants = new ArrayList<>();
       }
-      mVariants.add(variant);
+      mVariants.add(new Variant(uri, width, height));
       return this;
     }
 

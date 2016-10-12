@@ -150,11 +150,9 @@ public class MainActivity extends Activity {
   }
 
   private void loadMainImage(SimpleDraweeView draweeView) {
-    MediaVariations.Builder variationsBuilder
-        = MediaVariations.Builder.newBuilderForMediaId(MEDIA_ID);
+    MediaVariations.Builder variationsBuilder = MediaVariations.newBuilderForMediaId(MEDIA_ID);
     for (Size size : Size.values()) {
-      variationsBuilder.addVariant(
-          MediaVariations.Variant.withSize(size.uri, size.width, size.height));
+      variationsBuilder.addVariant(size.uri, size.width, size.height);
     }
 
     // Only reaches into cache to force use of fallbacks

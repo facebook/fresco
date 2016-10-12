@@ -116,12 +116,12 @@ public class MediaVariationsFallbackProducerTest {
         true,
         Priority.MEDIUM);
 
-    mMediaVariationsWithVariants = MediaVariations.Builder.newBuilderForMediaId("variations")
-        .addVariant(MediaVariations.Variant.withSize(URI_S, SIZE_S, SIZE_S))
-        .addVariant(MediaVariations.Variant.withSize(URI_M, SIZE_M, SIZE_M))
-        .addVariant(MediaVariations.Variant.withSize(URI_L, SIZE_L, SIZE_L))
+    mMediaVariationsWithVariants = MediaVariations.newBuilderForMediaId("variations")
+        .addVariant(URI_S, SIZE_S, SIZE_S)
+        .addVariant(URI_M, SIZE_M, SIZE_M)
+        .addVariant(URI_L, SIZE_L, SIZE_L)
         .build();
-    mEmptyMediaVariations = MediaVariations.Builder.newBuilderForMediaId("no-variations").build();
+    mEmptyMediaVariations = MediaVariations.newBuilderForMediaId("no-variations").build();
 
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
     when(mImageRequest.getMediaVariations()).thenReturn(mMediaVariationsWithVariants);
