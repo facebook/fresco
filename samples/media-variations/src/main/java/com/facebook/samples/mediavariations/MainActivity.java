@@ -33,15 +33,15 @@ import com.facebook.imagepipeline.request.MediaVariations;
 
 public class MainActivity extends Activity {
   private static final String URI_TEMPLATE
-      = "http://frescolib.org/static/sample-images/dandelion-%s.jpg";
-  private static final String MEDIA_ID = "dandelion";
+      = "http://frescolib.org/static/sample-images/monkey-selfie-%s.jpg";
+  private static final String MEDIA_ID = "monkey-selfie";
 
   private enum Size {
-    XS(R.id.thumb_xs, "xs", 120, 90),
-    S(R.id.thumb_s, "s", 240, 180),
-    M(R.id.thumb_m, "m", 480, 360),
-    L(R.id.thumb_l, "l", 960, 720),
-    XL(R.id.thumb_xl, "xl", 1920, 1440);
+    XS(R.id.thumb_xs, "xs", 377, 523),
+    S(R.id.thumb_s, "s", 629, 871),
+    M(R.id.thumb_m, "m", 1048, 1451),
+    L(R.id.thumb_l, "l", 1747, 2418),
+    XL(R.id.thumb_xl, "xl", 2912, 4030);
 
     final @IdRes int thumbViewId;
     final String name;
@@ -155,8 +155,9 @@ public class MainActivity extends Activity {
       variationsBuilder.addVariant(size.uri, size.width, size.height);
     }
 
-    // Only reaches into cache to force use of fallbacks
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Size.XL.uri)
+    // Request a non-existent image to force fallback to the variations
+    Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));
+    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
         .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
         .setMediaVariations(variationsBuilder.build())
         .setResizeOptions(new ResizeOptions(draweeView.getWidth(), draweeView.getHeight()))
