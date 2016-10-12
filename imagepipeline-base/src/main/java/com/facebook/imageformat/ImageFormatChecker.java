@@ -58,7 +58,11 @@ public class ImageFormatChecker {
         }
       }
     }
-    return mDefaultFormatChecker.determineFormat(imageHeaderBytes, headerSize);
+    ImageFormat format = mDefaultFormatChecker.determineFormat(imageHeaderBytes, headerSize);
+    if (format == null) {
+      format = ImageFormat.UNKNOWN;
+    }
+    return format;
   }
 
   private void updateMaxHeaderLength() {
