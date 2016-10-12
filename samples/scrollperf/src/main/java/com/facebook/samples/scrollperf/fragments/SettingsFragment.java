@@ -78,6 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
+    updateDecodeCancellationSummary(findPreference(Const.DECODE_CANCELLATION_KEY));
     // This has no meaning for Android > JELLY_BEAN_MR1 because it already supports WebP
     if (WebpSupportStatus.sIsWebpSupportRequired) {
       updateWebpSupportSummary(findPreference(Const.WEBP_SUPPORT_KEY));
@@ -145,6 +146,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.WEBP_SUPPORT_KEY:
         updateWebpSupportSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.DECODE_CANCELLATION_KEY:
+        updateDecodeCancellationSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.OVERRIDE_SIZE_KEY:
@@ -253,6 +258,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
             getResources(),
             (ListPreference) preference,
             R.array.scale_type_summaries);
+  }
+
+  private void updateDecodeCancellationSummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_decode_cancellation_summary,
+        R.string.unchecked_decode_cancellation_summary);
   }
 
   private void updateWebpSupportSummary(final Preference preference) {

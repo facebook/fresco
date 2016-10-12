@@ -181,4 +181,9 @@
     <string translatable="false" name="title_webp_support">WebP Support</string>
     <string translatable="false" name="checked_webp_support_summary">We\'re using direct WebP decoding</string>
     <string translatable="false" name="unchecked_webp_support_summary">We\'re not using WebP direct decoding on pre-4.3 devices</string>
+
+    <!-- Decode cancellation-->
+    <string translatable="false" name="title_decode_cancellation">Decode cancellation</string>
+    <string translatable="false" name="checked_decode_cancellation_summary">Decoding is cancelled for cancelled requests</string>
+    <string translatable="false" name="unchecked_decode_cancellation_summary">Decoding is NOT cancelled for cancelled requests</string>
 </resources>

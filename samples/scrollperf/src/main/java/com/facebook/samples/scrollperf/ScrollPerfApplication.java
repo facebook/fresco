@@ -43,6 +43,7 @@ public class ScrollPerfApplication extends Application {
     if (WebpSupportStatus.sIsWebpSupportRequired) {
       imagePipelineConfigBuilder.experiment().setWebpSupportEnabled(config.webpSupportEnabled);
     }
+    imagePipelineConfigBuilder.experiment().setDecodeCancellationEnabled(config.decodeCancellation);
     Fresco.initialize(this, imagePipelineConfigBuilder.build());
   }
 }
