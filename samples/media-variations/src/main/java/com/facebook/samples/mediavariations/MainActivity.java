@@ -30,6 +30,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.MediaVariations;
+import com.facebook.samples.mediavariations.widget.ResizableFrameLayout;
 
 public class MainActivity extends Activity {
   private static final String URI_TEMPLATE
@@ -147,6 +148,10 @@ public class MainActivity extends Activity {
         loadMainImage(draweeView);
       }
     });
+
+    ResizableFrameLayout mainImageFrameLayout =
+        (ResizableFrameLayout) findViewById(R.id.frame_main);
+    mainImageFrameLayout.init(findViewById(R.id.btn_resize));
   }
 
   private void loadMainImage(SimpleDraweeView draweeView) {
@@ -158,13 +163,13 @@ public class MainActivity extends Activity {
     // Request a non-existent image to force fallback to the variations
     Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
         .setMediaVariations(variationsBuilder.build())
         .setResizeOptions(new ResizeOptions(draweeView.getWidth(), draweeView.getHeight()))
         .build();
     DraweeController controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
         .setOldController(draweeView.getController())
+        .setRetainImageOnFailure(true)
         .build();
     draweeView.setController(controller);
   }

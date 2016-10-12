@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         .build();
     DraweeController controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
+        .setRetainImageOnFailure(true)
         .build();
     findViewAndSetController(R.id.progressive_jpeg, controller);
 

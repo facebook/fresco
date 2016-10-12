@@ -58,11 +58,31 @@
       android:text="@string/media_variations"
       />
 
-  <com.facebook.drawee.view.SimpleDraweeView
-      android:id="@+id/img_main"
+  <com.facebook.samples.mediavariations.widget.ResizableFrameLayout
+      android:id="@+id/frame_main"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      fresco:actualImageScaleType="fitCenter"
-      fresco:failureImage="@color/red"
+      android:minHeight="80dp"
+      android:minWidth="80dp"
+      >
+
+      <com.facebook.drawee.view.SimpleDraweeView
+          android:id="@+id/img_main"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          fresco:actualImageScaleType="centerCrop"
+          fresco:failureImage="@color/red"
+          fresco:overlayImage="@drawable/resize_outline"
       />
+
+      <View
+          android:id="@+id/btn_resize"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_gravity="bottom|right"
+          android:background="@drawable/resize_outline"
+          tools:ignore="RtlHardcoded"
+      />
+
+  </com.facebook.samples.mediavariations.widget.ResizableFrameLayout>
 </LinearLayout>
