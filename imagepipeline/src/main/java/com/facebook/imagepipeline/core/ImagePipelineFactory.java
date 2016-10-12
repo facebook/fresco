@@ -300,7 +300,6 @@ public class ImagePipelineFactory {
    */
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
-      boolean decodeMemoryFileEnabled,
       boolean webpSupportEnabled,
       WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -310,8 +309,8 @@ public class ImagePipelineFactory {
           maxNumThreads,
           new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
-      if (decodeMemoryFileEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-        return new GingerbreadPurgeableDecoder(webpSupportEnabled, webpErrorLogger);
+      if (webpSupportEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        return new GingerbreadPurgeableDecoder(webpErrorLogger);
       } else {
         return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
       }
@@ -322,7 +321,6 @@ public class ImagePipelineFactory {
     if (mPlatformDecoder == null) {
       mPlatformDecoder = buildPlatformDecoder(
           mConfig.getPoolFactory(),
-          mConfig.isDecodeMemoryFileEnabled(),
           mConfig.getExperiments().isWebpSupportEnabled(),
           mConfig.getExperiments().getWebpErrorLogger());
     }

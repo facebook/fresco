@@ -73,7 +73,6 @@ public class ImagePipelineConfig {
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
-  private final boolean mDecodeMemoryFileEnabled;
   private final FileCacheFactory mFileCacheFactory;
   private final Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
   private final ExecutorSupplier mExecutorSupplier;
@@ -124,7 +123,6 @@ public class ImagePipelineConfig {
             DefaultCacheKeyFactory.getInstance() :
             builder.mCacheKeyFactory;
     mContext = Preconditions.checkNotNull(builder.mContext);
-    mDecodeMemoryFileEnabled = builder.mDecodeMemoryFileEnabled;
     mFileCacheFactory = builder.mFileCacheFactory == null ?
         new DiskStorageCacheFactory(new DynamicDefaultDiskStorageFactory()) :
         builder.mFileCacheFactory;
@@ -237,10 +235,6 @@ public class ImagePipelineConfig {
    */
   public boolean isDecodeFileDescriptorEnabled() {
     return mImagePipelineExperiments.isDecodeFileDescriptorEnabled();
-  }
-
-  public boolean isDecodeMemoryFileEnabled() {
-    return mDecodeMemoryFileEnabled;
   }
 
   public FileCacheFactory getFileCacheFactory() {
@@ -366,7 +360,6 @@ public class ImagePipelineConfig {
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
-    private boolean mDecodeMemoryFileEnabled;
     private Supplier<MemoryCacheParams> mEncodedMemoryCacheParamsSupplier;
     private ExecutorSupplier mExecutorSupplier;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
@@ -410,11 +403,6 @@ public class ImagePipelineConfig {
 
     public Builder setCacheKeyFactory(CacheKeyFactory cacheKeyFactory) {
       mCacheKeyFactory = cacheKeyFactory;
-      return this;
-    }
-
-    public Builder setDecodeMemoryFileEnabled(boolean decodeMemoryFileEnabled) {
-      mDecodeMemoryFileEnabled = decodeMemoryFileEnabled;
       return this;
     }
 

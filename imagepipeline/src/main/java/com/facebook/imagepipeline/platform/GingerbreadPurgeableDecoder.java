@@ -41,16 +41,12 @@ import java.lang.reflect.Method;
 public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   private static Method sGetFileDescriptorMethod;
-  private final boolean mWebpSupportEnabled;
 
   /**
    * Creates a GingerbreadPurgeableDecoder with optional support for webp
-   * @param webpSupportEnabled If true the webpsupport library is enabled
    */
   public GingerbreadPurgeableDecoder(
-      boolean webpSupportEnabled,
       WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
-    this.mWebpSupportEnabled = webpSupportEnabled;
   }
 
   /**
@@ -142,12 +138,7 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
     try {
       memoryFile = copyToMemoryFile(bytesRef, inputLength, suffix);
       FileDescriptor fd = getMemoryFileDescriptor(memoryFile);
-      Bitmap bitmap;
-      if (mWebpSupportEnabled) {
-        bitmap = sWebpBitmapFactory.decodeFileDescriptor(fd, null, options);
-      } else {
-        bitmap = BitmapFactory.decodeFileDescriptor(fd, null, options);
-      }
+      Bitmap bitmap = sWebpBitmapFactory.decodeFileDescriptor(fd, null, options);
       return Preconditions.checkNotNull(bitmap, "BitmapFactory returned null");
     } catch (IOException e) {
       throw Throwables.propagate(e);
