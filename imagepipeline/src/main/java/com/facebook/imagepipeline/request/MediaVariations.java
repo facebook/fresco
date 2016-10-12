@@ -18,6 +18,7 @@ import java.util.List;
 import android.net.Uri;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.imagepipeline.common.ResizeOptions;
 
 /**
  * An optional part of image requests which describes the piece of media being requested.
@@ -61,6 +62,13 @@ public final class MediaVariations {
    */
   public @Nullable List<Variant> getVariants() {
     return mVariants;
+  }
+
+  /**
+   * Checks whether any variants are contained.
+   */
+  public boolean hasVariants() {
+    return mVariants != null && !mVariants.isEmpty();
   }
 
   /**
