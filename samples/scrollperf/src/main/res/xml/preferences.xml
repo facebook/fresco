@@ -140,10 +140,6 @@
             android:title="@string/title_webp_support"
         />
         <CheckBoxPreference
-            android:key="memory_file_descriptor_key"
-            android:title="@string/title_memory_file_descriptor"
-        />
-        <CheckBoxPreference
             android:key="auto_rotate"
             android:title="@string/title_auto_rotate"
             />

@@ -55,7 +55,6 @@ public class Config {
 
   public final int decodingThreadCount;
   public final boolean webpSupportEnabled;
-  public final boolean memoryFileDescriptorEnabled;
 
   public final boolean drawBorder;
 
@@ -125,9 +124,6 @@ public class Config {
     final boolean webpSupportEnabled = sharedPreferences.getBoolean(
         Const.WEBP_SUPPORT_KEY,
         false);
-    final boolean memoryFileDescriptorEnabled = sharedPreferences.getBoolean(
-        Const.MEMORY_FILE_DESCRIPTOR_KEY,
-        false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -149,8 +145,7 @@ public class Config {
       fadeDurationMs,
       drawBorder,
       decodingThreadCount,
-      webpSupportEnabled,
-      memoryFileDescriptorEnabled);
+      webpSupportEnabled);
   }
 
   private Config(
@@ -174,8 +169,7 @@ public class Config {
       final int fadeDurationMs,
       final boolean drawBorder,
       final int decodingThreadNumber,
-      final boolean webpSupportEnabled,
-      final boolean memoryFileDescriptorEnabled) {
+      final boolean webpSupportEnabled) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.gridSpanCount = gridSpanCount;
@@ -197,6 +191,5 @@ public class Config {
     this.drawBorder = drawBorder;
     this.decodingThreadCount = decodingThreadNumber;
     this.webpSupportEnabled = webpSupportEnabled;
-    this.memoryFileDescriptorEnabled = memoryFileDescriptorEnabled;
   }
 }

@@ -59,5 +59,4 @@ public final class Const {
 
   public static final String DECODING_THREAD_KEY= "decoding_thread_key";
   public static final String WEBP_SUPPORT_KEY = "webp_support_key";
-  public static final String MEMORY_FILE_DESCRIPTOR_KEY= "memory_file_descriptor_key";
 }
