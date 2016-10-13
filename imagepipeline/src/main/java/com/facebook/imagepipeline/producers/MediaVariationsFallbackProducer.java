@@ -173,9 +173,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
             consumer.onNewResult(cachedReference, useAsLastResult);
             cachedReference.close();
 
-            triggerNextProducer = !useAsLastResult &&
-                producerContext.getLowestPermittedRequestLevel().getValue() <
-                    ImageRequest.RequestLevel.DISK_CACHE.getValue();
+            triggerNextProducer = !useAsLastResult;
           } else {
             listener.onProducerFinishWithSuccess(
                 requestId,
