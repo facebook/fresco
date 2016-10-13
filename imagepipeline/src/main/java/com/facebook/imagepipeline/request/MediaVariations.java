@@ -165,6 +165,9 @@ public final class MediaVariations {
      * Required if the image request lacks {@link com.facebook.imagepipeline.common.ResizeOptions}
      * or if no other variants are added but otherwise optional as the image pipeline will be able
      * to choose the best size from the variants provided.
+     *
+     * <p><i>This is not currently used. For now requests must include ResizeOptions for the
+     * variations to be used.</i>
      */
     public Builder setPreferredVariant(Variant preferredVariant) {
       this.mPreferredVariant = preferredVariant;

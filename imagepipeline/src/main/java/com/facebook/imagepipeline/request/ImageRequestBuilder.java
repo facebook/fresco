@@ -118,7 +118,7 @@ public class ImageRequestBuilder {
    * Sets details of variations of the piece of media which might allow the request to be satisfied
    * (either as a placeholder or ultimate result) by a cached image at another size.
    *
-   * <p><i>In development. Not yet functional.</i>
+   * <p><i>Experimental.</i> This is now functional but the behaviour is still being tested.
    * @param mediaVariations the variations of image which relate to the same original media
    * @return the updated builder instance
    */
