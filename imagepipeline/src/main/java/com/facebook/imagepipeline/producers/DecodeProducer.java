@@ -46,11 +46,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   public static final String PRODUCER_NAME = "DecodeProducer";
 
   // keys for extra map
-  private static final String BITMAP_SIZE_KEY = "bitmapSize";
-  private static final String HAS_GOOD_QUALITY_KEY = "hasGoodQuality";
-  private static final String IMAGE_TYPE_KEY = "imageType";
-  private static final String IS_FINAL_KEY = "isFinal";
-  private static final String IMAGE_FORMAT_NAME_KEY = "imageFormat";
+  public static final String EXTRA_BITMAP_SIZE = ProducerConstants.EXTRA_BITMAP_SIZE;
+  public static final String EXTRA_HAS_GOOD_QUALITY = ProducerConstants.EXTRA_HAS_GOOD_QUALITY;
+  public static final String EXTRA_IMAGE_TYPE = ProducerConstants.EXTRA_IMAGE_TYPE;
+  public static final String EXTRA_IS_FINAL = ProducerConstants.EXTRA_IS_FINAL;
+  public static final String EXTRA_IMAGE_FORMAT_NAME = ProducerConstants.EXTRA_IMAGE_FORMAT_NAME;
 
   private final ByteArrayPool mByteArrayPool;
   private final Executor mExecutor;
@@ -260,29 +260,29 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         // We need this because the of() utility method doesn't have a proper overload method
         // for all these parameters
         return ImmutableMap.of(
-            BITMAP_SIZE_KEY,
+            EXTRA_BITMAP_SIZE,
             sizeStr,
             JobScheduler.QUEUE_TIME_KEY,
             queueStr,
-            HAS_GOOD_QUALITY_KEY,
+            EXTRA_HAS_GOOD_QUALITY,
             qualityStr,
-            IS_FINAL_KEY,
+            EXTRA_IS_FINAL,
             finalStr,
-            IMAGE_TYPE_KEY,
+            EXTRA_IMAGE_TYPE,
             cacheChoiceStr,
-            IMAGE_FORMAT_NAME_KEY,
+            EXTRA_IMAGE_FORMAT_NAME,
             imageFormatName);
       } else {
         return ImmutableMap.of(
             JobScheduler.QUEUE_TIME_KEY,
             queueStr,
-            HAS_GOOD_QUALITY_KEY,
+            EXTRA_HAS_GOOD_QUALITY,
             qualityStr,
-            IS_FINAL_KEY,
+            EXTRA_IS_FINAL,
             finalStr,
-            IMAGE_TYPE_KEY,
+            EXTRA_IMAGE_TYPE,
             cacheChoiceStr,
-            IMAGE_FORMAT_NAME_KEY,
+            EXTRA_IMAGE_FORMAT_NAME,
             imageFormatName);
       }
     }

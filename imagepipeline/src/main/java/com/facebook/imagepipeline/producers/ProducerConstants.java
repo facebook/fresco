@@ -19,4 +19,10 @@ package com.facebook.imagepipeline.producers;
 class ProducerConstants {
 
   static final String EXTRA_CACHED_VALUE_FOUND = "cached_value_found";
+
+  static final String EXTRA_BITMAP_SIZE = "bitmapSize";
+  static final String EXTRA_HAS_GOOD_QUALITY = "hasGoodQuality";
+  static final String EXTRA_IMAGE_TYPE = "imageType";
+  static final String EXTRA_IS_FINAL = "isFinal";
+  static final String EXTRA_IMAGE_FORMAT_NAME = "imageFormat";
 }
