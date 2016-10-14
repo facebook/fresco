@@ -63,6 +63,7 @@ public class ImagePipeline {
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
   private AtomicLong mIdCounter;
 
   public ImagePipeline(
@@ -74,7 +75,8 @@ public class ImagePipeline {
       BufferedDiskCache mainBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
-      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
+      ThreadHandoffProducerQueue threadHandoffProducerQueue,
+      Supplier<Boolean> suppressBitmapPrefetchingSupplier) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
@@ -85,6 +87,7 @@ public class ImagePipeline {
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
+    mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
   }
 
   /**
@@ -275,8 +278,9 @@ public class ImagePipeline {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
     try {
-      Producer<Void> producerSequence =
-          mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
+      Producer<Void> producerSequence = mSuppressBitmapPrefetchingSupplier.get()
+          ? mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
+          : mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
       return submitPrefetchRequest(
           producerSequence,
           imageRequest,

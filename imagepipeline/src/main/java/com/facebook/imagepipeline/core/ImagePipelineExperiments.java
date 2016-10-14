@@ -30,6 +30,7 @@ public class ImagePipelineExperiments {
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
+  private final boolean mSuppressBitmapPrefetching;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
@@ -43,6 +44,7 @@ public class ImagePipelineExperiments {
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
+    mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -105,6 +107,7 @@ public class ImagePipelineExperiments {
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
+    private boolean mSuppressBitmapPrefetching = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -176,6 +179,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setEnhancedWebpTranscodingType(
         @WebpTranscodeProducer.EnhancedTranscodingType int enhancedWebpTranscodingType) {
       mEnhancedWebpTranscodingType = enhancedWebpTranscodingType;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setSuppressBitmapPrefetching(
+        boolean suppressBitmapPrefetching) {
+      mSuppressBitmapPrefetching = suppressBitmapPrefetching;
       return mConfigBuilder;
     }
 

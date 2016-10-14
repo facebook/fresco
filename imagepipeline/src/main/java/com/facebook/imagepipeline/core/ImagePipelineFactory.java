@@ -22,6 +22,7 @@ import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -256,7 +257,8 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
-              mThreadHandoffProducerQueue);
+              mThreadHandoffProducerQueue,
+              Suppliers.of(false));
     }
     return mImagePipeline;
   }

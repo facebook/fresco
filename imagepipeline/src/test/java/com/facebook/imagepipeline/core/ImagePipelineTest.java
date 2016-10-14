@@ -67,6 +67,7 @@ public class ImagePipelineTest {
   @Mock public Object mCallerContext;
 
   private Supplier<Boolean> mPrefetchEnabledSupplier;
+  private Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
   private ImagePipeline mImagePipeline;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
@@ -80,7 +81,9 @@ public class ImagePipelineTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mPrefetchEnabledSupplier = mock(Supplier.class);
+    mSuppressBitmapPrefetchingSupplier = mock(Supplier.class);
     when(mPrefetchEnabledSupplier.get()).thenReturn(true);
+    when(mSuppressBitmapPrefetchingSupplier.get()).thenReturn(false);
     mRequestListener1 = mock(RequestListener.class);
     mRequestListener2 = mock(RequestListener.class);
     mBitmapMemoryCache = mock(MemoryCache.class);
@@ -97,7 +100,8 @@ public class ImagePipelineTest {
         mMainDiskStorageCache,
         mSmallImageDiskStorageCache,
         mCacheKeyFactory,
-        mThreadHandoffProducerQueue);
+        mThreadHandoffProducerQueue,
+        mSuppressBitmapPrefetchingSupplier);
 
     when(mImageRequest.getProgressiveRenderingEnabled()).thenReturn(true);
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);
@@ -120,6 +124,17 @@ public class ImagePipelineTest {
         mImagePipeline.prefetchToBitmapCache(mImageRequest, mCallerContext);
     assertTrue(dataSource.hasFailed());
     verifyNoMoreInteractions(mProducerSequenceFactory, mRequestListener1, mRequestListener2);
+  }
+
+  @Test
+  public void testPrefetchToBitmapCacheWithBitmapPrefetcherSuppressed() {
+    Producer<Void> prefetchProducerSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
+        .thenReturn(prefetchProducerSequence);
+    when(mSuppressBitmapPrefetchingSupplier.get()).thenReturn(true);
+    DataSource<Void> dataSource =
+        mImagePipeline.prefetchToBitmapCache(mImageRequest, mCallerContext);
+    verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.MEDIUM);
   }
 
   @Test
