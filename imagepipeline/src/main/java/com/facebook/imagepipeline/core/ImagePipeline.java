@@ -558,6 +558,7 @@ public class ImagePipeline {
           lowestPermittedRequestLevel,
         /* isPrefetch */ false,
           imageRequest.getProgressiveRenderingEnabled() ||
+              imageRequest.getMediaVariations() != null ||
               !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
           imageRequest.getPriority());
       return CloseableProducerToDataSourceAdapter.create(
