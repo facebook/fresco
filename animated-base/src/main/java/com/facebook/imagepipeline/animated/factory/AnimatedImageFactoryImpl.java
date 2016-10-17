@@ -25,7 +25,9 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 import java.util.ArrayList;
@@ -118,14 +120,21 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
     }
   }
 
-  private CloseableAnimatedImage getCloseableImage(
+  private CloseableImage getCloseableImage(
       ImageDecodeOptions options,
       AnimatedImage image,
       Bitmap.Config bitmapConfig) {
     List<CloseableReference<Bitmap>> decodedFrames = null;
     CloseableReference<Bitmap> previewBitmap = null;
     try {
-      int frameForPreview = options.useLastFrameForPreview ? image.getFrameCount() - 1 : 0;
+      final int frameForPreview = options.useLastFrameForPreview ? image.getFrameCount() - 1 : 0;
+      if (options.forceStaticImage) {
+        return new CloseableStaticBitmap(
+            createPreviewBitmap(image, bitmapConfig, frameForPreview),
+            ImmutableQualityInfo.FULL_QUALITY,
+            0);
+      }
+
       if (options.decodeAllFrames) {
         decodedFrames = decodeAllFrames(image, bitmapConfig);
         previewBitmap = CloseableReference.cloneOrNull(decodedFrames.get(frameForPreview));
