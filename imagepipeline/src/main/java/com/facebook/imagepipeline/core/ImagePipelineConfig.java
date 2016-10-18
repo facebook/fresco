@@ -102,10 +102,13 @@ public class ImagePipelineConfig {
     if (webpBitmapFactory != null) {
       setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments);
     } else {
-      // We check using intospection
-      webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists();
-      if (webpBitmapFactory != null) {
-        setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments);
+      // We check using intospection only if the experiment is enabled
+      if (mImagePipelineExperiments.isWebpSupportEnabled() &&
+          WebpSupportStatus.sIsWebpSupportRequired) {
+        webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists();
+        if (webpBitmapFactory != null) {
+          setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments);
+        }
       }
     }
     mAnimatedImageFactory = builder.mAnimatedImageFactory;

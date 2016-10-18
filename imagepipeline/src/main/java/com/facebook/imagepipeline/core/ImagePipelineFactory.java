@@ -303,7 +303,7 @@ public class ImagePipelineFactory {
    */
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
-      boolean webpSupportEnabled,
+      WebpBitmapFactory webpBitmapFactory,
       WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
@@ -312,8 +312,7 @@ public class ImagePipelineFactory {
           maxNumThreads,
           new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
-      if (webpSupportEnabled &&
-          WebpSupportStatus.sWebpBitmapFactory != null
+      if (webpBitmapFactory != null
           && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
         return new GingerbreadPurgeableDecoder(webpErrorLogger);
       } else {
@@ -326,7 +325,7 @@ public class ImagePipelineFactory {
     if (mPlatformDecoder == null) {
       mPlatformDecoder = buildPlatformDecoder(
           mConfig.getPoolFactory(),
-          mConfig.getExperiments().isWebpSupportEnabled(),
+          mConfig.getExperiments().getWebpBitmapFactory(),
           mConfig.getExperiments().getWebpErrorLogger());
     }
     return mPlatformDecoder;
