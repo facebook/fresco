@@ -18,6 +18,7 @@ import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
@@ -173,6 +174,45 @@ public class EncodedImageTest {
     assertEquals(800, encodedImage.getWidth());
     assertEquals(600, encodedImage.getHeight());
     assertEquals(0, encodedImage.getRotationAngle());
+  }
+
+  private void checkWebpImage(final String imagePath,
+      final ImageFormat imageFormat,
+      final int expectedWidth,
+      final int expectedHeight) throws IOException {
+    PooledByteBuffer buf = new TrivialPooledByteBuffer(
+        ByteStreams.toByteArray(EncodedImageTest.class.getResourceAsStream(imagePath)));
+    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(buf));
+    encodedImage.parseMetaData();
+    assertSame(imageFormat, encodedImage.getImageFormat());
+    assertEquals(expectedWidth, encodedImage.getWidth());
+    assertEquals(expectedHeight, encodedImage.getHeight());
+    assertEquals(0, encodedImage.getRotationAngle());
+  }
+
+  @Test
+  public void testParseMetaData_SimpleWEBP() throws IOException {
+    checkWebpImage("images/1_webp_plain.webp", DefaultImageFormats.WEBP_SIMPLE, 320, 214);
+  }
+
+  @Test
+  public void testParseMetaData_LosslessWEBP() throws IOException {
+    checkWebpImage("images/1_webp_ll.webp", DefaultImageFormats.WEBP_LOSSLESS, 400, 301);
+  }
+
+  @Test
+  public void testParseMetaData_ExtendedWithAlphaWEBP() throws IOException {
+    checkWebpImage("images/1_webp_ea.webp", DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA, 400, 301);
+  }
+
+  @Test
+  public void testParseMetaData_ExtendedWEBP() throws IOException {
+    checkWebpImage("images/1_webp_e.webp", DefaultImageFormats.WEBP_EXTENDED, 480, 320);
+  }
+
+  @Test
+  public void testParseMetaData_AnimatedWEBP() throws IOException {
+    checkWebpImage("images/1_webp_anim.webp", DefaultImageFormats.WEBP_ANIMATED, 322, 477);
   }
 
   @Test
