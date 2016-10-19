@@ -8,6 +8,7 @@
  */
 package com.facebook.imagepipeline.core;
 
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
@@ -26,7 +27,7 @@ public class ImagePipelineExperiments {
   private final boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
-  private final boolean mMediaVariationsEnabled;
+  private final Supplier<Boolean> mMediaVariationsEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
@@ -40,7 +41,16 @@ public class ImagePipelineExperiments {
         builder.mDecodeFileDescriptorEnabled;
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
-    mMediaVariationsEnabled = builder.mMediaVariationsEnabled;
+    if (builder.mMediaVariationsEnabled != null) {
+      mMediaVariationsEnabled = builder.mMediaVariationsEnabled;
+    } else {
+      mMediaVariationsEnabled = new Supplier<Boolean>() {
+        @Override
+        public Boolean get() {
+          return Boolean.FALSE;
+        }
+      };
+    }
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
@@ -60,7 +70,7 @@ public class ImagePipelineExperiments {
   }
 
   public boolean isMediaVariationsEnabled() {
-    return mMediaVariationsEnabled;
+    return mMediaVariationsEnabled.get().booleanValue();
   }
 
   public boolean isWebpSupportEnabled() {
@@ -103,7 +113,7 @@ public class ImagePipelineExperiments {
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
-    private boolean mMediaVariationsEnabled = false;
+    private Supplier<Boolean> mMediaVariationsEnabled = null;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
@@ -143,7 +153,8 @@ public class ImagePipelineExperiments {
      * {@link com.facebook.imagepipeline.request.MediaVariations} object to possibly provide
      * fallback images which are present in cache.
      */
-    public ImagePipelineConfig.Builder setMediaVariationsEnabled(boolean mediaVariationsEnabled) {
+    public ImagePipelineConfig.Builder setMediaVariationsEnabled(
+        Supplier<Boolean> mediaVariationsEnabled) {
       mMediaVariationsEnabled = mediaVariationsEnabled;
       return mConfigBuilder;
     }

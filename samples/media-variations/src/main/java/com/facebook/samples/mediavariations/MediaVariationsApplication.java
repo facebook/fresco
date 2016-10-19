@@ -13,6 +13,7 @@ package com.facebook.samples.mediavariations;
 
 import android.app.Application;
 
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -33,7 +34,12 @@ public class MediaVariationsApplication extends Application {
     listeners.add(new RequestLoggingListener());
     ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
         .setRequestListeners(listeners)
-        .experiment().setMediaVariationsEnabled(true)
+        .experiment().setMediaVariationsEnabled(new Supplier<Boolean>() {
+          @Override
+          public Boolean get() {
+            return true;
+          }
+        })
         .build();
     Fresco.initialize(this, config);
   }
