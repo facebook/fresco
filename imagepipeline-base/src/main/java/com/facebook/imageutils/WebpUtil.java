@@ -21,11 +21,6 @@ import android.util.Pair;
 public class WebpUtil {
 
   /**
-   * 50 bytes max to read the dimension for the WebP image.
-   */
-  private static final int MAX_READ_LIMIT = 100;
-
-  /**
    * Header for VP8 (lossy WebP). Take care of the space into the String
    */
   private static final String VP8_HEADER = "VP8 ";
@@ -44,24 +39,18 @@ public class WebpUtil {
   }
 
   /**
-   * This method checks for the dimension of the WebP image from the given InputStream. The given
-   * InputStream is consumed if it doesn't not support mark/reset
+   * This method checks for the dimension of the WebP image from the given InputStream. We don't
+   * support mark/reset and the Stream is always closed.
    *
    * @param is The InputStream used for read WebP data
    * @return The Size of the WebP image if any or null if the size is not available
    */
-  @Nullable
-  public static Pair<Integer, Integer> getSize(InputStream is) {
+  @Nullable public static Pair<Integer, Integer> getSize(InputStream is) {
     // Here we have to parse the WebP data skipping all the information which are not
     // the size
-    String imageFormat = null;
     Pair<Integer, Integer> result = null;
     byte[] headerBuffer = new byte[4];
     try {
-      // We check for Mark/Reset support
-      if (is.markSupported()) {
-        is.mark(MAX_READ_LIMIT);
-      }
       is.read(headerBuffer);
       // These must be RIFF
       if (!compare(headerBuffer, "RIFF")) {
@@ -87,9 +76,9 @@ public class WebpUtil {
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      if (is != null && is.markSupported()) {
+      if (is != null) {
         try {
-          is.reset();
+          is.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
