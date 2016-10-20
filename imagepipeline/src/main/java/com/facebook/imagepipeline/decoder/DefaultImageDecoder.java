@@ -11,8 +11,6 @@ package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
 
-import javax.annotation.Nullable;
-
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -30,6 +28,8 @@ import com.facebook.imagepipeline.platform.PlatformDecoder;
 
 import java.io.InputStream;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 /**
  * Decodes images.
@@ -61,7 +61,7 @@ public class DefaultImageDecoder implements ImageDecoder {
         ImageDecodeOptions options) {
       ImageFormat imageFormat = encodedImage.getImageFormat();
       if (imageFormat == DefaultImageFormats.JPEG) {
-        return decodeJpeg(encodedImage, length, qualityInfo);
+        return decodeJpeg(encodedImage, length, qualityInfo, options);
       } else if (imageFormat == DefaultImageFormats.GIF) {
         return decodeGif(encodedImage, options);
       } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
@@ -69,7 +69,7 @@ public class DefaultImageDecoder implements ImageDecoder {
       } else if (imageFormat == ImageFormat.UNKNOWN) {
         throw new IllegalArgumentException("unknown image format");
       }
-      return decodeStaticImage(encodedImage);
+      return decodeStaticImage(encodedImage, options);
     }
   };
 
@@ -143,7 +143,7 @@ public class DefaultImageDecoder implements ImageDecoder {
           && GifFormatChecker.isAnimated(is)) {
         return mAnimatedImageFactory.decodeGif(encodedImage, options, mBitmapConfig);
       }
-      return decodeStaticImage(encodedImage);
+      return decodeStaticImage(encodedImage, options);
     } finally {
       Closeables.closeQuietly(is);
     }
@@ -154,9 +154,10 @@ public class DefaultImageDecoder implements ImageDecoder {
    * @return a CloseableStaticBitmap
    */
   public CloseableStaticBitmap decodeStaticImage(
-      final EncodedImage encodedImage) {
+      final EncodedImage encodedImage,
+      ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
-        mPlatformDecoder.decodeFromEncodedImage(encodedImage, mBitmapConfig);
+        mPlatformDecoder.decodeFromEncodedImage(encodedImage, options.bitmapConfig);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,
@@ -178,9 +179,10 @@ public class DefaultImageDecoder implements ImageDecoder {
   public CloseableStaticBitmap decodeJpeg(
       final EncodedImage encodedImage,
       int length,
-      QualityInfo qualityInfo) {
+      QualityInfo qualityInfo,
+      ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
-        mPlatformDecoder.decodeJPEGFromEncodedImage(encodedImage, mBitmapConfig, length);
+        mPlatformDecoder.decodeJPEGFromEncodedImage(encodedImage, options.bitmapConfig, length);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,

@@ -9,9 +9,11 @@
 
 package com.facebook.imagepipeline.common;
 
-import javax.annotation.concurrent.Immutable;
+import android.graphics.Bitmap;
 
 import java.util.Locale;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
@@ -50,12 +52,18 @@ public class ImageDecodeOptions {
    */
   public final boolean forceStaticImage;
 
+  /**
+   * StaticImage and JPEG will decode with this config;
+   */
+  public final Bitmap.Config bitmapConfig;
+
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
     this.useLastFrameForPreview = b.getUseLastFrameForPreview();
     this.decodeAllFrames = b.getDecodeAllFrames();
     this.forceStaticImage = b.getForceStaticImage();
+    this.bitmapConfig = b.getBitmapConfig();
   }
 
   /**
@@ -87,6 +95,7 @@ public class ImageDecodeOptions {
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
+    if (bitmapConfig != that.bitmapConfig) return false;
 
     return true;
   }
@@ -98,6 +107,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
+    result = 31 * result + bitmapConfig.ordinal();
     return result;
   }
 
@@ -105,11 +115,12 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%b-%b-%b-%b",
+        "%d-%b-%b-%b-%b-%s",
         minDecodeIntervalMs,
         decodePreviewFrame,
         useLastFrameForPreview,
         decodeAllFrames,
-        forceStaticImage);
+        forceStaticImage,
+        bitmapConfig.name());
   }
 }
