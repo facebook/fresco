@@ -25,4 +25,5 @@ class ProducerConstants {
   static final String EXTRA_IMAGE_TYPE = "imageType";
   static final String EXTRA_IS_FINAL = "isFinal";
   static final String EXTRA_IMAGE_FORMAT_NAME = "imageFormat";
+  static final String ENCODED_IMAGE_SIZE = "encodedImageSize";
 }

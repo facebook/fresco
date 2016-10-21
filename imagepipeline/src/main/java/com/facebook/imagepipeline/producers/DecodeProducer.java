@@ -48,9 +48,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   // keys for extra map
   public static final String EXTRA_BITMAP_SIZE = ProducerConstants.EXTRA_BITMAP_SIZE;
   public static final String EXTRA_HAS_GOOD_QUALITY = ProducerConstants.EXTRA_HAS_GOOD_QUALITY;
-  public static final String EXTRA_IMAGE_TYPE = ProducerConstants.EXTRA_IMAGE_TYPE;
   public static final String EXTRA_IS_FINAL = ProducerConstants.EXTRA_IS_FINAL;
   public static final String EXTRA_IMAGE_FORMAT_NAME = ProducerConstants.EXTRA_IMAGE_FORMAT_NAME;
+  public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
   private final ByteArrayPool mByteArrayPool;
   private final Executor mExecutor;
@@ -205,6 +205,13 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       } else {
         imageFormatStr = "unknown";
       }
+      final String encodedImageSize;
+      if (encodedImage != null) {
+        encodedImageSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
+      } else {
+        // We should never be here
+        encodedImageSize = "unknown";
+      }
       try {
         long queueTime = mJobScheduler.getQueuedTime();
         int length = isLast ?
@@ -221,7 +228,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
               queueTime,
               quality,
               isLast,
-              imageFormatStr);
+              imageFormatStr,
+              encodedImageSize);
           mProducerListener.
               onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
           handleError(e);
@@ -232,7 +240,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             queueTime,
             quality,
             isLast,
-            imageFormatStr);
+            imageFormatStr,
+            encodedImageSize);
         mProducerListener.
             onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
         handleResult(image, isLast);
@@ -246,14 +255,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         long queueTime,
         QualityInfo quality,
         boolean isFinal,
-        String imageFormatName) {
+        String imageFormatName,
+        String encodedImageSize) {
       if (!mProducerListener.requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
       String queueStr = String.valueOf(queueTime);
       String qualityStr = String.valueOf(quality.isOfGoodEnoughQuality());
       String finalStr = String.valueOf(isFinal);
-      String cacheChoiceStr = String.valueOf(mProducerContext.getImageRequest().getCacheChoice());
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
         String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
@@ -268,8 +277,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             qualityStr,
             EXTRA_IS_FINAL,
             finalStr,
-            EXTRA_IMAGE_TYPE,
-            cacheChoiceStr,
+            ENCODED_IMAGE_SIZE,
+            encodedImageSize,
             EXTRA_IMAGE_FORMAT_NAME,
             imageFormatName);
       } else {
@@ -280,8 +289,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             qualityStr,
             EXTRA_IS_FINAL,
             finalStr,
-            EXTRA_IMAGE_TYPE,
-            cacheChoiceStr,
+            ENCODED_IMAGE_SIZE,
+            encodedImageSize,
             EXTRA_IMAGE_FORMAT_NAME,
             imageFormatName);
       }
