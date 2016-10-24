@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.common;
 
+import android.graphics.Bitmap;
+
 /**
  * Builder for {@link ImageDecodeOptions}.
  */
@@ -19,6 +21,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
+  private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
 
   public ImageDecodeOptionsBuilder() {
   }
@@ -34,6 +37,7 @@ public class ImageDecodeOptionsBuilder {
     mUseLastFrameForPreview = options.useLastFrameForPreview;
     mDecodeAllFrames = options.decodeAllFrames;
     mForceStaticImage = options.forceStaticImage;
+    mBitmapConfig = options.bitmapConfig;
     return this;
   }
 
@@ -142,6 +146,23 @@ public class ImageDecodeOptionsBuilder {
    */
   public boolean getForceStaticImage() {
     return mForceStaticImage;
+  }
+
+  /**
+   * Gets which config image will be decode with;
+   *
+   * @return which config image will be decode with
+   */
+  public Bitmap.Config getBitmapConfig() {
+    return mBitmapConfig;
+  }
+
+  /**
+   * Sets which config static image will be decode with;
+   * @param bitmapConfig which config static image will be decode with;
+   */
+  public void setBitmapConfig(Bitmap.Config bitmapConfig) {
+    mBitmapConfig = bitmapConfig;
   }
 
   /**
