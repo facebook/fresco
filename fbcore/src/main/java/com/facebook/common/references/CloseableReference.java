@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.internal.Preconditions;
@@ -65,6 +65,16 @@ import com.facebook.common.logging.FLog;
  */
 public final class CloseableReference<T> implements Cloneable, Closeable {
 
+  public static class Stats {
+    public final int totalFinalized;
+    public final int unclosedInFinalize;
+
+    private Stats(int totalFinalized, int unclosedInFinalize) {
+      this.totalFinalized = totalFinalized;
+      this.unclosedInFinalize = unclosedInFinalize;
+    }
+  }
+
   private static Class<CloseableReference> TAG = CloseableReference.class;
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
@@ -79,6 +89,8 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
+  private static final AtomicInteger TOTAL_FINALIZED = new AtomicInteger(0);
+  private static final AtomicInteger UNCLOSED_IN_FINALIZE = new AtomicInteger(0);
 
   @GuardedBy("this")
   private boolean mIsClosed = false;
@@ -180,6 +192,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   @Override
   protected void finalize() throws Throwable {
     try {
+      TOTAL_FINALIZED.incrementAndGet();
       // We put synchronized here so that lint doesn't warn about accessing mIsClosed, which is
       // guarded by this. Lint isn't aware of finalize semantics.
       synchronized (this) {
@@ -188,6 +201,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       }
 
+      UNCLOSED_IN_FINALIZE.incrementAndGet();
       FLog.w(TAG, "Finalized without closing: %x %x (type = %s)",
           System.identityHashCode(this),
           System.identityHashCode(mSharedReference),
@@ -277,5 +291,9 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         closeSafely(ref);
       }
     }
+  }
+
+  public static Stats getStats() {
+    return new Stats(TOTAL_FINALIZED.get(), UNCLOSED_IN_FINALIZE.get());
   }
 }
