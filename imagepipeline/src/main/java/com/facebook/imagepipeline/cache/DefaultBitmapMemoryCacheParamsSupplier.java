@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
- *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
@@ -10,6 +9,8 @@
 package com.facebook.imagepipeline.cache;
 
 import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Build;
 
 import com.facebook.common.internal.Supplier;
@@ -24,10 +25,12 @@ public class DefaultBitmapMemoryCacheParamsSupplier implements Supplier<MemoryCa
   private static final int MAX_EVICTION_QUEUE_ENTRIES = Integer.MAX_VALUE;
   private static final int MAX_CACHE_ENTRY_SIZE = Integer.MAX_VALUE;
 
+  private final Context mContext;
   private final ActivityManager mActivityManager;
 
-  public DefaultBitmapMemoryCacheParamsSupplier(ActivityManager activityManager) {
-    mActivityManager = activityManager;
+  public DefaultBitmapMemoryCacheParamsSupplier(Context context) {
+    mContext = context;
+    mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
   }
 
   @Override
@@ -41,8 +44,14 @@ public class DefaultBitmapMemoryCacheParamsSupplier implements Supplier<MemoryCa
   }
 
   private int getMaxCacheSize() {
-    final int maxMemory =
-        Math.min(mActivityManager.getMemoryClass() * ByteConstants.MB, Integer.MAX_VALUE);
+    final int memoryClass;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
+        (mContext.getApplicationInfo().flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) {
+      memoryClass = mActivityManager.getLargeMemoryClass();
+    } else {
+      memoryClass = mActivityManager.getMemoryClass();
+    }
+    final int maxMemory = Math.min(memoryClass * ByteConstants.MB, Integer.MAX_VALUE);
     if (maxMemory < 32 * ByteConstants.MB) {
       return 4 * ByteConstants.MB;
     } else if (maxMemory < 64 * ByteConstants.MB) {
