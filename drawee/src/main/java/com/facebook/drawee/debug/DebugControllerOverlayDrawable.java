@@ -18,6 +18,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 
+import com.facebook.common.internal.VisibleForTesting;
+
 /**
  * Drawee Controller overlay that displays debug information.
  */
@@ -25,7 +27,22 @@ public class DebugControllerOverlayDrawable extends Drawable {
 
   private static final String NO_CONTROLLER_ID = "none";
 
-  private static final int OVERLAY_COLOR = 0x66FF9800;
+  // Green if the image dimensions are OK
+  @VisibleForTesting
+  static final int OVERLAY_COLOR_IMAGE_OK = 0x664CAF50;
+
+  // Orange if the image dimensions are a bit off
+  @VisibleForTesting
+  static final int OVERLAY_COLOR_IMAGE_ALMOST_OK = 0x66FF9800;
+
+  // Red if the image dimensions are too far off
+  @VisibleForTesting
+  static final int OVERLAY_COLOR_IMAGE_NOT_OK = 0x66F44336;
+
+  // Values are given in per cent. E.g. 0.1 means 10% smaller or larger.
+  private static final float IMAGE_SIZE_THRESHOLD_OK = 0.1f;
+  private static final float IMAGE_SIZE_THRESHOLD_NOT_OK = 0.5f;
+
   private static final int OUTLINE_COLOR = 0xFFFF9800;
   private static final int TEXT_COLOR = 0xFFFFFFFF;
   private static final int OUTLINE_STROKE_WIDTH_PX = 2;
@@ -139,7 +156,7 @@ public class DebugControllerOverlayDrawable extends Drawable {
 
     // Draw overlay
     mPaint.setStyle(Paint.Style.FILL);
-    mPaint.setColor(OVERLAY_COLOR);
+    mPaint.setColor(determineOverlayColor(mWidthPx, mHeightPx));
     canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
 
     // Draw text
@@ -200,5 +217,36 @@ public class DebugControllerOverlayDrawable extends Drawable {
       canvas.drawText(String.format(text, args), mCurrentTextXPx, mCurrentTextYPx, mPaint);
     }
     mCurrentTextYPx += mLineIncrementPx;
+  }
+
+  @VisibleForTesting
+  int determineOverlayColor(
+      int imageWidth,
+      int imageHeight) {
+    int drawableWidth = getBounds().width();
+    int drawableHeight = getBounds().height();
+    if (drawableWidth == 0 || drawableHeight== 0 || imageWidth == 0 || imageHeight == 0) {
+      return OVERLAY_COLOR_IMAGE_NOT_OK;
+    }
+
+    // Update the thresholds for the overlay color
+    float scaledImageWidthThresholdOk = drawableWidth * IMAGE_SIZE_THRESHOLD_OK;
+    float scaledImageWidthThresholdNotOk = drawableWidth * IMAGE_SIZE_THRESHOLD_NOT_OK;
+    float scaledImageHeightThresholdOk = drawableHeight * IMAGE_SIZE_THRESHOLD_OK;
+    float scaledImageHeightThresholdNotOk = drawableHeight * IMAGE_SIZE_THRESHOLD_NOT_OK;
+
+    // Calculate the dimension differences
+    int absWidthDifference = Math.abs(imageWidth - drawableWidth);
+    int absHeightDifference = Math.abs(imageHeight - drawableHeight);
+
+    // Return corresponding color
+    if (absWidthDifference < scaledImageWidthThresholdOk &&
+        absHeightDifference < scaledImageHeightThresholdOk) {
+      return OVERLAY_COLOR_IMAGE_OK;
+    } else if (absWidthDifference < scaledImageWidthThresholdNotOk &&
+        absHeightDifference < scaledImageHeightThresholdNotOk) {
+      return OVERLAY_COLOR_IMAGE_ALMOST_OK;
+    }
+    return OVERLAY_COLOR_IMAGE_NOT_OK;
   }
 }
