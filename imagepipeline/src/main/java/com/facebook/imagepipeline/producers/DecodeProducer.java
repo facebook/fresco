@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -23,6 +24,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
@@ -51,6 +53,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   public static final String EXTRA_IS_FINAL = ProducerConstants.EXTRA_IS_FINAL;
   public static final String EXTRA_IMAGE_FORMAT_NAME = ProducerConstants.EXTRA_IMAGE_FORMAT_NAME;
   public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
+  public static final String REQUESTED_IMAGE_SIZE = ProducerConstants.REQUESTED_IMAGE_SIZE;
+  public static final String SAMPLE_SIZE = ProducerConstants.SAMPLE_SIZE;
 
   private final ByteArrayPool mByteArrayPool;
   private final Executor mExecutor;
@@ -206,11 +210,21 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         imageFormatStr = "unknown";
       }
       final String encodedImageSize;
+      final String sampleSize;
       if (encodedImage != null) {
         encodedImageSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
+        sampleSize = String.valueOf(encodedImage.getSampleSize());
       } else {
         // We should never be here
         encodedImageSize = "unknown";
+        sampleSize = "unknown";
+      }
+      final String requestedSizeStr;
+      final ResizeOptions resizeOptions = mProducerContext.getImageRequest().getResizeOptions();
+      if (resizeOptions != null) {
+        requestedSizeStr = resizeOptions.width + "x" + resizeOptions.height;
+      } else {
+        requestedSizeStr = "unknown";
       }
       try {
         long queueTime = mJobScheduler.getQueuedTime();
@@ -229,7 +243,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
               quality,
               isLast,
               imageFormatStr,
-              encodedImageSize);
+              encodedImageSize,
+              requestedSizeStr,
+              sampleSize);
           mProducerListener.
               onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
           handleError(e);
@@ -241,7 +257,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             quality,
             isLast,
             imageFormatStr,
-            encodedImageSize);
+            encodedImageSize,
+            requestedSizeStr,
+            sampleSize);
         mProducerListener.
             onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
         handleResult(image, isLast);
@@ -256,7 +274,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         QualityInfo quality,
         boolean isFinal,
         String imageFormatName,
-        String encodedImageSize) {
+        String encodedImageSize,
+        String requestImageSize,
+        String sampleSize) {
       if (!mProducerListener.requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
@@ -266,33 +286,28 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       if (image instanceof CloseableStaticBitmap) {
         Bitmap bitmap = ((CloseableStaticBitmap) image).getUnderlyingBitmap();
         String sizeStr = bitmap.getWidth() + "x" + bitmap.getHeight();
-        // We need this because the of() utility method doesn't have a proper overload method
+        // We need this because the copyOf() utility method doesn't have a proper overload method
         // for all these parameters
-        return ImmutableMap.of(
-            EXTRA_BITMAP_SIZE,
-            sizeStr,
-            JobScheduler.QUEUE_TIME_KEY,
-            queueStr,
-            EXTRA_HAS_GOOD_QUALITY,
-            qualityStr,
-            EXTRA_IS_FINAL,
-            finalStr,
-            ENCODED_IMAGE_SIZE,
-            encodedImageSize,
-            EXTRA_IMAGE_FORMAT_NAME,
-            imageFormatName);
+        final Map<String, String> tmpMap = new HashMap<>(8);
+        tmpMap.put(EXTRA_BITMAP_SIZE, sizeStr);
+        tmpMap.put(JobScheduler.QUEUE_TIME_KEY, queueStr);
+        tmpMap.put(EXTRA_HAS_GOOD_QUALITY, qualityStr);
+        tmpMap.put(EXTRA_IS_FINAL, finalStr);
+        tmpMap.put(ENCODED_IMAGE_SIZE, encodedImageSize);
+        tmpMap.put(EXTRA_IMAGE_FORMAT_NAME, imageFormatName);
+        tmpMap.put(REQUESTED_IMAGE_SIZE, requestImageSize);
+        tmpMap.put(SAMPLE_SIZE, sampleSize);
+        return ImmutableMap.copyOf(tmpMap);
       } else {
-        return ImmutableMap.of(
-            JobScheduler.QUEUE_TIME_KEY,
-            queueStr,
-            EXTRA_HAS_GOOD_QUALITY,
-            qualityStr,
-            EXTRA_IS_FINAL,
-            finalStr,
-            ENCODED_IMAGE_SIZE,
-            encodedImageSize,
-            EXTRA_IMAGE_FORMAT_NAME,
-            imageFormatName);
+        final Map<String, String> tmpMap = new HashMap<>(7);
+        tmpMap.put(JobScheduler.QUEUE_TIME_KEY, queueStr);
+        tmpMap.put(EXTRA_HAS_GOOD_QUALITY, qualityStr);
+        tmpMap.put(EXTRA_IS_FINAL, finalStr);
+        tmpMap.put(ENCODED_IMAGE_SIZE, encodedImageSize);
+        tmpMap.put(EXTRA_IMAGE_FORMAT_NAME, imageFormatName);
+        tmpMap.put(REQUESTED_IMAGE_SIZE, requestImageSize);
+        tmpMap.put(SAMPLE_SIZE, sampleSize);
+        return ImmutableMap.copyOf(tmpMap);
       }
     }
 
