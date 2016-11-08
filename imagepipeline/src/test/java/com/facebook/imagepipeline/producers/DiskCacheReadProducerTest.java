@@ -54,9 +54,9 @@ import static org.mockito.Mockito.*;
 public class DiskCacheReadProducerTest {
   private static final String PRODUCER_NAME = DiskCacheReadProducer.PRODUCER_NAME;
   private static final Map EXPECTED_MAP_ON_CACHE_HIT =
-      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
+      ImmutableMap.of(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND, "true");
   private static final Map EXPECTED_MAP_ON_CACHE_MISS =
-      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
+      ImmutableMap.of(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND, "false");
 
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Producer mInputProducer;
@@ -300,10 +300,10 @@ public class DiskCacheReadProducerTest {
   @Test
   public void testGetExtraMap() {
     assertEquals(
-        ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true"),
-        DiskCacheProducer.getExtraMap(mProducerListener, mRequestId, true));
+        ImmutableMap.of(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND, "true"),
+        DiskCacheReadProducer.getExtraMap(mProducerListener, mRequestId, true));
     assertEquals(
-        ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false"),
+        ImmutableMap.of(DiskCacheReadProducer.EXTRA_CACHED_VALUE_FOUND, "false"),
         DiskCacheReadProducer.getExtraMap(mProducerListener, mRequestId, false));
   }
 

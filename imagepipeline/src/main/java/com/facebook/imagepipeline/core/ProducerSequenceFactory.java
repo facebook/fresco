@@ -501,15 +501,11 @@ public class ProducerSequenceFactory {
   }
 
   private Producer<EncodedImage> newDiskCacheSequence(Producer<EncodedImage> inputProducer) {
-    if (mMediaVariationsEnabled) {
-      Producer<EncodedImage> cacheWriteProducer =
-          mProducerFactory.newDiskCacheWriteProducer(inputProducer);
-      Producer<EncodedImage> mediaVariationsProducer =
-          mProducerFactory.newMediaVariationsProducer(cacheWriteProducer);
-      return mProducerFactory.newDiskCacheReadProducer(mediaVariationsProducer);
-    } else {
-      return mProducerFactory.newDiskCacheProducer(inputProducer);
-    }
+    Producer<EncodedImage> cacheWriteProducer =
+        mProducerFactory.newDiskCacheWriteProducer(inputProducer);
+    Producer<EncodedImage> mediaVariationsProducer =
+        mProducerFactory.newMediaVariationsProducer(cacheWriteProducer);
+    return mProducerFactory.newDiskCacheReadProducer(mediaVariationsProducer);
   }
 
   /**

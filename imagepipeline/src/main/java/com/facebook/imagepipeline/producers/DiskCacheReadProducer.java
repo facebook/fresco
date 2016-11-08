@@ -35,7 +35,7 @@ import bolts.Task;
  * enable another producer to sit between cache read and write.
  */
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
-  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
+  public static final String PRODUCER_NAME = "DiskCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private final Producer<EncodedImage> mInputProducer;

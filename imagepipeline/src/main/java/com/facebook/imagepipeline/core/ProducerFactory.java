@@ -36,7 +36,6 @@ import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
 import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
-import com.facebook.imagepipeline.producers.DiskCacheProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.DiskCacheWriteProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
@@ -197,16 +196,6 @@ public class ProducerFactory {
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
         inputProducer);
-  }
-
-  public DiskCacheProducer newDiskCacheProducer(
-      Producer<EncodedImage> inputProducer) {
-    return new DiskCacheProducer(
-        mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache,
-        mCacheKeyFactory,
-        inputProducer,
-        mForceSmallCacheThresholdBytes);
   }
 
   public DiskCacheReadProducer newDiskCacheReadProducer(

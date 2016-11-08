@@ -71,7 +71,7 @@ public class MediaVariationsFallbackProducerTest {
       MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_USED_AS_LAST,
       "false");
   private static final Map EXPECTED_MAP_ON_CACHE_MISS =
-      ImmutableMap.of(DiskCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
+      ImmutableMap.of(MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_FOUND, "false");
 
   private static final int SIZE_S = 100;
   private static final int SIZE_M = 200;
