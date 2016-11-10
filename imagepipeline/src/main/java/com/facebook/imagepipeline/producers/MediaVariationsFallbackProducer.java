@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -78,14 +79,64 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
         resizeOptions == null ||
         resizeOptions.height <= 0 ||
         resizeOptions.width <= 0 ||
-        mediaVariations == null ||
-        !mediaVariations.hasVariants()) {
-      mInputProducer.produceResults(consumer, producerContext);
+        mediaVariations == null) {
+      startInputProducer(consumer, producerContext);
       return;
     }
 
     producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
 
+    final AtomicBoolean isCancelled = new AtomicBoolean(false);
+
+    if (mediaVariations.getVariants() != null) {
+      chooseFromVariants(
+          consumer,
+          producerContext,
+          mediaVariations.getVariants(),
+          imageRequest,
+          resizeOptions,
+          isCancelled);
+    } else {
+      Task<List<MediaVariations.Variant>> cachedVariantsTask =
+          mMediaVariationsIndexDatabase.getCachedVariants(mediaVariations.getMediaId());
+      cachedVariantsTask.continueWith(new Continuation<List<MediaVariations.Variant>, Object>() {
+
+        @Override
+        public Object then(Task<List<MediaVariations.Variant>> task) throws Exception {
+          if (task.isCancelled() || task.isFaulted()) {
+            return task;
+          } else {
+            try {
+              if (task.getResult() == null || task.getResult().isEmpty()) {
+                startInputProducer(consumer, producerContext);
+                return null;
+              } else {
+                return chooseFromVariants(
+                    consumer,
+                    producerContext,
+                    task.getResult(),
+                    imageRequest,
+                    resizeOptions,
+                    isCancelled);
+              }
+            } catch (Exception e) {
+              return null;
+            }
+          }
+        }
+      });
+    }
+
+    subscribeTaskForRequestCancellation(isCancelled, producerContext);
+  }
+
+  private Task chooseFromVariants(
+      final Consumer<EncodedImage> consumer,
+      final ProducerContext producerContext,
+      final List<MediaVariations.Variant> variants,
+      final ImageRequest imageRequest,
+      final ResizeOptions resizeOptions,
+      final AtomicBoolean isCancelled) {
     final BufferedDiskCache preferredCache =
         imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL ?
             mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
@@ -93,8 +144,10 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
     MediaVariations.Variant preferredVariant = null;
     CacheKey preferredCacheKey = null;
-    for (int i = 0; i < mediaVariations.getVariants().size(); i++) {
-      final MediaVariations.Variant variant = mediaVariations.getVariants().get(i);
+    Task<EncodedImage> diskLookupTask;
+
+    for (int i = 0; i < variants.size(); i++) {
+      final MediaVariations.Variant variant = variants.get(i);
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, variant.getUri(), callerContext);
       if (preferredCache.containsSync(cacheKey)) {
@@ -105,8 +158,6 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       }
     }
 
-    final AtomicBoolean isCancelled = new AtomicBoolean(false);
-    final Task<EncodedImage> diskLookupTask;
     final boolean useAsLastResult;
     if (preferredCacheKey == null) {
       diskLookupTask = Task.forResult(null);
@@ -118,8 +169,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
     Continuation<EncodedImage, Void> continuation =
         onFinishDiskReads(consumer, producerContext, useAsLastResult);
-    diskLookupTask.continueWith(continuation);
-    subscribeTaskForRequestCancellation(isCancelled, producerContext);
+    return diskLookupTask.continueWith(continuation);
   }
 
   private static boolean isBigEnoughForRequestedSize(

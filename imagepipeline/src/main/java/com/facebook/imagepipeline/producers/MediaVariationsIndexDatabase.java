@@ -9,18 +9,27 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.request.MediaVariations;
+
+import bolts.Task;
 
 public class MediaVariationsIndexDatabase {
   private static final String TAG = MediaVariationsIndexDatabase.class.getSimpleName();
@@ -45,6 +54,69 @@ public class MediaVariationsIndexDatabase {
     mDbHelper = new IndexDbOpenHelper(context);
     mReadExecutor = readExecutor;
     mWriteExecutor = writeExecutor;
+  }
+
+  public Task<List<MediaVariations.Variant>> getCachedVariants(final String mediaId) {
+    try {
+      return Task.call(
+          new Callable<List<MediaVariations.Variant>>() {
+            @Override
+            public List<MediaVariations.Variant> call() throws Exception {
+              return getCachedVariantsSync(mediaId);
+            }
+          },
+          mReadExecutor);
+    } catch (Exception exception) {
+      FLog.w(TAG, exception, "Failed to schedule query task for %s", mediaId);
+      return Task.forError(exception);
+    }
+  }
+
+  private synchronized List<MediaVariations.Variant> getCachedVariantsSync(String mediaId) {
+    SQLiteDatabase db = mDbHelper.getWritableDatabase();
+    Cursor c = null;
+    try {
+      String selection = IndexEntry.COLUMN_NAME_MEDIA_ID + " = ?";
+      String[] selectionArgs = {mediaId};
+
+      c = db.query(
+          IndexEntry.TABLE_NAME,
+          PROJECTION,
+          selection,
+          selectionArgs,
+          null, // groupBy
+          null, // having
+          null); // orderBy
+
+      if (c.getCount() == 0) {
+        return null;
+      }
+
+      final int columnIndexCacheKey =
+          c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
+      final int columnIndexWidth = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_WIDTH);
+      final int columnIndexHeight =
+          c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_HEIGHT);
+
+      List<MediaVariations.Variant> variants = new ArrayList<>(c.getCount());
+      while (c.moveToNext()) {
+        variants.add(new MediaVariations.Variant(
+            Uri.parse(c.getString(columnIndexCacheKey)),
+            c.getInt(columnIndexWidth),
+            c.getInt(columnIndexHeight)
+        ));
+      }
+
+      return variants;
+    } catch (SQLException x) {
+      FLog.e(TAG, x, "Error reading for %s", mediaId);
+      throw x;
+    } finally {
+      if (c != null) {
+        c.close();
+      }
+      db.close();
+    }
   }
 
   public void saveCachedVariant(
