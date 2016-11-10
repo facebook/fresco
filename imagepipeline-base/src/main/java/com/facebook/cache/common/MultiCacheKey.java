@@ -69,4 +69,9 @@ public class MultiCacheKey implements CacheKey {
     }
     return false;
   }
+
+  @Override
+  public String getUriString() {
+    return mCacheKeys.get(0).getUriString();
+  }
 }

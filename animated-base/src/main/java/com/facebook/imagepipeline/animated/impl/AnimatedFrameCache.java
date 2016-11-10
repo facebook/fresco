@@ -72,6 +72,11 @@ public class AnimatedFrameCache {
     public boolean containsUri(Uri uri) {
       return mImageCacheKey.containsUri(uri);
     }
+
+    @Override
+    public String getUriString() {
+      return null;
+    }
   }
 
   private final CacheKey mImageCacheKey;

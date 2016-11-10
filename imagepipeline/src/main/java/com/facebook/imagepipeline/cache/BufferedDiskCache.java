@@ -105,7 +105,7 @@ public class BufferedDiskCache {
           TAG,
           exception,
           "Failed to schedule disk-cache read for %s",
-          key.toString());
+          key.getUriString());
       return Task.forError(exception);
     }
   }
@@ -148,11 +148,11 @@ public class BufferedDiskCache {
     EncodedImage result = mStagingArea.get(key);
     if (result != null) {
       result.close();
-      FLog.v(TAG, "Found image for %s in staging area", key.toString());
+      FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
       mImageCacheStatsTracker.onStagingAreaHit(key);
       return true;
     } else {
-      FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+      FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
       mImageCacheStatsTracker.onStagingAreaMiss();
       try {
         return mFileCache.hasKey(key);
@@ -174,11 +174,11 @@ public class BufferedDiskCache {
               }
               EncodedImage result = mStagingArea.get(key);
               if (result != null) {
-                FLog.v(TAG, "Found image for %s in staging area", key.toString());
+                FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
                 mImageCacheStatsTracker.onStagingAreaHit(key);
                 result.setEncodedCacheKey(key);
               } else {
-                FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+                FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
                 mImageCacheStatsTracker.onStagingAreaMiss();
 
                 try {
@@ -214,7 +214,7 @@ public class BufferedDiskCache {
           TAG,
           exception,
           "Failed to schedule disk-cache read for %s",
-          key.toString());
+          key.getUriString());
       return Task.forError(exception);
     }
   }
@@ -257,7 +257,7 @@ public class BufferedDiskCache {
           TAG,
           exception,
           "Failed to schedule disk-cache write for %s",
-          key.toString());
+          key.getUriString());
       mStagingArea.remove(key, encodedImage);
       EncodedImage.closeSafely(finalEncodedImage);
     }
@@ -283,7 +283,7 @@ public class BufferedDiskCache {
     } catch (Exception exception) {
       // Log failure
       // TODO: 3697790
-      FLog.w(TAG, exception, "Failed to schedule disk-cache remove for %s", key.toString());
+      FLog.w(TAG, exception, "Failed to schedule disk-cache remove for %s", key.getUriString());
       return Task.forError(exception);
     }
   }
@@ -313,7 +313,7 @@ public class BufferedDiskCache {
   }
 
   private Task<EncodedImage> foundPinnedImage(CacheKey key, EncodedImage pinnedImage) {
-    FLog.v(TAG, "Found image for %s in staging area", key.toString());
+    FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
     mImageCacheStatsTracker.onStagingAreaHit(key);
     return Task.forResult(pinnedImage);
   }
@@ -323,15 +323,15 @@ public class BufferedDiskCache {
    */
   private PooledByteBuffer readFromDiskCache(final CacheKey key) throws IOException {
     try {
-      FLog.v(TAG, "Disk cache read for %s", key.toString());
+      FLog.v(TAG, "Disk cache read for %s", key.getUriString());
 
       final BinaryResource diskCacheResource = mFileCache.getResource(key);
       if (diskCacheResource == null) {
-        FLog.v(TAG, "Disk cache miss for %s", key.toString());
+        FLog.v(TAG, "Disk cache miss for %s", key.getUriString());
         mImageCacheStatsTracker.onDiskCacheMiss();
         return null;
       } else {
-        FLog.v(TAG, "Found entry in disk cache for %s", key.toString());
+        FLog.v(TAG, "Found entry in disk cache for %s", key.getUriString());
         mImageCacheStatsTracker.onDiskCacheHit();
       }
 
@@ -343,13 +343,13 @@ public class BufferedDiskCache {
         is.close();
       }
 
-      FLog.v(TAG, "Successful read from disk cache for %s", key.toString());
+      FLog.v(TAG, "Successful read from disk cache for %s", key.getUriString());
       return byteBuffer;
     } catch (IOException ioe) {
       // TODO: 3697790 log failures
       // TODO: 5258772 - uncomment line below
       // mFileCache.remove(key);
-      FLog.w(TAG, ioe, "Exception reading from cache for %s", key.toString());
+      FLog.w(TAG, ioe, "Exception reading from cache for %s", key.getUriString());
       mImageCacheStatsTracker.onDiskCacheGetFail();
       throw ioe;
     }
@@ -362,7 +362,7 @@ public class BufferedDiskCache {
   private void writeToDiskCache(
       final CacheKey key,
       final EncodedImage encodedImage) {
-    FLog.v(TAG, "About to write to disk-cache for key %s", key.toString());
+    FLog.v(TAG, "About to write to disk-cache for key %s", key.getUriString());
     try {
       mFileCache.insert(
           key, new WriterCallback() {
@@ -372,11 +372,11 @@ public class BufferedDiskCache {
             }
           }
       );
-      FLog.v(TAG, "Successful disk-cache write for key %s", key.toString());
+      FLog.v(TAG, "Successful disk-cache write for key %s", key.getUriString());
     } catch (IOException ioe) {
       // Log failure
       // TODO: 3697790
-      FLog.w(TAG, ioe, "Failed to write to disk-cache for key %s", key.toString());
+      FLog.w(TAG, ioe, "Failed to write to disk-cache for key %s", key.getUriString());
     }
   }
 }

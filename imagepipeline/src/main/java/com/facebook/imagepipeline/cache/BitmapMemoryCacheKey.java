@@ -88,10 +88,11 @@ public class BitmapMemoryCacheKey implements CacheKey {
 
   @Override
   public boolean containsUri(Uri uri) {
-    return getSourceUriString().contains(uri.toString());
+    return getUriString().contains(uri.toString());
   }
 
-  public String getSourceUriString() {
+  @Override
+  public String getUriString() {
     return mSourceString;
   }
 

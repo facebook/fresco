@@ -148,7 +148,7 @@ public class StagingArea {
               TAG,
               "Found closed reference %d for key %s (%d)",
               System.identityHashCode(storedEncodedImage),
-              key.toString(),
+              key.getUriString(),
               System.identityHashCode(key));
           return null;
         }
@@ -177,7 +177,7 @@ public class StagingArea {
             TAG,
             "Found closed reference %d for key %s (%d)",
             System.identityHashCode(storedEncodedImage),
-            key.toString(),
+            key.getUriString(),
             System.identityHashCode(key));
         return false;
       }

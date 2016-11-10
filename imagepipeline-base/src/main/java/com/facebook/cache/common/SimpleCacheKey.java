@@ -52,4 +52,9 @@ public class SimpleCacheKey implements CacheKey {
   public boolean containsUri(Uri uri) {
     return mKey.contains(uri.toString());
   }
+
+  @Override
+  public String getUriString() {
+    return mKey;
+  }
 }

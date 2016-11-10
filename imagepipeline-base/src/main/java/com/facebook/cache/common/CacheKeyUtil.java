@@ -57,6 +57,6 @@ public final class CacheKeyUtil {
   }
 
   private static String secureHashKey(final CacheKey key) throws UnsupportedEncodingException {
-    return SecureHashUtil.makeSHA1HashBase64(key.toString().getBytes("UTF-8"));
+    return SecureHashUtil.makeSHA1HashBase64(key.getUriString().getBytes("UTF-8"));
   }
 }
