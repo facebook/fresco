@@ -128,6 +128,9 @@ public class MainActivity extends Activity {
       Size size,
       ImageRequest.RequestLevel requestLevel) {
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(size.uri)
+        .setMediaVariations(MediaVariations.newBuilderForMediaId(MEDIA_ID)
+            .setForceRequestForSpecifiedUri(true)
+            .build())
         .setLowestPermittedRequestLevel(requestLevel)
         .setResizeOptions(new ResizeOptions(draweeView.getWidth(), draweeView.getHeight()))
         .build();
@@ -156,9 +159,6 @@ public class MainActivity extends Activity {
 
   private void loadMainImage(SimpleDraweeView draweeView) {
     MediaVariations.Builder variationsBuilder = MediaVariations.newBuilderForMediaId(MEDIA_ID);
-    for (Size size : Size.values()) {
-      variationsBuilder.addVariant(size.uri, size.width, size.height);
-    }
 
     // Request a non-existent image to force fallback to the variations
     Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));

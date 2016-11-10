@@ -37,13 +37,13 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 public final class MediaVariations {
 
   private final String mMediaId;
-  private final @Nullable Variant mPreferredVariant;
   private final @Nullable List<Variant> mVariants;
+  private final boolean mForceRequestForSpecifiedUri;
 
   private MediaVariations(Builder builder) {
     mMediaId = builder.mMediaId;
-    mPreferredVariant = builder.mPreferredVariant;
     mVariants = builder.mVariants;
+    mForceRequestForSpecifiedUri = builder.mForceRequestForSpecifiedUri;
   }
 
   /**
@@ -65,19 +65,13 @@ public final class MediaVariations {
   }
 
   /**
-   * Checks whether any variants are contained.
+   * Gets whether the URI in the original request should be downloaded even if another cached image
+   * appears to be big enough for the request.
+   *
+   * @return true if any found image should only be used as a placeholder, whatever the size
    */
-  public boolean hasVariants() {
-    return mVariants != null && !mVariants.isEmpty();
-  }
-
-  /**
-   * Required if the image request lacks {@link com.facebook.imagepipeline.common.ResizeOptions} but
-   * otherwise optional as the image pipeline will be able to choose the best size from the variants
-   * provided.
-   */
-  public @Nullable Variant getPreferredVariant() {
-    return mPreferredVariant;
+  public boolean shouldForceRequestForSpecifiedUri() {
+    return mForceRequestForSpecifiedUri;
   }
 
   @Override
@@ -87,13 +81,13 @@ public final class MediaVariations {
     }
     MediaVariations otherVariations = (MediaVariations) o;
     return Objects.equal(mMediaId, otherVariations.mMediaId) &&
-        Objects.equal(mPreferredVariant, otherVariations.mPreferredVariant) &&
+        mForceRequestForSpecifiedUri == otherVariations.mForceRequestForSpecifiedUri &&
         Objects.equal(mVariants, otherVariations.mVariants);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(mMediaId, mPreferredVariant, mVariants);
+    return Objects.hashCode(mMediaId, mForceRequestForSpecifiedUri, mVariants);
   }
 
   public final static class Variant {
@@ -141,7 +135,19 @@ public final class MediaVariations {
   }
 
   /**
-   * Creates a builder for a new MediaVariations.
+   * Creates an instance with a media ID and without specific variants.
+   *
+   * @param mediaId the unique ID for this piece of media. This must be non-null and unique for
+   *                this piece of media (i.e. another request for the same picture at a different
+   *                size should share the ID but not an unrelated image and not the same media at
+   *                a different orientation).
+   */
+  public static MediaVariations forMediaId(String mediaId) {
+    return newBuilderForMediaId(mediaId).build();
+  }
+
+  /**
+   * Creates a builder for a new MediaVariations to which you can add specific variants.
    *
    * @param mediaId the unique ID for this piece of media. This must be non-null and unique for
    *                this piece of media (i.e. another request for the same picture at a different
@@ -154,24 +160,11 @@ public final class MediaVariations {
 
   public static class Builder {
     private final String mMediaId;
-    private Variant mPreferredVariant;
     private List<Variant> mVariants;
+    private boolean mForceRequestForSpecifiedUri = false;
 
     private Builder(String mediaId) {
       mMediaId = mediaId;
-    }
-
-    /**
-     * Required if the image request lacks {@link com.facebook.imagepipeline.common.ResizeOptions}
-     * or if no other variants are added but otherwise optional as the image pipeline will be able
-     * to choose the best size from the variants provided.
-     *
-     * <p><i>This is not currently used. For now requests must include ResizeOptions for the
-     * variations to be used.</i>
-     */
-    public Builder setPreferredVariant(Variant preferredVariant) {
-      this.mPreferredVariant = preferredVariant;
-      return this;
     }
 
     public Builder addVariant(Uri uri, int width, int height) {
@@ -179,6 +172,19 @@ public final class MediaVariations {
         mVariants = new ArrayList<>();
       }
       mVariants.add(new Variant(uri, width, height));
+      return this;
+    }
+
+    /**
+     * Sets whether the URI specified in the image request should be downloaded, even if another
+     * cached image appears to be big enough for the request. This may be useful for example if the
+     * original image should be saved in encoded format but the original size is unknown.
+     *
+     * <p>In this case, whatever other image is found may still be returned as a non-final
+     * placeholder.
+     */
+    public Builder setForceRequestForSpecifiedUri(boolean forceRequestForSpecifiedUri) {
+      mForceRequestForSpecifiedUri = forceRequestForSpecifiedUri;
       return this;
     }
 

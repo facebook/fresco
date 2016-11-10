@@ -92,6 +92,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       chooseFromVariants(
           consumer,
           producerContext,
+          mediaVariations,
           mediaVariations.getVariants(),
           imageRequest,
           resizeOptions,
@@ -114,6 +115,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
                 return chooseFromVariants(
                     consumer,
                     producerContext,
+                    mediaVariations,
                     task.getResult(),
                     imageRequest,
                     resizeOptions,
@@ -133,6 +135,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private Task chooseFromVariants(
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext,
+      final MediaVariations mediaVariations,
       final List<MediaVariations.Variant> variants,
       final ImageRequest imageRequest,
       final ResizeOptions resizeOptions,
@@ -164,7 +167,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       useAsLastResult = false;
     } else {
       diskLookupTask = preferredCache.get(preferredCacheKey, isCancelled);
-      useAsLastResult = isBigEnoughForRequestedSize(preferredVariant, resizeOptions);
+      useAsLastResult = !mediaVariations.shouldForceRequestForSpecifiedUri() &&
+          isBigEnoughForRequestedSize(preferredVariant, resizeOptions);
     }
 
     Continuation<EncodedImage, Void> continuation =
