@@ -160,7 +160,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           triggerNextProducer = false;
         } else if (task.isFaulted()) {
           listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
-          mInputProducer.produceResults(consumer, producerContext);
+          startInputProducer(consumer, producerContext);
           triggerNextProducer = true;
         } else {
           EncodedImage cachedReference = task.getResult();
@@ -187,11 +187,18 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
         }
 
         if (triggerNextProducer) {
-          mInputProducer.produceResults(consumer, producerContext);
+          startInputProducer(consumer, producerContext);
         }
         return null;
       }
     };
+  }
+
+  private void startInputProducer(
+      Consumer<EncodedImage> consumer,
+      ProducerContext producerContext) {
+    mInputProducer
+        .produceResults(new MediaVariationsConsumer(consumer, producerContext), producerContext);
   }
 
   private static boolean isTaskCancelled(Task<?> task) {
@@ -229,5 +236,41 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
             isCancelled.set(true);
           }
         });
+  }
+
+  @VisibleForTesting
+  class MediaVariationsConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
+
+    private final ProducerContext mProducerContext;
+
+    public MediaVariationsConsumer(
+        Consumer<EncodedImage> consumer, ProducerContext producerContext) {
+      super(consumer);
+      mProducerContext = producerContext;
+    }
+
+    @Override
+    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+      if (isLast && newResult != null) {
+        storeResultInDatabase(newResult);
+      }
+      getConsumer().onNewResult(newResult, isLast);
+    }
+
+    private void storeResultInDatabase(EncodedImage newResult) {
+      final ImageRequest imageRequest = mProducerContext.getImageRequest();
+      final MediaVariations mediaVariations = imageRequest.getMediaVariations();
+
+      if (!imageRequest.isDiskCacheEnabled() ||
+          mediaVariations == null) {
+        return;
+      }
+
+      final CacheKey cacheKey =
+          mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
+
+      mMediaVariationsIndexDatabase
+          .saveCachedVariant(mediaVariations.getMediaId(), cacheKey, newResult);
+    }
   }
 }

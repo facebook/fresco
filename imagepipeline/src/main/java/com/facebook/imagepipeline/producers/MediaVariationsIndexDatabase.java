@@ -11,12 +11,19 @@ package com.facebook.imagepipeline.producers;
 
 import java.util.concurrent.Executor;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.CacheKeyUtil;
+import com.facebook.common.logging.FLog;
+import com.facebook.imagepipeline.image.EncodedImage;
+
 public class MediaVariationsIndexDatabase {
+  private static final String TAG = MediaVariationsIndexDatabase.class.getSimpleName();
 
   private static final String[] PROJECTION = {
       IndexEntry.COLUMN_NAME_CACHE_KEY,
@@ -38,6 +45,37 @@ public class MediaVariationsIndexDatabase {
     mDbHelper = new IndexDbOpenHelper(context);
     mReadExecutor = readExecutor;
     mWriteExecutor = writeExecutor;
+  }
+
+  public void saveCachedVariant(
+      final String mediaId,
+      final CacheKey cacheKey,
+      final EncodedImage encodedImage) {
+    mWriteExecutor.execute(new Runnable() {
+      @Override
+      public void run() {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        try {
+          db.beginTransaction();
+
+          ContentValues contentValues = new ContentValues();
+          contentValues.put(IndexEntry.COLUMN_NAME_MEDIA_ID, mediaId);
+          contentValues.put(IndexEntry.COLUMN_NAME_WIDTH, encodedImage.getWidth());
+          contentValues.put(IndexEntry.COLUMN_NAME_HEIGHT, encodedImage.getHeight());
+          contentValues.put(IndexEntry.COLUMN_NAME_CACHE_KEY, cacheKey.getUriString());
+          contentValues
+              .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
+
+          db.insertOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
+
+          db.setTransactionSuccessful();
+        } catch (Exception x) {
+          FLog.e(TAG, x, "Error writing for %s", mediaId);
+        } finally {
+          db.endTransaction();
+        }
+      }
+    });
   }
 
   private static final class IndexEntry implements BaseColumns {
