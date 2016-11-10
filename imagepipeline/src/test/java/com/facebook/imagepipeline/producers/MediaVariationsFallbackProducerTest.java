@@ -88,6 +88,7 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public EncodedImage mImageM;
   @Mock public EncodedImage mImageL;
   @Mock public EncodedImage mImageXL;
+  @Mock public MediaVariationsIndexDatabase mMediaVariationsIndexDatabase;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
@@ -104,6 +105,7 @@ public class MediaVariationsFallbackProducerTest {
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
+        mMediaVariationsIndexDatabase,
         mInputProducer);
 
     mProducerContext = new SettableProducerContext(

@@ -51,16 +51,19 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
+  private final MediaVariationsIndexDatabase mMediaVariationsIndexDatabase;
   private final Producer<EncodedImage> mInputProducer;
 
   public MediaVariationsFallbackProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
+      MediaVariationsIndexDatabase mediaVariationsIndexDatabase,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
+    mMediaVariationsIndexDatabase = mediaVariationsIndexDatabase;
     mInputProducer = inputProducer;
   }
 
