@@ -50,6 +50,8 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private static final float HUGE_IMAGE_SCALE_FACTOR_THRESHOLD = 1.1f;
   private static final boolean DEFAULT_ALLOW_TOUCH_INTERCEPTION_WHILE_ZOOMED = true;
 
+  private boolean mUseSimpleTouchHandling = false;
+
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
 
@@ -285,7 +287,12 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
           this.hashCode());
       return true;
     }
-    if (mZoomableController.onTouchEvent(event)) {
+
+    if (mUseSimpleTouchHandling) {
+      if (mZoomableController.onTouchEvent(event)) {
+        return true;
+      }
+    } else if (mZoomableController.onTouchEvent(event)) {
       // Do not allow the parent to intercept touch events if:
       // - we do not allow swiping while zoomed and the image is zoomed
       // - we allow swiping while zoomed and the transform was corrected
@@ -387,5 +394,9 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   protected ZoomableController createZoomableController() {
     return AnimatedZoomableController.newInstance();
+  }
+
+  public void setExperimentalSimpleTouchHandlingEnabled(boolean enabled) {
+    mUseSimpleTouchHandling = enabled;
   }
 }
