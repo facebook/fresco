@@ -53,7 +53,6 @@ public class ProducerSequenceFactory {
   private final boolean mWebpSupportEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private final int mThrottlingMaxSimultaneousRequests;
-  private final boolean mMediaVariationsEnabled;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -85,8 +84,7 @@ public class ProducerSequenceFactory {
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
-      int throttlingMaxSimultaneousRequests,
-      boolean mediaVariationsEnabled) {
+      int throttlingMaxSimultaneousRequests) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -95,7 +93,6 @@ public class ProducerSequenceFactory {
     mCloseableImagePrefetchSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
     mThrottlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
-    mMediaVariationsEnabled = mediaVariationsEnabled;
   }
 
   /**

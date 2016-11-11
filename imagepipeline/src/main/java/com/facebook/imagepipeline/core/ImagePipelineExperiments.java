@@ -27,7 +27,7 @@ public class ImagePipelineExperiments {
   private final boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
-  private final Supplier<Boolean> mMediaVariationsEnabled;
+  private final Supplier<Boolean> mMediaVariationsIndexEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
@@ -41,10 +41,10 @@ public class ImagePipelineExperiments {
         builder.mDecodeFileDescriptorEnabled;
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
-    if (builder.mMediaVariationsEnabled != null) {
-      mMediaVariationsEnabled = builder.mMediaVariationsEnabled;
+    if (builder.mMediaVariationsIndexEnabled != null) {
+      mMediaVariationsIndexEnabled = builder.mMediaVariationsIndexEnabled;
     } else {
-      mMediaVariationsEnabled = new Supplier<Boolean>() {
+      mMediaVariationsIndexEnabled = new Supplier<Boolean>() {
         @Override
         public Boolean get() {
           return Boolean.FALSE;
@@ -69,8 +69,8 @@ public class ImagePipelineExperiments {
     return mForceSmallCacheThresholdBytes;
   }
 
-  public boolean isMediaVariationsEnabled() {
-    return mMediaVariationsEnabled.get().booleanValue();
+  public boolean getMediaVariationsIndexEnabled() {
+    return mMediaVariationsIndexEnabled.get().booleanValue();
   }
 
   public boolean isWebpSupportEnabled() {
@@ -113,7 +113,7 @@ public class ImagePipelineExperiments {
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
-    private Supplier<Boolean> mMediaVariationsEnabled = null;
+    private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
@@ -149,13 +149,14 @@ public class ImagePipelineExperiments {
     }
 
     /**
-     * If true, this will allow the image pipeline to look at each request's
-     * {@link com.facebook.imagepipeline.request.MediaVariations} object to possibly provide
-     * fallback images which are present in cache.
+     * If true, this will allow the image pipeline to keep an index of the ID in each request's
+     * {@link com.facebook.imagepipeline.request.MediaVariations} object (if present) to possibly
+     * provide fallback images which are present in cache, without the need to explicitly provide
+     * alternative variants of the image in the request.
      */
-    public ImagePipelineConfig.Builder setMediaVariationsEnabled(
-        Supplier<Boolean> mediaVariationsEnabled) {
-      mMediaVariationsEnabled = mediaVariationsEnabled;
+    public ImagePipelineConfig.Builder setMediaVariationsIndexEnabled(
+        Supplier<Boolean> mediaVariationsIndexEnabled) {
+      mMediaVariationsIndexEnabled = mediaVariationsIndexEnabled;
       return mConfigBuilder;
     }
 

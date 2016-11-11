@@ -34,7 +34,7 @@ public class MediaVariationsApplication extends Application {
     listeners.add(new RequestLoggingListener());
     ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
         .setRequestListeners(listeners)
-        .experiment().setMediaVariationsEnabled(new Supplier<Boolean>() {
+        .experiment().setMediaVariationsIndexEnabled(new Supplier<Boolean>() {
           @Override
           public Boolean get() {
             return true;
