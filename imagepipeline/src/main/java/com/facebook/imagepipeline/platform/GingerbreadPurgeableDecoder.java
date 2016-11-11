@@ -43,13 +43,6 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
   private static Method sGetFileDescriptorMethod;
 
   /**
-   * Creates a GingerbreadPurgeableDecoder with optional support for webp
-   */
-  public GingerbreadPurgeableDecoder(
-      WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
-  }
-
-  /**
    * Decodes a byteArray into a purgeable bitmap
    *
    * @param bytesRef the byte buffer that contains the encoded bytes

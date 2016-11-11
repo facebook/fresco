@@ -102,7 +102,7 @@ public class ImagePipelineConfig {
     if (webpBitmapFactory != null) {
       setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments);
     } else {
-      // We check using intospection only if the experiment is enabled
+      // We check using introspection only if the experiment is enabled
       if (mImagePipelineExperiments.isWebpSupportEnabled() &&
           WebpSupportStatus.sIsWebpSupportRequired) {
         webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists();
