@@ -18,7 +18,6 @@ import java.util.List;
 import android.net.Uri;
 
 import com.facebook.common.internal.Objects;
-import com.facebook.imagepipeline.common.ResizeOptions;
 
 /**
  * An optional part of image requests which describes the piece of media being requested.
@@ -136,14 +135,18 @@ public final class MediaVariations {
   }
 
   /**
-   * Creates an instance with a media ID and without specific variants.
+   * Creates an instance with a media ID and without specific variants. If a null ID is given, null
+   * is returned.
    *
    * @param mediaId the unique ID for this piece of media. This must be non-null and unique for
    *                this piece of media (i.e. another request for the same picture at a different
    *                size should share the ID but not an unrelated image and not the same media at
    *                a different orientation).
    */
-  public static MediaVariations forMediaId(String mediaId) {
+  public static @Nullable MediaVariations forMediaId(@Nullable String mediaId) {
+    if (mediaId == null) {
+      return null;
+    }
     return newBuilderForMediaId(mediaId).build();
   }
 
