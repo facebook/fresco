@@ -24,7 +24,6 @@ import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.webp.WebpBitmapFactory;
-import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -50,6 +49,9 @@ import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.imagepipeline.producers.MediaVariationsIndex;
+import com.facebook.imagepipeline.producers.MediaVariationsIndexDatabase;
+import com.facebook.imagepipeline.producers.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 /**
@@ -105,6 +107,7 @@ public class ImagePipelineFactory {
   private ProducerSequenceFactory mProducerSequenceFactory;
   private BufferedDiskCache mSmallImageBufferedDiskCache;
   private FileCache mSmallImageFileCache;
+  private MediaVariationsIndex mMediaVariationsIndex;
 
   private PlatformBitmapFactory mPlatformBitmapFactory;
   private PlatformDecoder mPlatformDecoder;
@@ -347,6 +350,7 @@ public class ImagePipelineFactory {
               getEncodedMemoryCache(),
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
+              getMediaVariationsIndex(),
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory(),
               mConfig.getExperiments().isDecodeFileDescriptorEnabled(),
@@ -397,5 +401,17 @@ public class ImagePipelineFactory {
               mConfig.getImageCacheStatsTracker());
     }
     return mSmallImageBufferedDiskCache;
+  }
+
+  public MediaVariationsIndex getMediaVariationsIndex() {
+    if (mMediaVariationsIndex == null) {
+      mMediaVariationsIndex = mConfig.getExperiments().getMediaVariationsIndexEnabled()
+          ? new MediaVariationsIndexDatabase(mConfig.getContext(),
+              mConfig.getExecutorSupplier().forLocalStorageRead(),
+              mConfig.getExecutorSupplier().forLocalStorageWrite())
+          : new NoOpMediaVariationsIndex();
+    }
+
+    return mMediaVariationsIndex;
   }
 }

@@ -31,7 +31,7 @@ import com.facebook.imagepipeline.request.MediaVariations;
 
 import bolts.Task;
 
-public class MediaVariationsIndexDatabase {
+public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   private static final String TAG = MediaVariationsIndexDatabase.class.getSimpleName();
 
   private static final String[] PROJECTION = {
@@ -56,6 +56,7 @@ public class MediaVariationsIndexDatabase {
     mWriteExecutor = writeExecutor;
   }
 
+  @Override
   public Task<List<MediaVariations.Variant>> getCachedVariants(final String mediaId) {
     try {
       return Task.call(
@@ -119,6 +120,7 @@ public class MediaVariationsIndexDatabase {
     }
   }
 
+  @Override
   public void saveCachedVariant(
       final String mediaId,
       final CacheKey cacheKey,

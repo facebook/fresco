@@ -101,7 +101,7 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public EncodedImage mImageM;
   @Mock public EncodedImage mImageL;
   @Mock public EncodedImage mImageXL;
-  @Mock public MediaVariationsIndexDatabase mMediaVariationsIndexDatabase;
+  @Mock public MediaVariationsIndex mMediaVariationsIndex;
   @Mock public EncodedImage mIntermediateEncodedImage;
   @Mock public EncodedImage mFinalEncodedImage;
   @Captor public ArgumentCaptor<Consumer<EncodedImage>> mConsumerCaptor;
@@ -121,7 +121,7 @@ public class MediaVariationsFallbackProducerTest {
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
-        mMediaVariationsIndexDatabase,
+        mMediaVariationsIndex,
         mInputProducer);
 
     mProducerContext = new SettableProducerContext(
@@ -317,7 +317,7 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
     verify(mConsumer).onNewResult(mFinalEncodedImage, true);
 
-    verify(mMediaVariationsIndexDatabase)
+    verify(mMediaVariationsIndex)
         .saveCachedVariant(MEDIA_ID, CACHE_KEY_ORIGINAL, mFinalEncodedImage);
   }
 
@@ -328,7 +328,7 @@ public class MediaVariationsFallbackProducerTest {
 
   private void whenIndexDbReturnsTaskForResult(List<MediaVariations.Variant> variants) {
     Task<List<MediaVariations.Variant>> task = Task.forResult(variants);
-    when(mMediaVariationsIndexDatabase.getCachedVariants(MEDIA_ID)).thenReturn(task);
+    when(mMediaVariationsIndex.getCachedVariants(MEDIA_ID)).thenReturn(task);
   }
 
   private void whenCacheContains(BufferedDiskCache cache, CacheKey... cacheKeys) {

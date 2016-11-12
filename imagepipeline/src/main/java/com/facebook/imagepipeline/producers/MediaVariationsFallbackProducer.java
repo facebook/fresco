@@ -52,19 +52,19 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final MediaVariationsIndexDatabase mMediaVariationsIndexDatabase;
+  private final MediaVariationsIndex mMediaVariationsIndex;
   private final Producer<EncodedImage> mInputProducer;
 
   public MediaVariationsFallbackProducer(
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
-      MediaVariationsIndexDatabase mediaVariationsIndexDatabase,
+      MediaVariationsIndex mediaVariationsIndex,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
-    mMediaVariationsIndexDatabase = mediaVariationsIndexDatabase;
+    mMediaVariationsIndex = mediaVariationsIndex;
     mInputProducer = inputProducer;
   }
 
@@ -99,7 +99,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           isCancelled);
     } else {
       Task<List<MediaVariations.Variant>> cachedVariantsTask =
-          mMediaVariationsIndexDatabase.getCachedVariants(mediaVariations.getMediaId());
+          mMediaVariationsIndex.getCachedVariants(mediaVariations.getMediaId());
       cachedVariantsTask.continueWith(new Continuation<List<MediaVariations.Variant>, Object>() {
 
         @Override
@@ -323,7 +323,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
 
-      mMediaVariationsIndexDatabase
+      mMediaVariationsIndex
           .saveCachedVariant(mediaVariations.getMediaId(), cacheKey, newResult);
     }
   }

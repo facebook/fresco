@@ -48,6 +48,7 @@ import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
+import com.facebook.imagepipeline.producers.MediaVariationsIndex;
 import com.facebook.imagepipeline.producers.MediaVariationsIndexDatabase;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
@@ -92,6 +93,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
+  private MediaVariationsIndex mMediaVariationsIndex;
   private final int mForceSmallCacheThresholdBytes;
   private final @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
 
@@ -113,6 +115,7 @@ public class ProducerFactory {
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
+      MediaVariationsIndex mediaVariationsIndex,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       boolean decodeFileDescriptorEnabled,
@@ -138,6 +141,7 @@ public class ProducerFactory {
     mEncodedMemoryCache = encodedMemoryCache;
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mMediaVariationsIndex = mediaVariationsIndex;
     mCacheKeyFactory = cacheKeyFactory;
 
     mPlatformBitmapFactory = platformBitmapFactory;
@@ -213,17 +217,11 @@ public class ProducerFactory {
 
   public MediaVariationsFallbackProducer newMediaVariationsProducer(
       Producer<EncodedImage> inputProducer) {
-    MediaVariationsIndexDatabase mediaVariationsIndexDatabase = new MediaVariationsIndexDatabase(
-        mContext,
-        mExecutorSupplier.forLocalStorageRead(),
-        mExecutorSupplier.forLocalStorageWrite()
-    );
-
     return new MediaVariationsFallbackProducer(
         mDefaultBufferedDiskCache,
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
-        mediaVariationsIndexDatabase,
+        mMediaVariationsIndex,
         inputProducer);
   }
 
