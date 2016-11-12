@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -43,7 +45,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   private static final String SQL_DELETE_ENTRIES =
       "DROP TABLE IF EXISTS " + IndexEntry.TABLE_NAME;
 
-  private final IndexDbOpenHelper mDbHelper;
+  private final LazyIndexDbOpenHelper mDbHelper;
   private final Executor mReadExecutor;
   private final Executor mWriteExecutor;
 
@@ -51,7 +53,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
       Context context,
       Executor readExecutor,
       Executor writeExecutor) {
-    mDbHelper = new IndexDbOpenHelper(context);
+    mDbHelper = new LazyIndexDbOpenHelper(context);
     mReadExecutor = readExecutor;
     mWriteExecutor = writeExecutor;
   }
@@ -160,6 +162,22 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
     public static final String COLUMN_NAME_HEIGHT = "height";
     public static final String COLUMN_NAME_CACHE_KEY = "cache_key";
     public static final String COLUMN_NAME_RESOURCE_ID = "resource_id";
+  }
+
+  private static class LazyIndexDbOpenHelper {
+    private final Context mContext;
+    private @Nullable IndexDbOpenHelper mIndexDbOpenHelper;
+
+    private LazyIndexDbOpenHelper(Context context) {
+      mContext = context;
+    }
+
+    public synchronized SQLiteDatabase getWritableDatabase() {
+      if (mIndexDbOpenHelper == null) {
+        mIndexDbOpenHelper = new IndexDbOpenHelper(mContext);
+      }
+      return mIndexDbOpenHelper.getWritableDatabase();
+    }
   }
 
   private static class IndexDbOpenHelper extends SQLiteOpenHelper {
