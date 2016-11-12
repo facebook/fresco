@@ -26,6 +26,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.common.webp.BitmapCreator;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
 
@@ -42,6 +43,13 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
   private static WebpErrorLogger mWebpErrorLogger;
+
+  private static BitmapCreator mBitmapCreator;
+
+  @Override
+  public void setBitmapCreator(final BitmapCreator bitmapCreator) {
+    mBitmapCreator = bitmapCreator;
+  }
 
   private static InputStream wrapToMarkSupportedStream(InputStream inputStream) {
     if (!inputStream.markSupported()) {
@@ -514,7 +522,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
         options.inBitmap.isMutable()) {
       return options.inBitmap;
     }
-    return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    return mBitmapCreator.createNakedBitmap(width, height, Bitmap.Config.ARGB_8888);
   }
 
   @DoNotStrip

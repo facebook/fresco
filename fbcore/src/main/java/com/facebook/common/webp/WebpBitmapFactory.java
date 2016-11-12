@@ -35,7 +35,7 @@ public interface WebpBitmapFactory {
      * @param message The message to log
      * @param extra Extra message if any
      */
-    void onWebpErrorLog(String message, String extra );
+    void onWebpErrorLog(String message, String extra);
   }
 
   /**
@@ -44,6 +44,13 @@ public interface WebpBitmapFactory {
    * @param logger The WebpErrorLogger in order to observe webp errors
    */
   void setWebpErrorLogger(WebpErrorLogger logger);
+
+  /**
+   * Set the object which should create the bg Bitmap
+   *
+   * @param bitmapCreator The BitmapCreator implementation
+   */
+  void setBitmapCreator(final BitmapCreator bitmapCreator);
 
   Bitmap decodeFileDescriptor(
       FileDescriptor fd,

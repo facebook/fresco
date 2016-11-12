@@ -25,9 +25,11 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
+import com.facebook.common.webp.BitmapCreator;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
+import com.facebook.imagepipeline.bitmaps.HoneycombBitmapCreator;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
@@ -97,20 +99,6 @@ public class ImagePipelineConfig {
   private ImagePipelineConfig(Builder builder) {
     // We have to build experiments before the rest
     mImagePipelineExperiments = builder.mExperimentsBuilder.build();
-    // Here we manage the WebpBitmapFactory implementation if any
-    WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
-    if (webpBitmapFactory != null) {
-      setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments);
-    } else {
-      // We check using introspection only if the experiment is enabled
-      if (mImagePipelineExperiments.isWebpSupportEnabled() &&
-          WebpSupportStatus.sIsWebpSupportRequired) {
-        webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists();
-        if (webpBitmapFactory != null) {
-          setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments);
-        }
-      }
-    }
     mAnimatedImageFactory = builder.mAnimatedImageFactory;
     mBitmapMemoryCacheParamsSupplier =
         builder.mBitmapMemoryCacheParamsSupplier == null ?
@@ -184,16 +172,36 @@ public class ImagePipelineConfig {
     mExecutorSupplier =
         builder.mExecutorSupplier == null ?
             new DefaultExecutorSupplier(numCpuBoundThreads) : builder.mExecutorSupplier;
+    // Here we manage the WebpBitmapFactory implementation if any
+    WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
+    if (webpBitmapFactory != null) {
+      BitmapCreator bitmapCreator = new HoneycombBitmapCreator(getPoolFactory());
+      setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments, bitmapCreator);
+    } else {
+      // We check using introspection only if the experiment is enabled
+      if (mImagePipelineExperiments.isWebpSupportEnabled() &&
+          WebpSupportStatus.sIsWebpSupportRequired) {
+        webpBitmapFactory = WebpSupportStatus.loadWebpBitmapFactoryIfExists();
+        if (webpBitmapFactory != null) {
+          BitmapCreator bitmapCreator = new HoneycombBitmapCreator(getPoolFactory());
+          setWebpBitmapFactory(webpBitmapFactory, mImagePipelineExperiments, bitmapCreator);
+        }
+      }
+    }
   }
 
   private static void setWebpBitmapFactory(
       final WebpBitmapFactory webpBitmapFactory,
-      final ImagePipelineExperiments imagePipelineExperiments) {
+      final ImagePipelineExperiments imagePipelineExperiments,
+      final BitmapCreator bitmapCreator) {
     WebpSupportStatus.sWebpBitmapFactory = webpBitmapFactory;
     final WebpBitmapFactory.WebpErrorLogger webpErrorLogger =
         imagePipelineExperiments.getWebpErrorLogger();
     if (webpErrorLogger != null) {
       webpBitmapFactory.setWebpErrorLogger(webpErrorLogger);
+    }
+    if (bitmapCreator != null) {
+      webpBitmapFactory.setBitmapCreator(bitmapCreator);
     }
   }
 

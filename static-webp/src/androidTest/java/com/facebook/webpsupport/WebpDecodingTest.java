@@ -23,6 +23,8 @@ import android.test.InstrumentationTestCase;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +40,17 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   private Instrumentation mInstrumentation;
 
+  private WebpBitmapFactoryImpl mWebpBitmapFactory;
+
   @Override
   @Before
   public void setUp() {
     mInstrumentation = InstrumentationRegistry.getInstrumentation();
+    mWebpBitmapFactory = new WebpBitmapFactoryImpl();
+    ImagePipelineConfig.Builder configBuilder =
+        ImagePipelineConfig.newBuilder(mInstrumentation.getContext())
+            .experiment().setWebpBitmapFactory(mWebpBitmapFactory);
+    ImagePipelineFactory.initialize(configBuilder.build());
   }
 
   private MemoryFile getMemoryFile(String path) {
@@ -86,7 +95,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   @Test
   public void test_webp_extended_decoding_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
         getTestImageInputStream("webp_e.webp"),
         null,
         null);
@@ -96,7 +105,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
   @Test
   public void test_webp_extended_decoding_filedescriptor_bitmap() throws Throwable {
     final MemoryFile memoryFile =  getMemoryFile("webp_e.webp");
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
         getMemoryFileDescriptor(memoryFile),
         null,
         null);
@@ -106,7 +115,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   @Test
   public void test_webp_extended_with_alpha_decoding_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
         getTestImageInputStream("webp_ea.webp"),
         null,
         null);
@@ -117,7 +126,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
   @Test
   public void test_webp_extended_with_alpha_decoding_filedescriptor_bitmap() throws Throwable {
     final MemoryFile memoryFile =  getMemoryFile("webp_ea.webp");
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
         getMemoryFileDescriptor(memoryFile),
         null,
         null);
@@ -127,7 +136,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   @Test
   public void test_webp_lossless_decoding_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
         getTestImageInputStream("webp_ll.webp"),
         null,
         null);
@@ -138,7 +147,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
   @Test
   public void test_webp_lossless_decoding_filedescriptor_bitmap() throws Throwable {
     final MemoryFile memoryFile =  getMemoryFile("webp_ll.webp");
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
         getMemoryFileDescriptor(memoryFile),
         null,
         null);
@@ -148,7 +157,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   @Test
   public void test_webp_plain_inputstream_bitmap() throws Throwable {
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeStream(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeStream(
         getTestImageInputStream("webp_plain.webp"),
         null,
         null);
@@ -159,7 +168,7 @@ public class WebpDecodingTest extends InstrumentationTestCase {
   @Test
   public void test_webp_plain_decoding_filedescriptor_bitmap() throws Throwable {
     final MemoryFile memoryFile =  getMemoryFile("webp_plain.webp");
-    final Bitmap bitmap = WebpBitmapFactoryImpl.hookDecodeFileDescriptor(
+    final Bitmap bitmap = mWebpBitmapFactory.decodeFileDescriptor(
         getMemoryFileDescriptor(memoryFile),
         null,
         null);
