@@ -159,21 +159,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       setWebpBitmapOptions(bitmap, opts);
     } else {
       bitmap = originalDecodeByteArray(array, offset, length, opts);
-      if (bitmap == null && isWebp) {
-        // We notify that the native decoding failed
-        sendWebpErrorLog("webp_native_decode_array_fallback", bitmap);
-        // We fall back using our native code
-        bitmap = nativeDecodeByteArray(
-            array,
-            offset,
-            length,
-            opts,
-            getScaleFromOptions(opts),
-            getInTempStorageFromOptions(opts));
-        // We notify that the direct decoding failed after a native decoding
-        sendWebpErrorLog("webp_direct_decode_array_fallback", bitmap);
-        setWebpBitmapOptions(bitmap, opts);
-      }
     }
     return bitmap;
   }
@@ -228,20 +213,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       setPaddingDefaultValues(outPadding);
     } else {
       bitmap = originalDecodeStream(inputStream, outPadding, opts);
-      if (bitmap == null && isWebp) {
-        // If the bitmap is null and the image is webp it means that something went wrong. We use
-        // our decoder as fallback
-        sendWebpErrorLog("webp_native_decode_stream_fallback", bitmap);
-        bitmap = nativeDecodeStream(
-            inputStream,
-            opts,
-            getScaleFromOptions(opts),
-            getInTempStorageFromOptions(opts));
-        // We check if the direct ddecoding has failed after a native decode
-        sendWebpErrorLog("webp_direct_decode_stream_fallback", bitmap);
-        setWebpBitmapOptions(bitmap, opts);
-        setPaddingDefaultValues(outPadding);
-      }
     }
     return bitmap;
   }
@@ -439,19 +410,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
         } else {
           nativeSeek(fd, originalSeekPosition, true);
           bitmap = originalDecodeFileDescriptor(fd, outPadding, opts);
-          if (bitmap == null && isWebp) {
-            // Notify that the native decode has failed and that we're trying to decode directly
-            sendWebpErrorLog("webp_native_decode_fd_fallback", bitmap);
-            // We fallback into our code for decoding
-            bitmap = nativeDecodeStream(
-                new FileInputStream(fd),
-                opts,
-                getScaleFromOptions(opts),
-                getInTempStorageFromOptions(opts));
-            // Notify that the direct decoder failed after native decoder
-            sendWebpErrorLog("webp_direct_decode_fd_fallback", bitmap);
-            setWebpBitmapOptions(bitmap, opts);
-          }
         }
       } finally {
         try {
@@ -462,19 +420,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       }
     } else {
       bitmap = hookDecodeStream(new FileInputStream(fd), outPadding, opts);
-      if (bitmap == null && isWebp) {
-        // Notify that the native decoding was wrong
-        sendWebpErrorLog("webp_native_decode_out_seek_fd_fallback", bitmap);
-        // We fallback into our code for decoding
-        bitmap = nativeDecodeStream(
-            new FileInputStream(fd),
-            opts,
-            getScaleFromOptions(opts),
-            getInTempStorageFromOptions(opts));
-        // Notify if the direct decoding has failed after native decoder
-        sendWebpErrorLog("webp_direct_decode_out_seek_fd_fallback", bitmap);
-        setWebpBitmapOptions(bitmap, opts);
-      }
       setPaddingDefaultValues(outPadding);
     }
     return bitmap;
