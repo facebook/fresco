@@ -54,11 +54,23 @@ public class StandaloneActivity extends AppCompatActivity {
     int frameDurationMs = getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
     // Create a new animated drawable with the example backend
-    AnimatedDrawable2 animatedDrawable = new AnimatedDrawable2(
+    final AnimatedDrawable2 animatedDrawable = new AnimatedDrawable2(
         new ExampleColorBackend(EXAMPLE_COLORS, frameDurationMs));
 
     // Set the animation as a background
     animationContainer.setBackgroundDrawable(animatedDrawable);
+
+    // Add a click listener to start / stop the animation
+    animationContainer.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (animatedDrawable.isRunning()) {
+          animatedDrawable.stop();
+        } else {
+          animatedDrawable.start();
+        }
+      }
+    });
 
     // Start the animation
     animatedDrawable.start();
