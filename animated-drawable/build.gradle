@@ -16,5 +16,6 @@ dependencies {
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
 
+    compile project(':drawee')
     compile project(':fbcore')
 }
