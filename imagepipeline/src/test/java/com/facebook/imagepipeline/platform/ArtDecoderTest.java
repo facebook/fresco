@@ -22,12 +22,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.v4.util.Pools;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.soloader.SoLoaderShim;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -97,11 +98,11 @@ public class ArtDecoderTest {
 
     mPooledByteBuffer = new TrivialPooledByteBuffer(mEncodedBytes);
     mBitmapPool = mock(BitmapPool.class);
-    mArtDecoder = new ArtDecoder(mBitmapPool, 1);
+    mArtDecoder = new ArtDecoder(mBitmapPool, 1, new Pools.SynchronizedPool(1));
 
     mByteBufferRef = CloseableReference.of(mPooledByteBuffer);
     mEncodedImage = new EncodedImage(mByteBufferRef);
-    mEncodedImage.setImageFormat(ImageFormat.JPEG);
+    mEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     mBitmap = MockBitmapFactory.create();
     doReturn(mBitmap).when(mBitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_SIZE);
 

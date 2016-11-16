@@ -20,7 +20,6 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.producers.PostprocessorProducer.RepeatedPostprocessorConsumer;
@@ -130,31 +129,6 @@ public class RepeatedPostprocessorProducerTest {
 
     performCancelAndVerifyOnCancellation();
     verify(mSourceCloseableStaticBitmap).close();
-  }
-
-  @Test
-  public void testNonStaticBitmapIsPassedOn() {
-    RepeatedPostprocessorConsumer postprocessorConsumer = produceResults();
-    RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
-
-    CloseableAnimatedImage sourceCloseableAnimatedImage = mock(CloseableAnimatedImage.class);
-    CloseableReference<CloseableImage> sourceCloseableImageRef =
-        CloseableReference.<CloseableImage>of(sourceCloseableAnimatedImage);
-    postprocessorConsumer.onNewResult(sourceCloseableImageRef, true);
-    sourceCloseableImageRef.close();
-    mTestExecutorService.runUntilIdle();
-
-    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(false));
-    mInOrder.verifyNoMoreInteractions();
-
-    assertEquals(1, mResults.size());
-    CloseableReference<CloseableImage> res0 = mResults.get(0);
-    assertTrue(CloseableReference.isValid(res0));
-    assertSame(sourceCloseableAnimatedImage, res0.get());
-    res0.close();
-
-    performCancelAndVerifyOnCancellation();
-    verify(sourceCloseableAnimatedImage).close();
   }
 
   @Test

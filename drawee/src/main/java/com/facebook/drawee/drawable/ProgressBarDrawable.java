@@ -12,7 +12,9 @@ package com.facebook.drawee.drawable;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
 /**
@@ -21,12 +23,16 @@ import android.graphics.drawable.Drawable;
 public class ProgressBarDrawable extends Drawable {
 
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final Path mPath = new Path();
+  private final RectF mRect = new RectF();
   private int mBackgroundColor = 0x80000000;
   private int mColor = 0x800080FF;
   private int mPadding = 10;
   private int mBarWidth = 20;
   private int mLevel = 0;
+  private int mRadius = 0;
   private boolean mHideWhenZero = false;
+  private boolean mIsVertical = false;
 
   /** Sets the progress bar color. */
   public void setColor(int color) {
@@ -92,6 +98,32 @@ public class ProgressBarDrawable extends Drawable {
     return mHideWhenZero;
   }
 
+  /** The progress bar will be displayed as a rounded corner rectangle, sets the radius here. */
+  public void setRadius(int radius) {
+    if (mRadius != radius) {
+      mRadius = radius;
+      invalidateSelf();
+    }
+  }
+
+  /** Gets the radius of the progress bar. */
+  public int getRadius() {
+    return mRadius;
+  }
+
+  /** Sets if the progress bar should be vertical. */
+  public void setIsVertical(boolean isVertical) {
+    if (mIsVertical != isVertical) {
+      mIsVertical = isVertical;
+      invalidateSelf();
+    }
+  }
+
+  /** Gets if the progress bar is vertical. */
+  public boolean getIsVertical() {
+    return mIsVertical;
+  }
+
   @Override
   protected boolean onLevelChange(int level) {
     mLevel = level;
@@ -119,16 +151,43 @@ public class ProgressBarDrawable extends Drawable {
     if (mHideWhenZero && mLevel == 0) {
       return;
     }
-    drawBar(canvas, 10000, mBackgroundColor);
-    drawBar(canvas, mLevel, mColor);
+    if (mIsVertical) {
+      drawVerticalBar(canvas, 10000, mBackgroundColor);
+      drawVerticalBar(canvas, mLevel, mColor);
+    } else {
+      drawHorizontalBar(canvas, 10000, mBackgroundColor);
+      drawHorizontalBar(canvas, mLevel, mColor);
+    }
   }
 
-  private void drawBar(Canvas canvas, int level, int color) {
+  private void drawHorizontalBar(Canvas canvas, int level, int color) {
     Rect bounds = getBounds();
     int length = (bounds.width() - 2 * mPadding) * level / 10000;
     int xpos = bounds.left + mPadding;
     int ypos = bounds.bottom - mPadding - mBarWidth;
+    mRect.set(xpos, ypos, xpos + length, ypos + mBarWidth);
+    drawBar(canvas, color);
+  }
+
+  private void drawVerticalBar(Canvas canvas, int level, int color) {
+    Rect bounds = getBounds();
+    int length = (bounds.height() - 2 * mPadding) * level / 10000;
+    int xpos = bounds.left + mPadding;
+    int ypos = bounds.top + mPadding;
+    mRect.set(xpos, ypos, xpos + mBarWidth, ypos + length);
+    drawBar(canvas, color);
+  }
+
+  private void drawBar(Canvas canvas, int color) {
     mPaint.setColor(color);
-    canvas.drawRect(xpos, ypos, xpos + length, ypos + mBarWidth, mPaint);
+    mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+    mPath.reset();
+    mPath.setFillType(Path.FillType.EVEN_ODD);
+    mPath.addRoundRect(
+        mRect,
+        Math.min(mRadius, mBarWidth / 2),
+        Math.min(mRadius, mBarWidth / 2),
+        Path.Direction.CW);
+    canvas.drawPath(mPath, mPaint);
   }
 }

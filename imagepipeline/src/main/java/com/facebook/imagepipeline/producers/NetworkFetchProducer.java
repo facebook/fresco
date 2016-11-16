@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
  */
 public class NetworkFetchProducer implements Producer<EncodedImage> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "NetworkFetchProducer";
+  public static final String PRODUCER_NAME = "NetworkFetchProducer";
   public static final String INTERMEDIATE_RESULT_PRODUCER_EVENT = "intermediate_result";
   private static final int READ_SIZE = 16 * 1024;
 
@@ -136,7 +136,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   private void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream,
       FetchState fetchState) {
-    final long nowMs = SystemClock.elapsedRealtime();
+    final long nowMs = SystemClock.uptimeMillis();
     if (shouldPropagateIntermediateResults(fetchState) &&
         nowMs - fetchState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);

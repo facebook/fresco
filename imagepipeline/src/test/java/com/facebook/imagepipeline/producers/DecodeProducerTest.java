@@ -50,7 +50,6 @@ import static org.mockito.Mockito.*;
 public class DecodeProducerTest {
 
   private static final ImageDecodeOptions IMAGE_DECODE_OPTIONS = ImageDecodeOptions.newBuilder()
-      .setBackgroundColor(0)
       .setMinDecodeIntervalMs(100)
       .build();
   private static final int PREVIEW_SCAN = 2;
@@ -108,6 +107,7 @@ public class DecodeProducerTest {
         mProgressiveJpegConfig,
         false, /* Set downsampleEnabled to false */
         false, /* Set resizeAndRotateForNetwork to false */
+        false, /* We don't cancel when the request is cancelled */
         mInputProducer);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
@@ -295,7 +295,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decodeImage(
+    inOrder.verify(mImageDecoder).decode(
         mEncodedImage,
         IMAGE_SIZE,
         ImmutableQualityInfo.FULL_QUALITY,
@@ -319,7 +319,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decodeImage(
+    inOrder.verify(mImageDecoder).decode(
         mEncodedImage,
         200,
         ImmutableQualityInfo.of(PREVIEW_SCAN, false, false),
@@ -338,7 +338,7 @@ public class DecodeProducerTest {
     JobScheduler.JobRunnable jobRunnable = getJobRunnable();
 
     Exception exception = new RuntimeException();
-    when(mImageDecoder.decodeImage(
+    when(mImageDecoder.decode(
         mEncodedImage,
         IMAGE_SIZE,
         ImmutableQualityInfo.FULL_QUALITY,
@@ -348,7 +348,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decodeImage(
+    inOrder.verify(mImageDecoder).decode(
         mEncodedImage,
         IMAGE_SIZE,
         ImmutableQualityInfo.FULL_QUALITY,

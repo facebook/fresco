@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    compile "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compile project(':fbcore')
+    compile project(':imagepipeline-base')
+}
+apply from: rootProject.file('release.gradle')
+
+android {
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task jarTest (type: Jar) {
+    from android.sourceSets.test.java.srcDirs
+    include '**/*.java'
+    classifier = 'test'
+}
+
+configurations {
+    testOutput.extendsFrom (testCompile)
+}
+
+artifacts.add('archives', sourcesJar)
+artifacts.add('testOutput', jarTest)
+
+build.dependsOn jarTest

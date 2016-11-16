@@ -22,12 +22,12 @@ public interface WebpTranscoder {
   /**
   * @return true if given type of WebP is supported natively by the framework
   */
-  public boolean isWebpNativelySupported(ImageFormat webpFormat);
+  boolean isWebpNativelySupported(ImageFormat webpFormat);
 
   /**
    * Transcodes webp image given by input stream into jpeg.
    */
-  public void transcodeWebpToJpeg(
+  void transcodeWebpToJpeg(
       InputStream inputStream,
       OutputStream outputStream,
       int quality) throws IOException;
@@ -35,7 +35,7 @@ public interface WebpTranscoder {
   /**
    * Transcodes Webp image given by input stream into png.
    */
-  public void transcodeWebpToPng(
+  void transcodeWebpToPng(
       InputStream inputStream,
       OutputStream outputStream) throws IOException;
 

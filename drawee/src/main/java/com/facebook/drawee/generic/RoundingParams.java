@@ -12,8 +12,10 @@ package com.facebook.drawee.generic;
 import java.util.Arrays;
 
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.drawee.drawable.ScalingUtils;
 
 /**
  * Class that encapsulates rounding parameters.
@@ -29,10 +31,10 @@ public class RoundingParams {
     OVERLAY_COLOR,
 
     /**
-     * Uses BitmapShader to draw bitmap with rounded corners. Works only with BitmapDrawables and
-     * ColorDrawables.
-     * IMPORTANT: Only the actual image and the placeholder image will get rounded. Other images
-     * (such as retry, failure, progress bar, backgrounds, overlays, etc.) won't get rounded.
+     * Uses BitmapShader to draw the bitmap with rounded corners. This is the default rounding
+     * method. It doesn't support animations, and it does not support any scale types other than
+     * {@link ScalingUtils.ScaleType#CENTER_CROP}, {@link ScalingUtils.ScaleType#FOCUS_CROP} and
+     * {@link ScalingUtils.ScaleType#FIT_XY}.
      */
     BITMAP_ONLY
   }
@@ -139,7 +141,7 @@ public class RoundingParams {
    *
    * @param overlayColor overlay color
    */
-  public RoundingParams setOverlayColor(int overlayColor) {
+  public RoundingParams setOverlayColor(@ColorInt int overlayColor) {
     mOverlayColor = overlayColor;
     mRoundingMethod = RoundingMethod.OVERLAY_COLOR;
     return this;
@@ -183,11 +185,40 @@ public class RoundingParams {
   }
 
   /**
+   * Sets the border width
+   * @param width of the width
+   */
+  public RoundingParams setBorderWidth(float width) {
+    Preconditions.checkArgument(width >= 0, "the border width cannot be < 0");
+    mBorderWidth = width;
+    return this;
+  }
+
+  /** Gets the border width */
+  public float getBorderWidth() {
+    return mBorderWidth;
+  }
+
+  /**
+   * Sets the border color
+   * @param color of the border
+   */
+  public RoundingParams setBorderColor(@ColorInt int color) {
+    mBorderColor = color;
+    return this;
+  }
+
+  /** Gets the border color */
+  public int getBorderColor() {
+    return mBorderColor;
+  }
+
+  /**
    * Sets the border around the rounded drawable
    * @param color of the border
    * @param width of the width
    */
-  public RoundingParams setBorder(int color, float width) {
+  public RoundingParams setBorder(@ColorInt int color, float width) {
     Preconditions.checkArgument(width >= 0, "the border width cannot be < 0");
     mBorderWidth = width;
     mBorderColor = color;
@@ -202,16 +233,6 @@ public class RoundingParams {
     Preconditions.checkArgument(padding >= 0, "the padding cannot be < 0");
     mPadding = padding;
     return this;
-  }
-
-  /** Gets the border width */
-  public float getBorderWidth() {
-    return mBorderWidth;
-  }
-
-  /** Gets the border color */
-  public int getBorderColor() {
-    return mBorderColor;
   }
 
   /** Gets the padding size */

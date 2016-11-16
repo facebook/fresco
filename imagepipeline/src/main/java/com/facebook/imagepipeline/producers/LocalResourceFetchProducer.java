@@ -24,7 +24,8 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Executes a local fetch from a resource.
  */
 public class LocalResourceFetchProducer extends LocalFetchProducer {
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalResourceFetchProducer";
+
+  public static final String PRODUCER_NAME = "LocalResourceFetchProducer";
 
   private final Resources mResources;
 

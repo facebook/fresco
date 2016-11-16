@@ -12,30 +12,31 @@ package com.facebook.imagepipeline.producers;
 import android.net.Uri;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.request.ImageRequest;
 
-import org.junit.*;
-import org.junit.runner.*;
-import org.junit.runners.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class DownsampleUtilTest {
 
   private ImageRequest mImageRequest;
-  private CloseableReference<PooledByteBuffer> bufferRef;
+  private EncodedImage mEncodedImage;
 
   @Before
-  public void setUp() {
-    bufferRef = CloseableReference.of(mock(PooledByteBuffer.class));
+  public void setup() {
     mImageRequest = mock(ImageRequest.class);
-    when(mImageRequest.getAutoRotateEnabled()).thenReturn(true);
     Uri uri = mock(Uri.class);
     when(uri.toString()).thenReturn("test");
     when(mImageRequest.getSourceUri()).thenReturn(uri);
@@ -43,89 +44,82 @@ public class DownsampleUtilTest {
 
   @Test
   public void testDetermineSampleSize_NullResizeOptions() {
-    ResizeOptions resizeOptions;
-    EncodedImage encodedImage = new EncodedImage(bufferRef);
-    encodedImage.setRotationAngle(0);
-    encodedImage.setWidth(0);
-    encodedImage.setHeight(0);
+    whenImageWidthAndHeight(0, 0);
     // Null resizeOptions
-    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }
 
   @Test
   public void testDetermineSampleSize_NoEncodedImageDimensions() {
-    EncodedImage encodedImage = new EncodedImage(bufferRef);
-    encodedImage.setRotationAngle(0);
-    encodedImage.setWidth(0);
-    encodedImage.setHeight(0);
-    ResizeOptions resizeOptions = new ResizeOptions(1, 1);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    whenImageWidthAndHeight(0, 0);
+    whenRequestResizeWidthAndHeightWithExifRotation(1, 1);
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
 
     // Width or height of the encoded image are 0
-    encodedImage.setWidth(100);
-    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
-    encodedImage.setWidth(0);
-    encodedImage.setHeight(100);
-    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    mEncodedImage.setWidth(100);
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+    mEncodedImage.setWidth(0);
+    mEncodedImage.setHeight(100);
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }
 
   @Test
   public void testDetermineSampleSize_JPEG() {
-    EncodedImage encodedImage = new EncodedImage(bufferRef);
-    encodedImage.setRotationAngle(0);
-    encodedImage.setWidth(100);
-    encodedImage.setHeight(100);
-    ResizeOptions resizeOptions = new ResizeOptions(50, 50);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
-    resizeOptions = new ResizeOptions(50, 25);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    whenImageWidthAndHeight(100, 100);
+    whenRequestResizeWidthAndHeightWithExifRotation(50, 50);
+    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+
+    whenRequestResizeWidthAndHeightWithExifRotation(50, 25);
+    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }
 
   @Test
   public void testDetermineSampleSize_PNG() {
-    EncodedImage encodedImage = new EncodedImage(bufferRef);
-    encodedImage.setImageFormat(ImageFormat.PNG);
-    ResizeOptions resizeOptions = new ResizeOptions(50, 50);
-    encodedImage.setRotationAngle(0);
-    encodedImage.setWidth(150);
-    encodedImage.setHeight(150);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(3, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    whenImageWidthAndHeight(150, 150);
+    mEncodedImage.setImageFormat(DefaultImageFormats.PNG);
+    whenRequestResizeWidthAndHeightWithExifRotation(50, 50);
+    assertEquals(3, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }
 
   @Test
   public void testDetermineSampleSize_WithRotation() {
-    EncodedImage encodedImage = new EncodedImage(bufferRef);
-    encodedImage.setRotationAngle(90);
-    encodedImage.setWidth(50);
-    encodedImage.setHeight(100);
+    whenImageWidthHeightAndRotation(50, 100, 90);
 
-    ResizeOptions resizeOptions = new ResizeOptions(50, 25);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
-    resizeOptions = new ResizeOptions(25, 50);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    whenRequestResizeWidthAndHeightWithExifRotation(50, 25);
+    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+
+    whenRequestResizeWidthAndHeightWithExifRotation(25, 50);
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+  }
+
+  @Test
+  public void testDetermineSampleSize_WithRotationForcedByRequest() {
+    whenImageWidthAndHeight(50, 100);
+
+    // The rotation angles should be ignored as they're dealt with by the ResizeAndRotateProducer
+    // 50,100 -> 50,25 = 1
+    whenRequestResizeWidthHeightAndForcedRotation(50, 25, 90);
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+
+    // 50,100 -> 25,50 = 2
+    whenRequestResizeWidthHeightAndForcedRotation(25, 50, 270);
+    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+
+    // 50,100 -> 10,20 = 5
+    whenRequestResizeWidthHeightAndForcedRotation(10, 20, 180);
+    assertEquals(5, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }
 
   @Test
   public void testDetermineSampleSize_OverMaxPossibleSize() {
-    EncodedImage encodedImage = new EncodedImage(bufferRef);
-    encodedImage.setRotationAngle(0);
-    encodedImage.setWidth(4000);
-    encodedImage.setHeight(4000);
+    whenImageWidthAndHeight(4000, 4000);
 
-    ResizeOptions resizeOptions = new ResizeOptions(4000, 4000);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
-    encodedImage.setWidth(8000);
-    encodedImage.setHeight(8000);
-    resizeOptions = new ResizeOptions(8000, 8000);
-    when(mImageRequest.getResizeOptions()).thenReturn(resizeOptions);
-    assertEquals(4, DownsampleUtil.determineSampleSize(mImageRequest, encodedImage));
+    whenRequestResizeWidthAndHeightWithExifRotation(4000, 4000);
+    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+
+    whenImageWidthAndHeight(8000, 8000);
+    whenRequestResizeWidthAndHeightWithExifRotation(8000, 8000);
+    assertEquals(4, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
   }
 
   @Test
@@ -170,5 +164,31 @@ public class DownsampleUtilTest {
     assertEquals(8, DownsampleUtil.roundToPowerOfTwo(6));
     assertEquals(8, DownsampleUtil.roundToPowerOfTwo(7));
     assertEquals(8, DownsampleUtil.roundToPowerOfTwo(8));
+  }
+
+  private void whenImageWidthAndHeight(int width, int height) {
+    whenImageWidthHeightAndRotation(width, height, 0);
+  }
+
+  private void whenImageWidthHeightAndRotation(int width, int height, int rotationAngle) {
+    mEncodedImage = new EncodedImage(CloseableReference.of(mock(PooledByteBuffer.class)));
+    mEncodedImage.setWidth(width);
+    mEncodedImage.setHeight(height);
+    mEncodedImage.setRotationAngle(rotationAngle);
+  }
+
+  private void whenRequestResizeWidthAndHeightWithExifRotation(int width, int height) {
+    whenRequestResizeWidthHeightAndForcedRotation(width, height, -1);
+  }
+
+  private void whenRequestResizeWidthHeightAndForcedRotation(
+      int width,
+      int height,
+      int rotationAngle) {
+    when(mImageRequest.getPreferredWidth()).thenReturn(width);
+    when(mImageRequest.getPreferredHeight()).thenReturn(height);
+    when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(width, height));
+    when(mImageRequest.getRotationOptions())
+        .thenReturn(RotationOptions.forceRotation(rotationAngle));
   }
 }

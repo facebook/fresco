@@ -24,8 +24,8 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class BitmapMemoryCacheProducer implements Producer<CloseableReference<CloseableImage>> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
-  @VisibleForTesting static final String VALUE_FOUND = "cached_value_found";
+  public static final String PRODUCER_NAME = "BitmapMemoryCacheProducer";
+  public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
   private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
@@ -49,7 +49,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
     final String requestId = producerContext.getId();
     listener.onProducerStart(requestId, getProducerName());
     final ImageRequest imageRequest = producerContext.getImageRequest();
-    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest);
+    final Object callerContext = producerContext.getCallerContext();
+    final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
 
     CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
 
@@ -59,7 +60,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
         listener.onProducerFinishWithSuccess(
             requestId,
             getProducerName(),
-            listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "true") : null);
+            listener.requiresExtraMap(requestId)
+                ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
+                : null);
         consumer.onProgressUpdate(1f);
       }
       consumer.onNewResult(cachedReference, isFinal);
@@ -74,7 +77,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       listener.onProducerFinishWithSuccess(
           requestId,
           getProducerName(),
-          listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+          listener.requiresExtraMap(requestId)
+              ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
+              : null);
       consumer.onNewResult(null, true);
       return;
     }
@@ -83,7 +88,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
     listener.onProducerFinishWithSuccess(
         requestId,
         getProducerName(),
-        listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+        listener.requiresExtraMap(requestId)
+            ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
+            : null);
     mInputProducer.produceResults(wrappedConsumer, producerContext);
   }
 

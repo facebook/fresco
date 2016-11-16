@@ -69,10 +69,14 @@ public class ScaleTypeDrawableTest {
 
   @Test
   public void testConfigureBounds_NoIntrinsicDimensions() {
-    for (ScaleType scaleType : ScaleType.values()) {
-      System.out.println("testConfigureBounds_NoIntrinsicDimensions: " + scaleType);
-      testConfigureBounds_NoIntrinsicDimensions(scaleType, mViewBounds);
-    }
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_XY, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_START, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_CENTER, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FIT_END, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.CENTER, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.CENTER_INSIDE, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.CENTER_CROP, mViewBounds);
+    testConfigureBounds_NoIntrinsicDimensions(ScaleType.FOCUS_CROP, mViewBounds);
   }
 
   private void testConfigureBounds_NoIntrinsicDimensions(ScaleType scaleType, Rect viewBounds) {
@@ -91,10 +95,14 @@ public class ScaleTypeDrawableTest {
 
   @Test
   public void testConfigureBounds_SameAsView() {
-    for (ScaleType scaleType : ScaleType.values()) {
-      System.out.println("testConfigureBounds_SameAsView: " + scaleType);
-      testConfigureBounds_SameAsView(scaleType, mViewBounds);
-    }
+    testConfigureBounds_SameAsView(ScaleType.FIT_XY, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FIT_START, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FIT_CENTER, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FIT_END, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.CENTER, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.CENTER_INSIDE, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.CENTER_CROP, mViewBounds);
+    testConfigureBounds_SameAsView(ScaleType.FOCUS_CROP, mViewBounds);
   }
 
   private void testConfigureBounds_SameAsView(ScaleType scaleType, Rect viewBounds) {
@@ -256,6 +264,21 @@ public class ScaleTypeDrawableTest {
     expectedMatrix.setScale(2.0f, 2.0f);
     expectedMatrix.postTranslate(10, -289);
     testConfigureBounds(bounds, width, height, ScaleType.FOCUS_CROP, focusPoint, expectedMatrix);
+  }
+
+  @Test
+  public void testConfigureBoundsNoOpWhenScaleTypeNotChanged() {
+    Rect bounds = new Rect(10, 10, 410, 310);
+    int width = 200;
+    int height = 300;
+    PointF focusPoint = new PointF(0.5f, 0.9f);
+    Matrix expectedMatrix = new Matrix();
+    expectedMatrix.setScale(2.0f, 2.0f);
+    expectedMatrix.postTranslate(10, -289);
+    testConfigureBounds(bounds, width, height, ScaleType.FOCUS_CROP, focusPoint, expectedMatrix);
+
+    mScaleTypeDrawable.setScaleType(ScaleType.FOCUS_CROP);
+    verifyNoMoreInteractions(mUnderlyingDrawable);
   }
 
   private void testConfigureBounds(

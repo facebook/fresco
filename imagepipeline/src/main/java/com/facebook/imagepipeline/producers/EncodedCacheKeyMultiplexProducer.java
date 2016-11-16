@@ -24,14 +24,18 @@ public class EncodedCacheKeyMultiplexProducer extends
 
   private final CacheKeyFactory mCacheKeyFactory;
 
-  public EncodedCacheKeyMultiplexProducer(CacheKeyFactory cacheKeyFactory, Producer inputProducer) {
+  public EncodedCacheKeyMultiplexProducer(
+      CacheKeyFactory cacheKeyFactory,
+      Producer inputProducer) {
     super(inputProducer);
     mCacheKeyFactory = cacheKeyFactory;
   }
 
   protected Pair<CacheKey, ImageRequest.RequestLevel> getKey(ProducerContext producerContext) {
     return Pair.create(
-        mCacheKeyFactory.getEncodedCacheKey(producerContext.getImageRequest()),
+        mCacheKeyFactory.getEncodedCacheKey(
+            producerContext.getImageRequest(),
+            producerContext.getCallerContext()),
         producerContext.getLowestPermittedRequestLevel());
   }
 

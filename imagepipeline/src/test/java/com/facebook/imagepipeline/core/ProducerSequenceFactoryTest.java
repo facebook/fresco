@@ -15,38 +15,30 @@ import com.facebook.common.media.MediaUtils;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.producers.DecodeProducer;
-import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
-import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
-import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
-import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
-import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
-import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
-import com.facebook.imagepipeline.producers.NetworkFetcher;
-import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
-import com.facebook.imagepipeline.producers.ResizeAndRotateProducer;
-import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
-import com.facebook.imagepipeline.producers.ThrottlingProducer;
-import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 
-import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.*;
-import org.powermock.api.mockito.*;
-import org.powermock.core.classloader.annotations.*;
-import org.powermock.modules.junit4.rule.*;
-import org.robolectric.*;
-import org.robolectric.annotation.*;
+import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.RETURNS_MOCKS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests {@link ProducerSequenceFactory}.
@@ -59,7 +51,6 @@ public class ProducerSequenceFactoryTest {
 
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
-  @Mock public NetworkFetcher mNetworkFetcher;
   private final String mDummyMime = "dummy_mime";
   private Uri mUri;
   private ProducerSequenceFactory mProducerSequenceFactory;
@@ -72,8 +63,10 @@ public class ProducerSequenceFactoryTest {
     MockitoAnnotations.initMocks(this);
     PowerMockito.mockStatic(UriUtil.class, MediaUtils.class);
 
+    ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+
     mProducerSequenceFactory =
-        new ProducerSequenceFactory(new MockProducerFactory(), null, true, true, false, null);
+        new ProducerSequenceFactory(producerFactory, null, true, false, null, 5);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -102,11 +95,27 @@ public class ProducerSequenceFactoryTest {
   }
 
   @Test
+  public void testLocalFileFetchToEncodedMemory() {
+    PowerMockito.when(UriUtil.isLocalFileUri(mUri)).thenReturn(true);
+    Producer<CloseableReference<PooledByteBuffer>> producer =
+        mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
+    assertSame(producer, mProducerSequenceFactory.mLocalFileEncodedImageProducerSequence);
+  }
+
+  @Test
   public void testNetworkFetchToEncodedMemory() {
     PowerMockito.when(UriUtil.isNetworkUri(mUri)).thenReturn(true);
     Producer<CloseableReference<PooledByteBuffer>> producer =
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
-    assertSame(producer, mProducerSequenceFactory.mEncodedImageProducerSequence);
+    assertSame(producer, mProducerSequenceFactory.mNetworkEncodedImageProducerSequence);
+  }
+
+  @Test
+  public void testLocalFileFetchToEncodedMemoryPrefetch() {
+    PowerMockito.when(UriUtil.isLocalFileUri(mUri)).thenReturn(true);
+    Producer<Void> producer =
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
+    assertSame(producer, mProducerSequenceFactory.mLocalFileFetchToEncodedMemoryPrefetchSequence);
   }
 
   @Test
@@ -115,12 +124,6 @@ public class ProducerSequenceFactoryTest {
     Producer<Void> producer =
         mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
     assertSame(producer, mProducerSequenceFactory.mNetworkFetchToEncodedMemoryPrefetchSequence);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testEncodedBytesNotAllowedForLocalFiles() {
-    PowerMockito.when(UriUtil.isLocalFileUri(mUri)).thenReturn(true);
-    mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
   }
 
   @Test
@@ -246,99 +249,9 @@ public class ProducerSequenceFactoryTest {
         mProducerSequenceFactory.getEncodedImageProducerSequence(mImageRequest);
     assertSame(
         encodedSequence,
-        mProducerSequenceFactory.mEncodedImageProducerSequence);
+        mProducerSequenceFactory.mNetworkEncodedImageProducerSequence);
     assertNull(
         mProducerSequenceFactory.mPostprocessorSequences.get(
             mProducerSequenceFactory.mBackgroundNetworkFetchToEncodedMemorySequence));
   }
-
-  private static class MockProducerFactory extends ProducerFactory {
-
-    public MockProducerFactory() {
-      super(
-          RuntimeEnvironment.application,
-          null,
-          null,
-          null,
-          false,
-          false,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          false);
-    }
-
-    @Override
-    public LocalVideoThumbnailProducer newLocalVideoThumbnailProducer() {
-      return mock(LocalVideoThumbnailProducer.class);
-    }
-
-    @Override
-    public <T> ThreadHandoffProducer<T> newBackgroundThreadHandoffProducer(
-        Producer<T> inputProducer,
-        ThreadHandoffProducerQueue inputThreadHandoffProducerQueue) {
-      return mock(ThreadHandoffProducer.class);
-    }
-
-    @Override
-    public LocalFileFetchProducer newLocalFileFetchProducer() {
-      return mock(LocalFileFetchProducer.class);
-    }
-
-    @Override
-    public LocalResourceFetchProducer newLocalResourceFetchProducer() {
-      return mock(LocalResourceFetchProducer.class);
-    }
-
-    @Override
-    public WebpTranscodeProducer newWebpTranscodeProducer(
-        Producer<EncodedImage> inputProducer) {
-      return mock(WebpTranscodeProducer.class);
-    }
-
-    @Override
-    public ResizeAndRotateProducer newResizeAndRotateProducer(
-        Producer<EncodedImage> inputProducer) {
-      return mock(ResizeAndRotateProducer.class);
-    }
-
-    @Override
-    public <T> ThrottlingProducer<T> newThrottlingProducer(
-        int maxSimultaneousRequests,
-        Producer<T> inputProducer) {
-      return mock(ThrottlingProducer.class);
-    }
-
-    @Override
-    public LocalExifThumbnailProducer newLocalExifThumbnailProducer() {
-      return mock(LocalExifThumbnailProducer.class);
-    }
-
-    @Override
-    public DecodeProducer newDecodeProducer(Producer<EncodedImage> inputProducer) {
-      return mock(DecodeProducer.class);
-    }
-
-    @Override
-    public LocalAssetFetchProducer newLocalAssetFetchProducer() {
-      return mock(LocalAssetFetchProducer.class);
-    }
-
-    @Override
-    public LocalContentUriFetchProducer newContentUriFetchProducer() {
-      return mock(LocalContentUriFetchProducer.class);
-    }
-
-    @Override
-    public PostprocessorProducer newPostprocessorProducer(
-        Producer<CloseableReference<CloseableImage>> inputProducer) {
-      return mock(PostprocessorProducer.class);
-    }
-  }
-
 }

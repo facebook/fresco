@@ -13,12 +13,14 @@ import javax.annotation.Nullable;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.drawee.R;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
@@ -48,31 +50,31 @@ public class SimpleDraweeView extends GenericDraweeView {
 
   public SimpleDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context, hierarchy);
-    init();
+    init(context, null);
   }
 
   public SimpleDraweeView(Context context) {
     super(context);
-    init();
+    init(context, null);
   }
 
   public SimpleDraweeView(Context context, AttributeSet attrs) {
     super(context, attrs);
-    init();
+    init(context, attrs);
   }
 
   public SimpleDraweeView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
-    init();
+    init(context, attrs);
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public SimpleDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    init();
+    init(context, attrs);
   }
 
-  private void init() {
+  private void init(Context context, @Nullable AttributeSet attrs) {
     if (isInEditMode()) {
       return;
     }
@@ -80,6 +82,19 @@ public class SimpleDraweeView extends GenericDraweeView {
         sDraweeControllerBuilderSupplier,
         "SimpleDraweeView was not initialized!");
     mSimpleDraweeControllerBuilder = sDraweeControllerBuilderSupplier.get();
+
+    if (attrs != null) {
+      TypedArray gdhAttrs = context.obtainStyledAttributes(
+          attrs,
+          R.styleable.SimpleDraweeView);
+      try {
+        if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
+          setImageURI(Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)), null);
+        }
+      } finally {
+        gdhAttrs.recycle();
+      }
+    }
   }
 
   protected SimpleDraweeControllerBuilder getControllerBuilder() {
@@ -98,6 +113,15 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   /**
+   * Displays an image given by the uri string.
+   *
+   * @param uriString uri string of the image
+   */
+  public void setImageURI(@Nullable String uriString) {
+    setImageURI(uriString, null);
+  }
+
+  /**
    * Displays an image given by the uri.
    *
    * @param uri uri of the image
@@ -110,5 +134,16 @@ public class SimpleDraweeView extends GenericDraweeView {
         .setOldController(getController())
         .build();
     setController(controller);
+  }
+
+  /**
+   * Displays an image given by the uri string.
+   *
+   * @param uriString uri string of the image
+   * @param callerContext caller context
+   */
+  public void setImageURI(@Nullable String uriString, @Nullable Object callerContext) {
+    Uri uri = (uriString != null) ? Uri.parse(uriString) : null;
+    setImageURI(uri, callerContext);
   }
 }

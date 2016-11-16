@@ -132,7 +132,7 @@ public class BitmapCounter {
           throw new TooManyBitmapsException();
         }
       }
-      List<CloseableReference<Bitmap>> ret = new ArrayList<>();
+      List<CloseableReference<Bitmap>> ret = new ArrayList<>(bitmaps.size());
       for (Bitmap bitmap : bitmaps) {
         ret.add(CloseableReference.of(bitmap, mUnpooledBitmapsReleaser));
       }

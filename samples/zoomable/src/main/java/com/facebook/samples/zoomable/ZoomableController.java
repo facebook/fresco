@@ -25,7 +25,7 @@ public interface ZoomableController {
   /**
    * Listener interface.
    */
-  public interface Listener {
+  interface Listener {
 
     /**
      * Notifies the view that the transform changed.
@@ -64,6 +64,29 @@ public interface ZoomableController {
    * @return the current scale factor
    */
   float getScaleFactor();
+
+  /**
+   * Returns true if the zoomable transform is identity matrix, and the controller is idle.
+   */
+  boolean isIdentity();
+
+  /**
+   * Returns true if the transform was corrected during the last update.
+   *
+   * This mainly happens when a gesture would cause the image to get out of limits and the
+   * transform gets corrected in order to prevent that.
+   */
+  boolean wasTransformCorrected();
+
+  /**
+   * See {@link android.support.v4.view.ScrollingView}.
+   */
+  int computeHorizontalScrollRange();
+  int computeHorizontalScrollOffset();
+  int computeHorizontalScrollExtent();
+  int computeVerticalScrollRange();
+  int computeVerticalScrollOffset();
+  int computeVerticalScrollExtent();
 
   /**
    * Gets the current transform.

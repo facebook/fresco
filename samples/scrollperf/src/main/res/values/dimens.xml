@@ -1,0 +1,12 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="size_selection_text_size">15sp</dimen>
+    <integer name="default_size_value">400</integer>
+
+    <dimen name="drawee_border_width">2dp</dimen>
+    <dimen name="drawee_corner_radius">16dp</dimen>
+    <dimen name="drawee_padding">16dp</dimen>
+</resources>

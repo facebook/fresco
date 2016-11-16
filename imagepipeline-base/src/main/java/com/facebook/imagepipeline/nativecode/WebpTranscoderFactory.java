@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.nativecode;
 
-import static com.facebook.common.webp.WebpSupportStatus.sWebpLibraryPresent;
-
 /**
  * This is the class responsible to return the WebpTranscoder if any
  */

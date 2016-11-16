@@ -17,11 +17,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Closeables;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 
 /**
@@ -65,6 +65,16 @@ import com.facebook.common.logging.FLog;
  */
 public final class CloseableReference<T> implements Cloneable, Closeable {
 
+  public static class Stats {
+    public final int totalFinalized;
+    public final int unclosedInFinalize;
+
+    private Stats(int totalFinalized, int unclosedInFinalize) {
+      this.totalFinalized = totalFinalized;
+      this.unclosedInFinalize = unclosedInFinalize;
+    }
+  }
+
   private static Class<CloseableReference> TAG = CloseableReference.class;
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
@@ -79,6 +89,12 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
+  private static final AtomicInteger TOTAL_FINALIZED = new AtomicInteger(0);
+  private static final AtomicInteger UNCLOSED_IN_FINALIZE = new AtomicInteger(0);
+
+  private static volatile boolean sTraceTracking;
+  private final @Nullable Throwable mObtainedTrace;
+  private @Nullable Throwable mClonedTrace;
 
   @GuardedBy("this")
   private boolean mIsClosed = false;
@@ -92,11 +108,13 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   private CloseableReference(SharedReference<T> sharedReference) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
+    mObtainedTrace = getTraceOrNull();
   }
 
   private CloseableReference(T t, ResourceReleaser<T> resourceReleaser) {
     // Ref-count pre-set to 1
     mSharedReference = new SharedReference<T>(t, resourceReleaser);
+    mObtainedTrace = getTraceOrNull();
   }
 
   /**
@@ -161,11 +179,13 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    */
   @Override
   public synchronized CloseableReference<T> clone() {
+    mClonedTrace = getTraceOrNull();
     Preconditions.checkState(isValid());
     return new CloseableReference<T>(mSharedReference);
   }
 
   public synchronized CloseableReference<T> cloneOrNull() {
+    mClonedTrace = getTraceOrNull();
     return isValid() ? new CloseableReference<T>(mSharedReference) : null;
   }
 
@@ -180,6 +200,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   @Override
   protected void finalize() throws Throwable {
     try {
+      TOTAL_FINALIZED.incrementAndGet();
       // We put synchronized here so that lint doesn't warn about accessing mIsClosed, which is
       // guarded by this. Lint isn't aware of finalize semantics.
       synchronized (this) {
@@ -188,10 +209,18 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       }
 
-      FLog.w(TAG, "Finalized without closing: %x %x (type = %s)",
+      UNCLOSED_IN_FINALIZE.incrementAndGet();
+      String message = String.format(
+          "Finalized without closing: %x %x (type = %s)",
           System.identityHashCode(this),
           System.identityHashCode(mSharedReference),
           mSharedReference.get().getClass().getSimpleName());
+      if (sTraceTracking) {
+        Throwable cause = mClonedTrace != null ? mClonedTrace : mObtainedTrace;
+        FLog.wtf(TAG, message, cause);
+      } else {
+        FLog.w(TAG, message);
+      }
 
       close();
     } finally {
@@ -277,5 +306,20 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         closeSafely(ref);
       }
     }
+  }
+
+  public static Stats getStats() {
+    return new Stats(TOTAL_FINALIZED.get(), UNCLOSED_IN_FINALIZE.get());
+  }
+
+  public static void setTraceTrackingEnabled(boolean enabled) {
+    sTraceTracking = enabled;
+  }
+
+  private static @Nullable Throwable getTraceOrNull() {
+    if (sTraceTracking) {
+      return new Throwable();
+    }
+    return null;
   }
 }

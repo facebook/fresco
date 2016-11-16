@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
+import com.facebook.drawee.drawable.ArrayDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import org.robolectric.RobolectricTestRunner;
 
@@ -26,6 +27,8 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 @RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyBuilderTest {
@@ -49,18 +52,19 @@ public class GenericDraweeHierarchyBuilderTest {
 
   private void testInitialState(GenericDraweeHierarchyBuilder builder) {
     assertEquals(300, builder.getFadeDuration());
+    assertEquals(0, builder.getDesiredAspectRatio(), 0);
     assertEquals(null, builder.getPlaceholderImage());
-    assertEquals(null, builder.getPlaceholderImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getPlaceholderImageScaleType());
     assertEquals(null, builder.getRetryImage());
-    assertEquals(null, builder.getRetryImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getRetryImageScaleType());
     assertEquals(null, builder.getFailureImage());
-    assertEquals(null, builder.getFailureImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getFailureImageScaleType());
     assertEquals(null, builder.getProgressBarImage());
-    assertEquals(null, builder.getProgressBarImageScaleType());
-    assertEquals(ScalingUtils.ScaleType.CENTER_CROP, builder.getActualImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getProgressBarImageScaleType());
+    assertEquals(ScaleType.CENTER_CROP, builder.getActualImageScaleType());
     assertEquals(null, builder.getActualImageMatrix());
     assertEquals(null, builder.getActualImageFocusPoint());
-    assertEquals(null, builder.getBackgrounds());
+    assertEquals(null, builder.getBackground());
     assertEquals(null, builder.getOverlays());
     assertEquals(null, builder.getRoundingParams());
   }
@@ -76,33 +80,51 @@ public class GenericDraweeHierarchyBuilderTest {
     builder.setFadeDuration(100);
     assertEquals(100, builder.getFadeDuration());
 
-    // test image setters with default scale type
+    // test desired aspect ratio
+    builder.setDesiredAspectRatio(1.33f);
+    assertEquals(1.33f, builder.getDesiredAspectRatio(), 0);
+
+    // test image setters without modifying scale type (default expected)
     builder.setPlaceholderImage(mPlaceholderDrawable1);
     builder.setRetryImage(mRetryDrawable1);
     builder.setFailureImage(mFailureDrawable1);
     builder.setProgressBarImage(mProgressBarDrawable1);
     assertEquals(mPlaceholderDrawable1, builder.getPlaceholderImage());
-    assertEquals(ScalingUtils.ScaleType.CENTER_INSIDE, builder.getPlaceholderImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getPlaceholderImageScaleType());
     assertEquals(mRetryDrawable1, builder.getRetryImage());
-    assertEquals(ScalingUtils.ScaleType.CENTER_INSIDE, builder.getRetryImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getRetryImageScaleType());
     assertEquals(mFailureDrawable1, builder.getFailureImage());
-    assertEquals(ScalingUtils.ScaleType.CENTER_INSIDE, builder.getFailureImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getFailureImageScaleType());
     assertEquals(mProgressBarDrawable1, builder.getProgressBarImage());
-    assertEquals(ScalingUtils.ScaleType.CENTER_INSIDE, builder.getProgressBarImageScaleType());
+    assertEquals(ScaleType.CENTER_INSIDE, builder.getProgressBarImageScaleType());
 
     // test image setters with explicit scale type
-    builder.setPlaceholderImage(mPlaceholderDrawable2, ScalingUtils.ScaleType.CENTER);
-    builder.setRetryImage(mRetryDrawable2, ScalingUtils.ScaleType.FIT_CENTER);
-    builder.setFailureImage(mFailureDrawable2, ScalingUtils.ScaleType.FIT_END);
-    builder.setProgressBarImage(mProgressBarDrawable2, ScalingUtils.ScaleType.CENTER_CROP);
+    builder.setPlaceholderImage(mPlaceholderDrawable2, ScaleType.CENTER);
+    builder.setRetryImage(mRetryDrawable2, ScaleType.FIT_CENTER);
+    builder.setFailureImage(mFailureDrawable2, ScaleType.FIT_END);
+    builder.setProgressBarImage(mProgressBarDrawable2, ScaleType.CENTER_CROP);
     assertEquals(mPlaceholderDrawable2, builder.getPlaceholderImage());
-    assertEquals(ScalingUtils.ScaleType.CENTER, builder.getPlaceholderImageScaleType());
+    assertEquals(ScaleType.CENTER, builder.getPlaceholderImageScaleType());
     assertEquals(mRetryDrawable2, builder.getRetryImage());
-    assertEquals(ScalingUtils.ScaleType.FIT_CENTER, builder.getRetryImageScaleType());
+    assertEquals(ScaleType.FIT_CENTER, builder.getRetryImageScaleType());
     assertEquals(mFailureDrawable2, builder.getFailureImage());
-    assertEquals(ScalingUtils.ScaleType.FIT_END, builder.getFailureImageScaleType());
+    assertEquals(ScaleType.FIT_END, builder.getFailureImageScaleType());
     assertEquals(mProgressBarDrawable2, builder.getProgressBarImage());
-    assertEquals(ScalingUtils.ScaleType.CENTER_CROP, builder.getProgressBarImageScaleType());
+    assertEquals(ScaleType.CENTER_CROP, builder.getProgressBarImageScaleType());
+
+    // test image setters without modifying scale type (previous scaletype expected)
+    builder.setPlaceholderImage(mPlaceholderDrawable1);
+    builder.setRetryImage(mRetryDrawable1);
+    builder.setFailureImage(mFailureDrawable1);
+    builder.setProgressBarImage(mProgressBarDrawable1);
+    assertEquals(mPlaceholderDrawable1, builder.getPlaceholderImage());
+    assertEquals(ScaleType.CENTER, builder.getPlaceholderImageScaleType());
+    assertEquals(mRetryDrawable1, builder.getRetryImage());
+    assertEquals(ScaleType.FIT_CENTER, builder.getRetryImageScaleType());
+    assertEquals(mFailureDrawable1, builder.getFailureImage());
+    assertEquals(ScaleType.FIT_END, builder.getFailureImageScaleType());
+    assertEquals(mProgressBarDrawable1, builder.getProgressBarImage());
+    assertEquals(ScaleType.CENTER_CROP, builder.getProgressBarImageScaleType());
 
     // test actual image matrix
     builder.setActualImageMatrix(mActualImageMatrix);
@@ -110,31 +132,40 @@ public class GenericDraweeHierarchyBuilderTest {
     assertSame(null, builder.getActualImageScaleType());
 
     // test actual image scale type
-    builder.setActualImageScaleType(ScalingUtils.ScaleType.FIT_START);
-    assertEquals(ScalingUtils.ScaleType.FIT_START, builder.getActualImageScaleType());
+    builder.setActualImageScaleType(ScaleType.FIT_START);
+    assertEquals(ScaleType.FIT_START, builder.getActualImageScaleType());
 
     // test actual image focus point
     builder.setActualImageFocusPoint(mFocusPoint);
     AndroidGraphicsTestUtils.assertEquals(mFocusPoint, builder.getActualImageFocusPoint(), 0f);
-    builder.setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP);
-    assertSame(ScalingUtils.ScaleType.FOCUS_CROP, builder.getActualImageScaleType());
+    builder.setActualImageScaleType(ScaleType.FOCUS_CROP);
+    assertSame(ScaleType.FOCUS_CROP, builder.getActualImageScaleType());
     assertSame(null, builder.getActualImageMatrix());
 
     // test backgrounds & overlays
     builder.setBackgrounds(Arrays.asList(mBackgroundDrawable1, mBackgroundDrawable2));
     builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
-    assertArrayEquals(
-        builder.getBackgrounds().toArray(),
-        new Drawable[]{mBackgroundDrawable1, mBackgroundDrawable2});
+    assertEquals(builder.getBackground().getClass(), ArrayDrawable.class);
+    ArrayDrawable bgArrayDrawable = (ArrayDrawable) builder.getBackground();
+    assertEquals(2, bgArrayDrawable.getNumberOfLayers());
+    assertSame(mBackgroundDrawable1, bgArrayDrawable.getDrawable(0));
+    assertSame(mBackgroundDrawable2, bgArrayDrawable.getDrawable(1));
     assertArrayEquals(
         builder.getOverlays().toArray(),
         new Drawable[]{mOverlayDrawable1, mOverlayDrawable2});
     builder.setBackground(mBackgroundDrawable2);
     builder.setOverlay(mOverlayDrawable2);
     builder.setPressedStateOverlay(mPressedStateDrawable);
-    assertArrayEquals(builder.getBackgrounds().toArray(), new Drawable[]{mBackgroundDrawable2});
+    assertSame(builder.getBackground(), mBackgroundDrawable2);
     assertArrayEquals(builder.getOverlays().toArray(), new Drawable[] {mOverlayDrawable2});
     assertEquals(builder.getPressedStateOverlay().getClass(), StateListDrawable.class);
+    // test clearing backgrounds & overlays
+    builder.setBackground(null);
+    assertNull(builder.getBackground());
+    builder.setOverlay(null);
+    assertNull(builder.getOverlays());
+    builder.setPressedStateOverlay(null);
+    assertNull(builder.getPressedStateOverlay());
 
     // test rounding params
     builder.setRoundingParams(mRoundingParams);

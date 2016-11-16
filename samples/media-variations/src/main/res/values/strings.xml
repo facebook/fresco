@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">Fresco Media Variations</string>
+  <string name="individual_variants">Individual variants (click to load)</string>
+  <string name="media_variations">Combined image request (click to refresh)</string>
+  <string name="clear_cache">Clear cache and reset</string>
+  <string name="restart_toast">Cache cleared. Please restart the app to test further.</string>
+</resources>

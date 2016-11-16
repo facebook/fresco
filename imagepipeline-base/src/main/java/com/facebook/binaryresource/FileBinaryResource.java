@@ -61,9 +61,9 @@ public class FileBinaryResource implements BinaryResource {
   }
 
   /*
-   * Factory method to create a wrapping BinaryResource without explicitly taking care of null.
-   * If the supplied file is null, instead of BinaryResource, null is returned.
-   */
+     * Factory method to create a wrapping BinaryResource without explicitly taking care of null.
+     * If the supplied file is null, instead of BinaryResource, null is returned.
+     */
   public static FileBinaryResource createOrNull(File file) {
     return (file != null) ? new FileBinaryResource(file) : null;
   }

@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.request;
 import javax.annotation.Nullable;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
@@ -24,6 +25,13 @@ import com.facebook.imagepipeline.nativecode.Bitmaps;
  * <p> Clients should override exactly one of the three provided {@link #process} methods.
  */
 public abstract class BasePostprocessor implements Postprocessor {
+
+  /**
+   * The fallback bitmap configuration is used for creating a new destination bitmap when the
+   * source bitmap has <code>config==null</code>. This is the case for preview images for GIF
+   * animations.
+   */
+  public static final Bitmap.Config FALLBACK_BITMAP_CONFIGURATION = Bitmap.Config.ARGB_8888;
 
   @Override
   public String getName() {
@@ -47,11 +55,12 @@ public abstract class BasePostprocessor implements Postprocessor {
   public CloseableReference<Bitmap> process(
       Bitmap sourceBitmap,
       PlatformBitmapFactory bitmapFactory) {
+    final Bitmap.Config sourceBitmapConfig = sourceBitmap.getConfig();
     CloseableReference<Bitmap> destBitmapRef =
-        bitmapFactory.createBitmap(
+        bitmapFactory.createBitmapInternal(
             sourceBitmap.getWidth(),
             sourceBitmap.getHeight(),
-            sourceBitmap.getConfig());
+            sourceBitmapConfig != null ? sourceBitmapConfig : FALLBACK_BITMAP_CONFIGURATION);
     try {
       process(destBitmapRef.get(), sourceBitmap);
       return CloseableReference.cloneOrNull(destBitmapRef);
@@ -76,7 +85,7 @@ public abstract class BasePostprocessor implements Postprocessor {
    * @param sourceBitmap the source bitmap to be used as input
    */
   public void process(Bitmap destBitmap, Bitmap sourceBitmap) {
-    Bitmaps.copyBitmap(destBitmap, sourceBitmap);
+    internalCopyBitmap(destBitmap, sourceBitmap);
     process(destBitmap);
   }
 
@@ -99,5 +108,23 @@ public abstract class BasePostprocessor implements Postprocessor {
   @Nullable
   public CacheKey getPostprocessorCacheKey() {
     return null;
+  }
+
+  /**
+   * Copies the content of <code>sourceBitmap</code> to <code>destBitmap</code>. Both bitmaps must
+   * have the same width and height. If their {@link Bitmap.Config} are identical, the memory is
+   * directly copied. Otherwise, the <code>sourceBitmap</code> is drawn into
+   * <code>destBitmap</code>.
+   */
+  private static void internalCopyBitmap(Bitmap destBitmap, Bitmap sourceBitmap) {
+    if (destBitmap.getConfig() == sourceBitmap.getConfig()) {
+      Bitmaps.copyBitmap(destBitmap, sourceBitmap);
+    } else {
+      // The bitmap configurations might be different when the source bitmap's configuration is
+      // null, because it uses an internal configuration and the destination bitmap's configuration
+      // is the FALLBACK_BITMAP_CONFIGURATION. This is the case for static images for animated GIFs.
+      Canvas canvas = new Canvas(destBitmap);
+      canvas.drawBitmap(sourceBitmap, 0, 0, null);
+    }
   }
 }

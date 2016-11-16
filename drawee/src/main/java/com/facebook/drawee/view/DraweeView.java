@@ -39,7 +39,7 @@ import com.facebook.drawee.interfaces.DraweeController;
  * support ImageView's setImageXxx, setScaleType and similar methods. Extending ImageView is a short
  * term solution in order to inherit some of its implementation (padding calculations, etc.).
  * This class is likely to be converted to extend View directly in the future, so avoid using
- * ImageView's methods and properties (T5856175).
+ * ImageView's methods and properties.
  */
 public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
@@ -125,25 +125,53 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    mDraweeHolder.onAttach();
+    onAttach();
   }
 
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    mDraweeHolder.onDetach();
+    onDetach();
   }
 
   @Override
   public void onStartTemporaryDetach() {
     super.onStartTemporaryDetach();
-    mDraweeHolder.onDetach();
+    onDetach();
   }
 
   @Override
   public void onFinishTemporaryDetach() {
     super.onFinishTemporaryDetach();
+    onAttach();
+  }
+
+  /** Called by the system to attach. Subclasses may override. */
+  protected void onAttach() {
+    doAttach();
+  }
+
+  /**  Called by the system to detach. Subclasses may override. */
+  protected void onDetach() {
+    doDetach();
+  }
+
+  /**
+   * Does the actual work of attaching.
+   *
+   * Non-test subclasses should NOT override. Use onAttach for custom code.
+   */
+  protected void doAttach() {
     mDraweeHolder.onAttach();
+  }
+
+  /**
+   * Does the actual work of detaching.
+   *
+   * Non-test subclasses should NOT override. Use onDetach for custom code.
+   */
+  protected void doDetach() {
+    mDraweeHolder.onDetach();
   }
 
   @Override

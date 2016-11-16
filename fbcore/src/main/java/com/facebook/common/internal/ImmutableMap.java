@@ -72,7 +72,19 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
     return Collections.unmodifiableMap(map);
   }
 
-  // looking for of() with > 5 entries? Use the put method instead
+  public static <K, V> Map<K, V> of(
+      K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
+    Map<K, V> map = new HashMap<>();
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+    map.put(k4, v4);
+    map.put(k5, v5);
+    map.put(k6, v6);
+    return Collections.unmodifiableMap(map);
+  }
+
+  // looking for of() with > 6 entries? Use the put method instead
 
   // Dummy method at the moment to help us enforce types.
   public static <K, V> ImmutableMap<K, V> copyOf(Map<? extends K, ? extends V> map) {

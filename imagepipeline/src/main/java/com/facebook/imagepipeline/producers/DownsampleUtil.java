@@ -13,7 +13,7 @@ package com.facebook.imagepipeline.producers;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -40,7 +40,7 @@ public class DownsampleUtil {
     }
     float ratio = determineDownsampleRatio(imageRequest, encodedImage);
     int sampleSize;
-    if (encodedImage.getImageFormat() == ImageFormat.JPEG) {
+    if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
       sampleSize = ratioToSampleSizeJPEG(ratio);
     } else {
       sampleSize = ratioToSampleSize(ratio);
@@ -50,7 +50,7 @@ public class DownsampleUtil {
     // possible dimension for an image.
     int maxDimension = Math.max(encodedImage.getHeight(), encodedImage.getWidth());
     while (maxDimension / sampleSize > MAX_BITMAP_SIZE) {
-      if (encodedImage.getImageFormat() == ImageFormat.JPEG) {
+      if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
         sampleSize *= 2;
       } else {
         sampleSize++;
@@ -127,7 +127,7 @@ public class DownsampleUtil {
   }
 
   private static int getRotationAngle(ImageRequest imageRequest, EncodedImage encodedImage) {
-    if (!imageRequest.getAutoRotateEnabled()) {
+    if (!imageRequest.getRotationOptions().useImageMetadata()) {
       return 0;
     }
     int rotationAngle = encodedImage.getRotationAngle();

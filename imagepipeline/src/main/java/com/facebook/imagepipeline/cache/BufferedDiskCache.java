@@ -17,6 +17,10 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.WriterCallback;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
@@ -24,10 +28,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.memory.PooledByteStreams;
-import com.facebook.binaryresource.BinaryResource;
-import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.common.WriterCallback;
-import com.facebook.cache.disk.FileCache;
 
 import bolts.Task;
 
@@ -63,43 +63,38 @@ public class BufferedDiskCache {
   }
 
   /**
-   * Performs a key-value look up in the disk cache. If the value is not found in the staging area,
-   * then a disk cache check is scheduled on a background thread. Any error manifests itself as a
+   * Returns true if the key is in the in-memory key index.
+   *
+   * Not guaranteed to be correct. The cache may yet have this key even if this returns false.
+   * But if it returns true, it definitely has it.
+   *
+   * Avoids a disk read.
+   */
+  public boolean containsSync(CacheKey key) {
+      return mStagingArea.containsKey(key) || mFileCache.hasKeySync(key);
+  }
+
+  /**
+   * Performs a key-value look up in the disk cache. If no value is found in the staging area,
+   * then disk cache checks are scheduled on a background thread. Any error manifests itself as a
    * cache miss, i.e. the returned Task resolves to false.
    * @param key
-   * @return Task that resolves to true if the element is found, or false otherwise
+   * @return Task that resolves to true if an element is found, or false otherwise
    */
   public Task<Boolean> contains(final CacheKey key) {
-    Preconditions.checkNotNull(key);
-
-    final EncodedImage pinnedImage = mStagingArea.get(key);
-    if (pinnedImage != null) {
-      pinnedImage.close();
-      FLog.v(TAG, "Found image for %s in staging area", key.toString());
-      mImageCacheStatsTracker.onStagingAreaHit();
+    if (containsSync(key)) {
       return Task.forResult(true);
     }
+    return containsAsync(key);
+  }
 
+  private Task<Boolean> containsAsync(final CacheKey key) {
     try {
       return Task.call(
           new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-              EncodedImage result = mStagingArea.get(key);
-              if (result != null) {
-                result.close();
-                FLog.v(TAG, "Found image for %s in staging area", key.toString());
-                mImageCacheStatsTracker.onStagingAreaHit();
-                return true;
-              } else {
-                FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
-                mImageCacheStatsTracker.onStagingAreaMiss();
-                try {
-                  return mFileCache.hasKey(key);
-                } catch (Exception exception) {
-                  return false;
-                }
-              }
+              return checkInStagingAreaAndFileCache(key);
             }
           },
           mReadExecutor);
@@ -110,30 +105,64 @@ public class BufferedDiskCache {
           TAG,
           exception,
           "Failed to schedule disk-cache read for %s",
-          key.toString());
+          key.getUriString());
       return Task.forError(exception);
     }
   }
 
   /**
+   * Performs disk cache check synchronously.
+   * @param key
+   * @return true if the key is found in disk cache else false
+   */
+  public boolean diskCheckSync(final CacheKey key) {
+    if (containsSync(key)) {
+      return true;
+    }
+    return checkInStagingAreaAndFileCache(key);
+  }
+
+  /**
    * Performs key-value look up in disk cache. If value is not found in disk cache staging area
    * then disk cache read is scheduled on background thread. Any error manifests itself as
-   * cache miss, i.e. the returned future resolves to null.
+   * cache miss, i.e. the returned task resolves to null.
    * @param key
-   * @return ListenableFuture that resolves to cached element or null if one cannot be retrieved;
-   *   returned future never rethrows any exception
+   * @return Task that resolves to cached element or null if one cannot be retrieved;
+   *   returned task never rethrows any exception
    */
-  public Task<EncodedImage> get(final CacheKey key, final AtomicBoolean isCancelled) {
-    Preconditions.checkNotNull(key);
-    Preconditions.checkNotNull(isCancelled);
-
+  public Task<EncodedImage> get(CacheKey key, AtomicBoolean isCancelled) {
     final EncodedImage pinnedImage = mStagingArea.get(key);
     if (pinnedImage != null) {
-      FLog.v(TAG, "Found image for %s in staging area", key.toString());
-      mImageCacheStatsTracker.onStagingAreaHit();
-      return Task.forResult(pinnedImage);
+      return foundPinnedImage(key, pinnedImage);
     }
+    return getAsync(key, isCancelled);
+  }
 
+  /**
+   * Performs key-value loop up in staging area and file cache.
+   * Any error manifests itself as a miss, i.e. returns false.
+   * @param key
+   * @return true if the image is found in staging area or File cache, false if not found
+   */
+  private boolean checkInStagingAreaAndFileCache(final CacheKey key) {
+    EncodedImage result = mStagingArea.get(key);
+    if (result != null) {
+      result.close();
+      FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
+      mImageCacheStatsTracker.onStagingAreaHit(key);
+      return true;
+    } else {
+      FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
+      mImageCacheStatsTracker.onStagingAreaMiss();
+      try {
+        return mFileCache.hasKey(key);
+      } catch (Exception exception) {
+        return false;
+      }
+    }
+  }
+
+  private Task<EncodedImage> getAsync(final CacheKey key, final AtomicBoolean isCancelled) {
     try {
       return Task.call(
           new Callable<EncodedImage>() {
@@ -145,10 +174,11 @@ public class BufferedDiskCache {
               }
               EncodedImage result = mStagingArea.get(key);
               if (result != null) {
-                FLog.v(TAG, "Found image for %s in staging area", key.toString());
-                mImageCacheStatsTracker.onStagingAreaHit();
+                FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
+                mImageCacheStatsTracker.onStagingAreaHit(key);
+                result.setEncodedCacheKey(key);
               } else {
-                FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+                FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
                 mImageCacheStatsTracker.onStagingAreaMiss();
 
                 try {
@@ -156,6 +186,7 @@ public class BufferedDiskCache {
                   CloseableReference<PooledByteBuffer> ref = CloseableReference.of(buffer);
                   try {
                     result = new EncodedImage(ref);
+                    result.setEncodedCacheKey(key);
                   } finally {
                     CloseableReference.closeSafely(ref);
                   }
@@ -183,7 +214,7 @@ public class BufferedDiskCache {
           TAG,
           exception,
           "Failed to schedule disk-cache read for %s",
-          key.toString());
+          key.getUriString());
       return Task.forError(exception);
     }
   }
@@ -200,6 +231,7 @@ public class BufferedDiskCache {
 
     // Store encodedImage in staging area
     mStagingArea.put(key, encodedImage);
+    encodedImage.setEncodedCacheKey(key);
 
     // Write to disk cache. This will be executed on background thread, so increment the ref count.
     // When this write completes (with success/failure), then we will bump down the ref count
@@ -225,7 +257,7 @@ public class BufferedDiskCache {
           TAG,
           exception,
           "Failed to schedule disk-cache write for %s",
-          key.toString());
+          key.getUriString());
       mStagingArea.remove(key, encodedImage);
       EncodedImage.closeSafely(finalEncodedImage);
     }
@@ -251,7 +283,7 @@ public class BufferedDiskCache {
     } catch (Exception exception) {
       // Log failure
       // TODO: 3697790
-      FLog.w(TAG, exception, "Failed to schedule disk-cache remove for %s", key.toString());
+      FLog.w(TAG, exception, "Failed to schedule disk-cache remove for %s", key.getUriString());
       return Task.forError(exception);
     }
   }
@@ -280,20 +312,26 @@ public class BufferedDiskCache {
     }
   }
 
+  private Task<EncodedImage> foundPinnedImage(CacheKey key, EncodedImage pinnedImage) {
+    FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
+    mImageCacheStatsTracker.onStagingAreaHit(key);
+    return Task.forResult(pinnedImage);
+  }
+
   /**
    * Performs disk cache read. In case of any exception null is returned.
    */
   private PooledByteBuffer readFromDiskCache(final CacheKey key) throws IOException {
     try {
-      FLog.v(TAG, "Disk cache read for %s", key.toString());
+      FLog.v(TAG, "Disk cache read for %s", key.getUriString());
 
       final BinaryResource diskCacheResource = mFileCache.getResource(key);
       if (diskCacheResource == null) {
-        FLog.v(TAG, "Disk cache miss for %s", key.toString());
+        FLog.v(TAG, "Disk cache miss for %s", key.getUriString());
         mImageCacheStatsTracker.onDiskCacheMiss();
         return null;
       } else {
-        FLog.v(TAG, "Found entry in disk cache for %s", key.toString());
+        FLog.v(TAG, "Found entry in disk cache for %s", key.getUriString());
         mImageCacheStatsTracker.onDiskCacheHit();
       }
 
@@ -305,13 +343,13 @@ public class BufferedDiskCache {
         is.close();
       }
 
-      FLog.v(TAG, "Successful read from disk cache for %s", key.toString());
+      FLog.v(TAG, "Successful read from disk cache for %s", key.getUriString());
       return byteBuffer;
     } catch (IOException ioe) {
       // TODO: 3697790 log failures
       // TODO: 5258772 - uncomment line below
       // mFileCache.remove(key);
-      FLog.w(TAG, ioe, "Exception reading from cache for %s", key.toString());
+      FLog.w(TAG, ioe, "Exception reading from cache for %s", key.getUriString());
       mImageCacheStatsTracker.onDiskCacheGetFail();
       throw ioe;
     }
@@ -324,7 +362,7 @@ public class BufferedDiskCache {
   private void writeToDiskCache(
       final CacheKey key,
       final EncodedImage encodedImage) {
-    FLog.v(TAG, "About to write to disk-cache for key %s", key.toString());
+    FLog.v(TAG, "About to write to disk-cache for key %s", key.getUriString());
     try {
       mFileCache.insert(
           key, new WriterCallback() {
@@ -334,11 +372,11 @@ public class BufferedDiskCache {
             }
           }
       );
-      FLog.v(TAG, "Successful disk-cache write for key %s", key.toString());
+      FLog.v(TAG, "Successful disk-cache write for key %s", key.getUriString());
     } catch (IOException ioe) {
       // Log failure
       // TODO: 3697790
-      FLog.w(TAG, ioe, "Failed to write to disk-cache for key %s", key.toString());
+      FLog.w(TAG, ioe, "Failed to write to disk-cache for key %s", key.getUriString());
     }
   }
 }

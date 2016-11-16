@@ -14,12 +14,16 @@ import javax.annotation.concurrent.Immutable;
 
 import java.util.Locale;
 
+import android.net.Uri;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.common.util.HashCodeUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 
 /**
  * Cache key for BitmapMemoryCache
@@ -29,32 +33,37 @@ public class BitmapMemoryCacheKey implements CacheKey {
 
   private final String mSourceString;
   private final @Nullable ResizeOptions mResizeOptions;
-  private final boolean mAutoRotated;
+  private final RotationOptions mRotationOptions;
   private final ImageDecodeOptions mImageDecodeOptions;
   private final @Nullable CacheKey mPostprocessorCacheKey;
   private final @Nullable String mPostprocessorName;
   private final int mHash;
+  private final Object mCallerContext;
+  private final long mCacheTime;
 
   public BitmapMemoryCacheKey(
       String sourceString,
       @Nullable ResizeOptions resizeOptions,
-      boolean autoRotated,
+      RotationOptions rotationOptions,
       ImageDecodeOptions imageDecodeOptions,
       @Nullable CacheKey postprocessorCacheKey,
-      @Nullable String postprocessorName) {
+      @Nullable String postprocessorName,
+      Object callerContext) {
     mSourceString = Preconditions.checkNotNull(sourceString);
     mResizeOptions = resizeOptions;
-    mAutoRotated = autoRotated;
+    mRotationOptions = rotationOptions;
     mImageDecodeOptions = imageDecodeOptions;
     mPostprocessorCacheKey = postprocessorCacheKey;
     mPostprocessorName = postprocessorName;
     mHash = HashCodeUtil.hashCode(
         sourceString.hashCode(),
         (resizeOptions != null) ? resizeOptions.hashCode() : 0,
-        autoRotated ? Boolean.TRUE.hashCode() : Boolean.FALSE.hashCode(),
+        rotationOptions.hashCode(),
         mImageDecodeOptions,
         mPostprocessorCacheKey,
         postprocessorName);
+    mCallerContext = callerContext;
+    mCacheTime = RealtimeSinceBootClock.get().now();
   }
 
   @Override
@@ -66,7 +75,7 @@ public class BitmapMemoryCacheKey implements CacheKey {
     return mHash == otherKey.mHash &&
         mSourceString.equals(otherKey.mSourceString) &&
         Objects.equal(this.mResizeOptions, otherKey.mResizeOptions) &&
-        mAutoRotated == otherKey.mAutoRotated &&
+        Objects.equal(this.mRotationOptions, otherKey.mRotationOptions) &&
         Objects.equal(mImageDecodeOptions, otherKey.mImageDecodeOptions) &&
         Objects.equal(mPostprocessorCacheKey, otherKey.mPostprocessorCacheKey) &&
         Objects.equal(mPostprocessorName, otherKey.mPostprocessorName);
@@ -77,7 +86,13 @@ public class BitmapMemoryCacheKey implements CacheKey {
     return mHash;
   }
 
-  public String getSourceUriString() {
+  @Override
+  public boolean containsUri(Uri uri) {
+    return getUriString().contains(uri.toString());
+  }
+
+  @Override
+  public String getUriString() {
     return mSourceString;
   }
 
@@ -93,10 +108,18 @@ public class BitmapMemoryCacheKey implements CacheKey {
         "%s_%s_%s_%s_%s_%s_%d",
         mSourceString,
         mResizeOptions,
-        Boolean.toString(mAutoRotated),
+        mRotationOptions,
         mImageDecodeOptions,
         mPostprocessorCacheKey,
         mPostprocessorName,
         mHash);
+  }
+
+  public Object getCallerContext() {
+    return mCallerContext;
+  }
+
+  public long getInBitmapCacheSince() {
+    return mCacheTime;
   }
 }

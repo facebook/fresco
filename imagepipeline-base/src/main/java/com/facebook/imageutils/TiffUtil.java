@@ -36,6 +36,7 @@ class TiffUtil {
   public static int getAutoRotateAngleFromOrientation(int orientation) {
     switch (orientation) {
       case ExifInterface.ORIENTATION_NORMAL:
+      case ExifInterface.ORIENTATION_UNDEFINED:
         return 0;
       case ExifInterface.ORIENTATION_ROTATE_180:
         return 180;

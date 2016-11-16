@@ -14,7 +14,7 @@ import java.io.InputStream;
 import android.util.Pair;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
@@ -87,14 +87,14 @@ public class AddImageTransformMetaDataProducerTest {
   @Test
   public void testOnNewResultLastNotJpeg() {
     when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
-        .thenReturn(ImageFormat.WEBP_SIMPLE);
+        .thenReturn(DefaultImageFormats.WEBP_SIMPLE);
     mAddMetaDataConsumer.onNewResult(mFinalResult, true);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
     verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(true));
     EncodedImage encodedImage = argumentCaptor.getValue();
     assertTrue(EncodedImage.isValid(encodedImage));
-    assertEquals(ImageFormat.WEBP_SIMPLE, encodedImage.getImageFormat());
-    assertEquals(-1, encodedImage.getRotationAngle());
+    assertEquals(DefaultImageFormats.WEBP_SIMPLE, encodedImage.getImageFormat());
+    assertEquals(0, encodedImage.getRotationAngle());
     assertEquals(-1, encodedImage.getWidth());
     assertEquals(-1, encodedImage.getHeight());
   }
@@ -102,15 +102,15 @@ public class AddImageTransformMetaDataProducerTest {
   @Test
   public void testOnNewResultNotLastNotJpeg() {
     when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
-        .thenReturn(ImageFormat.WEBP_SIMPLE);
+        .thenReturn(DefaultImageFormats.WEBP_SIMPLE);
     when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(null);
     mAddMetaDataConsumer.onNewResult(mIntermediateResult, false);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
     verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(false));
     EncodedImage encodedImage = argumentCaptor.getValue();
     assertTrue(EncodedImage.isValid(encodedImage));
-    assertEquals(ImageFormat.WEBP_SIMPLE, encodedImage.getImageFormat());
-    assertEquals(-1, encodedImage.getRotationAngle());
+    assertEquals(DefaultImageFormats.WEBP_SIMPLE, encodedImage.getImageFormat());
+    assertEquals(0, encodedImage.getRotationAngle());
     assertEquals(-1, encodedImage.getWidth());
     assertEquals(-1, encodedImage.getHeight());
   }
@@ -120,7 +120,7 @@ public class AddImageTransformMetaDataProducerTest {
     int rotationAngle = 180;
     int orientation = 1;
     when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
-        .thenReturn(ImageFormat.JPEG);
+        .thenReturn(DefaultImageFormats.JPEG);
     when(JfifUtil.getAutoRotateAngleFromOrientation(orientation)).thenReturn(rotationAngle);
     when(JfifUtil.getOrientation(any(InputStream.class))).thenReturn(orientation);
     when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(null);
@@ -137,7 +137,7 @@ public class AddImageTransformMetaDataProducerTest {
   @Test
   public void testOnNewResultNotLast_RotationNotFound() {
     when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
-        .thenReturn(ImageFormat.JPEG);
+        .thenReturn(DefaultImageFormats.JPEG);
     when(JfifUtil.getOrientation(any(InputStream.class))).thenReturn(0);
     mAddMetaDataConsumer.onNewResult(mIntermediateResult, false);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
@@ -156,7 +156,7 @@ public class AddImageTransformMetaDataProducerTest {
     int width = 10;
     int height = 20;
     when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
-        .thenReturn(ImageFormat.JPEG);
+        .thenReturn(DefaultImageFormats.JPEG);
     when(JfifUtil.getAutoRotateAngleFromOrientation(orientation)).thenReturn(rotationAngle);
     when(JfifUtil.getOrientation(any(InputStream.class))).thenReturn(orientation);
     when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(new Pair(width, height));
@@ -165,7 +165,7 @@ public class AddImageTransformMetaDataProducerTest {
     verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(true));
     EncodedImage encodedImage = argumentCaptor.getValue();
     assertTrue(EncodedImage.isValid(encodedImage));
-    assertEquals(ImageFormat.JPEG, encodedImage.getImageFormat());
+    assertEquals(DefaultImageFormats.JPEG, encodedImage.getImageFormat());
     assertEquals(rotationAngle, encodedImage.getRotationAngle());
     assertEquals(width, encodedImage.getWidth());
     assertEquals(height, encodedImage.getHeight());
@@ -178,7 +178,7 @@ public class AddImageTransformMetaDataProducerTest {
     int width = 10;
     int height = 20;
     when(ImageFormatChecker.getImageFormat_WrapIOException(any(InputStream.class)))
-        .thenReturn(ImageFormat.JPEG);
+        .thenReturn(DefaultImageFormats.JPEG);
     when(JfifUtil.getAutoRotateAngleFromOrientation(orientation)).thenReturn(rotationAngle);
     when(JfifUtil.getOrientation(any(InputStream.class))).thenReturn(orientation);
     when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(new Pair(width, height));
@@ -187,7 +187,7 @@ public class AddImageTransformMetaDataProducerTest {
     verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(true));
     EncodedImage encodedImage = argumentCaptor.getValue();
     assertTrue(EncodedImage.isValid(encodedImage));
-    assertEquals(ImageFormat.JPEG, encodedImage.getImageFormat());
+    assertEquals(DefaultImageFormats.JPEG, encodedImage.getImageFormat());
     assertEquals(rotationAngle, encodedImage.getRotationAngle());
     assertEquals(width, encodedImage.getWidth());
     assertEquals(height, encodedImage.getHeight());

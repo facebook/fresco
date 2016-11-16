@@ -15,7 +15,6 @@ import java.util.concurrent.Executor;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -24,7 +23,8 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Executes a local fetch from an asset.
  */
 public class LocalAssetFetchProducer extends LocalFetchProducer {
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalAssetFetchProducer";
+
+  public static final String PRODUCER_NAME = "LocalAssetFetchProducer";
 
   private final AssetManager mAssetManager;
 

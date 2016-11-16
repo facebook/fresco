@@ -25,24 +25,30 @@ import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.common.webp.BitmapCreator;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
 
-import static com.facebook.common.webp.WebpSupportStatus.isWebpPlatformSupported;
+import static com.facebook.common.webp.WebpSupportStatus.isWebpSupportedByPlatform;
 import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
 
 @DoNotStrip
 public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   private static final int HEADER_SIZE = 20;
 
-  private static final int IN_TEMP_BUFFER_SIZE = 8*1024;
+  private static final int IN_TEMP_BUFFER_SIZE = 8 * 1024;
 
   public static final boolean IN_BITMAP_SUPPORTED =
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
-  static {
-    SoLoaderShim.loadLibrary("static-webp");
+  private static WebpErrorLogger mWebpErrorLogger;
+
+  private static BitmapCreator mBitmapCreator;
+
+  @Override
+  public void setBitmapCreator(final BitmapCreator bitmapCreator) {
+    mBitmapCreator = bitmapCreator;
   }
 
   private static InputStream wrapToMarkSupportedStream(InputStream inputStream) {
@@ -94,6 +100,11 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @Override
+  public void setWebpErrorLogger(WebpErrorLogger webpErrorLogger) {
+    this.mWebpErrorLogger = webpErrorLogger;
+  }
+
+  @Override
   public Bitmap decodeFileDescriptor(
       FileDescriptor fd,
       Rect outPadding,
@@ -131,19 +142,38 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       int offset,
       int length,
       BitmapFactory.Options opts) {
+    StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
-    if (isWebpHeader(array, offset, length) && !isWebpPlatformSupported(array, offset, length)) {
+    boolean isWebp = isWebpHeader(array, offset, length);
+    boolean isWebpSupported = isWebpSupportedByPlatform(array, offset, length);
+    if (isWebp && !isWebpSupported) {
       bitmap = nativeDecodeByteArray(
           array,
           offset,
           length,
           opts,
           getScaleFromOptions(opts),
-          getInBitmapFromOptions(opts),
           getInTempStorageFromOptions(opts));
+      // We notify that the direct decoding failed
+      sendWebpErrorLog("webp_direct_decode_array", bitmap);
       setWebpBitmapOptions(bitmap, opts);
     } else {
       bitmap = originalDecodeByteArray(array, offset, length, opts);
+      if (bitmap == null && isWebp) {
+        // We notify that the native decoding failed
+        sendWebpErrorLog("webp_native_decode_array_fallback", bitmap);
+        // We fall back using our native code
+        bitmap = nativeDecodeByteArray(
+            array,
+            offset,
+            length,
+            opts,
+            getScaleFromOptions(opts),
+            getInTempStorageFromOptions(opts));
+        // We notify that the direct decoding failed after a native decoding
+        sendWebpErrorLog("webp_direct_decode_array_fallback", bitmap);
+        setWebpBitmapOptions(bitmap, opts);
+      }
     }
     return bitmap;
   }
@@ -178,24 +208,41 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream inputStream,
       Rect outPadding,
       BitmapFactory.Options opts) {
+    StaticWebpNativeLoader.ensure();
     inputStream = wrapToMarkSupportedStream(inputStream);
 
     Bitmap bitmap;
 
     byte[] header = getWebpHeader(inputStream, opts);
-    if (isWebpHeader(header, 0, HEADER_SIZE) && !isWebpPlatformSupported(header, 0, HEADER_SIZE)) {
+    boolean isWebp = isWebpHeader(header, 0, HEADER_SIZE);
+    boolean isWebpSupported = isWebpSupportedByPlatform(header, 0, HEADER_SIZE);
+    if (isWebp && !isWebpSupported) {
       bitmap = nativeDecodeStream(
           inputStream,
           opts,
           getScaleFromOptions(opts),
-          getInBitmapFromOptions(opts),
           getInTempStorageFromOptions(opts));
+      // We notify that the direct decoder failed
+      sendWebpErrorLog("webp_direct_decode_stream", bitmap);
       setWebpBitmapOptions(bitmap, opts);
       setPaddingDefaultValues(outPadding);
     } else {
       bitmap = originalDecodeStream(inputStream, outPadding, opts);
+      if (bitmap == null && isWebp) {
+        // If the bitmap is null and the image is webp it means that something went wrong. We use
+        // our decoder as fallback
+        sendWebpErrorLog("webp_native_decode_stream_fallback", bitmap);
+        bitmap = nativeDecodeStream(
+            inputStream,
+            opts,
+            getScaleFromOptions(opts),
+            getInTempStorageFromOptions(opts));
+        // We check if the direct ddecoding has failed after a native decode
+        sendWebpErrorLog("webp_direct_decode_stream_fallback", bitmap);
+        setWebpBitmapOptions(bitmap, opts);
+        setPaddingDefaultValues(outPadding);
+      }
     }
-
     return bitmap;
   }
 
@@ -288,7 +335,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       // Keep resulting bitmap as null
     }
 
-    if (bm == null && opts != null && opts.inBitmap != null) {
+    if (IN_BITMAP_SUPPORTED && bm == null && opts != null && opts.inBitmap != null) {
       throw new IllegalArgumentException("Problem decoding into existing bitmap");
     }
 
@@ -368,27 +415,43 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       FileDescriptor fd,
       Rect outPadding,
       BitmapFactory.Options opts) {
+    StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
 
+    boolean isWebp = false;
     long originalSeekPosition = nativeSeek(fd, 0, false);
     if (originalSeekPosition != -1) {
       InputStream inputStream = wrapToMarkSupportedStream(new FileInputStream(fd));
-
       try {
         byte[] header = getWebpHeader(inputStream, opts);
-        if (isWebpHeader(header, 0, HEADER_SIZE)
-            && !isWebpPlatformSupported(header, 0, HEADER_SIZE)) {
+        isWebp = isWebpHeader(header, 0, HEADER_SIZE);
+        boolean isWebpSupported = isWebpSupportedByPlatform(header, 0, HEADER_SIZE);
+        if (isWebp && !isWebpSupported) {
           bitmap = nativeDecodeStream(
               inputStream,
               opts,
               getScaleFromOptions(opts),
-              getInBitmapFromOptions(opts),
               getInTempStorageFromOptions(opts));
+          // We send error if the direct decode failed
+          sendWebpErrorLog("webp_direct_decode_fd", bitmap);
           setPaddingDefaultValues(outPadding);
           setWebpBitmapOptions(bitmap, opts);
         } else {
           nativeSeek(fd, originalSeekPosition, true);
           bitmap = originalDecodeFileDescriptor(fd, outPadding, opts);
+          if (bitmap == null && isWebp) {
+            // Notify that the native decode has failed and that we're trying to decode directly
+            sendWebpErrorLog("webp_native_decode_fd_fallback", bitmap);
+            // We fallback into our code for decoding
+            bitmap = nativeDecodeStream(
+                new FileInputStream(fd),
+                opts,
+                getScaleFromOptions(opts),
+                getInTempStorageFromOptions(opts));
+            // Notify that the direct decoder failed after native decoder
+            sendWebpErrorLog("webp_direct_decode_fd_fallback", bitmap);
+            setWebpBitmapOptions(bitmap, opts);
+          }
         }
       } finally {
         try {
@@ -399,6 +462,19 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       }
     } else {
       bitmap = hookDecodeStream(new FileInputStream(fd), outPadding, opts);
+      if (bitmap == null && isWebp) {
+        // Notify that the native decoding was wrong
+        sendWebpErrorLog("webp_native_decode_out_seek_fd_fallback", bitmap);
+        // We fallback into our code for decoding
+        bitmap = nativeDecodeStream(
+            new FileInputStream(fd),
+            opts,
+            getScaleFromOptions(opts),
+            getInTempStorageFromOptions(opts));
+        // Notify if the direct decoding has failed after native decoder
+        sendWebpErrorLog("webp_direct_decode_out_seek_fd_fallback", bitmap);
+        setWebpBitmapOptions(bitmap, opts);
+      }
       setPaddingDefaultValues(outPadding);
     }
     return bitmap;
@@ -440,7 +516,13 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   @DoNotStrip
   private static Bitmap createBitmap(int width, int height, BitmapFactory.Options options) {
-    return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    if (IN_BITMAP_SUPPORTED &&
+        options != null &&
+        options.inBitmap != null &&
+        options.inBitmap.isMutable()) {
+      return options.inBitmap;
+    }
+    return mBitmapCreator.createNakedBitmap(width, height, Bitmap.Config.ARGB_8888);
   }
 
   @DoNotStrip
@@ -448,7 +530,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream is,
       BitmapFactory.Options options,
       float scale,
-      Bitmap inBitmap,
       byte[] inTempStorage);
 
   @DoNotStrip
@@ -458,21 +539,10 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       int length,
       BitmapFactory.Options opts,
       float scale,
-      Bitmap inBitmap,
       byte[] inTempStorage);
-
 
   @DoNotStrip
   private static native long nativeSeek(FileDescriptor fd, long offset, boolean absolute);
-
-  @DoNotStrip
-  private static Bitmap getInBitmapFromOptions(final BitmapFactory.Options options) {
-    if (IN_BITMAP_SUPPORTED && options != null) {
-      return options.inBitmap;
-    } else {
-      return null;
-    }
-  }
 
   @DoNotStrip
   private static byte[] getInTempStorageFromOptions(@Nullable final BitmapFactory.Options options) {
@@ -501,5 +571,12 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       }
     }
     return scale;
+  }
+
+  private static void sendWebpErrorLog(String message, Bitmap bitmap) {
+    // We want to track only when bitmap is null after native decoding
+    if (mWebpErrorLogger != null && bitmap == null) {
+      mWebpErrorLogger.onWebpErrorLog(message, "decoding_failure");
+    }
   }
 }

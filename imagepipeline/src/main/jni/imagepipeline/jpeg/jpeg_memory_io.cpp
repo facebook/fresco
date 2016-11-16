@@ -91,7 +91,7 @@ static void memSourceSkipInputData(j_decompress_ptr dinfo, long num_bytes) {
  * <p> libjpeg will call this callback after it reads all relevant bytes.
  * At that point of time the source can be released.
  */
-static void memSourceTermSource(j_decompress_ptr dinfo) {
+static void memSourceTermSource(j_decompress_ptr) {
   // Do not di anything extra
 }
 

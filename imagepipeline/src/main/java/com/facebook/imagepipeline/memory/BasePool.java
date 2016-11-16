@@ -725,7 +725,7 @@ public abstract class BasePool<V> implements Pool<V> {
   @NotThreadSafe
   @VisibleForTesting
   static class Counter {
-    private static final String TAG = "com.facebook.imagepipeline.common.BasePool.Counter";
+    private static final String TAG = "com.facebook.imagepipeline.memory.BasePool.Counter";
 
     int mCount;
     int mNumBytes;

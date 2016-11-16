@@ -9,6 +9,9 @@
 
 package com.facebook.cache.disk;
 
+import android.os.Environment;
+import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.WriterCallback;
@@ -65,6 +69,11 @@ public class DefaultDiskStorage implements DiskStorage {
   private final File mRootDirectory;
 
   /**
+   * True if cache is external
+   */
+  private final boolean mIsExternal;
+
+  /**
    * All the sharding occurs inside a version-directory. That allows for easy version upgrade.
    * When we find a base directory with no version-directory in it, it means that it's a different
    * version and we should delete the whole directory (including itself) for both reasons:
@@ -93,6 +102,7 @@ public class DefaultDiskStorage implements DiskStorage {
     Preconditions.checkNotNull(rootDirectory);
 
     mRootDirectory = rootDirectory;
+    mIsExternal = isExternal(rootDirectory, cacheErrorLogger);
     // mVersionDirectory's name identifies:
     // - the cache structure's version (sharded)
     // - the content's version (version value)
@@ -102,6 +112,28 @@ public class DefaultDiskStorage implements DiskStorage {
     mCacheErrorLogger = cacheErrorLogger;
     recreateDirectoryIfVersionChanges();
     mClock = SystemClock.get();
+  }
+
+  private static boolean isExternal(File directory, CacheErrorLogger cacheErrorLogger) {
+    boolean state = false;
+    String appCacheDirPath = null;
+    File extStoragePath = Environment.getExternalStorageDirectory();
+    if (extStoragePath != null) {
+      String cacheDirPath = extStoragePath.toString();
+      try {
+        appCacheDirPath = directory.getCanonicalPath();
+        if (appCacheDirPath.contains(cacheDirPath)) {
+          state = true;
+        }
+      } catch (IOException e) {
+        cacheErrorLogger.logError(
+            CacheErrorLogger.CacheErrorCategory.OTHER,
+            TAG,
+            "failed to read folder to check if external: " + appCacheDirPath,
+            e);
+      }
+    }
+    return state;
   }
 
   @VisibleForTesting
@@ -117,6 +149,18 @@ public class DefaultDiskStorage implements DiskStorage {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public boolean isExternal() {
+    return mIsExternal;
+  }
+
+  @Override
+  public String getStorageName() {
+    String directoryName = mRootDirectory.getAbsolutePath();
+    return "_" + directoryName.substring(directoryName.lastIndexOf('/') + 1, directoryName.length())
+        + "_" + directoryName.hashCode();
   }
 
   /**
@@ -146,47 +190,6 @@ public class DefaultDiskStorage implements DiskStorage {
             "version directory could not be created: " + mVersionDirectory,
             null);
       }
-    }
-  }
-
-  @Override
-  public void updateResource(
-      final String resourceId,
-      final FileBinaryResource fileBinaryResource,
-      final WriterCallback callback,
-      final Object debugInfo)
-    throws IOException {
-    File file = fileBinaryResource.getFile();
-    FileOutputStream fileStream = null;
-    try {
-      fileStream = new FileOutputStream(file);
-    } catch (FileNotFoundException fne) {
-      mCacheErrorLogger.logError(
-          CacheErrorLogger.CacheErrorCategory.WRITE_UPDATE_FILE_NOT_FOUND,
-          TAG,
-          "updateResource",
-          fne);
-      throw fne;
-    }
-
-    long length = -1;
-    try {
-      CountingOutputStream countingStream = new CountingOutputStream(fileStream);
-      callback.write(countingStream);
-      // just in case underlying stream's close method doesn't flush:
-      // we flush it manually and inside the try/catch
-      countingStream.flush();
-      length = countingStream.getCount();
-    } finally {
-      // if it fails to close (or write the last piece) we really want to know
-      // Normally we would want this to be quiet because a closing exception would hide one
-      // inside the try/finally, but now we really want to know if something fails at flush or close
-      fileStream.close();
-    }
-    // this code should never throw, but if filesystem doesn't fail on a failing/uncomplete close
-    // we want to know and manually fail
-    if (file.length() != length) {
-      throw new IncompleteFileException(length, file.length());
     }
   }
 
@@ -244,7 +247,7 @@ public class DefaultDiskStorage implements DiskStorage {
     public void visitFile(File file) {
       FileInfo info = getShardFileInfo(file);
       if (info != null && info.type == FileType.CONTENT) {
-        result.add(new EntryImpl(file));
+        result.add(new EntryImpl(info.resourceId, file));
       }
     }
 
@@ -345,7 +348,7 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public FileBinaryResource createTemporary(
+  public Inserter insert(
       String resourceId,
       Object debugInfo)
       throws IOException {
@@ -353,62 +356,24 @@ public class DefaultDiskStorage implements DiskStorage {
     FileInfo info = new FileInfo(FileType.TEMP, resourceId);
     File parent = getSubdirectory(info.resourceId);
     if (!parent.exists()) {
-      mkdirs(parent, "createTemporary");
+      mkdirs(parent, "insert");
     }
 
     try {
       File file = info.createTempFile(parent);
-      return FileBinaryResource.createOrNull(file);
+      return new InserterImpl(resourceId, file);
     } catch (IOException ioe) {
       mCacheErrorLogger.logError(
           CacheErrorLogger.CacheErrorCategory.WRITE_CREATE_TEMPFILE,
           TAG,
-          "createTemporary",
+          "insert",
           ioe);
       throw ioe;
     }
   }
 
   @Override
-  public FileBinaryResource commit(
-      String resourceId,
-      FileBinaryResource tempFileResource,
-      Object debugInfo)
-      throws IOException {
-
-    File tempFile = tempFileResource.getFile();
-    File targetFile = getContentFileFor(resourceId);
-
-    try {
-      FileUtils.rename(tempFile, targetFile);
-    } catch (FileUtils.RenameException re) {
-      CacheErrorLogger.CacheErrorCategory category;
-      Throwable cause = re.getCause();
-      if (cause == null) {
-        category = CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_OTHER;
-      } else if (cause instanceof FileUtils.ParentDirNotFoundException) {
-        category =
-            CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_TEMPFILE_PARENT_NOT_FOUND;
-      } else if (cause instanceof FileNotFoundException) {
-        category = CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_TEMPFILE_NOT_FOUND;
-      } else {
-        category = CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_OTHER;
-      }
-      mCacheErrorLogger.logError(
-          category,
-          TAG,
-          "commit",
-          re);
-      throw re;
-    }
-    if (targetFile.exists()) {
-      targetFile.setLastModified(mClock.now());
-    }
-    return FileBinaryResource.createOrNull(targetFile);
-  }
-
-  @Override
-  public FileBinaryResource getResource(String resourceId, Object debugInfo) {
+  public BinaryResource getResource(String resourceId, Object debugInfo) {
     final File file = getContentFileFor(resourceId);
     if (file.exists()) {
       file.setLastModified(mClock.now());
@@ -417,8 +382,7 @@ public class DefaultDiskStorage implements DiskStorage {
     return null;
   }
 
-  @Override
-  public String getFilename(String resourceId) {
+  private String getFilename(String resourceId) {
     FileInfo fileInfo = new FileInfo(FileType.CONTENT, resourceId);
     String path = getSubdirectoryPath(fileInfo.resourceId);
     return fileInfo.toPath(path);
@@ -534,16 +498,23 @@ public class DefaultDiskStorage implements DiskStorage {
    * Implementation of Entry listed by entriesIterator.
    */
   @VisibleForTesting
-  class EntryImpl implements Entry {
+  static class EntryImpl implements Entry {
+    private final String id;
     private final FileBinaryResource resource;
     private long size;
     private long timestamp;
 
-    private EntryImpl(File cachedFile) {
+    private EntryImpl(String id, File cachedFile) {
       Preconditions.checkNotNull(cachedFile);
+      this.id = Preconditions.checkNotNull(id);
       this.resource = FileBinaryResource.createOrNull(cachedFile);
       this.size = -1;
       this.timestamp = -1;
+    }
+
+    @Override
+    public String getId() {
+      return id;
     }
 
     @Override
@@ -639,6 +610,7 @@ public class DefaultDiskStorage implements DiskStorage {
       return f;
     }
 
+    @Nullable
     public static FileInfo fromFile(File file) {
       String name = file.getName();
       int pos = name.lastIndexOf('.');
@@ -660,6 +632,93 @@ public class DefaultDiskStorage implements DiskStorage {
       }
 
       return new FileInfo(type, resourceId);
+    }
+  }
+
+  @VisibleForTesting
+  /* package protected */ class InserterImpl implements Inserter {
+
+    private final String mResourceId;
+
+    @VisibleForTesting
+    /* package protected*/ final File mTemporaryFile;
+
+    public InserterImpl(String resourceId, File temporaryFile) {
+      mResourceId = resourceId;
+      mTemporaryFile = temporaryFile;
+    }
+
+    @Override
+    public void writeData(WriterCallback callback, Object debugInfo) throws IOException {
+      FileOutputStream fileStream;
+      try {
+        fileStream = new FileOutputStream(mTemporaryFile);
+      } catch (FileNotFoundException fne) {
+        mCacheErrorLogger.logError(
+            CacheErrorLogger.CacheErrorCategory.WRITE_UPDATE_FILE_NOT_FOUND,
+            TAG,
+            "updateResource",
+            fne);
+        throw fne;
+      }
+
+      long length;
+      try {
+        CountingOutputStream countingStream = new CountingOutputStream(fileStream);
+        callback.write(countingStream);
+        // just in case underlying stream's close method doesn't flush:
+        // we flush it manually and inside the try/catch
+        countingStream.flush();
+        length = countingStream.getCount();
+      } finally {
+        // if it fails to close (or write the last piece) we really want to know
+        // Normally we would want this to be quiet because a closing exception would hide one
+        // inside the try, but now we really want to know if something fails at flush or close
+        fileStream.close();
+      }
+      // this code should never throw, but if filesystem doesn't fail on a failing/uncomplete close
+      // we want to know and manually fail
+      if (mTemporaryFile.length() != length) {
+        throw new IncompleteFileException(length, mTemporaryFile.length());
+      }
+    }
+
+    @Override
+    public BinaryResource commit(Object debugInfo) throws IOException {
+      // the temp resource must be ours!
+      File targetFile = getContentFileFor(mResourceId);
+
+      try {
+        FileUtils.rename(mTemporaryFile, targetFile);
+      } catch (FileUtils.RenameException re) {
+        CacheErrorLogger.CacheErrorCategory category;
+        Throwable cause = re.getCause();
+        if (cause == null) {
+          category = CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_OTHER;
+        } else if (cause instanceof FileUtils.ParentDirNotFoundException) {
+          category =
+              CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_TEMPFILE_PARENT_NOT_FOUND;
+        } else if (cause instanceof FileNotFoundException) {
+          category = CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_TEMPFILE_NOT_FOUND;
+        } else {
+          category = CacheErrorLogger.CacheErrorCategory.WRITE_RENAME_FILE_OTHER;
+        }
+        mCacheErrorLogger.logError(
+            category,
+            TAG,
+            "commit",
+            re);
+        throw re;
+      }
+      if (targetFile.exists()) {
+        targetFile.setLastModified(mClock.now());
+      }
+      return FileBinaryResource.createOrNull(targetFile);
+    }
+
+    @Override
+    public boolean cleanUp() {
+      return !mTemporaryFile.exists() || mTemporaryFile.delete();
     }
   }
 }
