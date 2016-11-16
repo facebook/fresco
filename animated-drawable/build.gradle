@@ -14,4 +14,7 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+
+    compile project(':fbcore')
 }
