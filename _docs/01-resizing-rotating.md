@@ -79,7 +79,7 @@ It's very annoying to users to see their images show up sideways! Many devices s
 
 ```java
 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-    .setAutoRotateEnabled(true)
+    .setRotationOptions(RotationOptions.autoRotate())
     .build();
 // as above
 ```
