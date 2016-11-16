@@ -8,6 +8,7 @@
  */
 package com.facebook.imagepipeline.bitmaps;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ public class HoneycombBitmapCreator implements BitmapCreator {
     mJpegGenerator = new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory());
   }
 
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
   public Bitmap createNakedBitmap(
       int width, int height, Bitmap.Config bitmapConfig) {
@@ -68,6 +70,7 @@ public class HoneycombBitmapCreator implements BitmapCreator {
           0,
           length,
           options);
+      bitmap.setHasAlpha(true);
       bitmap.eraseColor(Color.TRANSPARENT);
       return bitmap;
     } finally {
