@@ -46,8 +46,8 @@ int width = 50, height = 50;
 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setResizeOptions(new ResizeOptions(width, height))
     .build();
-PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
-    .setOldController(mDraweeView.getController())
+DraweeController controller = Fresco.newDraweeControllerBuilder()
+    .setOldController(mSimpleDraweeView.getController())
     .setImageRequest(request)
     .build();
 mSimpleDraweeView.setController(controller);
