@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.core;
 
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.webp.WebpBitmapFactory;
-import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
@@ -23,7 +22,6 @@ public class ImagePipelineExperiments {
 
   private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
-  private final @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
   private final boolean mDecodeFileDescriptorEnabled;
   private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
@@ -36,7 +34,6 @@ public class ImagePipelineExperiments {
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
-    mEnhancedWebpTranscodingType = builder.mEnhancedWebpTranscodingType;
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
         builder.mDecodeFileDescriptorEnabled;
     mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
@@ -81,10 +78,6 @@ public class ImagePipelineExperiments {
     return mDecodeCancellationEnabled;
   }
 
-  public @WebpTranscodeProducer.EnhancedTranscodingType int getEnhancedWebpTranscodingType() {
-    return mEnhancedWebpTranscodingType;
-  }
-
   public int getThrottlingMaxSimultaneousRequests() {
     return mThrottlingMaxSimultaneousRequests;
   }
@@ -109,7 +102,6 @@ public class ImagePipelineExperiments {
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
-    private @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
@@ -185,12 +177,6 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setWebpBitmapFactory(
         WebpBitmapFactory webpBitmapFactory) {
       mWebpBitmapFactory = webpBitmapFactory;
-      return mConfigBuilder;
-    }
-
-    public ImagePipelineConfig.Builder setEnhancedWebpTranscodingType(
-        @WebpTranscodeProducer.EnhancedTranscodingType int enhancedWebpTranscodingType) {
-      mEnhancedWebpTranscodingType = enhancedWebpTranscodingType;
       return mConfigBuilder;
     }
 

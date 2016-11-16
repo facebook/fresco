@@ -95,7 +95,6 @@ public class ProducerFactory {
   private final Context mContext;
   private MediaVariationsIndex mMediaVariationsIndex;
   private final int mForceSmallCacheThresholdBytes;
-  private final @WebpTranscodeProducer.EnhancedTranscodingType int mEnhancedWebpTranscodingType;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -106,7 +105,6 @@ public class ProducerFactory {
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
       boolean downsampleEnabled,
-      @WebpTranscodeProducer.EnhancedTranscodingType int enhancedWebpTranscodingType,
       boolean resizeAndRotateEnabledForNetwork,
       boolean decodeCancellationEnabled,
       ExecutorSupplier executorSupplier,
@@ -130,7 +128,6 @@ public class ProducerFactory {
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
     mDownsampleEnabled = downsampleEnabled;
-    mEnhancedWebpTranscodingType = enhancedWebpTranscodingType;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDecodeCancellationEnabled = decodeCancellationEnabled;
 
@@ -353,7 +350,6 @@ public class ProducerFactory {
     return new WebpTranscodeProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
-        inputProducer,
-        mEnhancedWebpTranscodingType);
+        inputProducer);
   }
 }

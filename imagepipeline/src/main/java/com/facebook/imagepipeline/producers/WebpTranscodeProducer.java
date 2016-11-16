@@ -44,28 +44,19 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 public class WebpTranscodeProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "WebpTranscodeProducer";
 
-  @Retention(SOURCE)
-  @IntDef({JPEG_WEBP_ENHANCED_TYPE, PNG_WEBP_ENHANCED_TYPE})
-  public @interface EnhancedTranscodingType {}
-  public static final int JPEG_WEBP_ENHANCED_TYPE = 0;
-  public static final int PNG_WEBP_ENHANCED_TYPE = 1;
-
   private static final int DEFAULT_JPEG_QUALITY = 80;
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final @EnhancedTranscodingType int mEnhancedTranscodingType;
 
   public WebpTranscodeProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Producer<EncodedImage> inputProducer,
-      @EnhancedTranscodingType int enhancedTranscodingType) {
+      Producer<EncodedImage> inputProducer) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mInputProducer = Preconditions.checkNotNull(inputProducer);
-    mEnhancedTranscodingType = enhancedTranscodingType;
   }
 
   @Override
@@ -124,7 +115,7 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
             try {
-              doTranscode(encodedImageCopy, outputStream, mEnhancedTranscodingType);
+              doTranscode(encodedImageCopy, outputStream);
               CloseableReference<PooledByteBuffer> ref =
                   CloseableReference.of(outputStream.toByteBuffer());
               try {
@@ -187,22 +178,15 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
 
   private static void doTranscode(
       final EncodedImage encodedImage,
-      final PooledByteBufferOutputStream outputStream,
-      final @EnhancedTranscodingType int enhancedWebpTranscodingType) throws Exception {
+      final PooledByteBufferOutputStream outputStream) throws Exception {
     InputStream imageInputStream = encodedImage.getInputStream();
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
     if (imageFormat == DefaultImageFormats.WEBP_SIMPLE ||
         imageFormat == DefaultImageFormats.WEBP_EXTENDED) {
-      // In this case we transcode to JPG or PNG depending on the experiment value
-      if (PNG_WEBP_ENHANCED_TYPE == enhancedWebpTranscodingType) {
-        WebpTranscoderFactory.getWebpTranscoder()
-            .transcodeWebpToPng(imageInputStream, outputStream);
-      } else {
         WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
             imageInputStream,
             outputStream,
             DEFAULT_JPEG_QUALITY);
-      }
     } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS ||
         imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
       // In this case we always transcode to PNG
