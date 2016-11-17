@@ -30,6 +30,17 @@
         <item>http://www.gstatic.com/webp/gallery/4.webp</item>
         <item>http://www.gstatic.com/webp/gallery/5.webp</item>
     </string-array>
+    <string-array name="example_png_uris">
+        <item>http://frescolib.org/static/sample-png/test_png_001.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_002.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_003.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_004.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_005.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_006.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_007.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_008.png</item>
+        <item>http://frescolib.org/static/sample-png/test_png_009.png</item>
+    </string-array>
     <string-array name="grid_recycler_layout_values">
         <item>1</item>
         <item>2</item>

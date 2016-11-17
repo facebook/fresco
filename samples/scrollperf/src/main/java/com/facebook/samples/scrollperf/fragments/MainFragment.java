@@ -138,6 +138,10 @@ public class MainFragment extends Fragment {
         simpleAdapter = LocalResourceSimpleAdapter
             .getEagerAdapter(getContext(), R.array.example_webp_uris);
         break;
+      case Const.LOCAL_RESOURCE_PNG_URIS:
+        simpleAdapter = LocalResourceSimpleAdapter
+            .getEagerAdapter(getContext(), R.array.example_png_uris);
+        break;
       case Const.LOCAL_INTERNAL_PHOTO_URIS:
         simpleAdapter = ContentProviderSimpleAdapter.getInternalPhotoSimpleAdapter(getActivity());
         mDistinctUriCompatible = false;

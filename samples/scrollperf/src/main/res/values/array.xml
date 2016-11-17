@@ -4,18 +4,21 @@
     <array name="data_source_labels">
         <item>@string/label_local_uri</item>
         <item>@string/label_local_webp_uri</item>
+        <item>@string/label_local_png_uri</item>
         <item>@string/label_local_internal_photo_uri</item>
         <item>@string/label_local_external_photo_uri</item>
     </array>
     <array name="data_source_values">
         <item>@string/value_local_uri</item>
         <item>@string/value_local_webp_uri</item>
+        <item>@string/value_local_png_uri</item>
         <item>@string/value_local_internal_photo_uri</item>
         <item>@string/value_local_external_photo_uri</item>
     </array>
     <array name="data_source_summaries">
         <item>@string/value_local_summary</item>
         <item>@string/value_local_webp_summary</item>
+        <item>@string/value_local_png_summary</item>
         <item>@string/value_local_internal_photo_uri_summary</item>
         <item>@string/value_local_external_photo_uri_summary</item>
     </array>
