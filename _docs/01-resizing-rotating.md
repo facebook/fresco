@@ -46,8 +46,8 @@ int width = 50, height = 50;
 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setResizeOptions(new ResizeOptions(width, height))
     .build();
-PipelineDraweeController controller = Fresco.newDraweeControllerBuilder()
-    .setOldController(mDraweeView.getController())
+DraweeController controller = Fresco.newDraweeControllerBuilder()
+    .setOldController(mSimpleDraweeView.getController())
     .setImageRequest(request)
     .build();
 mSimpleDraweeView.setController(controller);
@@ -79,7 +79,7 @@ It's very annoying to users to see their images show up sideways! Many devices s
 
 ```java
 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-    .setAutoRotateEnabled(true)
+    .setRotationOptions(RotationOptions.autoRotate())
     .build();
 // as above
 ```
