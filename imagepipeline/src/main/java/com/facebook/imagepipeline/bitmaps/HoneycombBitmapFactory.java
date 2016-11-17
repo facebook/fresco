@@ -49,6 +49,7 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
   public CloseableReference<Bitmap> createBitmapInternal(
       int width,
@@ -63,6 +64,7 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
       try {
         CloseableReference<Bitmap> bitmapRef = mPurgeableDecoder.decodeJPEGFromEncodedImage(
             encodedImage, bitmapConfig, jpgRef.get().size());
+        bitmapRef.get().setHasAlpha(true);
         bitmapRef.get().eraseColor(Color.TRANSPARENT);
         return bitmapRef;
       } finally {
