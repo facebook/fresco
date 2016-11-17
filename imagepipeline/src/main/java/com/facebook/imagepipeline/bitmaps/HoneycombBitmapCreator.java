@@ -28,9 +28,6 @@ import com.facebook.imageutils.JfifUtil;
  */
 public class HoneycombBitmapCreator implements BitmapCreator {
 
-  protected static final byte[] EOI = new byte[]{
-      (byte) JfifUtil.MARKER_FIRST_BYTE, (byte) JfifUtil.MARKER_EOI};
-
   private final EmptyJpegGenerator mJpegGenerator;
   private final FlexByteArrayPool mFlexByteArrayPool;
 
@@ -55,16 +52,11 @@ public class HoneycombBitmapCreator implements BitmapCreator {
           encodedImage.getSampleSize(),
           bitmapConfig);
       int length = jpgRef.get().size();
-      byte[] suffix = endsWithEOI(jpgRef, length) ? null : EOI;
       final PooledByteBuffer pooledByteBuffer = jpgRef.get();
       encodedBytesArrayRef =
           mFlexByteArrayPool.get(length + 2);
       byte[] encodedBytesArray = encodedBytesArrayRef.get();
       pooledByteBuffer.read(0, encodedBytesArray, 0, length);
-      if (suffix != null) {
-        putEOI(encodedBytesArray, length);
-        length += 2;
-      }
       Bitmap bitmap = BitmapFactory.decodeByteArray(
           encodedBytesArray,
           0,
@@ -96,18 +88,5 @@ public class HoneycombBitmapCreator implements BitmapCreator {
       options.inMutable = true;  // no known perf difference; allows postprocessing to work
     }
     return options;
-  }
-
-  private static void putEOI(byte[] imageBytes, int offset) {
-    // TODO 5884402: remove dependency on JfifUtil
-    imageBytes[offset] = (byte) JfifUtil.MARKER_FIRST_BYTE;
-    imageBytes[offset + 1] = (byte) JfifUtil.MARKER_EOI;
-  }
-
-  protected static boolean endsWithEOI(CloseableReference<PooledByteBuffer> bytesRef, int length) {
-    PooledByteBuffer buffer = bytesRef.get();
-    return length >= 2 &&
-        buffer.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE &&
-        buffer.read(length - 1) == (byte) JfifUtil.MARKER_EOI;
   }
 }
