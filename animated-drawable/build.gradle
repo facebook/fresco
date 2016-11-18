@@ -22,6 +22,10 @@ dependencies {
     }
     testCompile project(':imagepipeline-test')
 
+    compile project(':drawee-backends:drawee-pipeline')
+    compile project(':imagepipeline-base')
+    compile project(':imagepipeline')
     compile project(':drawee')
     compile project(':fbcore')
+    compile project(':animated-base')
 }
