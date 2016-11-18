@@ -153,10 +153,15 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
           getScaleFromOptions(opts),
           getInTempStorageFromOptions(opts));
       // We notify that the direct decoding failed
-      sendWebpErrorLog("webp_direct_decode_array", bitmap);
+      if (bitmap == null) {
+        sendWebpErrorLog("webp_direct_decode_array");
+      }
       setWebpBitmapOptions(bitmap, opts);
     } else {
       bitmap = originalDecodeByteArray(array, offset, length, opts);
+      if (bitmap == null) {
+        sendWebpErrorLog("webp_direct_decode_array_failed_on_no_webp");
+      }
     }
     return bitmap;
   }
@@ -204,11 +209,16 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
           getScaleFromOptions(opts),
           getInTempStorageFromOptions(opts));
       // We notify that the direct decoder failed
-      sendWebpErrorLog("webp_direct_decode_stream", bitmap);
+      if (bitmap == null) {
+        sendWebpErrorLog("webp_direct_decode_stream");
+      }
       setWebpBitmapOptions(bitmap, opts);
       setPaddingDefaultValues(outPadding);
     } else {
       bitmap = originalDecodeStream(inputStream, outPadding, opts);
+      if (bitmap == null) {
+        sendWebpErrorLog("webp_direct_decode_stream_failed_on_no_webp");
+      }
     }
     return bitmap;
   }
@@ -398,12 +408,17 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
               getScaleFromOptions(opts),
               getInTempStorageFromOptions(opts));
           // We send error if the direct decode failed
-          sendWebpErrorLog("webp_direct_decode_fd", bitmap);
+          if (bitmap == null) {
+            sendWebpErrorLog("webp_direct_decode_fd");
+          }
           setPaddingDefaultValues(outPadding);
           setWebpBitmapOptions(bitmap, opts);
         } else {
           nativeSeek(fd, originalSeekPosition, true);
           bitmap = originalDecodeFileDescriptor(fd, outPadding, opts);
+          if (bitmap == null) {
+            sendWebpErrorLog("webp_direct_decode_fd_failed_on_no_webp");
+          }
         }
       } finally {
         try {
@@ -512,9 +527,9 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     return scale;
   }
 
-  private static void sendWebpErrorLog(String message, Bitmap bitmap) {
+  private static void sendWebpErrorLog(String message) {
     // We want to track only when bitmap is null after native decoding
-    if (mWebpErrorLogger != null && bitmap == null) {
+    if (mWebpErrorLogger != null) {
       mWebpErrorLogger.onWebpErrorLog(message, "decoding_failure");
     }
   }
