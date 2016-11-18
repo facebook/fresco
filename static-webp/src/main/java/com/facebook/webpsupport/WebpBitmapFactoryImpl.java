@@ -28,9 +28,9 @@ import android.util.TypedValue;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.webp.BitmapCreator;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
 
-import static com.facebook.common.webp.WebpSupportStatus.isWebpSupportedByPlatform;
 import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
 
 @DoNotStrip
@@ -144,9 +144,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       BitmapFactory.Options opts) {
     StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
-    boolean isWebp = isWebpHeader(array, offset, length);
-    boolean isWebpSupported = isWebpSupportedByPlatform(array, offset, length);
-    if (isWebp && !isWebpSupported) {
+    if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(array, offset, length)) {
       bitmap = nativeDecodeByteArray(
           array,
           offset,
@@ -199,9 +197,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     Bitmap bitmap;
 
     byte[] header = getWebpHeader(inputStream, opts);
-    boolean isWebp = isWebpHeader(header, 0, HEADER_SIZE);
-    boolean isWebpSupported = isWebpSupportedByPlatform(header, 0, HEADER_SIZE);
-    if (isWebp && !isWebpSupported) {
+    if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(header, 0, HEADER_SIZE)) {
       bitmap = nativeDecodeStream(
           inputStream,
           opts,
@@ -395,9 +391,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
       InputStream inputStream = wrapToMarkSupportedStream(new FileInputStream(fd));
       try {
         byte[] header = getWebpHeader(inputStream, opts);
-        isWebp = isWebpHeader(header, 0, HEADER_SIZE);
-        boolean isWebpSupported = isWebpSupportedByPlatform(header, 0, HEADER_SIZE);
-        if (isWebp && !isWebpSupported) {
+        if (WebpSupportStatus.sIsWebpSupportRequired && isWebpHeader(header, 0, HEADER_SIZE)) {
           bitmap = nativeDecodeStream(
               inputStream,
               opts,
