@@ -14,6 +14,7 @@ import javax.annotation.concurrent.Immutable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.net.Uri;
 
@@ -90,6 +91,12 @@ public final class MediaVariations {
     return Objects.hashCode(mMediaId, mForceRequestForSpecifiedUri, mVariants);
   }
 
+  @Override
+  public String toString() {
+    return String
+        .format((Locale) null, "%s-%b-%s", mMediaId, mForceRequestForSpecifiedUri, mVariants);
+  }
+
   public final static class Variant {
 
     private final Uri mUri;
@@ -131,6 +138,11 @@ public final class MediaVariations {
       hashCode = 31 * hashCode + mWidth;
       hashCode = 31 * hashCode + mHeight;
       return hashCode;
+    }
+
+    @Override
+    public String toString() {
+      return String.format((Locale) null, "%dx%d %s", mWidth, mHeight, mUri);
     }
   }
 

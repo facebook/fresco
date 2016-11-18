@@ -204,6 +204,7 @@ public class ImageRequest {
         .add("priority", mRequestPriority)
         .add("resizeOptions", mResizeOptions)
         .add("rotationOptions", mRotationOptions)
+        .add("mediaVariations", mMediaVariations)
         .toString();
   }
 
