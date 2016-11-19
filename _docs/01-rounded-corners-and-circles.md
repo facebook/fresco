@@ -47,7 +47,7 @@ When [constructing a hierarchy](using-drawees-code.html), you can pass an instan
 ```java
 int overlayColor = getResources().getColor(R.color.green);
 RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
-// alternatively use fromCornersRadii or asCircle
+// alternatively use fromCornersRadius or asCircle
 roundingParams.setOverlayColor(overlayColor);
 genericDraweeHierarchyBuilder
     .setRoundingParams(roundingParams);
