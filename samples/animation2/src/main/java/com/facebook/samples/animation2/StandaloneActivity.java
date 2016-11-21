@@ -153,7 +153,7 @@ public class StandaloneActivity extends AppCompatActivity {
 
     @Override
     public int getLoopCount() {
-      return LOOP_COUNT_INFINITE;
+      return 3;
     }
 
     @Override

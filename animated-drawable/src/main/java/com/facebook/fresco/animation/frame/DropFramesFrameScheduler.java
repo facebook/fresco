@@ -30,7 +30,7 @@ public class DropFramesFrameScheduler implements FrameScheduler {
   public int getFrameNumberToRender(long animationTimeMs, long lastFrameTimeMs) {
     if (!isInfiniteAnimation()) {
       long loopCount = animationTimeMs / getLoopDurationMs();
-      if (loopCount > mAnimationBackend.getLoopCount()) {
+      if (loopCount >= mAnimationBackend.getLoopCount()) {
         return FRAME_NUMBER_DONE;
       }
     }

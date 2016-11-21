@@ -154,6 +154,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable {
     if (frameNumberToDraw == FrameScheduler.FRAME_NUMBER_DONE) {
       frameNumberToDraw = mAnimationBackend.getFrameCount() - 1;
       mAnimationListener.onAnimationStop(this);
+      mIsRunning = false;
     } else if (frameNumberToDraw == 0) {
       mAnimationListener.onAnimationRepeat(this);
     }

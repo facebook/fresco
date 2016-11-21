@@ -28,7 +28,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 public class DropFramesFrameSchedulerTest {
 
-  private AnimationBackend mDummyAnimationBackend;
+  private DummyAnimationBackend mDummyAnimationBackend;
 
   private DropFramesFrameScheduler mFrameScheduler;
 
@@ -80,6 +80,26 @@ public class DropFramesFrameSchedulerTest {
   }
 
   @Test
+  public void testLoopCount() throws Exception {
+    long animationDurationMs = mDummyAnimationBackend.getAnimationDurationMs();
+    int lastFrameNumber = mDummyAnimationBackend.getFrameCount() - 1;
+
+    assertThat(mFrameScheduler.getFrameNumberToRender(animationDurationMs, -1))
+        .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
+
+    assertThat(mFrameScheduler.getFrameNumberToRender(animationDurationMs + 1, -1))
+        .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
+
+    assertThat(mFrameScheduler.getFrameNumberToRender(
+        animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber), -1))
+        .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
+
+    assertThat(mFrameScheduler.getFrameNumberToRender(
+        animationDurationMs + mDummyAnimationBackend.getFrameDurationMs(lastFrameNumber) + 100, -1))
+        .isEqualTo(FrameScheduler.FRAME_NUMBER_DONE);
+  }
+
+  @Test
   public void testGetFrameNumberWithinLoop() throws Exception {
     assertThat(mFrameScheduler.getFrameNumberWithinLoop(0)).isEqualTo(0);
     assertThat(mFrameScheduler.getFrameNumberWithinLoop(1)).isEqualTo(0);
@@ -91,6 +111,18 @@ public class DropFramesFrameSchedulerTest {
   }
 
   private static class DummyAnimationBackend implements AnimationBackend {
+
+    public long getLoopDurationMs() {
+      long loopDuration = 0;
+      for (int i = 0; i < getFrameCount(); i++) {
+        loopDuration += getFrameDurationMs(i);
+      }
+      return loopDuration;
+    }
+
+    public long getAnimationDurationMs() {
+      return getLoopDurationMs() * getLoopCount();
+    }
 
     @Override
     public int getFrameCount() {
