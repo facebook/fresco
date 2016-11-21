@@ -354,4 +354,30 @@ public class AnimatedDrawable2 extends Drawable implements Animatable {
     }
     return new DropFramesFrameScheduler(animationBackend);
   }
+
+  /**
+   * Set the animation to the given level. The level represents the animation time in ms.
+   * If the animation time is greater than the last frame time for the last loop, the last
+   * frame will be displayed.
+   *
+   * If the animation is running (e.g. if {@link #start()} has been called, the level change
+   * will be ignored. In this case, {@link #stop()} the animation first.
+   *
+   * @param level the animation time in ms
+   * @return true if the level change could be performed
+   */
+  @Override
+  protected boolean onLevelChange(int level) {
+    if (mIsRunning) {
+      // If the client called start on us, they expect us to run the animation. In that case,
+      // we ignore level changes.
+      return false;
+    }
+    if (mLastFrameAnimationTimeMs != level) {
+      mLastFrameAnimationTimeMs = level;
+      invalidateSelf();
+      return true;
+    }
+    return false;
+  }
 }
