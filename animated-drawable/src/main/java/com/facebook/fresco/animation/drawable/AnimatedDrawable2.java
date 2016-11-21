@@ -86,6 +86,22 @@ public class AnimatedDrawable2 extends Drawable implements Animatable {
     mMonotonicClock = monotonicClock;
   }
 
+  @Override
+  public int getIntrinsicWidth() {
+    if (mAnimationBackend == null) {
+      return super.getIntrinsicWidth();
+    }
+    return mAnimationBackend.getIntrinsicWidth();
+  }
+
+  @Override
+  public int getIntrinsicHeight() {
+    if (mAnimationBackend == null) {
+      return super.getIntrinsicHeight();
+    }
+    return mAnimationBackend.getIntrinsicHeight();
+  }
+
   /**
    * Start the animation.
    */

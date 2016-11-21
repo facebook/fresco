@@ -109,6 +109,16 @@ public class AnimatedDrawableCachingBackendWrapper implements AnimationBackend,
   }
 
   @Override
+  public int getIntrinsicWidth() {
+    return mAnimatedDrawableCachingBackend.getWidth();
+  }
+
+  @Override
+  public int getIntrinsicHeight() {
+    return mAnimatedDrawableCachingBackend.getHeight();
+  }
+
+  @Override
   public void onInactive() {
     if (mAnimatedDrawableCachingBackend != null) {
       mAnimatedDrawableCachingBackend.dropCaches();

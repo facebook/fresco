@@ -186,5 +186,15 @@ public class StandaloneActivity extends AppCompatActivity {
     public int getSizeInBytes() {
       return mColors.length * 4;
     }
+
+    @Override
+    public int getIntrinsicWidth() {
+      return INTRINSIC_DIMENSION_UNSET;
+    }
+
+    @Override
+    public int getIntrinsicHeight() {
+      return INTRINSIC_DIMENSION_UNSET;
+    }
   }
 }

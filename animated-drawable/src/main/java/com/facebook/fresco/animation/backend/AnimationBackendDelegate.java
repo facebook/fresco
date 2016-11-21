@@ -98,6 +98,22 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
     return 0;
   }
 
+  @Override
+  public int getIntrinsicWidth() {
+    if (mAnimationBackend == null) {
+      return INTRINSIC_DIMENSION_UNSET;
+    }
+    return mAnimationBackend.getIntrinsicWidth();
+  }
+
+  @Override
+  public int getIntrinsicHeight() {
+    if (mAnimationBackend == null) {
+      return INTRINSIC_DIMENSION_UNSET;
+    }
+    return mAnimationBackend.getIntrinsicHeight();
+  }
+
   /**
    * Set the animation backend to forward calls to.
    * If called with null, the current backend will be removed.

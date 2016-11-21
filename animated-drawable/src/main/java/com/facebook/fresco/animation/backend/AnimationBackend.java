@@ -28,6 +28,14 @@ public interface AnimationBackend {
   int LOOP_COUNT_INFINITE = 0;
 
   /**
+   * Default value if the intrinsic dimensions are not set.
+   *
+   * @see #getIntrinsicWidth()
+   * @see #getIntrinsicHeight()
+   */
+  int INTRINSIC_DIMENSION_UNSET = -1;
+
+  /**
    * Get the number of frames for the animation
    * @return the number of frames
    */
@@ -85,6 +93,28 @@ public interface AnimationBackend {
    * @param bounds the bounds to be used for drawing frames
    */
   void setBounds(Rect bounds);
+
+  /**
+   * Get the intrinsic width of the underlying animation or
+   * {@link #INTRINSIC_DIMENSION_UNSET} if not available.
+   *
+   * This value is used by the underlying drawable for aspect ratio computations,
+   * similar to {@link Drawable#getIntrinsicWidth()}.
+   *
+   * @return the width or {@link #INTRINSIC_DIMENSION_UNSET} if unset
+   */
+  int getIntrinsicWidth();
+
+  /**
+   * Get the intrinsic height of the underlying animation or
+   * {@link #INTRINSIC_DIMENSION_UNSET} if not available.
+   *
+   * This value is used by the underlying drawable for aspect ratio computations,
+   * similar to {@link Drawable#getIntrinsicHeight()}.
+   *
+   * @return the height or {@link #INTRINSIC_DIMENSION_UNSET} if unset
+   */
+  int getIntrinsicHeight();
 
   /**
    * Get the size of the animation backend.
