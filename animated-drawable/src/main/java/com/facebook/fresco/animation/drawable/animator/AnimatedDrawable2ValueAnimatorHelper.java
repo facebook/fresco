@@ -56,7 +56,7 @@ public class AnimatedDrawable2ValueAnimatorHelper {
       @TargetApi(Build.VERSION_CODES.HONEYCOMB)
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
-        drawable.setLevel(animation.getAnimatedValue());
+        drawable.setLevel((Integer) animation.getAnimatedValue());
       }
     };
   }
