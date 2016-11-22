@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.util.ExceptionWithNoStacktrace;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
@@ -166,7 +167,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @Override
     public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       if (isLast && !EncodedImage.isValid(newResult)) {
-        handleError(new NullPointerException("Encoded image is not valid."));
+        handleError(new ExceptionWithNoStacktrace("Encoded image is not valid."));
         return;
       }
       if (!updateDecodeJob(newResult, isLast)) {
