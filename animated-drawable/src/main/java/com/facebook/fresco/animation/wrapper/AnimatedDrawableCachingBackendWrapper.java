@@ -143,7 +143,7 @@ public class AnimatedDrawableCachingBackendWrapper implements AnimationBackend,
     // Close the previous frame
     if (bitmapReference != mLastDrawnFrame) {
       CloseableReference.closeSafely(mLastDrawnFrame);
-      mLastDrawnFrame = bitmapReference.clone();
+      mLastDrawnFrame = bitmapReference;
     }
     return true;
   }
