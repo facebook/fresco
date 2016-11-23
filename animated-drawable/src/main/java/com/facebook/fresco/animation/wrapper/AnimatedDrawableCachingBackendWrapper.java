@@ -109,6 +109,15 @@ public class AnimatedDrawableCachingBackendWrapper implements AnimationBackend,
   }
 
   @Override
+  public void clear() {
+    if (mAnimatedDrawableCachingBackend != null) {
+      mAnimatedDrawableCachingBackend.dropCaches();
+    }
+    CloseableReference.closeSafely(mLastDrawnFrame);
+    mLastDrawnFrame = null;
+  }
+
+  @Override
   public int getIntrinsicWidth() {
     return mAnimatedDrawableCachingBackend.getWidth();
   }
@@ -120,11 +129,7 @@ public class AnimatedDrawableCachingBackendWrapper implements AnimationBackend,
 
   @Override
   public void onInactive() {
-    if (mAnimatedDrawableCachingBackend != null) {
-      mAnimatedDrawableCachingBackend.dropCaches();
-    }
-    CloseableReference.closeSafely(mLastDrawnFrame);
-    mLastDrawnFrame = null;
+    clear();
   }
 
   private boolean drawBitmap(

@@ -99,6 +99,13 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
+  public void clear() {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.clear();
+    }
+  }
+
+  @Override
   public int getIntrinsicWidth() {
     if (mAnimationBackend == null) {
       return INTRINSIC_DIMENSION_UNSET;

@@ -174,5 +174,9 @@ public class DropFramesFrameSchedulerTest {
     public int getSizeInBytes() {
       return 0;
     }
+
+    @Override
+    public void clear() {
+    }
   }
 }

@@ -122,4 +122,10 @@ public interface AnimationBackend {
    *
    */
   int getSizeInBytes();
+
+  /**
+   * Clean up animation data. This will be called when the backing drawable is cleared as well.
+   * For example, drop all cached frames.
+   */
+  void clear();
 }

@@ -188,6 +188,10 @@ public class StandaloneActivity extends AppCompatActivity {
     }
 
     @Override
+    public void clear() {
+    }
+
+    @Override
     public int getIntrinsicWidth() {
       return INTRINSIC_DIMENSION_UNSET;
     }
