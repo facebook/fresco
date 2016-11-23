@@ -20,6 +20,7 @@ import android.os.SystemClock;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.common.time.MonotonicClock;
+import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.drawable.DrawableProperties;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.frame.DropFramesFrameScheduler;
@@ -29,7 +30,7 @@ import com.facebook.fresco.animation.frame.FrameScheduler;
  * Experimental new animated drawable that uses a supplied
  * {@link AnimationBackend} for drawing frames.
  */
-public class AnimatedDrawable2 extends Drawable implements Animatable {
+public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableWithCaches {
 
   private static final Class<?> TAG = AnimatedDrawable2.class;
 
@@ -396,5 +397,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public void dropCaches() {
+    if (mAnimationBackend != null) {
+      mAnimationBackend.clear();
+    }
   }
 }
