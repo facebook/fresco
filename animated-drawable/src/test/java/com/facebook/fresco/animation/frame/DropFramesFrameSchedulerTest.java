@@ -161,6 +161,16 @@ public class DropFramesFrameSchedulerTest {
     }
 
     @Override
+    public int getIntrinsicWidth() {
+      return INTRINSIC_DIMENSION_UNSET;
+    }
+
+    @Override
+    public int getIntrinsicHeight() {
+      return INTRINSIC_DIMENSION_UNSET;
+    }
+
+    @Override
     public int getSizeInBytes() {
       return 0;
     }
