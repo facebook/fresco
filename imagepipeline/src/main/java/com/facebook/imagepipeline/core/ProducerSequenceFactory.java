@@ -52,7 +52,6 @@ public class ProducerSequenceFactory {
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final boolean mWebpSupportEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
-  private final int mThrottlingMaxSimultaneousRequests;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -83,8 +82,7 @@ public class ProducerSequenceFactory {
       NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
-      ThreadHandoffProducerQueue threadHandoffProducerQueue,
-      int throttlingMaxSimultaneousRequests) {
+      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -92,7 +90,6 @@ public class ProducerSequenceFactory {
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
-    mThrottlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
   }
 
   /**
@@ -541,9 +538,7 @@ public class ProducerSequenceFactory {
         mProducerFactory.newResizeAndRotateProducer(localImageProducer, true);
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
-        mProducerFactory.newThrottlingProducer(
-            mThrottlingMaxSimultaneousRequests,
-            localImageProducer);
+        mProducerFactory.newThrottlingProducer(localImageProducer);
     return mProducerFactory.newBranchOnSeparateImagesProducer(
         newLocalThumbnailProducer(thumbnailProducers),
         localImageThrottlingProducer);

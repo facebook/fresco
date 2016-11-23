@@ -67,6 +67,9 @@ import com.facebook.imagepipeline.cache.SplitCachesByImageSizeDiskCachePolicy;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
 public class ProducerFactory {
+
+  private static final int MAX_SIMULTANEOUS_REQUESTS = 5;
+
   // Local dependencies
   private ContentResolver mContentResolver;
   private Resources mResources;
@@ -337,10 +340,9 @@ public class ProducerFactory {
   }
 
   public <T> ThrottlingProducer<T> newThrottlingProducer(
-      int maxSimultaneousRequests,
       Producer<T> inputProducer) {
     return new ThrottlingProducer<T>(
-        maxSimultaneousRequests,
+        MAX_SIMULTANEOUS_REQUESTS,
         mExecutorSupplier.forLightweightBackgroundTasks(),
         inputProducer);
   }

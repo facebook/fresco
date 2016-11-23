@@ -23,7 +23,6 @@ public class ImagePipelineExperiments {
   private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
   private final boolean mDecodeFileDescriptorEnabled;
-  private final int mThrottlingMaxSimultaneousRequests;
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final Supplier<Boolean> mMediaVariationsIndexEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
@@ -36,7 +35,6 @@ public class ImagePipelineExperiments {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
     mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
         builder.mDecodeFileDescriptorEnabled;
-    mThrottlingMaxSimultaneousRequests = builder.mThrottlingMaxSimultaneousRequests;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     if (builder.mMediaVariationsIndexEnabled != null) {
       mMediaVariationsIndexEnabled = builder.mMediaVariationsIndexEnabled;
@@ -78,10 +76,6 @@ public class ImagePipelineExperiments {
     return mDecodeCancellationEnabled;
   }
 
-  public int getThrottlingMaxSimultaneousRequests() {
-    return mThrottlingMaxSimultaneousRequests;
-  }
-
   public WebpBitmapFactory.WebpErrorLogger getWebpErrorLogger() {
     return mWebpErrorLogger;
   }
@@ -104,7 +98,6 @@ public class ImagePipelineExperiments {
     private boolean mWebpSupportEnabled = false;
     private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
-    private int mThrottlingMaxSimultaneousRequests = DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE;
     private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
@@ -183,18 +176,6 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setSuppressBitmapPrefetching(
         boolean suppressBitmapPrefetching) {
       mSuppressBitmapPrefetching = suppressBitmapPrefetching;
-      return mConfigBuilder;
-    }
-
-    /**
-     * Using this method is possible to change the max number of threads for loading and sizing
-     * local images
-     * @param throttlingMaxSimultaneousRequests Max number of thread
-     * @return The Builder itself for chaining
-     */
-    public ImagePipelineConfig.Builder setThrottlingMaxSimultaneousRequests(
-        int throttlingMaxSimultaneousRequests) {
-      mThrottlingMaxSimultaneousRequests = throttlingMaxSimultaneousRequests;
       return mConfigBuilder;
     }
 

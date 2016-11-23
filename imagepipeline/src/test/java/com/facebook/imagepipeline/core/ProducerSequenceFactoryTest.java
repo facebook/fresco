@@ -66,7 +66,7 @@ public class ProducerSequenceFactoryTest {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
 
     mProducerSequenceFactory =
-        new ProducerSequenceFactory(producerFactory, null, true, false, null, 5);
+        new ProducerSequenceFactory(producerFactory, null, true, false, null);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
