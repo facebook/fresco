@@ -147,16 +147,16 @@ public final class MediaVariations {
   }
 
   /**
-   * Creates an instance with a media ID and without specific variants. If a null ID is given, null
-   * is returned.
+   * Creates an instance with a media ID and without specific variants. If a null or empty ID is
+   * given, null is returned.
    *
-   * @param mediaId the unique ID for this piece of media. This must be non-null and unique for
-   *                this piece of media (i.e. another request for the same picture at a different
-   *                size should share the ID but not an unrelated image and not the same media at
-   *                a different orientation).
+   * @param mediaId the unique ID for this piece of media. If this is neither null or empty, it must
+   *                be unique for this piece of media (i.e. another request for the same picture at
+   *                a different size should share the ID but not an unrelated image and not the same
+   *                media at a different orientation).
    */
   public static @Nullable MediaVariations forMediaId(@Nullable String mediaId) {
-    if (mediaId == null) {
+    if (mediaId == null || mediaId.isEmpty()) {
       return null;
     }
     return newBuilderForMediaId(mediaId).build();
