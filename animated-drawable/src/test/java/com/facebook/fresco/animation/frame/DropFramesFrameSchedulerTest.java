@@ -64,14 +64,33 @@ public class DropFramesFrameSchedulerTest {
   }
 
   @Test
-  public void testGetDelayUntilNextFrameMs() throws Exception {
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(0)).isEqualTo(0);
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(1)).isEqualTo(99);
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(50)).isEqualTo(50);
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(100)).isEqualTo(0);
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(170)).isEqualTo(30);
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(460)).isEqualTo(40);
-    assertThat(mFrameScheduler.getDelayUntilNextFrameMs(510)).isEqualTo(90);
+  public void testGetTargetRenderTimeForNextFrameMs() throws Exception {
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(0)).isEqualTo(100);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(1)).isEqualTo(100);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(50)).isEqualTo(100);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(100)).isEqualTo(200);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(170)).isEqualTo(200);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(460)).isEqualTo(500);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(499)).isEqualTo(500);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(500)).isEqualTo(600);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(501)).isEqualTo(600);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(510)).isEqualTo(600);
+  }
+
+  @Test
+  public void testGetTargetRenderTimeForNextFrameMsWhenAnimationOver() throws Exception {
+    long animationDurationMs = mDummyAnimationBackend.getAnimationDurationMs();
+
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(animationDurationMs - 1))
+        .isEqualTo(animationDurationMs);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(animationDurationMs))
+        .isEqualTo(FrameScheduler.NO_NEXT_TARGET_RENDER_TIME);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(animationDurationMs + 1))
+        .isEqualTo(FrameScheduler.NO_NEXT_TARGET_RENDER_TIME);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(animationDurationMs + 100))
+        .isEqualTo(FrameScheduler.NO_NEXT_TARGET_RENDER_TIME);
+    assertThat(mFrameScheduler.getTargetRenderTimeForNextFrameMs(animationDurationMs * 100))
+        .isEqualTo(FrameScheduler.NO_NEXT_TARGET_RENDER_TIME);
   }
 
   @Test

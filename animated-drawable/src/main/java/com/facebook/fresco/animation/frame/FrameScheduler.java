@@ -15,6 +15,8 @@ public interface FrameScheduler {
 
   int FRAME_NUMBER_DONE = -1;
 
+  int NO_NEXT_TARGET_RENDER_TIME = -1;
+
   /**
    * Get the frame number for the given animation time or {@link #FRAME_NUMBER_DONE}
    * if the animation is over.
@@ -41,13 +43,14 @@ public interface FrameScheduler {
   long getTargetRenderTimeMs(int frameNumber);
 
   /**
-   * For a given animation time, calculate the delay until the next frame should be rendered.
-   * This can also return 0 if the next frame should be rendered right now.
+   * For a given animation time, calculate the target render time for the next frame in ms.
+   * If the animation is over, this will return {@link #NO_NEXT_TARGET_RENDER_TIME}
    *
    * @param animationTimeMs the current animation time in ms
-   * @return the delay in ms until the next frame is due
+   * @return the target animation time in ms for the next frame after the given animation time or
+   *         {@link #NO_NEXT_TARGET_RENDER_TIME} if the animation is over
    */
-  long getDelayUntilNextFrameMs(long animationTimeMs);
+  long getTargetRenderTimeForNextFrameMs(long animationTimeMs);
 
   /**
    * @return true if the animation is infinite

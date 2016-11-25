@@ -19,7 +19,6 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 
 import com.facebook.common.logging.FLog;
-import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.drawable.DrawableProperties;
 import com.facebook.fresco.animation.backend.AnimationBackend;
@@ -57,9 +56,6 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   @Nullable
   private DrawableProperties mDrawableProperties;
 
-  @Nullable
-  private final MonotonicClock mMonotonicClock;
-
   /**
    * Runnable that invalidates the drawable that will be scheduled according to the next
    * target frame.
@@ -67,6 +63,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   private final Runnable mInvalidateRunnable = new Runnable() {
     @Override
     public void run() {
+      // Remove all potential other scheduled runnables
+      // (e.g. if the view has been invalidated a lot)
+      unscheduleSelf(mInvalidateRunnable);
+      // Draw the next frame
       invalidateSelf();
     }
   };
@@ -75,16 +75,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     this(null);
   }
 
-  public AnimatedDrawable2(@Nullable AnimationBackend animationBackend) {
-    this(animationBackend, null);
-  }
-
   public AnimatedDrawable2(
-      @Nullable AnimationBackend animationBackend,
-      @Nullable MonotonicClock monotonicClock) {
+      @Nullable AnimationBackend animationBackend) {
     mAnimationBackend = animationBackend;
     mFrameScheduler = createSchedulerForBackendAndDelayMethod(mAnimationBackend);
-    mMonotonicClock = monotonicClock;
   }
 
   @Override
@@ -201,8 +195,11 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
             frameDrawn);
       }
       // Schedule the next frame if needed
-      scheduleNextFrame(
-          mFrameScheduler.getDelayUntilNextFrameMs(actualRenderTimeEnd - mStartTimeMs));
+      long targetRenderTimeForNextFrameMs =
+          mFrameScheduler.getTargetRenderTimeForNextFrameMs(actualRenderTimeEnd - mStartTimeMs);
+      if (targetRenderTimeForNextFrameMs != FrameScheduler.NO_NEXT_TARGET_RENDER_TIME) {
+        scheduleNextFrame(targetRenderTimeForNextFrameMs);
+      }
     }
   }
 
@@ -343,10 +340,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   /**
    * Schedule the next frame to be rendered after the given delay.
    *
-   * @param nextFrameDelayMs the time in ms to update the frame
+   * @param targetAnimationTimeMs the time in ms to update the frame
    */
-  private void scheduleNextFrame(long nextFrameDelayMs) {
-    scheduleSelf(mInvalidateRunnable, nextFrameDelayMs);
+  private void scheduleNextFrame(long targetAnimationTimeMs) {
+    scheduleSelf(mInvalidateRunnable, mStartTimeMs + targetAnimationTimeMs);
   }
 
   private void onFrameDropped() {
@@ -358,10 +355,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   }
 
   /**
-   * @return the current time in ms
+   * @return the current uptime in ms
    */
   private long now() {
-    return mMonotonicClock == null ? SystemClock.uptimeMillis() : mMonotonicClock.now();
+    // This call has to return {@link SystemClock#uptimeMillis()} in order to preserve correct
+    // frame scheduling.
+    return SystemClock.uptimeMillis();
   }
 
   @Nullable

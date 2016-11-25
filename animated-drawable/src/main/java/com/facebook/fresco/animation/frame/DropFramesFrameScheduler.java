@@ -61,16 +61,32 @@ public class DropFramesFrameScheduler implements FrameScheduler {
   }
 
   @Override
-  public long getDelayUntilNextFrameMs(long animationTimeMs) {
+  public long getTargetRenderTimeForNextFrameMs(long animationTimeMs) {
     long loopDurationMs = getLoopDurationMs();
-    while (animationTimeMs > loopDurationMs) {
-      animationTimeMs -= loopDurationMs;
+    // Sanity check.
+    if (loopDurationMs == 0) {
+      return NO_NEXT_TARGET_RENDER_TIME;
     }
-    int currentFrame = 0;
-    while (animationTimeMs > 0) {
-      animationTimeMs -= mAnimationBackend.getFrameDurationMs(currentFrame++);
+    if (!isInfiniteAnimation()) {
+      long loopCount = animationTimeMs / getLoopDurationMs();
+      if (loopCount >= mAnimationBackend.getLoopCount()) {
+        return NO_NEXT_TARGET_RENDER_TIME;
+      }
     }
-    return -animationTimeMs;
+    // The animation time in the current loop
+    long timePassedInCurrentLoopMs = animationTimeMs % loopDurationMs;
+    // The animation time in the current loop for the next frame
+    long timeOfNextFrameInLoopMs = 0;
+
+    int frameCount = mAnimationBackend.getFrameCount();
+    for (int i = 0; i < frameCount && timeOfNextFrameInLoopMs <= timePassedInCurrentLoopMs; i++) {
+      timeOfNextFrameInLoopMs += mAnimationBackend.getFrameDurationMs(i);
+    }
+
+    // Difference between current time in loop and next frame in loop
+    long timeUntilNextFrameInLoopMs = timeOfNextFrameInLoopMs - timePassedInCurrentLoopMs;
+    // Add the difference to the current animation time
+    return animationTimeMs + timeUntilNextFrameInLoopMs;
   }
 
   @Override
