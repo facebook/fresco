@@ -85,6 +85,7 @@ public class ImageRequestBuilder {
         .setCacheChoice(imageRequest.getCacheChoice())
         .setLocalThumbnailPreviewsEnabled(imageRequest.getLocalThumbnailPreviewsEnabled())
         .setLowestPermittedRequestLevel(imageRequest.getLowestPermittedRequestLevel())
+        .setMediaVariations(imageRequest.getMediaVariations())
         .setPostprocessor(imageRequest.getPostprocessor())
         .setProgressiveRenderingEnabled(imageRequest.getProgressiveRenderingEnabled())
         .setRequestPriority(imageRequest.getPriority())
