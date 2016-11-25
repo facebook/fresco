@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.common;
 
+import javax.annotation.Nullable;
+
 import java.util.Locale;
 
 import com.facebook.common.internal.Preconditions;
@@ -36,6 +38,26 @@ public class ResizeOptions {
 
   /* round-up fraction for resize process, defaults to DEFAULT_ROUNDUP_FRACTION */
   public final float roundUpFraction;
+
+  /**
+   * @return new ResizeOptions, if the width and height values are valid, and null otherwise
+   */
+  public @Nullable static ResizeOptions forDimensions(int width, int height) {
+    if (width <= 0 || height <= 0) {
+      return null;
+    }
+    return new ResizeOptions(width, height);
+  }
+
+  /**
+   * @return new ResizeOptions, if the width and height values are valid, and null otherwise
+   */
+  public @Nullable static ResizeOptions forSquareSize(int size) {
+    if (size <= 0) {
+      return null;
+    }
+    return new ResizeOptions(size, size);
+  }
 
   public ResizeOptions(
       int width,
