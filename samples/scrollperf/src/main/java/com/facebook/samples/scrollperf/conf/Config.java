@@ -58,6 +58,8 @@ public class Config {
 
   public final boolean drawBorder;
 
+  public final boolean draweeOverlayEnabled;
+
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context);
@@ -124,6 +126,9 @@ public class Config {
     final boolean webpSupportEnabled = sharedPreferences.getBoolean(
         Const.WEBP_SUPPORT_KEY,
         false);
+    final boolean draweeOverlayEnabled = sharedPreferences.getBoolean(
+        Const.DRAWEE_OVERLAY_KEY,
+        false);
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -145,7 +150,8 @@ public class Config {
       fadeDurationMs,
       drawBorder,
       decodeCancellation,
-      webpSupportEnabled);
+      webpSupportEnabled,
+      draweeOverlayEnabled);
   }
 
   private Config(
@@ -169,7 +175,8 @@ public class Config {
       final int fadeDurationMs,
       final boolean drawBorder,
       final boolean decodeCancellation,
-      final boolean webpSupportEnabled) {
+      final boolean webpSupportEnabled,
+      final boolean draweeOverlayEnabled) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.gridSpanCount = gridSpanCount;
@@ -191,5 +198,6 @@ public class Config {
     this.drawBorder = drawBorder;
     this.decodeCancellation = decodeCancellation;
     this.webpSupportEnabled = webpSupportEnabled;
+    this.draweeOverlayEnabled = draweeOverlayEnabled;
   }
 }

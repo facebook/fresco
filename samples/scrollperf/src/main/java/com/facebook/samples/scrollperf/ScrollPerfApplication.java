@@ -14,6 +14,7 @@ package com.facebook.samples.scrollperf;
 import android.app.Application;
 
 import com.facebook.common.webp.WebpSupportStatus;
+import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.samples.scrollperf.conf.Config;
@@ -34,6 +35,9 @@ public class ScrollPerfApplication extends Application {
       imagePipelineConfigBuilder.experiment().setWebpSupportEnabled(config.webpSupportEnabled);
     }
     imagePipelineConfigBuilder.experiment().setDecodeCancellationEnabled(config.decodeCancellation);
-    Fresco.initialize(this, imagePipelineConfigBuilder.build());
+    DraweeConfig draweeConfig = DraweeConfig.newBuilder()
+        .setDrawDebugOverlay(config.draweeOverlayEnabled)
+        .build();
+    Fresco.initialize(this, imagePipelineConfigBuilder.build(), draweeConfig);
   }
 }

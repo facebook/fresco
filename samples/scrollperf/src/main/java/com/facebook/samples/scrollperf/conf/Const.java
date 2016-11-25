@@ -61,4 +61,6 @@ public final class Const {
   public static final String WEBP_SUPPORT_KEY = "webp_support_key";
 
   public static final String DECODE_CANCELLATION_KEY= "decode_cancellation_key";
+
+  public static final String DRAWEE_OVERLAY_KEY= "drawee_overlay_key";
 }

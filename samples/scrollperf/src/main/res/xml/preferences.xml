@@ -101,6 +101,10 @@
             android:key="scale_type"
             android:title="@string/title_preferences_scale_type"
             />
+        <CheckBoxPreference
+            android:key="drawee_overlay_key"
+            android:title="@string/title_drawee_overlay"
+            />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="key_preferences_recycler_layout"

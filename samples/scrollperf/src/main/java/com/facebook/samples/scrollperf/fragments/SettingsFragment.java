@@ -68,6 +68,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateRotationAngleSummary(findPreference(Const.FORCED_ROTATION_ANGLE_KEY));
     updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
     updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
+    updateDraweeOverlaySummary(findPreference(Const.DRAWEE_OVERLAY_KEY));
     // Set sizes
     SizePreferences widthPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
@@ -145,6 +146,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         break;
       case Const.DECODE_CANCELLATION_KEY:
         updateDecodeCancellationSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.DRAWEE_OVERLAY_KEY:
+        updateDraweeOverlaySummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
       case Const.OVERRIDE_SIZE_KEY:
@@ -316,6 +321,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) preference,
         R.string.checked_downsampling_summary,
         R.string.unchecked_downsampling_summary);
+  }
+
+  private void updateDraweeOverlaySummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_drawee_overlay_summary,
+        R.string.unchecked_drawee_overlay_summary);
   }
 
   private void updateOverrideSizeSummary(final Preference preference) {

@@ -190,4 +190,9 @@
     <string translatable="false" name="title_decode_cancellation">Decode cancellation</string>
     <string translatable="false" name="checked_decode_cancellation_summary">Decoding is cancelled for cancelled requests</string>
     <string translatable="false" name="unchecked_decode_cancellation_summary">Decoding is NOT cancelled for cancelled requests</string>
+
+    <!-- Drawee debug overlay-->
+    <string translatable="false" name="title_drawee_overlay">Drawee debug overlay</string>
+    <string translatable="false" name="checked_drawee_overlay_summary">Debug overlay enabled</string>
+    <string translatable="false" name="unchecked_drawee_overlay_summary">Debug overlay disabled</string>
 </resources>
