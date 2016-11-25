@@ -91,8 +91,6 @@ public class ImagePipelineExperiments {
 
   public static class Builder {
 
-    private static final int DEFAULT_MAX_SIMULTANEOUS_FILE_FETCH_AND_RESIZE = 5;
-
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
