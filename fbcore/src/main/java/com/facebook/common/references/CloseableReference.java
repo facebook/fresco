@@ -75,6 +75,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     }
   }
 
+  private static final String TAG_UNCLOSED = "UnclosedReference";
   private static Class<CloseableReference> TAG = CloseableReference.class;
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
@@ -210,16 +211,19 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
       }
 
       UNCLOSED_IN_FINALIZE.incrementAndGet();
-      String message = String.format(
-          "Finalized without closing: %x %x (type = %s)",
-          System.identityHashCode(this),
-          System.identityHashCode(mSharedReference),
-          mSharedReference.get().getClass().getSimpleName());
       if (sTraceTracking) {
         Throwable cause = mClonedTrace != null ? mClonedTrace : mObtainedTrace;
-        FLog.wtf(TAG, message, cause);
+        String message = mClonedTrace != null
+            ? "Finalized without closing! Cause is clone location."
+            : "Finalized without closing! Cause is obtain location.";
+        FLog.wtf(TAG_UNCLOSED, message, cause);
       } else {
-        FLog.w(TAG, message);
+        FLog.w(
+            TAG,
+            "Finalized without closing: %x %x (type = %s)",
+            System.identityHashCode(this),
+            System.identityHashCode(mSharedReference),
+            mSharedReference.get().getClass().getSimpleName());
       }
 
       close();
