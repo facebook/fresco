@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
@@ -65,16 +64,6 @@ import com.facebook.common.logging.FLog;
  */
 public final class CloseableReference<T> implements Cloneable, Closeable {
 
-  public static class Stats {
-    public final int totalFinalized;
-    public final int unclosedInFinalize;
-
-    private Stats(int totalFinalized, int unclosedInFinalize) {
-      this.totalFinalized = totalFinalized;
-      this.unclosedInFinalize = unclosedInFinalize;
-    }
-  }
-
   private static final String TAG_UNCLOSED = "UnclosedReference";
   private static Class<CloseableReference> TAG = CloseableReference.class;
 
@@ -89,9 +78,6 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
           }
         }
       };
-
-  private static final AtomicInteger TOTAL_FINALIZED = new AtomicInteger(0);
-  private static final AtomicInteger UNCLOSED_IN_FINALIZE = new AtomicInteger(0);
 
   private static volatile boolean sTraceTracking;
   private final @Nullable Throwable mObtainedTrace;
@@ -201,7 +187,6 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   @Override
   protected void finalize() throws Throwable {
     try {
-      TOTAL_FINALIZED.incrementAndGet();
       // We put synchronized here so that lint doesn't warn about accessing mIsClosed, which is
       // guarded by this. Lint isn't aware of finalize semantics.
       synchronized (this) {
@@ -210,7 +195,6 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       }
 
-      UNCLOSED_IN_FINALIZE.incrementAndGet();
       if (sTraceTracking) {
         Throwable cause = mClonedTrace != null ? mClonedTrace : mObtainedTrace;
         String message = mClonedTrace != null
@@ -310,10 +294,6 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         closeSafely(ref);
       }
     }
-  }
-
-  public static Stats getStats() {
-    return new Stats(TOTAL_FINALIZED.get(), UNCLOSED_IN_FINALIZE.get());
   }
 
   public static void setTraceTrackingEnabled(boolean enabled) {
