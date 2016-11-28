@@ -21,6 +21,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
+import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 
 /**
@@ -36,19 +38,27 @@ public class DraweeViewAdapter extends RecyclerView.Adapter<DraweeViewHolder> {
 
   private final int mPaddingPx;
 
-  public DraweeViewAdapter(Context context, SimpleAdapter<Uri> simpleAdapter, Config config) {
+  private final PerfListener mPerfListener;
+
+  public DraweeViewAdapter(
+      Context context,
+      SimpleAdapter<Uri> simpleAdapter,
+      Config config,
+      PerfListener perfListener) {
     this.mContext = context;
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
     this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
+    mPerfListener = perfListener;
   }
 
   @Override
   public DraweeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(mContext, mConfig);
-    final SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext, gdh);
+    final InstrumentedDraweeView simpleDraweeView =
+        new InstrumentedDraweeView(mContext, gdh, mConfig);
     simpleDraweeView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
-    return new DraweeViewHolder(parent, simpleDraweeView, mConfig);
+    return new DraweeViewHolder(parent, simpleDraweeView, mConfig, mPerfListener);
   }
 
   @Override

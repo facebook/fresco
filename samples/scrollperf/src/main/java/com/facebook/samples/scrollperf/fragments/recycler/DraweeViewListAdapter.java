@@ -27,6 +27,8 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
+import com.facebook.samples.scrollperf.instrumentation.InstrumentedDraweeView;
+import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.DraweeUtil;
 import com.facebook.samples.scrollperf.util.PipelineUtil;
 import com.facebook.samples.scrollperf.util.SizeUtil;
@@ -42,10 +44,17 @@ public class DraweeViewListAdapter extends BaseAdapter {
 
   private final int mPaddingPx;
 
-  public DraweeViewListAdapter(Context context, SimpleAdapter<Uri> simpleAdapter, Config config) {
+  private final PerfListener mPerfListener;
+
+  public DraweeViewListAdapter(
+      Context context,
+      SimpleAdapter<Uri> simpleAdapter,
+      Config config,
+      PerfListener perfListener) {
     this.mSimpleAdapter = simpleAdapter;
     this.mConfig = config;
     this.mPaddingPx = context.getResources().getDimensionPixelSize(R.dimen.drawee_padding);
+    this.mPerfListener = perfListener;
   }
 
   @Override
@@ -65,18 +74,20 @@ public class DraweeViewListAdapter extends BaseAdapter {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    SimpleDraweeView draweeView;
+    InstrumentedDraweeView draweeView;
     if (convertView == null) {
       final Context context = parent.getContext();
       GenericDraweeHierarchy gdh = DraweeUtil.createDraweeHierarchy(context, mConfig);
-      draweeView = new SimpleDraweeView(context, gdh);
+      draweeView = new InstrumentedDraweeView(context, gdh, mConfig);
       SizeUtil.setConfiguredSize(parent, draweeView, mConfig);
       draweeView.setPadding(mPaddingPx, mPaddingPx, mPaddingPx, mPaddingPx);
     } else {
-      draweeView = (SimpleDraweeView) convertView;
+      draweeView = (InstrumentedDraweeView) convertView;
     }
+    final Uri uri = getItem(position);
+    draweeView.initInstrumentation(uri.toString(), mPerfListener);
     ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder
-            .newBuilderWithSource(getItem(position))
+            .newBuilderWithSource(uri)
             .setResizeOptions(
                     new ResizeOptions(
                             draweeView.getLayoutParams().width,
@@ -87,6 +98,9 @@ public class DraweeViewListAdapter extends BaseAdapter {
             .setImageRequest(imageRequestBuilder.build());
     if (mConfig.reuseOldController) {
       builder.setOldController(draweeView.getController());
+    }
+    if (mConfig.instrumentationEnabled) {
+      draweeView.setListener(builder);
     }
     draweeView.setController(builder.build());
     return draweeView;

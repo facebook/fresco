@@ -132,6 +132,10 @@
         android:title="@string/title_other_group"
         >
         <CheckBoxPreference
+            android:key="instrumentation_key"
+            android:title="@string/title_instrumentation"
+        />
+        <CheckBoxPreference
             android:key="webp_support_key"
             android:title="@string/title_webp_support"
         />

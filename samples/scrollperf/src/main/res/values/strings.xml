@@ -195,4 +195,9 @@
     <string translatable="false" name="title_drawee_overlay">Drawee debug overlay</string>
     <string translatable="false" name="checked_drawee_overlay_summary">Debug overlay enabled</string>
     <string translatable="false" name="unchecked_drawee_overlay_summary">Debug overlay disabled</string>
+
+    <!-- Instrumentation-->
+    <string translatable="false" name="title_instrumentation">Enable Instrumentation</string>
+    <string translatable="false" name="checked_instrumentation_summary">Instrumentation is enabled</string>
+    <string translatable="false" name="unchecked_instrumentation_summary">Instrumentation is disabled</string>
 </resources>

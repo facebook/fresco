@@ -59,6 +59,7 @@ public class Config {
   public final boolean drawBorder;
 
   public final boolean draweeOverlayEnabled;
+  public final boolean instrumentationEnabled;
 
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
@@ -129,6 +130,10 @@ public class Config {
     final boolean draweeOverlayEnabled = sharedPreferences.getBoolean(
         Const.DRAWEE_OVERLAY_KEY,
         false);
+    final boolean instrumentationEnabled = sharedPreferences.getBoolean(
+        Const.INSTRUMENTATION_ENABLED_KEY,
+        false);
+
     return new Config(
       dataSourceType,
       recyclerLayoutType,
@@ -151,7 +156,8 @@ public class Config {
       drawBorder,
       decodeCancellation,
       webpSupportEnabled,
-      draweeOverlayEnabled);
+      draweeOverlayEnabled,
+      instrumentationEnabled);
   }
 
   private Config(
@@ -176,7 +182,8 @@ public class Config {
       final boolean drawBorder,
       final boolean decodeCancellation,
       final boolean webpSupportEnabled,
-      final boolean draweeOverlayEnabled) {
+      final boolean draweeOverlayEnabled,
+      final boolean instrumentationEnabled) {
     this.dataSourceType = dataSourceType;
     this.recyclerLayoutType = recyclerLayoutType;
     this.gridSpanCount = gridSpanCount;
@@ -199,5 +206,6 @@ public class Config {
     this.decodeCancellation = decodeCancellation;
     this.webpSupportEnabled = webpSupportEnabled;
     this.draweeOverlayEnabled = draweeOverlayEnabled;
+    this.instrumentationEnabled = instrumentationEnabled;
   }
 }

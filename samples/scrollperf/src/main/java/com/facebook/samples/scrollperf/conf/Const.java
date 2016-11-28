@@ -63,4 +63,5 @@ public final class Const {
   public static final String DECODE_CANCELLATION_KEY= "decode_cancellation_key";
 
   public static final String DRAWEE_OVERLAY_KEY= "drawee_overlay_key";
+  public static final String INSTRUMENTATION_ENABLED_KEY= "instrumentation_key";
 }

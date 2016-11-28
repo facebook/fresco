@@ -69,6 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
     updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
     updateDraweeOverlaySummary(findPreference(Const.DRAWEE_OVERLAY_KEY));
+    updateInstrumentationSummary(findPreference(Const.INSTRUMENTATION_ENABLED_KEY));
     // Set sizes
     SizePreferences widthPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
@@ -143,6 +144,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       case Const.WEBP_SUPPORT_KEY:
         updateWebpSupportSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.INSTRUMENTATION_ENABLED_KEY:
+        updateInstrumentationSummary(preference);
         break;
       case Const.DECODE_CANCELLATION_KEY:
         updateDecodeCancellationSummary(preference);
@@ -329,6 +333,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) preference,
         R.string.checked_drawee_overlay_summary,
         R.string.unchecked_drawee_overlay_summary);
+  }
+
+  private void updateInstrumentationSummary(final Preference preference) {
+    updateCheckBoxPreference(
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_instrumentation_summary,
+        R.string.unchecked_instrumentation_summary);
   }
 
   private void updateOverrideSizeSummary(final Preference preference) {

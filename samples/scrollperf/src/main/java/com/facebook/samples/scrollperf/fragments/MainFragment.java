@@ -38,6 +38,7 @@ import com.facebook.samples.scrollperf.data.impl.DistinctUriDecorator;
 import com.facebook.samples.scrollperf.data.impl.LocalResourceSimpleAdapter;
 import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewAdapter;
 import com.facebook.samples.scrollperf.fragments.recycler.DraweeViewListAdapter;
+import com.facebook.samples.scrollperf.instrumentation.PerfListener;
 import com.facebook.samples.scrollperf.util.UI;
 
 public class MainFragment extends Fragment {
@@ -60,10 +61,13 @@ public class MainFragment extends Fragment {
 
   boolean mDistinctUriCompatible = true;
 
+  private PerfListener mPerfListener;
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    mPerfListener = new PerfListener();
   }
 
   @Override
@@ -169,12 +173,20 @@ public class MainFragment extends Fragment {
       case Const.RECYCLER_VIEW_LAYOUT_VALUE:
       case Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mDraweeViewAdapter = new DraweeViewAdapter(getContext(), mSimpleAdapter, mConfig);
+        mDraweeViewAdapter = new DraweeViewAdapter(
+            getContext(),
+            mSimpleAdapter,
+            mConfig,
+            mPerfListener);
         mRecyclerView.setAdapter(mDraweeViewAdapter);
         break;
       case Const.LISTVIEW_LAYOUT_VALUE:
         // Create the Adapter
-        mListAdapter = new DraweeViewListAdapter(getContext(), mSimpleAdapter, mConfig);
+        mListAdapter = new DraweeViewListAdapter(
+            getContext(),
+            mSimpleAdapter,
+            mConfig,
+            mPerfListener);
         // Set the adapter
         mListView.setAdapter(mListAdapter);
         break;
