@@ -19,8 +19,8 @@ import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.util.SizeUtil;
 
 /**
- * We use this class to keep in memory all the information from the Settings. It's a kind of
- * buffer of those information in order to avoid repeated reading
+ * We use this class to keep in memory all the information from the Settings. It's a kind of buffer
+ * of those information in order to avoid repeated reading
  */
 public class Config {
 
@@ -63,149 +63,255 @@ public class Config {
 
   public static Config load(final Context context) {
     final SharedPreferences sharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context);
-    final String dataSourceType = sharedPreferences.getString(
+        PreferenceManager.getDefaultSharedPreferences(context);
+    return Builder.newBuilder()
+        .setDataSourceType(sharedPreferences.getString(
             Const.DATA_SOURCE_KEY,
-            context.getString(R.string.value_local_uri));
-    final boolean infiniteDataSource = sharedPreferences.getBoolean(
+            context.getString(R.string.value_local_uri)))
+        .setInfiniteDataSource(sharedPreferences.getBoolean(
             Const.INFINITE_DATA_SOURCE_KEY,
-            false);
-    final boolean distinctUriDataSource = sharedPreferences.getBoolean(
+            false))
+        .setDistinctUriDataSource(sharedPreferences.getBoolean(
             Const.DISTINCT_DATA_SOURCE_KEY,
-            false);
-    final String recyclerLayoutType = sharedPreferences.getString(
+            false))
+        .setRecyclerLayoutType(sharedPreferences.getString(
             Const.RECYCLER_LAYOUT_KEY,
-            context.getString(R.string.value_recyclerview_recycler_layout));
-    final boolean reuseOldController = sharedPreferences.getBoolean(
+            context.getString(R.string.value_recyclerview_recycler_layout)))
+        .setReuseOldController(sharedPreferences.getBoolean(
             Const.REUSE_OLD_CONTROLLER_KEY,
-            false);
-    final boolean useRoundedCorners = sharedPreferences.getBoolean(
+            false))
+        .setUseRoundedCorners(sharedPreferences.getBoolean(
             Const.ROUNDED_CORNERS_KEY,
-            false);
-    final boolean useRoundedAsCircle = sharedPreferences.getBoolean(
+            false))
+        .setUseRoundedAsCircle(sharedPreferences.getBoolean(
             Const.ROUNDED_AS_CIRCLE_KEY,
-            false);
-    final boolean usePostprocessor = sharedPreferences.getBoolean(
+            false))
+        .setUsePostprocessor(sharedPreferences.getBoolean(
             Const.USE_POSTPROCESSOR_KEY,
-            false);
-    final String postprocessorType = sharedPreferences.getString(
+            false))
+        .setPostprocessorType(sharedPreferences.getString(
             Const.POSTPROCESSOR_TYPE_KEY,
-            context.getString(R.string.value_postprocessor_medium));
-    final String scaleType = sharedPreferences.getString(
+            context.getString(R.string.value_postprocessor_medium)))
+        .setScaleType(sharedPreferences.getString(
             Const.SCALE_TYPE_KEY,
-            context.getString(R.string.value_scale_type_fit_center));
-    final boolean rotateUsingMetaData = sharedPreferences.getBoolean(
+            context.getString(R.string.value_scale_type_fit_center)))
+        .setRotateUsingMetaData(sharedPreferences.getBoolean(
             Const.AUTO_ROTATE_KEY,
-            false);
-    final int forcedRotationAngle = Integer.parseInt(sharedPreferences.getString(
+            false))
+        .setForcedRotationAngle(Integer.parseInt(sharedPreferences.getString(
             Const.FORCED_ROTATION_ANGLE_KEY,
-            "0"));
-    final boolean downsampling = sharedPreferences.getBoolean(
-        Const.DOWNSAMPLING_KEY,
-        false);
-    final boolean overrideSize = sharedPreferences.getBoolean(
-        Const.OVERRIDE_SIZE_KEY,
-        false);
-    final int overridenWidth = sharedPreferences.getInt(
-        Const.OVERRIDEN_WIDTH_KEY,
-        SizeUtil.DISPLAY_WIDTH / 2);
-    final int overridenHeight = sharedPreferences.getInt(
-        Const.OVERRIDEN_HEIGHT_KEY,
-        SizeUtil.DISPLAY_HEIGHT / 2);
-    final int fadeDurationMs = Integer.parseInt(sharedPreferences.getString(
+            "0")))
+        .setDownsampling(sharedPreferences.getBoolean(
+            Const.DOWNSAMPLING_KEY,
+            false))
+        .setOverrideSize(sharedPreferences.getBoolean(
+            Const.OVERRIDE_SIZE_KEY,
+            false))
+        .setOverridenWidth(sharedPreferences.getInt(
+            Const.OVERRIDEN_WIDTH_KEY,
+            SizeUtil.DISPLAY_WIDTH / 2))
+        .setOverridenHeight(sharedPreferences.getInt(
+            Const.OVERRIDEN_HEIGHT_KEY,
+            SizeUtil.DISPLAY_HEIGHT / 2))
+        .setFadeDurationMs(Integer.parseInt(sharedPreferences.getString(
             Const.FADE_DURATION_KEY,
-            context.getString(R.string.value_fast_fade_duration)));
-    final boolean drawBorder = sharedPreferences.getBoolean(
+            context.getString(R.string.value_fast_fade_duration))))
+        .setDrawBorder(sharedPreferences.getBoolean(
             Const.DRAW_BORDER_KEY,
-            false);
-    final int gridSpanCount = Integer.parseInt(sharedPreferences.getString(
-        Const.GRID_SPAN_COUNT_KEY,
-        "3"));
-    final boolean decodeCancellation = sharedPreferences.getBoolean(
-        Const.DECODE_CANCELLATION_KEY,
-        false);
-    final boolean webpSupportEnabled = sharedPreferences.getBoolean(
-        Const.WEBP_SUPPORT_KEY,
-        false);
-    final boolean draweeOverlayEnabled = sharedPreferences.getBoolean(
-        Const.DRAWEE_OVERLAY_KEY,
-        false);
-    final boolean instrumentationEnabled = sharedPreferences.getBoolean(
-        Const.INSTRUMENTATION_ENABLED_KEY,
-        false);
-
-    return new Config(
-      dataSourceType,
-      recyclerLayoutType,
-      gridSpanCount,
-      infiniteDataSource,
-      distinctUriDataSource,
-      reuseOldController,
-      useRoundedCorners,
-      useRoundedAsCircle,
-      usePostprocessor,
-      postprocessorType,
-      scaleType,
-      rotateUsingMetaData,
-      forcedRotationAngle,
-      downsampling,
-      overrideSize,
-      overridenWidth,
-      overridenHeight,
-      fadeDurationMs,
-      drawBorder,
-      decodeCancellation,
-      webpSupportEnabled,
-      draweeOverlayEnabled,
-      instrumentationEnabled);
+            false))
+        .setGridSpanCount(Integer.parseInt(sharedPreferences.getString(
+            Const.GRID_SPAN_COUNT_KEY,
+            "3")))
+        .setDecodeCancellation(sharedPreferences.getBoolean(
+            Const.DECODE_CANCELLATION_KEY,
+            false))
+        .setWebpSupportEnabled(sharedPreferences.getBoolean(
+            Const.WEBP_SUPPORT_KEY,
+            false))
+        .setDraweeOverlayEnabled(sharedPreferences.getBoolean(
+            Const.DRAWEE_OVERLAY_KEY,
+            false))
+        .setInstrumentationEnabled(sharedPreferences.getBoolean(
+            Const.INSTRUMENTATION_ENABLED_KEY,
+            false)).build();
   }
 
-  private Config(
-      final String dataSourceType,
-      final String recyclerLayoutType,
-      final int gridSpanCount,
-      final boolean infiniteDataSource,
-      final boolean distinctUriDataSource,
-      final boolean reuseOldController,
-      final boolean useRoundedCorners,
-      final boolean useRoundedAsCircle,
-      final boolean usePostprocessor,
-      final String postprocessorType,
-      final String scaleType,
-      final boolean rotateUsingMetaData,
-      final int forcedRotationAngle,
-      final boolean downsampling,
-      final boolean overrideSize,
-      final int overridenWidth,
-      final int overridenHeight,
-      final int fadeDurationMs,
-      final boolean drawBorder,
-      final boolean decodeCancellation,
-      final boolean webpSupportEnabled,
-      final boolean draweeOverlayEnabled,
-      final boolean instrumentationEnabled) {
-    this.dataSourceType = dataSourceType;
-    this.recyclerLayoutType = recyclerLayoutType;
-    this.gridSpanCount = gridSpanCount;
-    this.infiniteDataSource = infiniteDataSource;
-    this.distinctUriDataSource = distinctUriDataSource;
-    this.reuseOldController = reuseOldController;
-    this.useRoundedCorners = useRoundedCorners;
-    this.useRoundedAsCircle = useRoundedAsCircle;
-    this.usePostprocessor = usePostprocessor;
-    this.postprocessorType = postprocessorType;
-    this.scaleType = scaleType;
-    this.rotateUsingMetaData = rotateUsingMetaData;
-    this.forcedRotationAngle = forcedRotationAngle;
-    this.downsampling = downsampling;
-    this.overrideSize = overrideSize;
-    this.overridenWidth = overridenWidth;
-    this.overridenHeight = overridenHeight;
-    this.fadeDurationMs = fadeDurationMs;
-    this.drawBorder = drawBorder;
-    this.decodeCancellation = decodeCancellation;
-    this.webpSupportEnabled = webpSupportEnabled;
-    this.draweeOverlayEnabled = draweeOverlayEnabled;
-    this.instrumentationEnabled = instrumentationEnabled;
+  private Config(Builder builder) {
+    this.dataSourceType = builder.mDataSourceType;
+    this.recyclerLayoutType = builder.mRecyclerLayoutType;
+    this.gridSpanCount = builder.mGridSpanCount;
+    this.infiniteDataSource = builder.mInfiniteDataSource;
+    this.distinctUriDataSource = builder.mDistinctUriDataSource;
+    this.reuseOldController = builder.mReuseOldController;
+    this.useRoundedCorners = builder.mUseRoundedCorners;
+    this.useRoundedAsCircle = builder.mUseRoundedAsCircle;
+    this.usePostprocessor = builder.mUsePostprocessor;
+    this.postprocessorType = builder.mPostprocessorType;
+    this.scaleType = builder.mScaleType;
+    this.rotateUsingMetaData = builder.mRotateUsingMetaData;
+    this.forcedRotationAngle = builder.mForcedRotationAngle;
+    this.downsampling = builder.mDownsampling;
+    this.overrideSize = builder.mOverrideSize;
+    this.overridenWidth = builder.mOverridenWidth;
+    this.overridenHeight = builder.mOverridenHeight;
+    this.fadeDurationMs = builder.mFadeDurationMs;
+    this.drawBorder = builder.mDrawBorder;
+    this.decodeCancellation = builder.mDecodeCancellation;
+    this.webpSupportEnabled = builder.mWebpSupportEnabled;
+    this.draweeOverlayEnabled = builder.mDraweeOverlayEnabled;
+    this.instrumentationEnabled = builder.mInstrumentationEnabled;
+  }
+
+  public static class Builder {
+
+    private String mDataSourceType;
+    private boolean mInfiniteDataSource;
+    private boolean mDistinctUriDataSource;
+    private String mRecyclerLayoutType;
+    private int mGridSpanCount;
+    private boolean mReuseOldController;
+    private boolean mUseRoundedCorners;
+    private boolean mUseRoundedAsCircle;
+    private boolean mUsePostprocessor;
+    private String mPostprocessorType;
+    private String mScaleType;
+    private boolean mRotateUsingMetaData;
+    private int mForcedRotationAngle;
+    private boolean mDownsampling;
+    private boolean mOverrideSize;
+    private int mOverridenWidth;
+    private int mOverridenHeight;
+    private int mFadeDurationMs;
+    private boolean mDecodeCancellation;
+    private boolean mWebpSupportEnabled;
+    private boolean mDrawBorder;
+    private boolean mDraweeOverlayEnabled;
+    private boolean mInstrumentationEnabled;
+
+    private Builder() {
+    }
+
+    public static Builder newBuilder() {
+      return new Builder();
+    }
+
+    public Builder setDataSourceType(String dataSourceType) {
+      this.mDataSourceType = dataSourceType;
+      return this;
+    }
+
+    public Builder setInfiniteDataSource(boolean infiniteDataSource) {
+      this.mInfiniteDataSource = infiniteDataSource;
+      return this;
+    }
+
+    public Builder setDistinctUriDataSource(boolean distinctUriDataSource) {
+      this.mDistinctUriDataSource = distinctUriDataSource;
+      return this;
+    }
+
+    public Builder setRecyclerLayoutType(String recyclerLayoutType) {
+      this.mRecyclerLayoutType = recyclerLayoutType;
+      return this;
+    }
+
+    public Builder setGridSpanCount(int gridSpanCount) {
+      this.mGridSpanCount = gridSpanCount;
+      return this;
+    }
+
+    public Builder setReuseOldController(boolean reuseOldController) {
+      this.mReuseOldController = reuseOldController;
+      return this;
+    }
+
+    public Builder setUseRoundedCorners(boolean useRoundedCorners) {
+      this.mUseRoundedCorners = useRoundedCorners;
+      return this;
+    }
+
+    public Builder setUseRoundedAsCircle(boolean useRoundedAsCircle) {
+      this.mUseRoundedAsCircle = useRoundedAsCircle;
+      return this;
+    }
+
+    public Builder setUsePostprocessor(boolean usePostprocessor) {
+      this.mUsePostprocessor = usePostprocessor;
+      return this;
+    }
+
+    public Builder setPostprocessorType(String postprocessorType) {
+      this.mPostprocessorType = postprocessorType;
+      return this;
+    }
+
+    public Builder setScaleType(String scaleType) {
+      this.mScaleType = scaleType;
+      return this;
+    }
+
+    public Builder setRotateUsingMetaData(boolean rotateUsingMetaData) {
+      this.mRotateUsingMetaData = rotateUsingMetaData;
+      return this;
+    }
+
+    public Builder setForcedRotationAngle(int forcedRotationAngle) {
+      this.mForcedRotationAngle = forcedRotationAngle;
+      return this;
+    }
+
+    public Builder setDownsampling(boolean downsampling) {
+      this.mDownsampling = downsampling;
+      return this;
+    }
+
+    public Builder setOverrideSize(boolean overrideSize) {
+      this.mOverrideSize = overrideSize;
+      return this;
+    }
+
+    public Builder setOverridenWidth(int overridenWidth) {
+      this.mOverridenWidth = overridenWidth;
+      return this;
+    }
+
+    public Builder setOverridenHeight(int overridenHeight) {
+      this.mOverridenHeight = overridenHeight;
+      return this;
+    }
+
+    public Builder setFadeDurationMs(int fadeDurationMs) {
+      this.mFadeDurationMs = fadeDurationMs;
+      return this;
+    }
+
+    public Builder setDecodeCancellation(boolean decodeCancellation) {
+      this.mDecodeCancellation = decodeCancellation;
+      return this;
+    }
+
+    public Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
+      this.mWebpSupportEnabled = webpSupportEnabled;
+      return this;
+    }
+
+    public Builder setDrawBorder(boolean drawBorder) {
+      this.mDrawBorder = drawBorder;
+      return this;
+    }
+
+    public Builder setDraweeOverlayEnabled(boolean draweeOverlayEnabled) {
+      this.mDraweeOverlayEnabled = draweeOverlayEnabled;
+      return this;
+    }
+
+    public Builder setInstrumentationEnabled(boolean instrumentationEnabled) {
+      this.mInstrumentationEnabled = instrumentationEnabled;
+      return this;
+    }
+
+    public Config build() {
+      return new Config(this);
+    }
   }
 }
