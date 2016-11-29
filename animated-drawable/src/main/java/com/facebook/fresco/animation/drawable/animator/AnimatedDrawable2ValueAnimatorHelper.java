@@ -11,10 +11,9 @@ package com.facebook.fresco.animation.drawable.animator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.view.animation.LinearInterpolator;
 
+import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
-import com.facebook.imagepipeline.animated.base.AnimatedImage;
 
 /**
  * Helper class to create {@link ValueAnimator}s for {@link AnimatedDrawable2}.
@@ -40,7 +39,7 @@ public class AnimatedDrawable2ValueAnimatorHelper {
     animator.setIntValues(0, (int) animatedDrawable.getLoopDurationMs());
     animator.setDuration(animatedDrawable.getLoopDurationMs());
     animator.setRepeatCount(
-        loopCount != AnimatedImage.LOOP_COUNT_INFINITE ? loopCount : ValueAnimator.INFINITE);
+        loopCount != AnimationInformation.LOOP_COUNT_INFINITE ? loopCount : ValueAnimator.INFINITE);
     animator.setRepeatMode(ValueAnimator.RESTART);
     // Use a linear interpolator
     animator.setInterpolator(null);

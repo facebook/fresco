@@ -9,7 +9,7 @@
 package com.facebook.fresco.animation.frame;
 
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.fresco.animation.backend.AnimationInformation;
 
 /**
  * Frame scheduler that maps time values to frames.
@@ -18,19 +18,19 @@ public class DropFramesFrameScheduler implements FrameScheduler {
 
   private static final int UNSET = -1;
 
-  private final AnimationBackend mAnimationBackend;
+  private final AnimationInformation mAnimationInformation;
 
   private long mLoopDurationMs = UNSET;
 
-  public DropFramesFrameScheduler(AnimationBackend animationBackend) {
-    mAnimationBackend = animationBackend;
+  public DropFramesFrameScheduler(AnimationInformation animationInformation) {
+    mAnimationInformation = animationInformation;
   }
 
   @Override
   public int getFrameNumberToRender(long animationTimeMs, long lastFrameTimeMs) {
     if (!isInfiniteAnimation()) {
       long loopCount = animationTimeMs / getLoopDurationMs();
-      if (loopCount >= mAnimationBackend.getLoopCount()) {
+      if (loopCount >= mAnimationInformation.getLoopCount()) {
         return FRAME_NUMBER_DONE;
       }
     }
@@ -44,9 +44,9 @@ public class DropFramesFrameScheduler implements FrameScheduler {
       return mLoopDurationMs;
     }
     mLoopDurationMs = 0;
-    int frameCount = mAnimationBackend.getFrameCount();
+    int frameCount = mAnimationInformation.getFrameCount();
     for (int i = 0; i < frameCount; i++) {
-      mLoopDurationMs += mAnimationBackend.getFrameDurationMs(i);
+      mLoopDurationMs += mAnimationInformation.getFrameDurationMs(i);
     }
     return mLoopDurationMs;
   }
@@ -55,7 +55,7 @@ public class DropFramesFrameScheduler implements FrameScheduler {
   public long getTargetRenderTimeMs(int frameNumber) {
     long targetRenderTimeMs = 0;
     for (int i = 0; i < frameNumber; i++) {
-      targetRenderTimeMs += mAnimationBackend.getFrameDurationMs(frameNumber);
+      targetRenderTimeMs += mAnimationInformation.getFrameDurationMs(frameNumber);
     }
     return targetRenderTimeMs;
   }
@@ -69,7 +69,7 @@ public class DropFramesFrameScheduler implements FrameScheduler {
     }
     if (!isInfiniteAnimation()) {
       long loopCount = animationTimeMs / getLoopDurationMs();
-      if (loopCount >= mAnimationBackend.getLoopCount()) {
+      if (loopCount >= mAnimationInformation.getLoopCount()) {
         return NO_NEXT_TARGET_RENDER_TIME;
       }
     }
@@ -78,9 +78,9 @@ public class DropFramesFrameScheduler implements FrameScheduler {
     // The animation time in the current loop for the next frame
     long timeOfNextFrameInLoopMs = 0;
 
-    int frameCount = mAnimationBackend.getFrameCount();
+    int frameCount = mAnimationInformation.getFrameCount();
     for (int i = 0; i < frameCount && timeOfNextFrameInLoopMs <= timePassedInCurrentLoopMs; i++) {
-      timeOfNextFrameInLoopMs += mAnimationBackend.getFrameDurationMs(i);
+      timeOfNextFrameInLoopMs += mAnimationInformation.getFrameDurationMs(i);
     }
 
     // Difference between current time in loop and next frame in loop
@@ -91,7 +91,7 @@ public class DropFramesFrameScheduler implements FrameScheduler {
 
   @Override
   public boolean isInfiniteAnimation() {
-    return mAnimationBackend.getLoopCount() == AnimationBackend.LOOP_COUNT_INFINITE;
+    return mAnimationInformation.getLoopCount() == AnimationInformation.LOOP_COUNT_INFINITE;
   }
 
   @VisibleForTesting
@@ -99,7 +99,7 @@ public class DropFramesFrameScheduler implements FrameScheduler {
     int frame = 0;
     long currentDuration = 0;
     do {
-      currentDuration += mAnimationBackend.getFrameDurationMs(frame);
+      currentDuration += mAnimationInformation.getFrameDurationMs(frame);
       frame++;
     } while (timeInCurrentLoopMs >= currentDuration);
     return frame - 1;

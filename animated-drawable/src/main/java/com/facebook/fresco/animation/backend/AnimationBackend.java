@@ -19,13 +19,7 @@ import android.support.annotation.IntRange;
 /**
  * Animation backend interface that is used to draw frames.
  */
-public interface AnimationBackend {
-
-  /**
-   * Loop count to be returned by {@link #getLoopCount()} when the animation should be repeated
-   * indefinitely.
-   */
-  int LOOP_COUNT_INFINITE = 0;
+public interface AnimationBackend extends AnimationInformation {
 
   /**
    * Default value if the intrinsic dimensions are not set.
@@ -34,27 +28,6 @@ public interface AnimationBackend {
    * @see #getIntrinsicHeight()
    */
   int INTRINSIC_DIMENSION_UNSET = -1;
-
-  /**
-   * Get the number of frames for the animation
-   * @return the number of frames
-   */
-  int getFrameCount();
-
-  /**
-   * Get the frame duration for a given frame number in milliseconds.
-   *
-   * @param frameNumber the frame to get the duration for
-   * @return the duration in ms
-   */
-  int getFrameDurationMs(int frameNumber);
-
-  /**
-   * Get the number of loops the animation has or {@link #LOOP_COUNT_INFINITE} for infinite.
-   *
-   * @return the loop count
-   */
-  int getLoopCount();
 
   /**
    * Draw the frame for the given frame number on the canvas.

@@ -22,6 +22,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.drawable.DrawableProperties;
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.frame.DropFramesFrameScheduler;
 import com.facebook.fresco.animation.frame.FrameScheduler;
 
@@ -314,12 +315,12 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
 
   /**
    * Get the loop count of the animation.
-   * The returned value is either {@link AnimationBackend#LOOP_COUNT_INFINITE} if the animation
+   * The returned value is either {@link AnimationInformation#LOOP_COUNT_INFINITE} if the animation
    * is repeated infinitely or a positive integer that corresponds to the number of loops.
-   * If no animation backend is set, {@link AnimationBackend#LOOP_COUNT_INFINITE}
+   * If no animation backend is set, {@link AnimationInformation#LOOP_COUNT_INFINITE}
    * will be returned.
    *
-   * @return the loop count of the animation or {@link AnimationBackend#LOOP_COUNT_INFINITE}
+   * @return the loop count of the animation or {@link AnimationInformation#LOOP_COUNT_INFINITE}
    */
   public int getLoopCount() {
     return mAnimationBackend == null
