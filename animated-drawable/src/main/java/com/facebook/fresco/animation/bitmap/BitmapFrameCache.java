@@ -65,8 +65,9 @@ public interface BitmapFrameCache {
    * This bitmap can either be a reused bitmap returned by
    * {@link #getBitmapToReuseForFrame(int, int, int)} or a new bitmap.
    *
-   * Note: the implementation of this interface has to manually close the given bitmap reference
-   * once the bitmap is no longer needed.
+   * Note: the implementation of this interface has to manually clone the given bitmap reference
+   * if it wants to hold on to the bitmap.
+   * The original reference will be automatically closed after this call.
    *
    * @param frameNumber the frame number that has been rendered
    * @param bitmap the bitmap that has been rendered

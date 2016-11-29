@@ -16,7 +16,8 @@ import android.graphics.Rect;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 
 /**
- * Bitmap frame renderer used to render animated images (e.g. GIFs or animated WebPs).
+ * Bitmap frame renderer used by {@link BitmapAnimationBackend} to render
+ * animated images (e.g. GIFs or animated WebPs).
  */
 public interface BitmapFrameRenderer {
 
