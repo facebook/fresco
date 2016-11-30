@@ -119,4 +119,23 @@
         <item>@string/label_medium_fade_duration</item>
         <item>@string/label_slow_fade_duration</item>
     </array>
+    <!-- Decoding thread number-->
+    <array name="decoding_thread_labels">
+        <item>Number of processors</item>
+        <item>Single Thread</item>
+        <item>2 threads for decoding</item>
+        <item>3 threads for decoding</item>
+        <item>4 threads for decoding</item>
+        <item>6 threads for decoding</item>
+        <item>8 threads for decoding</item>
+    </array>
+    <array name="decoding_thread_summaries">
+        <item>Number of processors: </item>
+        <item>Single Thread</item>
+        <item>2 threads for decoding</item>
+        <item>3 threads for decoding</item>
+        <item>4 threads for decoding</item>
+        <item>6 threads for decoding</item>
+        <item>8 threads for decoding</item>
+    </array>
 </resources>

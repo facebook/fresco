@@ -72,6 +72,14 @@
             android:key="downsampling"
             android:title="@string/title_downsampling"
             />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/title_decoding_thread_count"
+            android:entries="@array/decoding_thread_labels"
+            android:entryValues="@array/decoding_thread_values"
+            android:key="decoding_thread_key"
+            android:title="@string/title_decoding_thread_count"
+            />
       <CheckBoxPreference
           android:key="auto_size_override"
           android:title="@string/title_auto_size_override"

@@ -34,7 +34,7 @@ import com.facebook.samples.scrollperf.util.SizeUtil;
  * The Fragment for settings
  */
 public class SettingsFragment extends PreferenceFragmentCompat
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
 
   /**
    * The Tag for this Fragment
@@ -70,6 +70,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
     updateDraweeOverlaySummary(findPreference(Const.DRAWEE_OVERLAY_KEY));
     updateInstrumentationSummary(findPreference(Const.INSTRUMENTATION_ENABLED_KEY));
+    updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
     // Set sizes
     SizePreferences widthPreferences =
         (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
@@ -145,6 +146,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
         updateWebpSupportSummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
         break;
+      case Const.DECODING_THREAD_KEY:
+        updateNumberOfDecodingThreadSummary(preference);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
       case Const.INSTRUMENTATION_ENABLED_KEY:
         updateInstrumentationSummary(preference);
         break;
@@ -170,34 +175,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void updateDataSourceSummary(final Preference preference) {
     updateListPreference(
-      getResources(),
-      (ListPreference) preference,
-      R.array.data_source_summaries);
+        getResources(),
+        (ListPreference) preference,
+        R.array.data_source_summaries);
   }
 
   private void updateInfiniteDataSourceSummary(final Preference preference) {
     final boolean currentState = updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_infinite_data_source_summary,
-            R.string.unchecked_infinite_data_source_summary);
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_infinite_data_source_summary,
+        R.string.unchecked_infinite_data_source_summary);
     // We disableDistinct Uris if infinite is not enabled
     findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(currentState);
   }
 
   private void updateDistinctDataSourceSummary(final Preference preference) {
     updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_distinct_uri_data_source_summary,
-            R.string.unchecked_distinct_uri_data_source_summary);
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_distinct_uri_data_source_summary,
+        R.string.unchecked_distinct_uri_data_source_summary);
   }
 
   private void updateRecyclerLayoutSummary(final Preference preference) {
     updateListPreference(
-            getResources(),
-            (ListPreference) preference,
-            R.array.recycler_layout_summaries);
+        getResources(),
+        (ListPreference) preference,
+        R.array.recycler_layout_summaries);
     updateGridRecyclerLayoutSummary();
   }
 
@@ -220,48 +225,48 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void updateReuseOldControllerSummary(final Preference preference) {
     updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_reuse_old_controller_summary,
-            R.string.unchecked_reuse_old_controller_summary);
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_reuse_old_controller_summary,
+        R.string.unchecked_reuse_old_controller_summary);
   }
 
   private void updateRoundedCornersSummary(final Preference preference) {
     updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_rounded_corners_summary,
-            R.string.unchecked_rounded_corners_summary);
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_rounded_corners_summary,
+        R.string.unchecked_rounded_corners_summary);
   }
 
   private void updateRoundedAsCircleSummary(final Preference preference) {
     updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_rounded_as_circle_summary,
-            R.string.unchecked_rounded_as_circle_summary);
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_rounded_as_circle_summary,
+        R.string.unchecked_rounded_as_circle_summary);
   }
 
   private void updateUsePostprocessorSummary(final Preference preference) {
     updateCheckBoxPreference(
-            getResources(),
-            (CheckBoxPreference) preference,
-            R.string.checked_postprocessor_summary,
-            R.string.unchecked_postprocessor_summary);
+        getResources(),
+        (CheckBoxPreference) preference,
+        R.string.checked_postprocessor_summary,
+        R.string.unchecked_postprocessor_summary);
   }
 
   private void updateWhatPostprocessorSummary(final Preference preference) {
     updateListPreference(
-            getResources(),
-            (ListPreference) preference,
-            R.array.postprocessor_summaries);
+        getResources(),
+        (ListPreference) preference,
+        R.array.postprocessor_summaries);
   }
 
   private void updateWhatScaleTypeSummary(final Preference preference) {
     updateListPreference(
-            getResources(),
-            (ListPreference) preference,
-            R.array.scale_type_summaries);
+        getResources(),
+        (ListPreference) preference,
+        R.array.scale_type_summaries);
   }
 
   private void updateDecodeCancellationSummary(final Preference preference) {
@@ -281,10 +286,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private static boolean updateCheckBoxPreference(
-          Resources resources,
-          CheckBoxPreference preference,
-          int checkedSummaryRes,
-          int uncheckedSummaryRes) {
+      Resources resources,
+      CheckBoxPreference preference,
+      int checkedSummaryRes,
+      int uncheckedSummaryRes) {
     final boolean checkboxState = preference.isChecked();
     if (checkboxState) {
       preference.setSummary(resources.getString(checkedSummaryRes));
@@ -295,9 +300,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private static void updateListPreference(
-          Resources resources,
-          ListPreference preference,
-          int arrayValuesId) {
+      Resources resources,
+      ListPreference preference,
+      int arrayValuesId) {
     final int valueIndex = preference.findIndexOfValue(preference.getValue());
     final String summary = resources.getStringArray(arrayValuesId)[valueIndex];
     preference.setSummary(summary);
@@ -325,6 +330,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (CheckBoxPreference) preference,
         R.string.checked_downsampling_summary,
         R.string.unchecked_downsampling_summary);
+  }
+
+  private void updateNumberOfDecodingThreadSummary(final Preference preference) {
+    final ListPreference listPreference = (ListPreference) preference;
+    final int valueIndex = listPreference.findIndexOfValue(listPreference.getValue());
+    String summary = getResources().getStringArray(R.array.decoding_thread_summaries)[valueIndex];
+    if (valueIndex == 0) {
+      summary += Const.NUMBER_OF_PROCESSORS;
+    }
+    preference.setSummary(summary);
   }
 
   private void updateDraweeOverlaySummary(final Preference preference) {
@@ -375,6 +390,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   public static class ShowRestartMessageDialog extends DialogFragment {
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       // Use the Builder class for convenient dialog construction

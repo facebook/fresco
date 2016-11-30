@@ -56,6 +56,8 @@ public class Config {
   public final boolean decodeCancellation;
   public final boolean webpSupportEnabled;
 
+  public final int decodingThreadCount;
+
   public final boolean drawBorder;
 
   public final boolean draweeOverlayEnabled;
@@ -133,7 +135,11 @@ public class Config {
             false))
         .setInstrumentationEnabled(sharedPreferences.getBoolean(
             Const.INSTRUMENTATION_ENABLED_KEY,
-            false)).build();
+            false))
+        .setDecodingThreadCount(Integer.parseInt(sharedPreferences.getString(
+            Const.DECODING_THREAD_KEY,
+            "0")))
+        .build();
   }
 
   private Config(Builder builder) {
@@ -160,6 +166,7 @@ public class Config {
     this.webpSupportEnabled = builder.mWebpSupportEnabled;
     this.draweeOverlayEnabled = builder.mDraweeOverlayEnabled;
     this.instrumentationEnabled = builder.mInstrumentationEnabled;
+    this.decodingThreadCount = builder.mDecodingThreadCount;
   }
 
   public static class Builder {
@@ -187,6 +194,7 @@ public class Config {
     private boolean mDrawBorder;
     private boolean mDraweeOverlayEnabled;
     private boolean mInstrumentationEnabled;
+    private int mDecodingThreadCount;
 
     private Builder() {
     }
@@ -257,6 +265,11 @@ public class Config {
 
     public Builder setForcedRotationAngle(int forcedRotationAngle) {
       this.mForcedRotationAngle = forcedRotationAngle;
+      return this;
+    }
+
+    public Builder setDecodingThreadCount(int decodingThreadCount) {
+      this.mDecodingThreadCount = decodingThreadCount;
       return this;
     }
 

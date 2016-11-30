@@ -153,6 +153,7 @@
     <!-- Resizing -->
     <string translatable="false" name="title_preferences_resize_group">Resizing options</string>
     <string translatable="false" name="title_downsampling">Downsampling</string>
+    <string translatable="false" name="title_decoding_thread_count">Thread number for decoding</string>
 
     <string translatable="false" name="checked_downsampling_summary">Enabled</string>
     <string translatable="false" name="unchecked_downsampling_summary">Disabled</string>
