@@ -31,7 +31,7 @@ public class AnimatedDrawableBackendAnimationInformation
 
   @Override
   public int getFrameDurationMs(int frameNumber) {
-    return mAnimatedDrawableBackend.getDurationMs();
+    return mAnimatedDrawableBackend.getDurationMsForFrame(frameNumber);
   }
 
   @Override
