@@ -366,7 +366,8 @@ public class ImagePipelineFactory {
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExperiments().isWebpSupportEnabled(),
-              mThreadHandoffProducerQueue);
+              mThreadHandoffProducerQueue,
+              mConfig.getExperiments().getUseDownsamplingRatioForResizing());
     }
     return mProducerSequenceFactory;
   }

@@ -46,6 +46,7 @@ import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
+import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calculateDownsampleRatio;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -452,6 +453,14 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
+  public void testDownsamplingRatioUsage() {
+    assertEquals(8, calculateDownsampleRatio(1));
+    assertEquals(4, calculateDownsampleRatio(2));
+    assertEquals(2, calculateDownsampleRatio(4));
+    assertEquals(1, calculateDownsampleRatio(8));
+  }
+
+  @Test
   public void testResizeRatio() {
     ResizeOptions resizeOptions = new ResizeOptions(512, 512);
     assertEquals(
@@ -569,7 +578,8 @@ public class ResizeAndRotateProducerTest {
         mTestExecutorService,
         mPooledByteBufferFactory,
         resizingEnabled,
-        mInputProducer);
+        mInputProducer,
+        false);
 
     mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
   }

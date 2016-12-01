@@ -29,6 +29,7 @@ public class ImagePipelineExperiments {
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
   private final boolean mSuppressBitmapPrefetching;
+  private final boolean mUseDownsamplingRatioForResizing;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
@@ -50,6 +51,7 @@ public class ImagePipelineExperiments {
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
     mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
+    mUseDownsamplingRatioForResizing = builder.mUseDownsamplingRatioForResizing;
   }
 
   public boolean isDecodeFileDescriptorEnabled() {
@@ -66,6 +68,10 @@ public class ImagePipelineExperiments {
 
   public boolean getMediaVariationsIndexEnabled() {
     return mMediaVariationsIndexEnabled.get().booleanValue();
+  }
+
+  public boolean getUseDownsamplingRatioForResizing() {
+    return mUseDownsamplingRatioForResizing;
   }
 
   public boolean isWebpSupportEnabled() {
@@ -101,6 +107,7 @@ public class ImagePipelineExperiments {
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
     private boolean mSuppressBitmapPrefetching = false;
+    private boolean mUseDownsamplingRatioForResizing = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -145,6 +152,12 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
       mWebpSupportEnabled = webpSupportEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setUseDownsampligRatioForResizing(
+        boolean useDownsamplingRatioForResizing) {
+      mUseDownsamplingRatioForResizing = useDownsamplingRatioForResizing;
       return mConfigBuilder;
     }
 

@@ -320,12 +320,14 @@ public class ProducerFactory {
 
   public ResizeAndRotateProducer newResizeAndRotateProducer(
       Producer<EncodedImage> inputProducer,
-      boolean resizingEnabledIfNotDownsampling) {
+      boolean resizingEnabledIfNotDownsampling,
+      boolean useDownsamplingRatio) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
         resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
-        inputProducer);
+        inputProducer,
+        useDownsamplingRatio);
   }
 
   public static <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {

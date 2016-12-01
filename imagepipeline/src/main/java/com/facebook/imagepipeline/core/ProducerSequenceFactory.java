@@ -52,6 +52,7 @@ public class ProducerSequenceFactory {
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final boolean mWebpSupportEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  private final boolean mUseDownsamplingRatio;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -82,7 +83,8 @@ public class ProducerSequenceFactory {
       NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
-      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
+      ThreadHandoffProducerQueue threadHandoffProducerQueue,
+      boolean useDownsamplingRatio) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -90,6 +92,7 @@ public class ProducerSequenceFactory {
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
+    mUseDownsamplingRatio = useDownsamplingRatio;
   }
 
   /**
@@ -283,7 +286,8 @@ public class ProducerSequenceFactory {
       mCommonNetworkFetchToEncodedMemorySequence =
           mProducerFactory.newResizeAndRotateProducer(
               mCommonNetworkFetchToEncodedMemorySequence,
-              mResizeAndRotateEnabledForNetwork);
+              mResizeAndRotateEnabledForNetwork,
+              mUseDownsamplingRatio);
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
   }
@@ -432,7 +436,10 @@ public class ProducerSequenceFactory {
         inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
-      inputProducer = mProducerFactory.newResizeAndRotateProducer(inputProducer, true);
+      inputProducer = mProducerFactory.newResizeAndRotateProducer(
+          inputProducer,
+          true,
+          mUseDownsamplingRatio);
       mDataFetchSequence = newBitmapCacheGetToDecodeSequence(inputProducer);
     }
     return mDataFetchSequence;
@@ -535,7 +542,10 @@ public class ProducerSequenceFactory {
     Producer<EncodedImage> localImageProducer =
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
     localImageProducer =
-        mProducerFactory.newResizeAndRotateProducer(localImageProducer, true);
+        mProducerFactory.newResizeAndRotateProducer(
+            localImageProducer,
+            true,
+            mUseDownsamplingRatio);
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(localImageProducer);
@@ -549,7 +559,10 @@ public class ProducerSequenceFactory {
     ThumbnailBranchProducer thumbnailBranchProducer =
         mProducerFactory.newThumbnailBranchProducer(thumbnailProducers);
 
-    return mProducerFactory.newResizeAndRotateProducer(thumbnailBranchProducer, true);
+    return mProducerFactory.newResizeAndRotateProducer(
+        thumbnailBranchProducer,
+        true,
+        mUseDownsamplingRatio);
   }
 
   /**

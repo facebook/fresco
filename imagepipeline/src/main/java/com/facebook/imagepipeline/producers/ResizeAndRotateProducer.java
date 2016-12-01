@@ -56,16 +56,19 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private final PooledByteBufferFactory mPooledByteBufferFactory;
   private final boolean mResizingEnabled;
   private final Producer<EncodedImage> mInputProducer;
+  private final boolean mUseDownsamplingRatio;
 
   public ResizeAndRotateProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
       boolean resizingEnabled,
-      Producer<EncodedImage> inputProducer) {
+      Producer<EncodedImage> inputProducer,
+      boolean useDownsamplingRatio) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mResizingEnabled = resizingEnabled;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
+    mUseDownsamplingRatio = useDownsamplingRatio;
   }
 
   @Override
@@ -154,7 +157,13 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       EncodedImage ret = null;
       InputStream is = null;
       try {
-        int numerator = getScaleNumerator(imageRequest, encodedImage, mResizingEnabled);
+        final int numerator;
+        if (mUseDownsamplingRatio) {
+          int downsampleRatio = DownsampleUtil.determineSampleSize(imageRequest, encodedImage);
+          numerator = calculateDownsampleRatio(downsampleRatio);
+        } else {
+          numerator = getScaleNumerator(imageRequest, encodedImage, mResizingEnabled);
+        }
         extraMap = getExtraMap(encodedImage, imageRequest, numerator);
         is = encodedImage.getInputStream();
         JpegTranscoder.transcodeJpeg(
@@ -313,5 +322,14 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {
     return !rotationOptions.canDeferUntilRendered() &&
         getRotationAngle(rotationOptions, encodedImage) != 0;
+  }
+
+  /**
+   * This method calculate the ratio in case the downsampling was enabled
+   * @param downsampleRatio The ratio from downsampling
+   * @return The ratio to use for software resize using the downsampling limitation
+   */
+  @VisibleForTesting static int calculateDownsampleRatio(int downsampleRatio) {
+    return 8 / downsampleRatio;
   }
 }
