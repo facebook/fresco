@@ -98,7 +98,7 @@ public class StatFsHelper {
   }
 
   /**
-   * Check if free space available in the filesystem is greater than the given threshold.
+   * Check if available space in the filesystem is greater than the given threshold.
    * Note that the free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS.
    * If the amount of free space has crossed over the threshold since the last update, it will
    * return incorrect results till the space stats are updated again.
@@ -116,6 +116,60 @@ public class StatFsHelper {
       return availableStorageSpace < freeSpaceThreshold;
     }
     return true;
+  }
+
+  /**
+   * Gets the information about the free storage space, including reserved blocks,
+   * either internal or external depends on the given input
+   * @param storageType Internal or external storage type
+   * @return available space in bytes, -1 if no information is available
+   */
+  @SuppressLint("DeprecatedMethod")
+  public long getFreeStorageSpace(StorageType storageType) {
+    ensureInitialized();
+
+    maybeUpdateStats();
+
+    StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
+    if (statFS != null) {
+      long blockSize, availableBlocks;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFS.getBlockSizeLong();
+        availableBlocks = statFS.getFreeBlocksLong();
+      } else {
+        blockSize = statFS.getBlockSize();
+        availableBlocks = statFS.getFreeBlocks();
+      }
+      return blockSize * availableBlocks;
+    }
+    return -1;
+  }
+
+  /**
+   * Gets the information about the total storage space,
+   * either internal or external depends on the given input
+   * @param storageType Internal or external storage type
+   * @return available space in bytes, -1 if no information is available
+   */
+  @SuppressLint("DeprecatedMethod")
+  public long getTotalStorageSpace(StorageType storageType) {
+    ensureInitialized();
+
+    maybeUpdateStats();
+
+    StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
+    if (statFS != null) {
+      long blockSize, totalBlocks;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFS.getBlockSizeLong();
+        totalBlocks = statFS.getBlockCountLong();
+      } else {
+        blockSize = statFS.getBlockSize();
+        totalBlocks = statFS.getBlockCount();
+      }
+      return blockSize * totalBlocks;
+    }
+    return -1;
   }
 
   /**
