@@ -12,13 +12,17 @@ package com.facebook.fresco.animation.factory;
 import java.util.concurrent.ScheduledExecutorService;
 
 import android.graphics.Rect;
+import android.net.Uri;
 
+import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.DrawableFactory;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
@@ -27,7 +31,9 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
+import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 
@@ -41,20 +47,29 @@ import com.facebook.imagepipeline.image.CloseableImage;
  */
 public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
 
+  public static final int CACHING_STRATEGY_NO_CACHE = 0;
+  public static final int CACHING_STRATEGY_FRESCO_CACHE = 1;
+
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final ScheduledExecutorService mScheduledExecutorServiceForUiThread;
   private final MonotonicClock mMonotonicClock;
   private final PlatformBitmapFactory mPlatformBitmapFactory;
+  private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
+  private final Supplier<Integer> mCachingStrategySupplier;
 
   public ExperimentalBitmapAnimationDrawableFactory(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       ScheduledExecutorService scheduledExecutorServiceForUiThread,
       MonotonicClock monotonicClock,
-      PlatformBitmapFactory platformBitmapFactory) {
+      PlatformBitmapFactory platformBitmapFactory,
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      Supplier<Integer> cachingStrategySupplier) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mMonotonicClock = monotonicClock;
     mPlatformBitmapFactory = platformBitmapFactory;
+    mBackingCache = backingCache;
+    mCachingStrategySupplier = cachingStrategySupplier;
   }
 
   @Override
@@ -75,7 +90,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
 
     BitmapAnimationBackend bitmapAnimationBackend = new BitmapAnimationBackend(
         mPlatformBitmapFactory,
-        createBitmapFrameCache(),
+        createBitmapFrameCache(animatedImageResult),
         new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
         new AnimatedDrawableBackendFrameRenderer(animatedDrawableBackend));
 
@@ -92,8 +107,41 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     return mAnimatedDrawableBackendProvider.get(animatedImageResult, initialBounds);
   }
 
-  private BitmapFrameCache createBitmapFrameCache() {
-    // No caching for now
-    return new NoOpCache();
+  private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
+    switch (mCachingStrategySupplier.get()) {
+      case CACHING_STRATEGY_FRESCO_CACHE:
+        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult));
+      case CACHING_STRATEGY_NO_CACHE:
+      default:
+        return new NoOpCache();
+    }
+  }
+
+  private AnimatedFrameCache createAnimatedFrameCache(
+      final AnimatedImageResult animatedImageResult) {
+    return new AnimatedFrameCache(
+        new AnimationFrameCacheKey(animatedImageResult.hashCode()),
+        mBackingCache);
+  }
+
+  public static class AnimationFrameCacheKey implements CacheKey {
+
+    private static final String URI_PREFIX = "anim://";
+
+    private final String mAnimationUriString;
+
+    public AnimationFrameCacheKey(int imageId) {
+      mAnimationUriString = URI_PREFIX + imageId;
+    }
+
+    @Override
+    public boolean containsUri(Uri uri) {
+      return uri.toString().startsWith(mAnimationUriString);
+    }
+
+    @Override
+    public String getUriString() {
+      return mAnimationUriString;
+    }
   }
 }
