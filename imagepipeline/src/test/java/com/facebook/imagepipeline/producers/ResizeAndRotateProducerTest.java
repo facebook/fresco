@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 
+import android.net.Uri;
 import android.os.SystemClock;
 
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
@@ -46,7 +47,7 @@ import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calculateDownsampleRatio;
+import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calculateDownsampleNumerator;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -104,6 +105,7 @@ public class ResizeAndRotateProducerTest {
           }
         });
 
+    when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("http://testuri"));
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
     mTestScheduledExecutorService = new TestScheduledExecutorService(mFakeClockForScheduled);
     mUiThreadImmediateExecutorService = mock(UiThreadImmediateExecutorService.class);
@@ -454,10 +456,10 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testDownsamplingRatioUsage() {
-    assertEquals(8, calculateDownsampleRatio(1));
-    assertEquals(4, calculateDownsampleRatio(2));
-    assertEquals(2, calculateDownsampleRatio(4));
-    assertEquals(1, calculateDownsampleRatio(8));
+    assertEquals(8, calculateDownsampleNumerator(1));
+    assertEquals(4, calculateDownsampleNumerator(2));
+    assertEquals(2, calculateDownsampleNumerator(4));
+    assertEquals(1, calculateDownsampleNumerator(8));
   }
 
   @Test

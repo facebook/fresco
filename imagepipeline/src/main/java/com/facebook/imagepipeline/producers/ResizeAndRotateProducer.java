@@ -45,6 +45,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "ResizeAndRotateProducer";
   private static final String ORIGINAL_SIZE_KEY = "Original size";
   private static final String REQUESTED_SIZE_KEY = "Requested size";
+  private static final String DOWNSAMPLE_ENUMERATOR_KEY = "downsampleEnumerator";
+  private static final String SOFTWARE_ENUMERATOR_KEY = "softwareEnumerator";
   private static final String FRACTION_KEY = "Fraction";
   private static final int FULL_ROUND = 360;
 
@@ -157,14 +159,24 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       EncodedImage ret = null;
       InputStream is = null;
       try {
+        final int softwareNumerator = getSoftwareNumerator(
+            imageRequest,
+            encodedImage,
+            mResizingEnabled);
+        final int downsampleRatio = DownsampleUtil.determineSampleSize(imageRequest, encodedImage);
+        final int downsampleNumerator = calculateDownsampleNumerator(downsampleRatio);
         final int numerator;
         if (mUseDownsamplingRatio) {
-          int downsampleRatio = DownsampleUtil.determineSampleSize(imageRequest, encodedImage);
-          numerator = calculateDownsampleRatio(downsampleRatio);
+          numerator = downsampleNumerator;
         } else {
-          numerator = getScaleNumerator(imageRequest, encodedImage, mResizingEnabled);
+          numerator = softwareNumerator;
         }
-        extraMap = getExtraMap(encodedImage, imageRequest, numerator);
+        extraMap = getExtraMap(
+            encodedImage,
+            imageRequest,
+            numerator,
+            downsampleNumerator,
+            softwareNumerator);
         is = encodedImage.getInputStream();
         JpegTranscoder.transcodeJpeg(
             is,
@@ -202,7 +214,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     private Map<String, String> getExtraMap(
         EncodedImage encodedImage,
         ImageRequest imageRequest,
-        int numerator) {
+        int numerator,
+        int downsampleNumerator,
+        int softwareNumerator) {
       if (!mProducerContext.getListener().requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
@@ -221,7 +235,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           ORIGINAL_SIZE_KEY, originalSize,
           REQUESTED_SIZE_KEY, requestedSize,
           FRACTION_KEY, fraction,
-          JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()));
+          JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()),
+          DOWNSAMPLE_ENUMERATOR_KEY, Integer.toString(downsampleNumerator),
+          SOFTWARE_ENUMERATOR_KEY, Integer.toString(softwareNumerator));
     }
   }
 
@@ -237,7 +253,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     }
     return TriState.valueOf(
         shouldRotate(request.getRotationOptions(), encodedImage) ||
-            shouldResize(getScaleNumerator(request, encodedImage, resizingEnabled)));
+            shouldResize(getSoftwareNumerator(request, encodedImage, resizingEnabled)));
   }
 
   @VisibleForTesting static float determineResizeRatio(
@@ -266,7 +282,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return (int) (roundUpFraction + maxRatio * JpegTranscoder.SCALE_DENOMINATOR);
   }
 
-  private static int getScaleNumerator(
+  private static int getSoftwareNumerator(
       ImageRequest imageRequest,
       EncodedImage encodedImage,
       boolean resizingEnabled) {
@@ -329,7 +345,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
    * @param downsampleRatio The ratio from downsampling
    * @return The ratio to use for software resize using the downsampling limitation
    */
-  @VisibleForTesting static int calculateDownsampleRatio(int downsampleRatio) {
+  @VisibleForTesting static int calculateDownsampleNumerator(int downsampleRatio) {
     return 8 / downsampleRatio;
   }
 }
