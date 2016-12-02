@@ -11,6 +11,9 @@ package com.facebook.drawee.backends.pipeline;
 import javax.annotation.Nullable;
 
 import com.facebook.common.internal.ImmutableList;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +25,15 @@ public class DraweeConfig {
 
   @Nullable
   private final ImmutableList<DrawableFactory> mCustomDrawableFactories;
-  private final boolean mDrawDebugOverlay;
+  private final Supplier<Boolean> mDebugOverlayEnabledSupplier;
 
   private DraweeConfig(Builder builder) {
     mCustomDrawableFactories = builder.mCustomDrawableFactories != null
         ? ImmutableList.copyOf(builder.mCustomDrawableFactories)
         : null;
-    mDrawDebugOverlay = builder.mDrawDebugOverlay;
+    mDebugOverlayEnabledSupplier = builder.mDebugOverlayEnabledSupplier != null
+        ? builder.mDebugOverlayEnabledSupplier
+        : Suppliers.of(false);
   }
 
   @Nullable
@@ -36,18 +41,18 @@ public class DraweeConfig {
     return mCustomDrawableFactories;
   }
 
-  public boolean shouldDrawDebugOverlay() {
-    return mDrawDebugOverlay;
-  }
-
   public static Builder newBuilder() {
     return new Builder();
+  }
+
+  public Supplier<Boolean> getDebugOverlayEnabledSupplier() {
+    return mDebugOverlayEnabledSupplier;
   }
 
   public static class Builder {
 
     private List<DrawableFactory> mCustomDrawableFactories;
-    private boolean mDrawDebugOverlay;
+    private Supplier<Boolean> mDebugOverlayEnabledSupplier;
 
     /**
      * Add a custom drawable factory that will be used to create
@@ -68,11 +73,24 @@ public class DraweeConfig {
      * Set whether a debug overlay that displays image information, like dimensions and size
      * should be drawn on top of a Drawee view.
      *
-     * @param drawDebugOverlay true if the debug overlay should be drawn
+     * @param drawDebugOverlay <code>true</code> if the debug overlay should be drawn
      * @return the builder
      */
     public Builder setDrawDebugOverlay(boolean drawDebugOverlay) {
-      mDrawDebugOverlay = drawDebugOverlay;
+      return setDebugOverlayEnabledSupplier(Suppliers.of(drawDebugOverlay));
+    }
+
+    /**
+     * Set whether a debug overlay that displays image information, like dimensions and size
+     * should be drawn on top of a Drawee view.
+     *
+     * @param debugOverlayEnabledSupplier should return <code>true</code> if the debug overlay
+     * should be drawn
+     * @return the builder
+     */
+    public Builder setDebugOverlayEnabledSupplier(Supplier<Boolean> debugOverlayEnabledSupplier) {
+      Preconditions.checkNotNull(debugOverlayEnabledSupplier);
+      mDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
       return this;
     }
 

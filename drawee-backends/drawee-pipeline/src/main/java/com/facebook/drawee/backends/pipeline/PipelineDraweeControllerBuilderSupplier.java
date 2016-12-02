@@ -62,7 +62,6 @@ public class PipelineDraweeControllerBuilderSupplier implements
     if (animatedFactory != null) {
       animatedDrawableFactory = animatedFactory.getAnimatedDrawableFactory(context);
     }
-    final boolean drawDebugOverlay = draweeConfig != null && draweeConfig.shouldDrawDebugOverlay();
     mPipelineDraweeControllerFactory = new PipelineDraweeControllerFactory(
         context.getResources(),
         DeferredReleaser.getInstance(),
@@ -72,7 +71,9 @@ public class PipelineDraweeControllerBuilderSupplier implements
         draweeConfig != null
                 ? draweeConfig.getCustomDrawableFactories()
                 : null,
-        drawDebugOverlay);
+        draweeConfig != null
+            ? draweeConfig.getDebugOverlayEnabledSupplier()
+            : null);
     mBoundControllerListeners = boundControllerListeners;
   }
 
