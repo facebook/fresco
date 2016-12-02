@@ -23,6 +23,7 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
+import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
@@ -50,6 +51,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   public static final int CACHING_STRATEGY_NO_CACHE = 0;
   public static final int CACHING_STRATEGY_FRESCO_CACHE = 1;
   public static final int CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING = 2;
+  public static final int CACHING_STRATEGY_KEEP_LAST_CACHE = 3;
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final ScheduledExecutorService mScheduledExecutorServiceForUiThread;
@@ -114,6 +116,8 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
         return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), true);
       case CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING:
         return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), false);
+      case CACHING_STRATEGY_KEEP_LAST_CACHE:
+        return new KeepLastFrameCache();
       case CACHING_STRATEGY_NO_CACHE:
       default:
         return new NoOpCache();
