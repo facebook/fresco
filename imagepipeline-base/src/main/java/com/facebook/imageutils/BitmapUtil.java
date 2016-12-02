@@ -67,8 +67,8 @@ public final class BitmapUtil {
       return bitmap.getByteCount();
     }
 
-    // Estimate for earlier platforms.
-    return bitmap.getWidth() * bitmap.getRowBytes();
+    // Estimate for earlier platforms. Same code as getByteCount() for Honeycomb.
+    return bitmap.getRowBytes() * bitmap.getHeight();
   }
 
   /**
