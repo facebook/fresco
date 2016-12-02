@@ -91,11 +91,13 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     AnimatedDrawableBackend animatedDrawableBackend =
         createAnimatedDrawableBackend(animatedImageResult);
 
+    BitmapFrameCache bitmapFrameCache = createBitmapFrameCache(animatedImageResult);
+
     BitmapAnimationBackend bitmapAnimationBackend = new BitmapAnimationBackend(
         mPlatformBitmapFactory,
-        createBitmapFrameCache(animatedImageResult),
+        bitmapFrameCache,
         new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
-        new AnimatedDrawableBackendFrameRenderer(animatedDrawableBackend));
+        new AnimatedDrawableBackendFrameRenderer(bitmapFrameCache, animatedDrawableBackend));
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
         bitmapAnimationBackend,

@@ -11,6 +11,7 @@ package com.facebook.fresco.animation.bitmap.wrapper;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 
+import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 
@@ -34,11 +35,14 @@ public class AnimatedDrawableBackendFrameRendererTest {
 
   private AnimatedDrawableBackendFrameRenderer mAnimatedDrawableBackendFrameRenderer;
   private AnimatedDrawableBackend mAnimatedDrawableBackend;
+  private BitmapFrameCache mBitmapFrameCache;
 
   @Before
   public void setup() {
     mAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
+    mBitmapFrameCache = mock(BitmapFrameCache.class);
     mAnimatedDrawableBackendFrameRenderer = new AnimatedDrawableBackendFrameRenderer(
+        mBitmapFrameCache,
         mAnimatedDrawableBackend);
   }
 
