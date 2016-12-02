@@ -30,13 +30,15 @@ import com.facebook.imageutils.BitmapUtil;
 public class FrescoFrameCache implements BitmapFrameCache {
 
   private final AnimatedFrameCache mAnimatedFrameCache;
+  private final boolean mEnableBitmapReusing;
 
   @GuardedBy("this")
   @Nullable
   private CloseableReference<CloseableImage> mLastCachedItem;
 
-  public FrescoFrameCache(AnimatedFrameCache animatedFrameCache) {
+  public FrescoFrameCache(AnimatedFrameCache animatedFrameCache, boolean enableBitmapReusing) {
     mAnimatedFrameCache = animatedFrameCache;
+    mEnableBitmapReusing = enableBitmapReusing;
   }
 
   @Nullable
@@ -51,11 +53,15 @@ public class FrescoFrameCache implements BitmapFrameCache {
     return extractAndClose(CloseableReference.cloneOrNull(mLastCachedItem));
   }
 
+  @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getBitmapToReuseForFrame(
       int frameNumber,
       int width,
       int height) {
+    if (!mEnableBitmapReusing) {
+      return null;
+    }
     return extractAndClose(mAnimatedFrameCache.getForReuse());
   }
 

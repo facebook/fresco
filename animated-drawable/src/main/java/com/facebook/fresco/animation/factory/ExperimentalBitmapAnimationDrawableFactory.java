@@ -49,6 +49,7 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
 
   public static final int CACHING_STRATEGY_NO_CACHE = 0;
   public static final int CACHING_STRATEGY_FRESCO_CACHE = 1;
+  public static final int CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING = 2;
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final ScheduledExecutorService mScheduledExecutorServiceForUiThread;
@@ -110,7 +111,9 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     switch (mCachingStrategySupplier.get()) {
       case CACHING_STRATEGY_FRESCO_CACHE:
-        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult));
+        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), true);
+      case CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING:
+        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), false);
       case CACHING_STRATEGY_NO_CACHE:
       default:
         return new NoOpCache();
