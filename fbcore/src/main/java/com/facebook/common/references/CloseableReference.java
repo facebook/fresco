@@ -64,7 +64,6 @@ import com.facebook.common.logging.FLog;
  */
 public final class CloseableReference<T> implements Cloneable, Closeable {
 
-  private static final String TAG_UNCLOSED = "UnclosedReference";
   private static Class<CloseableReference> TAG = CloseableReference.class;
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
@@ -79,7 +78,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private static volatile boolean sTraceTracking;
+  private static volatile @Nullable UnclosedReferenceListener sUnclosedReferenceListener;
   private final @Nullable Throwable mObtainedTrace;
   private @Nullable Throwable mClonedTrace;
 
@@ -195,12 +194,10 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       }
 
-      if (sTraceTracking) {
+      UnclosedReferenceListener listener = sUnclosedReferenceListener;
+      if (listener != null) {
         Throwable cause = mClonedTrace != null ? mClonedTrace : mObtainedTrace;
-        String message = mClonedTrace != null
-            ? "Finalized without closing! Cause is clone location."
-            : "Finalized without closing! Cause is obtain location.";
-        FLog.wtf(TAG_UNCLOSED, message, cause);
+        listener.onUnclosedReferenceFinalized(this, cause);
       } else {
         FLog.w(
             TAG,
@@ -296,14 +293,19 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     }
   }
 
-  public static void setTraceTrackingEnabled(boolean enabled) {
-    sTraceTracking = enabled;
+  public static void setUnclosedReferenceListener(
+      UnclosedReferenceListener unclosedReferenceListener) {
+    sUnclosedReferenceListener = unclosedReferenceListener;
   }
 
   private static @Nullable Throwable getTraceOrNull() {
-    if (sTraceTracking) {
+    if (sUnclosedReferenceListener != null) {
       return new Throwable();
     }
     return null;
+  }
+
+  public interface UnclosedReferenceListener {
+    void onUnclosedReferenceFinalized(CloseableReference<?> ref, Throwable relevantTrace);
   }
 }
