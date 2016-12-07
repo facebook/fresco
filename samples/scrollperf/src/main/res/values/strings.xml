@@ -201,4 +201,7 @@
     <string translatable="false" name="title_instrumentation">Enable Instrumentation</string>
     <string translatable="false" name="checked_instrumentation_summary">Instrumentation is enabled</string>
     <string translatable="false" name="unchecked_instrumentation_summary">Instrumentation is disabled</string>
+
+    <!-- BgColor-->
+    <string translatable="false" name="title_bg_color">Drawee background color</string>
 </resources>

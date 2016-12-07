@@ -25,6 +25,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.samples.scrollperf.conf.Config;
+import com.facebook.samples.scrollperf.util.DraweeUtil;
 
 /**
  * {@link SimpleDraweeView} with instrumentation.
@@ -66,6 +67,7 @@ public class InstrumentedDraweeView extends SimpleDraweeView implements Instrume
         }
       };
     }
+    DraweeUtil.setBgColor(this, mConfig);
   }
 
   @Override

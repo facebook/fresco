@@ -57,6 +57,7 @@ public final class Const {
   public static final String FADE_DURATION_KEY = "fade_duration";
   public static final String DRAW_BORDER_KEY = "draw_border";
   public static final String GRID_SPAN_COUNT_KEY= "grid_span_count_key";
+  public static final String BG_COLOR_KEY = "bg_color_key";
 
   public static final String WEBP_SUPPORT_KEY = "webp_support_key";
 

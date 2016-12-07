@@ -69,6 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateDownsamplingSummary(findPreference(Const.DOWNSAMPLING_KEY));
     updateOverrideSizeSummary(findPreference(Const.OVERRIDE_SIZE_KEY));
     updateDraweeOverlaySummary(findPreference(Const.DRAWEE_OVERLAY_KEY));
+    updateBgColorSummary(findPreference(Const.BG_COLOR_KEY));
     updateInstrumentationSummary(findPreference(Const.INSTRUMENTATION_ENABLED_KEY));
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
     // Set sizes
@@ -160,6 +161,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       case Const.DRAWEE_OVERLAY_KEY:
         updateDraweeOverlaySummary(preference);
         getShowRestartMessageDialog().show(getChildFragmentManager(), null);
+        break;
+      case Const.BG_COLOR_KEY:
+        updateBgColorSummary(preference);
         break;
       case Const.OVERRIDE_SIZE_KEY:
         updateOverrideSizeSummary(preference);
@@ -260,6 +264,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getResources(),
         (ListPreference) preference,
         R.array.postprocessor_summaries);
+  }
+
+  private void updateBgColorSummary(final Preference preference) {
+    updateListPreference(
+        getResources(),
+        (ListPreference) preference,
+        R.array.bg_color_summaries);
   }
 
   private void updateWhatScaleTypeSummary(final Preference preference) {

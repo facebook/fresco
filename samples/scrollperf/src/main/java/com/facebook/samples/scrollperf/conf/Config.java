@@ -57,6 +57,7 @@ public class Config {
   public final boolean webpSupportEnabled;
 
   public final int decodingThreadCount;
+  public final int bgColor;
 
   public final boolean drawBorder;
 
@@ -139,6 +140,9 @@ public class Config {
         .setDecodingThreadCount(Integer.parseInt(sharedPreferences.getString(
             Const.DECODING_THREAD_KEY,
             "0")))
+        .setBgColor(Integer.parseInt(sharedPreferences.getString(
+            Const.BG_COLOR_KEY,
+            "0")))
         .build();
   }
 
@@ -167,6 +171,7 @@ public class Config {
     this.draweeOverlayEnabled = builder.mDraweeOverlayEnabled;
     this.instrumentationEnabled = builder.mInstrumentationEnabled;
     this.decodingThreadCount = builder.mDecodingThreadCount;
+    this.bgColor = builder.mBgColor;
   }
 
   public static class Builder {
@@ -195,6 +200,7 @@ public class Config {
     private boolean mDraweeOverlayEnabled;
     private boolean mInstrumentationEnabled;
     private int mDecodingThreadCount;
+    private int mBgColor;
 
     private Builder() {
     }
@@ -310,6 +316,11 @@ public class Config {
 
     public Builder setDrawBorder(boolean drawBorder) {
       this.mDrawBorder = drawBorder;
+      return this;
+    }
+
+    public Builder setBgColor(int bgColor) {
+      this.mBgColor = bgColor;
       return this;
     }
 

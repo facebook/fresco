@@ -109,6 +109,14 @@
             android:key="scale_type"
             android:title="@string/title_preferences_scale_type"
             />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="@string/title_bg_color"
+            android:entries="@array/bg_color_labels"
+            android:entryValues="@array/bg_color_values"
+            android:key="bg_color_key"
+            android:title="@string/title_bg_color"
+        />
         <CheckBoxPreference
             android:key="drawee_overlay_key"
             android:title="@string/title_drawee_overlay"

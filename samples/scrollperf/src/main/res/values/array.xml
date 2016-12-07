@@ -138,4 +138,29 @@
         <item>6 threads for decoding</item>
         <item>8 threads for decoding</item>
     </array>
+    <!-- Background colors-->
+    <array name="bg_color_labels">
+        <item>Default</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>White</item>
+        <item>Black</item>
+    </array>
+    <array name="bg_color_summaries">
+        <item>Default background</item>
+        <item>Red background</item>
+        <item>Green background</item>
+        <item>Blue background</item>
+        <item>White background</item>
+        <item>Black background</item>
+    </array>
+    <integer-array name="bg_colors">
+        <item>?android:colorBackground</item>
+        <item>@color/red</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/white</item>
+        <item>@color/black</item>
+    </integer-array>
 </resources>
