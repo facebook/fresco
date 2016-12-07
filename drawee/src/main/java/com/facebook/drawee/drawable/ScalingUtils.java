@@ -161,7 +161,9 @@ public class ScalingUtils {
   }
 
   private static class ScaleTypeFitXY extends AbstractScaleType {
+
     public static final ScaleType INSTANCE = new ScaleTypeFitXY();
+
     @Override
     public void getTransformImpl(
         Matrix outTransform,
@@ -177,10 +179,17 @@ public class ScalingUtils {
       outTransform.setScale(scaleX, scaleY);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
     }
+
+    @Override
+    public String toString() {
+      return "fit_xy";
+    }
   }
 
   private static class ScaleTypeFitStart extends AbstractScaleType {
+
     public static final ScaleType INSTANCE = new ScaleTypeFitStart();
+
     @Override
     public void getTransformImpl(
         Matrix outTransform,
@@ -196,6 +205,11 @@ public class ScalingUtils {
       float dy = parentRect.top;
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "fit_start";
     }
   }
 
@@ -219,6 +233,11 @@ public class ScalingUtils {
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
     }
+
+    @Override
+    public String toString() {
+      return "fit_center";
+    }
   }
 
   private static class ScaleTypeFitEnd extends AbstractScaleType {
@@ -241,6 +260,11 @@ public class ScalingUtils {
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
     }
+
+    @Override
+    public String toString() {
+      return "fit_end";
+    }
   }
 
   private static class ScaleTypeCenter extends AbstractScaleType {
@@ -260,6 +284,11 @@ public class ScalingUtils {
       float dx = parentRect.left + (parentRect.width() - childWidth) * 0.5f;
       float dy = parentRect.top + (parentRect.height() - childHeight) * 0.5f;
       outTransform.setTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "center";
     }
   }
 
@@ -282,6 +311,11 @@ public class ScalingUtils {
       float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "center_inside";
     }
   }
 
@@ -311,6 +345,11 @@ public class ScalingUtils {
       }
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "center_crop";
     }
   }
 
@@ -342,6 +381,11 @@ public class ScalingUtils {
       }
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "focus_crop";
     }
   }
 
@@ -451,6 +495,14 @@ public class ScalingUtils {
       }
       transform.setValues(mMatrixValuesInterpolated);
       return transform;
+    }
+
+    @Override
+    public String toString() {
+      return String.format(
+          "InterpolatingScaleType(%s -> %s)",
+          String.valueOf(mScaleTypeFrom),
+          String.valueOf(mScaleTypeTo));
     }
   }
 }
