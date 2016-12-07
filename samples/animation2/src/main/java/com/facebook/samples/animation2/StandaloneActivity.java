@@ -30,6 +30,7 @@ import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import com.facebook.samples.animation2.utils.AnimationBackendUtils;
 
 /**
  * Simple standalone activity that creates a new {@link AnimatedDrawable2} and a custom backend
@@ -54,8 +55,10 @@ public class StandaloneActivity extends AppCompatActivity {
     // an inactivity toast message after 2 seconds.
     // In order to remove the inactivity check, just remove the wrapper method and set it to
     // the backend directly.
-    AnimationBackend animationBackend = wrapAnimationBackendWithInactivityCheck(
-        createColorAnimationBackend());
+    AnimationBackend animationBackend =
+        AnimationBackendUtils.wrapAnimationBackendWithInactivityCheck(
+            this,
+            createColorAnimationBackend());
 
     // Create a new animated drawable with the example backend
     final AnimatedDrawable2 animatedDrawable = new AnimatedDrawable2(animationBackend);
@@ -98,34 +101,6 @@ public class StandaloneActivity extends AppCompatActivity {
     int frameDurationMs = getResources().getInteger(android.R.integer.config_mediumAnimTime);
     // Create and return the backend
     return new ExampleColorBackend(colors, frameDurationMs);
-  }
-
-  /**
-   * Wraps the given animation backend with an activity check.
-   * When no frame has been drawn for more than 2 seconds, an inactivity toast message will
-   * be displayed.
-   *
-   * @param animationBackend the backend to wrap
-   * @return the backend to use
-   */
-  private AnimationBackend wrapAnimationBackendWithInactivityCheck(
-      AnimationBackend animationBackend) {
-    AnimationBackendDelegateWithInactivityCheck.InactivityListener inactivityListener =
-        new AnimationBackendDelegateWithInactivityCheck.InactivityListener() {
-      @Override
-      public void onInactive() {
-        Toast.makeText(
-            StandaloneActivity.this,
-            "Animation backend inactive.",
-            Toast.LENGTH_SHORT)
-            .show();
-      }
-    };
-    return AnimationBackendDelegateWithInactivityCheck.createForBackend(
-        animationBackend,
-        inactivityListener,
-        RealtimeSinceBootClock.get(),
-        UiThreadImmediateExecutorService.getInstance());
   }
 
   private static class ExampleColorBackend implements AnimationBackend {
