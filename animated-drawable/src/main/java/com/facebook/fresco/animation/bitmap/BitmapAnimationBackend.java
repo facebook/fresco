@@ -235,7 +235,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       mBitmapWidth = mBounds == null ? 0 : mBounds.width();
     }
 
-    mBitmapHeight = mBitmapFrameRenderer.getIntrinsicWidth();
+    mBitmapHeight = mBitmapFrameRenderer.getIntrinsicHeight();
     if (mBitmapHeight == INTRINSIC_DIMENSION_UNSET) {
       mBitmapHeight = mBounds == null ? 0 : mBounds.height();
     }
