@@ -232,12 +232,12 @@ public class BitmapAnimationBackend implements AnimationBackend,
     // Calculate the correct bitmap dimensions
     mBitmapWidth = mBitmapFrameRenderer.getIntrinsicWidth();
     if (mBitmapWidth == INTRINSIC_DIMENSION_UNSET) {
-      mBitmapWidth = mBounds == null ? 0 : mBounds.width();
+      mBitmapWidth = mBounds == null ? INTRINSIC_DIMENSION_UNSET : mBounds.width();
     }
 
     mBitmapHeight = mBitmapFrameRenderer.getIntrinsicHeight();
     if (mBitmapHeight == INTRINSIC_DIMENSION_UNSET) {
-      mBitmapHeight = mBounds == null ? 0 : mBounds.height();
+      mBitmapHeight = mBounds == null ? INTRINSIC_DIMENSION_UNSET : mBounds.height();
     }
   }
 

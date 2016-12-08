@@ -153,6 +153,86 @@ public class BitmapAnimationBackendTest {
   }
 
   @Test
+  public void testSetBoundsUpdatesIntrinsicDimensionsWhenBackendDimensionsUnsetAndNullBounds() {
+    int boundsWidth = 160;
+    int boundsHeight = 90;
+    int backendIntrinsicWidth = AnimationBackend.INTRINSIC_DIMENSION_UNSET;
+    int backendIntrinsicHeight = AnimationBackend.INTRINSIC_DIMENSION_UNSET;
+    setupBoundsAndRendererDimensions(
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight);
+
+    mBitmapAnimationBackend.setBounds(null);
+
+    assertThat(mBitmapAnimationBackend.getIntrinsicWidth())
+        .isEqualTo(AnimationBackend.INTRINSIC_DIMENSION_UNSET);
+    assertThat(mBitmapAnimationBackend.getIntrinsicHeight())
+        .isEqualTo(AnimationBackend.INTRINSIC_DIMENSION_UNSET);
+  }
+
+  @Test
+  public void testSetBoundsUpdatesIntrinsicDimensionsWhenBackendDimensionsSetAndNullBounds() {
+    int boundsWidth = 160;
+    int boundsHeight = 90;
+    int backendIntrinsicWidth = 260;
+    int backendIntrinsicHeight = 300;
+    setupBoundsAndRendererDimensions(
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight);
+
+    mBitmapAnimationBackend.setBounds(null);
+
+    assertThat(mBitmapAnimationBackend.getIntrinsicWidth())
+        .isEqualTo(backendIntrinsicWidth);
+    assertThat(mBitmapAnimationBackend.getIntrinsicHeight())
+        .isEqualTo(backendIntrinsicHeight);
+  }
+
+  @Test
+  public void testSetBoundsUpdatesIntrinsicDimensionsWhenBackendWidthSetAndNullBounds() {
+    int boundsWidth = 160;
+    int boundsHeight = 90;
+    int backendIntrinsicWidth = 260;
+    int backendIntrinsicHeight = AnimationBackend.INTRINSIC_DIMENSION_UNSET;
+    setupBoundsAndRendererDimensions(
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight);
+
+    mBitmapAnimationBackend.setBounds(null);
+
+    assertThat(mBitmapAnimationBackend.getIntrinsicWidth())
+        .isEqualTo(backendIntrinsicWidth);
+    assertThat(mBitmapAnimationBackend.getIntrinsicHeight())
+        .isEqualTo(backendIntrinsicHeight);
+  }
+
+  @Test
+  public void testSetBoundsUpdatesIntrinsicDimensionsWhenBackendHeightSetAndNullBounds() {
+    int boundsWidth = 160;
+    int boundsHeight = 90;
+    int backendIntrinsicWidth = AnimationBackend.INTRINSIC_DIMENSION_UNSET;
+    int backendIntrinsicHeight = 400;
+    setupBoundsAndRendererDimensions(
+        boundsWidth,
+        boundsHeight,
+        backendIntrinsicWidth,
+        backendIntrinsicHeight);
+
+    mBitmapAnimationBackend.setBounds(null);
+
+    assertThat(mBitmapAnimationBackend.getIntrinsicWidth())
+        .isEqualTo(backendIntrinsicWidth);
+    assertThat(mBitmapAnimationBackend.getIntrinsicHeight())
+        .isEqualTo(backendIntrinsicHeight);
+  }
+
+  @Test
   public void testGetFrameCount() {
     when(mAnimationInformation.getFrameCount()).thenReturn(123);
     assertThat(mBitmapAnimationBackend.getFrameCount()).isEqualTo(123);
