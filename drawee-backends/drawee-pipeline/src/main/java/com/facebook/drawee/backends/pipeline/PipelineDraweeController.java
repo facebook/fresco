@@ -26,6 +26,10 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
 import com.facebook.drawee.drawable.OrientedDrawable;
+import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
@@ -199,19 +203,37 @@ public class PipelineDraweeController
     throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
   }
 
+  @Override
+  public void setHierarchy(@Nullable DraweeHierarchy hierarchy) {
+    super.setHierarchy(hierarchy);
+    maybeUpdateDebugOverlay(null);
+  }
+
   private void maybeUpdateDebugOverlay(@Nullable CloseableImage image) {
     if (!mDrawDebugOverlay) {
       return;
     }
     Drawable controllerOverlay = getControllerOverlay();
+
     if (controllerOverlay == null) {
       controllerOverlay = new DebugControllerOverlayDrawable();
       setControllerOverlay(controllerOverlay);
     }
+
     if (controllerOverlay instanceof DebugControllerOverlayDrawable) {
       DebugControllerOverlayDrawable debugOverlay =
           (DebugControllerOverlayDrawable) controllerOverlay;
       debugOverlay.setControllerId(getId());
+
+      final DraweeHierarchy draweeHierarchy = getHierarchy();
+      ScaleType scaleType = null;
+      if (draweeHierarchy != null) {
+        final ScaleTypeDrawable scaleTypeDrawable =
+            ScalingUtils.getActiveScaleTypeDrawable(draweeHierarchy.getTopLevelDrawable());
+        scaleType = scaleTypeDrawable != null ? scaleTypeDrawable.getScaleType() : null;
+      }
+      debugOverlay.setScaleType(scaleType);
+
       if (image != null) {
         debugOverlay.setDimensions(image.getWidth(), image.getHeight());
         debugOverlay.setImageSize(image.getSizeInBytes());

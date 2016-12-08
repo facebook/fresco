@@ -12,13 +12,16 @@ import javax.annotation.Nullable;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 /**
  * Drawee Controller overlay that displays debug information.
@@ -52,8 +55,8 @@ public class DebugControllerOverlayDrawable extends Drawable {
   private static final int TEXT_PADDING_PX = 10;
 
   // Debug-text dependent parameters
-  private static final int NUMBER_OF_LINES = 6;
-  private static final int MAX_LINE_WIDTH_EM = 8;
+  private static final int MAX_NUMBER_OF_LINES = 7;
+  private static final int MAX_LINE_WIDTH_EM = 7;
 
   // General information
   private String mControllerId;
@@ -61,6 +64,7 @@ public class DebugControllerOverlayDrawable extends Drawable {
   private int mHeightPx;
   private int mImageSizeBytes;
   private String mImageFormat;
+  private ScaleType mScaleType;
 
   // Animations
   private int mFrameCount;
@@ -71,6 +75,9 @@ public class DebugControllerOverlayDrawable extends Drawable {
 
   // Internal helpers
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final Matrix mMatrix = new Matrix(); // avoid local allocation
+  private final Rect mRect = new Rect(); // avoid local allocation
+  private final RectF mRectF = new RectF(); // avoid local allocation
   private int mStartTextXPx;
   private int mStartTextYPx;
   private int mLineIncrementPx;
@@ -134,14 +141,18 @@ public class DebugControllerOverlayDrawable extends Drawable {
     mImageFormat = imageFormat;
   }
 
+  public void setScaleType(ScaleType scaleType) {
+    mScaleType = scaleType;
+  }
+
   @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
 
-    // Update the text parameters since the size changed
-    // If you modify the debug text, make sure to also update NUMBER_OF_LINES and MAX_LINE_WIDTH_EM.
-    // The line width has been estimated for a reasonable max line width on average
-    prepareDebugTextParameters(bounds, NUMBER_OF_LINES, MAX_LINE_WIDTH_EM);
+    // Update the text parameters since the size changed. If you modify the debug text, make sure
+    // to also update MAX_NUMBER_OF_LINES and MAX_LINE_WIDTH_EM. The line width has been estimated
+    // for a reasonable max line width on average.
+    prepareDebugTextParameters(bounds, MAX_NUMBER_OF_LINES, MAX_LINE_WIDTH_EM);
   }
 
   @Override
@@ -156,7 +167,7 @@ public class DebugControllerOverlayDrawable extends Drawable {
 
     // Draw overlay
     mPaint.setStyle(Paint.Style.FILL);
-    mPaint.setColor(determineOverlayColor(mWidthPx, mHeightPx));
+    mPaint.setColor(determineOverlayColor(mWidthPx, mHeightPx, mScaleType));
     canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
 
     // Draw text
@@ -176,6 +187,9 @@ public class DebugControllerOverlayDrawable extends Drawable {
     }
     if (mFrameCount > 0) {
       addDebugText(canvas, "anim: f %d, l %d", mFrameCount, mLoopCount);
+    }
+    if (mScaleType != null) {
+      addDebugText(canvas, "scale: %s", mScaleType);
     }
   }
 
@@ -222,22 +236,51 @@ public class DebugControllerOverlayDrawable extends Drawable {
   @VisibleForTesting
   int determineOverlayColor(
       int imageWidth,
-      int imageHeight) {
-    int drawableWidth = getBounds().width();
-    int drawableHeight = getBounds().height();
-    if (drawableWidth == 0 || drawableHeight== 0 || imageWidth == 0 || imageHeight == 0) {
+      int imageHeight,
+      @Nullable ScaleType scaleType) {
+    int visibleDrawnAreaWidth = getBounds().width();
+    int visibleDrawnAreaHeight = getBounds().height();
+
+    if (visibleDrawnAreaWidth <= 0 ||
+        visibleDrawnAreaHeight <= 0 ||
+        imageWidth <= 0 ||
+        imageHeight <= 0) {
       return OVERLAY_COLOR_IMAGE_NOT_OK;
     }
 
+    if (scaleType != null) {
+      // Apply optional scale type in order to get boundaries of the actual area to be filled
+      mRect.left = mRect.top = 0;
+      mRect.right = visibleDrawnAreaWidth;
+      mRect.bottom = visibleDrawnAreaHeight;
+
+      mMatrix.reset();
+
+      // We can ignore the focus point as it has no influence on the scale, but only the translation
+      scaleType.getTransform(mMatrix, mRect, imageWidth, imageHeight, 0f, 0f);
+
+      mRectF.left = mRectF.top = 0;
+      mRectF.right = imageWidth;
+      mRectF.bottom = imageHeight;
+
+      mMatrix.mapRect(mRectF);
+
+      final int drawnAreaWidth = (int) mRectF.width();
+      final int drawnAreaHeight = (int) mRectF.height();
+
+      visibleDrawnAreaWidth = Math.min(visibleDrawnAreaWidth, drawnAreaWidth);
+      visibleDrawnAreaHeight = Math.min(visibleDrawnAreaHeight, drawnAreaHeight);
+    }
+
     // Update the thresholds for the overlay color
-    float scaledImageWidthThresholdOk = drawableWidth * IMAGE_SIZE_THRESHOLD_OK;
-    float scaledImageWidthThresholdNotOk = drawableWidth * IMAGE_SIZE_THRESHOLD_NOT_OK;
-    float scaledImageHeightThresholdOk = drawableHeight * IMAGE_SIZE_THRESHOLD_OK;
-    float scaledImageHeightThresholdNotOk = drawableHeight * IMAGE_SIZE_THRESHOLD_NOT_OK;
+    float scaledImageWidthThresholdOk = visibleDrawnAreaWidth * IMAGE_SIZE_THRESHOLD_OK;
+    float scaledImageWidthThresholdNotOk = visibleDrawnAreaWidth * IMAGE_SIZE_THRESHOLD_NOT_OK;
+    float scaledImageHeightThresholdOk = visibleDrawnAreaHeight * IMAGE_SIZE_THRESHOLD_OK;
+    float scaledImageHeightThresholdNotOk = visibleDrawnAreaHeight * IMAGE_SIZE_THRESHOLD_NOT_OK;
 
     // Calculate the dimension differences
-    int absWidthDifference = Math.abs(imageWidth - drawableWidth);
-    int absHeightDifference = Math.abs(imageHeight - drawableHeight);
+    int absWidthDifference = Math.abs(imageWidth - visibleDrawnAreaWidth);
+    int absHeightDifference = Math.abs(imageHeight - visibleDrawnAreaHeight);
 
     // Return corresponding color
     if (absWidthDifference < scaledImageWidthThresholdOk &&
