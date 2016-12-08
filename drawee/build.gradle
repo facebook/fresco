@@ -25,6 +25,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    sourceSets {
+        test {
+            java {
+                exclude '**/DebugControllerOverlayDrawableInternalTest.java'
+            }
+        }
+    }
+
     packagingOptions {
         exclude 'NOTICE'
         exclude 'LICENSE'
