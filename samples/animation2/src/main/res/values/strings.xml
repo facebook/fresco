@@ -2,4 +2,5 @@
   <string name="app_name">Experimental Animations</string>
   <!-- Samples -->
   <string name="title_simple_color">Simple Color</string>
+  <string name="title_simple_bitmap">Simple Bitmap</string>
 </resources>

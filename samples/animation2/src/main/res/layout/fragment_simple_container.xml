@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     >
-  <View
+  <ImageView
       android:id="@+id/animation_container"
       android:layout_width="@dimen/animation_width"
       android:layout_height="@dimen/animation_height"

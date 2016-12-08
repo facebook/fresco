@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
@@ -46,13 +47,13 @@ public class SimpleColorFragment extends Fragment {
       LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_simple_color, container, false);
+    return inflater.inflate(R.layout.fragment_simple_container, container, false);
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     // Get the animation container
-    View animationContainer = view.findViewById(R.id.animation_container);
+    ImageView animationContainer = (ImageView) view.findViewById(R.id.animation_container);
 
     // Create the animation backend
     // In addition, we wrap it with an activity check. Tap the view to stop the animation to see
@@ -68,7 +69,7 @@ public class SimpleColorFragment extends Fragment {
     final AnimatedDrawable2 animatedDrawable = new AnimatedDrawable2(animationBackend);
 
     // Set the animation as a background
-    animationContainer.setBackgroundDrawable(animatedDrawable);
+    animationContainer.setImageDrawable(animatedDrawable);
 
     // Add a click listener to start / stop the animation
     animationContainer.setOnClickListener(new View.OnClickListener() {
