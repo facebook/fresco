@@ -9,7 +9,6 @@
 
 package com.facebook.cache.disk;
 
-import android.os.Environment;
 import javax.annotation.Nullable;
 
 import java.io.File;
@@ -21,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import android.os.Environment;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
@@ -117,21 +118,30 @@ public class DefaultDiskStorage implements DiskStorage {
   private static boolean isExternal(File directory, CacheErrorLogger cacheErrorLogger) {
     boolean state = false;
     String appCacheDirPath = null;
-    File extStoragePath = Environment.getExternalStorageDirectory();
-    if (extStoragePath != null) {
-      String cacheDirPath = extStoragePath.toString();
-      try {
-        appCacheDirPath = directory.getCanonicalPath();
-        if (appCacheDirPath.contains(cacheDirPath)) {
-          state = true;
+
+    try {
+      File extStoragePath = Environment.getExternalStorageDirectory();
+      if (extStoragePath != null) {
+        String cacheDirPath = extStoragePath.toString();
+        try {
+          appCacheDirPath = directory.getCanonicalPath();
+          if (appCacheDirPath.contains(cacheDirPath)) {
+            state = true;
+          }
+        } catch (IOException e) {
+          cacheErrorLogger.logError(
+              CacheErrorLogger.CacheErrorCategory.OTHER,
+              TAG,
+              "failed to read folder to check if external: " + appCacheDirPath,
+              e);
         }
-      } catch (IOException e) {
-        cacheErrorLogger.logError(
-            CacheErrorLogger.CacheErrorCategory.OTHER,
-            TAG,
-            "failed to read folder to check if external: " + appCacheDirPath,
-            e);
       }
+    } catch (Exception e) {
+      cacheErrorLogger.logError(
+          CacheErrorLogger.CacheErrorCategory.OTHER,
+          TAG,
+          "failed to get the external storage directory!",
+          e);
     }
     return state;
   }
