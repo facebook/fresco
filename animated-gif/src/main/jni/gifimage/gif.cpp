@@ -1152,10 +1152,24 @@ jint GifFrame_nativeGetDurationMs(JNIEnv* pEnv, jobject thiz) {
  *
  * @return the color (as an int, as in Android) of the transparent pixel of this frame
  */
-jint GifFrame_nativeGetTransparentPixel(JNIEnv* pEnv, jobject thiz) {
+jint GifFrame_nativeGetTransparentPixelColor(JNIEnv* pEnv, jobject thiz) {
   auto spNativeContext = getGifFrameNativeContext(pEnv, thiz);
+  auto pGifWrapper = spNativeContext->spGifWrapper;
+   
+  //
+  // Get the right color table to use, then get index of transparent pixel into that table
+  //
+  int frameNum = spNativeContext->frameNum;
+  ColorMapObject* pColorMap = pGifWrapper->get()->SColorMap;
+  SavedImage* pSavedImage = &pGifWrapper->get()->SavedImages[frameNum];
 
-  ColorMapObject* pColorMap = spNativeContext->spGifWrapper->get()->SColorMap;
+  if (pSavedImage->ImageDesc.ColorMap != NULL) {
+    // use local color table
+    pColorMap = pSavedImage->ImageDesc.ColorMap;
+    if (pColorMap->ColorCount != (1 << pColorMap->BitsPerPixel)) {
+      pColorMap = sDefaultColorMap;
+    }
+  }
 
   int colorIndex = spNativeContext->transparentIndex;
 
@@ -1345,9 +1359,9 @@ static JNINativeMethod sGifFrameMethods[] = {
   { "nativeGetDurationMs",
     "()I",
     (void*)GifFrame_nativeGetDurationMs },
-  { "nativeGetTransparentPixel",
+  { "nativeGetTransparentPixelColor",
     "()I",
-    (void*)GifFrame_nativeGetTransparentPixel },
+    (void*)GifFrame_nativeGetTransparentPixelColor },
   { "nativeHasTransparency",
     "()Z",
     (void*)GifFrame_nativeHasTransparency },

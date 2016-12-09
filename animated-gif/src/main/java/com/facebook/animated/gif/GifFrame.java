@@ -81,8 +81,8 @@ public class GifFrame implements AnimatedImageFrame {
     return nativeHasTransparency();
   }
 
-  public int getTransparentPixel() {
-    return nativeGetTransparentPixel();
+  public int getTransparentPixelColor() {
+    return nativeGetTransparentPixelColor();
   }
 
   public int getDisposalMode() {
@@ -96,7 +96,7 @@ public class GifFrame implements AnimatedImageFrame {
   private native int nativeGetXOffset();
   private native int nativeGetYOffset();
   private native int nativeGetDisposalMode();
-  private native int nativeGetTransparentPixel();
+  private native int nativeGetTransparentPixelColor();
   private native boolean nativeHasTransparency();
   private native void nativeDispose();
   private native void nativeFinalize();
