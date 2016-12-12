@@ -6,13 +6,16 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${ANDROID_GRADLE_PLUGIN_VERSION}"
-        classpath "de.undercouch:gradle-download-task:${GRADLE_DOWNLOAD_TASK_VERSION}"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${GRADLE_BINTRAY_PLUGIN_VERSION}"
         classpath "com.github.dcendents:android-maven-gradle-plugin:${ANDROID_MAVEN_GRADLE_PLUGIN_VERSION}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+
+plugins {
+    id "de.undercouch.download" version "3.1.2"
 }
 
 project.ext {

@@ -46,7 +46,7 @@ task createNativeDepsDirectories {
 }
 
 task downloadGiflib(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz'
+    src 'http://kent.dl.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir

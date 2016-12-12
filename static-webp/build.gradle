@@ -36,14 +36,14 @@ task createNativeDepsDirectories {
 }
 
 task downloadLibjpeg(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/libjpeg-turbo/1.5.0/libjpeg-turbo-1.5.0.tar.gz'
+    src 'https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.5.0.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir
 }
 
 task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'http://downloads.sourceforge.net/project/libpng/libpng16/older-releases/1.6.10/libpng-1.6.10.tar.gz'
+    src 'https://github.com/glennrp/libpng/archive/v1.6.10.tar.gz'
     onlyIfNewer true
     overwrite false
     dest downloadsDir
@@ -57,12 +57,12 @@ task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
 }
 
 task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibjpeg.dest}/libjpeg-turbo-1.5.0.tar.gz"))
+    from tarTree(resources.gzip("${downloadLibjpeg.dest}/1.5.0.tar.gz"))
     into "${downloadsDir}/libjpeg"
 }
 
 task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibpng.dest}/libpng-1.6.10.tar.gz"))
+    from tarTree(resources.gzip("${downloadLibpng.dest}/v1.6.10.tar.gz"))
     into "${downloadsDir}/libpng"
 }
 
