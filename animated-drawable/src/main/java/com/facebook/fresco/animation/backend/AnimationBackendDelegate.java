@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
@@ -144,6 +145,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
     return mAnimationBackend;
   }
 
+  @SuppressLint("Range")
   private void applyBackendSettings(AnimationBackend backend) {
     if (mBounds != null) {
       backend.setBounds(mBounds);
