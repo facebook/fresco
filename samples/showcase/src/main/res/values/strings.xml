@@ -1,0 +1,15 @@
+<resources>
+  <string name="app_name">Fresco Showcase</string>
+
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
+
+  <string name="navdrawer_title">Fresco Showcase</string>
+  <string name="navdrawer_subtitle">frescolib.org</string>
+
+  <string name="action_settings">Settings</string>
+
+  <!-- Navigation drawer categories -->
+  <string name="category_drawee">Drawee</string>
+  <string name="category_pipeline">Image Pipeline</string>
+</resources>

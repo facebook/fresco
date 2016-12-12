@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item android:title="@string/category_drawee">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_drawee_1"
+            android:title="Drawee 1"/>
+        <item
+            android:id="@+id/nav_drawee_2"
+            android:title="Drawee 2"/>
+      </group>
+    </menu>
+  </item>
+
+  <item android:title="@string/category_pipeline">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_pipeline_1"
+            android:title="Pipeline 1"/>
+        <item
+            android:id="@+id/nav_pipeline_2"
+            android:title="Pipeline 2"/>
+      </group>
+    </menu>
+  </item>
+</menu>
