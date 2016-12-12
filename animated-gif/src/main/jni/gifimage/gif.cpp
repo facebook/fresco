@@ -1075,7 +1075,7 @@ void GifFrame_nativeRenderFrame(
     throwIllegalArgumentException(pEnv, "Width or height is negative");
     return;
   }
-  
+
   if (bitmapInfo.width < (unsigned) width || bitmapInfo.height < (unsigned) height) {
     throwIllegalStateException(pEnv, "Width or height is too small");
     return;
@@ -1145,6 +1145,53 @@ jint GifFrame_nativeGetDurationMs(JNIEnv* pEnv, jobject thiz) {
     return -1;
   }
   return spNativeContext->durationMs;
+}
+
+/**
+ * Gets the color (as an int, as in Android) of the transparent pixel of this frame
+ *
+ * @return the color (as an int, as in Android) of the transparent pixel of this frame
+ */
+jint GifFrame_nativeGetTransparentPixelColor(JNIEnv* pEnv, jobject thiz) {
+  auto spNativeContext = getGifFrameNativeContext(pEnv, thiz);
+  auto pGifWrapper = spNativeContext->spGifWrapper;
+
+  //
+  // Get the right color table to use, then get index of transparent pixel into that table
+  //
+  int frameNum = spNativeContext->frameNum;
+  ColorMapObject* pColorMap = pGifWrapper->get()->SColorMap;
+  SavedImage* pSavedImage = &pGifWrapper->get()->SavedImages[frameNum];
+
+  if (pSavedImage->ImageDesc.ColorMap != NULL) {
+    // use local color table
+    pColorMap = pSavedImage->ImageDesc.ColorMap;
+    if (pColorMap->ColorCount != (1 << pColorMap->BitsPerPixel)) {
+      pColorMap = sDefaultColorMap;
+    }
+  }
+
+  int colorIndex = spNativeContext->transparentIndex;
+
+  if (pColorMap != NULL  &&  colorIndex >= 0) {
+    PixelType32 color = getColorFromTable(colorIndex, pColorMap);
+
+    //
+    // convert PixelType32 to Android-style int color value.
+    // the c++ compiler will optimize these four lines of bit-shifting -- there is no need to
+    // collapse them into a single confusing expression
+    //
+    int alphaShifted  = color.alpha   << 24;
+    int redShifted    = color.red     << 16;
+    int greenShifted  = color.green   <<  8;
+    int blueShifted   = color.blue    <<  0;
+
+    int iColor = alphaShifted | redShifted | greenShifted | blueShifted;
+
+    return iColor;
+  } else {
+    return 0; // in android, 0 == Color.TRANSPARENT
+  }
 }
 
 jboolean GifFrame_nativeHasTransparency(JNIEnv* pEnv, jobject thiz) {
@@ -1312,6 +1359,9 @@ static JNINativeMethod sGifFrameMethods[] = {
   { "nativeGetDurationMs",
     "()I",
     (void*)GifFrame_nativeGetDurationMs },
+  { "nativeGetTransparentPixelColor",
+    "()I",
+    (void*)GifFrame_nativeGetTransparentPixelColor },
   { "nativeHasTransparency",
     "()Z",
     (void*)GifFrame_nativeHasTransparency },
