@@ -1,0 +1,35 @@
+<script>
+  var docnavData = [
+    {
+      group: "Recent Posts",
+      items: [
+        {% for post in site.posts limit:10 %}
+        {
+          key : "{{ site.url }}{{ site.baseurl }}{{ post.url }}",
+          title : "{{ post.title }}",
+          url : "{{ site.url }}{{ site.baseurl }}{{ post.url }}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% if site.posts.size > 10 %},
+    {
+      group: "Older Posts",
+      items: [
+        {% for post in site.posts offset:10 %}
+        {
+          key : "{{ site.url }}{{ site.baseurl }}{{ post.url }}",
+          title : "{{ post.title }}",
+          url : "{{ site.url }}{{ site.baseurl }}{{ post.url }}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+    {% endif %}
+  ];
+  var currentGroup = "Recent Posts";
+  var currentDoc = "{{ page.title }}";
+  var activeGroup = "Recent Posts";
+  var sectionTitle = "Blog";
+  var sectionPath = "{{ site.baseurl}}/blog/";
+</script>
+{% include react/collection_nav.html %}

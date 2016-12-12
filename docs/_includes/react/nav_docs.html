@@ -1,0 +1,32 @@
+<script>
+  var docnavData = [
+    {% for group in site.data.nav_docs %}
+    {
+      group     : "{{ group.title }}",
+      items     : [
+        {% for item in group.items %}
+        {% for docitem in site.docs %}
+          {% if docitem.docid == item.id %}
+            {% assign doc = docitem %}
+            {% if docitem.docid == page.docid %}
+            {% assign currentGroup = group %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {
+          key : "{{ site.url }}{{ site.baseurl }}{{ doc.url }}",
+          title : "{{ doc.title }}",
+          url : "{{ site.url }}{{ site.baseurl }}{{ doc.url }}",
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+    },
+    {% endfor %}
+  ];
+  var currentGroup = "{{ currentGroup.title }}";
+  var currentDoc = "{{ page.title }}";
+  var activeGroup = "{{ currentGroup.title }}";
+  var sectionTitle = "Docs";
+  var sectionPath = "{{ site.baseurl}}/docs/";
+</script>
+{% include react/collection_nav.html %}

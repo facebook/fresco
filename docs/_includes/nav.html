@@ -1,0 +1,25 @@
+<div id="fixed_header" class="fixedHeaderContainer{% if include.alwayson %} visible{% endif %}">
+  <div class="headerWrapper wrapper">
+    <header>
+      <a href="{{ site.url }}{{ site.baseurl }}/">
+        <img src="{{ site.url }}{{ site.baseurl }}/static/logo.png">
+        <h2>{{ site.title }}</h2>
+      </a>
+
+      <div class="navigationWrapper navigationFull" id="flat_nav">
+        <nav class="navigation">
+          <ul>
+            {% for item in site.data.nav %}
+            <li class="navItem{% if page.collection == item.category or page.category == item.category %} navItemActive{% endif %}">
+              <a href="{{ item.href }}">{{ item.title }}</a>
+            </li>
+            {% endfor %}
+            {% include nav_search.html %}
+          </ul>
+        </nav>
+      </div>
+      <div class="navigationWrapper navigationSlider" id="navigation_wrap"></div>
+    </header>
+  </div>
+  {% include react/header_nav.html %}
+</div>
