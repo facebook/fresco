@@ -4,11 +4,6 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'de.undercouch.download'
-import de.undercouch.gradle.tasks.download.Download
-
-import org.apache.tools.ant.taskdefs.condition.Os
-
 dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
@@ -24,25 +19,6 @@ apply from: rootProject.file('release.gradle')
 
 // We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
 // We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
-
-task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz'
-    onlyIfNewer true
-    overwrite false
-    dest downloadsDir
-}
-
-task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.5.1.tar.gz"))
-    into "${downloadsDir}/libwebp"
-}
-
-task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
-    from "${unpackLibwebp.destinationDir}/libwebp-0.5.1"
-    from 'src/main/jni/third-party/libwebp-0.5.1'
-    include('src/**/*.c', 'src/**/*.h', '*.mk')
-    into "${mergeDir}/libwebp-0.5.1"
-}
 
 task fetchNativeDeps(dependsOn: [copyLibwebp, copyLibpng, copyLibjpeg]) {
 }
