@@ -123,6 +123,18 @@ public class DownsampleUtilTest {
   }
 
   @Test
+  public void testDetermineSampleSize_CustomMaxPossibleSize() {
+    whenImageWidthAndHeight(4000, 4000);
+
+    whenRequestResizeWidthHeightAndMaxBitmapSize(4000, 4000, 4096);
+    assertEquals(1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+
+    whenImageWidthAndHeight(8000, 8000);
+    whenRequestResizeWidthHeightAndMaxBitmapSize(8000, 8000, 4096);
+    assertEquals(2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage));
+  }
+
+  @Test
   public void testRatioToSampleSize() {
     assertEquals(1, DownsampleUtil.ratioToSampleSize(1.000f));
     assertEquals(1, DownsampleUtil.ratioToSampleSize(0.667f));
@@ -190,5 +202,16 @@ public class DownsampleUtilTest {
     when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(width, height));
     when(mImageRequest.getRotationOptions())
         .thenReturn(RotationOptions.forceRotation(rotationAngle));
+  }
+
+  private void whenRequestResizeWidthHeightAndMaxBitmapSize(
+      int width,
+      int height,
+      float maxBitmapSize) {
+    when(mImageRequest.getPreferredWidth()).thenReturn(width);
+    when(mImageRequest.getPreferredHeight()).thenReturn(height);
+    when(mImageRequest.getResizeOptions()).thenReturn(
+        new ResizeOptions(width, height, maxBitmapSize));
+    when(mImageRequest.getRotationOptions()).thenReturn(RotationOptions.disableRotation());
   }
 }

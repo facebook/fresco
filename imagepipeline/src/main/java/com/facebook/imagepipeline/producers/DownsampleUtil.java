@@ -8,19 +8,17 @@
  */
 package com.facebook.imagepipeline.producers;
 
-
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.imageformat.DefaultImageFormats;
-import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imageutils.BitmapUtil;
 
 public class DownsampleUtil {
 
-  private static final float MAX_BITMAP_SIZE = 2048f;
   private static final float INTERVAL_ROUNDING = 1.0f/3;
   private static final int DEFAULT_SAMPLE_SIZE = 1;
 
@@ -49,7 +47,11 @@ public class DownsampleUtil {
     // Check the case when the dimension of the downsampled image is still larger than the max
     // possible dimension for an image.
     int maxDimension = Math.max(encodedImage.getHeight(), encodedImage.getWidth());
-    while (maxDimension / sampleSize > MAX_BITMAP_SIZE) {
+    final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
+    final float maxBitmapSize = resizeOptions != null
+        ? resizeOptions.maxBitmapSize
+        : BitmapUtil.MAX_BITMAP_SIZE;
+    while (maxDimension / sampleSize > maxBitmapSize) {
       if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
         sampleSize *= 2;
       } else {
