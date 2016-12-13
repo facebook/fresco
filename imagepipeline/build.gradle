@@ -4,11 +4,6 @@ apply plugin: 'maven'
 project.group = GROUP
 version = VERSION_NAME
 
-apply plugin: 'de.undercouch.download'
-import de.undercouch.gradle.tasks.download.Download
-
-import org.apache.tools.ant.taskdefs.condition.Os
-
 dependencies {
     provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
@@ -38,25 +33,6 @@ apply from: rootProject.file('release.gradle')
 
 // We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
 // We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
-
-task downloadLibjpeg(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.5.0.tar.gz'
-    onlyIfNewer true
-    overwrite false
-    dest downloadsDir
-}
-
-task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibjpeg.dest}/1.5.0.tar.gz"))
-    into "${downloadsDir}/libjpeg"
-}
-
-task copyLibjpeg(dependsOn: unpackLibjpeg, type: Copy) {
-    from "${unpackLibjpeg.destinationDir}/libjpeg-turbo-1.5.0"
-    from 'src/main/jni/third-party/libjpeg-turbo-1.5.x'
-    include('**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk')
-    into "${mergeDir}/libjpeg-turbo-1.5.x"
-}
 
 task fetchNativeDeps(dependsOn: [copyLibjpeg]) {
 }

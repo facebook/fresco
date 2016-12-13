@@ -1,3 +1,4 @@
+import de.undercouch.gradle.tasks.download.Download
 import org.apache.tools.ant.taskdefs.condition.Os
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -65,6 +66,8 @@ subprojects {
         }
     }
 
+    apply plugin: 'de.undercouch.download'
+
     ext.getNdkBuildName =  {
         if (Os.isFamily(Os.FAMILY_WINDOWS)) {
             return "ndk-build.cmd"
@@ -113,6 +116,25 @@ subprojects {
         nativeDepsDir.mkdirs()
         downloadsDir.mkdirs()
         mergeDir.mkdirs()
+    }
+
+    task downloadLibjpeg(dependsOn: createNativeDepsDirectories, type: Download) {
+        src 'https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.5.0.tar.gz'
+        onlyIfNewer true
+        overwrite false
+        dest downloadsDir
+    }
+
+    task unpackLibjpeg(dependsOn: downloadLibjpeg, type: Copy) {
+        from tarTree(resources.gzip("${downloadLibjpeg.dest}/1.5.0.tar.gz"))
+        into "${downloadsDir}/libjpeg"
+    }
+
+    task copyLibjpeg(dependsOn: unpackLibjpeg, type: Copy) {
+        from "${unpackLibjpeg.destinationDir}/libjpeg-turbo-1.5.0"
+        from 'src/main/jni/third-party/libjpeg-turbo-1.5.x'
+        include('**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk')
+        into "${mergeDir}/libjpeg-turbo-1.5.x"
     }
 }
 
