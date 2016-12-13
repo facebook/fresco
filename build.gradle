@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
@@ -60,6 +62,46 @@ subprojects {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        }
+    }
+
+    ext.getNdkBuildName =  {
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            return "ndk-build.cmd"
+        } else {
+            return "ndk-build"
+        }
+    }
+
+    ext.getNdkBuildFullPath = { Project project ->
+        File propFile = project.rootProject.file('local.properties')
+        if (!propFile.exists()) {
+            return getNdkBuildName()
+        }
+        Properties properties = new Properties()
+        properties.load(propFile.newDataInputStream())
+        def ndkCommand = properties.getProperty('ndk.command')
+        if (ndkCommand != null) {
+            return ndkCommand
+        }
+        def path = null
+        def ndkPath = properties.getProperty('ndk.path')
+        if (ndkPath != null) {
+            path = ndkPath
+        } else {
+            def ndkDir = properties.getProperty('ndk.dir')
+            if (ndkDir != null) {
+                path = ndkDir
+            }
+        }
+        if (path != null) {
+            if (!path.endsWith(File.separator)) {
+                path += File.separator
+            }
+            return path + getNdkBuildName()
+        } else {
+            // if none of above is provided, we assume ndk-build is already in $PATH
+            return getNdkBuildName()
         }
     }
 }

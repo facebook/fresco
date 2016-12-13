@@ -76,51 +76,11 @@ task removeNativeDeps(type: Delete) {
 }
 allclean.dependsOn removeNativeDeps
 
-def getNdkBuildName() {
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        return "ndk-build.cmd"
-    } else {
-        return "ndk-build"
-    }
-}
-
-def getNdkBuildFullPath() {
-    File propFile = project.rootProject.file('local.properties')
-    if (!propFile.exists()) {
-        return getNdkBuildName()
-    }
-    Properties properties = new Properties()
-    properties.load(propFile.newDataInputStream())
-    def ndkCommand = properties.getProperty('ndk.command')
-    if (ndkCommand != null) {
-        return ndkCommand
-    }
-    def path = null
-    def ndkPath = properties.getProperty('ndk.path')
-    if (ndkPath != null) {
-        path = ndkPath
-    } else {
-        def ndkDir = properties.getProperty('ndk.dir')
-        if (ndkDir != null) {
-            path = ndkDir
-        }
-    }
-    if (path != null) {
-        if (!path.endsWith(File.separator)) {
-            path += File.separator
-        }
-        return path + getNdkBuildName()
-    } else {
-        // if none of above is provided, we assume ndk-build is already in $PATH
-        return getNdkBuildName()
-    }
-}
-
 def makeNdkTasks(String name, Object[] deps) {
     task "ndk_build_$name"(dependsOn: deps, type: Exec) {
         inputs.file("src/main/jni/$name")
         outputs.dir("$buildDir/$name")
-        commandLine getNdkBuildFullPath(),
+        commandLine getNdkBuildFullPath(project),
             'NDK_PROJECT_PATH=null',
             'NDK_APPLICATION_MK=../Application.mk',
             'NDK_OUT=' + temporaryDir,
@@ -131,7 +91,7 @@ def makeNdkTasks(String name, Object[] deps) {
 
     task "ndk_clean_$name"(type: Exec) {
         ignoreExitValue true
-        commandLine getNdkBuildFullPath(),
+        commandLine getNdkBuildFullPath(project),
             'NDK_PROJECT_PATH=null',
             'NDK_APPLICATION_MK=../Application.mk',
             'NDK_OUT=' + temporaryDir,
