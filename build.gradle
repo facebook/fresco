@@ -104,6 +104,16 @@ subprojects {
             return getNdkBuildName()
         }
     }
+
+    ext.nativeDepsDir = new File("${projectDir}/nativedeps")
+    ext.downloadsDir = new File("${nativeDepsDir}/downloads")
+    ext.mergeDir = new File("${nativeDepsDir}/merge")
+
+    task createNativeDepsDirectories {
+        nativeDepsDir.mkdirs()
+        downloadsDir.mkdirs()
+        mergeDir.mkdirs()
+    }
 }
 
 repositories {
