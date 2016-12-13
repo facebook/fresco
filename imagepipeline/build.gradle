@@ -37,11 +37,6 @@ apply from: rootProject.file('release.gradle')
 task fetchNativeDeps(dependsOn: [copyLibjpeg]) {
 }
 
-task removeNativeDeps(type: Delete) {
-    delete nativeDepsDir
-}
-allclean.dependsOn removeNativeDeps
-
 android {
     def ndkLibs = [
         ['bitmaps', []],

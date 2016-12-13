@@ -142,6 +142,11 @@ subprojects {
     ext.downloadsDir = new File("${nativeDepsDir}/downloads")
     ext.mergeDir = new File("${nativeDepsDir}/merge")
 
+    task removeNativeDeps(type: Delete) {
+        delete nativeDepsDir
+    }
+    allclean.dependsOn removeNativeDeps
+
     task createNativeDepsDirectories {
         nativeDepsDir.mkdirs()
         downloadsDir.mkdirs()

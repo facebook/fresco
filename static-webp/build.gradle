@@ -23,11 +23,6 @@ apply from: rootProject.file('release.gradle')
 task fetchNativeDeps(dependsOn: [copyLibwebp, copyLibpng, copyLibjpeg]) {
 }
 
-task removeNativeDeps(type: Delete) {
-    delete nativeDepsDir
-}
-allclean.dependsOn removeNativeDeps
-
 android {
 
     def ndkLibs = [['static-webp', [copyLibjpeg, copyLibpng, copyLibwebp]]]
