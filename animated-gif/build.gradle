@@ -38,36 +38,6 @@ task removeNativeDeps(type: Delete) {
 }
 allclean.dependsOn removeNativeDeps
 
-def makeNdkTasks(String name, Object[] deps) {
-    task "ndk_build_$name"(dependsOn: deps, type: Exec) {
-        inputs.file("src/main/jni/$name")
-        outputs.dir("$buildDir/$name")
-        commandLine getNdkBuildFullPath(project),
-            'NDK_PROJECT_PATH=null',
-            'NDK_APPLICATION_MK=../Application.mk',
-            'NDK_OUT=' + temporaryDir,
-            "NDK_LIBS_OUT=$buildDir/$name",
-            '-C', file("src/main/jni/$name").absolutePath,
-            '--jobs', Runtime.getRuntime().availableProcessors()
-    }
-
-    task "ndk_clean_$name"(type: Exec) {
-        ignoreExitValue true
-        commandLine getNdkBuildFullPath(project),
-            'NDK_PROJECT_PATH=null',
-            'NDK_APPLICATION_MK=../Application.mk',
-            'NDK_OUT=' + temporaryDir,
-            "NDK_LIBS_OUT=$buildDir/$name",
-            '-C', file("src/main/jni/$name").absolutePath,
-            'clean'
-    }
-
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn "ndk_build_$name"
-    }
-    clean.dependsOn "ndk_clean_$name"
-}
-
 android {
     def ndkLibs = [['gifimage', [copyGiflib]]]
 
