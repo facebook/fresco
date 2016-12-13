@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/drawee_view"
+      android:layout_width="@dimen/drawee_width_medium"
+      android:layout_height="@dimen/drawee_height_medium"
+      />
+</LinearLayout>

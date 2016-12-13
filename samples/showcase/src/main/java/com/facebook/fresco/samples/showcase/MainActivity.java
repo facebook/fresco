@@ -12,9 +12,7 @@
 package com.facebook.fresco.samples.showcase;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,8 +22,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.fresco.samples.showcase.drawee.SimpleDraweeFragment;
+
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
+
+  private static final int INITIAL_NAVDRAWER_ITEM_ID = R.id.nav_drawee_simple;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,11 @@ public class MainActivity extends AppCompatActivity
 
     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
+
+    if (savedInstanceState == null) {
+      handleNavigationItemClick(INITIAL_NAVDRAWER_ITEM_ID);
+      navigationView.setCheckedItem(INITIAL_NAVDRAWER_ITEM_ID);
+    }
   }
 
   @Override
@@ -60,17 +67,25 @@ public class MainActivity extends AppCompatActivity
     return true;
   }
 
-  @SuppressWarnings("StatementWithEmptyBody")
   @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     handleNavigationItemClick(item.getItemId());
-
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
   }
 
-  public void handleNavigationItemClick(int itemId) {
+  private void handleNavigationItemClick(int itemId) {
+    if (itemId == R.id.nav_drawee_simple) {
+      showFragment(new SimpleDraweeFragment());
+      setTitle(R.string.title_drawee_simple);
+    }
+  }
 
+  private void showFragment(Fragment fragment) {
+    getSupportFragmentManager()
+        .beginTransaction()
+        .add(R.id.content_main, fragment)
+        .commit();
   }
 }

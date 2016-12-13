@@ -5,11 +5,9 @@
     <menu>
       <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_drawee_1"
-            android:title="Drawee 1"/>
-        <item
-            android:id="@+id/nav_drawee_2"
-            android:title="Drawee 2"/>
+            android:id="@+id/nav_drawee_simple"
+            android:title="@string/title_drawee_simple"
+            />
       </group>
     </menu>
   </item>
@@ -19,10 +17,12 @@
       <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_pipeline_1"
-            android:title="Pipeline 1"/>
+            android:title="Pipeline 1"
+            />
         <item
             android:id="@+id/nav_pipeline_2"
-            android:title="Pipeline 2"/>
+            android:title="Pipeline 2"
+            />
       </group>
     </menu>
   </item>

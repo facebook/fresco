@@ -9,7 +9,10 @@
 
   <string name="action_settings">Settings</string>
 
-  <!-- Navigation drawer categories -->
+  <!-- Navigation drawer items -->
   <string name="category_drawee">Drawee</string>
+  <string name="title_drawee_simple">Simple Drawee</string>
+
   <string name="category_pipeline">Image Pipeline</string>
+
 </resources>

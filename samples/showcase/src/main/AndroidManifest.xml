@@ -4,6 +4,8 @@
     package="com.facebook.fresco.samples.showcase"
     >
 
+  <uses-permission android:name="android.permission.INTERNET" />
+
   <application
       android:name=".ShowcaseApplication"
       android:allowBackup="false"
