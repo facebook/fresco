@@ -13,6 +13,8 @@
 package com.facebook.samples.mediavariations.widget;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +49,7 @@ public class ResizableFrameLayout extends FrameLayout {
     mMaximumHeight = getHeight();
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
   @Override
   public boolean onInterceptTouchEvent(MotionEvent event) {
     if (event.getAction() == MotionEvent.ACTION_DOWN &&
@@ -63,6 +66,7 @@ public class ResizableFrameLayout extends FrameLayout {
     return false;
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
   @Override
   public boolean onTouchEvent(MotionEvent event) {
     if (!mResizing) {
