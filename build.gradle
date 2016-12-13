@@ -155,6 +155,25 @@ subprojects {
         include('**/*.c', '**/*.h', '**/*.S', '*.mk')
         into "${mergeDir}/libpng-1.6.10"
     }
+
+    task downloadGiflib(dependsOn: createNativeDepsDirectories, type: Download) {
+        src 'http://kent.dl.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz'
+        onlyIfNewer true
+        overwrite false
+        dest downloadsDir
+    }
+
+    task unpackGiflib(dependsOn: downloadGiflib, type: Copy) {
+        from tarTree(resources.gzip("${downloadGiflib.dest}/giflib-5.1.1.tar.gz"))
+        into "${downloadsDir}/giflib"
+    }
+
+    task copyGiflib(dependsOn: unpackGiflib, type: Copy) {
+        from "${unpackGiflib.destinationDir}/giflib-5.1.1/lib"
+        from 'src/main/jni/third-party/giflib'
+        include('*.c', '*.h', '*.mk')
+        into "${mergeDir}/giflib"
+    }
 }
 
 repositories {
