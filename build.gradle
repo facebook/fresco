@@ -136,6 +136,25 @@ subprojects {
         include('**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk')
         into "${mergeDir}/libjpeg-turbo-1.5.x"
     }
+
+    task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
+        src 'https://github.com/glennrp/libpng/archive/v1.6.10.tar.gz'
+        onlyIfNewer true
+        overwrite false
+        dest downloadsDir
+    }
+
+    task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
+        from tarTree(resources.gzip("${downloadLibpng.dest}/v1.6.10.tar.gz"))
+        into "${downloadsDir}/libpng"
+    }
+
+    task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
+        from "${unpackLibpng.destinationDir}/libpng-1.6.10"
+        from 'src/main/jni/third-party/libpng-1.6.10'
+        include('**/*.c', '**/*.h', '**/*.S', '*.mk')
+        into "${mergeDir}/libpng-1.6.10"
+    }
 }
 
 repositories {

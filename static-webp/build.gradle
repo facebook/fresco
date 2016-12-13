@@ -25,13 +25,6 @@ apply from: rootProject.file('release.gradle')
 // We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
 // We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
 
-task downloadLibpng(dependsOn: createNativeDepsDirectories, type: Download) {
-    src 'https://github.com/glennrp/libpng/archive/v1.6.10.tar.gz'
-    onlyIfNewer true
-    overwrite false
-    dest downloadsDir
-}
-
 task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
     src 'https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz'
     onlyIfNewer true
@@ -39,21 +32,9 @@ task downloadLibwebp(dependsOn: createNativeDepsDirectories, type: Download) {
     dest downloadsDir
 }
 
-task unpackLibpng(dependsOn: downloadLibpng, type: Copy) {
-    from tarTree(resources.gzip("${downloadLibpng.dest}/v1.6.10.tar.gz"))
-    into "${downloadsDir}/libpng"
-}
-
 task unpackLibwebp(dependsOn: downloadLibwebp, type: Copy) {
     from tarTree(resources.gzip("${downloadLibwebp.dest}/v0.5.1.tar.gz"))
     into "${downloadsDir}/libwebp"
-}
-
-task copyLibpng(dependsOn: unpackLibpng, type: Copy) {
-    from "${unpackLibpng.destinationDir}/libpng-1.6.10"
-    from 'src/main/jni/third-party/libpng-1.6.10'
-    include('**/*.c', '**/*.h', '**/*.S', '*.mk')
-    into "${mergeDir}/libpng-1.6.10"
 }
 
 task copyLibwebp(dependsOn: unpackLibwebp, type: Copy) {
