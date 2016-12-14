@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 dependencies {
+    compile "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+
     compile project(':drawee-backends:drawee-pipeline')
 }
 

@@ -26,6 +26,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile project(':drawee-backends:drawee-pipeline')
+    compile "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
 
+    compile project(':drawee-backends:drawee-pipeline')
 }
