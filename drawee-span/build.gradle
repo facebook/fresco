@@ -9,6 +9,8 @@ android {
 }
 
 dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+
     compile project(path: ':drawee')
     compile project(path: ':fbcore')
     compile project(path: ':imagepipeline-base')
