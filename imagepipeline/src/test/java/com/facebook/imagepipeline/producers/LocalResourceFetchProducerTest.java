@@ -30,10 +30,8 @@ import org.mockito.*;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.robolectric.*;
-import org.robolectric.annotation.*;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -71,8 +69,8 @@ public class LocalResourceFetchProducerTest {
     mLocalResourceFetchProducer = new LocalResourceFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mResources,
-        false);
+        mResources
+    );
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,

@@ -77,8 +77,8 @@ public class LocalContentUriThumbnailFetchProducerTest {
     mLocalContentUriThumbnailFetchProducer = new LocalContentUriThumbnailFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mContentResolver,
-        false);
+        mContentResolver
+    );
     mContentUri = Uri.parse("content://media/external/images/media/1");
 
     mProducerContext = new SettableProducerContext(

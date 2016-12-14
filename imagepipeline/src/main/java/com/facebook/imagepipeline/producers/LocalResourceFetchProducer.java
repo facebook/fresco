@@ -15,7 +15,6 @@ import java.util.concurrent.Executor;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -32,9 +31,8 @@ public class LocalResourceFetchProducer extends LocalFetchProducer {
   public LocalResourceFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Resources resources,
-      boolean decodeFileDescriptorEnabled) {
-    super(executor, pooledByteBufferFactory, decodeFileDescriptorEnabled);
+      Resources resources) {
+    super(executor, pooledByteBufferFactory);
     mResources = resources;
   }
 

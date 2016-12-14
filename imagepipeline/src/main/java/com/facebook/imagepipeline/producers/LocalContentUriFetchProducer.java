@@ -45,9 +45,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   public LocalContentUriFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      ContentResolver contentResolver,
-      boolean decodeFileDescriptorEnabled) {
-    super(executor, pooledByteBufferFactory,decodeFileDescriptorEnabled);
+      ContentResolver contentResolver) {
+    super(executor, pooledByteBufferFactory);
     mContentResolver = contentResolver;
   }
 

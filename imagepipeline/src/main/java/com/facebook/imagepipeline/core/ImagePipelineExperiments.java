@@ -22,7 +22,6 @@ public class ImagePipelineExperiments {
 
   private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
-  private final boolean mDecodeFileDescriptorEnabled;
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final Supplier<Boolean> mMediaVariationsIndexEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
@@ -34,8 +33,6 @@ public class ImagePipelineExperiments {
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
-    mDecodeFileDescriptorEnabled = configBuilder.isDownsampleEnabled() &&
-        builder.mDecodeFileDescriptorEnabled;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     if (builder.mMediaVariationsIndexEnabled != null) {
       mMediaVariationsIndexEnabled = builder.mMediaVariationsIndexEnabled;
@@ -52,10 +49,6 @@ public class ImagePipelineExperiments {
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
     mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
     mUseDownsamplingRatioForResizing = builder.mUseDownsamplingRatioForResizing;
-  }
-
-  public boolean isDecodeFileDescriptorEnabled() {
-    return mDecodeFileDescriptorEnabled;
   }
 
   public boolean isExternalCreatedBitmapLogEnabled() {
@@ -100,7 +93,6 @@ public class ImagePipelineExperiments {
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
-    private boolean mDecodeFileDescriptorEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
@@ -111,12 +103,6 @@ public class ImagePipelineExperiments {
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
-    }
-
-    public ImagePipelineConfig.Builder setDecodeFileDescriptorEnabled(
-        boolean decodeFileDescriptorEnabled) {
-      mDecodeFileDescriptorEnabled = decodeFileDescriptorEnabled;
-      return mConfigBuilder;
     }
 
     public ImagePipelineConfig.Builder setExternalCreatedBitmapLogEnabled(

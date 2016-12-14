@@ -59,9 +59,8 @@ public class LocalContentUriThumbnailFetchProducer extends LocalFetchProducer
   public LocalContentUriThumbnailFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      ContentResolver contentResolver,
-      boolean decodeFileDescriptorEnabled) {
-    super(executor, pooledByteBufferFactory,decodeFileDescriptorEnabled);
+      ContentResolver contentResolver) {
+    super(executor, pooledByteBufferFactory);
     mContentResolver = contentResolver;
   }
 

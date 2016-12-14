@@ -13,11 +13,9 @@ import java.io.File;
 import java.io.InputStream;
 
 import android.content.ContentResolver;
-import android.graphics.Rect;
 import android.net.Uri;
 
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -33,7 +31,6 @@ import org.mockito.stubbing.*;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -63,8 +60,8 @@ public class LocalContentUriFetchProducerTest {
     mLocalContentUriFetchProducer = new LocalContentUriFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mContentResolver,
-        false);
+        mContentResolver
+    );
     mContentUri = Uri.fromFile(mock(File.class));
 
     mProducerContext = new SettableProducerContext(

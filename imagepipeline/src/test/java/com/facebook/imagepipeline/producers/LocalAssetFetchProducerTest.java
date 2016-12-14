@@ -32,7 +32,6 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -73,8 +72,8 @@ public class LocalAssetFetchProducerTest {
     mLocalAssetFetchProducer = new LocalAssetFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mAssetManager,
-        false);
+        mAssetManager
+    );
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,

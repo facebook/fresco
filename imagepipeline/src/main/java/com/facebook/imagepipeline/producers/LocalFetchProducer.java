@@ -9,18 +9,12 @@
 
 package com.facebook.imagepipeline.producers;
 
-import android.os.Build;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.internal.Closeables;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.util.ByteConstants;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
@@ -34,16 +28,12 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final boolean mDecodeFileDescriptorEnabledForKitKat;
 
   protected LocalFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory,
-      boolean fileDescriptorEnabled) {
+      PooledByteBufferFactory pooledByteBufferFactory) {
     mExecutor = executor;
     mPooledByteBufferFactory = pooledByteBufferFactory;
-    mDecodeFileDescriptorEnabledForKitKat = fileDescriptorEnabled &&
-        Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT;
   }
 
   @Override
@@ -108,31 +98,7 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
   protected EncodedImage getEncodedImage(
       InputStream inputStream,
       int length) throws IOException {
-    Runtime runTime = Runtime.getRuntime();
-    long javaMax = runTime.maxMemory();
-    long javaUsed = runTime.totalMemory() - runTime.freeMemory();
-    long javaFree = Math.min(javaMax - javaUsed, 8 * ByteConstants.MB);
-    if (mDecodeFileDescriptorEnabledForKitKat && inputStream instanceof FileInputStream &&
-        javaMax >= 64 * javaFree) {
-      return getInputStreamBackedEncodedImage(new File(inputStream.toString()), length);
-    } else {
-      return getByteBufferBackedEncodedImage(inputStream, length);
-    }
-  }
-
-  protected EncodedImage getInputStreamBackedEncodedImage(
-      final File file,
-      int length) throws IOException {
-    Supplier<FileInputStream> sup = new Supplier<FileInputStream>() {
-      @Override public FileInputStream get() {
-        try {
-          return new FileInputStream(file);
-        } catch (IOException ioe) {
-          throw new RuntimeException(ioe);
-        }
-      }
-    };
-    return new EncodedImage(sup, length);
+    return getByteBufferBackedEncodedImage(inputStream, length);
   }
 
   /**
