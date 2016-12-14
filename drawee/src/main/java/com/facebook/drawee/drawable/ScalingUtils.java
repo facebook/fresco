@@ -106,31 +106,6 @@ public class ScalingUtils {
         float focusY);
   }
 
-  /**
-   * Gets transformation based on the scale type.
-   * @param transform out matrix to store result
-   * @param parentBounds parent bounds
-   * @param childWidth child width
-   * @param childHeight child height
-   * @param focusX focus point x coordinate, relative [0...1]
-   * @param focusY focus point y coordinate, relative [0...1]
-   * @param scaleType scale type to be used
-   * @return reference to the out matrix
-   *
-   * @deprecated use {@code ScaleType.getTransform}
-   */
-  @Deprecated
-  public static Matrix getTransform(
-      final Matrix transform,
-      final Rect parentBounds,
-      final int childWidth,
-      final int childHeight,
-      final float focusX,
-      final float focusY,
-      final ScaleType scaleType) {
-    return scaleType.getTransform(transform, parentBounds, childWidth, childHeight, focusX, focusY);
-  }
-
   @Nullable
   public static ScaleTypeDrawable getActiveScaleTypeDrawable(Drawable drawable) {
     if (drawable == null) {
