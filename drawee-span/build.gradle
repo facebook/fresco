@@ -1,12 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 project.group = GROUP
 version = VERSION_NAME
-
-android {
-    buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdkVersion rootProject.ext.compileSdkVersion
-}
 
 dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
@@ -15,3 +11,16 @@ dependencies {
     compile project(path: ':fbcore')
     compile project(path: ':imagepipeline-base')
 }
+
+apply from: rootProject.file('release.gradle')
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)
