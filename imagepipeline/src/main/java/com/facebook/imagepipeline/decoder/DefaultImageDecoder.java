@@ -11,8 +11,6 @@ package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
 
-import javax.annotation.Nullable;
-
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -30,6 +28,8 @@ import com.facebook.imagepipeline.platform.PlatformDecoder;
 
 import java.io.InputStream;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 /**
  * Decodes images.

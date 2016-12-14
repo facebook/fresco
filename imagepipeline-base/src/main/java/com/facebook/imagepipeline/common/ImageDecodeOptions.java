@@ -9,11 +9,13 @@
 
 package com.facebook.imagepipeline.common;
 
-import javax.annotation.concurrent.Immutable;
+import android.graphics.Bitmap;
 
 import android.graphics.Bitmap;
 
 import java.util.Locale;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
