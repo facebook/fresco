@@ -7,3 +7,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 }
+
+dependencies {
+    compile project(path: ':drawee')
+    compile project(path: ':fbcore')
+    compile project(path: ':imagepipeline-base')
+}
