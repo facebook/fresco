@@ -9,14 +9,16 @@
 
 package com.facebook.imagepipeline.decoder;
 
-import android.graphics.Bitmap;
-
 import javax.annotation.Nullable;
+
+import java.io.InputStream;
+import java.util.Map;
+
+import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
-import com.facebook.imageformat.GifFormatChecker;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
@@ -27,9 +29,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-
-import java.io.InputStream;
-import java.util.Map;
 
 /**
  * Decodes images.
@@ -139,8 +138,7 @@ public class DefaultImageDecoder implements ImageDecoder {
     }
     try {
       if (!options.forceStaticImage
-          && mAnimatedImageFactory != null
-          && GifFormatChecker.isAnimated(is)) {
+          && mAnimatedImageFactory != null) {
         return mAnimatedImageFactory.decodeGif(encodedImage, options, mBitmapConfig);
       }
       return decodeStaticImage(encodedImage, options);
