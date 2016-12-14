@@ -49,7 +49,6 @@ import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
 import com.facebook.imagepipeline.producers.MediaVariationsIndex;
-import com.facebook.imagepipeline.producers.MediaVariationsIndexDatabase;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
@@ -95,9 +94,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private final Context mContext;
   private MediaVariationsIndex mMediaVariationsIndex;
-  private final int mForceSmallCacheThresholdBytes;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -121,8 +118,6 @@ public class ProducerFactory {
       PlatformBitmapFactory platformBitmapFactory,
       boolean decodeFileDescriptorEnabled,
       int forceSmallCacheThresholdBytes) {
-    mContext = context;
-    mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
