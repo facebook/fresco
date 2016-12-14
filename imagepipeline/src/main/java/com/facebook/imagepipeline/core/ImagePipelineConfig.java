@@ -239,14 +239,6 @@ public class ImagePipelineConfig {
     return sDefaultImageRequestConfig;
   }
 
-  /**
-   * @deprecated Use {@link #getExperiments()} and
-   * {@link ImagePipelineExperiments#isDecodeFileDescriptorEnabled()}
-   */
-  public boolean isDecodeFileDescriptorEnabled() {
-    return mImagePipelineExperiments.isDecodeFileDescriptorEnabled();
-  }
-
   public FileCacheFactory getFileCacheFactory() {
     return mFileCacheFactory;
   }
@@ -255,29 +247,12 @@ public class ImagePipelineConfig {
     return mDownsampleEnabled;
   }
 
-  /**
-   * @deprecated Use {@link #getExperiments()} and
-   * {@link ImagePipelineExperiments#isWebpSupportEnabled()}
-   */
-  public boolean isWebpSupportEnabled() {
-    return mImagePipelineExperiments.isWebpSupportEnabled();
-  }
-
   public Supplier<MemoryCacheParams> getEncodedMemoryCacheParamsSupplier() {
     return mEncodedMemoryCacheParamsSupplier;
   }
 
   public ExecutorSupplier getExecutorSupplier() {
     return mExecutorSupplier;
-  }
-
-  /**
-   * @deprecated Use {@link #getExperiments()} and
-   * {@link ImagePipelineExperiments#getForceSmallCacheThresholdBytes()}
-   */
-  @Deprecated
-  public int getForceSmallCacheThresholdBytes() {
-    return mImagePipelineExperiments.getForceSmallCacheThresholdBytes();
   }
 
   public ImageCacheStatsTracker getImageCacheStatsTracker() {
@@ -418,15 +393,6 @@ public class ImagePipelineConfig {
 
     public Builder setFileCacheFactory(FileCacheFactory fileCacheFactory) {
       mFileCacheFactory = fileCacheFactory;
-      return this;
-    }
-
-    /**
-     * @deprecated use {@link Builder#setFileCacheFactory} instead
-     */
-    @Deprecated
-    public Builder setDiskStorageFactory(DiskStorageFactory diskStorageFactory) {
-      setFileCacheFactory(new DiskStorageCacheFactory(diskStorageFactory));
       return this;
     }
 
