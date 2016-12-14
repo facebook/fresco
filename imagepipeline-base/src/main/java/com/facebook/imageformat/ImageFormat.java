@@ -38,23 +38,6 @@ public class ImageFormat {
   // Unknown image format
   public static final ImageFormat UNKNOWN = new ImageFormat("UNKNOWN", null);
 
-  /**
-   * Maps an image format to the file extension.
-   * Deprecated. Use {@link #getFileExtension()} instead.
-   * @param imageFormat image format
-   * @return  file extension for the image format
-   * @throws UnsupportedOperationException
-   */
-  @Deprecated
-  public static String getFileExtension(ImageFormat imageFormat)
-      throws UnsupportedOperationException {
-    String extension = imageFormat.getFileExtension();
-    if (extension == null) {
-      throw new UnsupportedOperationException("Unknown image format " + imageFormat.getName());
-    }
-    return extension;
-  }
-
   private final String mFileExtension;
   private final String mName;
 
