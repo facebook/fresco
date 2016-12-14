@@ -24,14 +24,14 @@ For most apps, specify the parameters of their hierarchy in [XML](using-drawees-
 We create an instance of the builder and then set it to the view:
 
 ```java
-List<Drawable> backgroundsList;
+Drawable background;
 List<Drawable> overlaysList;
 GenericDraweeHierarchyBuilder builder =
     new GenericDraweeHierarchyBuilder(getResources());
 GenericDraweeHierarchy hierarchy = builder
     .setFadeDuration(300)
     .setPlaceholderImage(new MyCustomDrawable())
-    .setBackgrounds(backgroundList)
+    .setBackground(background)
     .setOverlays(overlaysList)
     .build();
 mSimpleDraweeView.setHierarchy(hierarchy);

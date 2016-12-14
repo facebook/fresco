@@ -577,26 +577,6 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
-   * Sets the backgrounds.
-   *
-   * Backgrounds are drawn in list order before the rest of the hierarchy and overlays. The
-   * first background will be drawn at the bottom.
-   *
-   * @deprecated use {@code setBackground} instead
-   * @param backgrounds background drawables
-   * @return modified instance of this builder
-   */
-  @Deprecated
-  public GenericDraweeHierarchyBuilder setBackgrounds(@Nullable List<Drawable> backgrounds) {
-    if (backgrounds == null) {
-      mBackground = null;
-    } else {
-      mBackground = new ArrayDrawable(backgrounds.toArray(new Drawable[backgrounds.size()]));
-    }
-    return this;
-  }
-
-  /**
    * Sets a background.
    *
    * @param background background drawable

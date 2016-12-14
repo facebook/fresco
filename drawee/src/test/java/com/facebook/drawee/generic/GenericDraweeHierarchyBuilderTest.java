@@ -143,13 +143,7 @@ public class GenericDraweeHierarchyBuilderTest {
     assertSame(null, builder.getActualImageMatrix());
 
     // test backgrounds & overlays
-    builder.setBackgrounds(Arrays.asList(mBackgroundDrawable1, mBackgroundDrawable2));
     builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
-    assertEquals(builder.getBackground().getClass(), ArrayDrawable.class);
-    ArrayDrawable bgArrayDrawable = (ArrayDrawable) builder.getBackground();
-    assertEquals(2, bgArrayDrawable.getNumberOfLayers());
-    assertSame(mBackgroundDrawable1, bgArrayDrawable.getDrawable(0));
-    assertSame(mBackgroundDrawable2, bgArrayDrawable.getDrawable(1));
     assertArrayEquals(
         builder.getOverlays().toArray(),
         new Drawable[]{mOverlayDrawable1, mOverlayDrawable2});
