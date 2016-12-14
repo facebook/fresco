@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
   private void showFragment(Fragment fragment) {
     getSupportFragmentManager()
         .beginTransaction()
-        .add(R.id.content_main, fragment)
+        .replace(R.id.content_main, fragment)
         .commit();
   }
 }
