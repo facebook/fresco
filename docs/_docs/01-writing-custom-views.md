@@ -121,7 +121,7 @@ protected boolean verifyDrawable(Drawable who) {
 
 ### Constructing the View and DraweeHolder
 
-This should be done carefully. Se below.
+This should be done carefully. See below.
 
 #### Arranging your Constructors
 
