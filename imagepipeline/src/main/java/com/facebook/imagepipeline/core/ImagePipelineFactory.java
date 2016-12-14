@@ -152,18 +152,6 @@ public class ImagePipelineFactory {
     return mBitmapMemoryCache;
   }
 
-  /**
-   * Creates a new {@link DiskStorageCache} from the given {@link DiskCacheConfig}
-   *
-   * @deprecated use {@link DiskStorageCacheFactory.buildDiskStorageCache}
-   */
-  @Deprecated
-  public static DiskStorageCache buildDiskStorageCache(
-      DiskCacheConfig diskCacheConfig,
-      DiskStorage diskStorage) {
-    return DiskStorageCacheFactory.buildDiskStorageCache(diskCacheConfig, diskStorage);
-  }
-
   public CountingMemoryCache<CacheKey, PooledByteBuffer> getEncodedCountingMemoryCache() {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
@@ -230,14 +218,6 @@ public class ImagePipelineFactory {
               mConfig.getImageCacheStatsTracker());
     }
     return mMainBufferedDiskCache;
-  }
-
-  /**
-   * @deprecated use {@link ImagePipelineFactory.getMainFileCache}
-   */
-  @Deprecated
-  public FileCache getMainDiskStorageCache() {
-    return getMainFileCache();
   }
 
   public FileCache getMainFileCache() {
@@ -370,14 +350,6 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().getUseDownsamplingRatioForResizing());
     }
     return mProducerSequenceFactory;
-  }
-
-  /**
-   * @deprecated use {@link ImagePipelineFactory.getSmallImageFileCache}
-   */
-  @Deprecated
-  public FileCache getSmallImageDiskStorageCache() {
-    return getSmallImageFileCache();
   }
 
   public FileCache getSmallImageFileCache() {
