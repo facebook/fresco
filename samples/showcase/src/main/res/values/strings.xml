@@ -19,4 +19,10 @@
 
   <string name="category_pipeline">Image Pipeline</string>
 
+  <string name="imagepipeline_notification_title">Notifications</string>
+  <string name="imagepipeline_notification_button">Create Notification</string>
+  <string name="imagepipeline_notification_content_title">Fresco Says Hello</string>
+  <string name="imagepipeline_notification_content_text">This notification shows a bitmap that has been loaded by Fresco.</string>
+  <string name="imagepipeline_notification_help">Clicking on the button will create a new notification using a BaseBitmapDataSubscriber.</string>
+
 </resources>

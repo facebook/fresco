@@ -24,6 +24,7 @@ import android.view.MenuItem;
 
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.SimpleDraweeFragment;
+import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -85,6 +86,9 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_drawee_scaletype:
         showFragment(new DraweeScaleTypeFragment());
         setTitle(R.string.title_drawee_scale_type);
+      case R.id.nav_imagepipeline_notification:
+        showFragment(new ImagePipelineNotificationFragment());
+        setTitle(R.string.imagepipeline_notification_title);
         break;
     }
   }
