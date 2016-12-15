@@ -11,9 +11,13 @@
  */
 package com.facebook.fresco.samples.showcase;
 
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -66,6 +70,20 @@ public class MainActivity extends AppCompatActivity
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
+    // the support toolbar should probably do this by default
+    final TypedArray styles =
+        obtainStyledAttributes(R.style.AppTheme_Toolbar, new int[]{R.attr.colorControlNormal});
+    try {
+      int tintColor = styles.getColor(0, Color.BLACK);
+      for (int i = 0; i < menu.size(); i++) {
+        Drawable icon = menu.getItem(i).getIcon();
+        if (icon != null) {
+          DrawableCompat.setTint(icon, tintColor);
+        }
+      }
+    } finally {
+      styles.recycle();
+    }
     return true;
   }
 
