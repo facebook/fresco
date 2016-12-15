@@ -8,6 +8,10 @@
             android:id="@+id/nav_drawee_simple"
             android:title="@string/title_drawee_simple"
             />
+        <item
+            android:id="@+id/nav_drawee_scaletype"
+            android:title="@string/title_drawee_scale_type"
+            />
       </group>
     </menu>
   </item>

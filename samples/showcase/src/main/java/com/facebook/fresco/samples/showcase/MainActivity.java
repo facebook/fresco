@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.SimpleDraweeFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -76,9 +77,15 @@ public class MainActivity extends AppCompatActivity
   }
 
   private void handleNavigationItemClick(int itemId) {
-    if (itemId == R.id.nav_drawee_simple) {
-      showFragment(new SimpleDraweeFragment());
-      setTitle(R.string.title_drawee_simple);
+    switch (itemId) {
+      case R.id.nav_drawee_simple:
+        showFragment(new SimpleDraweeFragment());
+        setTitle(R.string.title_drawee_simple);
+        break;
+      case R.id.nav_drawee_scaletype:
+        showFragment(new DraweeScaleTypeFragment());
+        setTitle(R.string.title_drawee_scale_type);
+        break;
     }
   }
 

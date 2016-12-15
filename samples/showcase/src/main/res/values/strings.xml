@@ -11,7 +11,11 @@
 
   <!-- Navigation drawer items -->
   <string name="category_drawee">Drawee</string>
+
   <string name="title_drawee_simple">Simple Drawee</string>
+
+  <string name="title_drawee_scale_type">Scale Type</string>
+  <string name="help_drawee_scale_type">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
 
   <string name="category_pipeline">Image Pipeline</string>
 

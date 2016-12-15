@@ -3,8 +3,18 @@
   <dimen name="activity_horizontal_margin">16dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
 
+  <dimen name="margin_small">8dp</dimen>
+  <dimen name="margin_medium">16dp</dimen>
+  <dimen name="margin_large">24dp</dimen>
+
+  <dimen name="padding_small">4dp</dimen>
+  <dimen name="padding_medium">8dp</dimen>
+
   <dimen name="nav_header_padding_top">24dp</dimen>
   <dimen name="nav_header_height">80dp</dimen>
-  <dimen name="drawee_width_medium">240dp</dimen>
-  <dimen name="drawee_height_medium">240dp</dimen>
+
+  <dimen name="drawee_height_small">100dp</dimen>
+  <dimen name="drawee_width_small">100dp</dimen>
+  <dimen name="drawee_height_medium">200dp</dimen>
+  <dimen name="drawee_width_medium">200dp</dimen>
 </resources>
