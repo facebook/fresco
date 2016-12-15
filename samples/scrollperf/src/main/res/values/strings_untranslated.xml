@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="example_uris">
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_001.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_002.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_003.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_004.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_005.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_006.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_007.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_008.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_009.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_010.jpg</item>
-        <item>http://frescolib.org/static/sample-jpeg/test_jpeg_011.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_a_m.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_b_m.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_c_m.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_d_m.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_e_m.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_f_m.jpg</item>
+        <item>http://frescolib.org/static/sample-images/animal_g_m.jpg</item>
     </string-array>
     <string-array name="example_webp_uris">
         <item>https://www.gstatic.com/webp/gallery3/1_webp_ll.webp</item>
@@ -31,15 +27,13 @@
         <item>http://www.gstatic.com/webp/gallery/5.webp</item>
     </string-array>
     <string-array name="example_png_uris">
-        <item>http://frescolib.org/static/sample-png/test_png_001.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_002.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_003.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_004.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_005.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_006.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_007.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_008.png</item>
-        <item>http://frescolib.org/static/sample-png/test_png_009.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_a.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_b.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_c.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_d.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_e.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_f.png</item>
+        <item>http://frescolib.org/static/sample-images/animal_g.png</item>
     </string-array>
     <string-array name="grid_recycler_layout_values">
         <item>1</item>
