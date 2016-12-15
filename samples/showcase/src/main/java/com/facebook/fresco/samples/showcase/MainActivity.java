@@ -30,6 +30,7 @@ import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
+import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -112,10 +113,14 @@ public class MainActivity extends AppCompatActivity
         setTitle(R.string.drawee_span_simple_title);
         break;
 
-      // Notification
+      // Image Pipeline
       case R.id.nav_imagepipeline_notification:
         showFragment(new ImagePipelineNotificationFragment());
         setTitle(R.string.imagepipeline_notification_title);
+        break;
+      case R.id.nav_imagepipeline_prefetch:
+        showFragment(new ImagePipelinePrefetchFragment());
+        setTitle(R.string.imagepipeline_prefetch_title);
         break;
     }
   }
