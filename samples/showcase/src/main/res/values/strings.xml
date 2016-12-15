@@ -17,6 +17,9 @@
   <string name="drawee_scale_type_title">Scale Type</string>
   <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
 
+  <string name="drawee_span_simple_title">Simple DraweeSpan</string>
+  <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan.</string>
+
   <string name="category_pipeline">Image Pipeline</string>
 
   <string name="imagepipeline_notification_title">Notifications</string>

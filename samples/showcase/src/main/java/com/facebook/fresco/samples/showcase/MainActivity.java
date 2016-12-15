@@ -28,6 +28,7 @@ import android.view.MenuItem;
 
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
+import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -105,6 +106,10 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_drawee_scaletype:
         showFragment(new DraweeScaleTypeFragment());
         setTitle(R.string.drawee_scale_type_title);
+        break;
+      case R.id.nav_drawee_span_simple:
+        showFragment(new DraweeSpanSimpleTextFragment());
+        setTitle(R.string.drawee_span_simple_title);
         break;
 
       // Notification

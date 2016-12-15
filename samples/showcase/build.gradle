@@ -43,4 +43,5 @@ dependencies {
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
 
     compile project(':drawee-backends:drawee-pipeline')
+    compile project(':drawee-span')
 }
