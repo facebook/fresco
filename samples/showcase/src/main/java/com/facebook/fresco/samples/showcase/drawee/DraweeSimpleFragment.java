@@ -24,7 +24,7 @@ import com.facebook.fresco.samples.showcase.R;
 /**
  * Simple Drawee fragment that just displays an image.
  */
-public class SimpleDraweeFragment extends Fragment {
+public class DraweeSimpleFragment extends Fragment {
 
   @Nullable
   @Override

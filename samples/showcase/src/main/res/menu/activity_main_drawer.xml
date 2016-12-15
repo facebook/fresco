@@ -6,11 +6,11 @@
       <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_drawee_simple"
-            android:title="@string/title_drawee_simple"
+            android:title="@string/drawee_simple_title"
             />
         <item
             android:id="@+id/nav_drawee_scaletype"
-            android:title="@string/title_drawee_scale_type"
+            android:title="@string/drawee_scale_type_title"
             />
       </group>
     </menu>

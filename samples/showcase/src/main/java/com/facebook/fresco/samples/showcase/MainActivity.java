@@ -23,7 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
-import com.facebook.fresco.samples.showcase.drawee.SimpleDraweeFragment;
+import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -79,13 +79,17 @@ public class MainActivity extends AppCompatActivity
 
   private void handleNavigationItemClick(int itemId) {
     switch (itemId) {
+      // Drawee
       case R.id.nav_drawee_simple:
-        showFragment(new SimpleDraweeFragment());
-        setTitle(R.string.title_drawee_simple);
+        showFragment(new DraweeSimpleFragment());
+        setTitle(R.string.drawee_simple_title);
         break;
       case R.id.nav_drawee_scaletype:
         showFragment(new DraweeScaleTypeFragment());
-        setTitle(R.string.title_drawee_scale_type);
+        setTitle(R.string.drawee_scale_type_title);
+        break;
+
+      // Notification
       case R.id.nav_imagepipeline_notification:
         showFragment(new ImagePipelineNotificationFragment());
         setTitle(R.string.imagepipeline_notification_title);
