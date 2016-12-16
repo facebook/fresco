@@ -28,12 +28,13 @@ import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.span.DraweeSpan;
 import com.facebook.drawee.span.DraweeSpanStringBuilder;
 import com.facebook.drawee.span.SimpleDraweeSpanTextView;
+import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 
 /**
  * Simple fragment that displays text with inline images using {@link DraweeSpan}.
  */
-public class DraweeSpanSimpleTextFragment extends Fragment {
+public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
 
   private static final Uri INLINE_IMAGE_URI =
       Uri.parse("http://frescolib.org/static/sample-images/animal_a_m.jpg");
@@ -74,5 +75,10 @@ public class DraweeSpanSimpleTextFragment extends Fragment {
         DraweeSpan.ALIGN_CENTER); /* alignment */
 
     draweeSpanTextView.setDraweeSpanStringBuilder(draweeSpanStringBuilder);
+  }
+
+  @Override
+  public int getTitleId() {
+    return R.string.drawee_span_simple_title;
   }
 }

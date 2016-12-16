@@ -19,12 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 
 /**
  * Simple drawee fragment that just displays an image.
  */
-public class DraweeSimpleFragment extends Fragment {
+public class DraweeSimpleFragment extends BaseShowcaseFragment {
 
   @Nullable
   @Override
@@ -37,5 +38,10 @@ public class DraweeSimpleFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     simpleDraweeView.setImageURI("https://www.gstatic.com/webp/gallery/1.sm.jpg");
+  }
+
+  @Override
+  public int getTitleId() {
+    return R.string.drawee_simple_title;
   }
 }

@@ -26,6 +26,7 @@ import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -33,7 +34,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Fragment that illustrates how to prefetch images to disk cache so that they load faster when
  * finally displayed.
  */
-public class ImagePipelinePrefetchFragment extends Fragment {
+public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
 
   private static final String[] URLS = {
       "http://frescolib.org/static/sample-images/animal_a.png",
@@ -43,6 +44,11 @@ public class ImagePipelinePrefetchFragment extends Fragment {
   private Button mPrefetchButton;
   private TextView mPrefetchStatus;
   private ViewGroup mDraweesHolder;
+
+  @Override
+  public int getTitleId() {
+    return R.string.imagepipeline_prefetch_title;
+  }
 
   private class PrefetchSubscriber extends BaseDataSubscriber<Void> {
 

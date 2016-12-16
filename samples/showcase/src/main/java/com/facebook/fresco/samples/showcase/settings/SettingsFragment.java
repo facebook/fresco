@@ -15,10 +15,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.facebook.fresco.samples.showcase.ShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 
 import static android.support.v7.preference.R.styleable.PreferenceFragmentCompat;
@@ -27,12 +29,12 @@ import static android.support.v7.preference.R.styleable.PreferenceFragmentCompat
  * The Fragment for settings
  */
 public class SettingsFragment extends PreferenceFragmentCompat
-    implements SharedPreferences.OnSharedPreferenceChangeListener {
+    implements SharedPreferences.OnSharedPreferenceChangeListener, ShowcaseFragment {
 
   /**
    * The Tag for this Fragment
    */
-  public static final String TAG = SettingsFragment.class.getSimpleName();
+  private static final String TAG = SettingsFragment.class.getSimpleName();
 
   /**
    * The Dialog for asking the restart for the application
@@ -58,6 +60,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
       mShowRestartMessageDialog = new ShowRestartMessageDialog();
     }
     return mShowRestartMessageDialog;
+  }
+
+  @Nullable
+  @Override
+  public String getBackstackTag() {
+    return TAG;
+  }
+
+  @Override
+  public int getTitleId() {
+    return R.string.action_settings;
   }
 
   /**

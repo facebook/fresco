@@ -94,9 +94,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.action_settings) {
-      final SettingsFragment settingsFragment = new SettingsFragment();
-      showFragment(settingsFragment, SettingsFragment.TAG);
-      setTitle(R.string.action_settings);
+      showFragment(new SettingsFragment());
     }
     return super.onOptionsItemSelected(item);
   }
@@ -110,55 +108,44 @@ public class MainActivity extends AppCompatActivity
   }
 
   private void handleNavigationItemClick(int itemId) {
+    ShowcaseFragment fragment;
     switch (itemId) {
       // Drawee
       case R.id.nav_drawee_simple:
-        showFragment(new DraweeSimpleFragment());
-        setTitle(R.string.drawee_simple_title);
+        fragment = new DraweeSimpleFragment();
         break;
       case R.id.nav_drawee_scaletype:
-        showFragment(new DraweeScaleTypeFragment());
-        setTitle(R.string.drawee_scale_type_title);
+        fragment = new DraweeScaleTypeFragment();
         break;
       case R.id.nav_drawee_span_simple:
-        showFragment(new DraweeSpanSimpleTextFragment());
-        setTitle(R.string.drawee_span_simple_title);
+        fragment = new DraweeSpanSimpleTextFragment();
         break;
-
-      // Image Pipeline
+      // Notification
       case R.id.nav_imagepipeline_notification:
-        showFragment(new ImagePipelineNotificationFragment());
-        setTitle(R.string.imagepipeline_notification_title);
+        fragment = new ImagePipelineNotificationFragment();
         break;
+      // Prefetch
       case R.id.nav_imagepipeline_prefetch:
-        showFragment(new ImagePipelinePrefetchFragment());
-        setTitle(R.string.imagepipeline_prefetch_title);
+        fragment = new ImagePipelinePrefetchFragment();
         break;
+      default:
+        throw new IllegalArgumentException("No example with this id!");
     }
+    showFragment(fragment);
   }
 
   /**
    * Utility method to display a specific Fragent. If the tag is not null we add a backstack
    *
    * @param fragment The Fragment to add
-   * @param backstackTag The tag to use for the backstack
    */
-  private void showFragment(Fragment fragment, String backstackTag) {
+  private void showFragment(ShowcaseFragment fragment) {
     final FragmentTransaction fragmentTransaction = getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.content_main, fragment);
-    if (backstackTag != null) {
-      fragmentTransaction.addToBackStack(backstackTag);
+        .replace(R.id.content_main, (Fragment) fragment);
+    if (fragment.getBackstackTag() != null) {
+      fragmentTransaction.addToBackStack(fragment.getBackstackTag());
     }
     fragmentTransaction.commit();
-  }
-
-  /**
-   * Overload to simplify Fragment without backstack tag
-   *
-   * @param fragment The Fragment to add
-   */
-  private void showFragment(Fragment fragment) {
-    showFragment(fragment, null);
   }
 }

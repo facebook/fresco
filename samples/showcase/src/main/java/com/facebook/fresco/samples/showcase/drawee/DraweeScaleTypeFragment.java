@@ -27,12 +27,13 @@ import android.widget.TextView;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 
 /**
  * Simple drawee fragment that illustrates different scale types
  */
-public class DraweeScaleTypeFragment extends Fragment {
+public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
 
   private static final Uri URI_1 =
       Uri.parse("http://frescolib.org/static/sample-images/animal_a_m.jpg");
@@ -112,6 +113,11 @@ public class DraweeScaleTypeFragment extends Fragment {
     final GenericDraweeHierarchy hierarchy = mDraweeMain.getHierarchy();
     hierarchy.setActualImageScaleType(scaleType);
     hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
+  }
+
+  @Override
+  public int getTitleId() {
+    return R.string.drawee_scale_type_title;
   }
 
   private class SimpleScaleTypeAdapter extends BaseAdapter {

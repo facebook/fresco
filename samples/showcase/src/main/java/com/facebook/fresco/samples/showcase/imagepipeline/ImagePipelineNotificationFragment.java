@@ -29,6 +29,7 @@ import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
@@ -39,7 +40,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  * Fragment that illustrates how to use the image pipeline directly in order to create
  * notifications.
  */
-public class ImagePipelineNotificationFragment extends Fragment {
+public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
 
   private static final int NOTIFICATION_ID = 1;
   private static final Uri URI =
@@ -108,5 +109,10 @@ public class ImagePipelineNotificationFragment extends Fragment {
 
   private void showToastText(String text) {
     Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public int getTitleId() {
+    return R.string.imagepipeline_notification_title;
   }
 }
