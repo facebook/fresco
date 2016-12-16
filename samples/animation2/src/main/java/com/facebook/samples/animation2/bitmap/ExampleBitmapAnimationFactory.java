@@ -43,6 +43,7 @@ public class ExampleBitmapAnimationFactory {
         bitmapFrameCache,
         new ColorListAnimationInformation(colors, animationDurationMs),
         new ColorAndFrameNumberRenderer(colors));
+    bitmapAnimationBackend.setFrameListener(new DebugBitmapAnimationFrameListener());
     return bitmapAnimationBackend;
   }
 
