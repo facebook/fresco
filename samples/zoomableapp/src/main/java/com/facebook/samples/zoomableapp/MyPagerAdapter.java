@@ -13,15 +13,13 @@
 package com.facebook.samples.zoomableapp;
 
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.samples.zoomable.DoubleTapGestureListener;
 import com.facebook.samples.zoomable.ZoomableDraweeView;
 
 class MyPagerAdapter extends PagerAdapter {
@@ -62,11 +60,13 @@ class MyPagerAdapter extends PagerAdapter {
     ZoomableDraweeView zoomableDraweeView =
             (ZoomableDraweeView) page.findViewById(R.id.zoomableView);
     zoomableDraweeView.setAllowTouchInterceptionWhileZoomed(mAllowSwipingWhileZoomed);
+    // needed for double tap to zoom
+    zoomableDraweeView.setIsLongpressEnabled(false);
+    zoomableDraweeView.setTapListener(new DoubleTapGestureListener(zoomableDraweeView));
     DraweeController controller = Fresco.newDraweeControllerBuilder()
       .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
       .build();
     zoomableDraweeView.setController(controller);
-    zoomableDraweeView.setTapListener(createTapListener(position));
     page.requestLayout();
     return page;
   }
@@ -92,14 +92,5 @@ class MyPagerAdapter extends PagerAdapter {
   public int getItemPosition(Object object) {
     // We want to create a new view when we call notifyDataSetChanged() to have the correct behavior
     return POSITION_NONE;
-  }
-
-  private GestureDetector.SimpleOnGestureListener createTapListener(final int position) {
-    return new GestureDetector.SimpleOnGestureListener() {
-      @Override
-      public void onLongPress(MotionEvent e) {
-        Log.d("MyPagerAdapter", "onLongPress: " + position);
-      }
-    };
   }
 }
