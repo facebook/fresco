@@ -35,6 +35,9 @@ dependencies {
 
   // For WebP support, without animations
   compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
+
+  // Provide the Android support library (you might already have this or a similar dependency)
+  compile 'com.android.support:support-core-utils:{{site.support_library_version}}'
 }
 ```
 
