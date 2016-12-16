@@ -30,7 +30,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.R;
 
 /**
- * Simple Drawee fragment that illustrates different scale types
+ * Simple drawee fragment that illustrates different scale types
  */
 public class DraweeScaleTypeFragment extends Fragment {
 

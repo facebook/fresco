@@ -22,7 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.R;
 
 /**
- * Simple Drawee fragment that just displays an image.
+ * Simple drawee fragment that just displays an image.
  */
 public class DraweeSimpleFragment extends Fragment {
 

@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +32,7 @@ import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment;
+import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,6 +92,16 @@ public class MainActivity extends AppCompatActivity
   }
 
   @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_settings) {
+      final SettingsFragment settingsFragment = new SettingsFragment();
+      showFragment(settingsFragment, SettingsFragment.TAG);
+      setTitle(R.string.action_settings);
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     handleNavigationItemClick(item.getItemId());
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -125,10 +137,28 @@ public class MainActivity extends AppCompatActivity
     }
   }
 
-  private void showFragment(Fragment fragment) {
-    getSupportFragmentManager()
+  /**
+   * Utility method to display a specific Fragent. If the tag is not null we add a backstack
+   *
+   * @param fragment The Fragment to add
+   * @param backstackTag The tag to use for the backstack
+   */
+  private void showFragment(Fragment fragment, String backstackTag) {
+    final FragmentTransaction fragmentTransaction = getSupportFragmentManager()
         .beginTransaction()
-        .replace(R.id.content_main, fragment)
-        .commit();
+        .replace(R.id.content_main, fragment);
+    if (backstackTag != null) {
+      fragmentTransaction.addToBackStack(backstackTag);
+    }
+    fragmentTransaction.commit();
+  }
+
+  /**
+   * Overload to simplify Fragment without backstack tag
+   *
+   * @param fragment The Fragment to add
+   */
+  private void showFragment(Fragment fragment) {
+    showFragment(fragment, null);
   }
 }

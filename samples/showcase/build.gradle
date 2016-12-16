@@ -41,6 +41,7 @@ dependencies {
     provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
 
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-span')
