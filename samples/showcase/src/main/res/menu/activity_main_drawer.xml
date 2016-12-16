@@ -24,12 +24,16 @@
     <menu>
       <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_imagepipeline_prefetch"
-            android:title="@string/imagepipeline_prefetch_title"
-            />
-        <item
             android:id="@+id/nav_imagepipeline_notification"
             android:title="@string/imagepipeline_notification_title"
+            />
+        <item
+            android:id="@+id/nav_imagepipeline_postprocessor"
+            android:title="@string/imagepipeline_postprocessor_title"
+            />
+        <item
+            android:id="@+id/nav_imagepipeline_prefetch"
+            android:title="@string/imagepipeline_prefetch_title"
             />
       </group>
     </menu>

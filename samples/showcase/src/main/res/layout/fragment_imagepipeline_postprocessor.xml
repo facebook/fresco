@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
+
+  <Spinner
+      android:id="@+id/spinner"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      />
+
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/drawee_view"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/drawee_height_medium"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:background="@color/primary"
+      android:padding="@dimen/padding_small"
+      />
+
+  <Button
+      android:id="@+id/button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/imagepipeline_postprocessor_refresh"
+      />
+
+  <TextView
+      android:id="@+id/text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:text="@string/imagepipeline_postprocessor_help"
+      />
+</LinearLayout>

@@ -31,6 +31,7 @@ import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
+import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePostProcessorFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 
@@ -120,11 +121,14 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_drawee_span_simple:
         fragment = new DraweeSpanSimpleTextFragment();
         break;
-      // Notification
+
+      // Imagepipline
       case R.id.nav_imagepipeline_notification:
         fragment = new ImagePipelineNotificationFragment();
         break;
-      // Prefetch
+      case R.id.nav_imagepipeline_postprocessor:
+        fragment = new ImagePipelinePostProcessorFragment();
+        break;
       case R.id.nav_imagepipeline_prefetch:
         fragment = new ImagePipelinePrefetchFragment();
         break;
