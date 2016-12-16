@@ -203,6 +203,14 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   }
 
   /**
+   * Sets double tap listener for zoom or turn back, just support DefaultZoomableController
+   * and it's descendant currently.
+   */
+  public void setZoomDoubleTabListener(ZoomDoubleTabListener zoomDoubleTabListener) {
+    mTapGestureDetector.setOnDoubleTapListener(zoomDoubleTabListener);
+  }
+
+  /**
    * Sets whether long-press tap detection is enabled.
    * Unfortunately, long-press conflicts with onDoubleTapEvent.
    */
