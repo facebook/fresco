@@ -34,4 +34,8 @@
       </group>
     </menu>
   </item>
+  <item
+      android:id="@+id/nav_action_settings"
+      android:title="@string/action_settings"
+  />
 </menu>

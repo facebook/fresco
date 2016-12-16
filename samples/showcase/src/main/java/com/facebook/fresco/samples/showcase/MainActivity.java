@@ -128,6 +128,10 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_imagepipeline_prefetch:
         fragment = new ImagePipelinePrefetchFragment();
         break;
+      // Settings
+      case R.id.nav_action_settings:
+        fragment = new SettingsFragment();
+        break;
       default:
         throw new IllegalArgumentException("No example with this id!");
     }
