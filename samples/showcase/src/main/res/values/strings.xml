@@ -42,6 +42,12 @@
   <string name="imagepipeline_prefetch_title">Prefetch</string>
   <string name="imagepipeline_prefetch_help">1. Clear the cache\n2. Toggle images, they show slowly\n3. Hide the images\n4. Clear the cache\n5. Prefetch\n6. Show the images, they load fast!</string>
 
+  <string name="category_format">Image Format</string>
+
+  <string name="format_svg_title">SVG</string>
+  <string name="format_svg_switch">SVG support enabled</string>
+  <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>
+
   <!-- Other -->
 
   <string name="button_clear_cache">Clear Cache</string>

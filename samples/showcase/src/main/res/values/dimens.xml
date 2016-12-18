@@ -17,4 +17,5 @@
   <dimen name="drawee_width_small">100dp</dimen>
   <dimen name="drawee_height_medium">200dp</dimen>
   <dimen name="drawee_width_medium">200dp</dimen>
+  <dimen name="switch_padding">8dp</dimen>
 </resources>

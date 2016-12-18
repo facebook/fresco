@@ -17,6 +17,7 @@ import java.util.Set;
 import android.app.Application;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -27,15 +28,21 @@ import com.facebook.imagepipeline.listener.RequestLoggingListener;
  */
 public class ShowcaseApplication extends Application {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-        Set<RequestListener> listeners = new HashSet<>();
-        listeners.add(new RequestLoggingListener());
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-                .setRequestListeners(listeners)
-                .build();
-        Fresco.initialize(this, config);
-    }
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+    Set<RequestListener> listeners = new HashSet<>();
+    listeners.add(new RequestLoggingListener());
+
+    ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
+        .setRequestListeners(listeners)
+        .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
+        .build();
+
+    DraweeConfig.Builder draweeConfigBuilder = DraweeConfig.newBuilder();
+    CustomImageFormatConfigurator.addCustomDrawableFactories(this, draweeConfigBuilder);
+
+    Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build());
+  }
 }
