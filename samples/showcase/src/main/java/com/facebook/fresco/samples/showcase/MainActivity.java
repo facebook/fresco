@@ -37,12 +37,13 @@ import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragme
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePostProcessorFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment;
+import com.facebook.fresco.samples.showcase.misc.WelcomeFragment;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
-  private static final int INITIAL_NAVDRAWER_ITEM_ID = R.id.nav_drawee_simple;
+  private static final int INITIAL_NAVDRAWER_ITEM_ID = R.id.nav_welcome;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_imagepipeline_prefetch:
         fragment = new ImagePipelinePrefetchFragment();
         break;
+
       // Image Formats
       case R.id.nav_format_svg:
         fragment = new ImageFormatSvgFragment();
@@ -149,7 +151,11 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_format_keyframes:
         fragment = new ImageFormatKeyframesFragment();
         break;
-      // Settings
+
+      // More
+      case R.id.nav_welcome:
+        fragment = new WelcomeFragment();
+        break;
       case R.id.nav_action_settings:
         fragment = new SettingsFragment();
         break;
