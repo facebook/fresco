@@ -187,6 +187,11 @@ public class BufferedDiskCache {
                   try {
                     result = new EncodedImage(ref);
                     result.setEncodedCacheKey(key);
+                  } catch (Exception e) {
+                    // Remove the cached data if it cannot be used to create an encoded image.
+                    CloseableReference.closeSafely(ref);
+                    remove(key);
+                    throw e;
                   } finally {
                     CloseableReference.closeSafely(ref);
                   }

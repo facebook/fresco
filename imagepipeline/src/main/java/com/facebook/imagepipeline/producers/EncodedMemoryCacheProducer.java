@@ -18,6 +18,8 @@ import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.cache.common.CacheKey;
 
+import com.android.internal.util.Predicate;
+
 /**
  * Memory cache producer for the encoded memory cache.
  */
@@ -93,9 +95,23 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
               ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
               : null);
       mInputProducer.produceResults(consumerOfInputProducer, producerContext);
+    } catch (Exception e) {
+      // Remove the cached data if it cannot be used to create an encoded image.
+      CloseableReference.closeSafely(cachedReference);
+      mMemoryCache.removeAll(predicateForKey(cacheKey));
+      throw e;
     } finally {
       CloseableReference.closeSafely(cachedReference);
     }
+  }
+
+  private Predicate<CacheKey> predicateForKey(final CacheKey comparisonKey) {
+    return new Predicate<CacheKey>() {
+      @Override
+      public boolean apply(CacheKey key) {
+        return key.equals(comparisonKey);
+      }
+    };
   }
 
   private static class EncodedMemoryCacheConsumer
