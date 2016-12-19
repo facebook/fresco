@@ -12,9 +12,11 @@
 package com.facebook.fresco.samples.showcase;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
 
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
+import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample;
 import com.facebook.fresco.samples.showcase.imageformat.svg.SvgDecoderExample;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 
@@ -25,18 +27,24 @@ public class CustomImageFormatConfigurator {
 
   private static final String IMAGE_FORMAT_PREFS = "fresco_image_format_prefs";
   private static final String IMAGE_FORMAT_SVG_KEY = "svg";
+  private static final String IMAGE_FORMAT_KEYFRAMES_KEY = "keyframes";
 
   @Nullable
   public static ImageDecoderConfig createImageDecoderConfig(Context context) {
+    ImageDecoderConfig.Builder config = ImageDecoderConfig.newBuilder();
     if (isSvgEnabled(context)) {
-      return ImageDecoderConfig.newBuilder()
-          .addDecodingCapability(
-              SvgDecoderExample.SVG_FORMAT,
-              new SvgDecoderExample.SvgFormatChecker(),
-              new SvgDecoderExample.SvgDecoder())
-          .build();
+      config.addDecodingCapability(
+          SvgDecoderExample.SVG_FORMAT,
+          new SvgDecoderExample.SvgFormatChecker(),
+          new SvgDecoderExample.SvgDecoder());
     }
-    return null;
+    if (isKeyframesEnabled(context)) {
+      config.addDecodingCapability(
+          KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
+          KeyframesDecoderExample.createFormatChecker(),
+          KeyframesDecoderExample.createDecoder());
+    }
+    return config.build();
   }
 
   public static void addCustomDrawableFactories(
@@ -44,6 +52,9 @@ public class CustomImageFormatConfigurator {
       DraweeConfig.Builder draweeConfigBuilder) {
     if (isSvgEnabled(context)) {
       draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoderExample.SvgDrawableFactory());
+    }
+    if (isKeyframesEnabled(context)) {
+      draweeConfigBuilder.addCustomDrawableFactory(KeyframesDecoderExample.createDrawableFactory());
     }
   }
 
@@ -53,6 +64,16 @@ public class CustomImageFormatConfigurator {
 
   public static void setSvgEnabled(Context context, boolean svgEnabled) {
     setBoolean(context, IMAGE_FORMAT_SVG_KEY, svgEnabled);
+  }
+
+  public static boolean isKeyframesEnabled(Context context) {
+    //TODO Add setting and notify user when the feature is not supported
+    boolean defaultEnabled = Build.VERSION.SDK_INT >= 15;
+    return getBoolean(context, IMAGE_FORMAT_KEYFRAMES_KEY, defaultEnabled);
+  }
+
+  public static void setKeyFramesEnabled(Context context, boolean keyFramesEnabled) {
+    setBoolean(context, IMAGE_FORMAT_KEYFRAMES_KEY, keyFramesEnabled);
   }
 
   private static boolean getBoolean(Context context, String key, boolean defaultValue) {

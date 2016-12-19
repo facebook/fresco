@@ -1,0 +1,777 @@
+{
+  "formatVersion": "1.0",
+  "name": "KEYFRAMESLOGO",
+  "key": 0,
+  "frame_rate": 24,
+  "animation_frame_count": 88,
+  "canvas_size": [
+    615,
+    615
+  ],
+  "features": [
+    {
+      "name": "Circle",
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                0,
+                0
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                307.5
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                307.5
+              ]
+            }
+          ],
+          "timing_curves": []
+        }
+      ],
+      "key_frames": [
+        {
+          "start_frame": 0,
+          "data": [
+            "M-17.50,-298.50",
+            "C-110.66,-292.50,-173.50,-253.63,-220.50,-202.50",
+            "C-264.77,-154.33,-305.30,-80.56,-299.50,17.50",
+            "C-289.96,178.88,-161.32,310.07,17.50,299.50",
+            "C179.65,289.91,309.01,162.37,299.50,-16.50",
+            "C294.71,-106.64,253.08,-173.75,203.50,-219.50",
+            "C153.92,-265.25,78.36,-304.67,-17.50,-298.50"
+          ]
+        }
+      ],
+      "fill_color": "#ff4080ff"
+    },
+    {
+      "name": "| - 4",
+      "animation_group": 1,
+      "from_frame": 31,
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                836.367980957031,
+                540.000122070312
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 31,
+              "data": [
+                42.5
+              ]
+            },
+            {
+              "start_frame": 46,
+              "data": [
+                -17.5
+              ]
+            }
+          ],
+          "timing_curves": [
+            [
+              [
+                0.16666666667000002,
+                0.16666666667000002
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 31,
+              "data": [
+                12.4999389648438
+              ]
+            },
+            {
+              "start_frame": 46,
+              "data": [
+                12.4999389648438
+              ]
+            }
+          ],
+          "timing_curves": [
+            [
+              [
+                0.16666666667000002,
+                0.16666666667000002
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          ]
+        }
+      ],
+      "stroke_line_cap": "butt",
+      "key_frames": [
+        {
+          "start_frame": 0,
+          "data": [
+            "M836.44,695.44",
+            "L836.44,384.67"
+          ]
+        }
+      ],
+      "stroke_color": "#ff1c56c8",
+      "stroke_width": 90
+    },
+    {
+      "name": "| - 3",
+      "animation_group": 1,
+      "from_frame": 19,
+      "to_frame": 31,
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                951.182983398438,
+                540.000244140625
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                33.6829833984375
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                12.5000610351562
+              ]
+            }
+          ],
+          "timing_curves": []
+        }
+      ],
+      "stroke_line_cap": "butt",
+      "key_frames": [
+        {
+          "start_frame": 19,
+          "data": [
+            "M951.18,654.82",
+            "L960.00,663.63",
+            "L1083.63,540.00",
+            "L960.00,416.37",
+            "L954.18,422.18"
+          ]
+        },
+        {
+          "start_frame": 31,
+          "data": [
+            "M974.19,545.57",
+            "L974.62,546.00",
+            "L980.62,540.00",
+            "L974.62,534.00",
+            "L974.34,534.28"
+          ]
+        }
+      ],
+      "timing_curves": [
+        [
+          [
+            0.5,
+            0
+          ],
+          [
+            0.916666666665,
+            1
+          ]
+        ]
+      ],
+      "stroke_color": "#ff1c56c8",
+      "stroke_width": 90
+    },
+    {
+      "name": "| - 2",
+      "animation_group": 1,
+      "from_frame": 10,
+      "to_frame": 20,
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                960,
+                540.000122070312
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                42.5
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                12.4999389648438
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "SCALE",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                -100,
+                100
+              ]
+            }
+          ],
+          "timing_curves": []
+        }
+      ],
+      "stroke_line_cap": "butt",
+      "key_frames": [
+        {
+          "start_frame": 10,
+          "data": [
+            "M836.58,704.95",
+            "L836.52,540.60",
+            "L836.45,374.68"
+          ]
+        },
+        {
+          "start_frame": 16,
+          "data": [
+            "M912.90,693.21",
+            "L836.37,540.00",
+            "L912.90,386.57"
+          ]
+        },
+        {
+          "start_frame": 20,
+          "data": [
+            "M991.53,695.12",
+            "L836.31,540.00",
+            "L991.82,384.99"
+          ]
+        }
+      ],
+      "timing_curves": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            0.5,
+            1
+          ]
+        ],
+        [
+          [
+            0.00005,
+            0
+          ],
+          [
+            0.5,
+            1
+          ]
+        ]
+      ],
+      "stroke_color": "#ff1c56c8",
+      "stroke_width": 90
+    },
+    {
+      "name": "| - 1",
+      "animation_group": 1,
+      "to_frame": 10,
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                960,
+                540.000122070312
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                42.5
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                12.4999389648438
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "SCALE",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                -100,
+                100
+              ]
+            }
+          ],
+          "timing_curves": []
+        }
+      ],
+      "stroke_line_cap": "butt",
+      "key_frames": [
+        {
+          "start_frame": 0,
+          "data": [
+            "M836.63,704.80",
+            "L836.51,374.53"
+          ]
+        }
+      ],
+      "stroke_color": "#ff1c56c8",
+      "stroke_width": 90
+    },
+    {
+      "name": "< - 2",
+      "animation_group": 1,
+      "from_frame": 11,
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                836.367980957031,
+                540.000122070312
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 19,
+              "data": [
+                -88.1320190429688
+              ]
+            },
+            {
+              "start_frame": 31,
+              "data": [
+                -5.5
+              ]
+            }
+          ],
+          "timing_curves": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                0.8333333333299999,
+                0.8333333333299995
+              ]
+            ]
+          ]
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 19,
+              "data": [
+                12.4999389648438
+              ]
+            },
+            {
+              "start_frame": 31,
+              "data": [
+                12.4999389648438
+              ]
+            }
+          ],
+          "timing_curves": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                0.8333333333299999,
+                0.8333333333299995
+              ]
+            ]
+          ]
+        }
+      ],
+      "stroke_line_cap": "butt",
+      "key_frames": [
+        {
+          "start_frame": 11,
+          "data": [
+            "M836.38,704.87",
+            "L836.37,540.00",
+            "L836.37,374.53"
+          ]
+        },
+        {
+          "start_frame": 16,
+          "data": [
+            "M912.90,693.21",
+            "L836.37,540.00",
+            "L912.90,386.57"
+          ]
+        },
+        {
+          "start_frame": 20,
+          "data": [
+            "M960.00,663.63",
+            "L836.37,540.00",
+            "L960.00,416.37"
+          ]
+        },
+        {
+          "start_frame": 31,
+          "data": [
+            "M960.00,663.63",
+            "L836.37,540.00",
+            "L960.00,416.37"
+          ]
+        },
+        {
+          "start_frame": 40,
+          "data": [
+            "M977.14,673.79",
+            "L843.35,540.00",
+            "L977.14,406.21"
+          ]
+        },
+        {
+          "start_frame": 51,
+          "data": [
+            "M966.75,663.63",
+            "L843.12,540.00",
+            "L966.75,416.37"
+          ]
+        }
+      ],
+      "timing_curves": [
+        [
+          [
+            0.5,
+            0
+          ],
+          [
+            0.916666666665,
+            1
+          ]
+        ],
+        [
+          [
+            0.08333333333500001,
+            0
+          ],
+          [
+            0.5,
+            1
+          ]
+        ],
+        [
+          [
+            0.5,
+            0
+          ],
+          [
+            0.916666666665,
+            1
+          ]
+        ],
+        [
+          [
+            0.08333333333500001,
+            0
+          ],
+          [
+            0.51,
+            1
+          ]
+        ],
+        [
+          [
+            0.49,
+            0
+          ],
+          [
+            0.916666666665,
+            1
+          ]
+        ]
+      ],
+      "stroke_color": "#ffffffff",
+      "stroke_width": 90
+    },
+    {
+      "name": "< - 1",
+      "animation_group": 1,
+      "to_frame": 11,
+      "feature_animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                836.367980957031,
+                540.000122070312
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                -81.1320190429688
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                12.4999389648438
+              ]
+            }
+          ],
+          "timing_curves": []
+        }
+      ],
+      "stroke_line_cap": "butt",
+      "key_frames": [
+        {
+          "start_frame": 0,
+          "data": [
+            "M1086.48,704.87",
+            "Q1086.46,583.67,1085.49,540.00",
+            "Q1084.50,478.31,1084.49,374.03"
+          ]
+        },
+        {
+          "start_frame": 7,
+          "data": [
+            "M836.38,704.87",
+            "Q838.77,583.67,959.76,540.00",
+            "Q1082.77,478.31,1083.68,374.03"
+          ]
+        },
+        {
+          "start_frame": 11,
+          "data": [
+            "M836.16,705.07",
+            "Q836.16,581.20,836.16,539.91",
+            "Q836.16,498.61,836.15,374.74"
+          ]
+        }
+      ],
+      "timing_curves": [
+        [
+          [
+            0.5,
+            0
+          ],
+          [
+            0.916666666665,
+            1
+          ]
+        ],
+        [
+          [
+            0.08333333333500001,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "stroke_color": "#ffffffff",
+      "stroke_width": 90
+    }
+  ],
+  "animation_groups": [
+    {
+      "group_id": 1,
+      "group_name": "Parent 1",
+      "animations": [
+        {
+          "property": "ANCHOR_POINT",
+          "key_values": [
+            {
+              "start_frame": 0,
+              "data": [
+                12.5,
+                12.5
+              ]
+            }
+          ],
+          "timing_curves": []
+        },
+        {
+          "property": "X_POSITION",
+          "key_values": [
+            {
+              "start_frame": 15,
+              "data": [
+                277.5
+              ]
+            },
+            {
+              "start_frame": 56,
+              "data": [
+                284.5
+              ]
+            }
+          ],
+          "timing_curves": [
+            [
+              [
+                0.16666666667000002,
+                0.16666666666999982
+              ],
+              [
+                0.020000000000000018,
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "property": "Y_POSITION",
+          "key_values": [
+            {
+              "start_frame": 15,
+              "data": [
+                307.500183105469
+              ]
+            },
+            {
+              "start_frame": 56,
+              "data": [
+                307.500183105469
+              ]
+            }
+          ],
+          "timing_curves": [
+            [
+              [
+                0.16666666667000002,
+                0.16666666666999982
+              ],
+              [
+                0.020000000000000018,
+                1
+              ]
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -46,11 +46,15 @@
             android:id="@+id/nav_format_svg"
             android:title="@string/format_svg_title"
             />
+        <item
+            android:id="@+id/nav_format_keyframes"
+            android:title="@string/format_keyframes_title"
+            />
       </group>
     </menu>
   </item>
   <item
       android:id="@+id/nav_action_settings"
       android:title="@string/action_settings"
-  />
+      />
 </menu>

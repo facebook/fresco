@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
+import com.facebook.fresco.samples.showcase.imageformat.keyframes.ImageFormatKeyframesFragment;
 import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePostProcessorFragment;
@@ -135,6 +136,9 @@ public class MainActivity extends AppCompatActivity
       // Image Formats
       case R.id.nav_format_svg:
         fragment = new ImageFormatSvgFragment();
+        break;
+      case R.id.nav_format_keyframes:
+        fragment = new ImageFormatKeyframesFragment();
         break;
       // Settings
       case R.id.nav_action_settings:

@@ -44,6 +44,8 @@ dependencies {
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
 
+    compile 'com.facebook.keyframes:keyframes:1.0'
+
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-span')
 
