@@ -20,6 +20,10 @@
             android:id="@+id/nav_drawee_rounded_corners"
             android:title="@string/drawee_rounded_corners_title"
             />
+        <item
+            android:id="@+id/nav_drawee_hierarchy"
+            android:title="@string/drawee_hierarchy_title"
+            />
       </group>
     </menu>
   </item>
