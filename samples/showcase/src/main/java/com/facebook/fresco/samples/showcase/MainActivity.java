@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.fresco.samples.showcase.drawee.DraweeRoundedCornersFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
@@ -123,6 +124,10 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_drawee_span_simple:
         fragment = new DraweeSpanSimpleTextFragment();
         break;
+      case R.id.nav_drawee_rounded_corners:
+        fragment = new DraweeRoundedCornersFragment();
+        break;
+
       // Imagepipline
       case R.id.nav_imagepipeline_notification:
         fragment = new ImagePipelineNotificationFragment();

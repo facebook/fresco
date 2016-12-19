@@ -20,15 +20,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
 
 /**
  * Simple drawee fragment that illustrates different scale types
@@ -39,18 +38,6 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
       Uri.parse("http://frescolib.org/static/sample-images/animal_a_m.jpg");
   private static final Uri URI_2 =
       Uri.parse("http://frescolib.org/static/sample-images/animal_d_m.jpg");
-
-  private static final Entry[] SPINNER_ENTRIES = new Entry[]{
-      new Entry(ScaleType.CENTER, "center", null),
-      new Entry(ScaleType.CENTER_CROP, "center_crop", null),
-      new Entry(ScaleType.CENTER_INSIDE, "center_inside", null),
-      new Entry(ScaleType.FIT_CENTER, "fit_center", null),
-      new Entry(ScaleType.FIT_START, "fit_start", null),
-      new Entry(ScaleType.FIT_END, "fit_end", null),
-      new Entry(ScaleType.FIT_XY, "fit_xy", null),
-      new Entry(ScaleType.FOCUS_CROP, "focus_crop (0, 0)", new PointF(0, 0)),
-      new Entry(ScaleType.FOCUS_CROP, "focus_crop (1, 0.5)", new PointF(1, 0.5f))
-  };
 
   private SimpleDraweeView mDraweeTop1;
   private SimpleDraweeView mDraweeTop2;
@@ -88,11 +75,13 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
 
     changeMainDraweeUri(URI_1);
 
-    mSpinner.setAdapter(new SimpleScaleTypeAdapter());
+    final SimpleScaleTypeAdapter adapter = new SimpleScaleTypeAdapter();
+    mSpinner.setAdapter(adapter);
     mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final Entry spinnerEntry = SPINNER_ENTRIES[position];
+        final SimpleScaleTypeAdapter.Entry spinnerEntry =
+            (SimpleScaleTypeAdapter.Entry) adapter.getItem(position);
         changeMainDraweeScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
       }
 
@@ -118,53 +107,5 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
   @Override
   public int getTitleId() {
     return R.string.drawee_scale_type_title;
-  }
-
-  private class SimpleScaleTypeAdapter extends BaseAdapter {
-
-    @Override
-    public int getCount() {
-      return SPINNER_ENTRIES.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-      return SPINNER_ENTRIES[position];
-    }
-
-    @Override
-    public long getItemId(int position) {
-      return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-      final LayoutInflater layoutInflater = getLayoutInflater(null);
-
-      final View view = convertView != null
-          ? convertView
-          : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-
-      final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-      textView.setText(SPINNER_ENTRIES[position].description);
-
-      return view;
-    }
-  }
-
-  private static class Entry {
-
-    public final ScaleType scaleType;
-    public final String description;
-    public final PointF focusPoint;
-
-    public Entry(
-        ScaleType scaleType,
-        String description,
-        PointF focusPoint) {
-      this.scaleType = scaleType;
-      this.description = description;
-      this.focusPoint = focusPoint;
-    }
   }
 }

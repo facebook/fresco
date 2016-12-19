@@ -20,6 +20,8 @@
   <string name="drawee_span_simple_title">Simple DraweeSpan</string>
   <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan.</string>
 
+  <string name="drawee_rounded_corners_title">Rounded Corners</string>
+
   <string name="category_pipeline">Image Pipeline</string>
 
   <string name="imagepipeline_notification_title">Notifications</string>
@@ -61,5 +63,13 @@
 
   <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
   <string translatable="false" name="message_restart_now">Kill Now</string>
+
+  <string name="drawee_rounded_corners_as_circle">Using roundAsCircle</string>
+  <string name="drawee_rounded_corners_radius">16dp corner radius</string>
+  <string name="drawee_rounded_corners_some">Only rounding some corners</string>
+  <string name="drawee_rounded_corners_fancy">Fancy (different radii)</string>
+  <string name="drawee_rounded_corners_borders">Borders</string>
+  <string name="drawee_rounded_corners_bitmap_only_toast">Switched to BITMAP_ONLY rounding method</string>
+  <string name="drawee_rounded_corners_overlay_color_toast">Switched to OVERLAY_COLOR rounding method</string>
 
 </resources>

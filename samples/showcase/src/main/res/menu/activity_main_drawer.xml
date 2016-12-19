@@ -16,6 +16,10 @@
             android:id="@+id/nav_drawee_span_simple"
             android:title="@string/drawee_span_simple_title"
             />
+        <item
+            android:id="@+id/nav_drawee_rounded_corners"
+            android:title="@string/drawee_rounded_corners_title"
+            />
       </group>
     </menu>
   </item>
