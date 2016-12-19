@@ -49,6 +49,8 @@
   <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>
 
   <string name="format_keyframes_title">Keyframes</string>
+  <string name="format_keyframes_help">Keyframes animations are only supported on devices running Android 4.0.3 (API level 15) and above.</string>
+
 
   <!-- Other -->
 

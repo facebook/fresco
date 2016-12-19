@@ -23,6 +23,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
+import com.facebook.fresco.samples.showcase.CustomImageFormatConfigurator;
 import com.facebook.fresco.samples.showcase.R;
 
 /**
@@ -36,23 +37,30 @@ public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
       LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_drawee_simple, container, false);
+    return inflater.inflate(R.layout.fragment_format_keyframes, container, false);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    simpleDraweeView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-    DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setUri("http://frescolib.org/static/sample-images/animation.keyframes")
-        .setAutoPlayAnimations(true)
-        .build();
-    simpleDraweeView.setController(controller);
+    if (CustomImageFormatConfigurator.isKeyframesEnabled()) {
+      initAnimation(view);
+    }
   }
 
   @Override
   public int getTitleId() {
     return R.string.format_keyframes_title;
   }
+  @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+  private void initAnimation(View view) {
+    SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
+    simpleDraweeView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    DraweeController controller = Fresco.newDraweeControllerBuilder()
+        .setOldController(simpleDraweeView.getController())
+        .setUri("http://frescolib.org/static/sample-images/animation.keyframes")
+        .setAutoPlayAnimations(true)
+        .build();
+    simpleDraweeView.setController(controller);
+  }
+
 }

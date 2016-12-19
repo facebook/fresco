@@ -27,7 +27,6 @@ public class CustomImageFormatConfigurator {
 
   private static final String IMAGE_FORMAT_PREFS = "fresco_image_format_prefs";
   private static final String IMAGE_FORMAT_SVG_KEY = "svg";
-  private static final String IMAGE_FORMAT_KEYFRAMES_KEY = "keyframes";
 
   @Nullable
   public static ImageDecoderConfig createImageDecoderConfig(Context context) {
@@ -38,7 +37,7 @@ public class CustomImageFormatConfigurator {
           new SvgDecoderExample.SvgFormatChecker(),
           new SvgDecoderExample.SvgDecoder());
     }
-    if (isKeyframesEnabled(context)) {
+    if (isKeyframesEnabled()) {
       config.addDecodingCapability(
           KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
           KeyframesDecoderExample.createFormatChecker(),
@@ -53,7 +52,7 @@ public class CustomImageFormatConfigurator {
     if (isSvgEnabled(context)) {
       draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoderExample.SvgDrawableFactory());
     }
-    if (isKeyframesEnabled(context)) {
+    if (isKeyframesEnabled()) {
       draweeConfigBuilder.addCustomDrawableFactory(KeyframesDecoderExample.createDrawableFactory());
     }
   }
@@ -66,14 +65,8 @@ public class CustomImageFormatConfigurator {
     setBoolean(context, IMAGE_FORMAT_SVG_KEY, svgEnabled);
   }
 
-  public static boolean isKeyframesEnabled(Context context) {
-    //TODO Add setting and notify user when the feature is not supported
-    boolean defaultEnabled = Build.VERSION.SDK_INT >= 15;
-    return getBoolean(context, IMAGE_FORMAT_KEYFRAMES_KEY, defaultEnabled);
-  }
-
-  public static void setKeyFramesEnabled(Context context, boolean keyFramesEnabled) {
-    setBoolean(context, IMAGE_FORMAT_KEYFRAMES_KEY, keyFramesEnabled);
+  public static boolean isKeyframesEnabled() {
+    return Build.VERSION.SDK_INT >= 15;
   }
 
   private static boolean getBoolean(Context context, String key, boolean defaultValue) {
