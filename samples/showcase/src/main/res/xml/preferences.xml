@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-  <PreferenceCategory
-      android:title="Placeholder"
-  >
+  <PreferenceCategory android:title="@string/preferences_category_cache">
+    <Preference
+        android:key="clear_disk_cache"
+        android:title="@string/preference_cache_clear_cache_title"
+        android:summary="@string/preference_cache_clear_cache_summary"
+        />
   </PreferenceCategory>
 </PreferenceScreen>

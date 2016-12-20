@@ -56,6 +56,14 @@
   <string name="format_keyframes_help">Keyframes animations are only supported on devices running Android 4.0.3 (API level 15) and above.</string>
 
 
+  <!-- Preferences -->
+
+  <string name="preferences_category_cache">Cache</string>
+
+  <string name="preference_cache_clear_cache_title">Clear Caches</string>
+  <string name="preference_cache_clear_cache_summary">Removes all cached images from Fresco\'s disk and memory caches</string>
+  <string name="preference_cache_clear_cache_message_success">All caches have been cleared.</string>
+
   <!-- Other -->
 
   <string name="category_more">More</string>
