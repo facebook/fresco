@@ -16,4 +16,21 @@
         android:summaryOff="@string/preference_debug_show_overlay_summary_disabled"
         />
   </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/preferences_category_details">
+    <Preference
+        android:key="android_version"
+        android:title="@string/preference_details_android_version_title"
+        />
+
+    <Preference
+        android:key="cpu_architecture"
+        android:title="@string/preference_details_cpu_architecture_title"
+        />
+
+    <Preference
+        android:key="device_name"
+        android:title="@string/preference_details_device_name_title"
+        />
+  </PreferenceCategory>
 </PreferenceScreen>

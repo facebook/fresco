@@ -70,6 +70,16 @@
   <string name="preference_debug_show_overlay_summary_enabled">Debug overlay is shown for all Drawees</string>
   <string name="preference_debug_show_overlay_summary_disabled">Debug overlay is not shown</string>
 
+  <string name="preferences_category_details">Version and Device Details</string>
+
+  <string name="preference_details_android_version_title">Android Version</string>
+  <string name="preference_details_android_version_summary">SDK: %1$s (%2$s)</string>
+  <string name="preference_details_cpu_architecture_title">CPU Architecture</string>
+  <string name="preference_details_cpu_architecture_summary_before_21">%1$s - supported ABIs: %2$s, %3$s</string>
+  <string name="preference_details_cpu_architecture_summary_after_21">%1$s - supported ABIs: %2$s</string>
+  <string name="preference_details_device_name_title">Device Name</string>
+  <string name="preference_details_device_name_summary">%1$s %2$s</string>
+
   <!-- Other -->
 
   <string name="category_more">More</string>

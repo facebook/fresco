@@ -11,9 +11,12 @@
  */
 package com.facebook.fresco.samples.showcase.settings;
 
+import java.util.Arrays;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -36,6 +39,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   public static final String KEY_CLEAR_DISK_CACHE = "clear_disk_cache";
   public static final String KEY_DEBUG_OVERLAY = "debug_overlay";
+
+  public static final String KEY_DETAILS_ANDROID_VERSION = "android_version";
+  public static final String KEY_DETAILS_CPU_ARCHITECTURE = "cpu_architecture";
+  public static final String KEY_DETAILS_DEVICE_NAME = "device_name";
 
   /**
    * The Dialog for asking the restart for the application
@@ -61,6 +68,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(R.xml.preferences);
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    populateVersionAndDeviceDetails();
   }
 
   private void onClearDiskCachePreferenceClicked() {
@@ -76,6 +84,40 @@ public class SettingsFragment extends PreferenceFragmentCompat
       mShowRestartMessageDialog = new ShowRestartMessageDialog();
     }
     return mShowRestartMessageDialog;
+  }
+
+  private void populateVersionAndDeviceDetails() {
+    final Preference preferenceAndroidVersion = findPreference(KEY_DETAILS_ANDROID_VERSION);
+    final String androidVersion = getString(
+        R.string.preference_details_android_version_summary,
+        String.valueOf(Build.VERSION.SDK_INT),
+        Build.VERSION.RELEASE);
+    preferenceAndroidVersion.setSummary(androidVersion);
+
+    final Preference preferenceCpuArchitecture = findPreference(KEY_DETAILS_CPU_ARCHITECTURE);
+    final String cpuArch = System.getProperty("os.arch");
+
+    final String cpuDetails;
+    if (Build.VERSION.SDK_INT < 21) {
+      cpuDetails = getString(
+          R.string.preference_details_cpu_architecture_summary_before_21,
+          cpuArch,
+          Build.CPU_ABI,
+          Build.CPU_ABI2);
+    } else {
+      cpuDetails = getString(
+          R.string.preference_details_cpu_architecture_summary_after_21,
+          cpuArch,
+          Arrays.toString(Build.SUPPORTED_ABIS));
+    }
+    preferenceCpuArchitecture.setSummary(cpuDetails);
+
+    final Preference preferenceDeviceName = findPreference(KEY_DETAILS_DEVICE_NAME);
+    final String deviceName = getString(
+        R.string.preference_details_device_name_summary,
+        Build.MANUFACTURER,
+        Build.DEVICE);
+    preferenceDeviceName.setSummary(deviceName);
   }
 
   private void showToastText(String text) {
