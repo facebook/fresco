@@ -64,6 +64,12 @@
   <string name="preference_cache_clear_cache_summary">Removes all cached images from Fresco\'s disk and memory caches</string>
   <string name="preference_cache_clear_cache_message_success">All caches have been cleared.</string>
 
+  <string name="preferences_category_debug">Debug</string>
+
+  <string name="preference_debug_show_overlay_title">Debug Overlay</string>
+  <string name="preference_debug_show_overlay_summary_enabled">Debug overlay is shown for all Drawees</string>
+  <string name="preference_debug_show_overlay_summary_disabled">Debug overlay is not shown</string>
+
   <!-- Other -->
 
   <string name="category_more">More</string>

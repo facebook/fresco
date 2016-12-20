@@ -19,6 +19,7 @@ import android.app.Application;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
@@ -42,6 +43,9 @@ public class ShowcaseApplication extends Application {
 
     DraweeConfig.Builder draweeConfigBuilder = DraweeConfig.newBuilder();
     CustomImageFormatConfigurator.addCustomDrawableFactories(this, draweeConfigBuilder);
+
+    draweeConfigBuilder.setDebugOverlayEnabledSupplier(
+        DebugOverlaySupplierSingleton.getInstance(getApplicationContext()));
 
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build());
   }

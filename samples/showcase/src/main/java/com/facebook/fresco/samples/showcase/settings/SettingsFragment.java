@@ -23,10 +23,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.fresco.samples.showcase.ShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-
-import static android.support.v7.preference.R.styleable.PreferenceFragmentCompat;
+import com.facebook.fresco.samples.showcase.ShowcaseFragment;
 
 /**
  * The Fragment for settings
@@ -36,7 +34,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
-  private static final String KEY_CLEAR_DISK_CACHE = "clear_disk_cache";
+  public static final String KEY_CLEAR_DISK_CACHE = "clear_disk_cache";
+  public static final String KEY_DEBUG_OVERLAY = "debug_overlay";
 
   /**
    * The Dialog for asking the restart for the application
@@ -44,8 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private ShowRestartMessageDialog mShowRestartMessageDialog;
 
   @Override
-  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
   }
 
   @Override
