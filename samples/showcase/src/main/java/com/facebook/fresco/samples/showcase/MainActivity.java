@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
   }
 
   /**
-   * Utility method to display a specific Fragent. If the tag is not null we add a backstack
+   * Utility method to display a specific Fragment. If the tag is not null we add a backstack
    *
    * @param fragment The Fragment to add
    */
@@ -178,5 +178,7 @@ public class MainActivity extends AppCompatActivity
       fragmentTransaction.addToBackStack(fragment.getBackstackTag());
     }
     fragmentTransaction.commit();
+
+    setTitle(fragment.getTitleId());
   }
 }

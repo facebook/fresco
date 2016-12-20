@@ -3,6 +3,7 @@
 
   <item
       android:id="@+id/nav_welcome"
+      android:checkable="true"
       android:title="@string/welcome_nav_title"
       />
 
