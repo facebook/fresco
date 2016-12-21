@@ -7,12 +7,6 @@
     android:gravity="center_horizontal"
     >
 
-  <com.facebook.drawee.view.SimpleDraweeView
-      android:id="@+id/drawee_view"
-      android:layout_width="@dimen/drawee_width_medium"
-      android:layout_height="@dimen/drawee_height_medium"
-      app:placeholderImage="@color/primary"
-      />
   <android.support.v7.widget.SwitchCompat
       android:id="@+id/decoder_switch"
       android:layout_width="wrap_content"
@@ -21,6 +15,22 @@
       android:text="@string/format_svg_switch"
       app:switchPadding="@dimen/switch_padding"
       />
+
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/drawee_view"
+      android:layout_width="@dimen/drawee_width_medium"
+      android:layout_height="@dimen/drawee_height_medium"
+      android:layout_marginTop="@dimen/margin_medium"
+      />
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/switch_background"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/format_switch_checker_board"
+      />
+
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
