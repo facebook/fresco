@@ -46,6 +46,9 @@ dependencies {
 
     compile 'com.facebook.keyframes:keyframes:1.0'
 
+    compile project(':animated-base')
+    compile project(':animated-gif')
+
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-span')
 

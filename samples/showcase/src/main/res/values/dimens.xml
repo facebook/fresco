@@ -26,4 +26,6 @@
   <dimen name="drawee_rounded_corners_fancy_bottom_left">64dp</dimen>
 
   <dimen name="drawee_hierarchy_progress_radius">4dp</dimen>
+
+  <dimen name="checker_board_square_size">20dp</dimen>
 </resources>

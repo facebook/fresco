@@ -3,4 +3,7 @@
   <color name="primary">#FF5722</color>
   <color name="primaryDark">#E64A19</color>
   <color name="accent">#40C4FF</color>
+
+  <color name="checker_board_light">#E0E0E0</color>
+  <color name="checker_board_dark">#9E9E9E</color>
 </resources>

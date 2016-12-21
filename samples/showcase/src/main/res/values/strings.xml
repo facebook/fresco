@@ -48,13 +48,20 @@
 
   <string name="category_format">Image Format</string>
 
+  <string name="format_switch_checker_board">Checker board background</string>
+
+  <string name="format_gif_title">GIF</string>
+  <string name="format_gif_help">Select a size in the spinner to start playing that file. The animation has 36 frames and plays at 30 FPS.</string>
+  <string name="format_gif_label_small">Small (256x256 px)</string>
+  <string name="format_gif_label_medium">Medium (512x512 px)</string>
+  <string name="format_gif_label_large">Large (1024x1024 px)</string>
+
   <string name="format_svg_title">SVG</string>
   <string name="format_svg_switch">SVG support enabled</string>
   <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>
 
   <string name="format_keyframes_title">Keyframes</string>
   <string name="format_keyframes_help">Keyframes animations are only supported on devices running Android 4.0.3 (API level 15) and above.</string>
-
 
   <!-- Preferences -->
 
