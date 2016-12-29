@@ -95,7 +95,7 @@ static void setBitmapSize(JNIEnv* env, jobject bitmapOptions, int image_width, i
 }
 
 static jobject createBitmap(JNIEnv* env, int image_width, int image_height, jobject bitmapOptions) {
-  jobject bitmap = env->CallStaticObjectMethod(bitmapClass, createBitmapFunction, image_width, image_height, bitmapOptions);
+  jobject bitmap = env->CallStaticObjectMethod(webpBitmapFactoryClass, createBitmapFunction, image_width, image_height, bitmapOptions);
   return bitmap;
 }
 
