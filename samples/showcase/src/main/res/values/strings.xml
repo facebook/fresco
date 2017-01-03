@@ -24,6 +24,9 @@
 
   <string name="drawee_hierarchy_title">Placeholder, Progress, Failure</string>
 
+  <string name="drawee_rotation_title">Rotation</string>
+  <string name="drawee_rotation_help">Change the used RotationOptions using the drop-down menu on top.</string>
+
   <string name="category_pipeline">Image Pipeline</string>
 
   <string name="imagepipeline_notification_title">Notifications</string>

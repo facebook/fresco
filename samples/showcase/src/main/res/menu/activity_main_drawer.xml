@@ -30,6 +30,10 @@
             android:id="@+id/nav_drawee_hierarchy"
             android:title="@string/drawee_hierarchy_title"
             />
+        <item
+            android:id="@+id/nav_drawee_rotation"
+            android:title="@string/drawee_rotation_title"
+            />
       </group>
     </menu>
   </item>
