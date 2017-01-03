@@ -57,7 +57,7 @@ public class ImageRequestTest {
 
   @Test
   public void testLocalFileWithSpecialCharacterInPath() {
-    String filePath = "/storage/sdcard/QQ??20168898.jpg";
+    String filePath = new File("/storage/sdcard/QQ??20168898.jpg").getAbsolutePath();
     ImageRequest request = ImageRequest.fromUri("file://" + filePath);
 
     File file = request.getSourceFile();
