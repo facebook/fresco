@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.request;
 
-import java.io.File;
-
 import android.net.Uri;
 
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
@@ -53,16 +51,5 @@ public class ImageRequestTest {
     ImageRequest copy = ImageRequestBuilder.fromRequest(original).build();
 
     assertThat(copy).isEqualTo(original);
-  }
-
-  @Test
-  public void testLocalFileWithSpecialCharacterInPath() {
-    String filePath = "/storage/sdcard/QQ??20168898.jpg";
-    ImageRequest request = ImageRequest.fromUri("file://" + filePath);
-
-    File file = request.getSourceFile();
-
-    assertThat(file).isNotNull();
-    assertThat(file.getAbsolutePath()).isEqualTo(filePath);
   }
 }
