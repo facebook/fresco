@@ -9,7 +9,7 @@ next: supported-uris.html
 
 ## Drawees
 
-Drawees are spaces in which images are rendered. These are made up of three components, like an Model-View-Controller framework.
+Drawees are spaces in which images are rendered. These are made up of three components, like a Model-View-Controller (MVC) framework.
 
 ### DraweeView
 
