@@ -6,7 +6,5 @@ local.properties
 localhost/
 obj/
 *.iml
-Gemfile
 Gemfile.lock
 _site/
-

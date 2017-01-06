@@ -1,7 +1,6 @@
 .DS_STORE
 _site/
 *-e
-Gemfile
 Gemfile.lock
 *.swo
 *.swp
