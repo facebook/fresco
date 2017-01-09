@@ -59,6 +59,10 @@
   <string name="format_gif_label_medium">Medium (512x512 px)</string>
   <string name="format_gif_label_large">Large (1024x1024 px)</string>
 
+  <string name="format_color_title">Color</string>
+  <string name="format_color_switch">Color XML support enabled</string>
+  <string name="format_color_help">This example adds a custom color XML image format (&lt;color&gt;#rrggbb&lt;/color&gt;), decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable custom color XML support.</string>
+
   <string name="format_svg_title">SVG</string>
   <string name="format_svg_switch">SVG support enabled</string>
   <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>

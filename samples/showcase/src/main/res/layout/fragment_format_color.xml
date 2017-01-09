@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/decoder_switch"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/format_color_switch"
+      app:switchPadding="@dimen/switch_padding"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/drawee_height_medium"
+      android:orientation="horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      >
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/drawee1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/drawee2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+  </LinearLayout>
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/switch_background"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/format_switch_checker_board"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:text="@string/format_color_help"
+      />
+</LinearLayout>

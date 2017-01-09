@@ -61,6 +61,10 @@
     <menu>
       <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_format_color"
+            android:title="@string/format_color_title"
+            />
+        <item
             android:id="@+id/nav_format_gif"
             android:title="@string/format_gif_title"
             />

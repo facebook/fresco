@@ -9,7 +9,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.facebook.samples.decoders.color;
+package com.facebook.fresco.samples.showcase.imageformat.color;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,6 @@ import android.support.v4.graphics.ColorUtils;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.drawee.backends.pipeline.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
-import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -46,22 +45,27 @@ public class ColorImageExample {
   /**
    * Custom {@link ImageFormat} for color images.
    */
-  public static final ImageFormat COLOR = new ImageFormat("COLOR", "color");
+  public static final ImageFormat IMAGE_FORMAT_COLOR =
+      new ImageFormat("IMAGE_FORMAT_COLOR", "color");
 
   /**
-   * Create a new image format checker for {@link #COLOR}.
+   * Create a new image format checker for {@link #IMAGE_FORMAT_COLOR}.
    * @return the image format checker
    */
-  public static ImageFormat.FormatChecker getChecker() {
+  public static ImageFormat.FormatChecker createFormatChecker() {
     return new ColorFormatChecker();
   }
 
   /**
-   * Create a new decoder that can decode {@link #COLOR} images.
+   * Create a new decoder that can decode {@link #IMAGE_FORMAT_COLOR} images.
    * @return the decoder
    */
-  public static ImageDecoder getDecoder() {
+  public static ImageDecoder createDecoder() {
     return new ColorDecoder();
+  }
+
+  public static ColorDrawableFactory createDrawableFactory() {
+    return new ColorDrawableFactory();
   }
 
   /**
@@ -84,7 +88,7 @@ public class ColorImageExample {
         return null;
       }
       if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, HEADER)) {
-        return COLOR;
+        return IMAGE_FORMAT_COLOR;
       }
       return null;
     }

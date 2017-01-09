@@ -16,6 +16,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
+import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample;
 import com.facebook.fresco.samples.showcase.imageformat.svg.SvgDecoderExample;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
@@ -26,11 +27,18 @@ import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 public class CustomImageFormatConfigurator {
 
   private static final String IMAGE_FORMAT_PREFS = "fresco_image_format_prefs";
+  private static final String IMAGE_FORMAT_COLOR_KEY = "color";
   private static final String IMAGE_FORMAT_SVG_KEY = "svg";
 
   @Nullable
   public static ImageDecoderConfig createImageDecoderConfig(Context context) {
     ImageDecoderConfig.Builder config = ImageDecoderConfig.newBuilder();
+    if (isColorEnabled(context)) {
+      config.addDecodingCapability(
+          ColorImageExample.IMAGE_FORMAT_COLOR,
+          ColorImageExample.createFormatChecker(),
+          ColorImageExample.createDecoder());
+    }
     if (isSvgEnabled(context)) {
       config.addDecodingCapability(
           SvgDecoderExample.SVG_FORMAT,
@@ -49,12 +57,23 @@ public class CustomImageFormatConfigurator {
   public static void addCustomDrawableFactories(
       Context context,
       DraweeConfig.Builder draweeConfigBuilder) {
+    if (isColorEnabled(context)) {
+      draweeConfigBuilder.addCustomDrawableFactory(ColorImageExample.createDrawableFactory());
+    }
     if (isSvgEnabled(context)) {
       draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoderExample.SvgDrawableFactory());
     }
     if (isKeyframesEnabled()) {
       draweeConfigBuilder.addCustomDrawableFactory(KeyframesDecoderExample.createDrawableFactory());
     }
+  }
+
+  public static boolean isColorEnabled(Context context) {
+    return getBoolean(context, IMAGE_FORMAT_COLOR_KEY, false);
+  }
+
+  public static void setColorEnabled(Context context, boolean colorEnabled) {
+    setBoolean(context, IMAGE_FORMAT_COLOR_KEY, colorEnabled);
   }
 
   public static boolean isSvgEnabled(Context context) {
