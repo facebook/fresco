@@ -10,6 +10,7 @@
 package com.facebook.drawee.view;
 
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 
 import com.facebook.drawee.drawable.DrawableTestUtils;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
@@ -22,12 +23,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -191,6 +195,58 @@ public class DraweeHolderTest {
     mInOrderVerifier.verify(mController).onDetach();
     mInOrderVerifier.verify(mController).onAttach();
     assertTrue(mDraweeHolder.isAttached());
+  }
+
+  @Test
+  public void testSetNewControllerWithInvalidController() {
+    final DraweeHierarchy draweeHierarchy2 = DraweeMocks.mockDraweeHierarchyOf(mTopLevelDrawable);
+    final DraweeHolder draweeHolder2 = new DraweeHolder(draweeHierarchy2);
+
+    mDraweeHolder.onAttach();
+    mDraweeHolder.setController(mController);
+    draweeHolder2.setController(mController);
+
+    mDraweeHolder.setController(null);
+    verify(mController, never()).onDetach();
+    assertEquals(draweeHierarchy2, mController.getHierarchy());
+  }
+
+  @Test
+  public void testSetNewHierarchyWithInvalidController() {
+    final DraweeHierarchy draweeHierarchy2 = DraweeMocks.mockDraweeHierarchyOf(mTopLevelDrawable);
+    final DraweeHolder draweeHolder2 = new DraweeHolder(draweeHierarchy2);
+
+    mDraweeHolder.setController(mController);
+    draweeHolder2.setController(mController);
+
+    final DraweeHierarchy draweeHierarchy3 = DraweeMocks.mockDraweeHierarchyOf(mTopLevelDrawable);
+    mDraweeHolder.setHierarchy(draweeHierarchy3);
+    assertEquals(draweeHierarchy2, mController.getHierarchy());
+  }
+
+  @Test
+  public void testOnDetachWithInvalidController() {
+    final DraweeHierarchy draweeHierarchy2 = DraweeMocks.mockDraweeHierarchyOf(mTopLevelDrawable);
+    final DraweeHolder draweeHolder2 = new DraweeHolder(draweeHierarchy2);
+
+    mDraweeHolder.onAttach();
+    mDraweeHolder.setController(mController);
+    draweeHolder2.setController(mController);
+
+    mDraweeHolder.onDetach();
+    verify(mController, never()).onDetach();
+  }
+
+  @Test
+  public void testTouchEventWithInvalidController() {
+    final DraweeHierarchy draweeHierarchy2 = DraweeMocks.mockDraweeHierarchyOf(mTopLevelDrawable);
+    final DraweeHolder draweeHolder2 = new DraweeHolder(draweeHierarchy2);
+
+    mDraweeHolder.setController(mController);
+    draweeHolder2.setController(mController);
+
+    mDraweeHolder.onTouchEvent(mock(MotionEvent.class));
+    verify(mController, never()).onTouchEvent(any(MotionEvent.class));
   }
 
   /** There are 8 possible state transitions with two variables

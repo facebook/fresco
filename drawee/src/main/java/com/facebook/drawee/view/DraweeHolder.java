@@ -143,7 +143,7 @@ public class DraweeHolder<DH extends DraweeHierarchy>
    * @return whether the event was handled or not
    */
   public boolean onTouchEvent(MotionEvent event) {
-    if (mController == null) {
+    if (!isControllerValid()) {
       return false;
     }
     return mController.onTouchEvent(event);
@@ -208,7 +208,7 @@ public class DraweeHolder<DH extends DraweeHierarchy>
     }
 
     // Clear the old controller
-    if (mController != null) {
+    if (isControllerValid()) {
       mEventTracker.recordEvent(Event.ON_CLEAR_OLD_CONTROLLER);
       mController.setHierarchy(null);
     }
@@ -237,12 +237,15 @@ public class DraweeHolder<DH extends DraweeHierarchy>
    */
   public void setHierarchy(DH hierarchy) {
     mEventTracker.recordEvent(Event.ON_SET_HIERARCHY);
+    final boolean isControllerValid = isControllerValid();
+
     setVisibilityCallback(null);
     mHierarchy = Preconditions.checkNotNull(hierarchy);
     Drawable drawable = mHierarchy.getTopLevelDrawable();
     onVisibilityChange(drawable == null || drawable.isVisible());
     setVisibilityCallback(this);
-    if (mController != null) {
+
+    if (isControllerValid) {
       mController.setHierarchy(hierarchy);
     }
   }
@@ -290,7 +293,7 @@ public class DraweeHolder<DH extends DraweeHierarchy>
     }
     mEventTracker.recordEvent(Event.ON_DETACH_CONTROLLER);
     mIsControllerAttached = false;
-    if (mController != null) {
+    if (isControllerValid()) {
       mController.onDetach();
     }
   }
@@ -312,5 +315,9 @@ public class DraweeHolder<DH extends DraweeHierarchy>
         .add("trimmed", mTrimmed)
         .add("events", mEventTracker.toString())
         .toString();
+  }
+
+  private boolean isControllerValid() {
+    return mController != null && mController.getHierarchy() == getHierarchy();
   }
 }
