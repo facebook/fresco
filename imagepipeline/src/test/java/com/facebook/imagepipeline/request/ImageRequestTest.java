@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.request;
 
+import java.io.File;
+
 import android.net.Uri;
 
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
@@ -51,5 +53,29 @@ public class ImageRequestTest {
     ImageRequest copy = ImageRequestBuilder.fromRequest(original).build();
 
     assertThat(copy).isEqualTo(original);
+  }
+
+  @Test
+  public void testImageRequestForLocalFile_normal() {
+    final File file = new File("/foo/photos/penguin.jpg");
+    final ImageRequest imageRequest = ImageRequest.fromFile(file);
+
+    assertThat(imageRequest.getSourceFile()).isEqualTo(file);
+  }
+
+  @Test
+  public void testImageRequestForLocalFile_withSpaces() {
+    final File file = new File("/foo/photos folder/penguin crowd.jpg");
+    final ImageRequest imageRequest = ImageRequest.fromFile(file);
+
+    assertThat(imageRequest.getSourceFile()).isEqualTo(file);
+  }
+
+  @Test
+  public void testImageRequestForLocalFile_withSpecialCharacters() {
+    final File file = new File("/foo/photos#folder/with spaces/penguin?_&*\\...jpg");
+    final ImageRequest imageRequest = ImageRequest.fromFile(file);
+
+    assertThat(imageRequest.getSourceFile()).isEqualTo(file);
   }
 }

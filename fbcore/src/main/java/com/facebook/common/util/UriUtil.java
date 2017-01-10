@@ -11,6 +11,8 @@ package com.facebook.common.util;
 
 import javax.annotation.Nullable;
 
+import java.io.File;
+
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -184,6 +186,16 @@ public class UriUtil {
       result = srcUri.getPath();
     }
     return result;
+  }
+
+  /**
+   * Returns a URI for a given file using {@link Uri#fromFile(File)}.
+   *
+   * @param file a file with a valid path
+   * @return the URI
+   */
+  public static Uri getUriForFile(File file) {
+    return Uri.fromFile(file);
   }
 
   /**

@@ -17,6 +17,7 @@ import java.io.File;
 import android.net.Uri;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -70,6 +71,10 @@ public class ImageRequest {
 
   /** Request listener to use for this image request */
   private final @Nullable RequestListener mRequestListener;
+
+  public static ImageRequest fromFile(@Nullable File file) {
+    return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
+  }
 
   public static ImageRequest fromUri(@Nullable Uri uri) {
     return (uri == null) ? null : ImageRequestBuilder.newBuilderWithSource(uri).build();
