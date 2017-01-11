@@ -346,6 +346,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
    * @return The ratio to use for software resize using the downsampling limitation
    */
   @VisibleForTesting static int calculateDownsampleNumerator(int downsampleRatio) {
-    return 8 / downsampleRatio;
+    return Math.max(1, JpegTranscoder.SCALE_DENOMINATOR / downsampleRatio);
   }
 }

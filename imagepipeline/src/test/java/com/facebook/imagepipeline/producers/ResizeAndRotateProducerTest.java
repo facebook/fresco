@@ -460,6 +460,8 @@ public class ResizeAndRotateProducerTest {
     assertEquals(4, calculateDownsampleNumerator(2));
     assertEquals(2, calculateDownsampleNumerator(4));
     assertEquals(1, calculateDownsampleNumerator(8));
+    assertEquals(1, calculateDownsampleNumerator(16));
+    assertEquals(1, calculateDownsampleNumerator(32));
   }
 
   @Test
