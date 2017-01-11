@@ -20,7 +20,7 @@ import android.graphics.drawable.Drawable;
 /**
 * Drawable that displays a progress bar based on the level.
 */
-public class ProgressBarDrawable extends Drawable {
+public class ProgressBarDrawable extends Drawable implements CloneableDrawable {
 
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Path mPath = new Path();
@@ -158,6 +158,20 @@ public class ProgressBarDrawable extends Drawable {
       drawHorizontalBar(canvas, 10000, mBackgroundColor);
       drawHorizontalBar(canvas, mLevel, mColor);
     }
+  }
+
+  @Override
+  public Drawable cloneDrawable() {
+    final ProgressBarDrawable copy = new ProgressBarDrawable();
+    copy.mBackgroundColor = mBackgroundColor;
+    copy.mColor = mColor;
+    copy.mPadding = mPadding;
+    copy.mBarWidth = mBarWidth;
+    copy.mLevel = mLevel;
+    copy.mRadius = mRadius;
+    copy.mHideWhenZero = mHideWhenZero;
+    copy.mIsVertical = mIsVertical;
+    return copy;
   }
 
   private void drawHorizontalBar(Canvas canvas, int level, int color) {
