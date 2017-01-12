@@ -270,7 +270,8 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   }
 
   /**
-   * Jump immediately to the given frame number
+   * Jump immediately to the given frame number. The animation will not be paused if
+   * it is running. If the animation is not running, the animation will not be started.
    *
    * @param targetFrameNumber the frame number to jump to
    */
@@ -278,9 +279,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (mAnimationBackend == null || mFrameScheduler == null) {
       return;
     }
-    stop();
     // In order to jump to a given frame, we have to compute the correct start time
-    mStartTimeMs = now() - mFrameScheduler.getTargetRenderTimeMs(targetFrameNumber);
+    mLastFrameAnimationTimeMs = mFrameScheduler.getTargetRenderTimeMs(targetFrameNumber);
+    mStartTimeMs = now() - mLastFrameAnimationTimeMs;
     invalidateSelf();
   }
 
