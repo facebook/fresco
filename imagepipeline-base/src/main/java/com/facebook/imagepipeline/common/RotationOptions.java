@@ -64,6 +64,15 @@ public class RotationOptions {
   private final @Rotation int mRotation;
   private final boolean mDeferUntilRendered;
 
+  private static final RotationOptions ROTATION_OPTIONS_AUTO_ROTATE =
+      new RotationOptions(USE_EXIF_ROTATION_ANGLE, false);
+
+  private static final RotationOptions ROTATION_OPTIONS_DISABLE_ROTATION =
+      new RotationOptions(DISABLE_ROTATION, false);
+
+  private static final RotationOptions ROTATION_OPTIONS_ROTATE_AT_RENDER_TIME =
+      new RotationOptions(USE_EXIF_ROTATION_ANGLE, true);
+
   /**
    * Creates a new set of rotation options for JPEG images to use the rotation angle in the image
    * metadata.
@@ -74,7 +83,7 @@ public class RotationOptions {
    * defer, use {@link #autoRotateAtRenderTime()}.
    */
   public static RotationOptions autoRotate() {
-    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, false);
+    return ROTATION_OPTIONS_AUTO_ROTATE;
   }
 
   /**
@@ -82,7 +91,7 @@ public class RotationOptions {
    *
    */
   public static RotationOptions disableRotation() {
-    return new RotationOptions(DISABLE_ROTATION, false);
+    return ROTATION_OPTIONS_DISABLE_ROTATION;
   }
 
   /**
@@ -92,7 +101,7 @@ public class RotationOptions {
    * <p> The rotation may be deferred until the image is rendered.
    */
   public static RotationOptions autoRotateAtRenderTime() {
-    return new RotationOptions(USE_EXIF_ROTATION_ANGLE, true);
+    return ROTATION_OPTIONS_ROTATE_AT_RENDER_TIME;
   }
 
   /**
