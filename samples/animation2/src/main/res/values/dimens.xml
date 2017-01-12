@@ -5,4 +5,7 @@
   <!-- Animated image dimensions -->
   <dimen name="animation_width">100dp</dimen>
   <dimen name="animation_height">100dp</dimen>
+  <!-- Media controls -->
+  <dimen name="media_control_button_size">40dp</dimen>
+  <dimen name="media_control_seekbar_padding">8dp</dimen>
 </resources>
