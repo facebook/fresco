@@ -205,8 +205,8 @@ subprojects {
     // Gif
     createNativeLibrariesTasks(
             'Giflib',      // Name for the tasks
-            'http://kent.dl.sourceforge.net/project/giflib/giflib-5.1.1.tar.gz', // The Url for download
-            'giflib-5.1.1.tar.gz', // The downloaded file
+            'https://launchpad.net/ubuntu/+archive/primary/+files/giflib_5.1.1.orig.tar.gz', // The Url for download
+            'giflib_5.1.1.orig.tar.gz', // The downloaded file
             'giflib', // The folder where the file is downloaded
             'giflib-5.1.1/lib', // The first dir where we have put our customisation
             ['*.c', '*.h', '*.mk'], // Files to compile
