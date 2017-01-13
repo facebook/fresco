@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.Nullable;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -47,6 +48,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String REQUESTED_SIZE_KEY = "Requested size";
   private static final String DOWNSAMPLE_ENUMERATOR_KEY = "downsampleEnumerator";
   private static final String SOFTWARE_ENUMERATOR_KEY = "softwareEnumerator";
+  private static final String ROTATION_ANGLE_KEY = "rotationAngle";
   private static final String FRACTION_KEY = "Fraction";
   private static final int FULL_ROUND = 360;
 
@@ -171,17 +173,19 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         } else {
           numerator = softwareNumerator;
         }
+        final int rotationAngle = getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
         extraMap = getExtraMap(
             encodedImage,
             imageRequest,
             numerator,
             downsampleNumerator,
-            softwareNumerator);
+            softwareNumerator,
+            rotationAngle);
         is = encodedImage.getInputStream();
         JpegTranscoder.transcodeJpeg(
             is,
             outputStream,
-            getRotationAngle(imageRequest.getRotationOptions(), encodedImage),
+            rotationAngle,
             numerator,
             DEFAULT_JPEG_QUALITY);
         CloseableReference<PooledByteBuffer> ref =
@@ -216,7 +220,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         ImageRequest imageRequest,
         int numerator,
         int downsampleNumerator,
-        int softwareNumerator) {
+        int softwareNumerator,
+        int rotationAngle) {
       if (!mProducerContext.getListener().requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
@@ -231,13 +236,15 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       }
 
       String fraction = numerator > 0 ? numerator + "/8" : "";
-      return ImmutableMap.of(
-          ORIGINAL_SIZE_KEY, originalSize,
-          REQUESTED_SIZE_KEY, requestedSize,
-          FRACTION_KEY, fraction,
-          JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()),
-          DOWNSAMPLE_ENUMERATOR_KEY, Integer.toString(downsampleNumerator),
-          SOFTWARE_ENUMERATOR_KEY, Integer.toString(softwareNumerator));
+      final Map<String, String> map = new HashMap<>();
+      map.put(ORIGINAL_SIZE_KEY, originalSize);
+      map.put(REQUESTED_SIZE_KEY, requestedSize);
+      map.put(FRACTION_KEY, fraction);
+      map.put(JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()));
+      map.put(DOWNSAMPLE_ENUMERATOR_KEY, Integer.toString(downsampleNumerator));
+      map.put(SOFTWARE_ENUMERATOR_KEY, Integer.toString(softwareNumerator));
+      map.put(ROTATION_ANGLE_KEY, Integer.toString(rotationAngle));
+      return ImmutableMap.copyOf(map);
     }
   }
 
