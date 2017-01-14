@@ -24,6 +24,7 @@ import android.widget.ToggleButton;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.samples.animation2.color.ExampleColorBackend;
+import com.facebook.samples.animation2.local.LocalDrawableAnimationBackend;
 import com.facebook.samples.animation2.utils.AnimationBackendUtils;
 import com.facebook.samples.animation2.utils.AnimationControlsManager;
 
@@ -57,7 +58,8 @@ public class MediaControlFragment extends Fragment {
     AnimationBackend animationBackend =
         AnimationBackendUtils.wrapAnimationBackendWithInactivityCheck(
             getContext(),
-            ExampleColorBackend.createSampleColorAnimationBackend(getResources()));
+            createLocalDrawableBackend());
+
 
     // Create a new animated drawable, assign it to the image view and start the animation.
     mAnimatedDrawable = new AnimatedDrawable2(animationBackend);
@@ -69,5 +71,19 @@ public class MediaControlFragment extends Fragment {
         (SeekBar) view.findViewById(R.id.seekbar),
         (ToggleButton) view.findViewById(R.id.playpause),
         view.findViewById(R.id.reset));
+  }
+
+  private AnimationBackend createColorBackend() {
+    return ExampleColorBackend.createSampleColorAnimationBackend(getResources());
+  }
+
+  private AnimationBackend createLocalDrawableBackend() {
+    return new LocalDrawableAnimationBackend.Builder(getResources())
+        .addDrawableFrame(R.mipmap.ic_alarm)
+        .addDrawableFrame(R.mipmap.ic_android)
+        .addDrawableFrame(R.mipmap.ic_launcher)
+        .loopCount(3)
+        .frameDurationMs(500)
+        .build();
   }
 }
