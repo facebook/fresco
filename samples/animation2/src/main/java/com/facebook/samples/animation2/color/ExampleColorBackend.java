@@ -13,7 +13,6 @@ package com.facebook.samples.animation2.color;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -22,6 +21,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.samples.animation2.SampleData;
 
 /**
  * Example color backend that takes a list of colors and cycles through them.
@@ -34,23 +34,10 @@ public class ExampleColorBackend implements AnimationBackend {
    * @return the backend to use
    */
   public static AnimationBackend createSampleColorAnimationBackend(Resources resources) {
-    // Define the colors
-    int[] colors = {
-        Color.RED,
-        Color.GREEN,
-        Color.BLUE,
-        Color.CYAN,
-        Color.BLACK,
-        Color.GRAY,
-        Color.DKGRAY,
-        Color.LTGRAY,
-        Color.YELLOW,
-        Color.MAGENTA,
-    };
     // Get the animation duration in ms for each color frame
     int frameDurationMs = resources.getInteger(android.R.integer.config_mediumAnimTime);
     // Create and return the backend
-    return new ExampleColorBackend(colors, frameDurationMs);
+    return new ExampleColorBackend(SampleData.COLORS, frameDurationMs);
   }
 
   private final Paint mPaint = new Paint();

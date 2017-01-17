@@ -7,4 +7,5 @@
   <string name="backend_selector_title">Animation Backend</string>
   <string name="backend_color">Color</string>
   <string name="backend_local_drawables">Local Drawables</string>
+  <string name="backend_bitmap_simple">Simple Bitmaps</string>
 </resources>

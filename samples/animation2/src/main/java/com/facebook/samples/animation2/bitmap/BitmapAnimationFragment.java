@@ -11,7 +11,6 @@
  */
 package com.facebook.samples.animation2.bitmap;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +23,7 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.samples.animation2.R;
+import com.facebook.samples.animation2.SampleData;
 import com.facebook.samples.animation2.utils.AnimationBackendUtils;
 
 /**
@@ -34,19 +34,6 @@ import com.facebook.samples.animation2.utils.AnimationBackendUtils;
  * will be displayed.
  */
 public class BitmapAnimationFragment extends Fragment {
-
-  private final int[] COLORS = {
-      Color.RED,
-      Color.GREEN,
-      Color.BLUE,
-      Color.CYAN,
-      Color.BLACK,
-      Color.GRAY,
-      Color.DKGRAY,
-      Color.LTGRAY,
-      Color.YELLOW,
-      Color.MAGENTA,
-  };
 
   @Nullable
   @Override
@@ -72,7 +59,7 @@ public class BitmapAnimationFragment extends Fragment {
         AnimationBackendUtils.wrapAnimationBackendWithInactivityCheck(
             getContext(),
             ExampleBitmapAnimationFactory
-                .createColorBitmapAnimationBackend(COLORS, 300, new NoOpCache()));
+                .createColorBitmapAnimationBackend(SampleData.COLORS, 300, new NoOpCache()));
 
     // Create a new animated drawable, assign it to the image view and start the animation.
     final AnimatedDrawable2 animatedDrawable = new AnimatedDrawable2(animationBackend);

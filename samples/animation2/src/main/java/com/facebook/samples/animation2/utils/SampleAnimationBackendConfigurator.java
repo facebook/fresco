@@ -18,7 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.samples.animation2.R;
+import com.facebook.samples.animation2.SampleData;
+import com.facebook.samples.animation2.bitmap.ExampleBitmapAnimationFactory;
 import com.facebook.samples.animation2.color.ExampleColorBackend;
 import com.facebook.samples.animation2.local.LocalDrawableAnimationBackend;
 
@@ -54,6 +57,7 @@ public class SampleAnimationBackendConfigurator {
   private void addSampleBackends() {
     mArrayAdapter.add(createColorExample());
     mArrayAdapter.add(createLocalDrawableExample());
+    mArrayAdapter.add(createBitmapExample());
   }
 
   private BackendExampleEntry createColorExample() {
@@ -87,6 +91,27 @@ public class SampleAnimationBackendConfigurator {
       @Override
       public int getTitleResId() {
         return R.string.backend_local_drawables;
+      }
+    };
+  }
+
+  private BackendExampleEntry createBitmapExample() {
+    return new BackendExampleEntry() {
+      @Override
+      public AnimationBackend createBackend() {
+        // Get the animation duration in ms for each color frame
+        final int frameDurationMs = mContext.getResources()
+            .getInteger(android.R.integer.config_mediumAnimTime);
+        // Create and return the backend
+        return ExampleBitmapAnimationFactory.createColorBitmapAnimationBackend(
+            SampleData.COLORS,
+            frameDurationMs,
+            new NoOpCache());
+      }
+
+      @Override
+      public int getTitleResId() {
+        return R.string.backend_bitmap_simple;
       }
     };
   }
