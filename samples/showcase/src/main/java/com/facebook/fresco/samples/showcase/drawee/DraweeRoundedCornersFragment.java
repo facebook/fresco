@@ -147,6 +147,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     mDraweeFancy = (SimpleDraweeView) view.findViewById(R.id.drawee_fancy);
   }
 
+  @SuppressWarnings("ResourceType")
   private void initColors() {
     final TypedArray attrs =
         getActivity().getTheme().obtainStyledAttributes(R.style.AppTheme, new int[]{
