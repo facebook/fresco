@@ -146,7 +146,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
             contentValues
                 .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
 
-            db.insertOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
+          db.replaceOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
 
             db.setTransactionSuccessful();
           } catch (Exception x) {
@@ -196,7 +196,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
             IndexEntry.COLUMN_NAME_WIDTH + INTEGER_TYPE + "," +
             IndexEntry.COLUMN_NAME_HEIGHT + INTEGER_TYPE + "," +
             IndexEntry.COLUMN_NAME_CACHE_KEY + TEXT_TYPE + "," +
-            IndexEntry.COLUMN_NAME_RESOURCE_ID + TEXT_TYPE + " )";
+            IndexEntry.COLUMN_NAME_RESOURCE_ID + TEXT_TYPE + " UNIQUE )";
     private static final String SQL_CREATE_INDEX =
         "CREATE INDEX index_media_id ON " + IndexEntry.TABLE_NAME + " (" +
             IndexEntry.COLUMN_NAME_MEDIA_ID + ")";
