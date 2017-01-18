@@ -216,12 +216,12 @@ subprojects {
     // Webp
     createNativeLibrariesTasks(
             'Libwebp',      // Name for the tasks
-            'https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz', // The Url for download
-            'v0.5.1.tar.gz', // The downloaded file
+            'https://github.com/webmproject/libwebp/archive/v0.5.2.tar.gz', // The Url for download
+            'v0.5.2.tar.gz', // The downloaded file
             'libwebp', // The folder where the file is downloaded
-            'libwebp-0.5.1', // The first dir where we have put our customisation
+            'libwebp-0.5.2', // The first dir where we have put our customisation
             ['src/**/*.c', 'src/**/*.h', '*.mk'], // Files to compile
-            'libwebp-0.5.1' // Final destination dir
+            'libwebp-0.5.2' // Final destination dir
     )
 }
 
