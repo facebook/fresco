@@ -62,15 +62,20 @@ public class PipelineDraweeControllerBuilderSupplier implements
     if (animatedFactory != null) {
       animatedDrawableFactory = animatedFactory.getAnimatedDrawableFactory(context);
     }
-    mPipelineDraweeControllerFactory = new PipelineDraweeControllerFactory(
+    if (draweeConfig != null && draweeConfig.getPipelineDraweeControllerFactory() != null) {
+      mPipelineDraweeControllerFactory = draweeConfig.getPipelineDraweeControllerFactory();
+    } else {
+      mPipelineDraweeControllerFactory = new PipelineDraweeControllerFactory();
+    }
+    mPipelineDraweeControllerFactory.init(
         context.getResources(),
         DeferredReleaser.getInstance(),
         animatedDrawableFactory,
         UiThreadImmediateExecutorService.getInstance(),
         mImagePipeline.getBitmapMemoryCache(),
         draweeConfig != null
-                ? draweeConfig.getCustomDrawableFactories()
-                : null,
+            ? draweeConfig.getCustomDrawableFactories()
+            : null,
         draweeConfig != null
             ? draweeConfig.getDebugOverlayEnabledSupplier()
             : null);

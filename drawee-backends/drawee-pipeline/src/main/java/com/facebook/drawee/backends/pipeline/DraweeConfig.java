@@ -25,6 +25,8 @@ public class DraweeConfig {
 
   @Nullable
   private final ImmutableList<DrawableFactory> mCustomDrawableFactories;
+  @Nullable
+  private final PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
   private final Supplier<Boolean> mDebugOverlayEnabledSupplier;
 
   private DraweeConfig(Builder builder) {
@@ -34,11 +36,17 @@ public class DraweeConfig {
     mDebugOverlayEnabledSupplier = builder.mDebugOverlayEnabledSupplier != null
         ? builder.mDebugOverlayEnabledSupplier
         : Suppliers.of(false);
+    mPipelineDraweeControllerFactory = builder.mPipelineDraweeControllerFactory;
   }
 
   @Nullable
   public ImmutableList<DrawableFactory> getCustomDrawableFactories() {
     return mCustomDrawableFactories;
+  }
+
+  @Nullable
+  public PipelineDraweeControllerFactory getPipelineDraweeControllerFactory() {
+    return mPipelineDraweeControllerFactory;
   }
 
   public static Builder newBuilder() {
@@ -53,6 +61,7 @@ public class DraweeConfig {
 
     private List<DrawableFactory> mCustomDrawableFactories;
     private Supplier<Boolean> mDebugOverlayEnabledSupplier;
+    private PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
 
     /**
      * Add a custom drawable factory that will be used to create
@@ -91,6 +100,17 @@ public class DraweeConfig {
     public Builder setDebugOverlayEnabledSupplier(Supplier<Boolean> debugOverlayEnabledSupplier) {
       Preconditions.checkNotNull(debugOverlayEnabledSupplier);
       mDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
+      return this;
+    }
+
+    /**
+     * Set a PipelineDraweeControllerFactory to be used instead of the default one.
+     *
+     * @param factory the PipelineDraweeControllerFactory to use
+     * @return the builder
+     */
+    public Builder setPipelineDraweeControllerFactory(PipelineDraweeControllerFactory factory) {
+      mPipelineDraweeControllerFactory = factory;
       return this;
     }
 
