@@ -300,7 +300,7 @@ public class ProducerSequenceFactory {
     if (mLocalFileFetchToEncodedMemoryPrefetchSequence == null) {
       mLocalFileFetchToEncodedMemoryPrefetchSequence =
           ProducerFactory.newSwallowResultProducer(
-              getBackgroundNetworkFetchToEncodedMemorySequence());
+              getBackgroundLocalFileFetchToEncodeMemorySequence());
     }
     return mLocalFileFetchToEncodedMemoryPrefetchSequence;
   }
