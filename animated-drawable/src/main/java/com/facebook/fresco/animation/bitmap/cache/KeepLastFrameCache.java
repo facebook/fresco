@@ -27,6 +27,9 @@ public class KeepLastFrameCache implements BitmapFrameCache {
 
   private int mLastFrameNumber = FRAME_NUMBER_UNSET;
 
+  @Nullable
+  private FrameCacheListener mFrameCacheListener;
+
   @GuardedBy("this")
   @Nullable
   private CloseableReference<Bitmap> mLastBitmapReference;
@@ -75,17 +78,31 @@ public class KeepLastFrameCache implements BitmapFrameCache {
       int frameNumber,
       CloseableReference<Bitmap> bitmap,
       @BitmapAnimationBackend.FrameType int frameType) {
-    mLastFrameNumber = frameNumber;
     if (bitmap != null
         && mLastBitmapReference != null
         && bitmap.get().equals(mLastBitmapReference.get())) {
       return;
     }
     CloseableReference.closeSafely(mLastBitmapReference);
+    if (mFrameCacheListener != null && mLastFrameNumber != FRAME_NUMBER_UNSET) {
+      mFrameCacheListener.onFrameEvicted(this, mLastFrameNumber);
+    }
     mLastBitmapReference = CloseableReference.cloneOrNull(bitmap);
+    if (mFrameCacheListener != null) {
+      mFrameCacheListener.onFrameCached(this, frameNumber);
+    }
+    mLastFrameNumber = frameNumber;
+  }
+
+  @Override
+  public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
+    mFrameCacheListener = frameCacheListener;
   }
 
   private synchronized void closeAndResetLastBitmapReference() {
+    if (mFrameCacheListener != null && mLastFrameNumber != FRAME_NUMBER_UNSET) {
+      mFrameCacheListener.onFrameEvicted(this, mLastFrameNumber);
+    }
     CloseableReference.closeSafely(mLastBitmapReference);
     mLastBitmapReference = null;
     mLastFrameNumber = FRAME_NUMBER_UNSET;

@@ -19,6 +19,24 @@ import com.facebook.common.references.CloseableReference;
  */
 public interface BitmapFrameCache {
 
+  interface FrameCacheListener {
+
+    /**
+     * Called when the frame for the given frame number has been put in the frame cache.
+     * @param bitmapFrameCache the frame cache that holds the frame
+     * @param frameNumber the cached frame number
+     */
+    void onFrameCached(BitmapFrameCache bitmapFrameCache, int frameNumber);
+
+    /**
+     * Called when the frame for the given frame number has been evicted from the frame cache.
+     *
+     * @param bitmapFrameCache the frame cache that evicted the frame
+     * @param frameNumber the frame number of the evicted frame
+     */
+    void onFrameEvicted(BitmapFrameCache bitmapFrameCache, int frameNumber);
+  }
+
   /**
    * Get the cached frame for the given frame number.
    *
@@ -77,4 +95,11 @@ public interface BitmapFrameCache {
       int frameNumber,
       CloseableReference<Bitmap> bitmap,
       int frameType);
+
+  /**
+   * Set a frame cache listener that gets notified about caching events.
+   *
+   * @param frameCacheListener the listener to use
+   */
+  void setFrameCacheListener(FrameCacheListener frameCacheListener);
 }

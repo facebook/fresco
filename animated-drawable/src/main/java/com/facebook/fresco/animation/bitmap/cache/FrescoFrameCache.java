@@ -101,6 +101,11 @@ public class FrescoFrameCache implements BitmapFrameCache {
     }
   }
 
+  @Override
+  public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
+    // TODO (t15557326) Not supported for now
+  }
+
   @Nullable
   private static CloseableReference<Bitmap> extractAndClose(
       @Nullable CloseableReference<CloseableImage> closeableImage) {
