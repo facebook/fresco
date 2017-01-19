@@ -88,7 +88,7 @@ public class SimpleDraweeSpanTextView extends TextView {
   public void setDraweeSpanStringBuilder(DraweeSpanStringBuilder draweeSpanStringBuilder) {
     // setText will trigger onTextChanged, which will clean up the old draweeSpanStringBuilder
     // if necessary
-    setText(draweeSpanStringBuilder);
+    setText(draweeSpanStringBuilder, BufferType.SPANNABLE);
     mDraweeStringBuilder = draweeSpanStringBuilder;
     if (mDraweeStringBuilder != null && mIsAttached) {
       mDraweeStringBuilder.onAttachToView(this);
