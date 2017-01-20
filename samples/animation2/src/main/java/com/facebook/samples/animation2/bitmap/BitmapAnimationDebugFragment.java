@@ -22,12 +22,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
-import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.samples.animation2.R;
 import com.facebook.samples.animation2.SampleData;
@@ -45,6 +46,10 @@ public class BitmapAnimationDebugFragment extends Fragment {
   private final SparseArray<FrameInformationHolder> mFrameInfoMap = new SparseArray<>();
 
   private int mActiveFrameNumber = -1;
+
+  private BitmapAnimationBackend mBitmapAnimationBackend;
+  private AnimatedDrawable2 mAnimatedDrawable;
+  private AnimationControlsManager mAnimationControlsManager;
 
   private final BitmapAnimationBackend.FrameListener mFrameListener =
       new BitmapAnimationBackend.FrameListener() {
@@ -102,6 +107,15 @@ public class BitmapAnimationDebugFragment extends Fragment {
         }
       };
 
+  private final BitmapAnimationCacheSelectorConfigurator.BitmapFrameCacheChangedListener
+      mBitmapFrameCacheChangedListener =
+      new BitmapAnimationCacheSelectorConfigurator.BitmapFrameCacheChangedListener() {
+        @Override
+        public void onBitmapFrameCacheChanged(BitmapFrameCache bitmapFrameCache) {
+          updateBitmapFrameCache(bitmapFrameCache);
+        }
+      };
+
   @Nullable
   @Override
   public View onCreateView(
@@ -119,30 +133,39 @@ public class BitmapAnimationDebugFragment extends Fragment {
 
     mFrameInformationContainer = (LinearLayout) view.findViewById(R.id.frame_information);
 
-    // Create the cache and bitmap animation backend
-    BitmapFrameCache bitmapFrameCache = new KeepLastFrameCache();
-    bitmapFrameCache.setFrameCacheListener(mFrameCacheListener);
-    BitmapAnimationBackend animationBackend = ExampleBitmapAnimationFactory
+    mAnimatedDrawable = new AnimatedDrawable2();
+
+    mAnimationControlsManager = new AnimationControlsManager(
+        mAnimatedDrawable,
+        (SeekBar) getView().findViewById(R.id.seekbar),
+        (ToggleButton) getView().findViewById(R.id.playpause),
+        getView().findViewById(R.id.reset));
+
+    new BitmapAnimationCacheSelectorConfigurator(
+        (Spinner) view.findViewById(R.id.spinner),
+        mBitmapFrameCacheChangedListener,
+        mFrameCacheListener);
+
+    imageView.setImageDrawable(mAnimatedDrawable);
+  }
+
+  private void updateBitmapFrameCache(BitmapFrameCache bitmapFrameCache) {
+    mActiveFrameNumber = -1;
+    mBitmapAnimationBackend = ExampleBitmapAnimationFactory
         .createColorBitmapAnimationBackend(
             SampleData.COLORS,
             300,
             bitmapFrameCache);
 
-    // Create a new animated drawable, assign it to the image view and start the animation.
-    final AnimatedDrawable2 animatedDrawable = new AnimatedDrawable2(
+    AnimationBackend backendWithInactivityCheck =
         AnimationBackendUtils.wrapAnimationBackendWithInactivityCheck(
             getContext(),
-            animationBackend));
+            mBitmapAnimationBackend);
+    setupFrameInformationContainer(mBitmapAnimationBackend);
+    mAnimationControlsManager.updateBackendData(backendWithInactivityCheck);
 
-    setupFrameInformationContainer(animationBackend);
-
-    imageView.setImageDrawable(animatedDrawable);
-
-    new AnimationControlsManager(
-        animatedDrawable,
-        (SeekBar) view.findViewById(R.id.seekbar),
-        (ToggleButton) view.findViewById(R.id.playpause),
-        view.findViewById(R.id.reset));
+    mAnimatedDrawable.setAnimationBackend(backendWithInactivityCheck);
+    mAnimatedDrawable.invalidateSelf();
   }
 
   private void setupFrameInformationContainer(BitmapAnimationBackend bitmapAnimationBackend) {

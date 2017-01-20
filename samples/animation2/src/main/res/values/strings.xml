@@ -8,4 +8,8 @@
   <string name="backend_color">Color</string>
   <string name="backend_local_drawables">Local Drawables</string>
   <string name="backend_bitmap_simple">Simple Bitmaps</string>
+
+  <string name="cache_selector_title">Caching Strategy</string>
+  <string name="cache_noop">No-op cache</string>
+  <string name="cache_keep_last">Keep last frame</string>
 </resources>
