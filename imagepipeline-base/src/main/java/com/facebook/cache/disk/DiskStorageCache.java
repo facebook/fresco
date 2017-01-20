@@ -779,16 +779,16 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   private static void maybeDeleteSharedPreferencesFile(
       Context context,
       String directoryName) {
-    Context applicationContext = context.getApplicationContext();
-    String path =
-        applicationContext.getFilesDir().getParent()
-            + File.separator
-            + "shared_prefs"
-            + File.separator
-            + SHARED_PREFS_FILENAME_PREFIX
-            + directoryName;
-    File file = new File(path + ".xml");
     try {
+      Context applicationContext = context.getApplicationContext();
+      String path =
+          applicationContext.getFilesDir().getParent()
+              + File.separator
+              + "shared_prefs"
+              + File.separator
+              + SHARED_PREFS_FILENAME_PREFIX
+              + directoryName;
+      File file = new File(path + ".xml");
       if (file.exists()) {
         file.delete();
       }
