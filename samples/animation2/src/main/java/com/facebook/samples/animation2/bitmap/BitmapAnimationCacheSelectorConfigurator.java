@@ -60,6 +60,7 @@ public class BitmapAnimationCacheSelectorConfigurator {
   private void addSampleBackends() {
     mArrayAdapter.add(createNoOpCachingStrategy());
     mArrayAdapter.add(createKeepLastCachingStrategy());
+    mArrayAdapter.add(createNaiveCacheAllFramesCachingStrategy());
   }
 
   private CachingStrategyEntry createNoOpCachingStrategy() {
@@ -88,6 +89,21 @@ public class BitmapAnimationCacheSelectorConfigurator {
       @Override
       public int getTitleResId() {
         return R.string.cache_keep_last;
+      }
+    };
+  }
+
+  private CachingStrategyEntry createNaiveCacheAllFramesCachingStrategy() {
+    return new CachingStrategyEntry() {
+
+      @Override
+      public BitmapFrameCache createBitmapFrameCache() {
+        return new NaiveCacheAllFramesCachingBackend();
+      }
+
+      @Override
+      public int getTitleResId() {
+        return R.string.cache_naive_cache_all;
       }
     };
   }
