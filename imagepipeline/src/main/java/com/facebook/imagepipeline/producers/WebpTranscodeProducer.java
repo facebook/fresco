@@ -187,11 +187,13 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
             imageInputStream,
             outputStream,
             DEFAULT_JPEG_QUALITY);
+      encodedImage.setImageFormat(DefaultImageFormats.JPEG);
     } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS ||
         imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
       // In this case we always transcode to PNG
       WebpTranscoderFactory.getWebpTranscoder()
           .transcodeWebpToPng(imageInputStream, outputStream);
+      encodedImage.setImageFormat(DefaultImageFormats.PNG);
     } else {
       throw new IllegalArgumentException("Wrong image format");
     }
