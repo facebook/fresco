@@ -9,6 +9,9 @@
 
 package com.facebook.widget.text.span;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -32,6 +35,7 @@ import android.text.style.ReplacementSpan;
 public class BetterImageSpan extends ReplacementSpan {
 
   @IntDef({ALIGN_BASELINE, ALIGN_BOTTOM, ALIGN_CENTER})
+  @Retention(RetentionPolicy.SOURCE)
   public @interface BetterImageSpanAlignment {}
   public static final int ALIGN_BOTTOM = 0;
   public static final int ALIGN_BASELINE = 1;
