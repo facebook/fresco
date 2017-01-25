@@ -12,10 +12,7 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.Nullable;
 
 import java.io.InputStream;
-import java.lang.annotation.Retention;
 import java.util.concurrent.Executor;
-
-import android.support.annotation.IntDef;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
@@ -30,8 +27,6 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 
 import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
  * Transcodes WebP to JPEG / PNG.
