@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+  <Spinner
+      android:id="@+id/spinner"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      />
+
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/drawee_view"
+      android:layout_width="@dimen/drawee_width_medium"
+      android:layout_height="@dimen/drawee_height_medium"
+      android:layout_marginTop="@dimen/margin_medium"
+      />
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/switch_progressive_enabled"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:checked="true"
+      android:text="@string/format_pjpeg_switch_rendering_enabled"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:text="@string/format_pjpeg_help"
+      />
+
+  <ScrollView
+      android:id="@+id/debug_output_scroll_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:padding="@dimen/padding_medium"
+      android:clipToPadding="false"
+      android:background="@color/grey900"
+      android:scrollbars="vertical"
+      android:scrollbarThumbVertical="@color/primary"
+      android:scrollbarAlwaysDrawVerticalTrack="true"
+      >
+    <TextView
+        android:id="@+id/debug_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
+        android:textSize="12sp"
+        />
+  </ScrollView>
+</LinearLayout>
