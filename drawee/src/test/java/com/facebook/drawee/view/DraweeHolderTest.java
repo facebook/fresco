@@ -75,6 +75,16 @@ public class DraweeHolderTest {
   }
 
   @Test
+  public void testSetControllerBeforeHierarchy() {
+    mDraweeHolder = new DraweeHolder(null);
+    mDraweeHolder.setController(mController);
+    mDraweeHolder.setHierarchy(mDraweeHierarchy);
+    assertSame(mController, mDraweeHolder.getController());
+    assertSame(mDraweeHierarchy, mDraweeHolder.getHierarchy());
+    assertSame(mDraweeHierarchy, mController.getHierarchy());
+  }
+
+  @Test
   public void testClearControllerKeepsHierarchy() {
     mDraweeHolder.setController(mController);
     mDraweeHolder.setController(null);

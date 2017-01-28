@@ -318,6 +318,6 @@ public class DraweeHolder<DH extends DraweeHierarchy>
   }
 
   private boolean isControllerValid() {
-    return mController != null && mController.getHierarchy() == getHierarchy();
+    return mController != null && mController.getHierarchy() == mHierarchy;
   }
 }
