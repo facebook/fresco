@@ -15,6 +15,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity
 
   private static final int INITIAL_NAVDRAWER_ITEM_ID = R.id.nav_welcome;
 
+  private static final String KEY_SELECTED_NAVDRAWER_ITEM_ID = "selected_navdrawer_item_id";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -66,8 +69,11 @@ public class MainActivity extends AppCompatActivity
     navigationView.setNavigationItemSelectedListener(this);
 
     if (savedInstanceState == null) {
-      handleNavigationItemClick(INITIAL_NAVDRAWER_ITEM_ID);
-      navigationView.setCheckedItem(INITIAL_NAVDRAWER_ITEM_ID);
+      int selectedItem = PreferenceManager.getDefaultSharedPreferences(this).getInt(
+          KEY_SELECTED_NAVDRAWER_ITEM_ID,
+          INITIAL_NAVDRAWER_ITEM_ID);
+      handleNavigationItemClick(selectedItem);
+      navigationView.setCheckedItem(selectedItem);
     }
   }
 
@@ -179,6 +185,14 @@ public class MainActivity extends AppCompatActivity
         throw new IllegalArgumentException("No example with this id!");
     }
     showFragment(fragment);
+
+    // Save the item if it's not the settings fragment
+    if (itemId != R.id.nav_action_settings) {
+      PreferenceManager.getDefaultSharedPreferences(this)
+          .edit()
+          .putInt(KEY_SELECTED_NAVDRAWER_ITEM_ID, itemId)
+          .apply();
+    }
   }
 
   /**
