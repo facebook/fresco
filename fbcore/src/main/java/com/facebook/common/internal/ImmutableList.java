@@ -10,6 +10,7 @@
 package com.facebook.common.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +24,12 @@ public class ImmutableList<E> extends ArrayList<E> {
   }
 
   public static <E> ImmutableList<E> copyOf(List<E> list) {
+    return new ImmutableList<>(list);
+  }
+
+  public static <E> ImmutableList<E> of(E... elements) {
+    List<E> list = new ArrayList<>(elements.length);
+    Collections.addAll(list, elements);
     return new ImmutableList<>(list);
   }
 }
