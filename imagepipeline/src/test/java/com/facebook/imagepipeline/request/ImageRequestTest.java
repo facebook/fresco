@@ -60,7 +60,8 @@ public class ImageRequestTest {
     final File file = new File("/foo/photos/penguin.jpg");
     final ImageRequest imageRequest = ImageRequest.fromFile(file);
 
-    assertThat(imageRequest.getSourceFile()).isEqualTo(file);
+    assertThat(imageRequest.getSourceFile()).isNotNull();
+    assertThat(imageRequest.getSourceFile().getAbsolutePath()).isEqualTo(file.getAbsolutePath());
   }
 
   @Test
@@ -68,14 +69,16 @@ public class ImageRequestTest {
     final File file = new File("/foo/photos folder/penguin crowd.jpg");
     final ImageRequest imageRequest = ImageRequest.fromFile(file);
 
-    assertThat(imageRequest.getSourceFile()).isEqualTo(file);
+    assertThat(imageRequest.getSourceFile()).isNotNull();
+    assertThat(imageRequest.getSourceFile().getAbsolutePath()).isEqualTo(file.getAbsolutePath());
   }
 
   @Test
   public void testImageRequestForLocalFile_withSpecialCharacters() {
-    final File file = new File("/foo/photos#folder/with spaces/penguin?_&*\\...jpg");
+    final File file = new File("/foo/photos#folder/with spaces/penguin?_&*-...jpg");
     final ImageRequest imageRequest = ImageRequest.fromFile(file);
 
-    assertThat(imageRequest.getSourceFile()).isEqualTo(file);
+    assertThat(imageRequest.getSourceFile()).isNotNull();
+    assertThat(imageRequest.getSourceFile().getAbsolutePath()).isEqualTo(file.getAbsolutePath());
   }
 }
