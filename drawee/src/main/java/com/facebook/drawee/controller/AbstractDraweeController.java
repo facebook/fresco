@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.components.DraweeEventTracker;
 import com.facebook.drawee.components.RetryManager;
@@ -95,6 +96,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
   private @Nullable Drawable mDrawable;
+  private @Nullable Throwable mInitTrace;
 
   public AbstractDraweeController(
       DeferredReleaser deferredReleaser,
@@ -119,6 +121,9 @@ public abstract class AbstractDraweeController<T, INFO> implements
 
   private void init(String id, Object callerContext, boolean justConstructed) {
     mEventTracker.recordEvent(Event.ON_INIT_CONTROLLER);
+    if (CloseableReference.isUnclosedTrackingEnabled()) {
+      mInitTrace = new Throwable();
+    }
     // cancel deferred release
     if (!justConstructed && mDeferredReleaser != null) {
       mDeferredReleaser.cancelDeferredRelease(this);
@@ -465,6 +470,9 @@ public abstract class AbstractDraweeController<T, INFO> implements
             boolean isFinished = dataSource.isFinished();
             float progress = dataSource.getProgress();
             T image = dataSource.getResult();
+            if (mInitTrace != null && image instanceof CloseableReference) {
+              ((CloseableReference) image).setUnclosedRelevantTrance(mInitTrace);
+            }
             if (image != null) {
               onNewResultInternal(id, dataSource, image, progress, isFinished, wasImmediate);
             } else if (isFinished) {

@@ -79,8 +79,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
       };
 
   private static volatile @Nullable UnclosedReferenceListener sUnclosedReferenceListener;
-  private final @Nullable Throwable mObtainedTrace;
-  private @Nullable Throwable mClonedTrace;
+  private @Nullable Throwable mRelevantTrace;
 
   @GuardedBy("this")
   private boolean mIsClosed = false;
@@ -94,13 +93,13 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   private CloseableReference(SharedReference<T> sharedReference) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
-    mObtainedTrace = getTraceOrNull();
+    mRelevantTrace = getTraceOrNull();
   }
 
   private CloseableReference(T t, ResourceReleaser<T> resourceReleaser) {
     // Ref-count pre-set to 1
     mSharedReference = new SharedReference<T>(t, resourceReleaser);
-    mObtainedTrace = getTraceOrNull();
+    mRelevantTrace = getTraceOrNull();
   }
 
   /**
@@ -165,13 +164,13 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    */
   @Override
   public synchronized CloseableReference<T> clone() {
-    mClonedTrace = getTraceOrNull();
+    mRelevantTrace = getTraceOrNull();
     Preconditions.checkState(isValid());
     return new CloseableReference<T>(mSharedReference);
   }
 
   public synchronized CloseableReference<T> cloneOrNull() {
-    mClonedTrace = getTraceOrNull();
+    mRelevantTrace = getTraceOrNull();
     return isValid() ? new CloseableReference<T>(mSharedReference) : null;
   }
 
@@ -196,8 +195,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
 
       UnclosedReferenceListener listener = sUnclosedReferenceListener;
       if (listener != null) {
-        Throwable cause = mClonedTrace != null ? mClonedTrace : mObtainedTrace;
-        listener.onUnclosedReferenceFinalized(this, cause);
+        listener.onUnclosedReferenceFinalized(this, mRelevantTrace);
       } else {
         FLog.w(
             TAG,
@@ -211,6 +209,26 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     } finally {
       super.finalize();
     }
+  }
+
+  /**
+   * Returns whether CloseableReference instances are currently gathering obtain/clone traces for
+   * the purpose of unclosed reference tracking.
+   *
+   * @see #setUnclosedReferenceListener(UnclosedReferenceListener)
+   */
+  public static boolean isUnclosedTrackingEnabled() {
+    return sUnclosedReferenceListener != null;
+  }
+
+  /**
+   * If the obtained/cloned trace is not valuable in some instances, you can set a more relevant
+   * trace here, for the purpose of unclosed reference tracking.
+   *
+   * @see #setUnclosedReferenceListener(UnclosedReferenceListener)
+   */
+  public void setUnclosedRelevantTrance(Throwable relevantTrance) {
+    mRelevantTrace = relevantTrance;
   }
 
   /**
@@ -293,6 +311,10 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     }
   }
 
+  /**
+   * Set a listener to be notified when a CloseableReference is finalized by GC without it being
+   * explicitly closed beforehand.
+   */
   public static void setUnclosedReferenceListener(
       UnclosedReferenceListener unclosedReferenceListener) {
     sUnclosedReferenceListener = unclosedReferenceListener;
