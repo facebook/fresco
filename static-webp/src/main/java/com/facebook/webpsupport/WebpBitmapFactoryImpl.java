@@ -395,7 +395,6 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     StaticWebpNativeLoader.ensure();
     Bitmap bitmap;
 
-    boolean isWebp = false;
     long originalSeekPosition = nativeSeek(fd, 0, false);
     if (originalSeekPosition != -1) {
       InputStream inputStream = wrapToMarkSupportedStream(new FileInputStream(fd));
