@@ -13,6 +13,7 @@
   <string name="category_drawee">Drawee</string>
 
   <string name="drawee_simple_title">Simple Drawee</string>
+  <string name="drawee_simple_help">Basic SimpleDraweeView example that just sets the image URI.</string>
 
   <string name="drawee_scale_type_title">Scale Type</string>
   <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>

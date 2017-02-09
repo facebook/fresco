@@ -11,6 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase.drawee;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,9 @@ import com.facebook.fresco.samples.showcase.R;
  */
 public class DraweeSimpleFragment extends BaseShowcaseFragment {
 
+  private static final Uri URI =
+      Uri.parse("http://frescolib.org/static/sample-images/animal_d.png");
+
   @Nullable
   @Override
   public View onCreateView(
@@ -37,7 +41,7 @@ public class DraweeSimpleFragment extends BaseShowcaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    simpleDraweeView.setImageURI("https://www.gstatic.com/webp/gallery/1.sm.jpg");
+    simpleDraweeView.setImageURI(URI);
   }
 
   @Override
