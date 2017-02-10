@@ -15,6 +15,13 @@
   <string name="drawee_simple_title">Simple Drawee</string>
   <string name="drawee_simple_help">Basic SimpleDraweeView example that just sets the image URI.</string>
 
+  <string name="drawee_media_picker_title">Media Provider</string>
+  <string name="drawee_media_picker_help">Select an image by pressing one of the media picker buttons.</string>
+  <string name="drawee_media_picker_button_action_open_document">ACTION_OPEN_DOCUMENT</string>
+  <string name="drawee_media_picker_action_open_document_not_supported">Intent.ACTION_OPEN_DOCUMENT is only supported by Kitkat and above!</string>
+  <string name="drawee_media_picker_no_image">No image selected.</string>
+  <string name="drawee_media_picker_button_action_pick">ACTION_PICK</string>
+
   <string name="drawee_scale_type_title">Scale Type</string>
   <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
 

@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.fresco.samples.showcase.drawee.DraweeHierarchyFragment;
+import com.facebook.fresco.samples.showcase.drawee.DraweeMediaPickerFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeRotationFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeRoundedCornersFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
@@ -129,6 +130,9 @@ public class MainActivity extends AppCompatActivity
       // Drawee
       case R.id.nav_drawee_simple:
         fragment = new DraweeSimpleFragment();
+        break;
+      case R.id.nav_drawee_media_picker:
+        fragment = new DraweeMediaPickerFragment();
         break;
       case R.id.nav_drawee_scaletype:
         fragment = new DraweeScaleTypeFragment();

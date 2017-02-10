@@ -15,6 +15,10 @@
             android:title="@string/drawee_simple_title"
             />
         <item
+            android:id="@+id/nav_drawee_media_picker"
+            android:title="@string/drawee_media_picker_title"
+            />
+        <item
             android:id="@+id/nav_drawee_scaletype"
             android:title="@string/drawee_scale_type_title"
             />
