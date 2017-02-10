@@ -74,6 +74,16 @@ public class DraweeMediaPickerFragment extends BaseShowcaseFragment {
       }
     });
 
+    View actionGetContent = view.findViewById(R.id.pick_action_get_content);
+    actionGetContent.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_PICK_MEDIA);
+      }
+    });
+
     View actionPickButton = view.findViewById(R.id.pick_action_pick);
     actionPickButton.setOnClickListener(new View.OnClickListener() {
       @Override

@@ -19,6 +19,7 @@
   <string name="drawee_media_picker_help">Select an image by pressing one of the media picker buttons.</string>
   <string name="drawee_media_picker_button_action_open_document">ACTION_OPEN_DOCUMENT</string>
   <string name="drawee_media_picker_action_open_document_not_supported">Intent.ACTION_OPEN_DOCUMENT is only supported by Kitkat and above!</string>
+  <string name="drawee_media_picker_button_action_get_content">ACTION_GET_CONTENT</string>
   <string name="drawee_media_picker_no_image">No image selected.</string>
   <string name="drawee_media_picker_button_action_pick">ACTION_PICK</string>
 
