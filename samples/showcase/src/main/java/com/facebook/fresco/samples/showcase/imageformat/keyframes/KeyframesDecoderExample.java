@@ -14,6 +14,7 @@ package com.facebook.fresco.samples.showcase.imageformat.keyframes;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 
+import com.facebook.common.internal.Closeables;
 import com.facebook.drawee.backends.pipeline.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
@@ -27,6 +28,7 @@ import com.facebook.keyframes.deserializers.KFImageDeserializer;
 import com.facebook.keyframes.model.KFImage;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Decoder and related classes for loading and displaying Keyframe animated images.
@@ -91,12 +93,16 @@ public class KeyframesDecoderExample {
         int length,
         QualityInfo qualityInfo,
         ImageDecodeOptions options) {
+      InputStream encodedInputStream = null;
       try {
+        encodedInputStream = encodedImage.getInputStream();
         return new CloseableKeyframesImage(
-            KFImageDeserializer.deserialize(encodedImage.getInputStream()));
+            KFImageDeserializer.deserialize(encodedInputStream));
       } catch (IOException e) {
         e.printStackTrace();
         return null;
+      } finally {
+        Closeables.closeQuietly(encodedInputStream);
       }
     }
   }
