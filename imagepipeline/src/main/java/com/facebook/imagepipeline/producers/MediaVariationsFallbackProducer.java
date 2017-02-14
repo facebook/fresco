@@ -45,7 +45,7 @@ import bolts.Task;
  */
 public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "MediaVariationsFallbackProducer";
+  public static final String PRODUCER_NAME = "MediaVariationsFallbackProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
   public static final String EXTRA_CACHED_VALUE_USED_AS_LAST = "cached_value_used_as_last";
 
