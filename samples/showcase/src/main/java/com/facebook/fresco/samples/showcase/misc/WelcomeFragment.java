@@ -48,7 +48,7 @@ public class WelcomeFragment extends BaseShowcaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     final SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    draweeView.setImageURI(UriUtil.getUriForResourceId(R.drawable.logo));
+    draweeView.setActualImageResource(R.drawable.logo);
     draweeView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

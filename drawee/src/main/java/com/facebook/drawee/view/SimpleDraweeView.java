@@ -16,10 +16,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.R;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -89,7 +91,16 @@ public class SimpleDraweeView extends GenericDraweeView {
           R.styleable.SimpleDraweeView);
       try {
         if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
-          setImageURI(Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)), null);
+          setImageURI(
+              Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)),
+              null);
+        } else if (gdhAttrs.hasValue((R.styleable.SimpleDraweeView_actualImageResource))) {
+          int resId = gdhAttrs.getResourceId(
+              R.styleable.SimpleDraweeView_actualImageResource,
+              NO_ID);
+          if (resId != NO_ID) {
+            setActualImageResource(resId);
+          }
         }
       } finally {
         gdhAttrs.recycle();
@@ -145,5 +156,46 @@ public class SimpleDraweeView extends GenericDraweeView {
   public void setImageURI(@Nullable String uriString, @Nullable Object callerContext) {
     Uri uri = (uriString != null) ? Uri.parse(uriString) : null;
     setImageURI(uri, callerContext);
+  }
+
+  /**
+   * Sets the actual image resource to the given resource ID.
+   *
+   * Similar to {@link #setImageResource(int)}, this sets the displayed image to the given resource.
+   * However, {@link #setImageResource(int)} bypasses all Drawee functionality and makes the view
+   * act as a normal {@link android.widget.ImageView}, whereas this method keeps all of the
+   * Drawee functionality, including the {@link com.facebook.drawee.interfaces.DraweeHierarchy}.
+   *
+   * @param resourceId the resource ID to use.
+   */
+  public void setActualImageResource(@DrawableRes int resourceId) {
+    setActualImageResource(resourceId, null);
+  }
+
+  /**
+   * Sets the actual image resource to the given resource ID.
+   *
+   * Similar to {@link #setImageResource(int)}, this sets the displayed image to the given resource.
+   * However, {@link #setImageResource(int)} bypasses all Drawee functionality and makes the view
+   * act as a normal {@link android.widget.ImageView}, whereas this method keeps all of the
+   * Drawee functionality, including the {@link com.facebook.drawee.interfaces.DraweeHierarchy}.
+   *
+   * @param resourceId the resource ID to use.
+   * @param callerContext caller context
+   */
+  public void setActualImageResource(@DrawableRes int resourceId, @Nullable Object callerContext) {
+    setImageURI(UriUtil.getUriForResourceId(resourceId), callerContext);
+  }
+
+  /**
+   * This method will bypass all Drawee-related functionality.
+   * If you want to keep this functionality, take a look at {@link #setActualImageResource(int)}
+   * and {@link #setActualImageResource(int, Object)}}.
+   *
+   * @param resId the resource ID
+   */
+  @Override
+  public void setImageResource(int resId) {
+    super.setImageResource(resId);
   }
 }

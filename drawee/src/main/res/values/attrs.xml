@@ -128,6 +128,8 @@
 
     <!-- An image uri . -->
     <attr name="actualImageUri" format="string"/>
+    <!-- An image reference -->
+    <attr name="actualImageResource" format="reference"/>
 
   </declare-styleable>
 
