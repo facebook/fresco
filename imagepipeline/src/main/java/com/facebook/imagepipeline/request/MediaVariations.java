@@ -35,7 +35,7 @@ import com.facebook.common.internal.Objects;
  * is true in the image pipeline config.
  */
 @Immutable
-public final class MediaVariations {
+public class MediaVariations {
 
   private final String mMediaId;
   private final @Nullable List<Variant> mVariants;
