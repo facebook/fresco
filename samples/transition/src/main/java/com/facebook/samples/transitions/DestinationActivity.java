@@ -27,7 +27,7 @@ public class DestinationActivity extends Activity {
     setContentView(R.layout.drawee_destination);
 
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
-    simpleDraweeView.setImageURI("res:/" + R.drawable.test_image);
+    simpleDraweeView.setActualImageResource(R.drawable.test_image);
 
     getWindow().setSharedElementEnterTransition(DraweeTransition.createTransitionSet(
             ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.FIT_CENTER));

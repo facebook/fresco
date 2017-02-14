@@ -29,7 +29,7 @@ public class SourceActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.drawee_source);
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
-    mSimpleDraweeView.setImageURI("res:/" + R.drawable.test_image);
+    mSimpleDraweeView.setActualImageResource(R.drawable.test_image);
   }
 
   public void startTransition(View view) {
