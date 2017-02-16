@@ -72,6 +72,7 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
         mFrameCacheListener.onFrameEvicted(this, mBitmapSparseArray.keyAt(i));
       }
     }
+    mBitmapSparseArray.clear();
   }
 
   @Override
