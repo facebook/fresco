@@ -30,7 +30,6 @@ import com.facebook.drawee.components.RetryManager;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
-import com.facebook.infer.annotation.ReturnsOwnership;
 
 /**
  * Base implementation for Drawee controller builders.
@@ -438,7 +437,7 @@ public abstract class AbstractDraweeControllerBuilder <
   }
 
   /** Concrete builder classes should override this method to return a new controller. */
-  @ReturnsOwnership protected abstract AbstractDraweeController obtainController();
+  protected abstract AbstractDraweeController obtainController();
 
   /**
    * Concrete builder classes should override this method to return a data source for the request.
