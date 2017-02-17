@@ -28,12 +28,19 @@ public class ForwardingRequestListener implements RequestListener {
   public ForwardingRequestListener(Set<RequestListener> requestListeners) {
     mRequestListeners = new ArrayList<>(requestListeners.size());
     for (RequestListener requestListener : requestListeners) {
-      mRequestListeners.add(requestListener);
+      if (requestListener != null) {
+        mRequestListeners.add(requestListener);
+      }
     }
   }
 
   public ForwardingRequestListener(RequestListener... requestListeners) {
-    mRequestListeners = Arrays.asList(requestListeners);
+    mRequestListeners = new ArrayList<>(requestListeners.length);
+    for (RequestListener requestListener : requestListeners) {
+      if (requestListener != null) {
+        mRequestListeners.add(requestListener);
+      }
+    }
   }
 
   @Override
