@@ -10,6 +10,7 @@
 package com.facebook.imagepipeline.producers;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   private static final String SQL_DELETE_ENTRIES =
       "DROP TABLE IF EXISTS " + IndexEntry.TABLE_NAME;
 
+  @GuardedBy("MediaVariationsIndexDatabase.class")
   private final LazyIndexDbOpenHelper mDbHelper;
   private final Executor mReadExecutor;
   private final Executor mWriteExecutor;
@@ -75,50 +77,51 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
     }
   }
 
-  private synchronized List<MediaVariations.Variant> getCachedVariantsSync(String mediaId) {
-    SQLiteDatabase db = mDbHelper.getWritableDatabase();
-    Cursor c = null;
-    try {
-      String selection = IndexEntry.COLUMN_NAME_MEDIA_ID + " = ?";
-      String[] selectionArgs = {mediaId};
+  private List<MediaVariations.Variant> getCachedVariantsSync(String mediaId) {
+    synchronized (MediaVariationsIndexDatabase.class) {
+      SQLiteDatabase db = mDbHelper.getWritableDatabase();
+      Cursor c = null;
+      try {
+        String selection = IndexEntry.COLUMN_NAME_MEDIA_ID + " = ?";
+        String[] selectionArgs = {mediaId};
 
-      c = db.query(
-          IndexEntry.TABLE_NAME,
-          PROJECTION,
-          selection,
-          selectionArgs,
-          null, // groupBy
-          null, // having
-          null); // orderBy
+        c = db.query(
+            IndexEntry.TABLE_NAME,
+            PROJECTION,
+            selection,
+            selectionArgs,
+            null, // groupBy
+            null, // having
+            null); // orderBy
 
-      if (c.getCount() == 0) {
-        return null;
+        if (c.getCount() == 0) {
+          return null;
+        }
+
+        final int columnIndexCacheKey =
+            c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
+        final int columnIndexWidth = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_WIDTH);
+        final int columnIndexHeight =
+            c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_HEIGHT);
+
+        List<MediaVariations.Variant> variants = new ArrayList<>(c.getCount());
+        while (c.moveToNext()) {
+          variants.add(new MediaVariations.Variant(
+              Uri.parse(c.getString(columnIndexCacheKey)),
+              c.getInt(columnIndexWidth),
+              c.getInt(columnIndexHeight)
+          ));
+        }
+
+        return variants;
+      } catch (SQLException x) {
+        FLog.e(TAG, x, "Error reading for %s", mediaId);
+        throw x;
+      } finally {
+        if (c != null) {
+          c.close();
+        }
       }
-
-      final int columnIndexCacheKey =
-          c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
-      final int columnIndexWidth = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_WIDTH);
-      final int columnIndexHeight =
-          c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_HEIGHT);
-
-      List<MediaVariations.Variant> variants = new ArrayList<>(c.getCount());
-      while (c.moveToNext()) {
-        variants.add(new MediaVariations.Variant(
-            Uri.parse(c.getString(columnIndexCacheKey)),
-            c.getInt(columnIndexWidth),
-            c.getInt(columnIndexHeight)
-        ));
-      }
-
-      return variants;
-    } catch (SQLException x) {
-      FLog.e(TAG, x, "Error reading for %s", mediaId);
-      throw x;
-    } finally {
-      if (c != null) {
-        c.close();
-      }
-      db.close();
     }
   }
 
@@ -130,25 +133,27 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
     mWriteExecutor.execute(new Runnable() {
       @Override
       public void run() {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        try {
-          db.beginTransaction();
+        synchronized (MediaVariationsIndexDatabase.class) {
+          SQLiteDatabase db = mDbHelper.getWritableDatabase();
+          try {
+            db.beginTransaction();
 
-          ContentValues contentValues = new ContentValues();
-          contentValues.put(IndexEntry.COLUMN_NAME_MEDIA_ID, mediaId);
-          contentValues.put(IndexEntry.COLUMN_NAME_WIDTH, encodedImage.getWidth());
-          contentValues.put(IndexEntry.COLUMN_NAME_HEIGHT, encodedImage.getHeight());
-          contentValues.put(IndexEntry.COLUMN_NAME_CACHE_KEY, cacheKey.getUriString());
-          contentValues
-              .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(IndexEntry.COLUMN_NAME_MEDIA_ID, mediaId);
+            contentValues.put(IndexEntry.COLUMN_NAME_WIDTH, encodedImage.getWidth());
+            contentValues.put(IndexEntry.COLUMN_NAME_HEIGHT, encodedImage.getHeight());
+            contentValues.put(IndexEntry.COLUMN_NAME_CACHE_KEY, cacheKey.getUriString());
+            contentValues
+                .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
 
-          db.insertOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
+            db.insertOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
 
-          db.setTransactionSuccessful();
-        } catch (Exception x) {
-          FLog.e(TAG, x, "Error writing for %s", mediaId);
-        } finally {
-          db.endTransaction();
+            db.setTransactionSuccessful();
+          } catch (Exception x) {
+            FLog.e(TAG, x, "Error writing for %s", mediaId);
+          } finally {
+            db.endTransaction();
+          }
         }
       }
     });
