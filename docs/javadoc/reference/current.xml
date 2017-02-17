@@ -5160,6 +5160,19 @@
 <parameter name="list" type="java.util.List&lt;E&gt;">
 </parameter>
 </method>
+<method name="of"
+ return="com.facebook.common.internal.ImmutableList&lt;E&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="elements" type="E...">
+</parameter>
+</method>
 </class>
 <class name="ImmutableMap"
  extends="java.util.HashMap"
@@ -8438,77 +8451,6 @@
 </parameter>
 </method>
 </interface>
-<interface name="MemoryUiTrimmable"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="trim"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="untrim"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</interface>
-<class name="MemoryUiTrimmableRegistry"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="MemoryUiTrimmableRegistry"
- type="com.facebook.common.memory.MemoryUiTrimmableRegistry"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<method name="iterable"
- return="java.lang.Iterable&lt;com.facebook.common.memory.MemoryUiTrimmable&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="registerUiTrimmable"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="uiTrimmable" type="com.facebook.common.memory.MemoryUiTrimmable">
-</parameter>
-</method>
-</class>
 <class name="NoOpMemoryTrimmableRegistry"
  extends="java.lang.Object"
  abstract="false"
@@ -8570,9 +8512,9 @@
 >
 <class name="CloseableReference"
  extends="java.lang.Object"
- abstract="false"
+ abstract="true"
  static="false"
- final="true"
+ final="false"
  deprecated="not deprecated"
  visibility="public"
 >
@@ -8696,6 +8638,17 @@
  visibility="public"
 >
 </method>
+<method name="isUnclosedTrackingEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="isValid"
  return="boolean"
  abstract="false"
@@ -8761,6 +8714,62 @@
 <parameter name="unclosedReferenceListener" type="com.facebook.common.references.CloseableReference.UnclosedReferenceListener">
 </parameter>
 </method>
+<method name="setUnclosedRelevantTrance"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="relevantTrance" type="java.lang.Throwable">
+</parameter>
+</method>
+<method name="setUseFinalizers"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="useFinalizers" type="boolean">
+</parameter>
+</method>
+<field name="mIsClosed"
+ type="boolean"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="mRelevantTrace"
+ type="java.lang.Throwable"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
+<field name="mSharedReference"
+ type="com.facebook.common.references.SharedReference"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</field>
 </class>
 <interface name="CloseableReference.UnclosedReferenceListener"
  abstract="true"
@@ -19733,8 +19742,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.common.memory.MemoryUiTrimmable">
-</implements>
 <implements name="com.facebook.drawee.drawable.VisibilityCallback">
 </implements>
 <constructor name="DraweeHolder"
@@ -19925,28 +19932,6 @@
 >
 <parameter name="hierarchy" type="DH">
 </parameter>
-</method>
-<method name="trim"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="untrim"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 </method>
 </class>
 <class name="DraweeTransition"
@@ -38327,7 +38312,7 @@
 </parameter>
 <parameter name="maxNumThreads" type="int">
 </parameter>
-<parameter name="decodeBuffers" type="android.support.v4.util.Pools.SynchronizedPool">
+<parameter name="decodeBuffers" type="SynchronizedPool">
 </parameter>
 </constructor>
 <method name="decodeFromEncodedImage"
@@ -43142,7 +43127,7 @@
  extends="java.lang.Object"
  abstract="false"
  static="false"
- final="true"
+ final="false"
  deprecated="not deprecated"
  visibility="public"
 >

@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.0.1." />
+  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  CloseableReference - Fresco 1.0.1 API
+  CloseableReference - Fresco 1.1.0 API
 
 
-| Fresco 1.0.1
+| Fresco 1.1.0
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.0.1</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
     
     </div>
     <div id="headerRight">
@@ -385,6 +385,9 @@ Summary:
 
 
 
+  &#124; <a href="#lfields">Fields</a>
+  
+
 
 
 
@@ -392,9 +395,6 @@ Summary:
   &#124; <a href="#pubmethods">Methods</a>
   
 
-
-  &#124; <a href="#promethods">Protected Methods</a>
-  
 
 
   &#124; <a href="#inhmethods">Inherited Methods</a>
@@ -418,8 +418,8 @@ Summary:
 <div id="jd-header">
     public
      
-    final 
-    
+     
+    abstract
     class
 <h1>CloseableReference</h1>
 
@@ -512,7 +512,7 @@ Summary:
  <p>As with any Closeable, try-finally semantics may be needed to ensure that close is called.
  <p>Do not rely upon the finalizer; the purpose of this class is for expensive resources to
  be released without waiting for the garbage collector. The finalizer will log an error if
- the close method has not bee called.
+ the close method has not been called.
 </p>
 
 
@@ -577,6 +577,48 @@ Summary:
 
 
 
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mIsClosed">mIsClosed</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          Throwable</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mRelevantTrace">mRelevantTrace</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          <a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt;</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/common/references/CloseableReference.html#mSharedReference">mSharedReference</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+
+</table>
 
 
 
@@ -775,6 +817,25 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#isUnclosedTrackingEnabled()">isUnclosedTrackingEnabled</a></span>()
+        
+        <div class="jd-descrdiv">Returns whether CloseableReference instances are currently gathering obtain/clone traces for
+ the purpose of unclosed reference tracking.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
             synchronized
             
             
@@ -790,7 +851,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -808,7 +869,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -826,7 +887,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -845,7 +906,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -857,18 +918,10 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#setUnclosedReferenceListener(com.facebook.common.references.CloseableReference.UnclosedReferenceListener)">setUnclosedReferenceListener</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.UnclosedReferenceListener.html">CloseableReference.UnclosedReferenceListener</a> unclosedReferenceListener)
         
+        <div class="jd-descrdiv">Set a listener to be notified when a CloseableReference is finalized by GC without it being
+ explicitly closed beforehand.</div>
+  
   </td></tr>
-
-
-
-</table>
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="promethods" class="jd-sumtable"><tr><th colspan="12">Protected Methods</th></tr>
-
 
 
 	 
@@ -882,13 +935,34 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#finalize()">finalize</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#setUnclosedRelevantTrance(java.lang.Throwable)">setUnclosedRelevantTrance</a></span>(Throwable relevantTrance)
+        
+        <div class="jd-descrdiv">If the obtained/cloned trace is not valuable in some instances, you can set a more relevant
+ trace here, for the purpose of unclosed reference tracking.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/references/CloseableReference.html#setUseFinalizers(boolean)">setUseFinalizers</a></span>(boolean useFinalizers)
         
   </td></tr>
 
 
 
 </table>
+
+
 
 
 
@@ -1211,6 +1285,103 @@ From interface
 
 
 <!-- Fields -->
+
+
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
+
+
+
+
+<a id="mIsClosed"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        boolean
+      </span>
+        mIsClosed
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="mRelevantTrace"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Throwable
+      </span>
+        mRelevantTrace
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="mSharedReference"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+        final 
+        <a href="../../../../com/facebook/common/references/SharedReference.html">SharedReference</a>&lt;T&gt;
+      </span>
+        mSharedReference
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
 
 
 <!-- Public ctors -->
@@ -1600,6 +1771,43 @@ From interface
 </div>
 
 
+<a id="isUnclosedTrackingEnabled()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isUnclosedTrackingEnabled</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns whether CloseableReference instances are currently gathering obtain/clone traces for
+ the purpose of unclosed reference tracking.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../com/facebook/common/references/CloseableReference.html#setUnclosedReferenceListener(com.facebook.common.references.CloseableReference.UnclosedReferenceListener)">setUnclosedReferenceListener(UnclosedReferenceListener)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="isValid()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1764,35 +1972,65 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Set a listener to be notified when a CloseableReference is finalized by GC without it being
+ explicitly closed beforehand.
+</p></div>
 
     </div>
 </div>
 
 
-
-
-
-<!-- ========= METHOD DETAIL ======== -->
-
-<h2>Protected Methods</h2>
-
-
-
-<a id="finalize()"></a>
+<a id="setUnclosedRelevantTrance(java.lang.Throwable)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
-        protected 
+        public 
          
          
          
          
         void
       </span>
-      <span class="sympad">finalize</span>
-      <span class="normal">()</span>
+      <span class="sympad">setUnclosedRelevantTrance</span>
+      <span class="normal">(Throwable relevantTrance)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>If the obtained/cloned trace is not valuable in some instances, you can set a more relevant
+ trace here, for the purpose of unclosed reference tracking.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../com/facebook/common/references/CloseableReference.html#setUnclosedReferenceListener(com.facebook.common.references.CloseableReference.UnclosedReferenceListener)">setUnclosedReferenceListener(UnclosedReferenceListener)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="setUseFinalizers(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setUseFinalizers</span>
+      <span class="normal">(boolean useFinalizers)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1805,20 +2043,15 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>Throwable</td>
-            <td></td>
-        </tr>
-      </table>
-  </div>
 
     </div>
 </div>
 
 
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
 
 
 
