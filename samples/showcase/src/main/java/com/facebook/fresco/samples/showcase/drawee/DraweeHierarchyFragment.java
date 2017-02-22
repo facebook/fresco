@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
@@ -64,12 +65,8 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
     progressBarDrawable
         .setRadius(getResources().getDimensionPixelSize(R.dimen.drawee_hierarchy_progress_radius));
 
-    draweeView.setHierarchy(
-        new GenericDraweeHierarchyBuilder(getResources())
-            .setProgressBarImage(progressBarDrawable)
-            .setPlaceholderImage(R.mipmap.ic_launcher)
-            .setFailureImage(failureDrawable)
-            .build());
+    draweeView.getHierarchy().setProgressBarImage(progressBarDrawable);
+    draweeView.getHierarchy().setFailureImage(failureDrawable, ScaleType.CENTER_INSIDE);
 
     view.findViewById(R.id.load_success).setOnClickListener(new View.OnClickListener() {
       @Override
