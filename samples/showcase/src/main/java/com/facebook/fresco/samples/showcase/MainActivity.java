@@ -186,7 +186,8 @@ public class MainActivity extends AppCompatActivity
         fragment = new SettingsFragment();
         break;
       default:
-        throw new IllegalArgumentException("No example with this id!");
+        // Default to the welcome fragment
+        fragment = new WelcomeFragment();
     }
     showFragment(fragment);
 
