@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
     } finally {
       styles.recycle();
     }
-    return true;
+    return super.onCreateOptionsMenu(menu);
   }
 
   @Override
