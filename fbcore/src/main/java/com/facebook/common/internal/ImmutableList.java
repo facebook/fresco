@@ -19,6 +19,10 @@ import java.util.List;
  */
 public class ImmutableList<E> extends ArrayList<E> {
 
+  private ImmutableList(final int capacity) {
+    super(capacity);
+  }
+
   private ImmutableList(List<E> list) {
     super(list);
   }
@@ -28,8 +32,8 @@ public class ImmutableList<E> extends ArrayList<E> {
   }
 
   public static <E> ImmutableList<E> of(E... elements) {
-    List<E> list = new ArrayList<>(elements.length);
+    final ImmutableList<E> list = new ImmutableList<>(elements.length);
     Collections.addAll(list, elements);
-    return new ImmutableList<>(list);
+    return list;
   }
 }
