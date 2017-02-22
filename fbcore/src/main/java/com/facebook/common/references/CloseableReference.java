@@ -344,7 +344,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       @GuardedBy("Destructor.class")
       private Destructor previous;
       @GuardedBy("this")
-      private boolean closed;
+      private boolean destroyed;
 
       public Destructor(
           CloseableReference referent,
@@ -359,12 +359,16 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
         sHead = this;
       }
 
+      public synchronized boolean isDestroyed() {
+        return destroyed;
+      }
+
       public void destroy(boolean correctly) {
         synchronized (this) {
-          if (closed) {
+          if (destroyed) {
             return;
           }
-          closed = true;
+          destroyed = true;
         }
 
         synchronized (Destructor.class) {
@@ -423,6 +427,11 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
     @Override
     public void close() {
       mDestructor.destroy(true);
+    }
+
+    @Override
+    public boolean isValid() {
+      return !mDestructor.isDestroyed();
     }
   }
 
