@@ -10,29 +10,34 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.facebook.samples.mediavariations;
+package com.facebook.fresco.samples.showcase.imagepipeline;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
+import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.MediaVariations;
-import com.facebook.samples.mediavariations.widget.ResizableFrameLayout;
 
-public class MainActivity extends Activity {
+public class MediaVariationsFragment extends BaseShowcaseFragment {
   private static final String URI_TEMPLATE
       = "http://frescolib.org/static/sample-images/monkey-selfie-%s.jpg";
   private static final String MEDIA_ID = "monkey-selfie";
@@ -59,19 +64,28 @@ public class MainActivity extends Activity {
     }
   }
 
+  public MediaVariationsFragment() {
+    setHasOptionsMenu(true);
+  }
+
+  @Nullable
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    setContentView(R.layout.activity_main);
-
-    populateImagesAfterInitialLayout();
+  public View onCreateView(
+      LayoutInflater inflater,
+      @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_imagepipeline_media_variations, container, false);
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu, menu);
-    return super.onCreateOptionsMenu(menu);
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    populateImagesAfterInitialLayout(view);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_imagepipeline_media_variations, menu);
+    super.onCreateOptionsMenu(menu, inflater);
   }
 
   @Override
@@ -79,10 +93,13 @@ public class MainActivity extends Activity {
     if (item.getItemId() == R.id.clear_cache) {
       Fresco.getImagePipeline().clearCaches();
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        recreate();
+        getActivity().recreate();
       } else {
-        Toast.makeText(this, R.string.restart_toast, Toast.LENGTH_SHORT).show();
-        finish();
+        Toast.makeText(
+            getActivity(),
+            R.string.imagepipeline_media_variations_restart_toast,
+            Toast.LENGTH_SHORT).show();
+        getActivity().finish();
       }
       return true;
     }
@@ -90,15 +107,19 @@ public class MainActivity extends Activity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void populateImagesAfterInitialLayout() {
-    final View rootView = findViewById(R.id.layout_root);
+  @Override
+  public int getTitleId() {
+    return R.string.imagepipeline_media_variations_title;
+  }
+
+  private void populateImagesAfterInitialLayout(final View rootView) {
     rootView.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           @Override
           public void onGlobalLayout() {
-            populateMainImage();
+            populateMainImage(rootView);
             for (Size size : Size.values()) {
-              populateThumb(size.thumbViewId, size);
+              populateThumb(rootView, size.thumbViewId, size);
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -110,8 +131,8 @@ public class MainActivity extends Activity {
         });
   }
 
-  private void populateThumb(@IdRes int viewId, final Size size) {
-    final SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(viewId);
+  private void populateThumb(View rootView, @IdRes int viewId, final Size size) {
+    final SimpleDraweeView draweeView = (SimpleDraweeView) rootView.findViewById(viewId);
 
     loadThumb(draweeView, size, ImageRequest.RequestLevel.DISK_CACHE);
 
@@ -141,8 +162,8 @@ public class MainActivity extends Activity {
     draweeView.setController(controller);
   }
 
-  private void populateMainImage() {
-    final SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.img_main);
+  private void populateMainImage(View rootView) {
+    final SimpleDraweeView draweeView = (SimpleDraweeView) rootView.findViewById(R.id.img_main);
     loadMainImage(draweeView);
 
     draweeView.setOnClickListener(new View.OnClickListener() {
@@ -153,8 +174,8 @@ public class MainActivity extends Activity {
     });
 
     ResizableFrameLayout mainImageFrameLayout =
-        (ResizableFrameLayout) findViewById(R.id.frame_main);
-    mainImageFrameLayout.init(findViewById(R.id.btn_resize));
+        (ResizableFrameLayout) rootView.findViewById(R.id.frame_main);
+    mainImageFrameLayout.init(rootView.findViewById(R.id.btn_resize));
   }
 
   private void loadMainImage(SimpleDraweeView draweeView) {

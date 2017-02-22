@@ -58,6 +58,12 @@
   <string name="imagepipeline_prefetch_title">Prefetch</string>
   <string name="imagepipeline_prefetch_help">1. Clear the cache\n2. Toggle images, they show slowly\n3. Hide the images\n4. Clear the cache\n5. Prefetch\n6. Show the images, they load fast!</string>
 
+  <string name="imagepipeline_media_variations_title">Media Variations</string>
+  <string name="imagepipeline_media_variations_individual_variants">Individual variants (click to load)</string>
+  <string name="imagepipeline_media_variations_combined_request">Combined image request (click to refresh)</string>
+  <string name="imagepipeline_media_variations_clear_cache">Clear cache and reset</string>
+  <string name="imagepipeline_media_variations_restart_toast">Cache cleared. Please restart the app to test further.</string>
+
   <string name="category_format">Image Format</string>
 
   <string name="format_switch_checker_board">Checker board background</string>

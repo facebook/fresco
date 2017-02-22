@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
@@ -11,13 +12,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.facebook.samples.mediavariations.MainActivity"
+    tools:context="com.facebook.fresco.samples.showcase.imagepipeline.MediaVariationsFragment"
     >
 
   <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/individual_variants"
+      android:text="@string/imagepipeline_media_variations_individual_variants"
       />
 
   <LinearLayout
@@ -55,10 +56,10 @@
   <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/media_variations"
+      android:text="@string/imagepipeline_media_variations_combined_request"
       />
 
-  <com.facebook.samples.mediavariations.widget.ResizableFrameLayout
+  <com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout
       android:id="@+id/frame_main"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -71,7 +72,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           fresco:actualImageScaleType="centerCrop"
-          fresco:failureImage="@color/red"
+          fresco:failureImage="@color/primaryDark"
           fresco:overlayImage="@drawable/resize_outline"
       />
 
@@ -84,5 +85,5 @@
           tools:ignore="RtlHardcoded"
       />
 
-  </com.facebook.samples.mediavariations.widget.ResizableFrameLayout>
+  </com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout>
 </LinearLayout>
