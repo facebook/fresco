@@ -16,6 +16,7 @@ import java.util.Set;
 
 import android.app.Application;
 
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -39,6 +40,12 @@ public class ShowcaseApplication extends Application {
     ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
         .setRequestListeners(listeners)
         .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
+        .experiment().setMediaVariationsIndexEnabled(new Supplier<Boolean>() {
+          @Override
+          public Boolean get() {
+            return true;
+          }
+        })
         .build();
 
     DraweeConfig.Builder draweeConfigBuilder = DraweeConfig.newBuilder();
