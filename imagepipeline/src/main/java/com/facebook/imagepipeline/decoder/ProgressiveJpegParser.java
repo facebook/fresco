@@ -94,13 +94,16 @@ public class ProgressiveJpegParser {
 
   public ProgressiveJpegParser(ByteArrayPool byteArrayPool) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
+    reset();
+  }
+
+  public void reset() {
     mBytesParsed = 0;
     mLastByteRead = 0;
     mNextFullScanNumber = 0;
     mBestScanEndOffset = 0;
     mBestScanNumber = 0;
     mParserState = READ_FIRST_JPEG_BYTE;
-
   }
 
   /**

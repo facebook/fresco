@@ -419,6 +419,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       boolean ret = super.updateDecodeJob(encodedImage, isLast);
       if (!isLast && EncodedImage.isValid(encodedImage)) {
         if (!mProgressiveJpegParser.parseMoreData(encodedImage)) {
+          if (!mProgressiveJpegParser.isJpeg() && mLastScheduledScanNumber == 0) {
+            mProgressiveJpegParser.reset();
+            return true;
+          }
           return false;
         }
         int scanNum = mProgressiveJpegParser.getBestScanNumber();
