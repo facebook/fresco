@@ -68,11 +68,11 @@ public class ImageFormatColorFragment extends BaseShowcaseFragment {
     });
 
     SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.decoder_switch);
-    switchCompat.setChecked(CustomImageFormatConfigurator.isColorEnabled(getContext()));
+    switchCompat.setChecked(CustomImageFormatConfigurator.isGlobalColorDecoderEnabled(getContext()));
     switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        CustomImageFormatConfigurator.setColorEnabled(getContext(), isChecked);
+        CustomImageFormatConfigurator.setGlobalColorDecoderEnabled(getContext(), isChecked);
       }
     });
   }

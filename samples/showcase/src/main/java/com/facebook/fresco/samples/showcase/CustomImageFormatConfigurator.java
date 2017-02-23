@@ -33,7 +33,7 @@ public class CustomImageFormatConfigurator {
   @Nullable
   public static ImageDecoderConfig createImageDecoderConfig(Context context) {
     ImageDecoderConfig.Builder config = ImageDecoderConfig.newBuilder();
-    if (isColorEnabled(context)) {
+    if (isGlobalColorDecoderEnabled(context)) {
       config.addDecodingCapability(
           ColorImageExample.IMAGE_FORMAT_COLOR,
           ColorImageExample.createFormatChecker(),
@@ -57,9 +57,9 @@ public class CustomImageFormatConfigurator {
   public static void addCustomDrawableFactories(
       Context context,
       DraweeConfig.Builder draweeConfigBuilder) {
-    if (isColorEnabled(context)) {
-      draweeConfigBuilder.addCustomDrawableFactory(ColorImageExample.createDrawableFactory());
-    }
+    // We always add the color drawable factory so that it can be used for image decoder overrides,
+    // see ImageFormatOverrideExample.
+    draweeConfigBuilder.addCustomDrawableFactory(ColorImageExample.createDrawableFactory());
     if (isSvgEnabled(context)) {
       draweeConfigBuilder.addCustomDrawableFactory(new SvgDecoderExample.SvgDrawableFactory());
     }
@@ -68,11 +68,11 @@ public class CustomImageFormatConfigurator {
     }
   }
 
-  public static boolean isColorEnabled(Context context) {
+  public static boolean isGlobalColorDecoderEnabled(Context context) {
     return getBoolean(context, IMAGE_FORMAT_COLOR_KEY, false);
   }
 
-  public static void setColorEnabled(Context context, boolean colorEnabled) {
+  public static void setGlobalColorDecoderEnabled(Context context, boolean colorEnabled) {
     setBoolean(context, IMAGE_FORMAT_COLOR_KEY, colorEnabled);
   }
 

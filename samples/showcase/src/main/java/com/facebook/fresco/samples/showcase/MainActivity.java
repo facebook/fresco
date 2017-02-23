@@ -39,6 +39,7 @@ import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
 import com.facebook.fresco.samples.showcase.imageformat.color.ImageFormatColorFragment;
 import com.facebook.fresco.samples.showcase.imageformat.gif.ImageFormatGifFragment;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.ImageFormatKeyframesFragment;
+import com.facebook.fresco.samples.showcase.imageformat.override.ImageFormatOverrideExample;
 import com.facebook.fresco.samples.showcase.imageformat.pjpeg.ImageFormatProgressiveJpegFragment;
 import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
@@ -184,6 +185,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_format_keyframes:
         fragment = new ImageFormatKeyframesFragment();
+        break;
+      case R.id.nav_format_override:
+        fragment = new ImageFormatOverrideExample();
         break;
 
       // More
