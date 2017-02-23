@@ -95,6 +95,14 @@ public class RotationOptions {
   }
 
   /**
+   * Creates a new set of rotation options for JPEG images to load image without any rotation.
+   *
+   */
+  public static RotationOptions disableRotation() {
+    return new RotationOptions(DISABLE_ROTATION, false);
+  }
+
+  /**
    * Creates a new set of rotation options for JPEG images to use the rotation angle in the image
    * metadata.
    *
