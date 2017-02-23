@@ -108,6 +108,9 @@ public class DefaultImageDecoder implements ImageDecoder {
       final int length,
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
+    if (options.customImageDecoder != null) {
+      return options.customImageDecoder.decode(encodedImage, length, qualityInfo, options);
+    }
     ImageFormat imageFormat = encodedImage.getImageFormat();
     if (imageFormat == null || imageFormat == ImageFormat.UNKNOWN) {
       imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(

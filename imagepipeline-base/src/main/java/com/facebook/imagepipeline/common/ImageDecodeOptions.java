@@ -9,11 +9,14 @@
 
 package com.facebook.imagepipeline.common;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import android.graphics.Bitmap;
 
 import java.util.Locale;
+
+import com.facebook.imagepipeline.decoder.ImageDecoder;
 
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.
@@ -57,6 +60,11 @@ public class ImageDecodeOptions {
    */
   public final Bitmap.Config bitmapConfig;
 
+  /**
+   * Custom image decoder override.
+   */
+  public final @Nullable ImageDecoder customImageDecoder;
+
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
@@ -64,6 +72,7 @@ public class ImageDecodeOptions {
     this.decodeAllFrames = b.getDecodeAllFrames();
     this.forceStaticImage = b.getForceStaticImage();
     this.bitmapConfig = b.getBitmapConfig();
+    this.customImageDecoder = b.getCustomImageDecoder();
   }
 
   /**
@@ -96,7 +105,7 @@ public class ImageDecodeOptions {
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
     if (bitmapConfig != that.bitmapConfig) return false;
-
+    if (customImageDecoder != that.customImageDecoder) return false;
     return true;
   }
 
@@ -108,6 +117,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
     result = 31 * result + bitmapConfig.ordinal();
+    result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     return result;
   }
 
@@ -115,12 +125,13 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%b-%b-%b-%b-%s",
+        "%d-%b-%b-%b-%b-%s-%s",
         minDecodeIntervalMs,
         decodePreviewFrame,
         useLastFrameForPreview,
         decodeAllFrames,
         forceStaticImage,
-        bitmapConfig.name());
+        bitmapConfig.name(),
+        customImageDecoder);
   }
 }

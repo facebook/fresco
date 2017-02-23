@@ -9,7 +9,11 @@
 
 package com.facebook.imagepipeline.common;
 
+import javax.annotation.Nullable;
+
 import android.graphics.Bitmap;
+
+import com.facebook.imagepipeline.decoder.ImageDecoder;
 
 /**
  * Builder for {@link ImageDecodeOptions}.
@@ -22,6 +26,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
+  private @Nullable ImageDecoder mCustomImageDecoder;
 
   public ImageDecodeOptionsBuilder() {
   }
@@ -137,6 +142,30 @@ public class ImageDecodeOptionsBuilder {
   public ImageDecodeOptionsBuilder setForceStaticImage(boolean forceStaticImage) {
     mForceStaticImage = forceStaticImage;
     return this;
+  }
+
+  /**
+   * Set a custom image decoder override to be used for the given image.
+   * This will bypass all default decoders and only use the provided custom image decoder
+   * for the given image.
+   *
+   * @param customImageDecoder the custom decoder to use
+   * @return this builder
+   */
+  public ImageDecodeOptionsBuilder setCustomImageDecoder(
+      @Nullable ImageDecoder customImageDecoder) {
+    mCustomImageDecoder = customImageDecoder;
+    return this;
+  }
+
+  /**
+   * Get the custom image decoder, if one has been set.
+   *
+   * @return the custom image decoder or null if not set
+   */
+  @Nullable
+  public ImageDecoder getCustomImageDecoder() {
+    return mCustomImageDecoder;
   }
 
   /**
