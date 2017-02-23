@@ -38,6 +38,10 @@
             android:id="@+id/nav_drawee_rotation"
             android:title="@string/drawee_rotation_title"
             />
+        <item
+            android:id="@+id/nav_drawee_recycler"
+            android:title="@string/drawee_recycler_title"
+            />
       </group>
     </menu>
   </item>

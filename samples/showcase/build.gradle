@@ -43,6 +43,8 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
 
     compile 'com.facebook.keyframes:keyframes:1.0'
 

@@ -30,6 +30,7 @@ import android.view.MenuItem;
 
 import com.facebook.fresco.samples.showcase.drawee.DraweeHierarchyFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeMediaPickerFragment;
+import com.facebook.fresco.samples.showcase.drawee.DraweeRecyclerViewFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeRotationFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeRoundedCornersFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
@@ -149,6 +150,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_drawee_rotation:
         fragment = new DraweeRotationFragment();
+        break;
+      case R.id.nav_drawee_recycler:
+        fragment = new DraweeRecyclerViewFragment();
         break;
 
       // Imagepipline
