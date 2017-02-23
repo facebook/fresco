@@ -102,7 +102,7 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
     @Override
     public SimpleViewHolder onCreateViewHolder(
         ViewGroup parent,
-        int viewType) {`
+        int viewType) {
       View itemView = LayoutInflater.from(
           parent.getContext()).inflate(R.layout.drawee_recycler_item, parent, false);
       return new SimpleViewHolder(itemView);
