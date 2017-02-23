@@ -352,11 +352,13 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
         super(referent, referenceQueue);
         mSharedReference = referent.mSharedReference;
 
-        if (sHead != null) {
-          sHead.next = this;
-          previous = sHead;
+        synchronized (Destructor.class) {
+          if (sHead != null) {
+            sHead.next = this;
+            previous = sHead;
+          }
+          sHead = this;
         }
-        sHead = this;
       }
 
       public synchronized boolean isDestroyed() {
