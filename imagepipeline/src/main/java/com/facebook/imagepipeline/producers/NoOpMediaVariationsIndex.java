@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.facebook.cache.common.CacheKey;
@@ -22,7 +23,7 @@ public class NoOpMediaVariationsIndex implements MediaVariationsIndex {
 
   @Override
   public Task<List<MediaVariations.Variant>> getCachedVariants(String mediaId) {
-    return Task.forResult(null);
+    return Task.forResult(Collections.<MediaVariations.Variant>emptyList());
   }
 
   @Override

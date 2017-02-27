@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -29,6 +30,7 @@ import android.text.TextUtils;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.CacheKeyUtil;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -80,7 +82,8 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
     }
   }
 
-  private List<MediaVariations.Variant> getCachedVariantsSync(String mediaId) {
+  @VisibleForTesting
+  protected List<MediaVariations.Variant> getCachedVariantsSync(String mediaId) {
     synchronized (MediaVariationsIndexDatabase.class) {
       SQLiteDatabase db = mDbHelper.getWritableDatabase();
       Cursor c = null;
@@ -98,7 +101,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
             null); // orderBy
 
         if (c.getCount() == 0) {
-          return null;
+          return Collections.EMPTY_LIST;
         }
 
         final int columnIndexCacheKey = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
@@ -140,31 +143,39 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
     mWriteExecutor.execute(new Runnable() {
       @Override
       public void run() {
-        synchronized (MediaVariationsIndexDatabase.class) {
-          SQLiteDatabase db = mDbHelper.getWritableDatabase();
-          try {
-            db.beginTransaction();
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(IndexEntry.COLUMN_NAME_MEDIA_ID, mediaId);
-            contentValues.put(IndexEntry.COLUMN_NAME_WIDTH, encodedImage.getWidth());
-            contentValues.put(IndexEntry.COLUMN_NAME_HEIGHT, encodedImage.getHeight());
-            contentValues.put(IndexEntry.COLUMN_NAME_CACHE_CHOICE, cacheChoice.name());
-            contentValues.put(IndexEntry.COLUMN_NAME_CACHE_KEY, cacheKey.getUriString());
-            contentValues
-                .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
-
-            db.replaceOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
-
-            db.setTransactionSuccessful();
-          } catch (Exception x) {
-            FLog.e(TAG, x, "Error writing for %s", mediaId);
-          } finally {
-            db.endTransaction();
-          }
-        }
+        saveCachedVariantSync(mediaId, cacheChoice, cacheKey, encodedImage);
       }
     });
+  }
+
+  protected void saveCachedVariantSync(
+      final String mediaId,
+      final ImageRequest.CacheChoice cacheChoice,
+      final CacheKey cacheKey,
+      final EncodedImage encodedImage) {
+    synchronized (MediaVariationsIndexDatabase.class) {
+      SQLiteDatabase db = mDbHelper.getWritableDatabase();
+      try {
+        db.beginTransaction();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(IndexEntry.COLUMN_NAME_MEDIA_ID, mediaId);
+        contentValues.put(IndexEntry.COLUMN_NAME_WIDTH, encodedImage.getWidth());
+        contentValues.put(IndexEntry.COLUMN_NAME_HEIGHT, encodedImage.getHeight());
+        contentValues.put(IndexEntry.COLUMN_NAME_CACHE_CHOICE, cacheChoice.name());
+        contentValues.put(IndexEntry.COLUMN_NAME_CACHE_KEY, cacheKey.getUriString());
+        contentValues
+            .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
+
+        db.replaceOrThrow(IndexEntry.TABLE_NAME, null, contentValues);
+
+        db.setTransactionSuccessful();
+      } catch (Exception x) {
+        FLog.e(TAG, x, "Error writing for %s", mediaId);
+      } finally {
+        db.endTransaction();
+      }
+    }
   }
 
   private static final class IndexEntry implements BaseColumns {
