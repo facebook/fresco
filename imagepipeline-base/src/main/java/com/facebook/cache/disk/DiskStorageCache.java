@@ -205,14 +205,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     } else {
       mCountDownLatch = new CountDownLatch(0);
     }
-
-    executorForBackgrountInit.execute(new Runnable() {
-
-      @Override
-      public void run() {
-        maybeDeleteSharedPreferencesFile(context, mStorage.getStorageName());
-      }
-    });
   }
 
   @Override
@@ -773,27 +765,5 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
     }
     mCacheSizeLastUpdateTime = now;
     return true;
-  }
-
-  //TODO(t12287315): Remove the temp method for deleting created Preference in next release
-  private static void maybeDeleteSharedPreferencesFile(
-      Context context,
-      String directoryName) {
-    try {
-      Context applicationContext = context.getApplicationContext();
-      String path =
-          applicationContext.getFilesDir().getParent()
-              + File.separator
-              + "shared_prefs"
-              + File.separator
-              + SHARED_PREFS_FILENAME_PREFIX
-              + directoryName;
-      File file = new File(path + ".xml");
-      if (file.exists()) {
-        file.delete();
-      }
-    } catch (Exception e) {
-      FLog.e(TAG, "Fail to delete SharedPreference from file system. ");
-    }
   }
 }
