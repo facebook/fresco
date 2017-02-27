@@ -25,6 +25,7 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+    testCompile project(path: ':imagepipeline-base-test')
 }
 apply from: rootProject.file('release.gradle')
 
@@ -35,9 +36,6 @@ android {
 
     sourceSets {
         test {
-            java {
-                exclude '**/EncodedImageTest.java'
-            }
             resources {
                 exclude '**/BUCK'
             }

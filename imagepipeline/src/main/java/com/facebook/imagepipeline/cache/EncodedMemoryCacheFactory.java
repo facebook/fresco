@@ -10,7 +10,7 @@
 package com.facebook.imagepipeline.cache;
 
 import com.facebook.cache.common.CacheKey;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBuffer;
 
 public class EncodedMemoryCacheFactory {
 

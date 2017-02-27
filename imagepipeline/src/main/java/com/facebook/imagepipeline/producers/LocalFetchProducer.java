@@ -14,12 +14,11 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.internal.Closeables;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
-
 
 /**
  * Represents a local fetch producer.

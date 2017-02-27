@@ -14,14 +14,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.webp.BitmapCreator;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.memory.PoolFactory;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imageutils.JfifUtil;
 
 /**
  * This is the implementation of the BitmapCreator for the Honeycomb

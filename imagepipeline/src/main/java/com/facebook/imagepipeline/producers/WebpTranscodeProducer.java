@@ -15,18 +15,17 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
-import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
-
-import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
+import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
 
 /**
  * Transcodes WebP to JPEG / PNG.

@@ -23,9 +23,9 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**

@@ -11,6 +11,8 @@ package com.facebook.imagepipeline.memory;
 
 import java.io.InputStream;
 
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunk;
 

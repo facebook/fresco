@@ -10,7 +10,6 @@ dependencies {
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
-    compile project(':imagepipeline-base')
 }
 apply from: rootProject.file('release.gradle')
 

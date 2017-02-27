@@ -7,7 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+package com.facebook.common.memory;
+
 /**
- * Pool implementations for ByteBuffers and related Input/OutputStream implementations.
+ * A pool of byte-arrays
  */
-package com.facebook.imagepipeline.memory;
+public interface ByteArrayPool extends Pool<byte[]> {
+}

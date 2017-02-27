@@ -18,6 +18,9 @@ import android.net.Uri;
 import android.os.SystemClock;
 
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -25,15 +28,12 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
-import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 import com.facebook.imagepipeline.nativecode.JpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
+import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 
 import org.junit.*;
 import org.junit.runner.*;

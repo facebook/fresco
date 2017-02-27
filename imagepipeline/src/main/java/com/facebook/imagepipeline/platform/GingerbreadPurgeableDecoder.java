@@ -9,20 +9,20 @@
 
 package com.facebook.imagepipeline.platform;
 
+import javax.annotation.Nullable;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.MemoryFile;
-import javax.annotation.Nullable;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
-import com.facebook.common.webp.WebpBitmapFactory;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 
 import static com.facebook.common.webp.WebpSupportStatus.sWebpBitmapFactory;
 

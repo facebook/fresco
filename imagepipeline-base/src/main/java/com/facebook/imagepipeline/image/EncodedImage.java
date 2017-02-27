@@ -9,30 +9,30 @@
 
 package com.facebook.imagepipeline.image;
 
-import android.util.Pair;
-
-import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.Supplier;
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.SharedReference;
-import com.facebook.imageformat.DefaultImageFormats;
-import com.facebook.imageformat.ImageFormat;
-import com.facebook.imageformat.ImageFormatChecker;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
-import com.facebook.imageutils.BitmapUtil;
-import com.facebook.imageutils.JfifUtil;
-import com.facebook.imageutils.WebpUtil;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import android.util.Pair;
+
+import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferInputStream;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.SharedReference;
+import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.ImageFormatChecker;
+import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.JfifUtil;
+import com.facebook.imageutils.WebpUtil;
 
 /**
  * Class that contains all the information for an encoded image, both the image bytes (held on

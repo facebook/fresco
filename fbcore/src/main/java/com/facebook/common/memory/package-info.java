@@ -8,6 +8,6 @@
  */
 
 /**
- * Some utility classes in order to trim data from java memory
+ * Pool implementations for ByteBuffers and related Input/OutputStream implementations.
  */
 package com.facebook.common.memory;

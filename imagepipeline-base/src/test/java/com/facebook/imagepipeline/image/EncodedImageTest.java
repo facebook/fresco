@@ -16,10 +16,10 @@ import java.lang.Override;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
 

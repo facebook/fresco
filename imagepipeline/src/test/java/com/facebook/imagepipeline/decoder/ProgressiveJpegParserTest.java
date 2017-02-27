@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.memory.ByteArrayPool;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.ByteArrayPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 
 import org.junit.*;

@@ -12,8 +12,8 @@ package com.facebook.imagepipeline.cache;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 public class EncodedCountingMemoryCacheFactory {
 

@@ -12,10 +12,10 @@ package com.facebook.imagepipeline.core;
 import android.net.Uri;
 
 import com.facebook.common.media.MediaUtils;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;

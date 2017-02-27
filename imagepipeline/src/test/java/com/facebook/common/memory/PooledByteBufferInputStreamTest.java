@@ -7,19 +7,19 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.common.memory;
 
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static junit.framework.Assert.*;
 
 /**
- * Tests for {@link NativeMemoryChunkInputStream}
+ * Tests for {@link PooledByteBufferInputStream}
  */
 @RunWith(RobolectricTestRunner.class)
 public class PooledByteBufferInputStreamTest {

@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.ExceptionWithNoStacktrace;
 import com.facebook.common.util.UriUtil;
@@ -34,7 +35,6 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
-import com.facebook.imagepipeline.memory.ByteArrayPool;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;

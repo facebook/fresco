@@ -17,10 +17,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import android.net.Uri;
 
+import bolts.Continuation;
+import bolts.Task;
+
+import com.android.internal.util.Predicate;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
@@ -35,16 +40,11 @@ import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-
-import bolts.Continuation;
-import bolts.Task;
-import com.android.internal.util.Predicate;
 
 /**
  * The entry point for the image pipeline.

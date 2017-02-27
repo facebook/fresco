@@ -19,15 +19,15 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
 
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imageutils.BitmapUtil;
-import com.facebook.imageutils.JfifUtil;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
+import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.JfifUtil;
 
 import org.junit.*;
 import org.junit.runner.*;

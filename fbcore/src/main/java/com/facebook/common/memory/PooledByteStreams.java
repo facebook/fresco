@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.common.memory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +34,7 @@ public class PooledByteStreams {
   }
 
   @VisibleForTesting
-  PooledByteStreams(ByteArrayPool byteArrayPool, int tempBufSize) {
+  public PooledByteStreams(ByteArrayPool byteArrayPool, int tempBufSize) {
     Preconditions.checkArgument(tempBufSize > 0);
     mTempBufSize = tempBufSize;
     mByteArrayPool = byteArrayPool;

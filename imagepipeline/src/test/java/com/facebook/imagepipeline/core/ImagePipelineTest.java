@@ -14,11 +14,13 @@ import java.util.List;
 
 import android.net.Uri;
 
+import com.android.internal.util.Predicate;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
@@ -28,14 +30,12 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 
-import com.android.internal.util.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.common.memory;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -15,6 +15,7 @@ import java.io.InputStream;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBuffer;
 
 /**
  * An InputStream implementation over a {@link PooledByteBuffer} instance

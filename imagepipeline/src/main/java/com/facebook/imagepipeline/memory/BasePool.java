@@ -29,6 +29,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.common.memory.Pool;
 
 /**
  * A base pool class that manages a pool of values (of type V). <p>

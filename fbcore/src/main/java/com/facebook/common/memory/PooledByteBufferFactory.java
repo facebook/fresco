@@ -7,10 +7,12 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.memory;
+package com.facebook.common.memory;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.facebook.common.memory.PooledByteBuffer;
 
 /**
  * A factory to create instances of PooledByteBuffer and PooledByteBufferOutputStream

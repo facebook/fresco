@@ -13,8 +13,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**

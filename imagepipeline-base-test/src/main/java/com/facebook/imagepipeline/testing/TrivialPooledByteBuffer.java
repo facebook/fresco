@@ -9,7 +9,7 @@
 
 package com.facebook.imagepipeline.testing;
 
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBuffer;
 
 /**
  * A trivial implementation of {@link PooledByteBuffer}
