@@ -102,11 +102,17 @@ public class MediaVariations {
     private final Uri mUri;
     private final int mWidth;
     private final int mHeight;
+    @Nullable private final ImageRequest.CacheChoice mCacheChoice;
 
     public Variant(Uri uri, int width, int height) {
+      this(uri, width, height, null);
+    }
+
+    public Variant(Uri uri, int width, int height, @Nullable ImageRequest.CacheChoice cacheChoice) {
       mUri = uri;
       mWidth = width;
       mHeight = height;
+      mCacheChoice = cacheChoice;
     }
 
     public Uri getUri() {
@@ -119,6 +125,11 @@ public class MediaVariations {
 
     public int getHeight() {
       return mHeight;
+    }
+
+    @Nullable
+    public ImageRequest.CacheChoice getCacheChoice() {
+      return mCacheChoice;
     }
 
     @Override

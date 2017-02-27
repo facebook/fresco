@@ -353,8 +353,11 @@ public class MediaVariationsFallbackProducerTest {
   }
 
   private void whenIndexDbContains(Uri uri, int size) {
-    whenIndexDbReturnsTaskForResult(Lists
-        .newArrayList(new MediaVariations.Variant(uri, size, size)));
+    whenIndexDbReturnsTaskForResult(Lists.newArrayList(new MediaVariations.Variant(
+        uri,
+        size,
+        size,
+        ImageRequest.CacheChoice.valueOf("DEFAULT"))));
   }
 
   private void whenIndexDbReturnsTaskForResult(List<MediaVariations.Variant> variants) {

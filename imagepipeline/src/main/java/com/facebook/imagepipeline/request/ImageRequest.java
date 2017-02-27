@@ -217,11 +217,12 @@ public class ImageRequest {
    * An enum describing the cache choice.
    */
   public enum CacheChoice {
+
     /* Indicates that this image should go in the small disk cache, if one is being used */
     SMALL,
 
     /* Default */
-    DEFAULT,
+    DEFAULT
   }
 
   /**

@@ -25,6 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.CacheKeyUtil;
@@ -40,6 +41,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   private static final String TAG = MediaVariationsIndexDatabase.class.getSimpleName();
 
   private static final String[] PROJECTION = {
+      IndexEntry.COLUMN_NAME_CACHE_CHOICE,
       IndexEntry.COLUMN_NAME_CACHE_KEY,
       IndexEntry.COLUMN_NAME_WIDTH,
       IndexEntry.COLUMN_NAME_HEIGHT
@@ -99,19 +101,22 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
           return null;
         }
 
-        final int columnIndexCacheKey =
-            c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
+        final int columnIndexCacheKey = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
         final int columnIndexWidth = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_WIDTH);
-        final int columnIndexHeight =
-            c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_HEIGHT);
+        final int columnIndexHeight = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_HEIGHT);
+        final int columnIndexCacheChoice =
+            c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_CHOICE);
 
         List<MediaVariations.Variant> variants = new ArrayList<>(c.getCount());
         while (c.moveToNext()) {
+          String cacheChoiceStr = c.getString(columnIndexCacheChoice);
+
           variants.add(new MediaVariations.Variant(
               Uri.parse(c.getString(columnIndexCacheKey)),
               c.getInt(columnIndexWidth),
-              c.getInt(columnIndexHeight)
-          ));
+              c.getInt(columnIndexHeight),
+              TextUtils.isEmpty(cacheChoiceStr)
+                  ? null : ImageRequest.CacheChoice.valueOf(cacheChoiceStr)));
         }
 
         return variants;
