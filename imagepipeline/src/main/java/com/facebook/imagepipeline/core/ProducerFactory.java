@@ -213,6 +213,7 @@ public class ProducerFactory {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mMediaVariationsIndex,
+        mMainDiskCachePolicy,
         inputProducer);
   }
 

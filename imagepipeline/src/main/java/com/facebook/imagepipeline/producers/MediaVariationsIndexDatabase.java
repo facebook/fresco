@@ -30,6 +30,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.MediaVariations;
 
 import bolts.Task;
@@ -129,6 +130,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   @Override
   public void saveCachedVariant(
       final String mediaId,
+      final ImageRequest.CacheChoice cacheChoice,
       final CacheKey cacheKey,
       final EncodedImage encodedImage) {
     mWriteExecutor.execute(new Runnable() {

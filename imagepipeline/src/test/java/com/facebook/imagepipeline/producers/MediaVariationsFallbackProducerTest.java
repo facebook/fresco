@@ -20,6 +20,7 @@ import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.DiskCachePolicy;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -64,7 +65,7 @@ public class MediaVariationsFallbackProducerTest {
   private static final int SIZE_S = 100;
   private static final int SIZE_M = 200;
   private static final int SIZE_L = 300;
-  public static final String MEDIA_ID = "variations";
+  private static final String MEDIA_ID = "variations";
 
   private static final Uri URI_S = Uri.parse("http://www.facebook.com/s.png");
   private static final Uri URI_M = Uri.parse("http://www.facebook.com/m.png");
@@ -104,6 +105,7 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public MediaVariationsIndex mMediaVariationsIndex;
   @Mock public EncodedImage mIntermediateEncodedImage;
   @Mock public EncodedImage mFinalEncodedImage;
+  @Mock public DiskCachePolicy mDiskCachePolicy;
   @Captor public ArgumentCaptor<Consumer<EncodedImage>> mConsumerCaptor;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
@@ -122,6 +124,7 @@ public class MediaVariationsFallbackProducerTest {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mMediaVariationsIndex,
+        mDiskCachePolicy,
         mInputProducer);
 
     mProducerContext = new SettableProducerContext(
@@ -155,6 +158,9 @@ public class MediaVariationsFallbackProducerTest {
         .thenReturn(CACHE_KEY_M);
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, URI_L, mCallerContext))
         .thenReturn(CACHE_KEY_L);
+
+    when(mDiskCachePolicy.getCacheChoiceForResult(any(ImageRequest.class), any(EncodedImage.class)))
+        .thenReturn(ImageRequest.CacheChoice.DEFAULT);
 
     whenIndexDbReturnsTaskForResult(null);
   }
@@ -308,6 +314,34 @@ public class MediaVariationsFallbackProducerTest {
   }
 
   @Test
+  public void testWriteToIndexWithCorrectValuesForDefaultCacheChoice() {
+    testWriteToIndexWithCorrectValuesFor(ImageRequest.CacheChoice.DEFAULT);
+  }
+
+  @Test
+  public void testWriteToIndexWithCorrectValuesForSmallCacheChoice() {
+    testWriteToIndexWithCorrectValuesFor(ImageRequest.CacheChoice.SMALL);
+  }
+
+  private void testWriteToIndexWithCorrectValuesFor(ImageRequest.CacheChoice cacheChoice) {
+    when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
+    setupInputProducerSuccess();
+    when(mDiskCachePolicy.getCacheChoiceForResult(any(ImageRequest.class), any(EncodedImage.class)))
+        .thenReturn(cacheChoice);
+
+    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+
+    verify(mMediaVariationsIndex).saveCachedVariant(
+        MEDIA_ID,
+        cacheChoice,
+        CACHE_KEY_ORIGINAL,
+        mFinalEncodedImage);
+  }
+
+  @Test
   public void testInputProducerSuccess() {
     when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
     setupInputProducerSuccess();
@@ -316,9 +350,6 @@ public class MediaVariationsFallbackProducerTest {
 
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
     verify(mConsumer).onNewResult(mFinalEncodedImage, true);
-
-    verify(mMediaVariationsIndex)
-        .saveCachedVariant(MEDIA_ID, CACHE_KEY_ORIGINAL, mFinalEncodedImage);
   }
 
   private void whenIndexDbContains(Uri uri, int size) {

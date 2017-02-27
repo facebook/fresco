@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.MediaVariations;
 
 import bolts.Task;
@@ -23,6 +24,7 @@ public interface MediaVariationsIndex {
 
   void saveCachedVariant(
       String mediaId,
+      ImageRequest.CacheChoice cacheChoice,
       CacheKey cacheKey,
       EncodedImage encodedImage);
 }
