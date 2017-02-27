@@ -45,8 +45,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
       IndexEntry.COLUMN_NAME_HEIGHT
   };
 
-  private static final String SQL_DELETE_ENTRIES =
-      "DROP TABLE IF EXISTS " + IndexEntry.TABLE_NAME;
+  private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + IndexEntry.TABLE_NAME;
 
   @GuardedBy("MediaVariationsIndexDatabase.class")
   private final LazyIndexDbOpenHelper mDbHelper;
@@ -145,6 +144,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
             contentValues.put(IndexEntry.COLUMN_NAME_MEDIA_ID, mediaId);
             contentValues.put(IndexEntry.COLUMN_NAME_WIDTH, encodedImage.getWidth());
             contentValues.put(IndexEntry.COLUMN_NAME_HEIGHT, encodedImage.getHeight());
+            contentValues.put(IndexEntry.COLUMN_NAME_CACHE_CHOICE, cacheChoice.name());
             contentValues.put(IndexEntry.COLUMN_NAME_CACHE_KEY, cacheKey.getUriString());
             contentValues
                 .put(IndexEntry.COLUMN_NAME_RESOURCE_ID, CacheKeyUtil.getFirstResourceId(cacheKey));
@@ -168,6 +168,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
     public static final String COLUMN_NAME_MEDIA_ID = "media_id";
     public static final String COLUMN_NAME_WIDTH = "width";
     public static final String COLUMN_NAME_HEIGHT = "height";
+    public static final String COLUMN_NAME_CACHE_CHOICE = "cache_choice";
     public static final String COLUMN_NAME_CACHE_KEY = "cache_key";
     public static final String COLUMN_NAME_RESOURCE_ID = "resource_id";
   }
@@ -191,7 +192,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
 
   private static class IndexDbOpenHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "FrescoMediaVariationsIndex.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -201,6 +202,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
             IndexEntry.COLUMN_NAME_MEDIA_ID + TEXT_TYPE + "," +
             IndexEntry.COLUMN_NAME_WIDTH + INTEGER_TYPE + "," +
             IndexEntry.COLUMN_NAME_HEIGHT + INTEGER_TYPE + "," +
+            IndexEntry.COLUMN_NAME_CACHE_CHOICE + TEXT_TYPE + "," +
             IndexEntry.COLUMN_NAME_CACHE_KEY + TEXT_TYPE + "," +
             IndexEntry.COLUMN_NAME_RESOURCE_ID + TEXT_TYPE + " UNIQUE )";
     private static final String SQL_CREATE_INDEX =
@@ -232,6 +234,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
       } finally {
         db.endTransaction();
       }
+      onCreate(db);
     }
 
     @Override
