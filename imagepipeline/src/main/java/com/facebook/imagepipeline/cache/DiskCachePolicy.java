@@ -41,4 +41,15 @@ public interface DiskCachePolicy {
       EncodedImage newResult,
       ImageRequest imageRequest,
       Object callerContext);
+
+  /**
+   * Determines the cache in which to store the provided image.
+   *
+   * @param imageRequest request which resulted in loading the image
+   * @param encodedImage the image to store in cache
+   * @return cache choice that represents the cache to use
+   */
+  ImageRequest.CacheChoice getCacheChoiceForResult(
+      ImageRequest imageRequest,
+      EncodedImage encodedImage);
 }

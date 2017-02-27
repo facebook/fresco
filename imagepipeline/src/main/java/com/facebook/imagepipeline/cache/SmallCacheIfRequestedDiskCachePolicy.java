@@ -56,10 +56,17 @@ public class SmallCacheIfRequestedDiskCachePolicy
       Object callerContext) {
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, callerContext);
 
-    if (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL) {
+    if (getCacheChoiceForResult(imageRequest, newResult) == ImageRequest.CacheChoice.SMALL) {
       mSmallImageBufferedDiskCache.put(cacheKey, newResult);
     } else {
       mDefaultBufferedDiskCache.put(cacheKey, newResult);
     }
+  }
+
+  @Override
+  public ImageRequest.CacheChoice getCacheChoiceForResult(
+      ImageRequest imageRequest, EncodedImage encodedImage) {
+    return imageRequest.getCacheChoice() == null
+        ? ImageRequest.CacheChoice.DEFAULT : imageRequest.getCacheChoice();
   }
 }

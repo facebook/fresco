@@ -78,11 +78,24 @@ public class SplitCachesByImageSizeDiskCachePolicy implements DiskCachePolicy {
       Object callerContext) {
     final CacheKey cacheKey = mCacheKeyFactory.getEncodedCacheKey(imageRequest, callerContext);
 
-    int size = newResult.getSize();
-    if (size > 0 && size < mForceSmallCacheThresholdBytes) {
-      mSmallImageBufferedDiskCache.put(cacheKey, newResult);
+    switch (getCacheChoiceForResult(imageRequest, newResult)) {
+      case DEFAULT:
+        mDefaultBufferedDiskCache.put(cacheKey, newResult);
+        break;
+      case SMALL:
+        mSmallImageBufferedDiskCache.put(cacheKey, newResult);
+        break;
+    }
+  }
+
+  @Override
+  public ImageRequest.CacheChoice getCacheChoiceForResult(
+      ImageRequest imageRequest, EncodedImage encodedImage) {
+    int size = encodedImage.getSize();
+    if (size >= 0 && size < mForceSmallCacheThresholdBytes) {
+      return ImageRequest.CacheChoice.SMALL;
     } else {
-      mDefaultBufferedDiskCache.put(cacheKey, newResult);
+      return ImageRequest.CacheChoice.DEFAULT;
     }
   }
 
