@@ -72,7 +72,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
   // All resourceId stored on disk (if any).
   @VisibleForTesting final Set<String> mResourceIndex;
 
-  @GuardedBy("mLock")
   private long mCacheSizeLastUpdateTime;
 
   private final long mCacheSizeLimitMinimum;
@@ -199,6 +198,7 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
           synchronized (mLock) {
             maybeUpdateFileCacheSize();
           }
+          mIndexReady = true;
           mCountDownLatch.countDown();
         }
       });
@@ -748,8 +748,6 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
       }
       if (mCacheStats.getCount() != count || mCacheStats.getSize() != size) {
         if (mIndexPopulateAtStartupEnabled && mResourceIndex != tempResourceIndex) {
-          mIndexReady = true;
-        } else if (mIndexPopulateAtStartupEnabled) {
           mResourceIndex.clear();
           mResourceIndex.addAll(tempResourceIndex);
         }

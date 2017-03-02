@@ -38,6 +38,8 @@ import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.time.SystemClock;
+import com.facebook.imagepipeline.testing.FakeClock;
+import com.facebook.imagepipeline.testing.TestExecutorService;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -52,6 +54,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -91,12 +94,14 @@ public class DiskStorageCacheTest {
   private CacheEventListener mCacheEventListener;
   private InOrder mCacheEventListenerInOrder;
   private SystemClock mClock;
+  private TestExecutorService mBackgroundExecutor;
 
   @Before
   public void setUp() {
     mClock = mock(SystemClock.class);
     PowerMockito.mockStatic(SystemClock.class);
     PowerMockito.when(SystemClock.get()).thenReturn(mClock);
+    mBackgroundExecutor = new TestExecutorService(new FakeClock());
     mDiskTrimmableRegistry = mock(DiskTrimmableRegistry.class);
     mCacheEventListener = mock(CacheEventListener.class);
     mCacheEventListenerInOrder = inOrder(mCacheEventListener);
@@ -150,7 +155,7 @@ public class DiskStorageCacheTest {
         mock(CacheErrorLogger.class),
         mDiskTrimmableRegistry,
         context,
-        Executors.newSingleThreadExecutor(),
+        mBackgroundExecutor,
         indexPopulateAtStartupEnabled);
   }
 
@@ -612,6 +617,29 @@ public class DiskStorageCacheTest {
     // Index may not yet updated.
     DiskStorageCache cache2 = createDiskCache(mStorage, false);
     assertNotNull(cache2.getResource(key));
+  }
+
+  @Test
+  public void testIndexIsImmediatelyReadyIfIndexAtStartupIsOff() {
+    DiskStorageCache cache = createDiskCache(mStorage, false);
+
+    assertThat(cache.isIndexReady()).isTrue();
+  }
+
+  @Test
+  public void testIndexIsNotImmediatelyReadyIfIndexAtStartupIsOff() {
+    DiskStorageCache cache = createDiskCache(mStorage, true);
+
+    assertThat(cache.isIndexReady()).isFalse();
+  }
+
+  @Test
+  public void testIndexIsReadyIfIndexAtStartupIsOnAndTheBackgroundExecutorHasRun() {
+    DiskStorageCache cache = createDiskCache(mStorage, true);
+
+    mBackgroundExecutor.runUntilIdle();
+
+    assertThat(cache.isIndexReady()).isTrue();
   }
 
   @Test
