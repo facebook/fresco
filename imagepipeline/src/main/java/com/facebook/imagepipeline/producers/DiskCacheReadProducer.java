@@ -37,6 +37,7 @@ import bolts.Task;
 public class DiskCacheReadProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "DiskCacheProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
+  public static final String ENCODED_IMAGE_SIZE = ProducerConstants.ENCODED_IMAGE_SIZE;
 
   private final Producer<EncodedImage> mInputProducer;
   private final DiskCachePolicy mDiskCachePolicy;
@@ -88,7 +89,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
             listener.onProducerFinishWithSuccess(
                 requestId,
                 PRODUCER_NAME,
-                getExtraMap(listener, requestId, true));
+                getExtraMap(listener, requestId, true, cachedReference.getSize()));
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, true);
             cachedReference.close();
@@ -96,7 +97,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
             listener.onProducerFinishWithSuccess(
                 requestId,
                 PRODUCER_NAME,
-                getExtraMap(listener, requestId, false));
+                getExtraMap(listener, requestId, false, 0));
             mInputProducer.produceResults(consumer, producerContext);
           }
         }
@@ -126,11 +127,22 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   static Map<String, String> getExtraMap(
       final ProducerListener listener,
       final String requestId,
-      final boolean valueFound) {
+      final boolean valueFound,
+      final int sizeInBytes) {
     if (!listener.requiresExtraMap(requestId)) {
       return null;
     }
-    return ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, String.valueOf(valueFound));
+    if (valueFound) {
+      return ImmutableMap.of(
+          EXTRA_CACHED_VALUE_FOUND,
+          String.valueOf(valueFound),
+          ENCODED_IMAGE_SIZE,
+          String.valueOf(sizeInBytes));
+    } else {
+      return ImmutableMap.of(
+          EXTRA_CACHED_VALUE_FOUND,
+          String.valueOf(valueFound));
+    }
   }
 
   private void subscribeTaskForRequestCancellation(
