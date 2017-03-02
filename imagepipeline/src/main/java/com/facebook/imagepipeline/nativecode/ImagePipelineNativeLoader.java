@@ -40,6 +40,7 @@ public class ImagePipelineNativeLoader {
   }
 
   public static void load() {
+    SoLoaderShim.loadLibrary("fb_jpegturbo");
     SoLoaderShim.loadLibrary("imagepipeline");
   }
 }
