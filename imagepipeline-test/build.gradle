@@ -10,6 +10,7 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
     compile project(':imagepipeline-base')
+    compile project(':imagepipeline-base-test')
 
     compile "junit:junit:${JUNIT_VERSION}"
     compile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
