@@ -1,7 +1,13 @@
 apply plugin: 'com.android.application'
 
 dependencies {
+    compile "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+
     compile project(':drawee-backends:drawee-pipeline')
+    compile project(':animated-base')
+    compile project(':animated-base-support')
+    compile project(':animated-gif')
+    compile project(':animated-webp')
 }
 
 android {
@@ -9,8 +15,8 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.facebook.samples.uriapp"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
 

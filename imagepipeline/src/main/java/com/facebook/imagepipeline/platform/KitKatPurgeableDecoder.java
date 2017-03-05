@@ -17,9 +17,9 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
 
 /**

@@ -9,6 +9,7 @@
 
 package com.facebook.drawee.drawable;
 
+import android.annotation.SuppressLint;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
@@ -43,6 +44,7 @@ public class DrawableProperties {
     mFilterBitmap = filterBitmap ? 1 : 0;
   }
 
+  @SuppressLint("Range")
   public void applyTo(Drawable drawable) {
     if (drawable == null) {
       return;

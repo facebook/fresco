@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.request.RepeatedPostprocessorRunner;
  */
 public class PostprocessorProducer implements Producer<CloseableReference<CloseableImage>> {
 
-  @VisibleForTesting static final String NAME = "PostprocessorProducer";
+  public static final String NAME = "PostprocessorProducer";
   @VisibleForTesting static final String POSTPROCESSOR = "Postprocessor";
 
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;

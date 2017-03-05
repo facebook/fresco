@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+project.group = GROUP
+version = VERSION_NAME
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+}
+
+dependencies {
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+        exclude group: 'org.mockito', module: 'mockito-all'
+    }
+    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+    testCompile project(':imagepipeline-test')
+
+    compile project(':drawee-backends:drawee-pipeline')
+    compile project(':imagepipeline-base')
+    compile project(':imagepipeline')
+    compile project(':drawee')
+    compile project(':fbcore')
+    compile project(':animated-base')
+}

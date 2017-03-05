@@ -13,22 +13,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
  * Represents a local file fetch producer.
  */
 public class LocalFileFetchProducer extends LocalFetchProducer {
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalFileFetchProducer";
+
+  public static final String PRODUCER_NAME = "LocalFileFetchProducer";
 
   public LocalFileFetchProducer(
       Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory,
-      boolean decodeFileDescriptorEnabled) {
-    super(executor, pooledByteBufferFactory, decodeFileDescriptorEnabled);
+      PooledByteBufferFactory pooledByteBufferFactory) {
+    super(executor, pooledByteBufferFactory);
   }
 
   @Override

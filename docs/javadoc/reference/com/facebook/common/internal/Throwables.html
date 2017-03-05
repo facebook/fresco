@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+
+<link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
+<title>
+
+  Throwables - Fresco 1.1.0 API
+
+
+| Fresco 1.1.0
+
+</title>
+<link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
+<script src="../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
+<script src="../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../../../../../assets/doclava-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../assets/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+  setToRoot("../../../../", "../../../../../assets/");
+</script>
+<script src="../../../../../assets/doclava-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../assets/navtree_data.js" type="text/javascript"></script>
+<script src="../../../../../assets/customizations.js" type="text/javascript"></script>
+<noscript>
+  <style type="text/css">
+    html,body{overflow:auto;}
+    #body-content{position:relative; top:0;}
+    #doc-content{overflow:visible;border-left:3px solid #666;}
+    #side-nav{padding:0;}
+    #side-nav .toggle-list ul {display:block;}
+    #resize-packages-nav{border-bottom:3px solid #666;}
+  </style>
+</noscript>
+</head>
+
+<body class="">
+
+<div id="header">
+    <div id="headerLeft">
+    
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+    
+    </div>
+    <div id="headerRight">
+      
+  <div id="search" >
+      <div id="searchForm">
+          <form accept-charset="utf-8" class="gsc-search-box" 
+                onsubmit="return submit_search()">
+            <table class="gsc-search-box" cellpadding="0" cellspacing="0"><tbody>
+                <tr>
+                  <td class="gsc-input">
+                    <input id="search_autocomplete" class="gsc-input" type="text" size="33" autocomplete="off"
+                      title="search developer docs" name="q"
+                      value="search developer docs"
+                      onFocus="search_focus_changed(this, true)"
+                      onBlur="search_focus_changed(this, false)"
+                      onkeydown="return search_changed(event, true, '../../../../')"
+                      onkeyup="return search_changed(event, false, '../../../../')" />
+                  <div id="search_filtered_div" class="no-display">
+                      <table id="search_filtered" cellspacing=0>
+                      </table>
+                  </div>
+                  </td>
+                  <!-- <td class="gsc-search-button">
+                    <input type="submit" value="Search" title="search" id="search-button" class="gsc-search-button" />
+                  </td>
+                  <td class="gsc-clear-button">
+                    <div title="clear results" class="gsc-clear-button">&nbsp;</div>
+                  </td> -->
+                </tr></tbody>
+              </table>
+          </form>
+      </div><!-- searchForm -->
+  </div><!-- search -->
+      
+    </div>
+</div><!-- header -->
+
+
+  <div class="g-section g-tpl-240" id="body-content">
+    <div class="g-unit g-first side-nav-resizable" id="side-nav">
+      <div id="swapper">
+        <div id="nav-panels">
+          <div id="resize-packages-nav">
+            <div id="packages-nav">
+              <div id="index-links">
+                <a href="../../../../packages.html"  >Packages</a> | 
+                <a href="../../../../classes.html" >Classes</a>
+              </div>
+              <ul>
+                
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/cache/common/package-summary.html">com.facebook.cache.common</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/cache/disk/package-summary.html">com.facebook.cache.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/activitylistener/package-summary.html">com.facebook.common.activitylistener</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/disk/package-summary.html">com.facebook.common.disk</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/executors/package-summary.html">com.facebook.common.executors</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/file/package-summary.html">com.facebook.common.file</a></li>
+    <li class="selected api apilevel-">
+  <a href="../../../../com/facebook/common/internal/package-summary.html">com.facebook.common.internal</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/lifecycle/package-summary.html">com.facebook.common.lifecycle</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/logging/package-summary.html">com.facebook.common.logging</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/media/package-summary.html">com.facebook.common.media</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/memory/package-summary.html">com.facebook.common.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/references/package-summary.html">com.facebook.common.references</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/soloader/package-summary.html">com.facebook.common.soloader</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/statfs/package-summary.html">com.facebook.common.statfs</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/streams/package-summary.html">com.facebook.common.streams</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/time/package-summary.html">com.facebook.common.time</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/util/package-summary.html">com.facebook.common.util</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/common/webp/package-summary.html">com.facebook.common.webp</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/datasource/package-summary.html">com.facebook.datasource</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/debug/package-summary.html">com.facebook.drawee.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/generic/package-summary.html">com.facebook.drawee.generic</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/gestures/package-summary.html">com.facebook.drawee.gestures</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/interfaces/package-summary.html">com.facebook.drawee.interfaces</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/span/package-summary.html">com.facebook.drawee.span</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/view/package-summary.html">com.facebook.drawee.view</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/backend/package-summary.html">com.facebook.fresco.animation.backend</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/package-summary.html">com.facebook.fresco.animation.bitmap</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/drawable/animator/package-summary.html">com.facebook.fresco.animation.drawable.animator</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/factory/package-summary.html">com.facebook.fresco.animation.factory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/factory/package-summary.html">com.facebook.imagepipeline.animated.factory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/impl/package-summary.html">com.facebook.imagepipeline.animated.impl</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/animated/util/package-summary.html">com.facebook.imagepipeline.animated.util</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/backends/volley/package-summary.html">com.facebook.imagepipeline.backends.volley</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/core/package-summary.html">com.facebook.imagepipeline.core</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/postprocessors/package-summary.html">com.facebook.imagepipeline.postprocessors</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/widget/text/span/package-summary.html">com.facebook.widget.text.span</a></li>
+              </ul><br/>
+            </div> <!-- end packages -->
+          </div> <!-- end resize-packages -->
+          <div id="classes-nav">
+            <ul>
+              
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;T&gt;</li>
+      </ul>
+    </li>
+              
+    <li><h2>Classes</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/AndroidPredicates.html">AndroidPredicates</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/ByteStreams.html">ByteStreams</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Closeables.html">Closeables</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/CountingOutputStream.html">CountingOutputStream</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Files.html">Files</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;E&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/ImmutableMap.html">ImmutableMap</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/ImmutableSet.html">ImmutableSet</a>&lt;E&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Ints.html">Ints</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Objects.html">Objects</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Objects.ToStringHelper.html">Objects.ToStringHelper</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Preconditions.html">Preconditions</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Sets.html">Sets</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/Suppliers.html">Suppliers</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/common/internal/Throwables.html">Throwables</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/DoNotStrip.html">DoNotStrip</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/common/internal/VisibleForTesting.html">VisibleForTesting</a></li>
+      </ul>
+    </li>
+              
+              
+              
+            </ul><br/>
+          </div><!-- end classes -->
+        </div><!-- end nav-panels -->
+        <div id="nav-tree" style="display:none">
+          <div id="index-links">
+            <a href="../../../../packages.html"  >Packages</a> | 
+            <a href="../../../../classes.html" >Classes</a>
+          </div>
+        </div><!-- end nav-tree -->
+      </div><!-- end swapper -->
+    </div> <!-- end side-nav -->
+    <script>
+      if (!isMobile) {
+        //$("<a href='#' id='nav-swap' onclick='swapNav();return false;' style='font-size:10px;line-height:9px;margin-left:1em;text-decoration:none;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>").appendTo("#side-nav");
+        chooseDefaultNav();
+        if ($("#nav-tree").is(':visible')) {
+          init_default_navtree("../../../../");
+        } else {
+          addLoadEvent(function() {
+            scrollIntoView("packages-nav");
+            scrollIntoView("classes-nav");
+          });
+        }
+        //$("#swapper").css({borderBottom:"2px solid #aaa"});
+      } else {
+        swapNav(); // tree view should be used on mobile
+      }
+    </script>
+
+
+
+<div class="g-unit" id="doc-content">
+
+<div id="api-info-block">
+
+
+
+  
+   
+  
+  
+  
+  
+
+
+<div class="sum-details-links">
+
+
+Summary:
+
+
+
+
+
+
+
+
+
+
+
+  <a href="#pubmethods">Methods</a>
+  
+
+
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
+
+&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
+
+</div><!-- end sum-details-links -->
+<div class="api-level">
+  
+
+
+  
+  
+
+</div>
+</div><!-- end api-info-block -->
+
+
+<!-- ======== START OF CLASS DATA ======== -->
+
+<div id="jd-header">
+    public
+     
+    final 
+    
+    class
+<h1>Throwables</h1>
+
+
+
+  
+    extends Object<br/>
+  
+  
+  
+
+  
+  
+  
+
+
+</div><!-- end header -->
+
+<div id="naMessage"></div>
+
+<div id="jd-content" class="api apilevel-">
+<table class="jd-inheritance-table">
+
+
+    <tr>
+         	
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.common.internal.Throwables</td>
+    </tr>
+    
+
+</table>
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Class Overview</h2>
+<p>Static utility methods pertaining to instances of Throwable.
+
+ <p>See the Guava User Guide entry on <a href=
+ "http://code.google.com/p/guava-libraries/wiki/ThrowablesExplained">
+ Throwables</a>.</p>
+
+
+
+
+
+</div><!-- jd-descr -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Summary</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            List&lt;Throwable&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#getCausalChain(java.lang.Throwable)">getCausalChain</a></span>(Throwable throwable)
+        
+        <div class="jd-descrdiv">Gets a <code>Throwable</code> cause chain as a list.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            Throwable
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#getRootCause(java.lang.Throwable)">getRootCause</a></span>(Throwable throwable)
+        
+        <div class="jd-descrdiv">Returns the innermost cause of <code>throwable</code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#getStackTraceAsString(java.lang.Throwable)">getStackTraceAsString</a></span>(Throwable throwable)
+        
+        <div class="jd-descrdiv">Returns a string containing the result of
+ <code><a href="null#toString()">toString()</a></code>, followed by the full, recursive
+ stack trace of <code>throwable</code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            RuntimeException
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagate(java.lang.Throwable)">propagate</a></span>(Throwable throwable)
+        
+        <div class="jd-descrdiv">Propagates <code>throwable</code> as-is if it is an instance of
+ RuntimeException or Error, or else as a last resort, wraps
+ it in a <code>RuntimeException</code> then propagates.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;X&nbsp;extends&nbsp;Throwable&gt;
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfInstanceOf(java.lang.Throwable, java.lang.Class<X>)">propagateIfInstanceOf</a></span>(Throwable throwable, Class&lt;X&gt; declaredType)
+        
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of <code>declaredType</code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;X1&nbsp;extends&nbsp;Throwable,&nbsp;X2&nbsp;extends&nbsp;Throwable&gt;
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X1>, java.lang.Class<X2>)">propagateIfPossible</a></span>(Throwable throwable, Class&lt;X1&gt; declaredType1, Class&lt;X2&gt; declaredType2)
+        
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of RuntimeException, Error, <code>declaredType1</code>,
+ or <code>declaredType2</code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable)">propagateIfPossible</a></span>(Throwable throwable)
+        
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of RuntimeException or Error.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;X&nbsp;extends&nbsp;Throwable&gt;
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X>)">propagateIfPossible</a></span>(Throwable throwable, Class&lt;X&gt; declaredType)
+        
+        <div class="jd-descrdiv">Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of RuntimeException, Error, or
+ <code>declaredType</code>.</div>
+  
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Object-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  java.lang.Object
+
+<div id="inherited-methods-java.lang.Object">
+  <div id="inherited-methods-java.lang.Object-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Object
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">clone</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">equals</span>(Object arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">finalize</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            Class&lt;?&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getClass</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">hashCode</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notify</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notifyAll</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">toString</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0, int arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>()
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
+
+
+</div><!-- jd-descr (summary) -->
+
+<!-- Details -->
+
+
+
+
+
+
+
+
+<!-- XML Attributes -->
+
+
+<!-- Enum Values -->
+
+
+<!-- Constants -->
+
+
+<!-- Fields -->
+
+
+<!-- Public ctors -->
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<a id="getCausalChain(java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        List&lt;Throwable&gt;
+      </span>
+      <span class="sympad">getCausalChain</span>
+      <span class="normal">(Throwable throwable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets a <code>Throwable</code> cause chain as a list.  The first entry in the
+ list will be <code>throwable</code> followed by its cause hierarchy.  Note
+ that this is a snapshot of the cause chain and will not reflect
+ any subsequent changes to the cause chain.
+
+ <p>Here's an example of how it can be used to find specific types
+ of exceptions in the cause chain:
+
+ <pre>
+ Iterables.filter(Throwables.getCausalChain(e), IOException.class));
+ </pre></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>throwable</th>
+          <td>the non-null <code>Throwable</code> to extract causes from</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>an unmodifiable list containing the cause chain starting with
+     <code>throwable</code>
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getRootCause(java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        Throwable
+      </span>
+      <span class="sympad">getRootCause</span>
+      <span class="normal">(Throwable throwable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the innermost cause of <code>throwable</code>. The first throwable in a
+ chain provides context from when the error or exception was initially
+ detected. Example usage:
+ <pre>
+   assertEquals("Unable to assign a customer id",
+       Throwables.getRootCause(e).getMessage());
+ </pre>
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="getStackTraceAsString(java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getStackTraceAsString</span>
+      <span class="normal">(Throwable throwable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns a string containing the result of
+ <code><a href="null#toString()">toString()</a></code>, followed by the full, recursive
+ stack trace of <code>throwable</code>. Note that you probably should not be
+ parsing the resulting string; if you need programmatic access to the stack
+ frames, you can call <code><a href="null#getStackTrace()">getStackTrace()</a></code>.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="propagate(java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        RuntimeException
+      </span>
+      <span class="sympad">propagate</span>
+      <span class="normal">(Throwable throwable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> as-is if it is an instance of
+ RuntimeException or Error, or else as a last resort, wraps
+ it in a <code>RuntimeException</code> then propagates.
+ <p>
+ This method always throws an exception. The <code>RuntimeException</code> return
+ type is only for client code to make Java type system happy in case a
+ return value is required by the enclosing method. Example usage:
+ <pre>
+   T doSomething() {
+     try {
+       return someMethodThatCouldThrowAnything();
+     } catch (IKnowWhatToDoWithThisException e) {
+       return handle(e);
+     } catch (Throwable t) {
+       throw Throwables.propagate(t);
+     }
+   }
+ </pre></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>throwable</th>
+          <td>the Throwable to propagate</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>nothing will ever be returned; this return type is only for your
+     convenience, as illustrated in the example above
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="propagateIfInstanceOf(java.lang.Throwable, java.lang.Class<X>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">propagateIfInstanceOf</span>
+      <span class="normal">(Throwable throwable, Class&lt;X&gt; declaredType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of <code>declaredType</code>.  Example usage:
+ <pre>
+   try {
+     someMethodThatCouldThrowAnything();
+   } catch (IKnowWhatToDoWithThisException e) {
+     handle(e);
+   } catch (Throwable t) {
+     Throwables.propagateIfInstanceOf(t, IOException.class);
+     Throwables.propagateIfInstanceOf(t, SQLException.class);
+     throw Throwables.propagate(t);
+   }
+ </pre>
+</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>Throwable</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="propagateIfPossible(java.lang.Throwable, java.lang.Class<X1>, java.lang.Class<X2>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">propagateIfPossible</span>
+      <span class="normal">(Throwable throwable, Class&lt;X1&gt; declaredType1, Class&lt;X2&gt; declaredType2)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of RuntimeException, Error, <code>declaredType1</code>,
+ or <code>declaredType2</code>.  In the unlikely case that you have three or more
+ declared checked exception types, you can handle them all by invoking these
+ methods repeatedly. See usage example in <code><a href="../../../../com/facebook/common/internal/Throwables.html#propagateIfPossible(java.lang.Throwable, java.lang.Class<X>)">propagateIfPossible(Throwable, Class)</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>throwable</th>
+          <td>the Throwable to possibly propagate</td>
+        </tr>
+        <tr>
+          <th>declaredType1</th>
+          <td>any checked exception type declared by the calling
+     method</td>
+        </tr>
+        <tr>
+          <th>declaredType2</th>
+          <td>any other checked exception type declared by the
+     calling method
+</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>Throwable</td>
+            <td></td>
+        </tr>  
+        <tr>
+            <th>Throwable</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="propagateIfPossible(java.lang.Throwable)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">propagateIfPossible</span>
+      <span class="normal">(Throwable throwable)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of RuntimeException or Error.  Example usage:
+ <pre>
+   try {
+     someMethodThatCouldThrowAnything();
+   } catch (IKnowWhatToDoWithThisException e) {
+     handle(e);
+   } catch (Throwable t) {
+     Throwables.propagateIfPossible(t);
+     throw new RuntimeException("unexpected", t);
+   }
+ </pre>
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="propagateIfPossible(java.lang.Throwable, java.lang.Class<X>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">propagateIfPossible</span>
+      <span class="normal">(Throwable throwable, Class&lt;X&gt; declaredType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Propagates <code>throwable</code> exactly as-is, if and only if it is an
+ instance of RuntimeException, Error, or
+ <code>declaredType</code>. Example usage:
+ <pre>
+   try {
+     someMethodThatCouldThrowAnything();
+   } catch (IKnowWhatToDoWithThisException e) {
+     handle(e);
+   } catch (Throwable t) {
+     Throwables.propagateIfPossible(t, OtherException.class);
+     throw new RuntimeException("unexpected", t);
+   }
+ </pre></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>throwable</th>
+          <td>the Throwable to possibly propagate</td>
+        </tr>
+        <tr>
+          <th>declaredType</th>
+          <td>the single checked exception type declared by the
+     calling method
+</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>Throwable</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+
+
+
+<!-- ========= END OF CLASS DATA ========= -->
+<a id="navbar_top"></a>
+
+<div id="footer">
+ +Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
+ +</div> <!-- end footer - @generated -->
+
+</div> <!-- jd-content -->
+
+</div><!-- end doc-content -->
+
+</div> <!-- end body-content --> 
+
+<script type="text/javascript">
+init(); /* initialize doclava-developer-docs.js */
+</script>
+
+</body>
+</html>

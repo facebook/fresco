@@ -269,8 +269,12 @@ public class WrappingUtils {
       RoundingParams roundingParams,
       Resources resources) {
     if (drawable instanceof BitmapDrawable) {
+      final BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
       RoundedBitmapDrawable roundedBitmapDrawable =
-          RoundedBitmapDrawable.fromBitmapDrawable(resources, (BitmapDrawable) drawable);
+          new RoundedBitmapDrawable(
+              resources,
+              bitmapDrawable.getBitmap(),
+              bitmapDrawable.getPaint());
       applyRoundingParams(roundedBitmapDrawable, roundingParams);
       return roundedBitmapDrawable;
     }

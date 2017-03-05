@@ -9,9 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 import org.junit.*;
 import org.junit.runner.*;

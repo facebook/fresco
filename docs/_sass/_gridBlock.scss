@@ -1,0 +1,60 @@
+.gridBlock {
+  margin: -5px 0;
+  padding: 0;
+  padding-bottom: 20px;
+
+  .twoByGridBlock {
+    padding: 5px 0;
+
+    img {
+      margin-top: 6vh;
+      max-width: 100%;
+    }
+
+    &.featureBlock  h3 {
+      border-bottom: 1px solid rgba($primary-bg, 0.5);
+      color: $primary-bg;
+      font-size: 18px;
+      margin: 0;
+      padding: 10px 0;
+    }
+  }
+
+  .gridClear {
+    clear: both;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .gridBlock {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: -10px -10px 10px -10px;
+
+    .twoByGridBlock {
+      box-sizing: border-box;
+      flex: 1 0 50%;
+      padding: 10px;
+    }
+  }
+
+  h2 + .gridBlock {
+    padding-top: 20px;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .gridBlock {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: -10px -20px 10px -20px;
+
+    .twoByGridBlock {
+      box-sizing: border-box;
+      flex: 1 0 50%;
+      padding: 10px 20px;
+    }
+  }
+}

@@ -9,59 +9,58 @@
 
 package com.facebook.imageformat;
 
+import javax.annotation.Nullable;
+
 /**
- * Enum representing all used image formats.
+ * Class representing all used image formats.
  */
-public enum ImageFormat {
+public class ImageFormat {
 
-  WEBP_SIMPLE,
-  WEBP_LOSSLESS,
-  WEBP_EXTENDED,
-  WEBP_EXTENDED_WITH_ALPHA,
-  WEBP_ANIMATED,
-  JPEG,
-  PNG,
-  GIF,
-  BMP,
-  /**
-   * Unknown image. This is needed in case we fail to detect any type for particular image.
-   */
-  UNKNOWN;
+  public interface FormatChecker {
 
-  public static boolean isWebpFormat(ImageFormat imageFormat) {
-    return imageFormat == WEBP_SIMPLE ||
-        imageFormat == WEBP_LOSSLESS ||
-        imageFormat == WEBP_EXTENDED ||
-        imageFormat == WEBP_EXTENDED_WITH_ALPHA ||
-        imageFormat == WEBP_ANIMATED;
+    /**
+     * Get the number of header bytes the format checker requires
+     * @return the number of header bytes needed
+     */
+    int getHeaderSize();
+
+    /**
+     * Returns an {@link ImageFormat} if the checker is able to determine the format
+     * or null otherwise.
+     * @param headerBytes the header bytes to check
+     * @param headerSize the size of the header in bytes
+     * @return the image format or null if unknown
+     */
+    @Nullable
+    ImageFormat determineFormat(byte[] headerBytes, int headerSize);
+  }
+
+  // Unknown image format
+  public static final ImageFormat UNKNOWN = new ImageFormat("UNKNOWN", null);
+
+  private final String mFileExtension;
+  private final String mName;
+
+  public ImageFormat(String name, @Nullable String fileExtension) {
+    mName = name;
+    mFileExtension = fileExtension;
   }
 
   /**
-   * Maps an image format to the file extension
-   * @param imageFormat image format
-   * @return  file extension for the image format
-   * @throws UnsupportedOperationException
+   * Get the default file extension for the given image format.
+   * @return file extension for the image format
    */
-  public static String getFileExtension(ImageFormat imageFormat)
-      throws UnsupportedOperationException {
+  @Nullable
+  public String getFileExtension() {
+    return mFileExtension;
+  }
 
-    switch (imageFormat) {
-      case WEBP_SIMPLE:
-      case WEBP_LOSSLESS:
-      case WEBP_EXTENDED:
-      case WEBP_EXTENDED_WITH_ALPHA:
-      case WEBP_ANIMATED:
-        return "webp";
-      case JPEG:
-        return "jpeg";
-      case PNG:
-        return "png";
-      case GIF:
-        return "gif";
-      case BMP:
-        return "bmp";
-      default:
-        throw new UnsupportedOperationException("Unknown image format " + imageFormat.name());
-    }
+  @Override
+  public String toString() {
+    return getName();
+  }
+
+  public String getName() {
+    return mName;
   }
 }

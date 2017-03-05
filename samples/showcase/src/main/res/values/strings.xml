@@ -1,0 +1,156 @@
+<resources>
+  <string name="app_name">Fresco Showcase</string>
+
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
+
+  <string name="navdrawer_title">@string/app_name</string>
+  <string name="navdrawer_subtitle">frescolib.org</string>
+
+  <string name="action_settings">Settings</string>
+
+  <!-- Navigation drawer items -->
+  <string name="category_drawee">Drawee</string>
+
+  <string name="drawee_simple_title">Simple Drawee</string>
+  <string name="drawee_simple_help">Basic SimpleDraweeView example that just sets the image URI.</string>
+
+  <string name="drawee_media_picker_title">Media Provider</string>
+  <string name="drawee_media_picker_help">Select an image by pressing one of the media picker buttons.</string>
+  <string name="drawee_media_picker_button_action_open_document">ACTION_OPEN_DOCUMENT</string>
+  <string name="drawee_media_picker_action_open_document_not_supported">Intent.ACTION_OPEN_DOCUMENT is only supported by Kitkat and above!</string>
+  <string name="drawee_media_picker_button_action_get_content">ACTION_GET_CONTENT</string>
+  <string name="drawee_media_picker_no_image">No image selected.</string>
+  <string name="drawee_media_picker_button_action_pick">ACTION_PICK</string>
+
+  <string name="drawee_scale_type_title">Scale Type</string>
+  <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
+
+  <string name="drawee_span_simple_title">Simple DraweeSpan</string>
+  <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan.</string>
+
+  <string name="drawee_rounded_corners_title">Rounded Corners</string>
+
+  <string name="drawee_hierarchy_title">Placeholder, Progress, Failure</string>
+
+  <string name="drawee_rotation_title">Rotation</string>
+  <string name="drawee_rotation_help">Change the used RotationOptions using the drop-down menu on top.</string>
+
+  <string name="drawee_recycler_title">Recycler View</string>
+
+  <string name="category_pipeline">Image Pipeline</string>
+
+  <string name="imagepipeline_notification_title">Notifications</string>
+  <string name="imagepipeline_notification_button">Create Notification</string>
+  <string name="imagepipeline_notification_content_title">Fresco Says Hello</string>
+  <string name="imagepipeline_notification_content_text">This notification shows a bitmap that has been loaded by Fresco.</string>
+  <string name="imagepipeline_notification_help">Clicking on the button will create a new notification using a BaseBitmapDataSubscriber.</string>
+
+  <string name="imagepipeline_postprocessor_title">Post-Processor</string>
+  <string name="imagepipeline_postprocessor_help">Change the applied post-processor using the drop-down menu on top. Use the refresh button to re-run uncached post-processors.</string>
+  <string name="imagepipeline_postprocessor_show_original">Original</string>
+  <string name="imagepipeline_postprocessor_set_greyscale_slow">Grey Scale Post-Processor (slow)</string>
+  <string name="imagepipeline_postprocessor_set_greyscale">Grey Scale Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_watermark">Watermark Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_watermark_cached">Watermark Post-Processor (cached)</string>
+  <string name="imagepipeline_postprocessor_set_blur">Blur Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_scaling_blur">Scaling Blur Post-Processor</string>
+  <string name="imagepipeline_postprocessor_refresh">Refresh</string>
+
+  <string name="imagepipeline_prefetch_title">Prefetch</string>
+  <string name="imagepipeline_prefetch_help">1. Clear the cache\n2. Toggle images, they show slowly\n3. Hide the images\n4. Clear the cache\n5. Prefetch\n6. Show the images, they load fast!</string>
+
+  <string name="imagepipeline_media_variations_title">Media Variations</string>
+  <string name="imagepipeline_media_variations_individual_variants">Individual variants (click to load)</string>
+  <string name="imagepipeline_media_variations_combined_request">Combined image request (click to refresh)</string>
+  <string name="imagepipeline_media_variations_clear_cache">Clear cache and reset</string>
+  <string name="imagepipeline_media_variations_restart_toast">Cache cleared. Please restart the app to test further.</string>
+
+  <string name="category_format">Image Format</string>
+
+  <string name="format_switch_checker_board">Checker board background</string>
+
+  <string name="format_gif_title">GIF</string>
+  <string name="format_gif_help">Select a size in the spinner to start playing that file. The animation has 36 frames and plays at 30 FPS.</string>
+  <string name="format_gif_label_small">Small (256x256 px)</string>
+  <string name="format_gif_label_medium">Medium (512x512 px)</string>
+  <string name="format_gif_label_large">Large (1024x1024 px)</string>
+
+  <string name="format_pjpeg_title">Progressive JPEG</string>
+  <string name="format_pjpeg_help">Select a progressive JPEG from the spinner and enable or disable progessive JPEG support with the switch.</string>
+  <string name="format_pjpeg_switch_rendering_enabled">Progressive JPEG rendering enabled</string>
+  <string name="format_pjpeg_label_small">Small progressive JPEG</string>
+  <string name="format_pjpeg_label_medium">Medium progressive JPEG</string>
+  <string name="format_pjpeg_label_large">Large progressive JPEG</string>
+  <string name="format_pjpeg_label_slow">Slow progressive JPEG</string>
+
+  <string name="format_color_title">Color</string>
+  <string name="format_color_switch">Color XML support enabled</string>
+  <string name="format_color_help">This example adds a custom color XML image format (&lt;color&gt;#rrggbb&lt;/color&gt;), decoder, and Drawable factory. In this example, you have to enable the decoder globally when Fresco is initialized. Toggle the switch and restart the application to enable/disable custom color XML support.</string>
+
+  <string name="format_svg_title">SVG</string>
+  <string name="format_svg_switch">SVG support enabled</string>
+  <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>
+
+  <string name="format_keyframes_title">Keyframes</string>
+  <string name="format_keyframes_help">Keyframes animations are only supported on devices running Android 4.0.3 (API level 15) and above.</string>
+
+  <string name="format_override_title">Decoder Override</string>
+  <string name="format_override_help">This example overrides the decoder to be used for the given image. You can use this approach if you do not want to set a global custom decoder. The image will be decoded correctly even if global color decoding is disabled.</string>
+
+  <!-- Preferences -->
+
+  <string name="preferences_category_cache">Cache</string>
+
+  <string name="preference_cache_clear_cache_title">Clear Caches</string>
+  <string name="preference_cache_clear_cache_summary">Removes all cached images from Fresco\'s disk and memory caches</string>
+  <string name="preference_cache_clear_cache_message_success">All caches have been cleared.</string>
+
+  <string name="preferences_category_debug">Debug</string>
+
+  <string name="preference_debug_show_overlay_title">Debug Overlay</string>
+  <string name="preference_debug_show_overlay_summary_enabled">Debug overlay is shown for all Drawees</string>
+  <string name="preference_debug_show_overlay_summary_disabled">Debug overlay is not shown</string>
+
+  <string name="preferences_category_details">Version and Device Details</string>
+
+  <string name="preference_details_android_version_title">Android Version</string>
+  <string name="preference_details_android_version_summary">SDK: %1$s (%2$s)</string>
+  <string name="preference_details_cpu_architecture_title">CPU Architecture</string>
+  <string name="preference_details_cpu_architecture_summary_before_21">%1$s - supported ABIs: %2$s, %3$s</string>
+  <string name="preference_details_cpu_architecture_summary_after_21">%1$s - supported ABIs: %2$s</string>
+  <string name="preference_details_device_name_title">Device Name</string>
+  <string name="preference_details_device_name_summary">%1$s %2$s</string>
+
+  <!-- Other -->
+
+  <string name="category_more">More</string>
+
+  <string name="welcome_title">@string/app_name</string>
+  <string name="welcome_nav_title">Welcome Screen</string>
+  <string name="welcome_text_intro">This app illustrates features of the Fresco image library for Android. Use the left-hand drawer to browse the available samples.</string>
+  <string name="welcome_text_learn_more">You can learn more about Fresco by visiting our GitHub repository and our public documentation.</string>
+  <string name="welcome_button_github">GitHub</string>
+  <string name="welcome_button_doc">Documentation</string>
+
+  <string name="button_clear_cache">Clear Cache</string>
+  <string name="button_prefetch">Prefetch</string>
+  <string name="button_toggle_images">Toggle images</string>
+  <string name="prefetch_status">%1$d/%2$d prefetched, %3$d failed.</string>
+
+  <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
+  <string translatable="false" name="message_restart_now">Kill Now</string>
+
+  <string name="drawee_rounded_corners_as_circle">Using roundAsCircle</string>
+  <string name="drawee_rounded_corners_radius">16dp corner radius</string>
+  <string name="drawee_rounded_corners_some">Only rounding some corners</string>
+  <string name="drawee_rounded_corners_fancy">Fancy (different radii)</string>
+  <string name="drawee_rounded_corners_borders">Borders</string>
+  <string name="drawee_rounded_corners_bitmap_only_toast">Switched to BITMAP_ONLY rounding method</string>
+  <string name="drawee_rounded_corners_overlay_color_toast">Switched to OVERLAY_COLOR rounding method</string>
+
+  <string name="drawee_hierarchy_load_success">Load (success)</string>
+  <string name="drawee_hierarchy_load_fail">Load (fail)</string>
+  <string name="drawee_hierarchy_clear">Clear</string>
+
+</resources>

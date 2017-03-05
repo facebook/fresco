@@ -1,0 +1,16 @@
+.DS_STORE
+_site/
+*-e
+Gemfile.lock
+*.swo
+*.swp
+.gradle
+.DS_Store
+.idea
+build/
+local.properties
+obj/
+*.iml
+nativedeps/
+.sass-cache/
+.jekyll-metadata

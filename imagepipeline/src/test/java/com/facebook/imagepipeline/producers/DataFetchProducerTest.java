@@ -12,7 +12,7 @@ package com.facebook.imagepipeline.producers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormatChecker;
 
 import org.junit.*;
@@ -56,6 +56,8 @@ public class DataFetchProducerTest {
             "g7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ9" +
             "0m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/" +
             "Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7");
-    assertEquals(ImageFormat.GIF, ImageFormatChecker.getImageFormat(new ByteArrayInputStream(gif)));
+    assertEquals(
+        DefaultImageFormats.GIF,
+        ImageFormatChecker.getImageFormat(new ByteArrayInputStream(gif)));
   }
 }

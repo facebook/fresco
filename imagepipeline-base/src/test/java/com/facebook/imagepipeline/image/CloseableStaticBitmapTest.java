@@ -20,35 +20,57 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class CloseableStaticBitmapTest {
 
+  private static final int WIDTH = 10;
+  private static final int HEIGHT = 5;
+
   private Bitmap mBitmap;
   private CloseableStaticBitmap mCloseableStaticBitmap;
 
   @Before
   public void setUp() {
-    mBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+    mBitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
     ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
     mCloseableStaticBitmap = new CloseableStaticBitmap(
         mBitmap, releaser, ImmutableQualityInfo.FULL_QUALITY, 0);
   }
 
   @Test
+  public void testWidthAndHeight() {
+    assertThat(mCloseableStaticBitmap.getWidth()).isEqualTo(WIDTH);
+    assertThat(mCloseableStaticBitmap.getHeight()).isEqualTo(HEIGHT);
+  }
+
+  @Test
+  public void testWidthAndHeightWithRotatedImage() {
+    // Reverse width and height as the rotation angle should put them back again
+    mBitmap = Bitmap.createBitmap(HEIGHT, WIDTH, Bitmap.Config.ARGB_8888);
+    ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
+    mCloseableStaticBitmap = new CloseableStaticBitmap(
+        mBitmap, releaser, ImmutableQualityInfo.FULL_QUALITY, 90);
+
+    assertThat(mCloseableStaticBitmap.getWidth()).isEqualTo(WIDTH);
+    assertThat(mCloseableStaticBitmap.getHeight()).isEqualTo(HEIGHT);
+  }
+
+  @Test
   public void testClose() {
     mCloseableStaticBitmap.close();
-    assertTrue(mCloseableStaticBitmap.isClosed());
-    assertTrue(mBitmap.isRecycled());
+    assertThat(mCloseableStaticBitmap.isClosed()).isTrue();
+    assertThat(mBitmap.isRecycled()).isTrue();
   }
 
   @Test
   public void testConvert() {
     CloseableReference<Bitmap> ref = mCloseableStaticBitmap.convertToBitmapReference();
-    assertSame(ref.get(), mBitmap);
-    assertTrue(mCloseableStaticBitmap.isClosed());
+    assertThat(ref.get()).isSameAs(mBitmap);
+    assertThat(mCloseableStaticBitmap.isClosed()).isTrue();
   }
 
   @Test(expected = NullPointerException.class)

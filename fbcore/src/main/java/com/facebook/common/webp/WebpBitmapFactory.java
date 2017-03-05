@@ -24,6 +24,34 @@ import android.graphics.Rect;
  */
 public interface WebpBitmapFactory {
 
+  /**
+   * We listen to events in Webp direct decoding
+   */
+  interface WebpErrorLogger {
+
+    /**
+     * Invoked to notify the logger about an error
+     *
+     * @param message The message to log
+     * @param extra Extra message if any
+     */
+    void onWebpErrorLog(String message, String extra);
+  }
+
+  /**
+   * Register the given listener as observer of error
+   *
+   * @param logger The WebpErrorLogger in order to observe webp errors
+   */
+  void setWebpErrorLogger(WebpErrorLogger logger);
+
+  /**
+   * Set the object which should create the bg Bitmap
+   *
+   * @param bitmapCreator The BitmapCreator implementation
+   */
+  void setBitmapCreator(final BitmapCreator bitmapCreator);
+
   Bitmap decodeFileDescriptor(
       FileDescriptor fd,
       Rect outPadding,

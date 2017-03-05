@@ -1,0 +1,9 @@
+<resources>
+  <string name="app_name">Fresco Animation Demo</string>
+  <string name="animation_info">Duration: %1$d ms - Frame count: %2$d - Loop count: %3$s</string>
+  <string name="infinite">infinite</string>
+  <string name="unknown_animation_info">Unknown animation information</string>
+  <string name="play">Play</string>
+  <string name="pause">Pause</string>
+  <string name="stop">Stop</string>
+</resources>

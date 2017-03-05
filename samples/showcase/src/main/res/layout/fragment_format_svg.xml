@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/decoder_switch"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/format_svg_switch"
+      app:switchPadding="@dimen/switch_padding"
+      />
+
+  <com.facebook.drawee.view.SimpleDraweeView
+      android:id="@+id/drawee_view"
+      android:layout_width="@dimen/drawee_width_medium"
+      android:layout_height="@dimen/drawee_height_medium"
+      android:layout_marginTop="@dimen/margin_medium"
+      />
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/switch_background"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/format_switch_checker_board"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:textAppearance="?android:attr/textAppearanceSmall"
+      android:text="@string/format_svg_help"
+      />
+</LinearLayout>

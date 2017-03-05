@@ -15,8 +15,8 @@ import java.io.IOException;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
-
 
 /**
  * An implementation of {@link PooledByteBufferOutputStream} that produces a

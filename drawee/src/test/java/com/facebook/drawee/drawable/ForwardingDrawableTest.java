@@ -29,12 +29,12 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 public class ForwardingDrawableTest {
   private Drawable mInnerDrawable;
-  private FakeForwardingDrawable mDrawable;
+  private ForwardingDrawable mDrawable;
 
   @Before
   public void setup() {
     mInnerDrawable = mock(Drawable.class);
-    mDrawable = new FakeForwardingDrawable(mInnerDrawable);
+    mDrawable = new ForwardingDrawable(mInnerDrawable);
     // ForwardingDrawable will call mInnerDrawable.setCallback
     reset(mInnerDrawable);
   }
@@ -43,7 +43,7 @@ public class ForwardingDrawableTest {
   public void testIntrinsicDimensions() {
     when(mInnerDrawable.getIntrinsicWidth()).thenReturn(100);
     when(mInnerDrawable.getIntrinsicHeight()).thenReturn(200);
-    Drawable drawable1 = new FakeForwardingDrawable(mInnerDrawable);
+    Drawable drawable1 = new ForwardingDrawable(mInnerDrawable);
     Assert.assertEquals(100, drawable1.getIntrinsicWidth());
     Assert.assertEquals(200, drawable1.getIntrinsicHeight());
   }
@@ -91,10 +91,27 @@ public class ForwardingDrawableTest {
     verify(mInnerDrawable).draw(mockCanvas);
   }
 
-  static class FakeForwardingDrawable extends ForwardingDrawable {
-    public FakeForwardingDrawable(Drawable drawable) {
-      super(drawable);
-    }
-  }
+  @Test
+  public void testCopyProperties() {
+    Rect rect = new Rect(10, 20, 30, 40);
+    int config = 11;
+    int level = 100;
+    boolean visible = true;
+    int[] stateSet = new int[]{1, 2};
 
+    mDrawable.setBounds(rect);
+    mDrawable.setChangingConfigurations(config);
+    mDrawable.setLevel(level);
+    mDrawable.setVisible(visible, false);
+    mDrawable.setState(stateSet);
+
+    Drawable newDrawable = mock(Drawable.class);
+    mDrawable.setCurrent(newDrawable);
+
+    verify(newDrawable).setBounds(rect);
+    verify(newDrawable).setChangingConfigurations(config);
+    verify(newDrawable).setLevel(level);
+    verify(newDrawable).setVisible(visible, false);
+    verify(newDrawable).setState(stateSet);
+  }
 }

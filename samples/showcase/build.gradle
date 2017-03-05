@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.facebook.fresco.samples.showcase"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "${VERSION_NAME}"
+
+        testApplicationId "com.facebook.fresco.samples.showcase.test"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true // needed for tinting
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro', 'proguard-showcase.pro'
+        }
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            universalApk false
+        }
+    }
+}
+
+dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+
+    compile 'com.facebook.keyframes:keyframes:1.0'
+
+    compile project(':animated-base')
+    compile project(':animated-gif')
+
+    compile project(':drawee-backends:drawee-pipeline')
+    compile project(':drawee-span')
+
+    // Only used for the custom SVG decoder
+    compile 'com.caverock:androidsvg:1.2.1'
+}

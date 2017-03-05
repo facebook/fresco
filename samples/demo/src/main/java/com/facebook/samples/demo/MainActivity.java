@@ -12,93 +12,59 @@
 
 package com.facebook.samples.demo;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.support.annotation.IdRes;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-public class MainActivity extends Activity {
-
-  private ImageView mBaselineJpegView;
-  private SimpleDraweeView mProgressiveJpegView;
-  private SimpleDraweeView mStaticWebpView;
-  private SimpleDraweeView mAlphaWebpView;
-  private SimpleDraweeView mAnimatedGifView;
-  private SimpleDraweeView mAnimatedWebpView;
-  private SimpleDraweeView mOneLoopAnimatedWebpView;
-  private SimpleDraweeView mDataWebpView;
+public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-    Set<RequestListener> listeners = new HashSet<>();
-    listeners.add(new RequestLoggingListener());
-    ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-        .setRequestListeners(listeners)
-        .setBitmapsConfig(Bitmap.Config.ARGB_8888)
-        .build();
-    Fresco.initialize(this, config);
     setContentView(R.layout.activity_main);
 
-    mBaselineJpegView = (SimpleDraweeView) findViewById(R.id.baseline_jpeg);
-    mProgressiveJpegView = (SimpleDraweeView) findViewById(R.id.progressive_jpeg);
-    mStaticWebpView = (SimpleDraweeView) findViewById(R.id.static_webp);
-    mAlphaWebpView = (SimpleDraweeView) findViewById(R.id.alpha_webp);
-    mAnimatedGifView = (SimpleDraweeView) findViewById(R.id.animated_gif);
-    mAnimatedWebpView = (SimpleDraweeView) findViewById(R.id.animated_webp);
-    mOneLoopAnimatedWebpView = (SimpleDraweeView) findViewById(R.id.one_loop_animated_webp);
-    mDataWebpView = (SimpleDraweeView) findViewById(R.id.data_webp);
+    findViewAndLoadUri(R.id.baseline_jpeg, "https://www.gstatic.com/webp/gallery/1.sm.jpg");
 
-    mBaselineJpegView.setImageURI(Uri.parse("https://www.gstatic.com/webp/gallery/1.sm.jpg"));
-
-    Uri uri = Uri.parse("http://pooyak.com/p/progjpeg/jpegload.cgi?o=1");
-    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(
+        Uri.parse("http://pooyak.com/p/progjpeg/jpegload.cgi?o=1"))
         .setProgressiveRenderingEnabled(true)
         .build();
     DraweeController controller = Fresco.newDraweeControllerBuilder()
         .setImageRequest(request)
+        .setRetainImageOnFailure(true)
         .build();
-    mProgressiveJpegView.setController(controller);
+    findViewAndSetController(R.id.progressive_jpeg, controller);
 
-    mStaticWebpView.setImageURI(Uri.parse("https://www.gstatic.com/webp/gallery/2.sm.webp"));
+    findViewAndLoadUri(R.id.static_webp, "https://www.gstatic.com/webp/gallery/2.sm.webp");
 
-    mAlphaWebpView.setImageURI(Uri.parse("http://frescolib.org/static/translucent.webp"));
+    findViewAndLoadUri(R.id.alpha_webp, "http://frescolib.org/static/translucent.webp")
+        .getHierarchy().setBackgroundImage(new ColorDrawable(0xFF302013));
 
-    DraweeController animatedGifController = Fresco.newDraweeControllerBuilder()
-        .setAutoPlayAnimations(true)
-        .setUri(Uri.parse("https://s3.amazonaws.com/giphygifs/media/4aBQ9oNjgEQ2k/giphy.gif"))
-        .build();
-    mAnimatedGifView.setController(animatedGifController);
+    findViewAndLoadAnimatedImageUri(
+        R.id.animated_gif,
+        "https://s3.amazonaws.com/giphygifs/media/4aBQ9oNjgEQ2k/giphy.gif");
 
-    DraweeController animatedWebpController = Fresco.newDraweeControllerBuilder()
-        .setAutoPlayAnimations(true)
-        .setUri(Uri.parse("https://www.gstatic.com/webp/animated/1.webp"))
-        .build();
-    mAnimatedWebpView.setController(animatedWebpController);
+    findViewAndLoadAnimatedImageUri(
+        R.id.animated_webp,
+        "https://www.gstatic.com/webp/animated/1.webp");
 
-    DraweeController oneLoopWebpController = Fresco.newDraweeControllerBuilder()
-        .setAutoPlayAnimations(true)
-        .setUri(Uri.parse("https://dl.dropboxusercontent.com/u/6610969/webp_180_example.webp"))
-        .build();
-    mOneLoopAnimatedWebpView.setController(oneLoopWebpController);
+    findViewAndLoadAnimatedImageUri(
+        R.id.one_loop_animated_webp,
+        "https://dl.dropboxusercontent.com/u/6610969/webp_180_example.webp");
 
-    mDataWebpView.setImageURI(Uri.parse("data:image/webp;base64," +
+    String dataUri = "data:image/webp;base64," +
         "UklGRjgCAABXRUJQVlA4WAoAAAAQAAAAFwAAFwAAQUxQSC0AAAABJ6AgbQNm1+EkTnRExDkWahpJgRIk" +
         "oOCVgAKy/mVdSxvR/wyEHWJ49xCbCAcAVlA4IOQBAACQCgCdASoYABgAPlEkjkWjoiEUBAA4BQS2AE6Z" +
         "Qjgbyv8ZuWF3B3ANsBdoHoAeWj+s3wleTHcua7PMAYrNOLPHFqAbpKGWe8x3KqHen7YXTMnmq/c9GqBt" +
@@ -108,6 +74,57 @@ public class MainActivity extends Activity {
         "AOcx3JudnAseXqvm8dEtF+rA40Bg881EW88XwU1oXf/5RY/4ToF9NwcXPLC/AodLaAFPpiXt+C6cFDIj" +
         "+uqi12PWFO+p7jn1P+sjCpbP/OBdHIoez8Rp6nslBEiFG19LKqv6dkGzLKtvt9dRIpz2sef2JFUVB+v+" +
         "hvMMmQ4o6d8aMTGuv/4wZxogl/n/k3g83NO3bBnf7/TL8Baf97pQw43+FVR0hXfpvD0k51yE35e2jNF/" +
-        "98Uv3fAfPXw0T8irZQR4r1/ktG5xrypg/aKDooBtoI5aQAAA"));
+        "98Uv3fAfPXw0T8irZQR4r1/ktG5xrypg/aKDooBtoI5aQAAA";
+    findViewAndLoadUri(R.id.data_webp, dataUri);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.debug_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    menu.findItem(R.id.debug_overlay).setChecked(DebugOverlayHelper.isDebugOverlayEnabled(this));
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.debug_overlay) {
+      DebugOverlayHelper.toggleDebugOverlayEnabled(this);
+      DebugOverlayHelper.showRestartDialogFragment(this);
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private SimpleDraweeView findAndPrepare(@IdRes int viewId) {
+    SimpleDraweeView view = (SimpleDraweeView) findViewById(viewId);
+    view.getHierarchy().setProgressBarImage(new ProgressBarDrawable());
+    return view;
+  }
+
+  private SimpleDraweeView findViewAndLoadUri(@IdRes int viewId, String uri) {
+    SimpleDraweeView view = findAndPrepare(viewId);
+    view.setImageURI(Uri.parse(uri));
+    return view;
+  }
+
+  private SimpleDraweeView findViewAndSetController(
+      @IdRes int viewId,
+      DraweeController controller) {
+    SimpleDraweeView view = findAndPrepare(viewId);
+    view.setController(controller);
+    return view;
+  }
+
+  private SimpleDraweeView findViewAndLoadAnimatedImageUri(@IdRes int viewId, String uri) {
+    DraweeController animatedController = Fresco.newDraweeControllerBuilder()
+        .setAutoPlayAnimations(true)
+        .setUri(Uri.parse(uri))
+        .build();
+    return findViewAndSetController(viewId, animatedController);
   }
 }

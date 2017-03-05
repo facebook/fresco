@@ -1,0 +1,33 @@
+<resources>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+
+  <dimen name="margin_small">8dp</dimen>
+  <dimen name="margin_medium">16dp</dimen>
+  <dimen name="margin_large">24dp</dimen>
+
+  <dimen name="padding_small">4dp</dimen>
+  <dimen name="padding_medium">8dp</dimen>
+
+  <dimen name="nav_header_padding_top">24dp</dimen>
+  <dimen name="nav_header_height">80dp</dimen>
+
+  <dimen name="drawee_height_small">100dp</dimen>
+  <dimen name="drawee_width_small">100dp</dimen>
+  <dimen name="drawee_height_medium">200dp</dimen>
+  <dimen name="drawee_width_medium">200dp</dimen>
+  <dimen name="switch_padding">8dp</dimen>
+
+  <dimen name="drawee_rounded_corners_border_width">8dp</dimen>
+  <dimen name="drawee_rounded_corners_fancy_top_left">8dp</dimen>
+  <dimen name="drawee_rounded_corners_fancy_top_right">16dp</dimen>
+  <dimen name="drawee_rounded_corners_fancy_bottom_right">32dp</dimen>
+  <dimen name="drawee_rounded_corners_fancy_bottom_left">64dp</dimen>
+
+  <dimen name="drawee_hierarchy_progress_radius">4dp</dimen>
+
+  <dimen name="checker_board_square_size">20dp</dimen>
+
+  <dimen name="recycler_view_grid_item_half_padding">4dp</dimen>
+</resources>

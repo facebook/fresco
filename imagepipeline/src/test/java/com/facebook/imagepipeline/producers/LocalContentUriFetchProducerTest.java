@@ -13,14 +13,12 @@ import java.io.File;
 import java.io.InputStream;
 
 import android.content.ContentResolver;
-import android.graphics.Rect;
 import android.net.Uri;
 
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -33,7 +31,6 @@ import org.mockito.stubbing.*;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -63,8 +60,8 @@ public class LocalContentUriFetchProducerTest {
     mLocalContentUriFetchProducer = new LocalContentUriFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mContentResolver,
-        false);
+        mContentResolver
+    );
     mContentUri = Uri.fromFile(mock(File.class));
 
     mProducerContext = new SettableProducerContext(
@@ -120,26 +117,5 @@ public class LocalContentUriFetchProducerTest {
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
-  }
-
-  @Test
-  public void testIsSmallerThanThumbnail() {
-    ResizeOptions resizeOptions = new ResizeOptions(400, 800);
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 50, 50)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 500, 500)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 100, 1000)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 299, 600)));
-    assertFalse(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 300, 599)));
-    assertTrue(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 300, 600)));
-    assertTrue(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 400, 800)));
-    assertTrue(LocalContentUriFetchProducer.isThumbnailBigEnough(
-            resizeOptions, new Rect(0, 0, 1000, 1000)));
   }
 }

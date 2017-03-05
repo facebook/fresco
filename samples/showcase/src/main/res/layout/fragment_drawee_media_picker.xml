@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      >
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/drawee_view"
+        android:layout_width="@dimen/drawee_width_medium"
+        android:layout_height="@dimen/drawee_height_medium"
+        fresco:failureImage="@color/primary"
+        fresco:placeholderImage="@color/grey300"
+        />
+
+    <TextView
+        android:id="@+id/image_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        android:text="@string/drawee_media_picker_help"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
+    <Button
+        android:id="@+id/pick_action_open_document"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/drawee_media_picker_button_action_open_document"
+        />
+
+    <Button
+        android:id="@+id/pick_action_get_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/drawee_media_picker_button_action_get_content"
+        />
+
+    <Button
+        android:id="@+id/pick_action_pick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/drawee_media_picker_button_action_pick"
+        />
+  </LinearLayout>
+</ScrollView>

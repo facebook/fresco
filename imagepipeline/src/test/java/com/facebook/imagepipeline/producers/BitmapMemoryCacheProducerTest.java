@@ -95,8 +95,10 @@ public class BitmapMemoryCacheProducerTest {
     when(mProducerContext.getId()).thenReturn(mRequestId);
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
+    when(mProducerContext.getCallerContext()).thenReturn(PRODUCER_NAME);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
-    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest)).thenReturn(mBitmapMemoryCacheKey);
+    when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest, PRODUCER_NAME))
+        .thenReturn(mBitmapMemoryCacheKey);
   }
 
   @Test
@@ -107,7 +109,8 @@ public class BitmapMemoryCacheProducerTest {
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mFinalImageReference, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "true");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
     Assert.assertTrue(!mFinalImageReference.isValid());
   }
@@ -141,7 +144,8 @@ public class BitmapMemoryCacheProducerTest {
     verify(mConsumer).onNewResult(mIntermediateImageReference, false);
     verify(mConsumer).onNewResult(null, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
     Assert.assertTrue(!mIntermediateImageReference.isValid());
   }
@@ -159,7 +163,8 @@ public class BitmapMemoryCacheProducerTest {
     Assert.assertTrue(!mIntermediateImageReferenceClone.isValid());
     Assert.assertTrue(!mFinalImageReferenceClone.isValid());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
   }
 
@@ -185,7 +190,8 @@ public class BitmapMemoryCacheProducerTest {
         0,
         closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
   }
 
@@ -210,7 +216,8 @@ public class BitmapMemoryCacheProducerTest {
         0,
         closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
   }
 
@@ -234,7 +241,8 @@ public class BitmapMemoryCacheProducerTest {
         0,
         closeableImageRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
   }
 
@@ -245,7 +253,8 @@ public class BitmapMemoryCacheProducerTest {
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
   }
 
@@ -257,7 +266,8 @@ public class BitmapMemoryCacheProducerTest {
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(null, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
     verifyNoMoreInteractions(mInputProducer);
   }
@@ -271,7 +281,8 @@ public class BitmapMemoryCacheProducerTest {
     verify(mConsumer).onNewResult(mIntermediateImageReference, false);
     verify(mConsumer).onNewResult(null, true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
     Assert.assertTrue(!mIntermediateImageReference.isValid());
     verifyNoMoreInteractions(mInputProducer);
@@ -284,7 +295,8 @@ public class BitmapMemoryCacheProducerTest {
     mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onFailure(mException);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    Map<String, String> extraMap = ImmutableMap.of(BitmapMemoryCacheProducer.VALUE_FOUND, "false");
+    Map<String, String> extraMap =
+        ImmutableMap.of(BitmapMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
   }
 

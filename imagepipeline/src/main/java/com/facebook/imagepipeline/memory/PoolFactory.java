@@ -12,6 +12,9 @@ package com.facebook.imagepipeline.memory;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.memory.ByteArrayPool;
+import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.common.memory.PooledByteStreams;
 
 /**
  * Factory class for pools.

@@ -9,18 +9,15 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.concurrent.Executor;
 
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 
 /**
  * Uses ExecutorService to move further computation to different thread
  */
 public class ThreadHandoffProducer<T> implements Producer<T> {
 
-  @VisibleForTesting
-  protected static final String PRODUCER_NAME = "BackgroundThreadHandoffProducer";
+  public static final String PRODUCER_NAME = "BackgroundThreadHandoffProducer";
 
   private final Producer<T> mInputProducer;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;

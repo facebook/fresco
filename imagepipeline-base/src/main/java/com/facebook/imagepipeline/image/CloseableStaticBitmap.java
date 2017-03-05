@@ -16,6 +16,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -131,8 +132,10 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   @Override
   public int getWidth() {
-    Bitmap bitmap = mBitmap;
-    return (bitmap == null) ? 0 : bitmap.getWidth();
+    if (mRotationAngle == 90 || mRotationAngle == 270) {
+      return getBitmapHeight(mBitmap);
+    }
+    return getBitmapWidth(mBitmap);
   }
 
   /**
@@ -140,7 +143,17 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   @Override
   public int getHeight() {
-    Bitmap bitmap = mBitmap;
+    if (mRotationAngle == 90 || mRotationAngle == 270) {
+      return getBitmapWidth(mBitmap);
+    }
+    return getBitmapHeight(mBitmap);
+  }
+
+  private static int getBitmapWidth(@Nullable Bitmap bitmap) {
+    return (bitmap == null) ? 0 : bitmap.getWidth();
+  }
+
+  private static int getBitmapHeight(@Nullable Bitmap bitmap) {
     return (bitmap == null) ? 0 : bitmap.getHeight();
   }
 

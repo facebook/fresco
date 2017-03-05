@@ -35,6 +35,6 @@ public class RealtimeSinceBootClock implements MonotonicClock {
   @Override
   public long now() {
     // Guaranteed to be monotonic according to documentation.
-    return android.os.SystemClock.elapsedRealtime();
+    return android.os.SystemClock.elapsedRealtime/*sic*/();
   }
 }

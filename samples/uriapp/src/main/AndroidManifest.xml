@@ -3,6 +3,7 @@
     package="com.facebook.samples.uriapp" >
 
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
   <uses-sdk
       android:minSdkVersion="9"
@@ -10,6 +11,7 @@
       />
 
     <application
+        android:name=".UriApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">

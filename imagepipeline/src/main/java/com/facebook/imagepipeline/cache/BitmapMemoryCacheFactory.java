@@ -20,10 +20,10 @@ public class BitmapMemoryCacheFactory {
 
     imageCacheStatsTracker.registerBitmapMemoryCache(bitmapCountingMemoryCache);
 
-    MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker() {
+    MemoryCacheTracker memoryCacheTracker = new MemoryCacheTracker<CacheKey>() {
       @Override
-      public void onCacheHit() {
-        imageCacheStatsTracker.onBitmapCacheHit();
+      public void onCacheHit(CacheKey cacheKey) {
+        imageCacheStatsTracker.onBitmapCacheHit(cacheKey);
       }
 
       @Override

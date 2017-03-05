@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
@@ -96,7 +98,7 @@ public class StatFsHelper {
   }
 
   /**
-   * Check if free space available in the filesystem is greater than the given threshold.
+   * Check if available space in the filesystem is greater than the given threshold.
    * Note that the free space stats are cached and updated in intervals of RESTAT_INTERVAL_MS.
    * If the amount of free space has crossed over the threshold since the last update, it will
    * return incorrect results till the space stats are updated again.
@@ -117,11 +119,66 @@ public class StatFsHelper {
   }
 
   /**
+   * Gets the information about the free storage space, including reserved blocks,
+   * either internal or external depends on the given input
+   * @param storageType Internal or external storage type
+   * @return available space in bytes, -1 if no information is available
+   */
+  @SuppressLint("DeprecatedMethod")
+  public long getFreeStorageSpace(StorageType storageType) {
+    ensureInitialized();
+
+    maybeUpdateStats();
+
+    StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
+    if (statFS != null) {
+      long blockSize, availableBlocks;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFS.getBlockSizeLong();
+        availableBlocks = statFS.getFreeBlocksLong();
+      } else {
+        blockSize = statFS.getBlockSize();
+        availableBlocks = statFS.getFreeBlocks();
+      }
+      return blockSize * availableBlocks;
+    }
+    return -1;
+  }
+
+  /**
+   * Gets the information about the total storage space,
+   * either internal or external depends on the given input
+   * @param storageType Internal or external storage type
+   * @return available space in bytes, -1 if no information is available
+   */
+  @SuppressLint("DeprecatedMethod")
+  public long getTotalStorageSpace(StorageType storageType) {
+    ensureInitialized();
+
+    maybeUpdateStats();
+
+    StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
+    if (statFS != null) {
+      long blockSize, totalBlocks;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFS.getBlockSizeLong();
+        totalBlocks = statFS.getBlockCountLong();
+      } else {
+        blockSize = statFS.getBlockSize();
+        totalBlocks = statFS.getBlockCount();
+      }
+      return blockSize * totalBlocks;
+    }
+    return -1;
+  }
+
+  /**
    * Gets the information about the available storage space
    * either internal or external depends on the give input
    * @param storageType Internal or external storage type
    * @return available space in bytes, 0 if no information is available
    */
+  @SuppressLint("DeprecatedMethod")
   public long getAvailableStorageSpace(StorageType storageType) {
     ensureInitialized();
 
@@ -129,8 +186,14 @@ public class StatFsHelper {
 
     StatFs statFS = storageType == StorageType.INTERNAL ? mInternalStatFs : mExternalStatFs;
     if (statFS != null) {
-      long blockSize = statFS.getBlockSize();
-      long availableBlocks = statFS.getAvailableBlocks();
+      long blockSize, availableBlocks;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        blockSize = statFS.getBlockSizeLong();
+        availableBlocks = statFS.getAvailableBlocksLong();
+      } else {
+        blockSize = statFS.getBlockSize();
+        availableBlocks = statFS.getAvailableBlocks();
+      }
       return blockSize * availableBlocks;
     }
     return 0;
@@ -147,7 +210,7 @@ public class StatFsHelper {
     // with a frequency of once in RESTAT_INTERVAL_MS
     if (lock.tryLock()) {
       try {
-        if ((SystemClock.elapsedRealtime() - mLastRestatTime) > RESTAT_INTERVAL_MS) {
+        if ((SystemClock.uptimeMillis() - mLastRestatTime) > RESTAT_INTERVAL_MS) {
           updateStats();
         }
       } finally {
@@ -184,7 +247,7 @@ public class StatFsHelper {
   private void updateStats() {
     mInternalStatFs = updateStatsHelper(mInternalStatFs, mInternalPath);
     mExternalStatFs = updateStatsHelper(mExternalStatFs, mExternalPath);
-    mLastRestatTime = SystemClock.elapsedRealtime();
+    mLastRestatTime = SystemClock.uptimeMillis();
   }
 
   /**

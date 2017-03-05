@@ -11,9 +11,11 @@ package com.facebook.imagepipeline.memory;
 
 import java.io.ByteArrayInputStream;
 
+import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.memory.ByteArrayPool;
+import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
 
-import com.facebook.common.internal.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

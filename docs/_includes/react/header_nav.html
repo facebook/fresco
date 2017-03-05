@@ -1,0 +1,97 @@
+<script>
+  var event = document.createEvent('Event');
+  event.initEvent('slide', true, true);
+  document.addEventListener('slide', function (e) {
+    document.body.classList.toggle('sliderActive');
+  }, false);
+  var navData = [
+    {% for item in site.data.nav %}
+    {
+      href       : "{{ item.href }}",
+      text       : "{{ item.title }}",
+    },
+    {% endfor %}
+  ];
+</script>
+<script type="text/javascript">
+  var Nav = React.createClass({displayName: "Nav",
+    getInitialState: function() {
+      return {
+        currentPath: window.location.pathname,
+        slideoutActive: false,
+      };
+    },
+    getDefaultProps: function() {
+      return {
+        data: navData,
+      }
+    },
+    handleClick: function(id) {
+      this.setState({
+        slideoutActive: false,
+      });
+      document.dispatchEvent(event);
+    },
+    handleSlide: function(id) {
+      this.setState({
+        slideoutActive: !this.state.slideoutActive,
+      });
+      document.dispatchEvent(event);
+    },
+    componentDidMount: function() {
+      docsearch({
+        apiKey: '57436460790d750ed488518dfb6d41f9',
+        indexName: 'frescolib',
+        inputSelector: '#search_input_react',
+      });
+    },
+    render: function() {
+      var classes = React.addons.classSet({
+        'navSlideout': true,
+        'navSlideoutActive': this.state.slideoutActive,
+      });
+      var navClasses = React.addons.classSet({
+        'slidingNav': true,
+        'slidingNavActive': this.state.slideoutActive,
+      });
+      return (
+        React.createElement("div", null,
+          React.createElement("div", {className: classes, onClick: this.handleSlide},
+            React.createElement("i", {className: "menuExpand"},
+              React.createElement("span"),
+              React.createElement("span"),
+              React.createElement("span")
+            )
+          ),
+          React.createElement("nav", {className: navClasses},
+            React.createElement("ul", null,
+              this.props.data.map(this.renderNavItems),
+              React.createElement("li", {className: "navSearchWrapper reactNavSearchWrapper"},
+                React.createElement("input", {id: "search_input_react"})
+              )
+            )
+          )
+        )
+      );
+    },
+    renderNavItems: function(child, index) {
+      var classes = React.addons.classSet({
+        'navItem': true,
+        'navItemActive': this.state.currentPath === child.href,
+      });
+      return (
+        React.createElement("li", {key: index, className: classes},
+          React.createElement("a", {onClick: this.handleClick, href: child.href}, child.text)
+        )
+      );
+    },
+  });
+
+  function render(navData) {
+    React.render(
+      React.createElement(Nav, {data: navData}),
+      document.getElementById('navigation_wrap')
+    );
+  }
+  render(navData);
+</script>

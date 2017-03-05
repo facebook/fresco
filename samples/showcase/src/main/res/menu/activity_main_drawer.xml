@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item
+      android:id="@+id/nav_welcome"
+      android:checkable="true"
+      android:title="@string/welcome_nav_title"
+      />
+
+  <item android:title="@string/category_drawee">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_drawee_simple"
+            android:title="@string/drawee_simple_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_media_picker"
+            android:title="@string/drawee_media_picker_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_scaletype"
+            android:title="@string/drawee_scale_type_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_span_simple"
+            android:title="@string/drawee_span_simple_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_rounded_corners"
+            android:title="@string/drawee_rounded_corners_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_hierarchy"
+            android:title="@string/drawee_hierarchy_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_rotation"
+            android:title="@string/drawee_rotation_title"
+            />
+        <item
+            android:id="@+id/nav_drawee_recycler"
+            android:title="@string/drawee_recycler_title"
+            />
+      </group>
+    </menu>
+  </item>
+
+  <item android:title="@string/category_pipeline">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_imagepipeline_media_variations"
+            android:title="@string/imagepipeline_media_variations_title"
+            />
+        <item
+            android:id="@+id/nav_imagepipeline_notification"
+            android:title="@string/imagepipeline_notification_title"
+            />
+        <item
+            android:id="@+id/nav_imagepipeline_postprocessor"
+            android:title="@string/imagepipeline_postprocessor_title"
+            />
+        <item
+            android:id="@+id/nav_imagepipeline_prefetch"
+            android:title="@string/imagepipeline_prefetch_title"
+            />
+      </group>
+    </menu>
+  </item>
+
+  <item android:title="@string/category_format">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_format_pjpeg"
+            android:title="@string/format_pjpeg_title"
+            />
+        <item
+            android:id="@+id/nav_format_color"
+            android:title="@string/format_color_title"
+            />
+        <item
+            android:id="@+id/nav_format_gif"
+            android:title="@string/format_gif_title"
+            />
+        <item
+            android:id="@+id/nav_format_svg"
+            android:title="@string/format_svg_title"
+            />
+        <item
+            android:id="@+id/nav_format_keyframes"
+            android:title="@string/format_keyframes_title"
+            />
+        <item
+            android:id="@+id/nav_format_override"
+            android:title="@string/format_override_title"
+            />
+      </group>
+    </menu>
+  </item>
+
+  <item android:title="@string/category_more">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_action_settings"
+            android:title="@string/action_settings"
+            />
+      </group>
+    </menu>
+  </item>
+</menu>

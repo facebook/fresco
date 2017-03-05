@@ -17,9 +17,12 @@ import java.io.File;
 import android.net.Uri;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
 
 /**
@@ -28,11 +31,14 @@ import com.facebook.imageutils.BitmapUtil;
 @Immutable
 public class ImageRequest {
 
-  /** image type */
-  private final ImageType mImageType;
+  /** Cache choice */
+  private final CacheChoice mCacheChoice;
 
   /** Source Uri */
   private final Uri mSourceUri;
+
+  /** Media variations - useful for potentially providing fallback to an alternative cached image */
+  private final @Nullable MediaVariations mMediaVariations;
 
   /** Source File - for local fetches only, lazily initialized */
   private File mSourceFile;
@@ -46,11 +52,10 @@ public class ImageRequest {
   private final ImageDecodeOptions mImageDecodeOptions;
 
   /** resize options */
-  @Nullable
-  ResizeOptions mResizeOptions = null;
+  private final @Nullable ResizeOptions mResizeOptions;
 
-  /** Is auto-rotate enabled? */
-  private final boolean mAutoRotateEnabled;
+  /** rotation options */
+  private final RotationOptions mRotationOptions;
 
   /** Priority levels of this request. */
   private final Priority mRequestPriority;
@@ -64,6 +69,13 @@ public class ImageRequest {
   /** Postprocessor to run on the output bitmap. */
   private final Postprocessor mPostprocessor;
 
+  /** Request listener to use for this image request */
+  private final @Nullable RequestListener mRequestListener;
+
+  public static ImageRequest fromFile(@Nullable File file) {
+    return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
+  }
+
   public static ImageRequest fromUri(@Nullable Uri uri) {
     return (uri == null) ? null : ImageRequestBuilder.newBuilderWithSource(uri).build();
   }
@@ -73,8 +85,9 @@ public class ImageRequest {
   }
 
   protected ImageRequest(ImageRequestBuilder builder) {
-    mImageType = builder.getImageType();
+    mCacheChoice = builder.getCacheChoice();
     mSourceUri = builder.getSourceUri();
+    mMediaVariations = builder.getMediaVariations();
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
     mLocalThumbnailPreviewsEnabled = builder.isLocalThumbnailPreviewsEnabled();
@@ -82,21 +95,28 @@ public class ImageRequest {
     mImageDecodeOptions = builder.getImageDecodeOptions();
 
     mResizeOptions = builder.getResizeOptions();
-    mAutoRotateEnabled = builder.isAutoRotateEnabled();
+    mRotationOptions = builder.getRotationOptions() == null
+        ? RotationOptions.autoRotate() : builder.getRotationOptions();
 
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
 
     mPostprocessor = builder.getPostprocessor();
+
+    mRequestListener = builder.getRequestListener();
   }
 
-  public ImageType getImageType() {
-    return mImageType;
+  public CacheChoice getCacheChoice() {
+    return mCacheChoice;
   }
 
   public Uri getSourceUri() {
     return mSourceUri;
+  }
+
+  public @Nullable MediaVariations getMediaVariations() {
+    return mMediaVariations;
   }
 
   public int getPreferredWidth() {
@@ -111,12 +131,20 @@ public class ImageRequest {
     return mResizeOptions;
   }
 
-  public ImageDecodeOptions getImageDecodeOptions() {
-    return mImageDecodeOptions;
+  public RotationOptions getRotationOptions() {
+    return mRotationOptions;
   }
 
+  /**
+   * @deprecated Use {@link #getRotationOptions()}
+   */
+  @Deprecated
   public boolean getAutoRotateEnabled() {
-    return mAutoRotateEnabled;
+    return mRotationOptions.useImageMetadata();
+  }
+
+  public ImageDecodeOptions getImageDecodeOptions() {
+    return mImageDecodeOptions;
   }
 
   public boolean getProgressiveRenderingEnabled() {
@@ -150,6 +178,10 @@ public class ImageRequest {
     return mPostprocessor;
   }
 
+  public @Nullable RequestListener getRequestListener() {
+    return mRequestListener;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof ImageRequest)) {
@@ -157,24 +189,40 @@ public class ImageRequest {
     }
     ImageRequest request = (ImageRequest) o;
     return Objects.equal(mSourceUri, request.mSourceUri) &&
-        Objects.equal(mImageType, request.mImageType) &&
+        Objects.equal(mCacheChoice, request.mCacheChoice) &&
+        Objects.equal(mMediaVariations, request.mMediaVariations) &&
         Objects.equal(mSourceFile, request.mSourceFile);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(mImageType, mSourceUri, mSourceFile);
+    return Objects.hashCode(mCacheChoice, mSourceUri, mMediaVariations, mSourceFile);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this)
+        .add("uri", mSourceUri)
+        .add("cacheChoice", mCacheChoice)
+        .add("decodeOptions", mImageDecodeOptions)
+        .add("postprocessor", mPostprocessor)
+        .add("priority", mRequestPriority)
+        .add("resizeOptions", mResizeOptions)
+        .add("rotationOptions", mRotationOptions)
+        .add("mediaVariations", mMediaVariations)
+        .toString();
   }
 
   /**
-   * An enum describing type of the image.
+   * An enum describing the cache choice.
    */
-  public enum ImageType {
+  public enum CacheChoice {
+
     /* Indicates that this image should go in the small disk cache, if one is being used */
     SMALL,
 
     /* Default */
-    DEFAULT,
+    DEFAULT
   }
 
   /**

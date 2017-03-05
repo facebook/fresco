@@ -19,15 +19,15 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
 
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imageutils.BitmapUtil;
-import com.facebook.imageutils.JfifUtil;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
+import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.JfifUtil;
 
 import org.junit.*;
 import org.junit.runner.*;
@@ -116,15 +116,15 @@ public class LocalExifThumbnailProducerTest {
   public void testFindExifThumbnail() {
     mTestLocalExifThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mTestExecutorService.runUntilIdle();
-    // Should have 3 references open: The reference that is used in the producer, the cloned
-    // reference when the argument is captured and one more that is created when getByteBufferRef is
-    // called on EncodedImage
+    // Should have 2 references open: The cloned reference when the argument is
+    // captured by EncodedImage and the one that is created when
+    // getByteBufferRef is called on EncodedImage
     assertEquals(
-        3,
+        2,
         mCapturedEncodedImage.
             getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(mThumbnailByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    assertEquals(ImageFormat.JPEG, mCapturedEncodedImage.getImageFormat());
+    assertEquals(DefaultImageFormats.JPEG, mCapturedEncodedImage.getImageFormat());
     assertEquals(WIDTH, mCapturedEncodedImage.getWidth());
     assertEquals(HEIGHT, mCapturedEncodedImage.getHeight());
     assertEquals(ANGLE, mCapturedEncodedImage.getRotationAngle());

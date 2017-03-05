@@ -26,27 +26,35 @@ public class NoOpCacheEventListener implements CacheEventListener {
   }
 
   @Override
-  public void onHit() {
+  public void onHit(CacheEvent cacheEvent) {
 
   }
 
   @Override
-  public void onMiss() {
+  public void onMiss(CacheEvent cacheEvent) {
   }
 
   @Override
-  public void onWriteAttempt() {
+  public void onWriteAttempt(CacheEvent cacheEvent) {
   }
 
   @Override
-  public void onReadException() {
+  public void onWriteSuccess(CacheEvent cacheEvent) {
   }
 
   @Override
-  public void onWriteException() {
+  public void onReadException(CacheEvent cacheEvent) {
   }
 
   @Override
-  public void onEviction(EvictionReason evictionReason, int itemCount, long itemSize) {
+  public void onWriteException(CacheEvent cacheEvent) {
+  }
+
+  @Override
+  public void onEviction(CacheEvent cacheEvent) {
+  }
+
+  @Override
+  public void onCleared() {
   }
 }

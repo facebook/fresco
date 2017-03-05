@@ -29,7 +29,7 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
     if (result == null) {
       mTracker.onCacheMiss();
     } else {
-      mTracker.onCacheHit();
+      mTracker.onCacheHit(key);
     }
     return result;
   }

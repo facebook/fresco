@@ -29,6 +29,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.common.memory.Pool;
 
 /**
  * A base pool class that manages a pool of values (of type V). <p>
@@ -725,7 +726,7 @@ public abstract class BasePool<V> implements Pool<V> {
   @NotThreadSafe
   @VisibleForTesting
   static class Counter {
-    private static final String TAG = "com.facebook.imagepipeline.common.BasePool.Counter";
+    private static final String TAG = "com.facebook.imagepipeline.memory.BasePool.Counter";
 
     int mCount;
     int mNumBytes;

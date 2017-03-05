@@ -16,10 +16,10 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.net.Uri;
 
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -32,7 +32,6 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -73,8 +72,8 @@ public class LocalAssetFetchProducerTest {
     mLocalAssetFetchProducer = new LocalAssetFetchProducer(
         mExecutor,
         mPooledByteBufferFactory,
-        mAssetManager,
-        false);
+        mAssetManager
+    );
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,

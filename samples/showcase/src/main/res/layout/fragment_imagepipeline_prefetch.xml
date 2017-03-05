@@ -1,0 +1,80 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      >
+    <Button
+        android:id="@+id/clear_cache"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/button_clear_cache"
+        />
+    <Button
+        android:id="@+id/prefetch_now"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/button_prefetch"
+        />
+    <Button
+        android:id="@+id/toggle_images"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/button_toggle_images"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/drawees"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:orientation="horizontal"
+      >
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="0dp"
+        android:layout_height="@dimen/drawee_height_medium"
+        android:layout_weight="1"
+        app:placeholderImage="@mipmap/ic_launcher"
+        app:placeholderImageScaleType="center"
+        app:actualImageScaleType="centerCrop"
+        />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="0dp"
+        android:layout_height="@dimen/drawee_height_medium"
+        android:layout_weight="1"
+        app:placeholderImage="@mipmap/ic_launcher"
+        app:placeholderImageScaleType="center"
+        app:actualImageScaleType="centerCrop"
+        />
+  </LinearLayout>
+
+  <TextView
+      android:id="@+id/prefetch_status"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/imagepipeline_prefetch_help"
+      />
+
+</LinearLayout>

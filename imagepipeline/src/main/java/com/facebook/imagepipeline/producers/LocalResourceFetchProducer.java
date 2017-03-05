@@ -15,25 +15,24 @@ import java.util.concurrent.Executor;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
  * Executes a local fetch from a resource.
  */
 public class LocalResourceFetchProducer extends LocalFetchProducer {
-  @VisibleForTesting static final String PRODUCER_NAME = "LocalResourceFetchProducer";
+
+  public static final String PRODUCER_NAME = "LocalResourceFetchProducer";
 
   private final Resources mResources;
 
   public LocalResourceFetchProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
-      Resources resources,
-      boolean decodeFileDescriptorEnabled) {
-    super(executor, pooledByteBufferFactory, decodeFileDescriptorEnabled);
+      Resources resources) {
+    super(executor, pooledByteBufferFactory);
     mResources = resources;
   }
 

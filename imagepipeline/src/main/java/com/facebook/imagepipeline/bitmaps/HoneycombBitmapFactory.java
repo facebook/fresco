@@ -16,10 +16,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 
 /**
@@ -49,8 +49,9 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
   @Override
-  public CloseableReference<Bitmap> createBitmap(
+  public CloseableReference<Bitmap> createBitmapInternal(
       int width,
       int height,
       Bitmap.Config bitmapConfig) {
@@ -59,10 +60,11 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
         (short) height);
     try {
       EncodedImage encodedImage = new EncodedImage(jpgRef);
-      encodedImage.setImageFormat(ImageFormat.JPEG);
+      encodedImage.setImageFormat(DefaultImageFormats.JPEG);
       try {
         CloseableReference<Bitmap> bitmapRef = mPurgeableDecoder.decodeJPEGFromEncodedImage(
             encodedImage, bitmapConfig, jpgRef.get().size());
+        bitmapRef.get().setHasAlpha(true);
         bitmapRef.get().eraseColor(Color.TRANSPARENT);
         return bitmapRef;
       } finally {

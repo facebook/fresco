@@ -18,12 +18,12 @@ import java.util.Map;
 import android.os.SystemClock;
 
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.ByteArrayPool;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.ByteArrayPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
-import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
 
 /**
  * A producer to actually fetch images from the network.
@@ -36,7 +36,7 @@ import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
  */
 public class NetworkFetchProducer implements Producer<EncodedImage> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "NetworkFetchProducer";
+  public static final String PRODUCER_NAME = "NetworkFetchProducer";
   public static final String INTERMEDIATE_RESULT_PRODUCER_EVENT = "intermediate_result";
   private static final int READ_SIZE = 16 * 1024;
 
@@ -136,7 +136,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   private void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream,
       FetchState fetchState) {
-    final long nowMs = SystemClock.elapsedRealtime();
+    final long nowMs = SystemClock.uptimeMillis();
     if (shouldPropagateIntermediateResults(fetchState) &&
         nowMs - fetchState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);

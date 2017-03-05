@@ -29,16 +29,11 @@ public class SecureHashUtil {
   }
 
   public static String makeSHA1Hash(byte[] bytes) {
-    try {
-      MessageDigest md = MessageDigest.getInstance("SHA-1");
-      md.update(bytes, 0, bytes.length);
-      byte[] sha1hash = md.digest();
-      return convertToHex(sha1hash);
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+    return makeHash(bytes, "SHA-1");
+  }
+
+  public static String makeSHA256Hash(byte[] bytes) {
+    return makeHash(bytes, "SHA-256");
   }
 
   public static String makeSHA1HashBase64(byte[] bytes) {
@@ -61,16 +56,7 @@ public class SecureHashUtil {
   }
 
   public static String makeMD5Hash(byte[] bytes) {
-    try {
-      MessageDigest md = MessageDigest.getInstance("MD5");
-      md.update(bytes, 0, bytes.length);
-      byte[] sha1hash = md.digest();
-      return convertToHex(sha1hash);
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+    return makeHash(bytes, "MD5");
   }
 
   static final byte[] HEX_CHAR_TABLE = {
@@ -88,5 +74,18 @@ public class SecureHashUtil {
       sb.append((char) HEX_CHAR_TABLE[v & 0xF]);
     }
     return sb.toString();
+  }
+
+  private static String makeHash(byte[] bytes, String algorithm) {
+    try {
+      MessageDigest md = MessageDigest.getInstance(algorithm);
+      md.update(bytes, 0, bytes.length);
+      byte[] hash = md.digest();
+      return convertToHex(hash);
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

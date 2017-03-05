@@ -15,10 +15,10 @@ import java.io.InputStream;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
+import com.facebook.common.memory.ByteArrayPool;
+import com.facebook.common.memory.PooledByteArrayBufferedInputStream;
 import com.facebook.common.util.StreamUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.ByteArrayPool;
-import com.facebook.imagepipeline.memory.PooledByteArrayBufferedInputStream;
 import com.facebook.imageutils.JfifUtil;
 
 /**

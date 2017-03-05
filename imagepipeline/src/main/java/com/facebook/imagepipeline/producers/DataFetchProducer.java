@@ -18,8 +18,8 @@ import android.util.Base64;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
@@ -36,12 +36,11 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class DataFetchProducer extends LocalFetchProducer {
 
-  private static final String PRODUCER_NAME = "DataFetchProducer";
+  public static final String PRODUCER_NAME = "DataFetchProducer";
 
   public DataFetchProducer(
-      PooledByteBufferFactory pooledByteBufferFactory,
-      boolean fileDescriptorEnabled) {
-    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory, fileDescriptorEnabled);
+      PooledByteBufferFactory pooledByteBufferFactory) {
+    super(CallerThreadExecutor.getInstance(), pooledByteBufferFactory);
   }
 
   @Override

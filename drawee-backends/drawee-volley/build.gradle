@@ -4,8 +4,9 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
+    provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.mcxiaoke.volley:library:${VOLLEY_VERSION}"
+    compile "com.android.volley:volley:${VOLLEY_VERSION}"
 
     compile project(':drawee')
     compile project(':fbcore')

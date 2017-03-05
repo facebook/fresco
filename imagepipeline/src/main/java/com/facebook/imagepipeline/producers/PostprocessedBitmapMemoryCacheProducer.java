@@ -26,7 +26,7 @@ import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 public class PostprocessedBitmapMemoryCacheProducer
     implements Producer<CloseableReference<CloseableImage>> {
 
-  @VisibleForTesting static final String PRODUCER_NAME = "PostprocessedBitmapMemoryCacheProducer";
+  public static final String PRODUCER_NAME = "PostprocessedBitmapMemoryCacheProducer";
   @VisibleForTesting static final String VALUE_FOUND = "cached_value_found";
 
   private final MemoryCache<CacheKey, CloseableImage> mMemoryCache;
@@ -50,6 +50,7 @@ public class PostprocessedBitmapMemoryCacheProducer
     final ProducerListener listener = producerContext.getListener();
     final String requestId = producerContext.getId();
     final ImageRequest imageRequest = producerContext.getImageRequest();
+    final Object callerContext = producerContext.getCallerContext();
 
     // If there's no postprocessor or the postprocessor doesn't require caching, forward results.
     final Postprocessor postprocessor = imageRequest.getPostprocessor();
@@ -58,7 +59,8 @@ public class PostprocessedBitmapMemoryCacheProducer
       return;
     }
     listener.onProducerStart(requestId, getProducerName());
-    final CacheKey cacheKey = mCacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest);
+    final CacheKey cacheKey =
+        mCacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext);
     CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
     if (cachedReference != null) {
       listener.onProducerFinishWithSuccess(

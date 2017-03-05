@@ -15,15 +15,16 @@ import java.io.InputStream;
 import java.util.concurrent.Executor;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
+import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.memory.PooledByteBufferFactory;
-import com.facebook.imagepipeline.memory.PooledByteBufferOutputStream;
-
+import com.facebook.imagepipeline.nativecode.WebpTranscoder;
 import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
 
 /**
@@ -35,7 +36,8 @@ import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
  * <p> If the image is not WebP, no transformation is applied.
  */
 public class WebpTranscodeProducer implements Producer<EncodedImage> {
-  private static final String PRODUCER_NAME = "WebpTranscodeProducer";
+  public static final String PRODUCER_NAME = "WebpTranscodeProducer";
+
   private static final int DEFAULT_JPEG_QUALITY = 80;
 
   private final Executor mExecutor;
@@ -152,21 +154,20 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     Preconditions.checkNotNull(encodedImage);
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
         encodedImage.getInputStream());
-    switch (imageFormat) {
-      case WEBP_SIMPLE:
-      case WEBP_LOSSLESS:
-      case WEBP_EXTENDED:
-      case WEBP_EXTENDED_WITH_ALPHA:
-        return TriState.valueOf(
-            !WebpTranscoderFactory.getWebpTranscoder().isWebpNativelySupported(imageFormat));
-      case UNKNOWN:
-        // the image format might be unknown because we haven't fetched the whole header yet,
-        // in which case the decision whether to transcode or not cannot be made yet
-        return TriState.UNSET;
-      default:
-        // if the image format is known, but it is not WebP, then the image shouldn't be transcoded
+    if (DefaultImageFormats.isStaticWebpFormat(imageFormat)) {
+      final WebpTranscoder webpTranscoder = WebpTranscoderFactory.getWebpTranscoder();
+      if (webpTranscoder == null) {
         return TriState.NO;
+      }
+      return TriState.valueOf(
+              !webpTranscoder.isWebpNativelySupported(imageFormat));
+    } else if (imageFormat == ImageFormat.UNKNOWN) {
+      // the image format might be unknown because we haven't fetched the whole header yet,
+      // in which case the decision whether to transcode or not cannot be made yet
+      return TriState.UNSET;
     }
+    // if the image format is known, but it is not WebP, then the image shouldn't be transcoded
+    return TriState.NO;
   }
 
   private static void doTranscode(
@@ -174,21 +175,21 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
       final PooledByteBufferOutputStream outputStream) throws Exception {
     InputStream imageInputStream = encodedImage.getInputStream();
     ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(imageInputStream);
-    switch (imageFormat) {
-      case WEBP_SIMPLE:
-      case WEBP_EXTENDED:
+    if (imageFormat == DefaultImageFormats.WEBP_SIMPLE ||
+        imageFormat == DefaultImageFormats.WEBP_EXTENDED) {
         WebpTranscoderFactory.getWebpTranscoder().transcodeWebpToJpeg(
             imageInputStream,
             outputStream,
             DEFAULT_JPEG_QUALITY);
-        break;
-      case WEBP_LOSSLESS:
-      case WEBP_EXTENDED_WITH_ALPHA:
-        WebpTranscoderFactory.getWebpTranscoder()
-            .transcodeWebpToPng(imageInputStream, outputStream);
-        break;
-      default:
-        throw new IllegalArgumentException("Wrong image format");
+      encodedImage.setImageFormat(DefaultImageFormats.JPEG);
+    } else if (imageFormat == DefaultImageFormats.WEBP_LOSSLESS ||
+        imageFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
+      // In this case we always transcode to PNG
+      WebpTranscoderFactory.getWebpTranscoder()
+          .transcodeWebpToPng(imageInputStream, outputStream);
+      encodedImage.setImageFormat(DefaultImageFormats.PNG);
+    } else {
+      throw new IllegalArgumentException("Wrong image format");
     }
   }
 }

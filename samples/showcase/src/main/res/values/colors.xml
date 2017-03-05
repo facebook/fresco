@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="primary">#FF5722</color>
+  <color name="primaryDark">#E64A19</color>
+  <color name="accent">#40C4FF</color>
+  <color name="grey300">#E0E0E0</color>
+  <color name="grey900">#212121</color>
+
+  <color name="checker_board_light">@color/grey300</color>
+  <color name="checker_board_dark">#9E9E9E</color>
+
+  <color name="progress_bar_color">@color/accent</color>
+  <color name="progress_bar_background">@color/grey300</color>
+</resources>

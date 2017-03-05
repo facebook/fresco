@@ -1,0 +1,28 @@
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:baselineAligned="false"
+  android:orientation="horizontal"
+  tools:context="com.facebook.samples.zoomableapp.MainActivity"
+  >
+  <android.support.v4.view.ViewPager
+      android:id="@+id/pager"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+    <include layout="@layout/zoomable_image"/>
+
+  </android.support.v4.view.ViewPager>
+</LinearLayout>

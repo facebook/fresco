@@ -13,8 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.memory.FlexByteArrayPool;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
 
 /**
  * Bitmap factory for Gingerbread.
@@ -32,7 +30,7 @@ public class GingerbreadBitmapFactory extends PlatformBitmapFactory {
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> createBitmap(
+  public CloseableReference<Bitmap> createBitmapInternal(
       int width,
       int height,
       Bitmap.Config bitmapConfig) {

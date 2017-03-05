@@ -13,15 +13,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.util.Base64;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.common.webp.WebpSupportStatus;
-import com.facebook.common.soloader.SoLoaderShim;
 
 /**
  * Helper methods for modifying webp static images.
@@ -29,28 +27,22 @@ import com.facebook.common.soloader.SoLoaderShim;
 @DoNotStrip
 public class WebpTranscoderImpl implements WebpTranscoder {
 
-  static {
-    SoLoaderShim.loadLibrary("static-webp");
-  }
-
   /**
    * @return true if given type of WebP is supported natively by the framework
    */
   @Override
   public boolean isWebpNativelySupported(ImageFormat webpFormat) {
-    switch (webpFormat) {
-      case WEBP_SIMPLE: // Simple WebPs are supported on Android 4.0+
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-      case WEBP_LOSSLESS:
-      case WEBP_EXTENDED:
-      case WEBP_EXTENDED_WITH_ALPHA:
-        return WebpSupportStatus.sIsExtendedWebpSupported;
-      case WEBP_ANIMATED:
-        return false;
-      default:
-        Preconditions.checkArgument(false);
-        return false;
+    if (webpFormat == DefaultImageFormats.WEBP_SIMPLE) {
+      // Simple WebPs are supported on Android 4.0+
+      return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    } else if (webpFormat == DefaultImageFormats.WEBP_LOSSLESS ||
+        webpFormat == DefaultImageFormats.WEBP_EXTENDED ||
+        webpFormat == DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA) {
+      return WebpSupportStatus.sIsExtendedWebpSupported;
+    } else if (webpFormat == DefaultImageFormats.WEBP_ANIMATED) {
+      return false;
     }
+    throw new IllegalArgumentException("Image format is not a WebP.");
   }
 
   /**
@@ -61,6 +53,7 @@ public class WebpTranscoderImpl implements WebpTranscoder {
       InputStream inputStream,
       OutputStream outputStream,
       int quality) throws IOException {
+    StaticWebpNativeLoader.ensure();
     nativeTranscodeWebpToJpeg(
         Preconditions.checkNotNull(inputStream),
         Preconditions.checkNotNull(outputStream),
@@ -74,6 +67,7 @@ public class WebpTranscoderImpl implements WebpTranscoder {
   public void transcodeWebpToPng(
       InputStream inputStream,
       OutputStream outputStream) throws IOException {
+    StaticWebpNativeLoader.ensure();
     nativeTranscodeWebpToPng(
         Preconditions.checkNotNull(inputStream),
         Preconditions.checkNotNull(outputStream));

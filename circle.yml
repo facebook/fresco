@@ -1,0 +1,21 @@
+machine:
+  environment:
+    PATH: $ANDROID_NDK:$PATH
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+  java:
+    version: oraclejdk8
+
+dependencies:
+  pre:
+    # if necessary SDK / build tools / support library folders do not exist, update the circle ci instance accordingly
+    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-25" ]; then echo y | android update sdk --no-ui --all --filter "android-25"; fi
+    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.2" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.2"; fi
+    - if [ ! -d "/usr/local/android_sdk/extras/android/m2repository/com/android/support/support-core-utils/25.1.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
+
+test:
+  override:
+    - ./gradlew test assembleDebug -PdisablePreDex
+  post:
+    # copy test report for Circle CI to display
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/build/test-results/debug/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;

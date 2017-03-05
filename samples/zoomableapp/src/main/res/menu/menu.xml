@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="schemas.android.com/tools"
+    tools:context="com.facebook.samples.zoomableapp.MainActivity"
+    >
+  <item
+      android:id="@+id/allow_zoomed_swiping"
+      android:checkable="true"
+      android:title="@string/allow_zoomed_swiping"
+      />
+</menu>

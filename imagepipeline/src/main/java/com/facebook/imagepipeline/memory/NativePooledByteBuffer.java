@@ -14,8 +14,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
-
 
 /**
  * An implementation of {@link PooledByteBuffer} that uses native memory

@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.listener;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,11 +25,21 @@ public class ForwardingRequestListener implements RequestListener {
 
   private final List<RequestListener> mRequestListeners;
 
-  public ForwardingRequestListener(
-      Set<RequestListener> requestListeners) {
+  public ForwardingRequestListener(Set<RequestListener> requestListeners) {
     mRequestListeners = new ArrayList<>(requestListeners.size());
     for (RequestListener requestListener : requestListeners) {
-      mRequestListeners.add(requestListener);
+      if (requestListener != null) {
+        mRequestListeners.add(requestListener);
+      }
+    }
+  }
+
+  public ForwardingRequestListener(RequestListener... requestListeners) {
+    mRequestListeners = new ArrayList<>(requestListeners.length);
+    for (RequestListener requestListener : requestListeners) {
+      if (requestListener != null) {
+        mRequestListeners.add(requestListener);
+      }
     }
   }
 
@@ -170,6 +181,7 @@ public class ForwardingRequestListener implements RequestListener {
     }
   }
 
+  @Override
   public boolean requiresExtraMap(String id) {
     final int numberOfListeners = mRequestListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {

@@ -16,12 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.memory.PooledByteBuffer;
-import com.facebook.cache.common.CacheKey;
 
 /**
  * This is class encapsulates Map that maps ImageCacheKeys to EncodedImages pointing to
@@ -148,7 +148,7 @@ public class StagingArea {
               TAG,
               "Found closed reference %d for key %s (%d)",
               System.identityHashCode(storedEncodedImage),
-              key.toString(),
+              key.getUriString(),
               System.identityHashCode(key));
           return null;
         }
@@ -156,6 +156,33 @@ public class StagingArea {
       }
     }
     return storedEncodedImage;
+  }
+
+  /**
+   * Determine if an valid entry for the key exists in the staging area.
+   */
+  public synchronized boolean containsKey(CacheKey key) {
+    Preconditions.checkNotNull(key);
+    if (!mMap.containsKey(key)) {
+      return false;
+    }
+    EncodedImage storedEncodedImage = mMap.get(key);
+    synchronized (storedEncodedImage) {
+      if (!EncodedImage.isValid(storedEncodedImage)) {
+        // Reference is not valid, this means that someone cleared reference while it was still in
+        // use. Log error
+        // TODO: 3697790
+        mMap.remove(key);
+        FLog.w(
+            TAG,
+            "Found closed reference %d for key %s (%d)",
+            System.identityHashCode(storedEncodedImage),
+            key.getUriString(),
+            System.identityHashCode(key));
+        return false;
+      }
+      return true;
+    }
   }
 
   /**

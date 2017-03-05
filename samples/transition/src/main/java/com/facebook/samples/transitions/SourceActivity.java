@@ -12,37 +12,24 @@
 
 package com.facebook.samples.transitions;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.listener.RequestLoggingListener;
 
-import java.util.Set;
-import java.util.HashSet;
-
-
-public class SourceActivity extends AppCompatActivity {
+public class SourceActivity extends Activity {
 
   private SimpleDraweeView mSimpleDraweeView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Set<RequestListener> listeners = new HashSet<>();
-    listeners.add(new RequestLoggingListener());
-    ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-        .setRequestListeners(listeners)
-        .build();
-    Fresco.initialize(this, config);
     setContentView(R.layout.drawee_source);
     mSimpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
+    mSimpleDraweeView.setActualImageResource(R.drawable.test_image);
   }
 
   public void startTransition(View view) {

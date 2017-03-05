@@ -10,4 +10,4 @@ LOCAL_SRC_FILES := \
 LOCAL_CFLAGS += -Wall -Wextra -Werror -std=c11
 LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)

@@ -1,0 +1,16 @@
+<resources>
+  <string name="app_name">Experimental Animations</string>
+  <!-- Samples -->
+  <string name="title_simple_color">Simple Color</string>
+  <string name="title_simple_bitmap">Simple Bitmap</string>
+
+  <string name="backend_selector_title">Animation Backend</string>
+  <string name="backend_color">Color</string>
+  <string name="backend_local_drawables">Local Drawables</string>
+  <string name="backend_bitmap_simple">Simple Bitmaps</string>
+
+  <string name="cache_selector_title">Caching Strategy</string>
+  <string name="cache_noop">No-op cache</string>
+  <string name="cache_keep_last">Keep last frame</string>
+  <string name="cache_naive_cache_all">Naive cache all frames</string>
+</resources>

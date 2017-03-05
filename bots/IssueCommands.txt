@@ -1,0 +1,4 @@
+@facebook-github-bot stack-overflow
+comment Hey {issue_author} and thanks for posting this! {author} tells me this issue looks like a question that would be best asked on [StackOverflow](http://stackoverflow.com/questions/tagged/fresco). StackOverflow is amazing for Q&A: it has a reputation system, voting, the ability to mark a question as answered. Because of the reputation system it is likely the community will see and answer your question there. This also helps us use the GitHub bug tracker for bugs only. Will close this as this is really a question that should be asked on SO.
+add-label Stack Overflow
+close
