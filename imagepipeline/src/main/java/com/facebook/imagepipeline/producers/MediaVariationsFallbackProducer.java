@@ -9,6 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -96,10 +99,10 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       chooseFromVariants(
           consumer,
           producerContext,
-          mediaVariations,
-          mediaVariations.getVariants(),
           imageRequest,
+          mediaVariations.getVariants(),
           resizeOptions,
+          mediaVariations.shouldForceRequestForSpecifiedUri(),
           isCancelled);
     } else {
       Task<List<MediaVariations.Variant>> cachedVariantsTask =
@@ -119,10 +122,10 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
                 return chooseFromVariants(
                     consumer,
                     producerContext,
-                    mediaVariations,
-                    task.getResult(),
                     imageRequest,
+                    task.getResult(),
                     resizeOptions,
+                    mediaVariations.shouldForceRequestForSpecifiedUri(),
                     isCancelled);
               }
             } catch (Exception e) {
@@ -139,45 +142,98 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private Task chooseFromVariants(
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext,
-      final MediaVariations mediaVariations,
-      final List<MediaVariations.Variant> variants,
       final ImageRequest imageRequest,
+      final List<MediaVariations.Variant> variants,
       final ResizeOptions resizeOptions,
+      final boolean forceOriginalRequest,
       final AtomicBoolean isCancelled) {
-    final BufferedDiskCache preferredCache =
-        imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL ?
-            mSmallImageBufferedDiskCache : mDefaultBufferedDiskCache;
-    final Object callerContext = producerContext.getCallerContext();
+    List<MediaVariations.Variant> sortedVariants = getSortedList(variants, resizeOptions);
 
-    MediaVariations.Variant preferredVariant = null;
-    CacheKey preferredCacheKey = null;
-    Task<EncodedImage> diskLookupTask;
+    if (sortedVariants.isEmpty()) {
+      Continuation<EncodedImage, Void> continuation = onFinishDiskReads(
+          consumer,
+          producerContext,
+          imageRequest,
+          sortedVariants,
+          0,
+          forceOriginalRequest,
+          isCancelled);
+      return Task.forResult((EncodedImage) null).continueWith(continuation);
+    }
 
-    for (int i = 0; i < variants.size(); i++) {
-      final MediaVariations.Variant variant = variants.get(i);
-      final CacheKey cacheKey =
-          mCacheKeyFactory.getEncodedCacheKey(imageRequest, variant.getUri(), callerContext);
-      if (preferredCache.containsSync(cacheKey)) {
-        if (isCloserToRequest(variant, preferredVariant, resizeOptions)) {
-          preferredVariant = variant;
-          preferredCacheKey = cacheKey;
+    return attemptCacheReadForVariant(
+        consumer,
+        producerContext,
+        imageRequest,
+        sortedVariants,
+        0,
+        forceOriginalRequest,
+        isCancelled);
+  }
+
+  private Task attemptCacheReadForVariant(
+      final Consumer<EncodedImage> consumer,
+      final ProducerContext producerContext,
+      ImageRequest imageRequest,
+      List<MediaVariations.Variant> variants,
+      int index,
+      boolean forceOriginalRequest,
+      AtomicBoolean isCancelled) {
+    final MediaVariations.Variant variant = variants.get(index);
+    final CacheKey cacheKey = mCacheKeyFactory
+        .getEncodedCacheKey(imageRequest, variant.getUri(), producerContext.getCallerContext());
+    final ImageRequest.CacheChoice cacheChoice;
+    if (variant.getCacheChoice() == null) {
+      cacheChoice = imageRequest.getCacheChoice();
+    } else {
+      cacheChoice = variant.getCacheChoice();
+    }
+    final BufferedDiskCache preferredCache = cacheChoice == ImageRequest.CacheChoice.SMALL
+        ? mSmallImageBufferedDiskCache
+        : mDefaultBufferedDiskCache;
+
+    Task<EncodedImage> readTask = preferredCache.get(cacheKey, isCancelled);
+
+    Continuation<EncodedImage, Void> continuation = onFinishDiskReads(
+        consumer,
+        producerContext,
+        imageRequest,
+        variants,
+        index,
+        forceOriginalRequest,
+        isCancelled);
+    return readTask.continueWith(continuation);
+  }
+
+  private static List<MediaVariations.Variant> getSortedList(
+      List<MediaVariations.Variant> variants,
+      final ResizeOptions resizeOptions) {
+    if (variants.size() < 2) {
+      return variants;
+    }
+
+    List<MediaVariations.Variant> sortedVariants = new ArrayList<>(variants);
+    Collections.sort(sortedVariants, new Comparator<MediaVariations.Variant>() {
+      @Override
+      public int compare(MediaVariations.Variant o1, MediaVariations.Variant o2) {
+        final boolean o1BigEnough = isBigEnoughForRequestedSize(o1, resizeOptions);
+        final boolean o2BigEnough = isBigEnoughForRequestedSize(o2, resizeOptions);
+
+        if (o1BigEnough && o2BigEnough) {
+          // Prefer the smaller image as both are bigger than needed
+          return o1.getWidth() - o2.getWidth();
+        } else if (o1BigEnough) {
+          return -1;
+        } else if (o2BigEnough) {
+          return 1;
+        } else {
+          // Prefer the larger image as both are smaller than needed
+          return o2.getWidth() - o1.getWidth();
         }
       }
-    }
+    });
 
-    final boolean useAsLastResult;
-    if (preferredCacheKey == null) {
-      diskLookupTask = Task.forResult(null);
-      useAsLastResult = false;
-    } else {
-      diskLookupTask = preferredCache.get(preferredCacheKey, isCancelled);
-      useAsLastResult = !mediaVariations.shouldForceRequestForSpecifiedUri() &&
-          isBigEnoughForRequestedSize(preferredVariant, resizeOptions);
-    }
-
-    Continuation<EncodedImage, Void> continuation =
-        onFinishDiskReads(consumer, producerContext, useAsLastResult);
-    return diskLookupTask.continueWith(continuation);
+    return sortedVariants;
   }
 
   private static boolean isBigEnoughForRequestedSize(
@@ -186,25 +242,14 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
     return variant.getWidth() >= resizeOptions.width && variant.getHeight() >= resizeOptions.height;
   }
 
-  private static boolean isCloserToRequest(
-      MediaVariations.Variant variant,
-      MediaVariations.Variant comparison,
-      ResizeOptions resizeOptions) {
-    if (comparison == null) {
-      return true;
-    }
-    if (isBigEnoughForRequestedSize(comparison, resizeOptions)) {
-      return variant.getWidth() < comparison.getWidth() &&
-          isBigEnoughForRequestedSize(variant, resizeOptions);
-    } else {
-      return variant.getWidth() > comparison.getWidth();
-    }
-  }
-
   private Continuation<EncodedImage, Void> onFinishDiskReads(
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext,
-      final boolean useAsLastResult) {
+      final ImageRequest imageRequest,
+      final List<MediaVariations.Variant> variants,
+      final int index,
+      final boolean forceOriginalRequest,
+      final AtomicBoolean isCancelled) {
     final String requestId = producerContext.getId();
     final ProducerListener listener = producerContext.getListener();
     return new Continuation<EncodedImage, Void>() {
@@ -223,6 +268,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
         } else {
           EncodedImage cachedReference = task.getResult();
           if (cachedReference != null) {
+            final boolean useAsLastResult = !forceOriginalRequest &&
+                isBigEnoughForRequestedSize(variants.get(index), imageRequest.getResizeOptions());
             listener.onProducerFinishWithSuccess(
                 requestId,
                 PRODUCER_NAME,
@@ -235,6 +282,19 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
             cachedReference.close();
 
             triggerNextProducer = !useAsLastResult;
+          } else if (index < variants.size() - 1) {
+            // TODO t14487493: Remove the item from the index
+
+            attemptCacheReadForVariant(
+                consumer,
+                producerContext,
+                imageRequest,
+                variants,
+                index + 1,
+                forceOriginalRequest,
+                isCancelled);
+
+            triggerNextProducer = false;
           } else {
             listener.onProducerFinishWithSuccess(
                 requestId,
