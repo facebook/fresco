@@ -91,6 +91,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
         try {
           is.close();
         } catch (IOException e) {
+          //Do nothing and ignore the IOException here.
         }
       }
       if (connection != null) {
