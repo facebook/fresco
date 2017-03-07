@@ -19,7 +19,6 @@ import android.graphics.Bitmap;
 import android.os.MemoryFile;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
@@ -30,11 +29,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.*;
+
 /**
  * This is the test in order to directly decoding all types of webp images
  */
 @RunWith(AndroidJUnit4.class)
-public class WebpDecodingTest extends InstrumentationTestCase {
+public class WebpDecodingTest {
 
   private static Method sGetFileDescriptorMethod;
 
@@ -42,7 +43,6 @@ public class WebpDecodingTest extends InstrumentationTestCase {
 
   private WebpBitmapFactoryImpl mWebpBitmapFactory;
 
-  @Override
   @Before
   public void setUp() {
     mInstrumentation = InstrumentationRegistry.getInstrumentation();
