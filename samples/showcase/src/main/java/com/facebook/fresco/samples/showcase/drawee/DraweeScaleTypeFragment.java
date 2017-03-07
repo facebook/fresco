@@ -15,7 +15,6 @@ import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,7 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
 
     changeMainDraweeUri(URI_1);
 
-    final SimpleScaleTypeAdapter adapter = new SimpleScaleTypeAdapter();
+    final SimpleScaleTypeAdapter adapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
     mSpinner.setAdapter(adapter);
     mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override

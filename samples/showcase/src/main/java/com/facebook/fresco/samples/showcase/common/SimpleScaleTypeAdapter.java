@@ -11,6 +11,11 @@
  */
 package com.facebook.fresco.samples.showcase.common;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -23,7 +28,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 
 public class SimpleScaleTypeAdapter extends BaseAdapter {
 
-  private static final Entry[] SPINNER_ENTRIES = new Entry[]{
+  private static final Entry[] BUILT_IN_SPINNER_ENTRIES = new Entry[]{
       new Entry(ScalingUtils.ScaleType.CENTER, "center", null),
       new Entry(ScalingUtils.ScaleType.CENTER_CROP, "center_crop", null),
       new Entry(ScalingUtils.ScaleType.CENTER_INSIDE, "center_inside", null),
@@ -35,14 +40,36 @@ public class SimpleScaleTypeAdapter extends BaseAdapter {
       new Entry(ScalingUtils.ScaleType.FOCUS_CROP, "focus_crop (1, 0.5)", new PointF(1, 0.5f))
   };
 
+  private static final Entry[] CUSTOM_TYPES = new Entry[]{
+      new Entry(CustomScaleTypes.FIT_X, "custom: fit_x", null),
+      new Entry(CustomScaleTypes.FIT_Y, "custom: fit_y", null),
+  };
+
+  public static SimpleScaleTypeAdapter createForAllScaleTypes() {
+    List<Entry> entries = new ArrayList<>(BUILT_IN_SPINNER_ENTRIES.length + CUSTOM_TYPES.length);
+    Collections.addAll(entries, BUILT_IN_SPINNER_ENTRIES);
+    Collections.addAll(entries, CUSTOM_TYPES);
+    return new SimpleScaleTypeAdapter(entries);
+  }
+
+  private final List<Entry> mEntries;
+
+  private SimpleScaleTypeAdapter(Entry[] entries) {
+    this(Arrays.asList(entries));
+  }
+
+  private SimpleScaleTypeAdapter(List<Entry> entries) {
+    mEntries = entries;
+  }
+
   @Override
   public int getCount() {
-    return SPINNER_ENTRIES.length;
+    return mEntries.size();
   }
 
   @Override
   public Object getItem(int position) {
-    return SPINNER_ENTRIES[position];
+    return mEntries.get(position);
   }
 
   @Override
@@ -59,7 +86,7 @@ public class SimpleScaleTypeAdapter extends BaseAdapter {
         : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 
     final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-    textView.setText(SPINNER_ENTRIES[position].description);
+    textView.setText(mEntries.get(position).description);
 
     return view;
   }
