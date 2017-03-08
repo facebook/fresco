@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,7 +29,6 @@ import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import com.facebook.imagepipeline.request.MediaVariations;
 
 import bolts.Task;
-import org.fest.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -162,6 +159,9 @@ public class MediaVariationsFallbackProducerTest {
         .thenReturn(CACHE_KEY_M);
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, URI_L, mCallerContext))
         .thenReturn(CACHE_KEY_L);
+
+    when(mMediaVariationsIndex.getCachedVariants(anyString(), any(MediaVariations.Builder.class)))
+        .thenReturn(Task.<MediaVariations>forResult(null));
 
     when(mDiskCachePolicy.getCacheChoiceForResult(any(ImageRequest.class), any(EncodedImage.class)))
         .thenReturn(CacheChoice.DEFAULT);
@@ -418,24 +418,25 @@ public class MediaVariationsFallbackProducerTest {
   }
 
   private void whenIndexDbContains(Uri uri, int size, CacheChoice cacheChoice) {
-    whenIndexDbReturnsTaskForResult(Lists.newArrayList(new MediaVariations.Variant(
-        uri,
-        size,
-        size,
-        cacheChoice)));
+    whenIndexDbReturnsTaskForResult(
+        MediaVariations.newBuilderForMediaId(MEDIA_ID)
+            .addVariant(uri, size, size, cacheChoice)
+            .build());
   }
 
   private void whenIndexDbContainsAllVariants() {
-    List<MediaVariations.Variant> variants = new ArrayList<>(5);
-    variants.add(new MediaVariations.Variant(URI_S, SIZE_S, SIZE_S, CacheChoice.DEFAULT));
-    variants.add(new MediaVariations.Variant(URI_M, SIZE_M, SIZE_M, CacheChoice.DEFAULT));
-    variants.add(new MediaVariations.Variant(URI_L, SIZE_L, SIZE_L, CacheChoice.DEFAULT));
-    whenIndexDbReturnsTaskForResult(variants);
+    whenIndexDbReturnsTaskForResult(
+        MediaVariations.newBuilderForMediaId(MEDIA_ID)
+            .addVariant(URI_S, SIZE_S, SIZE_S, CacheChoice.DEFAULT)
+            .addVariant(URI_M, SIZE_M, SIZE_M, CacheChoice.DEFAULT)
+            .addVariant(URI_L, SIZE_L, SIZE_L, CacheChoice.DEFAULT)
+            .build());
   }
 
-  private void whenIndexDbReturnsTaskForResult(List<MediaVariations.Variant> variants) {
-    Task<List<MediaVariations.Variant>> task = Task.forResult(variants);
-    when(mMediaVariationsIndex.getCachedVariants(MEDIA_ID)).thenReturn(task);
+  private void whenIndexDbReturnsTaskForResult(MediaVariations mediaVariations) {
+    Task<MediaVariations> task = Task.forResult(mediaVariations);
+    when(mMediaVariationsIndex.getCachedVariants(eq(MEDIA_ID), any(MediaVariations.Builder.class)))
+        .thenReturn(task);
   }
 
   private void whenCacheContains(BufferedDiskCache cache, CacheKey... cacheKeys) {

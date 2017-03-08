@@ -9,7 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -72,20 +71,22 @@ public class MediaVariationsIndexDatabaseTest {
 
   @Test
   public void testGetsNoCachedVariantsIfNothingStored() {
-    List<MediaVariations.Variant> cachedVariants =
-        mMediaVariationsIndexDatabase.getCachedVariantsSync(MEDIA_ID);
+    MediaVariations mediaVariations = mMediaVariationsIndexDatabase
+        .getCachedVariantsSync(MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
 
-    assertThat(cachedVariants).isEmpty();
+    assertThat(mediaVariations.getMediaId()).isEqualTo(MEDIA_ID);
+    assertThat(mediaVariations.getVariantsCount()).isZero();
   }
 
   @Test
   public void testGetsNoCachedVariantsIfNonMatchingItemStored() {
     whenNonMatchingItemInIndex();
 
-    List<MediaVariations.Variant> cachedVariants =
-        mMediaVariationsIndexDatabase.getCachedVariantsSync(MEDIA_ID);
+    MediaVariations mediaVariations = mMediaVariationsIndexDatabase
+        .getCachedVariantsSync(MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
 
-    assertThat(cachedVariants).isEmpty();
+    assertThat(mediaVariations.getMediaId()).isEqualTo(MEDIA_ID);
+    assertThat(mediaVariations.getVariantsCount()).isZero();
   }
 
   @Test
@@ -96,11 +97,11 @@ public class MediaVariationsIndexDatabaseTest {
         CACHE_KEY_1,
         mEncodedImage1);
 
-    List<MediaVariations.Variant> cachedVariants =
-        mMediaVariationsIndexDatabase.getCachedVariantsSync(MEDIA_ID);
+    MediaVariations mediaVariations = mMediaVariationsIndexDatabase
+        .getCachedVariantsSync(MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
 
-    assertThat(cachedVariants).hasSize(1);
-    assertVariantIsEqualTo(cachedVariants.get(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
+    assertThat(mediaVariations.getVariantsCount()).isEqualTo(1);
+    assertVariantIsEqualTo(mediaVariations.getVariant(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
   }
 
   @Test
@@ -111,13 +112,26 @@ public class MediaVariationsIndexDatabaseTest {
     mMediaVariationsIndexDatabase
         .saveCachedVariantSync(MEDIA_ID, CACHE_CHOICE_2, CACHE_KEY_2, mEncodedImage2);
 
-    List<MediaVariations.Variant> cachedVariants =
-        mMediaVariationsIndexDatabase.getCachedVariantsSync(MEDIA_ID);
+    MediaVariations mediaVariations = mMediaVariationsIndexDatabase
+        .getCachedVariantsSync(MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
 
-    assertThat(cachedVariants).hasSize(2);
+    assertThat(mediaVariations.getVariantsCount()).isEqualTo(2);
 
-    assertVariantIsEqualTo(cachedVariants.get(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
-    assertVariantIsEqualTo(cachedVariants.get(1), URI_2, WIDTH_2, HEIGHT_2, CACHE_CHOICE_2);
+    assertVariantIsEqualTo(mediaVariations.getVariant(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
+    assertVariantIsEqualTo(mediaVariations.getVariant(1), URI_2, WIDTH_2, HEIGHT_2, CACHE_CHOICE_2);
+  }
+
+  @Test
+  public void testMediaVariationsShouldForceRequestIfSetInProvidedBuilder() {
+    mMediaVariationsIndexDatabase
+        .saveCachedVariantSync(MEDIA_ID, CACHE_CHOICE_1, CACHE_KEY_1, mEncodedImage1);
+    MediaVariations.Builder builder = MediaVariations.newBuilderForMediaId(MEDIA_ID)
+        .setForceRequestForSpecifiedUri(true);
+
+    MediaVariations mediaVariations =
+        mMediaVariationsIndexDatabase.getCachedVariantsSync(MEDIA_ID, builder);
+
+    assertThat(mediaVariations.shouldForceRequestForSpecifiedUri()).isTrue();
   }
 
   private void whenNonMatchingItemInIndex() {

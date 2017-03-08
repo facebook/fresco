@@ -13,6 +13,8 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,12 +59,46 @@ public class MediaVariations {
   }
 
   /**
-   * Get all known variants of this media. This may not be exhaustive and these sets may be
-   * combined over time to allow the possibilities of fallbacks being offered even when not
-   * specified in a later request.
+   * Get the number of contained variants. This may not be an exhaustive set of variants and these
+   * sets may be combined over time to allow the possibilities of fallbacks being offered even when
+   * not specified in a later request.
+   *
+   * @return the number of variants
    */
-  public @Nullable List<Variant> getVariants() {
-    return mVariants;
+  public int getVariantsCount() {
+    return mVariants == null ? 0 : mVariants.size();
+  }
+
+  /**
+   * Gets the variant at the specified index.
+   *
+   * @param index index of the element to return
+   * @return the element at the specified position in this list
+   * @throws IndexOutOfBoundsException if the index is out of range (<tt>index &lt; 0 || index &gt;=
+   * getVariantsCount()</tt>)
+   * @throws NullPointerException if there are no variants
+   */
+  public Variant getVariant(int index) {
+    return mVariants.get(index);
+  }
+
+  /**
+   * Gets a list of the variants in an order determined by the provided comparator.
+   */
+  public List<MediaVariations.Variant> getSortedVariants(Comparator<Variant> comparator) {
+    int variantsCount = getVariantsCount();
+    if (variantsCount == 0) {
+      return Collections.emptyList();
+    }
+
+    List<MediaVariations.Variant> variants = new ArrayList<>(variantsCount);
+    for (int i = 0; i < variantsCount; i++) {
+      variants.add(mVariants.get(i));
+    }
+
+    Collections.sort(variants, comparator);
+
+    return variants;
   }
 
   /**
@@ -195,10 +231,18 @@ public class MediaVariations {
     }
 
     public Builder addVariant(Uri uri, int width, int height) {
+      return addVariant(uri, width, height, null);
+    }
+
+    public Builder addVariant(
+        Uri uri,
+        int width,
+        int height,
+        ImageRequest.CacheChoice cacheChoice) {
       if (mVariants == null) {
         mVariants = new ArrayList<>();
       }
-      mVariants.add(new Variant(uri, width, height));
+      mVariants.add(new Variant(uri, width, height, cacheChoice));
       return this;
     }
 

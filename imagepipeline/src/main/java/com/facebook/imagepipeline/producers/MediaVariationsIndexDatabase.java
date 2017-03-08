@@ -12,9 +12,6 @@ package com.facebook.imagepipeline.producers;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 
@@ -66,13 +63,15 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   }
 
   @Override
-  public Task<List<MediaVariations.Variant>> getCachedVariants(final String mediaId) {
+  public Task<MediaVariations> getCachedVariants(
+      final String mediaId,
+      final MediaVariations.Builder mediaVariationsBuilder) {
     try {
       return Task.call(
-          new Callable<List<MediaVariations.Variant>>() {
+          new Callable<MediaVariations>() {
             @Override
-            public List<MediaVariations.Variant> call() throws Exception {
-              return getCachedVariantsSync(mediaId);
+            public MediaVariations call() throws Exception {
+              return getCachedVariantsSync(mediaId, mediaVariationsBuilder);
             }
           },
           mReadExecutor);
@@ -83,7 +82,9 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
   }
 
   @VisibleForTesting
-  protected List<MediaVariations.Variant> getCachedVariantsSync(String mediaId) {
+  protected MediaVariations getCachedVariantsSync(
+      String mediaId,
+      MediaVariations.Builder mediaVariationsBuilder) {
     synchronized (MediaVariationsIndexDatabase.class) {
       SQLiteDatabase db = mDbHelper.getWritableDatabase();
       Cursor c = null;
@@ -101,7 +102,7 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
             null); // orderBy
 
         if (c.getCount() == 0) {
-          return Collections.EMPTY_LIST;
+          return mediaVariationsBuilder.build();
         }
 
         final int columnIndexCacheKey = c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_KEY);
@@ -110,19 +111,18 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
         final int columnIndexCacheChoice =
             c.getColumnIndexOrThrow(IndexEntry.COLUMN_NAME_CACHE_CHOICE);
 
-        List<MediaVariations.Variant> variants = new ArrayList<>(c.getCount());
         while (c.moveToNext()) {
           String cacheChoiceStr = c.getString(columnIndexCacheChoice);
 
-          variants.add(new MediaVariations.Variant(
+          mediaVariationsBuilder.addVariant(
               Uri.parse(c.getString(columnIndexCacheKey)),
               c.getInt(columnIndexWidth),
               c.getInt(columnIndexHeight),
               TextUtils.isEmpty(cacheChoiceStr)
-                  ? null : ImageRequest.CacheChoice.valueOf(cacheChoiceStr)));
+                  ? null : ImageRequest.CacheChoice.valueOf(cacheChoiceStr));
         }
 
-        return variants;
+        return mediaVariationsBuilder.build();
       } catch (SQLException x) {
         FLog.e(TAG, x, "Error reading for %s", mediaId);
         throw x;

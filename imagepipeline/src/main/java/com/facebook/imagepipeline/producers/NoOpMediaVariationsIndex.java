@@ -9,9 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -22,8 +19,10 @@ import bolts.Task;
 public class NoOpMediaVariationsIndex implements MediaVariationsIndex {
 
   @Override
-  public Task<List<MediaVariations.Variant>> getCachedVariants(String mediaId) {
-    return Task.forResult(Collections.<MediaVariations.Variant>emptyList());
+  public Task<MediaVariations> getCachedVariants(
+      String mediaId,
+      MediaVariations.Builder mediaVariationsBuilder) {
+    return Task.forResult(null);
   }
 
   @Override
