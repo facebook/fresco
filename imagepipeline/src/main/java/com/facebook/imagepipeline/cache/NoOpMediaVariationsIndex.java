@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.producers;
+package com.facebook.imagepipeline.cache;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -16,15 +16,21 @@ import com.facebook.imagepipeline.request.MediaVariations;
 
 import bolts.Task;
 
-public interface MediaVariationsIndex {
+public class NoOpMediaVariationsIndex implements MediaVariationsIndex {
 
-  Task<MediaVariations> getCachedVariants(
+  @Override
+  public Task<MediaVariations> getCachedVariants(
       String mediaId,
-      MediaVariations.Builder mediaVariationsBuilder);
+      MediaVariations.Builder mediaVariationsBuilder) {
+    return Task.forResult(null);
+  }
 
-  void saveCachedVariant(
+  @Override
+  public void saveCachedVariant(
       String mediaId,
       ImageRequest.CacheChoice cacheChoice,
       CacheKey cacheKey,
-      EncodedImage encodedImage);
+      EncodedImage encodedImage) {
+    // no-op
+  }
 }

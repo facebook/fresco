@@ -49,9 +49,9 @@ import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-import com.facebook.imagepipeline.producers.MediaVariationsIndex;
-import com.facebook.imagepipeline.producers.MediaVariationsIndexDatabase;
-import com.facebook.imagepipeline.producers.NoOpMediaVariationsIndex;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
+import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
+import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 /**

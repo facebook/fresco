@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.facebook.imagepipeline.producers;
+package com.facebook.imagepipeline.cache;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

@@ -49,7 +49,7 @@ import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
-import com.facebook.imagepipeline.producers.MediaVariationsIndex;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
@@ -93,7 +93,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
-  private MediaVariationsIndex mMediaVariationsIndex;
+  private final MediaVariationsIndex mMediaVariationsIndex;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
