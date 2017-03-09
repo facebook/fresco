@@ -160,25 +160,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
     }
 
     List<MediaVariations.Variant> sortedVariants =
-        mediaVariations.getSortedVariants(new Comparator<MediaVariations.Variant>() {
-          @Override
-          public int compare(MediaVariations.Variant o1, MediaVariations.Variant o2) {
-            final boolean o1BigEnough = isBigEnoughForRequestedSize(o1, resizeOptions);
-            final boolean o2BigEnough = isBigEnoughForRequestedSize(o2, resizeOptions);
-
-            if (o1BigEnough && o2BigEnough) {
-              // Prefer the smaller image as both are bigger than needed
-              return o1.getWidth() - o2.getWidth();
-            } else if (o1BigEnough) {
-              return -1;
-            } else if (o2BigEnough) {
-              return 1;
-            } else {
-              // Prefer the larger image as both are smaller than needed
-              return o2.getWidth() - o1.getWidth();
-            }
-          }
-        });
+        mediaVariations.getSortedVariants(new VariantComparator(resizeOptions));
 
     return attemptCacheReadForVariant(
         consumer,
@@ -381,6 +363,34 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
       mMediaVariationsIndex
           .saveCachedVariant(mediaVariations.getMediaId(), cacheChoice, cacheKey, newResult);
+    }
+  }
+
+  @VisibleForTesting
+  static class VariantComparator implements Comparator<MediaVariations.Variant> {
+
+    private final ResizeOptions mResizeOptions;
+
+    VariantComparator(ResizeOptions resizeOptions) {
+      mResizeOptions = resizeOptions;
+    }
+
+    @Override
+    public int compare(MediaVariations.Variant o1, MediaVariations.Variant o2) {
+      final boolean o1BigEnough = isBigEnoughForRequestedSize(o1, mResizeOptions);
+      final boolean o2BigEnough = isBigEnoughForRequestedSize(o2, mResizeOptions);
+
+      if (o1BigEnough && o2BigEnough) {
+        // Prefer the smaller image as both are bigger than needed
+        return o1.getWidth() - o2.getWidth();
+      } else if (o1BigEnough) {
+        return -1;
+      } else if (o2BigEnough) {
+        return 1;
+      } else {
+        // Prefer the larger image as both are smaller than needed
+        return o2.getWidth() - o1.getWidth();
+      }
     }
   }
 }
