@@ -183,45 +183,45 @@ subprojects {
     // Libjpeg-turbo
     createNativeLibrariesTasks(
             'Libjpeg',      // Name for the tasks
-            'https://github.com/libjpeg-turbo/libjpeg-turbo/archive/1.5.0.tar.gz', // The Url for download
-            '1.5.0.tar.gz', // The downloaded file
+            "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${LIBJPEG_TURBO_VERSION}.tar.gz", // The Url for download
+            "${LIBJPEG_TURBO_VERSION}.tar.gz", // The downloaded file
             'libjpeg', // The folder where the file is downloaded
-            'libjpeg-turbo-1.5.0', // The first dir where we have put our customisation
+            "libjpeg-turbo-${LIBJPEG_TURBO_VERSION}", // The first dir where we have put our customisation
             ['**/*.c', '**/*.h','**/*.S', '**/*.asm', '**/*.inc', '*.mk'], // Files to compile
-            'libjpeg-turbo-1.5.x' // Final destination dir
+            "libjpeg-turbo-${LIBJPEG_TURBO_VERSION}" // Final destination dir
     )
 
     // Libpng
     createNativeLibrariesTasks(
             'Libpng',      // Name for the tasks
-            'https://github.com/glennrp/libpng/archive/v1.6.10.tar.gz', // The Url for download
-            'v1.6.10.tar.gz', // The downloaded file
+            "https://github.com/glennrp/libpng/archive/v${LIBPNG_VERSION}.tar.gz", // The Url for download
+            "v${LIBPNG_VERSION}.tar.gz", // The downloaded file
             'libpng', // The folder where the file is downloaded
-            'libpng-1.6.10', // The first dir where we have put our customisation
+            "libpng-${LIBPNG_VERSION}", // The first dir where we have put our customisation
             ['**/*.c', '**/*.h', '**/*.S', '*.mk'], // Files to compile
-            'libpng-1.6.10' // Final destination dir
+            "libpng-${LIBPNG_VERSION}" // Final destination dir
     )
 
     // Gif
     createNativeLibrariesTasks(
             'Giflib',      // Name for the tasks
-            'https://launchpad.net/ubuntu/+archive/primary/+files/giflib_5.1.1.orig.tar.gz', // The Url for download
-            'giflib_5.1.1.orig.tar.gz', // The downloaded file
+            "https://launchpad.net/ubuntu/+archive/primary/+files/giflib_${GIFLIB_VERSION}.orig.tar.gz", // The Url for download
+            "giflib_${GIFLIB_VERSION}.orig.tar.gz", // The downloaded file
             'giflib', // The folder where the file is downloaded
-            'giflib-5.1.1/lib', // The first dir where we have put our customisation
+            "giflib-${GIFLIB_VERSION}/lib", // The first dir where we have put our customisation
             ['*.c', '*.h', '*.mk'], // Files to compile
-            'giflib' // Final destination dir
+            "giflib" // Final destination dir
     )
 
     // Webp
     createNativeLibrariesTasks(
             'Libwebp',      // Name for the tasks
-            'https://github.com/webmproject/libwebp/archive/v0.5.2.tar.gz', // The Url for download
-            'v0.5.2.tar.gz', // The downloaded file
+            "https://github.com/webmproject/libwebp/archive/v${LIBWEBP_VERSION}.tar.gz", // The Url for download
+            "v${LIBWEBP_VERSION}.tar.gz", // The downloaded file
             'libwebp', // The folder where the file is downloaded
-            'libwebp-0.5.2', // The first dir where we have put our customisation
+            "libwebp-${LIBWEBP_VERSION}", // The first dir where we have put our customisation
             ['src/**/*.c', 'src/**/*.h', '*.mk'], // Files to compile
-            'libwebp-0.5.2' // Final destination dir
+            "libwebp-${LIBWEBP_VERSION}" // Final destination dir
     )
 }
 
