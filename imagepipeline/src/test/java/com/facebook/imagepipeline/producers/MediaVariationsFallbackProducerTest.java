@@ -16,7 +16,7 @@ import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.DiskCachePolicy;
@@ -77,20 +77,12 @@ public class MediaVariationsFallbackProducerTest {
   private static final CacheKey CACHE_KEY_L = new SimpleCacheKey("http://fb.com/l.png");
   private static final CacheKey CACHE_KEY_ORIGINAL = new SimpleCacheKey("http://fb.com/orig.png");
 
-  private static final Map<String, String> EXPECTED_MAP_ON_CACHE_HIT_FOR_LAST_IMAGE =
-      ImmutableMap.of(
-          MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_FOUND,
-          "true",
-          MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_USED_AS_LAST,
-          "true");
-  private static final Map<String, String> EXPECTED_MAP_ON_CACHE_HIT_FOR_INTERMEDIATE_IMAGE =
-      ImmutableMap.of(
-          MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_FOUND,
-          "true",
-          MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_USED_AS_LAST,
-          "false");
-  private static final Map<String, String> EXPECTED_MAP_ON_CACHE_MISS =
-      ImmutableMap.of(MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_FOUND, "false");
+  private static final int VARIANTS_COUNT = 3;
+  private static final boolean FOUND = true;
+  private static final boolean NOT_FOUND = false;
+  private static final TriState USED_AS_LAST = TriState.YES;
+  private static final TriState NOT_USED_AS_LAST = TriState.NO;
+  private static final TriState USED_AS_LAST_FLAG_NOT_EXPECTED = TriState.UNSET;
 
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Producer mInputProducer;
@@ -108,6 +100,7 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public EncodedImage mFinalEncodedImage;
   @Mock public DiskCachePolicy mDiskCachePolicy;
   @Captor public ArgumentCaptor<Consumer<EncodedImage>> mConsumerCaptor;
+  @Captor public ArgumentCaptor<Map<String, String>> mListenerExtrasCaptor;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
@@ -241,7 +234,11 @@ public class MediaVariationsFallbackProducerTest {
 
     verifyInputProducerProduceResultsWithNewConsumer();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_MISS);
+    verifySuccessSentToListener(
+        NOT_FOUND,
+        USED_AS_LAST_FLAG_NOT_EXPECTED,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache);
   }
 
@@ -256,7 +253,11 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_INTERMEDIATE_IMAGE);
+    verifySuccessSentToListener(
+        FOUND,
+        NOT_USED_AS_LAST,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mSmallImageBufferedDiskCache);
   }
 
@@ -271,7 +272,7 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_INTERMEDIATE_IMAGE);
+    verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
     verifyZeroInteractions(mDefaultBufferedDiskCache);
   }
 
@@ -287,7 +288,11 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer).onNewResult(mImageM, true);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_LAST_IMAGE);
+    verifySuccessSentToListener(
+        FOUND,
+        USED_AS_LAST,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
   }
 
@@ -303,7 +308,11 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_INTERMEDIATE_IMAGE);
+    verifySuccessSentToListener(
+        FOUND,
+        NOT_USED_AS_LAST,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mSmallImageBufferedDiskCache);
   }
 
@@ -318,8 +327,38 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer).onNewResult(mImageM, true);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_LAST_IMAGE);
+    verifySuccessSentToListener(
+        FOUND,
+        USED_AS_LAST,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
+  }
+
+  @Test
+  public void testSendsNonFinalImageToConsumerAndStartsInputProducerIfRequestForcesRequestForSpecifiedUri() {
+    MediaVariations mediaVariations = MediaVariations.newBuilderForMediaId(MEDIA_ID)
+        .setForceRequestForSpecifiedUri(true)
+        .build();
+    when(mImageRequest.getMediaVariations()).thenReturn(mediaVariations);
+    whenCacheContains(mDefaultBufferedDiskCache, CACHE_KEY_S, CACHE_KEY_M, CACHE_KEY_L);
+    whenIndexDbReturnsTaskForResult(
+        MediaVariations.newBuilderForMediaId(MEDIA_ID)
+            .setSource(MediaVariations.SOURCE_INDEX_DB)
+            .setForceRequestForSpecifiedUri(true)
+            .addVariant(URI_M, SIZE_M, SIZE_M, CacheChoice.DEFAULT)
+            .build());
+
+    when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(SIZE_M - 10, SIZE_M - 10));
+
+    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mConsumer).onNewResult(mImageM, false);
+    verify(mConsumer, never()).onProgressUpdate(anyFloat());
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
+    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyZeroInteractions(mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -334,7 +373,11 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer).onNewResult(mImageS, true);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_LAST_IMAGE);
+    verifySuccessSentToListener(
+        FOUND,
+        USED_AS_LAST,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mInputProducer, mDefaultBufferedDiskCache);
   }
 
@@ -353,7 +396,11 @@ public class MediaVariationsFallbackProducerTest {
 
     verifyInputProducerProduceResultsWithNewConsumer();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_MISS);
+    verifySuccessSentToListener(
+        NOT_FOUND,
+        USED_AS_LAST_FLAG_NOT_EXPECTED,
+        MediaVariations.SOURCE_INDEX_DB,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache);
   }
 
@@ -374,7 +421,11 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer).onNewResult(mImageL, true);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(EXPECTED_MAP_ON_CACHE_HIT_FOR_LAST_IMAGE);
+    verifySuccessSentToListener(
+        FOUND,
+        USED_AS_LAST,
+        MediaVariations.SOURCE_INDEX_DB,
+        VARIANTS_COUNT);
     verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
   }
 
@@ -420,6 +471,7 @@ public class MediaVariationsFallbackProducerTest {
   private void whenIndexDbContains(Uri uri, int size, CacheChoice cacheChoice) {
     whenIndexDbReturnsTaskForResult(
         MediaVariations.newBuilderForMediaId(MEDIA_ID)
+            .setSource(MediaVariations.SOURCE_INDEX_DB)
             .addVariant(uri, size, size, cacheChoice)
             .build());
   }
@@ -427,6 +479,7 @@ public class MediaVariationsFallbackProducerTest {
   private void whenIndexDbContainsAllVariants() {
     whenIndexDbReturnsTaskForResult(
         MediaVariations.newBuilderForMediaId(MEDIA_ID)
+            .setSource(MediaVariations.SOURCE_INDEX_DB)
             .addVariant(URI_S, SIZE_S, SIZE_S, CacheChoice.DEFAULT)
             .addVariant(URI_M, SIZE_M, SIZE_M, CacheChoice.DEFAULT)
             .addVariant(URI_L, SIZE_L, SIZE_L, CacheChoice.DEFAULT)
@@ -481,8 +534,28 @@ public class MediaVariationsFallbackProducerTest {
     assertThat(((MediaVariationsConsumer) consumer).getConsumer()).isSameAs(mConsumer);
   }
 
-  private void verifySuccessSentToListener(Map<String, String> extrasMap) {
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extrasMap);
+  private void verifySuccessSentToListener(
+      boolean found,
+      TriState isFinal,
+      @MediaVariations.Source String source,
+      int variantsCount) {
+    verify(mProducerListener).onProducerFinishWithSuccess(
+        eq(mRequestId),
+        eq(PRODUCER_NAME),
+        mListenerExtrasCaptor.capture());
+
+    Map<String, String> extras = mListenerExtrasCaptor.getValue();
+    assertThat(extras).hasSize(isFinal.isSet() ? 4 : 3);
+    assertThat(extras.get(MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_FOUND))
+        .isEqualTo(found ? "true" : "false");
+    if (isFinal.isSet()) {
+      assertThat(extras.get(MediaVariationsFallbackProducer.EXTRA_CACHED_VALUE_USED_AS_LAST))
+          .isEqualTo(isFinal.asBoolean() ? "true" : "false");
+    }
+    assertThat(extras.get(MediaVariationsFallbackProducer.EXTRA_VARIANTS_SOURCE)).isEqualTo(source);
+    assertThat(extras.get(MediaVariationsFallbackProducer.EXTRA_VARIANTS_COUNT))
+        .isEqualTo(Integer.toString(variantsCount));
+
     verify(mProducerListener, never())
         .onProducerFinishWithCancellation(anyString(), anyString(), anyMap());
     verify(mProducerListener, never())

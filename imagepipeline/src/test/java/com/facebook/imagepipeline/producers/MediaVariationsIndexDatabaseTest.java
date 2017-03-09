@@ -134,6 +134,25 @@ public class MediaVariationsIndexDatabaseTest {
     assertThat(mediaVariations.shouldForceRequestForSpecifiedUri()).isTrue();
   }
 
+  @Test
+  public void testMediaVariationsSourceIsSetAsExpected() {
+    whenNonMatchingItemInIndex();
+
+    String[] sources =
+        new String[] {
+            MediaVariations.SOURCE_IMAGE_REQUEST,
+            MediaVariations.SOURCE_INDEX_DB};
+    for (String source : sources) {
+      MediaVariations.Builder builder = MediaVariations.newBuilderForMediaId(MEDIA_ID)
+          .setSource(source);
+
+      MediaVariations mediaVariations =
+          mMediaVariationsIndexDatabase.getCachedVariantsSync(MEDIA_ID, builder);
+
+      assertThat(mediaVariations.getSource()).isEqualTo(source);
+    }
+  }
+
   private void whenNonMatchingItemInIndex() {
     mMediaVariationsIndexDatabase.saveCachedVariantSync(
         DIFFERENT_MEDIA_ID,

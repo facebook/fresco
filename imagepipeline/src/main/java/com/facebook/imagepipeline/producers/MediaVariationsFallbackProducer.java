@@ -51,6 +51,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   public static final String PRODUCER_NAME = "MediaVariationsFallbackProducer";
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
   public static final String EXTRA_CACHED_VALUE_USED_AS_LAST = "cached_value_used_as_last";
+  public static final String EXTRA_VARIANTS_COUNT = "variants_count";
+  public static final String EXTRA_VARIANTS_SOURCE = "variants_source";
 
   private final BufferedDiskCache mDefaultBufferedDiskCache;
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
@@ -105,7 +107,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
     } else {
       MediaVariations.Builder mediaVariationsBuilder =
           MediaVariations.newBuilderForMediaId(mediaVariations.getMediaId())
-              .setForceRequestForSpecifiedUri(mediaVariations.shouldForceRequestForSpecifiedUri());
+              .setForceRequestForSpecifiedUri(mediaVariations.shouldForceRequestForSpecifiedUri())
+              .setSource(MediaVariations.SOURCE_INDEX_DB);
       Task<MediaVariations> indexedMediaVariationsTask = mMediaVariationsIndex
           .getCachedVariants(mediaVariations.getMediaId(), mediaVariationsBuilder);
       indexedMediaVariationsTask.continueWith(new Continuation<MediaVariations, Object>() {
@@ -245,7 +248,13 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
             listener.onProducerFinishWithSuccess(
                 requestId,
                 PRODUCER_NAME,
-                getExtraMap(listener, requestId, true, useAsLastResult));
+                getExtraMap(
+                    listener,
+                    requestId,
+                    true,
+                    sortedVariants.size(),
+                    mediaVariations.getSource(),
+                    useAsLastResult));
 
             if (useAsLastResult) {
               consumer.onProgressUpdate(1);
@@ -271,7 +280,13 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
             listener.onProducerFinishWithSuccess(
                 requestId,
                 PRODUCER_NAME,
-                getExtraMap(listener, requestId, false, false));
+                getExtraMap(
+                    listener,
+                    requestId,
+                    false,
+                    sortedVariants.size(),
+                    mediaVariations.getSource(),
+                    false));
             triggerNextProducer = true;
           }
         }
@@ -301,6 +316,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       final ProducerListener listener,
       final String requestId,
       final boolean valueFound,
+      final int variantsCount,
+      final String variantsSource,
       boolean useAsLastResult) {
     if (!listener.requiresExtraMap(requestId)) {
       return null;
@@ -310,9 +327,19 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           EXTRA_CACHED_VALUE_FOUND,
           String.valueOf(true),
           EXTRA_CACHED_VALUE_USED_AS_LAST,
-          String.valueOf(useAsLastResult));
+          String.valueOf(useAsLastResult),
+          EXTRA_VARIANTS_COUNT,
+          String.valueOf(variantsCount),
+          EXTRA_VARIANTS_SOURCE,
+          variantsSource);
     } else {
-      return ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, String.valueOf(false));
+      return ImmutableMap.of(
+          EXTRA_CACHED_VALUE_FOUND,
+          String.valueOf(false),
+          EXTRA_VARIANTS_COUNT,
+          String.valueOf(variantsCount),
+          EXTRA_VARIANTS_SOURCE,
+          variantsSource);
     }
   }
 

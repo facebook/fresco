@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.request;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import java.lang.annotation.Retention;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,8 +20,11 @@ import java.util.List;
 import java.util.Locale;
 
 import android.net.Uri;
+import android.support.annotation.StringDef;
 
 import com.facebook.common.internal.Objects;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
  * An optional part of image requests which describes the piece of media being requested.
@@ -39,14 +43,31 @@ import com.facebook.common.internal.Objects;
 @Immutable
 public class MediaVariations {
 
+  /**
+   * Defines the range of valid source values to be held by an instance. These are then used in
+   * logging events.
+   */
+  @Retention(SOURCE)
+  @StringDef({
+      SOURCE_IMAGE_REQUEST,
+      SOURCE_INDEX_DB,
+  })
+  public @interface Source {
+  }
+
+  public static final String SOURCE_IMAGE_REQUEST = "request";
+  public static final String SOURCE_INDEX_DB = "index_db";
+
   private final String mMediaId;
   private final @Nullable List<Variant> mVariants;
   private final boolean mForceRequestForSpecifiedUri;
+  private final @Source String mSource;
 
   private MediaVariations(Builder builder) {
     mMediaId = builder.mMediaId;
     mVariants = builder.mVariants;
     mForceRequestForSpecifiedUri = builder.mForceRequestForSpecifiedUri;
+    mSource = builder.mSource;
   }
 
   /**
@@ -111,6 +132,15 @@ public class MediaVariations {
     return mForceRequestForSpecifiedUri;
   }
 
+  /**
+   * Get the source of these variations, for the purposes of logging.
+   * @see Source
+   */
+  @Source
+  public String getSource() {
+    return mSource;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof MediaVariations)) {
@@ -124,13 +154,18 @@ public class MediaVariations {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(mMediaId, mForceRequestForSpecifiedUri, mVariants);
+    return Objects.hashCode(mMediaId, mForceRequestForSpecifiedUri, mVariants, mSource);
   }
 
   @Override
   public String toString() {
-    return String
-        .format((Locale) null, "%s-%b-%s", mMediaId, mForceRequestForSpecifiedUri, mVariants);
+    return String.format(
+        (Locale) null,
+        "%s-%b-%s-%s",
+        mMediaId,
+        mForceRequestForSpecifiedUri,
+        mVariants,
+        mSource);
   }
 
   public final static class Variant {
@@ -176,7 +211,8 @@ public class MediaVariations {
       Variant otherVariant = (Variant) o;
       return Objects.equal(mUri, otherVariant.mUri) &&
           mWidth == otherVariant.mWidth &&
-          mHeight == otherVariant.mHeight;
+          mHeight == otherVariant.mHeight &&
+          mCacheChoice == otherVariant.mCacheChoice;
     }
 
     @Override
@@ -189,7 +225,7 @@ public class MediaVariations {
 
     @Override
     public String toString() {
-      return String.format((Locale) null, "%dx%d %s", mWidth, mHeight, mUri);
+      return String.format((Locale) null, "%dx%d %s %s", mWidth, mHeight, mUri, mCacheChoice);
     }
   }
 
@@ -225,6 +261,7 @@ public class MediaVariations {
     private final String mMediaId;
     private List<Variant> mVariants;
     private boolean mForceRequestForSpecifiedUri = false;
+    private @Source String mSource = SOURCE_IMAGE_REQUEST;
 
     private Builder(String mediaId) {
       mMediaId = mediaId;
@@ -256,6 +293,20 @@ public class MediaVariations {
      */
     public Builder setForceRequestForSpecifiedUri(boolean forceRequestForSpecifiedUri) {
       mForceRequestForSpecifiedUri = forceRequestForSpecifiedUri;
+      return this;
+    }
+
+    /**
+     * Sets the source of these variations.
+     *
+     * <p> It is not intended that uses of Fresco will set this manually. It's intended to be set
+     * within the library so that logging events can differentiate between variations defined in a
+     * request from those using the index database.
+     *
+     * @see MediaVariations.Source
+     */
+    public Builder setSource(@Source String source) {
+      mSource = source;
       return this;
     }
 
