@@ -20,6 +20,7 @@ import android.util.AttributeSet;
 import com.facebook.drawee.R;
 import com.facebook.drawee.drawable.AutoRotateDrawable;
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.infer.annotation.ReturnsOwnership;
 
 /**
  * Inflater for the {@code GenericDraweeHierarchy}.
@@ -207,10 +208,11 @@ public class GenericDraweeHierarchyInflater {
         roundBottomRight ? roundedCornerRadius : 0,
         roundBottomLeft ? roundedCornerRadius : 0);
     }
-    
+
     return builder;
   }
 
+  @ReturnsOwnership
   private static RoundingParams getRoundingParams(GenericDraweeHierarchyBuilder builder) {
     if (builder.getRoundingParams() == null) {
       builder.setRoundingParams(new RoundingParams());
