@@ -65,6 +65,11 @@
   <string name="imagepipeline_media_variations_combined_request">Combined image request (click to refresh)</string>
   <string name="imagepipeline_media_variations_clear_cache">Clear cache and reset</string>
   <string name="imagepipeline_media_variations_restart_toast">Cache cleared. Please restart the app to test further.</string>
+  <string name="imagepipeline_media_variations_mode_title">Mode</string>
+  <string name="imagepipeline_media_variations_mode_media_id">Media ID in request</string>
+  <string name="imagepipeline_media_variations_mode_listed_variants">Variants listed in request</string>
+  <string name="imagepipeline_media_variations_toast_mode_media_id">Using a media ID added to the image request</string>
+  <string name="imagepipeline_media_variations_toast_mode_listed_variants">Using a list of variants added to the image request</string>
 
   <string name="category_format">Image Format</string>
 

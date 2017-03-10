@@ -5,8 +5,28 @@
     >
 
   <item
-      android:id="@+id/clear_cache"
+      android:id="@+id/media_variations_clear_cache"
       android:title="@string/imagepipeline_media_variations_clear_cache"
       app:showAsAction="ifRoom"
       />
+
+  <item
+      android:enabled="false"
+      android:title="@string/imagepipeline_media_variations_mode_title"
+      />
+
+  <group
+      android:id="@+id/media_variations_modes"
+      android:checkableBehavior="single"
+      >
+    <item
+        android:id="@+id/media_variations_mode_media_id"
+        android:checked="true"
+        android:title="@string/imagepipeline_media_variations_mode_media_id"
+        />
+    <item
+        android:id="@+id/media_variations_mode_listed_variants"
+        android:title="@string/imagepipeline_media_variations_mode_listed_variants"
+        />
+  </group>
 </menu>

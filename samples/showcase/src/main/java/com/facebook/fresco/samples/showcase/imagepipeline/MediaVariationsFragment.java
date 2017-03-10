@@ -17,6 +17,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,9 +40,12 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.MediaVariations;
 
 public class MediaVariationsFragment extends BaseShowcaseFragment {
+
+  private static final String TAG = "MediaVariationsFragment";
   private static final String URI_TEMPLATE
       = "http://frescolib.org/static/sample-images/monkey-selfie-%s.jpg";
   private static final String MEDIA_ID = "monkey-selfie";
+  private SimpleDraweeView mMainImageDraweeView;
 
   private enum Size {
     XS(R.id.thumb_xs, "xs", 377, 523),
@@ -64,6 +69,25 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
     }
   }
 
+  private enum Mode {
+    MEDIA_ID_IN_REQUEST(
+        R.id.media_variations_mode_media_id,
+        R.string.imagepipeline_media_variations_toast_mode_media_id),
+    LISTED_IN_REQUEST(
+        R.id.media_variations_mode_listed_variants,
+        R.string.imagepipeline_media_variations_toast_mode_listed_variants);
+
+    final @IdRes int menuItemId;
+    final @StringRes int toastMessageId;
+
+    Mode(int menuItemId, int toastMessageId) {
+      this.menuItemId = menuItemId;
+      this.toastMessageId = toastMessageId;
+    }
+  }
+
+  private Mode mMode;
+
   public MediaVariationsFragment() {
     setHasOptionsMenu(true);
   }
@@ -80,17 +104,22 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     populateImagesAfterInitialLayout(view);
+
+    setMode(Mode.MEDIA_ID_IN_REQUEST);
   }
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.fragment_imagepipeline_media_variations, menu);
+
+    menu.findItem(mMode.menuItemId).setChecked(true);
+
     super.onCreateOptionsMenu(menu, inflater);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.clear_cache) {
+    if (item.getItemId() == R.id.media_variations_clear_cache) {
       Fresco.getImagePipeline().clearCaches();
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
         getActivity().recreate();
@@ -102,9 +131,23 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
         getActivity().finish();
       }
       return true;
+    } else if (item.getGroupId() == R.id.media_variations_modes) {
+      for (Mode mode : Mode.values()) {
+        if (mode.menuItemId == item.getItemId()) {
+          setMode(mode);
+          break;
+        }
+      }
+      clearMainImageAndBitmapCache();
+      item.setChecked(true);
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void setMode(Mode mode) {
+    mMode = mode;
+    Toast.makeText(getActivity(), mMode.toastMessageId, Toast.LENGTH_SHORT).show();
   }
 
   @Override
@@ -163,13 +206,13 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
   }
 
   private void populateMainImage(View rootView) {
-    final SimpleDraweeView draweeView = (SimpleDraweeView) rootView.findViewById(R.id.img_main);
-    loadMainImage(draweeView);
+    mMainImageDraweeView = (SimpleDraweeView) rootView.findViewById(R.id.img_main);
+    loadMainImage();
 
-    draweeView.setOnClickListener(new View.OnClickListener() {
+    mMainImageDraweeView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        loadMainImage(draweeView);
+        loadMainImage();
       }
     });
 
@@ -178,20 +221,50 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
     mainImageFrameLayout.init(rootView.findViewById(R.id.btn_resize));
   }
 
-  private void loadMainImage(SimpleDraweeView draweeView) {
-    MediaVariations.Builder variationsBuilder = MediaVariations.newBuilderForMediaId(MEDIA_ID);
-
+  private void loadMainImage() {
     // Request a non-existent image to force fallback to the variations
     Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setMediaVariations(variationsBuilder.build())
-        .setResizeOptions(new ResizeOptions(draweeView.getWidth(), draweeView.getHeight()))
+        .setMediaVariations(getMediaVariationsForMode(mMode))
+        .setResizeOptions(new ResizeOptions(
+            mMainImageDraweeView.getWidth(),
+            mMainImageDraweeView.getHeight()))
         .build();
+
+    Log.i(
+        TAG,
+        request.getMediaVariations() == null ? "null" : request.getMediaVariations().toString());
+
+    setDraweeControllerForRequest(request);
+  }
+
+  private void clearMainImageAndBitmapCache() {
+    Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));
+    setDraweeControllerForRequest(ImageRequest.fromUri(uri));
+
+    Fresco.getImagePipeline().clearMemoryCaches();
+  }
+
+  private void setDraweeControllerForRequest(ImageRequest imageRequest) {
     DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(request)
-        .setOldController(draweeView.getController())
-        .setRetainImageOnFailure(true)
-        .build();
-    draweeView.setController(controller);
+      .setImageRequest(imageRequest)
+      .setOldController(mMainImageDraweeView.getController())
+      .setRetainImageOnFailure(true)
+      .build();
+    mMainImageDraweeView.setController(controller);
+  }
+
+  private static MediaVariations getMediaVariationsForMode(Mode mode) {
+    switch (mode) {
+      case LISTED_IN_REQUEST:
+        MediaVariations.Builder builder = MediaVariations.newBuilderForMediaId(null);
+        for (Size size : Size.values()) {
+          builder.addVariant(size.uri, size.width, size.height);
+        }
+        return builder.build();
+      case MEDIA_ID_IN_REQUEST:
+        return MediaVariations.forMediaId(MEDIA_ID);
+    }
+    throw new IllegalStateException("Invalid media variations mode set");
   }
 }
