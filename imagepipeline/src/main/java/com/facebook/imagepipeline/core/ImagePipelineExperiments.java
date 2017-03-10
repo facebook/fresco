@@ -8,8 +8,11 @@
  */
 package com.facebook.imagepipeline.core;
 
+import javax.annotation.Nullable;
+
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.imagepipeline.cache.MediaIdExtractor;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
@@ -24,6 +27,7 @@ public class ImagePipelineExperiments {
   private final boolean mWebpSupportEnabled;
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final Supplier<Boolean> mMediaVariationsIndexEnabled;
+  private final MediaIdExtractor mMediaIdExtractor;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
@@ -44,6 +48,7 @@ public class ImagePipelineExperiments {
         }
       };
     }
+    mMediaIdExtractor = builder.mMediaIdExtractor;
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
@@ -61,6 +66,10 @@ public class ImagePipelineExperiments {
 
   public boolean getMediaVariationsIndexEnabled() {
     return mMediaVariationsIndexEnabled.get().booleanValue();
+  }
+
+  public @Nullable MediaIdExtractor getMediaIdExtractor() {
+    return mMediaIdExtractor;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -95,6 +104,7 @@ public class ImagePipelineExperiments {
     private boolean mWebpSupportEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
+    private MediaIdExtractor mMediaIdExtractor;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
@@ -133,6 +143,16 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setMediaVariationsIndexEnabled(
         Supplier<Boolean> mediaVariationsIndexEnabled) {
       mMediaVariationsIndexEnabled = mediaVariationsIndexEnabled;
+      return mConfigBuilder;
+    }
+
+    /**
+     * Sets experimental media ID extractor to pull IDs from URIs. This isn't currently recommended
+     * as a long-term collaborator but can be useful for identifying where media IDs would be most
+     * effective.
+     */
+    public ImagePipelineConfig.Builder setMediaIdExtractor(MediaIdExtractor mediaIdExtractor) {
+      mMediaIdExtractor = mediaIdExtractor;
       return mConfigBuilder;
     }
 
