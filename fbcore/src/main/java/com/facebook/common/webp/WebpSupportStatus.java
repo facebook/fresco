@@ -26,8 +26,6 @@ public class WebpSupportStatus {
 
   public static WebpBitmapFactory sWebpBitmapFactory = null;
 
-  public static boolean sWebpLibraryPresent = false;
-
   private static boolean sWebpLibraryChecked = false;
 
   public static WebpBitmapFactory loadWebpBitmapFactoryIfExists() {
