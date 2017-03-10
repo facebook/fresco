@@ -20,6 +20,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.fresco.samples.showcase.imagepipeline.ShowcaseMediaIdExtractor;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -46,6 +47,7 @@ public class ShowcaseApplication extends Application {
             return true;
           }
         })
+        .experiment().setMediaIdExtractor(new ShowcaseMediaIdExtractor())
         .build();
 
     DraweeConfig.Builder draweeConfigBuilder = DraweeConfig.newBuilder();

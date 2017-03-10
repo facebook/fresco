@@ -75,7 +75,10 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
         R.string.imagepipeline_media_variations_toast_mode_media_id),
     LISTED_IN_REQUEST(
         R.id.media_variations_mode_listed_variants,
-        R.string.imagepipeline_media_variations_toast_mode_listed_variants);
+        R.string.imagepipeline_media_variations_toast_mode_listed_variants),
+    RELY_ON_MEDIA_ID_EXTRACTOR(
+        R.id.media_variations_mode_media_id_extractor,
+        R.string.imagepipeline_media_variations_toast_mode_media_id_extractor);
 
     final @IdRes int menuItemId;
     final @StringRes int toastMessageId;
@@ -254,6 +257,7 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
     mMainImageDraweeView.setController(controller);
   }
 
+  @Nullable
   private static MediaVariations getMediaVariationsForMode(Mode mode) {
     switch (mode) {
       case LISTED_IN_REQUEST:
@@ -264,6 +268,10 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
         return builder.build();
       case MEDIA_ID_IN_REQUEST:
         return MediaVariations.forMediaId(MEDIA_ID);
+      case RELY_ON_MEDIA_ID_EXTRACTOR:
+        // Dependent on ShowcaseMediaIdExtractor being set as part of the config
+        // This is done in ShowcaseApplication
+        return null;
     }
     throw new IllegalStateException("Invalid media variations mode set");
   }
