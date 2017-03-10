@@ -51,12 +51,14 @@ public class MediaVariations {
   @StringDef({
       SOURCE_IMAGE_REQUEST,
       SOURCE_INDEX_DB,
+      SOURCE_ID_EXTRACTOR,
   })
   public @interface Source {
   }
 
   public static final String SOURCE_IMAGE_REQUEST = "request";
   public static final String SOURCE_INDEX_DB = "index_db";
+  public static final String SOURCE_ID_EXTRACTOR = "id_extractor";
 
   private final String mMediaId;
   private final @Nullable List<Variant> mVariants;

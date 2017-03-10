@@ -17,14 +17,11 @@ import android.support.v4.util.Pools;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
-import com.facebook.cache.disk.DiskStorage;
-import com.facebook.cache.disk.DiskStorageCache;
 import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.PooledByteBuffer;
-import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -330,6 +327,7 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               getMediaVariationsIndex(),
+              mConfig.getExperiments().getMediaIdExtractor(),
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory(),
               mConfig.getExperiments().getForceSmallCacheThresholdBytes());

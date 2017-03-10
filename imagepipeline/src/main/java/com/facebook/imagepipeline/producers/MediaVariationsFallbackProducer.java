@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import javax.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,6 +24,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.DiskCachePolicy;
+import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -59,6 +62,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final MediaVariationsIndex mMediaVariationsIndex;
+  @Nullable private MediaIdExtractor mMediaIdExtractor;
   private final DiskCachePolicy mDiskCachePolicy;
   private final Producer<EncodedImage> mInputProducer;
 
@@ -67,12 +71,14 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       MediaVariationsIndex mediaVariationsIndex,
+      @Nullable MediaIdExtractor mediaIdExtractor,
       DiskCachePolicy diskCachePolicy,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mMediaVariationsIndex = mediaVariationsIndex;
+    mMediaIdExtractor = mediaIdExtractor;
     mDiskCachePolicy = diskCachePolicy;
     mInputProducer = inputProducer;
   }
@@ -87,9 +93,28 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
     if (!imageRequest.isDiskCacheEnabled() ||
         resizeOptions == null ||
         resizeOptions.height <= 0 ||
-        resizeOptions.width <= 0 ||
-        mediaVariations == null) {
-      startInputProducer(consumer, producerContext);
+        resizeOptions.width <= 0) {
+      startInputProducerWithExistingConsumer(consumer, producerContext);
+      return;
+    }
+
+    final String mediaId;
+    final @MediaVariations.Source String source;
+    if (mediaVariations == null) {
+      if (mMediaIdExtractor == null) {
+        mediaId = null;
+        source = null;
+      } else {
+        mediaId = mMediaIdExtractor.getMediaIdFrom(imageRequest.getSourceUri());
+        source = MediaVariations.SOURCE_ID_EXTRACTOR;
+      }
+    } else {
+      mediaId = mediaVariations.getMediaId();
+      source = MediaVariations.SOURCE_INDEX_DB;
+    }
+
+    if (mediaVariations == null && mediaId == null) {
+      startInputProducerWithExistingConsumer(consumer, producerContext);
       return;
     }
 
@@ -97,7 +122,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
 
-    if (mediaVariations.getVariantsCount() > 0) {
+    if (mediaVariations != null && mediaVariations.getVariantsCount() > 0) {
       chooseFromVariants(
           consumer,
           producerContext,
@@ -107,11 +132,12 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           isCancelled);
     } else {
       MediaVariations.Builder mediaVariationsBuilder =
-          MediaVariations.newBuilderForMediaId(mediaVariations.getMediaId())
-              .setForceRequestForSpecifiedUri(mediaVariations.shouldForceRequestForSpecifiedUri())
-              .setSource(MediaVariations.SOURCE_INDEX_DB);
+          MediaVariations.newBuilderForMediaId(mediaId)
+              .setForceRequestForSpecifiedUri(
+                  mediaVariations != null && mediaVariations.shouldForceRequestForSpecifiedUri())
+              .setSource(source);
       Task<MediaVariations> indexedMediaVariationsTask = mMediaVariationsIndex
-          .getCachedVariants(mediaVariations.getMediaId(), mediaVariationsBuilder);
+          .getCachedVariants(mediaId, mediaVariationsBuilder);
       indexedMediaVariationsTask.continueWith(new Continuation<MediaVariations, Object>() {
 
         @Override
@@ -121,7 +147,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           } else {
             try {
               if (task.getResult() == null) {
-                startInputProducer(consumer, producerContext);
+                startInputProducerWithWrappedConsumer(consumer, producerContext, mediaId);
                 return null;
               } else {
                 return chooseFromVariants(
@@ -237,7 +263,10 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           triggerNextProducer = false;
         } else if (task.isFaulted()) {
           listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
-          startInputProducer(consumer, producerContext);
+          startInputProducerWithWrappedConsumer(
+              consumer,
+              producerContext,
+              mediaVariations.getMediaId());
           triggerNextProducer = true;
         } else {
           EncodedImage cachedReference = task.getResult();
@@ -293,18 +322,29 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
         }
 
         if (triggerNextProducer) {
-          startInputProducer(consumer, producerContext);
+          startInputProducerWithWrappedConsumer(
+              consumer,
+              producerContext,
+              mediaVariations.getMediaId());
         }
         return null;
       }
     };
   }
 
-  private void startInputProducer(
+  private void startInputProducerWithExistingConsumer(
       Consumer<EncodedImage> consumer,
       ProducerContext producerContext) {
-    mInputProducer
-        .produceResults(new MediaVariationsConsumer(consumer, producerContext), producerContext);
+    mInputProducer.produceResults(consumer, producerContext);
+  }
+
+  private void startInputProducerWithWrappedConsumer(
+      Consumer<EncodedImage> consumer,
+      ProducerContext producerContext,
+      String mediaId) {
+    mInputProducer.produceResults(
+        new MediaVariationsConsumer(consumer, producerContext, mediaId),
+        producerContext);
   }
 
   private static boolean isTaskCancelled(Task<?> task) {
@@ -360,11 +400,13 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   class MediaVariationsConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
     private final ProducerContext mProducerContext;
+    private final String mMediaId;
 
     public MediaVariationsConsumer(
-        Consumer<EncodedImage> consumer, ProducerContext producerContext) {
+        Consumer<EncodedImage> consumer, ProducerContext producerContext, String mediaId) {
       super(consumer);
       mProducerContext = producerContext;
+      mMediaId = mediaId;
     }
 
     @Override
@@ -377,10 +419,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
     private void storeResultInDatabase(EncodedImage newResult) {
       final ImageRequest imageRequest = mProducerContext.getImageRequest();
-      final MediaVariations mediaVariations = imageRequest.getMediaVariations();
 
-      if (!imageRequest.isDiskCacheEnabled() ||
-          mediaVariations == null) {
+      if (!imageRequest.isDiskCacheEnabled() || mMediaId == null) {
         return;
       }
 
@@ -389,8 +429,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
 
-      mMediaVariationsIndex
-          .saveCachedVariant(mediaVariations.getMediaId(), cacheChoice, cacheKey, newResult);
+      mMediaVariationsIndex.saveCachedVariant(mMediaId, cacheChoice, cacheKey, newResult);
     }
   }
 

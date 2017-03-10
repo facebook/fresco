@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.core;
 
+import javax.annotation.Nullable;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -48,6 +50,7 @@ import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
+import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
@@ -94,6 +97,7 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final MediaVariationsIndex mMediaVariationsIndex;
+  @Nullable private final MediaIdExtractor mMediaIdExtractor;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -113,6 +117,7 @@ public class ProducerFactory {
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       MediaVariationsIndex mediaVariationsIndex,
+      @Nullable MediaIdExtractor mediaIdExtractor,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory,
       int forceSmallCacheThresholdBytes) {
@@ -135,6 +140,7 @@ public class ProducerFactory {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mMediaVariationsIndex = mediaVariationsIndex;
+    mMediaIdExtractor = mediaIdExtractor;
     mCacheKeyFactory = cacheKeyFactory;
 
     mPlatformBitmapFactory = platformBitmapFactory;
@@ -213,6 +219,7 @@ public class ProducerFactory {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mMediaVariationsIndex,
+        mMediaIdExtractor,
         mMainDiskCachePolicy,
         inputProducer);
   }

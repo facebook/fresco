@@ -20,6 +20,7 @@ import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.DiskCachePolicy;
+import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -72,6 +73,7 @@ public class MediaVariationsFallbackProducerTest {
   private static final Uri URI_S = Uri.parse("http://www.facebook.com/s.png");
   private static final Uri URI_M = Uri.parse("http://www.facebook.com/m.png");
   private static final Uri URI_L = Uri.parse("http://www.facebook.com/l.png");
+  private static final Uri URI_ORIGINAL = Uri.parse("http://www.facebook.com/orig.png");
 
   private static final CacheKey CACHE_KEY_S = new SimpleCacheKey("http://fb.com/s.png");
   private static final CacheKey CACHE_KEY_M = new SimpleCacheKey("http://fb.com/m.png");
@@ -97,6 +99,7 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public EncodedImage mImageL;
   @Mock public EncodedImage mImageXL;
   @Mock public MediaVariationsIndex mMediaVariationsIndex;
+  @Mock public MediaIdExtractor mMediaIdExtractor;
   @Mock public EncodedImage mIntermediateEncodedImage;
   @Mock public EncodedImage mFinalEncodedImage;
   @Mock public DiskCachePolicy mDiskCachePolicy;
@@ -119,6 +122,7 @@ public class MediaVariationsFallbackProducerTest {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mMediaVariationsIndex,
+        mMediaIdExtractor,
         mDiskCachePolicy,
         mInputProducer);
 
@@ -139,6 +143,7 @@ public class MediaVariationsFallbackProducerTest {
         .build();
     mEmptyMediaVariations = MediaVariations.newBuilderForMediaId(MEDIA_ID).build();
 
+    when(mImageRequest.getSourceUri()).thenReturn(URI_ORIGINAL);
     when(mImageRequest.getCacheChoice()).thenReturn(CacheChoice.DEFAULT);
     when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(SIZE_M, SIZE_M));
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
@@ -154,8 +159,9 @@ public class MediaVariationsFallbackProducerTest {
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, URI_L, mCallerContext))
         .thenReturn(CACHE_KEY_L);
 
-    when(mMediaVariationsIndex.getCachedVariants(anyString(), any(MediaVariations.Builder.class)))
-        .thenReturn(Task.<MediaVariations>forResult(null));
+    whenIndexDbContainsNoMatchingVariants();
+
+    when(mMediaIdExtractor.getMediaIdFrom(any(Uri.class))).thenReturn(null);
 
     when(mDiskCachePolicy.getCacheChoiceForResult(any(ImageRequest.class), any(EncodedImage.class)))
         .thenReturn(CacheChoice.DEFAULT);
@@ -164,8 +170,6 @@ public class MediaVariationsFallbackProducerTest {
         .thenReturn(Task.<EncodedImage>forResult(null));
     when(mSmallImageBufferedDiskCache.get(any(CacheKey.class), any(AtomicBoolean.class)))
         .thenReturn(Task.<EncodedImage>forResult(null));
-
-    whenIndexDbReturnsTaskForResult(null);
   }
 
   @Test
@@ -174,7 +178,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verifyNoMoreInteractions(
         mConsumer,
         mProducerListener,
@@ -184,12 +188,12 @@ public class MediaVariationsFallbackProducerTest {
   }
 
   @Test
-  public void testStartInputProducerIfNullMediaVariations() {
+  public void testStartInputProducerIfNullMediaVariationsAndNoIdExtracted() {
     when(mImageRequest.getMediaVariations()).thenReturn(null);
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verifyNoMoreInteractions(
         mConsumer,
         mProducerListener,
@@ -209,7 +213,8 @@ public class MediaVariationsFallbackProducerTest {
         mConsumer,
         mCacheKeyFactory,
         mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache);
+        mSmallImageBufferedDiskCache,
+        mMediaIdExtractor);
   }
 
   @Test
@@ -219,18 +224,20 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verify(mInputProducer).produceResults(mConsumer, mProducerContext);
     verifyNoMoreInteractions(
         mConsumer,
         mProducerListener,
         mCacheKeyFactory,
         mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache);
+        mSmallImageBufferedDiskCache,
+        mMediaIdExtractor);
   }
 
   @Test
   public void testStartsInputProducerIfNoCachedVariantFoundFromRequest() {
     when(mImageRequest.getMediaVariations()).thenReturn(mMediaVariationsWithVariants);
+
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
     verifyInputProducerProduceResultsWithNewConsumer();
@@ -240,6 +247,23 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST_FLAG_NOT_EXPECTED,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
+    verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
+  }
+
+  @Test
+  public void testStartsInputProducerIfNoCachedVariantFoundForExtractedMediaId() {
+    when(mMediaIdExtractor.getMediaIdFrom(URI_ORIGINAL)).thenReturn(MEDIA_ID);
+
+    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mMediaIdExtractor).getMediaIdFrom(URI_ORIGINAL);
+    verifyInputProducerProduceResultsWithNewConsumer();
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    verifySuccessSentToListener(
+        NOT_FOUND,
+        USED_AS_LAST_FLAG_NOT_EXPECTED,
+        MediaVariations.SOURCE_ID_EXTRACTOR,
+        0);
     verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache);
   }
 
@@ -259,7 +283,7 @@ public class MediaVariationsFallbackProducerTest {
         NOT_USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mSmallImageBufferedDiskCache);
+    verifyZeroInteractions(mSmallImageBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -267,6 +291,7 @@ public class MediaVariationsFallbackProducerTest {
     when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
     whenCacheContains(mSmallImageBufferedDiskCache, CACHE_KEY_S);
     whenIndexDbContains(URI_S, SIZE_S, CacheChoice.SMALL);
+
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mConsumer).onNewResult(mImageS, false);
@@ -274,7 +299,7 @@ public class MediaVariationsFallbackProducerTest {
     verifyInputProducerProduceResultsWithNewConsumer();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
-    verifyZeroInteractions(mDefaultBufferedDiskCache);
+    verifyZeroInteractions(mDefaultBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -294,7 +319,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -314,7 +339,7 @@ public class MediaVariationsFallbackProducerTest {
         NOT_USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mSmallImageBufferedDiskCache);
+    verifyZeroInteractions(mSmallImageBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -333,7 +358,26 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
+  }
+
+  @Test
+  public void testSendsSmallestLargerFinalImageToConsumerWhenLargerVariantsFromExtractor() {
+    when(mImageRequest.getMediaVariations()).thenReturn(mMediaVariationsWithVariants);
+    whenCacheContains(mDefaultBufferedDiskCache, CACHE_KEY_S, CACHE_KEY_M, CACHE_KEY_L);
+    when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(SIZE_M - 10, SIZE_M - 10));
+
+    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mConsumer).onNewResult(mImageM, true);
+    verify(mConsumer).onProgressUpdate(1L);
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    verifySuccessSentToListener(
+        FOUND,
+        USED_AS_LAST,
+        MediaVariations.SOURCE_IMAGE_REQUEST,
+        VARIANTS_COUNT);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -343,12 +387,7 @@ public class MediaVariationsFallbackProducerTest {
         .build();
     when(mImageRequest.getMediaVariations()).thenReturn(mediaVariations);
     whenCacheContains(mDefaultBufferedDiskCache, CACHE_KEY_S, CACHE_KEY_M, CACHE_KEY_L);
-    whenIndexDbReturnsTaskForResult(
-        MediaVariations.newBuilderForMediaId(MEDIA_ID)
-            .setSource(MediaVariations.SOURCE_INDEX_DB)
-            .setForceRequestForSpecifiedUri(true)
-            .addVariant(URI_M, SIZE_M, SIZE_M, CacheChoice.DEFAULT)
-            .build());
+    whenIndexDbContains(URI_M, SIZE_M, CacheChoice.DEFAULT);
 
     when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(SIZE_M - 10, SIZE_M - 10));
 
@@ -379,7 +418,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mDefaultBufferedDiskCache);
+    verifyZeroInteractions(mInputProducer, mDefaultBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -402,7 +441,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST_FLAG_NOT_EXPECTED,
         MediaVariations.SOURCE_INDEX_DB,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache);
+    verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -427,7 +466,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_INDEX_DB,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
   }
 
   @Test
@@ -469,28 +508,50 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer).onNewResult(mFinalEncodedImage, true);
   }
 
-  private void whenIndexDbContains(Uri uri, int size, CacheChoice cacheChoice) {
-    whenIndexDbReturnsTaskForResult(
-        MediaVariations.newBuilderForMediaId(MEDIA_ID)
-            .setSource(MediaVariations.SOURCE_INDEX_DB)
-            .addVariant(uri, size, size, cacheChoice)
-            .build());
+  private void whenIndexDbContainsNoMatchingVariants() {
+    whenIndexDbReturnsTaskForResult(new VariantsProvider() {
+      @Override
+      public void addVariants(MediaVariations.Builder builder) {
+        // Nothing to add
+      }
+    });
+  }
+
+  private void whenIndexDbContains(final Uri uri, final int size, final CacheChoice cacheChoice) {
+    whenIndexDbReturnsTaskForResult(new VariantsProvider() {
+      @Override
+      public void addVariants(MediaVariations.Builder builder) {
+        builder.addVariant(uri, size, size, cacheChoice);
+      }
+    });
   }
 
   private void whenIndexDbContainsAllVariants() {
-    whenIndexDbReturnsTaskForResult(
-        MediaVariations.newBuilderForMediaId(MEDIA_ID)
-            .setSource(MediaVariations.SOURCE_INDEX_DB)
-            .addVariant(URI_S, SIZE_S, SIZE_S, CacheChoice.DEFAULT)
+    whenIndexDbReturnsTaskForResult(new VariantsProvider() {
+      @Override
+      public void addVariants(MediaVariations.Builder builder) {
+        builder.addVariant(URI_S, SIZE_S, SIZE_S, CacheChoice.DEFAULT)
             .addVariant(URI_M, SIZE_M, SIZE_M, CacheChoice.DEFAULT)
-            .addVariant(URI_L, SIZE_L, SIZE_L, CacheChoice.DEFAULT)
-            .build());
+            .addVariant(URI_L, SIZE_L, SIZE_L, CacheChoice.DEFAULT);
+      }
+    });
   }
 
-  private void whenIndexDbReturnsTaskForResult(MediaVariations mediaVariations) {
-    Task<MediaVariations> task = Task.forResult(mediaVariations);
+  private void whenIndexDbReturnsTaskForResult(final VariantsProvider variantsProvider) {
     when(mMediaVariationsIndex.getCachedVariants(eq(MEDIA_ID), any(MediaVariations.Builder.class)))
-        .thenReturn(task);
+        .then(new Answer<Task<MediaVariations>>() {
+          @Override
+          public Task<MediaVariations> answer(InvocationOnMock invocation) throws Throwable {
+            MediaVariations.Builder builder =
+                (MediaVariations.Builder) invocation.getArguments()[1];
+            variantsProvider.addVariants(builder);
+            return Task.forResult(builder.build());
+          }
+        });
+  }
+
+  private interface VariantsProvider {
+    void addVariants(MediaVariations.Builder builder);
   }
 
   private void whenCacheContains(BufferedDiskCache cache, CacheKey... cacheKeys) {
