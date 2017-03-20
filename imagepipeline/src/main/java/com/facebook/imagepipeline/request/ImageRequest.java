@@ -17,13 +17,24 @@ import java.io.File;
 import android.net.Uri;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.common.media.MediaUtils;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
+import com.facebook.imagepipeline.common.SourceUriType;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
+
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_DATA;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_ASSET;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_CONTENT;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWORK;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 /**
  * Immutable object encapsulating everything pipeline has to know about requested image to proceed.
@@ -36,6 +47,8 @@ public class ImageRequest {
 
   /** Source Uri */
   private final Uri mSourceUri;
+
+  private final @SourceUriType int mSourceUriType;
 
   /** Media variations - useful for potentially providing fallback to an alternative cached image */
   private final @Nullable MediaVariations mMediaVariations;
@@ -87,6 +100,7 @@ public class ImageRequest {
   protected ImageRequest(ImageRequestBuilder builder) {
     mCacheChoice = builder.getCacheChoice();
     mSourceUri = builder.getSourceUri();
+    mSourceUriType = getSourceUriType(mSourceUri);
     mMediaVariations = builder.getMediaVariations();
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
@@ -113,6 +127,10 @@ public class ImageRequest {
 
   public Uri getSourceUri() {
     return mSourceUri;
+  }
+
+  public @SourceUriType int getSourceUriType() {
+    return mSourceUriType;
   }
 
   public @Nullable MediaVariations getMediaVariations() {
@@ -254,6 +272,36 @@ public class ImageRequest {
 
     public static RequestLevel getMax(RequestLevel requestLevel1, RequestLevel requestLevel2) {
       return requestLevel1.getValue() > requestLevel2.getValue() ? requestLevel1 : requestLevel2;
+    }
+  }
+
+  /**
+   * This is a utility method which returns the type of Uri
+   * @param uri The Uri to test
+   * @return The type of the given Uri if available or SOURCE_TYPE_UNKNOWN if not
+   */
+  private static @SourceUriType int getSourceUriType(final Uri uri) {
+    if (uri == null) {
+      return SOURCE_TYPE_UNKNOWN;
+    }
+    if (UriUtil.isNetworkUri(uri)) {
+      return SOURCE_TYPE_NETWORK;
+    } else if (UriUtil.isLocalFileUri(uri)) {
+      if (MediaUtils.isVideo(MediaUtils.extractMime(uri.getPath()))) {
+        return SOURCE_TYPE_LOCAL_VIDEO_FILE;
+      } else {
+        return SOURCE_TYPE_LOCAL_IMAGE_FILE;
+      }
+    } else if (UriUtil.isLocalContentUri(uri)) {
+      return SOURCE_TYPE_LOCAL_CONTENT;
+    } else if (UriUtil.isLocalAssetUri(uri)) {
+      return SOURCE_TYPE_LOCAL_ASSET;
+    } else if (UriUtil.isLocalResourceUri(uri)) {
+      return SOURCE_TYPE_LOCAL_RESOURCE;
+    } else if (UriUtil.isDataUri(uri)) {
+      return SOURCE_TYPE_DATA;
+    } else {
+      return SOURCE_TYPE_UNKNOWN;
     }
   }
 }
