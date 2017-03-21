@@ -38,6 +38,10 @@ android {
             jni.srcDirs = []
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 task sourcesJar(type: Jar) {

@@ -30,6 +30,10 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 task sourcesJar(type: Jar) {

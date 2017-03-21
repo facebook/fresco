@@ -25,6 +25,9 @@ apply from: rootProject.file('release.gradle')
 android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
+    lintOptions {
+        abortOnError false
+    }
 }
 
 task sourcesJar(type: Jar) {

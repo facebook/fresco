@@ -33,5 +33,9 @@ android {
             }
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 

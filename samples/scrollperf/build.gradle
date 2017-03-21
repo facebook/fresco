@@ -20,6 +20,7 @@ android {
 
     lintOptions {
         warning 'InvalidPackage'
+        abortOnError false
     }
 
     sourceSets {

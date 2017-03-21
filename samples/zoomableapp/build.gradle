@@ -28,6 +28,7 @@ android {
 
     lintOptions {
         warning 'InvalidPackage'
+        abortOnError false
     }
 
     splits {
