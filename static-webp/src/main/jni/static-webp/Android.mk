@@ -40,6 +40,6 @@ LOCAL_STATIC_LIBRARIES += fb_png
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_png.a
 
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libpng-1.6.10)
+$(call import-module,libpng-1.6.26)
 $(call import-module,libwebp-0.5.2)
 $(call import-module,libjpeg-turbo-1.5.0)
