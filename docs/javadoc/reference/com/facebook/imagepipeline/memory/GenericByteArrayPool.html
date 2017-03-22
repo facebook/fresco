@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  GenericByteArrayPool - Fresco 1.1.0 API
+  GenericByteArrayPool - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -286,10 +286,6 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/ByteArrayPool.html">ByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/Pool.html">Pool</a>&lt;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a></li>
       </ul>
     </li>
@@ -314,10 +310,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NoOpPoolStatsTracker.html">NoOpPoolStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html">PoolConfig</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteArrayBufferedInputStream.html">PooledByteArrayBufferedInputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferInputStream.html">PooledByteBufferInputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteStreams.html">PooledByteStreams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/SharedByteArray.html">SharedByteArray</a></li>
@@ -333,7 +325,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.SizeTooLargeException.html">BasePool.SizeTooLargeException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.InvalidStreamException.html">NativePooledByteBufferOutputStream.InvalidStreamException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.ClosedException.html">PooledByteBuffer.ClosedException</a></li>
       </ul>
     </li>
               
@@ -389,6 +380,11 @@
   
 
   
+  
+  
+  
+
+  
    
   
   
@@ -397,11 +393,6 @@
 
   
    
-  
-  
-  
-  
-
   
   
   
@@ -483,7 +474,7 @@ Summary:
   
       implements 
       
-        <a href="../../../../com/facebook/imagepipeline/memory/ByteArrayPool.html">ByteArrayPool</a> 
+        <a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a> 
       
   
   
@@ -1204,6 +1195,8 @@ From class
 
 
 
+
+
 <tr class="api apilevel-" >
 <td colspan="12">
   <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.common.memory.MemoryTrimmable" class="jd-expando-trigger closed"
@@ -1250,6 +1243,68 @@ From interface
 
 <tr class="api apilevel-" >
 <td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.common.memory.Pool" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.common.memory.Pool-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/common/memory/Pool.html">com.facebook.common.memory.Pool</a>
+
+<div id="inherited-methods-com.facebook.common.memory.Pool">
+  <div id="inherited-methods-com.facebook.common.memory.Pool-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.common.memory.Pool-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            V
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/Pool.html#get(int)">get</a></span>(int size)
+        
+        <div class="jd-descrdiv">Gets a 'value' of size 'S' (or larger) from the pool, if available.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/Pool.html#release(V)">release</a></span>(V value)
+        
+        <div class="jd-descrdiv">Releases the given value to the pool.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
   <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.common.references.ResourceReleaser" class="jd-expando-trigger closed"
           ><img id="inherited-methods-com.facebook.common.references.ResourceReleaser-trigger"
           src="../../../../../assets/images/triangle-closed.png"
@@ -1281,70 +1336,6 @@ From interface
         <span class="sympad"><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release</a></span>(T value)
         
         <div class="jd-descrdiv"><p>Release the given value.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.memory.Pool" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.memory.Pool-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../com/facebook/imagepipeline/memory/Pool.html">com.facebook.imagepipeline.memory.Pool</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.memory.Pool">
-  <div id="inherited-methods-com.facebook.imagepipeline.memory.Pool-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.memory.Pool-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            V
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/Pool.html#get(int)">get</a></span>(int size)
-        
-        <div class="jd-descrdiv">Gets a 'value' of size 'S' (or larger) from the pool, if available.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/Pool.html#release(V)">release</a></span>(V value)
-        
-        <div class="jd-descrdiv">Releases the given value to the pool.</div>
   
   </td></tr>
 

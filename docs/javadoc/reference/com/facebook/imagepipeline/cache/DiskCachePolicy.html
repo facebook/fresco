@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  DiskCachePolicy - Fresco 1.1.0 API
+  DiskCachePolicy - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -291,6 +291,8 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
@@ -312,9 +314,11 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SmallCacheIfRequestedDiskCachePolicy.html">SmallCacheIfRequestedDiskCachePolicy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html">SplitCachesByImageSizeDiskCachePolicy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></li>
@@ -568,6 +572,24 @@ Summary:
             
             
             
+            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html#getCacheChoiceForResult(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)">getCacheChoiceForResult</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)
+        
+        <div class="jd-descrdiv">Determines the cache in which to store the provided image.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             void
         </td>
         <td class="jd-linkcol" width="100%">
@@ -655,6 +677,55 @@ Summary:
   <div class="jd-tagdata jd-tagdescr"><p>Creates and starts the task to carry out a disk cache read, using whichever caches and keys are
  appropriate for this policy.
 </p></div>
+
+    </div>
+</div>
+
+
+<a id="getCacheChoiceForResult(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
+      </span>
+      <span class="sympad">getCacheChoiceForResult</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Determines the cache in which to store the provided image.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageRequest</th>
+          <td>request which resulted in loading the image</td>
+        </tr>
+        <tr>
+          <th>encodedImage</th>
+          <td>the image to store in cache</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>cache choice that represents the cache to use
+</li></ul>
+  </div>
 
     </div>
 </div>

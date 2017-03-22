@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  MediaVariationsFallbackProducer - Fresco 1.1.0 API
+  MediaVariationsFallbackProducer - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -288,7 +288,6 @@
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/JobScheduler.JobRunnable.html">JobScheduler.JobRunnable</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsIndex.html">MediaVariationsIndex</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</li>
@@ -330,10 +329,8 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalResourceFetchProducer.html">LocalResourceFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalVideoThumbnailProducer.html">LocalVideoThumbnailProducer</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html">MediaVariationsFallbackProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.html">PostprocessedBitmapMemoryCacheProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html">PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer</a></li>
@@ -584,6 +581,27 @@ Summary:
     </tr>
     
     
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">String</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#EXTRA_VARIANTS_COUNT">EXTRA_VARIANTS_COUNT</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">String</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#EXTRA_VARIANTS_SOURCE">EXTRA_VARIANTS_SOURCE</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">String</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#PRODUCER_NAME">PRODUCER_NAME</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
 
 </table>
 
@@ -614,7 +632,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#MediaVariationsFallbackProducer(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.producers.MediaVariationsIndex, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)">MediaVariationsFallbackProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#MediaVariationsFallbackProducer(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.cache.MediaIdExtractor, com.facebook.imagepipeline.cache.DiskCachePolicy, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)">MediaVariationsFallbackProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor, <a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a> diskCachePolicy, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)
         
   </td></tr>
 
@@ -1015,6 +1033,123 @@ From interface
 
 
 
+<a id="EXTRA_VARIANTS_COUNT"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        String
+      </span>
+        EXTRA_VARIANTS_COUNT
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                "variants_count"
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="EXTRA_VARIANTS_SOURCE"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        String
+      </span>
+        EXTRA_VARIANTS_SOURCE
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                "variants_source"
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<a id="PRODUCER_NAME"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        String
+      </span>
+        PRODUCER_NAME
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                "MediaVariationsFallbackProducer"
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
 
 <!-- Fields -->
 
@@ -1027,7 +1162,7 @@ From interface
 
 
 
-<a id="MediaVariationsFallbackProducer(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.producers.MediaVariationsIndex, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)"></a>
+<a id="MediaVariationsFallbackProducer(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.cache.MediaIdExtractor, com.facebook.imagepipeline.cache.DiskCachePolicy, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1040,7 +1175,7 @@ From interface
         
       </span>
       <span class="sympad">MediaVariationsFallbackProducer</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor, <a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a> diskCachePolicy, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)</span>
     </h4>
       <div class="api-level">
         <div>

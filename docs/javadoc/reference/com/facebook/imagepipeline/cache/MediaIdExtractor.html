@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  PooledByteBuffer - Fresco 1.1.0 API
+  MediaIdExtractor - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -246,7 +246,7 @@
   <a href="../../../../com/facebook/imagepipeline/backends/volley/package-summary.html">com.facebook.imagepipeline.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
-    <li class="api apilevel-">
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
@@ -260,7 +260,7 @@
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
@@ -286,56 +286,47 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/ByteArrayPool.html">ByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/Pool.html">Pool</a>&lt;V&gt;</li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
       </ul>
     </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounter.html">BitmapCounter</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterProvider.html">BitmapCounterProvider</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultBitmapPoolParams.html">DefaultBitmapPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultByteArrayPoolParams.html">DefaultByteArrayPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultFlexByteArrayPoolParams.html">DefaultFlexByteArrayPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultNativeMemoryChunkPoolParams.html">DefaultNativeMemoryChunkPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/FlexByteArrayPool.html">FlexByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunk.html">NativeMemoryChunk</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferFactory.html">NativePooledByteBufferFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.html">NativePooledByteBufferOutputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NoOpPoolStatsTracker.html">NoOpPoolStatsTracker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html">PoolConfig</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteArrayBufferedInputStream.html">PooledByteArrayBufferedInputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferInputStream.html">PooledByteBufferInputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteStreams.html">PooledByteStreams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/SharedByteArray.html">SharedByteArray</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html">BitmapCountingMemoryCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultBitmapMemoryCacheParamsSupplier.html">DefaultBitmapMemoryCacheParamsSupplier</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultEncodedMemoryCacheParamsSupplier.html">DefaultEncodedMemoryCacheParamsSupplier</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SmallCacheIfRequestedDiskCachePolicy.html">SmallCacheIfRequestedDiskCachePolicy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html">SplitCachesByImageSizeDiskCachePolicy</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></li>
       </ul>
     </li>
               
               
               
-    <li><h2>Exceptions</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.InvalidSizeException.html">BasePool.InvalidSizeException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.InvalidValueException.html">BasePool.InvalidValueException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.SizeTooLargeException.html">BasePool.SizeTooLargeException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.InvalidStreamException.html">NativePooledByteBufferOutputStream.InvalidStreamException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.ClosedException.html">PooledByteBuffer.ClosedException</a></li>
-      </ul>
-    </li>
               
             </ul><br/>
           </div><!-- end classes -->
@@ -374,47 +365,9 @@
 
 
 
-  
-   
-  
-  
-  
-  
-
-  
-   
-  
-  
-  
-  
-
 
 <div class="sum-details-links">
 
-
-Summary:
-
-  <a href="#nestedclasses">Nested Classes</a>
-  
-
-
-
-
-
-
-
-
-
-
-
-  &#124; <a href="#pubmethods">Methods</a>
-  
-
-
-
-  &#124; <a href="#inhmethods">Inherited Methods</a>
-
-&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
 </div><!-- end sum-details-links -->
 <div class="api-level">
@@ -436,16 +389,11 @@ Summary:
      
     
     interface
-<h1>PooledByteBuffer</h1>
+<h1>MediaIdExtractor</h1>
 
 
 
   
-  
-      implements 
-      
-        Closeable 
-      
   
   
 
@@ -460,7 +408,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.memory.PooledByteBuffer</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.MediaIdExtractor</td>
     </tr>
     
 
@@ -471,46 +419,16 @@ Summary:
 
 
 
-<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
-
-  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-indirect" class="jd-expando-trigger closed"
-          ><img id="subclasses-indirect-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>Known Indirect Subclasses
-
-  <div id="subclasses-indirect">
-      <div id="subclasses-indirect-list"
-              class="jd-inheritedlinks"
-              
-              >
-          
-            
-              <a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a>
-            
-          
-      </div>
-      <div id="subclasses-indirect-summary"
-              style="display: none;"
-              >
-  <table class="jd-sumtable-expando">
-        <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a></td>
-              <td class="jd-descrcol" width="100%">An implementation of <code><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></code> that uses native memory
- (<code><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunk.html">NativeMemoryChunk</a></code>) to store data
-&nbsp;</td>
-          </tr>
-  </table>
-      </div>
-  </div>
-</td></tr></table>
-
 
 <div class="jd-descr">
 
 
 <h2>Class Overview</h2>
-<p>A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the
- java heap.
+<p>Experimental interface for a helper to extract media IDs from URLs. This can be useful in cases
+ where manually updating all image requests may carry too much overhead initially.
+
+ <p> Implementations must be careful not to provide identical media IDs for images which will be
+ returned with different aspect ratios or cropping.
 </p>
 
 
@@ -539,28 +457,6 @@ Summary:
 
 <h2>Summary</h2>
 
-
-
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
-
-
-  
-    <tr class="alt-color api apilevel-" >
-      <td class="jd-typecol">
-        
-         
-         
-        
-        class</td>
-      <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.ClosedException.html">PooledByteBuffer.ClosedException</a></td>
-      <td class="jd-descrcol" width="100%">Exception indicating that the PooledByteBuffer is closed
-&nbsp;</td>
-    </tr>
-    
-    
-
-</table>
 
 
 
@@ -600,101 +496,12 @@ Summary:
             
             
             
-            void
+            String
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#close()">close</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html#getMediaIdFrom(android.net.Uri)">getMediaIdFrom</a></span>(Uri uri)
         
-        <div class="jd-descrdiv">Close this PooledByteBuffer and release all underlying resources
-</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            long
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#getNativePtr()">getNativePtr</a></span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#isClosed()">isClosed</a></span>()
-        
-        <div class="jd-descrdiv">Check if this instance has already been closed</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int, byte[], int, int)">read</a></span>(int offset, byte[] buffer, int bufferOffset, int length)
-        
-        <div class="jd-descrdiv">Read consecutive bytes.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            byte
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#read(int)">read</a></span>(int offset)
-        
-        <div class="jd-descrdiv">Read byte at given offset</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html#size()">size</a></span>()
-        
-        <div class="jd-descrdiv">Get the size of the byte buffer</div>
+        <div class="jd-descrdiv">Extracts the media ID, if possible, from the provided URI.</div>
   
   </td></tr>
 
@@ -706,98 +513,6 @@ Summary:
 
 
 
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="inhmethods" class="jd-sumtable"><tr><th>
-  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
-  <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.io.Closeable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.io.Closeable-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  java.io.Closeable
-
-<div id="inherited-methods-java.io.Closeable">
-  <div id="inherited-methods-java.io.Closeable-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.io.Closeable-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">close</span>()
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.AutoCloseable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.AutoCloseable-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  java.lang.AutoCloseable
-
-<div id="inherited-methods-java.lang.AutoCloseable">
-  <div id="inherited-methods-java.lang.AutoCloseable-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.AutoCloseable-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">close</span>()
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-</table>
 
 
 </div><!-- jd-descr (summary) -->
@@ -839,7 +554,7 @@ From interface
 
 
 
-<a id="close()"></a>
+<a id="getMediaIdFrom(android.net.Uri)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -849,10 +564,10 @@ From interface
          
         abstract 
          
-        void
+        String
       </span>
-      <span class="sympad">close</span>
-      <span class="normal">()</span>
+      <span class="sympad">getMediaIdFrom</span>
+      <span class="normal">(Uri uri)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -864,207 +579,19 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Close this PooledByteBuffer and release all underlying resources
-</p></div>
-
-    </div>
-</div>
-
-
-<a id="getNativePtr()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        long
-      </span>
-      <span class="sympad">getNativePtr</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>pointer to native memory backing this buffer
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="isClosed()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        boolean
-      </span>
-      <span class="sympad">isClosed</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Check if this instance has already been closed</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true, if the instance has been closed
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="read(int, byte[], int, int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">read</span>
-      <span class="normal">(int offset, byte[] buffer, int bufferOffset, int length)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Read consecutive bytes.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Extracts the media ID, if possible, from the provided URI.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>offset</th>
-          <td>the position in the PooledByteBuffer of the first byte to read</td>
-        </tr>
-        <tr>
-          <th>buffer</th>
-          <td>the byte array where read bytes will be copied to</td>
-        </tr>
-        <tr>
-          <th>bufferOffset</th>
-          <td>the position within the buffer of the first copied byte</td>
-        </tr>
-        <tr>
-          <th>length</th>
-          <td>number of bytes to copy</td>
+          <th>uri</th>
+          <td>the image request's URI</td>
         </tr>
       </table>
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>number of bytes copied
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="read(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        byte
-      </span>
-      <span class="sympad">read</span>
-      <span class="normal">(int offset)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Read byte at given offset</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>byte at given offset
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="size()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        int
-      </span>
-      <span class="sympad">size</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Get the size of the byte buffer</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the size of the byte buffer
+      <ul class="nolist"><li>the extracted ID, or null
 </li></ul>
   </div>
 

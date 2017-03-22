@@ -8352,6 +8352,16 @@
 </package>
 <package name="com.facebook.common.memory"
 >
+<interface name="ByteArrayPool"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.common.memory.Pool">
+</implements>
+</interface>
 <class name="MemoryTrimType"
  extends="java.lang.Enum"
  abstract="false"
@@ -8505,6 +8515,409 @@
 >
 <parameter name="trimmable" type="com.facebook.common.memory.MemoryTrimmable">
 </parameter>
+</method>
+</class>
+<interface name="Pool"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.common.memory.MemoryTrimmable">
+</implements>
+<implements name="com.facebook.common.references.ResourceReleaser">
+</implements>
+<method name="get"
+ return="V"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="size" type="int">
+</parameter>
+</method>
+<method name="release"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="value" type="V">
+</parameter>
+</method>
+</interface>
+<class name="PooledByteArrayBufferedInputStream"
+ extends="java.io.InputStream"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="PooledByteArrayBufferedInputStream"
+ type="com.facebook.common.memory.PooledByteArrayBufferedInputStream"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="byteArray" type="byte[]">
+</parameter>
+<parameter name="resourceReleaser" type="com.facebook.common.references.ResourceReleaser&lt;byte[]&gt;">
+</parameter>
+</constructor>
+<method name="read"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+</class>
+<interface name="PooledByteBuffer"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.io.Closeable">
+</implements>
+<method name="close"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getNativePtr"
+ return="long"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isClosed"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="read"
+ return="byte"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="offset" type="int">
+</parameter>
+</method>
+<method name="read"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="offset" type="int">
+</parameter>
+<parameter name="buffer" type="byte[]">
+</parameter>
+<parameter name="bufferOffset" type="int">
+</parameter>
+<parameter name="length" type="int">
+</parameter>
+</method>
+<method name="size"
+ return="int"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</interface>
+<class name="PooledByteBuffer.ClosedException"
+ extends="java.lang.RuntimeException"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ClosedException"
+ type="com.facebook.common.memory.PooledByteBuffer.ClosedException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+</class>
+<interface name="PooledByteBufferFactory"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="newByteBuffer"
+ return="com.facebook.common.memory.PooledByteBuffer"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="size" type="int">
+</parameter>
+</method>
+<method name="newByteBuffer"
+ return="com.facebook.common.memory.PooledByteBuffer"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="newByteBuffer"
+ return="com.facebook.common.memory.PooledByteBuffer"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bytes" type="byte[]">
+</parameter>
+</method>
+<method name="newByteBuffer"
+ return="com.facebook.common.memory.PooledByteBuffer"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputStream" type="java.io.InputStream">
+</parameter>
+<parameter name="initialCapacity" type="int">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="newOutputStream"
+ return="com.facebook.common.memory.PooledByteBufferOutputStream"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newOutputStream"
+ return="com.facebook.common.memory.PooledByteBufferOutputStream"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="initialCapacity" type="int">
+</parameter>
+</method>
+</interface>
+<class name="PooledByteBufferInputStream"
+ extends="java.io.InputStream"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="PooledByteBufferInputStream"
+ type="com.facebook.common.memory.PooledByteBufferInputStream"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="pooledByteBuffer" type="com.facebook.common.memory.PooledByteBuffer">
+</parameter>
+</constructor>
+<method name="read"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="PooledByteBufferOutputStream"
+ extends="java.io.OutputStream"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="PooledByteBufferOutputStream"
+ type="com.facebook.common.memory.PooledByteBufferOutputStream"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="size"
+ return="int"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="toByteBuffer"
+ return="com.facebook.common.memory.PooledByteBuffer"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="PooledByteStreams"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="PooledByteStreams"
+ type="com.facebook.common.memory.PooledByteStreams"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
+</parameter>
+</constructor>
+<constructor name="PooledByteStreams"
+ type="com.facebook.common.memory.PooledByteStreams"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
+</parameter>
+<parameter name="tempBufSize" type="int">
+</parameter>
+</constructor>
+<method name="copy"
+ return="long"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="from" type="java.io.InputStream">
+</parameter>
+<parameter name="to" type="java.io.OutputStream">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="copy"
+ return="long"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="from" type="java.io.InputStream">
+</parameter>
+<parameter name="to" type="java.io.OutputStream">
+</parameter>
+<parameter name="bytesToCopy" type="long">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
 </method>
 </class>
 </package>
@@ -10701,16 +11114,6 @@
 </field>
 <field name="sWebpBitmapFactory"
  type="com.facebook.common.webp.WebpBitmapFactory"
- transient="false"
- volatile="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</field>
-<field name="sWebpLibraryPresent"
- type="boolean"
  transient="false"
  volatile="false"
  static="true"
@@ -20544,6 +20947,34 @@
 <parameter name="draweeControllerBuilderSupplier" type="com.facebook.common.internal.Supplier&lt;? extends com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder&gt;">
 </parameter>
 </method>
+<method name="setActualImageResource"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resourceId" type="int">
+</parameter>
+</method>
+<method name="setActualImageResource"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="resourceId" type="int">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
 <method name="setImageURI"
  return="void"
  abstract="false"
@@ -27208,11 +27639,11 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 </constructor>
 <method name="generate"
- return="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -28075,9 +28506,9 @@
 >
 <parameter name="fileCache" type="com.facebook.cache.disk.FileCache">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
-<parameter name="pooledByteStreams" type="com.facebook.imagepipeline.memory.PooledByteStreams">
+<parameter name="pooledByteStreams" type="com.facebook.common.memory.PooledByteStreams">
 </parameter>
 <parameter name="readExecutor" type="java.util.concurrent.Executor">
 </parameter>
@@ -28843,6 +29274,21 @@
 <parameter name="isCancelled" type="java.util.concurrent.atomic.AtomicBoolean">
 </parameter>
 </method>
+<method name="getCacheChoiceForResult"
+ return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
+</parameter>
+</method>
 <method name="writeToCache"
  return="void"
  abstract="true"
@@ -28878,7 +29324,7 @@
 >
 </constructor>
 <method name="get"
- return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -28912,7 +29358,7 @@
 >
 </constructor>
 <method name="get"
- return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -28921,7 +29367,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="encodedCountingMemoryCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedCountingMemoryCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="imageCacheStatsTracker" type="com.facebook.imagepipeline.cache.ImageCacheStatsTracker">
 </parameter>
@@ -29162,6 +29608,162 @@
  visibility="public"
 >
 <parameter name="predicate" type="com.android.internal.util.Predicate&lt;K&gt;">
+</parameter>
+</method>
+</class>
+<interface name="MediaIdExtractor"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getMediaIdFrom"
+ return="java.lang.String"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+</method>
+</interface>
+<interface name="MediaVariationsIndex"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getCachedVariants"
+ return="bolts.Task&lt;com.facebook.imagepipeline.request.MediaVariations&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="mediaVariationsBuilder" type="com.facebook.imagepipeline.request.MediaVariations.Builder">
+</parameter>
+</method>
+<method name="saveCachedVariant"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
+</parameter>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
+</parameter>
+</method>
+</interface>
+<class name="MediaVariationsIndexDatabase"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.imagepipeline.cache.MediaVariationsIndex">
+</implements>
+<constructor name="MediaVariationsIndexDatabase"
+ type="com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="context" type="android.content.Context">
+</parameter>
+<parameter name="readExecutor" type="java.util.concurrent.Executor">
+</parameter>
+<parameter name="writeExecutor" type="java.util.concurrent.Executor">
+</parameter>
+</constructor>
+<method name="getCachedVariants"
+ return="bolts.Task&lt;com.facebook.imagepipeline.request.MediaVariations&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="mediaVariationsBuilder" type="com.facebook.imagepipeline.request.MediaVariations.Builder">
+</parameter>
+</method>
+<method name="getCachedVariantsSync"
+ return="com.facebook.imagepipeline.request.MediaVariations"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="mediaVariationsBuilder" type="com.facebook.imagepipeline.request.MediaVariations.Builder">
+</parameter>
+</method>
+<method name="saveCachedVariant"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
+</parameter>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
+</parameter>
+</method>
+<method name="saveCachedVariantSync"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
+</parameter>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 </method>
 </class>
@@ -29554,6 +30156,59 @@
 </parameter>
 </method>
 </class>
+<class name="NoOpMediaVariationsIndex"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.imagepipeline.cache.MediaVariationsIndex">
+</implements>
+<constructor name="NoOpMediaVariationsIndex"
+ type="com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="getCachedVariants"
+ return="bolts.Task&lt;com.facebook.imagepipeline.request.MediaVariations&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="mediaVariationsBuilder" type="com.facebook.imagepipeline.request.MediaVariations.Builder">
+</parameter>
+</method>
+<method name="saveCachedVariant"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaId" type="java.lang.String">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
+</parameter>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
+</parameter>
+</method>
+</class>
 <class name="SmallCacheIfRequestedDiskCachePolicy"
  extends="java.lang.Object"
  abstract="false"
@@ -29593,6 +30248,21 @@
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
 <parameter name="isCancelled" type="java.util.concurrent.atomic.AtomicBoolean">
+</parameter>
+</method>
+<method name="getCacheChoiceForResult"
+ return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 </method>
 <method name="writeToCache"
@@ -29654,6 +30324,21 @@
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
 <parameter name="isCancelled" type="java.util.concurrent.atomic.AtomicBoolean">
+</parameter>
+</method>
+<method name="getCacheChoiceForResult"
+ return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
 </method>
 <method name="writeToCache"
@@ -29848,6 +30533,16 @@
  visibility="public"
 >
 </field>
+<field name="customImageDecoder"
+ type="com.facebook.imagepipeline.decoder.ImageDecoder"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 <field name="decodeAllFrames"
  type="boolean"
  transient="false"
@@ -29937,6 +30632,17 @@
  visibility="public"
 >
 </method>
+<method name="getCustomImageDecoder"
+ return="com.facebook.imagepipeline.decoder.ImageDecoder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getDecodeAllFrames"
  return="boolean"
  abstract="false"
@@ -30003,6 +30709,19 @@
  visibility="public"
 >
 <parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="setCustomImageDecoder"
+ return="com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="customImageDecoder" type="com.facebook.imagepipeline.decoder.ImageDecoder">
 </parameter>
 </method>
 <method name="setDecodeAllFrames"
@@ -30416,6 +31135,116 @@
 <implements name="java.lang.annotation.Annotation">
 </implements>
 </class>
+<class name="SourceUriType"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+<field name="SOURCE_TYPE_DATA"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="7"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_LOCAL_ASSET"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="5"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_LOCAL_CONTENT"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="4"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_LOCAL_FILE"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="1"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_LOCAL_IMAGE_FILE"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="3"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_LOCAL_RESOURCE"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="6"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_LOCAL_VIDEO_FILE"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="2"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_NETWORK"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="0"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_UNKNOWN"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="-1"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
 <class name="TooManyBitmapsException"
  extends="java.lang.RuntimeException"
  abstract="false"
@@ -30738,7 +31567,7 @@
 </parameter>
 <parameter name="bitmapMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
-<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="mainBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
@@ -30869,7 +31698,7 @@
 </parameter>
 </method>
 <method name="fetchEncodedImage"
- return="com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;"
+ return="com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -30955,7 +31784,7 @@
 </parameter>
 </method>
 <method name="getEncodedImageDataSourceSupplier"
- return="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;&gt;"
+ return="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;&gt;&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -31796,6 +32625,17 @@
  visibility="public"
 >
 </method>
+<method name="getMediaIdExtractor"
+ return="com.facebook.imagepipeline.cache.MediaIdExtractor"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getMediaVariationsIndexEnabled"
  return="boolean"
  abstract="false"
@@ -31953,6 +32793,19 @@
  visibility="public"
 >
 <parameter name="forceSmallCacheThresholdBytes" type="int">
+</parameter>
+</method>
+<method name="setMediaIdExtractor"
+ return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
 </parameter>
 </method>
 <method name="setMediaVariationsIndexEnabled"
@@ -32116,7 +32969,7 @@
 >
 </method>
 <method name="getEncodedCountingMemoryCache"
- return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32127,7 +32980,7 @@
 >
 </method>
 <method name="getEncodedMemoryCache"
- return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32171,7 +33024,7 @@
 >
 </method>
 <method name="getMediaVariationsIndex"
- return="com.facebook.imagepipeline.producers.MediaVariationsIndex"
+ return="com.facebook.imagepipeline.cache.MediaVariationsIndex"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32301,7 +33154,7 @@
 >
 <parameter name="context" type="android.content.Context">
 </parameter>
-<parameter name="byteArrayPool" type="com.facebook.imagepipeline.memory.ByteArrayPool">
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
 </parameter>
 <parameter name="imageDecoder" type="com.facebook.imagepipeline.decoder.ImageDecoder">
 </parameter>
@@ -32315,17 +33168,19 @@
 </parameter>
 <parameter name="executorSupplier" type="com.facebook.imagepipeline.core.ExecutorSupplier">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="bitmapMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
-<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="encodedMemoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="defaultBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
 <parameter name="smallImageBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
-<parameter name="mediaVariationsIndex" type="com.facebook.imagepipeline.producers.MediaVariationsIndex">
+<parameter name="mediaVariationsIndex" type="com.facebook.imagepipeline.cache.MediaVariationsIndex">
+</parameter>
+<parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
 </parameter>
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
@@ -32770,7 +33625,7 @@
 </parameter>
 </method>
 <method name="getEncodedImageProducerSequence"
- return="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;"
+ return="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32783,7 +33638,7 @@
 </parameter>
 </method>
 <method name="getLocalFileFetchEncodedImageProducerSequence"
- return="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;"
+ return="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32794,7 +33649,7 @@
 >
 </method>
 <method name="getNetworkFetchEncodedImageProducerSequence"
- return="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;"
+ return="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -33452,7 +34307,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="byteArrayPool" type="com.facebook.imagepipeline.memory.ByteArrayPool">
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
 </parameter>
 </constructor>
 <method name="getBestScanEndOffset"
@@ -34057,7 +34912,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="pooledByteBufferRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 </constructor>
 <constructor name="EncodedImage"
@@ -34144,7 +34999,7 @@
 </parameter>
 </method>
 <method name="getByteBufferRef"
- return="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -34232,7 +35087,7 @@
 >
 </method>
 <method name="getUnderlyingReferenceTestOnly"
- return="com.facebook.common.references.SharedReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;"
+ return="com.facebook.common.references.SharedReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;"
  abstract="false"
  native="false"
  synchronized="true"
@@ -35273,7 +36128,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.imagepipeline.memory.Pool">
+<implements name="com.facebook.common.memory.Pool">
 </implements>
 <constructor name="BasePool"
  type="com.facebook.imagepipeline.memory.BasePool"
@@ -35765,16 +36620,6 @@
 </parameter>
 </method>
 </class>
-<interface name="ByteArrayPool"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.memory.Pool">
-</implements>
-</interface>
 <class name="DefaultBitmapPoolParams"
  extends="java.lang.Object"
  abstract="false"
@@ -35986,7 +36831,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.imagepipeline.memory.ByteArrayPool">
+<implements name="com.facebook.common.memory.ByteArrayPool">
 </implements>
 <constructor name="GenericByteArrayPool"
  type="com.facebook.imagepipeline.memory.GenericByteArrayPool"
@@ -36342,7 +37187,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.imagepipeline.memory.PooledByteBuffer">
+<implements name="com.facebook.common.memory.PooledByteBuffer">
 </implements>
 <constructor name="NativePooledByteBuffer"
  type="com.facebook.imagepipeline.memory.NativePooledByteBuffer"
@@ -36441,7 +37286,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<implements name="com.facebook.common.memory.PooledByteBufferFactory">
 </implements>
 <constructor name="NativePooledByteBufferFactory"
  type="com.facebook.imagepipeline.memory.NativePooledByteBufferFactory"
@@ -36452,7 +37297,7 @@
 >
 <parameter name="pool" type="com.facebook.imagepipeline.memory.NativeMemoryChunkPool">
 </parameter>
-<parameter name="pooledByteStreams" type="com.facebook.imagepipeline.memory.PooledByteStreams">
+<parameter name="pooledByteStreams" type="com.facebook.common.memory.PooledByteStreams">
 </parameter>
 </constructor>
 <method name="newByteBuffer"
@@ -36539,7 +37384,7 @@
 </method>
 </class>
 <class name="NativePooledByteBufferOutputStream"
- extends="com.facebook.imagepipeline.memory.PooledByteBufferOutputStream"
+ extends="com.facebook.common.memory.PooledByteBufferOutputStream"
  abstract="false"
  static="false"
  final="false"
@@ -36732,44 +37577,6 @@
 </parameter>
 </method>
 </class>
-<interface name="Pool"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.common.memory.MemoryTrimmable">
-</implements>
-<implements name="com.facebook.common.references.ResourceReleaser">
-</implements>
-<method name="get"
- return="V"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="size" type="int">
-</parameter>
-</method>
-<method name="release"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="value" type="V">
-</parameter>
-</method>
-</interface>
 <class name="PoolConfig"
  extends="java.lang.Object"
  abstract="false"
@@ -37065,7 +37872,7 @@
 >
 </method>
 <method name="getPooledByteBufferFactory"
- return="com.facebook.imagepipeline.memory.PooledByteBufferFactory"
+ return="com.facebook.common.memory.PooledByteBufferFactory"
  abstract="false"
  native="false"
  synchronized="false"
@@ -37076,7 +37883,7 @@
 >
 </method>
 <method name="getPooledByteStreams"
- return="com.facebook.imagepipeline.memory.PooledByteStreams"
+ return="com.facebook.common.memory.PooledByteStreams"
  abstract="false"
  native="false"
  synchronized="false"
@@ -37098,7 +37905,7 @@
 >
 </method>
 <method name="getSmallByteArrayPool"
- return="com.facebook.imagepipeline.memory.ByteArrayPool"
+ return="com.facebook.common.memory.ByteArrayPool"
  abstract="false"
  native="false"
  synchronized="false"
@@ -37407,359 +38214,6 @@
 >
 </field>
 </interface>
-<class name="PooledByteArrayBufferedInputStream"
- extends="java.io.InputStream"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="PooledByteArrayBufferedInputStream"
- type="com.facebook.imagepipeline.memory.PooledByteArrayBufferedInputStream"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="byteArray" type="byte[]">
-</parameter>
-<parameter name="resourceReleaser" type="com.facebook.common.references.ResourceReleaser&lt;byte[]&gt;">
-</parameter>
-</constructor>
-<method name="read"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-</class>
-<interface name="PooledByteBuffer"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="java.io.Closeable">
-</implements>
-<method name="close"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getNativePtr"
- return="long"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="isClosed"
- return="boolean"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="read"
- return="byte"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="offset" type="int">
-</parameter>
-</method>
-<method name="read"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="offset" type="int">
-</parameter>
-<parameter name="buffer" type="byte[]">
-</parameter>
-<parameter name="bufferOffset" type="int">
-</parameter>
-<parameter name="length" type="int">
-</parameter>
-</method>
-<method name="size"
- return="int"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</interface>
-<class name="PooledByteBuffer.ClosedException"
- extends="java.lang.RuntimeException"
- abstract="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="ClosedException"
- type="com.facebook.imagepipeline.memory.PooledByteBuffer.ClosedException"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-</class>
-<interface name="PooledByteBufferFactory"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="newByteBuffer"
- return="com.facebook.imagepipeline.memory.PooledByteBuffer"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="size" type="int">
-</parameter>
-</method>
-<method name="newByteBuffer"
- return="com.facebook.imagepipeline.memory.PooledByteBuffer"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-<method name="newByteBuffer"
- return="com.facebook.imagepipeline.memory.PooledByteBuffer"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="bytes" type="byte[]">
-</parameter>
-</method>
-<method name="newByteBuffer"
- return="com.facebook.imagepipeline.memory.PooledByteBuffer"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="inputStream" type="java.io.InputStream">
-</parameter>
-<parameter name="initialCapacity" type="int">
-</parameter>
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-<method name="newOutputStream"
- return="com.facebook.imagepipeline.memory.PooledByteBufferOutputStream"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="newOutputStream"
- return="com.facebook.imagepipeline.memory.PooledByteBufferOutputStream"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="initialCapacity" type="int">
-</parameter>
-</method>
-</interface>
-<class name="PooledByteBufferInputStream"
- extends="java.io.InputStream"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="PooledByteBufferInputStream"
- type="com.facebook.imagepipeline.memory.PooledByteBufferInputStream"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="pooledByteBuffer" type="com.facebook.imagepipeline.memory.PooledByteBuffer">
-</parameter>
-</constructor>
-<method name="read"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<class name="PooledByteBufferOutputStream"
- extends="java.io.OutputStream"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="PooledByteBufferOutputStream"
- type="com.facebook.imagepipeline.memory.PooledByteBufferOutputStream"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<method name="size"
- return="int"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="toByteBuffer"
- return="com.facebook.imagepipeline.memory.PooledByteBuffer"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<class name="PooledByteStreams"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="PooledByteStreams"
- type="com.facebook.imagepipeline.memory.PooledByteStreams"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="byteArrayPool" type="com.facebook.imagepipeline.memory.ByteArrayPool">
-</parameter>
-</constructor>
-<method name="copy"
- return="long"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="from" type="java.io.InputStream">
-</parameter>
-<parameter name="to" type="java.io.OutputStream">
-</parameter>
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-<method name="copy"
- return="long"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="from" type="java.io.InputStream">
-</parameter>
-<parameter name="to" type="java.io.OutputStream">
-</parameter>
-<parameter name="bytesToCopy" type="long">
-</parameter>
-<exception name="IOException" type="java.io.IOException">
-</exception>
-</method>
-</class>
 <class name="SharedByteArray"
  extends="java.lang.Object"
  abstract="false"
@@ -38389,7 +38843,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="options" type="android.graphics.BitmapFactory.Options">
 </parameter>
@@ -38404,7 +38858,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="inputLength" type="int">
 </parameter>
@@ -38423,7 +38877,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="length" type="int">
 </parameter>
@@ -38459,7 +38913,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="options" type="android.graphics.BitmapFactory.Options">
 </parameter>
@@ -38474,7 +38928,7 @@
  deprecated="not deprecated"
  visibility="protected"
 >
-<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="bytesRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="length" type="int">
 </parameter>
@@ -39398,7 +39852,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 </constructor>
 <method name="getEncodedImage"
@@ -39456,7 +39910,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="byteArrayPool" type="com.facebook.imagepipeline.memory.ByteArrayPool">
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
 </parameter>
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
@@ -39668,6 +40122,17 @@
 <parameter name="producerContext" type="com.facebook.imagepipeline.producers.ProducerContext">
 </parameter>
 </method>
+<field name="ENCODED_IMAGE_SIZE"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;encodedImageSize&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 <field name="EXTRA_CACHED_VALUE_FOUND"
  type="java.lang.String"
  transient="false"
@@ -39817,7 +40282,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="memoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.memory.PooledByteBuffer&gt;">
+<parameter name="memoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer&gt;">
 </parameter>
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
@@ -40142,7 +40607,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="assetManager" type="android.content.res.AssetManager">
 </parameter>
@@ -40202,7 +40667,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="contentResolver" type="android.content.ContentResolver">
 </parameter>
@@ -40264,7 +40729,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="contentResolver" type="android.content.ContentResolver">
 </parameter>
@@ -40339,7 +40804,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="contentResolver" type="android.content.ContentResolver">
 </parameter>
@@ -40403,7 +40868,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 </constructor>
 <method name="getByteBufferBackedEncodedImage"
@@ -40499,7 +40964,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 </constructor>
 <method name="getEncodedImage"
@@ -40557,7 +41022,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="resources" type="android.content.res.Resources">
 </parameter>
@@ -40670,7 +41135,11 @@
 </parameter>
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
-<parameter name="mediaVariationsIndex" type="com.facebook.imagepipeline.producers.MediaVariationsIndex">
+<parameter name="mediaVariationsIndex" type="com.facebook.imagepipeline.cache.MediaVariationsIndex">
+</parameter>
+<parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
+</parameter>
+<parameter name="diskCachePolicy" type="com.facebook.imagepipeline.cache.DiskCachePolicy">
 </parameter>
 <parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
 </parameter>
@@ -40712,99 +41181,39 @@
  visibility="public"
 >
 </field>
-</class>
-<interface name="MediaVariationsIndex"
- abstract="true"
- static="false"
- final="false"
+<field name="EXTRA_VARIANTS_COUNT"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;variants_count&quot;"
+ static="true"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<method name="getCachedVariants"
- return="bolts.Task&lt;java.util.List&lt;com.facebook.imagepipeline.request.MediaVariations.Variant&gt;&gt;"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
+</field>
+<field name="EXTRA_VARIANTS_SOURCE"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;variants_source&quot;"
+ static="true"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="mediaId" type="java.lang.String">
-</parameter>
-</method>
-<method name="saveCachedVariant"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
+</field>
+<field name="PRODUCER_NAME"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;MediaVariationsFallbackProducer&quot;"
+ static="true"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="mediaId" type="java.lang.String">
-</parameter>
-<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
-</parameter>
-<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-</method>
-</interface>
-<class name="MediaVariationsIndexDatabase"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.producers.MediaVariationsIndex">
-</implements>
-<constructor name="MediaVariationsIndexDatabase"
- type="com.facebook.imagepipeline.producers.MediaVariationsIndexDatabase"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="context" type="android.content.Context">
-</parameter>
-<parameter name="readExecutor" type="java.util.concurrent.Executor">
-</parameter>
-<parameter name="writeExecutor" type="java.util.concurrent.Executor">
-</parameter>
-</constructor>
-<method name="getCachedVariants"
- return="bolts.Task&lt;java.util.List&lt;com.facebook.imagepipeline.request.MediaVariations.Variant&gt;&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="mediaId" type="java.lang.String">
-</parameter>
-</method>
-<method name="saveCachedVariant"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="mediaId" type="java.lang.String">
-</parameter>
-<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
-</parameter>
-<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-</method>
+</field>
 </class>
 <class name="MultiplexProducer"
  extends="java.lang.Object"
@@ -40885,9 +41294,9 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
-<parameter name="byteArrayPool" type="com.facebook.imagepipeline.memory.ByteArrayPool">
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
 </parameter>
 <parameter name="networkFetcher" type="com.facebook.imagepipeline.producers.NetworkFetcher">
 </parameter>
@@ -41060,55 +41469,6 @@
 </exception>
 </method>
 </interface>
-<class name="NoOpMediaVariationsIndex"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.producers.MediaVariationsIndex">
-</implements>
-<constructor name="NoOpMediaVariationsIndex"
- type="com.facebook.imagepipeline.producers.NoOpMediaVariationsIndex"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<method name="getCachedVariants"
- return="bolts.Task&lt;java.util.List&lt;com.facebook.imagepipeline.request.MediaVariations.Variant&gt;&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="mediaId" type="java.lang.String">
-</parameter>
-</method>
-<method name="saveCachedVariant"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="mediaId" type="java.lang.String">
-</parameter>
-<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
-</parameter>
-<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-</method>
-</class>
 <class name="NullProducer"
  extends="java.lang.Object"
  abstract="false"
@@ -41616,7 +41976,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="consumer" type="com.facebook.imagepipeline.producers.Consumer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.memory.PooledByteBuffer&gt;&gt;">
+<parameter name="consumer" type="com.facebook.imagepipeline.producers.Consumer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.common.memory.PooledByteBuffer&gt;&gt;">
 </parameter>
 <parameter name="context" type="com.facebook.imagepipeline.producers.ProducerContext">
 </parameter>
@@ -41641,7 +42001,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="resizingEnabled" type="boolean">
 </parameter>
@@ -42189,7 +42549,7 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
-<parameter name="pooledByteBufferFactory" type="com.facebook.imagepipeline.memory.PooledByteBufferFactory">
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
 </parameter>
 <parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
 </parameter>
@@ -42585,6 +42945,17 @@
 </method>
 <method name="getSourceUri"
  return="android.net.Uri"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getSourceUriType"
+ return="int"
  abstract="false"
  native="false"
  synchronized="false"
@@ -43155,8 +43526,45 @@
  visibility="public"
 >
 </method>
-<method name="getVariants"
+<method name="getSortedVariants"
  return="java.util.List&lt;com.facebook.imagepipeline.request.MediaVariations.Variant&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="comparator" type="java.util.Comparator&lt;com.facebook.imagepipeline.request.MediaVariations.Variant&gt;">
+</parameter>
+</method>
+<method name="getSource"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getVariant"
+ return="com.facebook.imagepipeline.request.MediaVariations.Variant"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="index" type="int">
+</parameter>
+</method>
+<method name="getVariantsCount"
+ return="int"
  abstract="false"
  native="false"
  synchronized="false"
@@ -43190,6 +43598,39 @@
  visibility="public"
 >
 </method>
+<field name="SOURCE_ID_EXTRACTOR"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;id_extractor&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_IMAGE_REQUEST"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;request&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_INDEX_DB"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;index_db&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 </class>
 <class name="MediaVariations.Builder"
  extends="java.lang.Object"
@@ -43216,6 +43657,25 @@
 <parameter name="height" type="int">
 </parameter>
 </method>
+<method name="addVariant"
+ return="com.facebook.imagepipeline.request.MediaVariations.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
+</parameter>
+</method>
 <method name="build"
  return="com.facebook.imagepipeline.request.MediaVariations"
  abstract="false"
@@ -43240,6 +43700,30 @@
 <parameter name="forceRequestForSpecifiedUri" type="boolean">
 </parameter>
 </method>
+<method name="setSource"
+ return="com.facebook.imagepipeline.request.MediaVariations.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="source" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<class name="MediaVariations.Source"
+ extends="java.lang.Object"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
 </class>
 <class name="MediaVariations.Variant"
  extends="java.lang.Object"
@@ -43263,6 +43747,33 @@
 <parameter name="height" type="int">
 </parameter>
 </constructor>
+<constructor name="Variant"
+ type="com.facebook.imagepipeline.request.MediaVariations.Variant"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+<parameter name="width" type="int">
+</parameter>
+<parameter name="height" type="int">
+</parameter>
+<parameter name="cacheChoice" type="com.facebook.imagepipeline.request.ImageRequest.CacheChoice">
+</parameter>
+</constructor>
+<method name="getCacheChoice"
+ return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getHeight"
  return="int"
  abstract="false"

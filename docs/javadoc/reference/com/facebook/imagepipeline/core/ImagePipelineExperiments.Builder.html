@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  ImagePipelineExperiments.Builder - Fresco 1.1.0 API
+  ImagePipelineExperiments.Builder - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -615,12 +615,9 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setMediaVariationsIndexEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)">setMediaIdExtractor</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor)
         
-        <div class="jd-descrdiv">If true, this will allow the image pipeline to keep an index of the ID in each request's
- <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
- provide fallback images which are present in cache, without the need to explicitly provide
- alternative variants of the image in the request.</div>
+        <div class="jd-descrdiv">Sets experimental media ID extractor to pull IDs from URIs.</div>
   
   </td></tr>
 
@@ -636,13 +633,34 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setMediaVariationsIndexEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)
+        
+        <div class="jd-descrdiv">If true, this will allow the image pipeline to keep an index of the ID in each request's
+ <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
+ provide fallback images which are present in cache, without the need to explicitly provide
+ alternative variants of the image in the request.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setSuppressBitmapPrefetching(boolean)">setSuppressBitmapPrefetching</a></span>(boolean suppressBitmapPrefetching)
         
   </td></tr>
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -658,7 +676,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -674,7 +692,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -690,7 +708,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1138,6 +1156,40 @@ From class
 
  <p>This will require the image pipeline to do up to two disk reads, instead of one, before
  going out to network. Use only if this pattern makes sense for your application.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+      </span>
+      <span class="sympad">setMediaIdExtractor</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets experimental media ID extractor to pull IDs from URIs. This isn't currently recommended
+ as a long-term collaborator but can be useful for identifying where media IDs would be most
+ effective.
 </p></div>
 
     </div>

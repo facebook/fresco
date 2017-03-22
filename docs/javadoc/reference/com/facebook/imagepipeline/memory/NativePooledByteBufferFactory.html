@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  NativePooledByteBufferFactory - Fresco 1.1.0 API
+  NativePooledByteBufferFactory - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -286,10 +286,6 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/ByteArrayPool.html">ByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/Pool.html">Pool</a>&lt;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a></li>
       </ul>
     </li>
@@ -314,10 +310,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NoOpPoolStatsTracker.html">NoOpPoolStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html">PoolConfig</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteArrayBufferedInputStream.html">PooledByteArrayBufferedInputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferInputStream.html">PooledByteBufferInputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteStreams.html">PooledByteStreams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/SharedByteArray.html">SharedByteArray</a></li>
@@ -333,7 +325,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.SizeTooLargeException.html">BasePool.SizeTooLargeException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.InvalidStreamException.html">NativePooledByteBufferOutputStream.InvalidStreamException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.ClosedException.html">PooledByteBuffer.ClosedException</a></li>
       </ul>
     </li>
               
@@ -450,7 +441,7 @@ Summary:
   
       implements 
       
-        <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> 
+        <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> 
       
   
   
@@ -558,7 +549,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferFactory.html#NativePooledByteBufferFactory(com.facebook.imagepipeline.memory.NativeMemoryChunkPool, com.facebook.imagepipeline.memory.PooledByteStreams)">NativePooledByteBufferFactory</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a> pool, <a href="../../../../com/facebook/imagepipeline/memory/PooledByteStreams.html">PooledByteStreams</a> pooledByteStreams)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferFactory.html#NativePooledByteBufferFactory(com.facebook.imagepipeline.memory.NativeMemoryChunkPool, com.facebook.common.memory.PooledByteStreams)">NativePooledByteBufferFactory</a></span>(<a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a> pool, <a href="../../../../com/facebook/common/memory/PooledByteStreams.html">PooledByteStreams</a> pooledByteStreams)
         
   </td></tr>
 
@@ -906,19 +897,19 @@ From class
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.memory.PooledByteBufferFactory" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.memory.PooledByteBufferFactory-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.common.memory.PooledByteBufferFactory" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.common.memory.PooledByteBufferFactory-trigger"
           src="../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From interface
 
-  <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html">com.facebook.imagepipeline.memory.PooledByteBufferFactory</a>
+  <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">com.facebook.common.memory.PooledByteBufferFactory</a>
 
-<div id="inherited-methods-com.facebook.imagepipeline.memory.PooledByteBufferFactory">
-  <div id="inherited-methods-com.facebook.imagepipeline.memory.PooledByteBufferFactory-list"
+<div id="inherited-methods-com.facebook.common.memory.PooledByteBufferFactory">
+  <div id="inherited-methods-com.facebook.common.memory.PooledByteBufferFactory-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.memory.PooledByteBufferFactory-summary" style="display: none;">
+  <div id="inherited-methods-com.facebook.common.memory.PooledByteBufferFactory-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -931,10 +922,10 @@ From interface
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>
+            <a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html#newByteBuffer(java.io.InputStream)">newByteBuffer</a></span>(InputStream inputStream)
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html#newByteBuffer(java.io.InputStream)">newByteBuffer</a></span>(InputStream inputStream)
         
         <div class="jd-descrdiv">Creates a new bytebuf instance by reading in the entire contents of the input stream</div>
   
@@ -949,10 +940,10 @@ From interface
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>
+            <a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html#newByteBuffer(byte[])">newByteBuffer</a></span>(byte[] bytes)
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html#newByteBuffer(byte[])">newByteBuffer</a></span>(byte[] bytes)
         
         <div class="jd-descrdiv">Creates a new bytebuf instance by reading in the entire contents of the byte array</div>
   
@@ -967,10 +958,10 @@ From interface
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>
+            <a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html#newByteBuffer(java.io.InputStream, int)">newByteBuffer</a></span>(InputStream inputStream, int initialCapacity)
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html#newByteBuffer(java.io.InputStream, int)">newByteBuffer</a></span>(InputStream inputStream, int initialCapacity)
         
         <div class="jd-descrdiv">Creates a new PooledByteBuffer instance with an initial capacity, and reading the entire
  contents of the input stream</div>
@@ -986,10 +977,10 @@ From interface
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a>
+            <a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html#newByteBuffer(int)">newByteBuffer</a></span>(int size)
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html#newByteBuffer(int)">newByteBuffer</a></span>(int size)
         
         <div class="jd-descrdiv">Creates a new PooledByteBuffer instance of given size.</div>
   
@@ -1004,10 +995,10 @@ From interface
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a>
+            <a href="../../../../com/facebook/common/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html#newOutputStream()">newOutputStream</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html#newOutputStream()">newOutputStream</a></span>()
         
         <div class="jd-descrdiv">Creates a new PooledByteBufferOutputStream instance with default initial capacity</div>
   
@@ -1022,10 +1013,10 @@ From interface
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a>
+            <a href="../../../../com/facebook/common/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/PooledByteBufferFactory.html#newOutputStream(int)">newOutputStream</a></span>(int initialCapacity)
+        <span class="sympad"><a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html#newOutputStream(int)">newOutputStream</a></span>(int initialCapacity)
         
         <div class="jd-descrdiv">Creates a new PooledByteBufferOutputStream instance with the specified initial capacity</div>
   
@@ -1072,7 +1063,7 @@ From interface
 
 
 
-<a id="NativePooledByteBufferFactory(com.facebook.imagepipeline.memory.NativeMemoryChunkPool, com.facebook.imagepipeline.memory.PooledByteStreams)"></a>
+<a id="NativePooledByteBufferFactory(com.facebook.imagepipeline.memory.NativeMemoryChunkPool, com.facebook.common.memory.PooledByteStreams)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1085,7 +1076,7 @@ From interface
         
       </span>
       <span class="sympad">NativePooledByteBufferFactory</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a> pool, <a href="../../../../com/facebook/imagepipeline/memory/PooledByteStreams.html">PooledByteStreams</a> pooledByteStreams)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a> pool, <a href="../../../../com/facebook/common/memory/PooledByteStreams.html">PooledByteStreams</a> pooledByteStreams)</span>
     </h4>
       <div class="api-level">
         <div>

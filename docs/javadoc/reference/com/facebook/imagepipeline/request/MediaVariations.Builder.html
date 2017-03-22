@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  MediaVariations.Builder - Fresco 1.1.0 API
+  MediaVariations.Builder - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -304,6 +304,11 @@
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Source.html">MediaVariations.Source</a></li>
+      </ul>
+    </li>
               
     <li><h2>Enums</h2>
       <ul>
@@ -523,13 +528,29 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html">MediaVariations.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html#addVariant(android.net.Uri, int, int)">addVariant</a></span>(Uri uri, int width, int height)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html#addVariant(android.net.Uri, int, int, com.facebook.imagepipeline.request.ImageRequest.CacheChoice)">addVariant</a></span>(Uri uri, int width, int height, <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a> cacheChoice)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html">MediaVariations.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html#addVariant(android.net.Uri, int, int)">addVariant</a></span>(Uri uri, int width, int height)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -545,7 +566,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -559,6 +580,24 @@ Summary:
         
         <div class="jd-descrdiv">Sets whether the URI specified in the image request should be downloaded, even if another
  cached image appears to be big enough for the request.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html">MediaVariations.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html#setSource(java.lang.String)">setSource</a></span>(String source)
+        
+        <div class="jd-descrdiv">Sets the source of these variations.</div>
   
   </td></tr>
 
@@ -821,6 +860,37 @@ From class
 
 
 
+<a id="addVariant(android.net.Uri, int, int, com.facebook.imagepipeline.request.ImageRequest.CacheChoice)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html">MediaVariations.Builder</a>
+      </span>
+      <span class="sympad">addVariant</span>
+      <span class="normal">(Uri uri, int width, int height, <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a> cacheChoice)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="addVariant(android.net.Uri, int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -915,6 +985,46 @@ From class
  <p>In this case, whatever other image is found may still be returned as a non-final
  placeholder.
 </p></div>
+
+    </div>
+</div>
+
+
+<a id="setSource(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Builder.html">MediaVariations.Builder</a>
+      </span>
+      <span class="sympad">setSource</span>
+      <span class="normal">(String source)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the source of these variations.
+
+ <p> It is not intended that uses of Fresco will set this manually. It's intended to be set
+ within the library so that logging events can differentiate between variations defined in a
+ request from those using the index database.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.Source.html">MediaVariations.Source</a></code></li>
+      </ul>
+  </div>
 
     </div>
 </div>

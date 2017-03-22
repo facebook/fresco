@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 <title>
 
-  Class Index - Fresco 1.1.0 API
+  Class Index - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="./../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -91,7 +91,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="./packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="./packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -318,7 +318,7 @@
 <div class="g-unit" id="doc-content">
 
 <div id="jd-header">
-<h1>Class Index - Fresco 1.1.0 API</h1>
+<h1>Class Index - Fresco API</h1>
 </div>
 
 <div id="jd-content">
@@ -1047,7 +1047,7 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/ByteArrayPool.html">ByteArrayPool</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a></td>
             <td class="jd-descrcol" width="100%">A pool of byte-arrays
 &nbsp;</td>
         </tr>
@@ -1326,7 +1326,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/DefaultByteArrayPoolParams.html">DefaultByteArrayPoolParams</a></td>
-            <td class="jd-descrcol" width="100%">Provides pool parameters (<code><a href="./com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a></code>) for common <code><a href="./com/facebook/imagepipeline/memory/ByteArrayPool.html">ByteArrayPool</a></code>
+            <td class="jd-descrcol" width="100%">Provides pool parameters (<code><a href="./com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a></code>) for common ByteArrayPool
 &nbsp;</td>
         </tr>
     
@@ -2380,20 +2380,32 @@
     
     
         <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></td>
+            <td class="jd-descrcol" width="100%">Experimental interface for a helper to extract media IDs from URLs.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/media/MediaUtils.html">MediaUtils</a></td>
             <td class="jd-descrcol" width="100%">Utility class.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></td>
             <td class="jd-descrcol" width="100%">An optional part of image requests which describes the piece of media being requested.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/request/MediaVariations.Builder.html">MediaVariations.Builder</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/request/MediaVariations.Source.html">MediaVariations.Source</a></td>
+            <td class="jd-descrcol" width="100%">Defines the range of valid source values to be held by an instance.&nbsp;</td>
         </tr>
     
     
@@ -2410,13 +2422,13 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/MediaVariationsIndex.html">MediaVariationsIndex</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
@@ -2517,7 +2529,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a></td>
-            <td class="jd-descrcol" width="100%">An implementation of <code><a href="./com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></code> that uses native memory
+            <td class="jd-descrcol" width="100%">An implementation of <code><a href="./com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a></code> that uses native memory
  (<code><a href="./com/facebook/imagepipeline/memory/NativeMemoryChunk.html">NativeMemoryChunk</a></code>) to store data
 &nbsp;</td>
         </tr>
@@ -2533,7 +2545,7 @@
     
         <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.html">NativePooledByteBufferOutputStream</a></td>
-            <td class="jd-descrcol" width="100%">An implementation of <code><a href="./com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></code> that produces a
+            <td class="jd-descrcol" width="100%">An implementation of <code><a href="./com/facebook/common/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></code> that produces a
  <code><a href="./com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a></code>
 &nbsp;</td>
         </tr>
@@ -2596,7 +2608,7 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
@@ -2723,7 +2735,7 @@
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/Pool.html">Pool</a>&lt;V&gt;</td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/Pool.html">Pool</a>&lt;V&gt;</td>
             <td class="jd-descrcol" width="100%">Manages a pool of reusable values of type V.&nbsp;</td>
         </tr>
     
@@ -2741,46 +2753,46 @@
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteArrayBufferedInputStream.html">PooledByteArrayBufferedInputStream</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteArrayBufferedInputStream.html">PooledByteArrayBufferedInputStream</a></td>
             <td class="jd-descrcol" width="100%">InputStream that wraps another input stream and buffers all reads.&nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a></td>
             <td class="jd-descrcol" width="100%">A 'pooled' byte-buffer abstraction.&nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteBuffer.ClosedException.html">PooledByteBuffer.ClosedException</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteBuffer.ClosedException.html">PooledByteBuffer.ClosedException</a></td>
             <td class="jd-descrcol" width="100%">Exception indicating that the PooledByteBuffer is closed
 &nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a></td>
             <td class="jd-descrcol" width="100%">A factory to create instances of PooledByteBuffer and PooledByteBufferOutputStream
 &nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteBufferInputStream.html">PooledByteBufferInputStream</a></td>
-            <td class="jd-descrcol" width="100%">An InputStream implementation over a <code><a href="./com/facebook/imagepipeline/memory/PooledByteBuffer.html">PooledByteBuffer</a></code> instance
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteBufferInputStream.html">PooledByteBufferInputStream</a></td>
+            <td class="jd-descrcol" width="100%">An InputStream implementation over a <code><a href="./com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a></code> instance
 &nbsp;</td>
         </tr>
     
     
         <tr class=" api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteBufferOutputStream.html">PooledByteBufferOutputStream</a></td>
             <td class="jd-descrcol" width="100%">An OutputStream that produces a PooledByteBuffer.&nbsp;</td>
         </tr>
     
     
         <tr class="alt-color api apilevel-" >
-            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/memory/PooledByteStreams.html">PooledByteStreams</a></td>
+            <td class="jd-linkcol"><a href="./com/facebook/common/memory/PooledByteStreams.html">PooledByteStreams</a></td>
             <td class="jd-descrcol" width="100%">Helper class for interacting with java streams, similar to guava's ByteSteams.&nbsp;</td>
         </tr>
     
@@ -3253,75 +3265,82 @@
     
     
         <tr class="alt-color api apilevel-" >
+            <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/common/SourceUriType.html">SourceUriType</a></td>
+            <td class="jd-descrcol" width="100%">This is the interface we use in order to define different types of Uri an ImageRequest
+ can have.&nbsp;</td>
+        </tr>
+    
+    
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html">SplitCachesByImageSizeDiskCachePolicy</a></td>
             <td class="jd-descrcol" width="100%">Task factory to attempt to load an image from either the main or small disk cache and then
  fallback to the other if the first attempt was unsuccessful.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></td>
             <td class="jd-descrcol" width="100%">This is class encapsulates Map that maps ImageCacheKeys to EncodedImages pointing to
  PooledByteBuffers.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/StatefulProducerRunnable.html">StatefulProducerRunnable</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%"><code><a href="./com/facebook/common/executors/StatefulRunnable.html">StatefulRunnable</a></code> intended to be used by producers.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/executors/StatefulRunnable.html">StatefulRunnable</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">Abstraction for computation.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/statfs/StatFsHelper.html">StatFsHelper</a></td>
             <td class="jd-descrcol" width="100%">Helper class that periodically checks the amount of free space available.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/statfs/StatFsHelper.StorageType.html">StatFsHelper.StorageType</a></td>
             <td class="jd-descrcol" width="100%">&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/nativecode/StaticWebpNativeLoader.html">StaticWebpNativeLoader</a></td>
             <td class="jd-descrcol" width="100%">Single place responsible for ensuring that `static-webp.so` is loaded
 &nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/util/StreamUtil.html">StreamUtil</a></td>
             <td class="jd-descrcol" width="100%">Utility method for dealing with Streams.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/internal/Supplier.html">Supplier</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">A class that can supply objects of a single type.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/internal/Suppliers.html">Suppliers</a></td>
             <td class="jd-descrcol" width="100%">Wrapper for creating a Supplier.&nbsp;</td>
         </tr>
     
     
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/imagepipeline/producers/SwallowResultProducer.html">SwallowResultProducer</a>&lt;T&gt;</td>
             <td class="jd-descrcol" width="100%">Swallow result producer.&nbsp;</td>
         </tr>
     
     
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
             <td class="jd-linkcol"><a href="./com/facebook/common/time/SystemClock.html">SystemClock</a></td>
             <td class="jd-descrcol" width="100%">Implementation of <code><a href="./com/facebook/common/time/Clock.html">Clock</a></code> that delegates to the system clock.&nbsp;</td>
         </tr>

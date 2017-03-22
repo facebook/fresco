@@ -52,15 +52,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <meta name="description" content="Javadoc API documentation for Fresco 1.1.0." />
+  <meta name="description" content="Javadoc API documentation for Fresco." />
 
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  com.facebook.imagepipeline.cache - Fresco 1.1.0 API
+  com.facebook.imagepipeline.cache - Fresco API
 
 
-| Fresco 1.1.0
+| Fresco
 
 </title>
 <link href="../../../../../assets/doclava-developer-docs.css" rel="stylesheet" type="text/css" />
@@ -92,7 +92,7 @@
 <div id="header">
     <div id="headerLeft">
     
-      <span id="masthead-title"><a href="../../../../packages.html">Fresco 1.1.0</a></span>
+      <span id="masthead-title"><a href="../../../../packages.html">Fresco</a></span>
     
     </div>
     <div id="headerRight">
@@ -291,6 +291,8 @@
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
@@ -312,9 +314,11 @@
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SmallCacheIfRequestedDiskCachePolicy.html">SmallCacheIfRequestedDiskCachePolicy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html">SplitCachesByImageSizeDiskCachePolicy</a></li>
         <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></li>
@@ -413,6 +417,14 @@
               <td class="jd-descrcol" width="100%">Interface for stats tracking for the image cache.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></td>
+              <td class="jd-descrcol" width="100%">Experimental interface for a helper to extract media IDs from URLs.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</td>
               <td class="jd-descrcol" width="100%">Interface for the image pipeline memory cache.&nbsp;</td>
           </tr>
@@ -490,18 +502,26 @@
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></td>
               <td class="jd-descrcol" width="100%">Configuration for a memory cache.&nbsp;</td>
           </tr>
-        <tr class="alt-color api apilevel-" >
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></td>
               <td class="jd-descrcol" width="100%">CountingMemoryCache eviction strategy appropriate for caches that store resources off the Dalvik
  heap.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></td>
               <td class="jd-descrcol" width="100%">Class that does no stats tracking at all
 &nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/cache/SmallCacheIfRequestedDiskCachePolicy.html">SmallCacheIfRequestedDiskCachePolicy</a></td>
