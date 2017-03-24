@@ -80,9 +80,6 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private static volatile @Nullable UnclosedReferenceListener sUnclosedReferenceListener;
-  protected @Nullable Throwable mRelevantTrace;
-
   @GuardedBy("this")
   protected boolean mIsClosed = false;
 
@@ -97,13 +94,11 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
   private CloseableReference(SharedReference<T> sharedReference) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
-    mRelevantTrace = getTraceOrNull();
   }
 
   private CloseableReference(T t, ResourceReleaser<T> resourceReleaser) {
     // Ref-count pre-set to 1
     mSharedReference = new SharedReference<T>(t, resourceReleaser);
-    mRelevantTrace = getTraceOrNull();
   }
 
   /**
@@ -178,13 +173,11 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    */
   @Override
   public synchronized CloseableReference<T> clone() {
-    mRelevantTrace = getTraceOrNull();
     Preconditions.checkState(isValid());
     return makeCloseableReference();
   }
 
   public synchronized CloseableReference<T> cloneOrNull() {
-    mRelevantTrace = getTraceOrNull();
     if (isValid()) {
       return makeCloseableReference();
     }
@@ -204,26 +197,6 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    */
   public synchronized boolean isValid() {
     return !mIsClosed;
-  }
-
-  /**
-   * Returns whether CloseableReference instances are currently gathering obtain/clone traces for
-   * the purpose of unclosed reference tracking.
-   *
-   * @see #setUnclosedReferenceListener(UnclosedReferenceListener)
-   */
-  public static boolean isUnclosedTrackingEnabled() {
-    return sUnclosedReferenceListener != null;
-  }
-
-  /**
-   * If the obtained/cloned trace is not valuable in some instances, you can set a more relevant
-   * trace here, for the purpose of unclosed reference tracking.
-   *
-   * @see #setUnclosedReferenceListener(UnclosedReferenceListener)
-   */
-  public void setUnclosedRelevantTrance(Throwable relevantTrance) {
-    mRelevantTrace = relevantTrance;
   }
 
   /**
@@ -306,28 +279,8 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
     }
   }
 
-  /**
-   * Set a listener to be notified when a CloseableReference is finalized by GC without it being
-   * explicitly closed beforehand.
-   */
-  public static void setUnclosedReferenceListener(
-      UnclosedReferenceListener unclosedReferenceListener) {
-    sUnclosedReferenceListener = unclosedReferenceListener;
-  }
-
   public static void setUseFinalizers(boolean useFinalizers) {
     sUseFinalizers = useFinalizers;
-  }
-
-  private static @Nullable Throwable getTraceOrNull() {
-    if (sUnclosedReferenceListener != null) {
-      return new Throwable();
-    }
-    return null;
-  }
-
-  public interface UnclosedReferenceListener {
-    void onUnclosedReferenceFinalized(CloseableReference<?> ref, Throwable relevantTrace);
   }
 
   private static class CloseableReferenceWithoutFinalizer<T> extends CloseableReference<T> {
@@ -458,17 +411,12 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
           }
         }
 
-        UnclosedReferenceListener listener = sUnclosedReferenceListener;
-        if (listener != null) {
-          listener.onUnclosedReferenceFinalized(this, mRelevantTrace);
-        } else {
-          FLog.w(
-              TAG,
-              "Finalized without closing: %x %x (type = %s)",
-              System.identityHashCode(this),
-              System.identityHashCode(mSharedReference),
-              mSharedReference.get().getClass().getSimpleName());
-        }
+        FLog.w(
+            TAG,
+            "Finalized without closing: %x %x (type = %s)",
+            System.identityHashCode(this),
+            System.identityHashCode(mSharedReference),
+            mSharedReference.get().getClass().getSimpleName());
 
         close();
       } finally {
