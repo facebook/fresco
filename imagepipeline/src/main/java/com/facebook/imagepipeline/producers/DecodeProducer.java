@@ -24,6 +24,7 @@ import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.ExceptionWithNoStacktrace;
 import com.facebook.common.util.UriUtil;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -417,7 +418,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @Override
     protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, boolean isLast) {
       boolean ret = super.updateDecodeJob(encodedImage, isLast);
-      if (!isLast && EncodedImage.isValid(encodedImage)) {
+      if (!isLast && EncodedImage.isValid(encodedImage) &&
+          encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
         if (!mProgressiveJpegParser.parseMoreData(encodedImage)) {
           return false;
         }

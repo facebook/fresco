@@ -43,16 +43,16 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
 
   private static final String TAG = "MediaVariationsFragment";
   private static final String URI_TEMPLATE
-      = "http://frescolib.org/static/sample-images/monkey-selfie-%s.jpg";
+      = "http://frescolib.org/static/sample-images/monkey-selfie-%s.%s";
   private static final String MEDIA_ID = "monkey-selfie";
   private SimpleDraweeView mMainImageDraweeView;
 
   private enum Size {
-    XS(R.id.thumb_xs, "xs", 377, 523),
-    S(R.id.thumb_s, "s", 629, 871),
-    M(R.id.thumb_m, "m", 1048, 1451),
-    L(R.id.thumb_l, "l", 1747, 2418),
-    XL(R.id.thumb_xl, "xl", 2912, 4030);
+    XS(R.id.thumb_xs, "xs", "png", 377, 523),
+    S(R.id.thumb_s, "s", "webp", 629, 871),
+    M(R.id.thumb_m, "m", "jpg", 1048, 1451),
+    L(R.id.thumb_l, "l", "jpg", 1747, 2418),
+    XL(R.id.thumb_xl, "xl", "jpg", 2912, 4030);
 
     final @IdRes int thumbViewId;
     final String name;
@@ -60,10 +60,10 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
     final int width;
     final int height;
 
-    Size(@IdRes int thumbViewId, String name, int width, int height) {
+    Size(@IdRes int thumbViewId, String name, String extension, int width, int height) {
       this.thumbViewId = thumbViewId;
       this.name = name;
-      this.uri = Uri.parse(String.format(URI_TEMPLATE, name));
+      this.uri = Uri.parse(String.format(URI_TEMPLATE, name, extension));
       this.width = width;
       this.height = height;
     }
@@ -226,7 +226,7 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
 
   private void loadMainImage() {
     // Request a non-existent image to force fallback to the variations
-    Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));
+    Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full", "jpg"));
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
         .setMediaVariations(getMediaVariationsForMode(mMode))
         .setResizeOptions(new ResizeOptions(
