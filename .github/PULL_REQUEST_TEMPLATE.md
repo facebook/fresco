@@ -1,17 +1,31 @@
-Thanks for submitting a pull request! Please provide enough information so that others can review your pull request:
+Thanks for submitting a PR! Please read these instructions carefully:
 
-Explain the **motivation** for making this change. What existing problem does the pull request solve?
+- [ ] Explain the **motivation** for making this change.
+- [ ] Provide a **test plan** demonstrating that the code is solid.
+- [ ] Match the **code formatting** of the rest of the codebase.
+- [ ] Target the `master` branch
 
-Prefer **small pull requests**. These are much easier to review and more likely to get merged. Make sure the PR does only one thing, otherwise please split it.
+## Motivation (required)
 
-**Test plan (required)**
+What existing problem does the pull request solve?
 
-Demonstrate the code is solid. Example: The exact commands you ran and their output, screenshots / videos if applicable.
+## Test Plan (required)
 
-Make sure tests pass on Circle CI.
+A good test plan has the exact commands you ran and their output, provides screenshots or videos if the pull request changes UI or updates the website. See [What is a Test Plan?][1] to learn more.  
 
-**Code formatting**
+If you have added code that should be tested, add tests.
 
-Look around. Match the style of the rest of the codebase. See also the simple [style guide](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md#coding-style). If you use IntelliJ IDEA or Android Studio, it should automatically pick up the [code style settings](https://github.com/facebook/fresco/blob/master/.idea/codeStyleSettings.xml).
+## Next Steps
 
-For more info, see the ["Pull Requests" section of our "Contributing" guidelines](https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md#pull-requests).
+Sign the [CLA][2], if you haven't already.
+
+Small pull requests are much easier to review and more likely to get merged. Make sure the PR does only one thing, otherwise please split it.
+
+Make sure all **tests pass** on [Circle CI][4]. PRs that break tests are unlikely to be merged.
+
+For more info, see the [Contributing guide][4].
+
+[1]: https://medium.com/@martinkonicek/what-is-a-test-plan-8bfc840ec171#.y9lcuqqi9
+[2]: https://code.facebook.com/cla
+[3]: http://circleci.com/gh/facebook/fresco
+[4]: https://github.com/facebook/fresco/blob/master/CONTRIBUTING.md
