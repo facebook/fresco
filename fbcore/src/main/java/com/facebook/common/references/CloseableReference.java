@@ -80,26 +80,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  @GuardedBy("this")
-  protected boolean mIsClosed = false;
-
-  protected final SharedReference<T> mSharedReference;
-
   private static volatile boolean sUseFinalizers = true;
-
-  /**
-   * The caller should guarantee that reference count of sharedReference is not decreased to zero,
-   * so that the reference is valid during execution of this method.
-   */
-  private CloseableReference(SharedReference<T> sharedReference) {
-    mSharedReference = Preconditions.checkNotNull(sharedReference);
-    sharedReference.addReference();
-  }
-
-  private CloseableReference(T t, ResourceReleaser<T> resourceReleaser) {
-    // Ref-count pre-set to 1
-    mSharedReference = new SharedReference<T>(t, resourceReleaser);
-  }
 
   /**
    * Constructs a CloseableReference.
@@ -147,57 +128,28 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    * <p>This method is idempotent. Calling it multiple times on the same instance has no effect.
    */
   @Override
-  public void close() {
-    synchronized (this) {
-      if (mIsClosed) {
-        return;
-      }
-      mIsClosed = true;
-    }
-
-    mSharedReference.deleteReference();
-  }
+  public abstract void close();
 
   /**
    * Returns the underlying Closeable if this reference is not closed yet.
    * Otherwise IllegalStateException is thrown.
    */
-  public synchronized T get() {
-    Preconditions.checkState(!mIsClosed);
-    return mSharedReference.get();
-  }
+  public abstract T get();
 
   /**
    * Returns a new CloseableReference to the same underlying SharedReference. The SharedReference
    * ref-count is incremented.
    */
   @Override
-  public synchronized CloseableReference<T> clone() {
-    Preconditions.checkState(isValid());
-    return makeCloseableReference();
-  }
+  public abstract CloseableReference<T> clone();
 
-  public synchronized CloseableReference<T> cloneOrNull() {
-    if (isValid()) {
-      return makeCloseableReference();
-    }
-    return null;
-  }
-
-  private CloseableReference<T> makeCloseableReference() {
-    if (sUseFinalizers) {
-      return new CloseableReferenceWithFinalizer<T>(mSharedReference);
-    }
-    return new CloseableReferenceWithoutFinalizer<T>(mSharedReference);
-  }
+  public abstract CloseableReference<T> cloneOrNull();
 
   /**
    * Checks if this closable-reference is valid i.e. is not closed.
    * @return true if the closeable reference is valid
    */
-  public synchronized boolean isValid() {
-    return !mIsClosed;
-  }
+  public abstract boolean isValid();
 
   /**
    * A test-only method to get the underlying references.
@@ -205,17 +157,13 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    * <p><b>DO NOT USE in application code.</b>
    */
   @VisibleForTesting
-  public synchronized SharedReference<T> getUnderlyingReferenceTestOnly() {
-    return mSharedReference;
-  }
+  public abstract SharedReference<T> getUnderlyingReferenceTestOnly();
 
   /**
    * Method used for tracking Closeables pointed by CloseableReference.
    * Use only for debugging and logging.
    */
-  public synchronized int getValueHash() {
-    return isValid() ? System.identityHashCode(mSharedReference.get()) : 0;
-  }
+  public abstract int getValueHash();
 
   /**
    * Checks if the closable-reference is valid i.e. is not null, and is not closed.
@@ -300,7 +248,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       private boolean destroyed;
 
       public Destructor(
-          CloseableReference referent,
+          CloseableReferenceWithoutFinalizer referent,
           ReferenceQueue<? super CloseableReference> referenceQueue) {
         super(referent, referenceQueue);
         mSharedReference = referent.mSharedReference;
@@ -355,6 +303,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       new Thread(new Runnable() {
         @Override
         public void run() {
+          //noinspection InfiniteLoopStatement
           for (;;) {
             try {
               final Destructor ref = (Destructor) REF_QUEUE.remove();
@@ -367,15 +316,17 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       }, "CloseableReferenceDestructorThread").start();
     }
 
+    private final SharedReference<T> mSharedReference;
     private final Destructor mDestructor;
 
     private CloseableReferenceWithoutFinalizer(SharedReference<T> sharedReference) {
-      super(sharedReference);
+      mSharedReference = Preconditions.checkNotNull(sharedReference);
+      sharedReference.addReference();
       mDestructor = new Destructor(this, REF_QUEUE);
     }
 
     private CloseableReferenceWithoutFinalizer(T t, ResourceReleaser<T> resourceReleaser) {
-      super(t, resourceReleaser);
+      mSharedReference = new SharedReference<T>(t, resourceReleaser);
       mDestructor = new Destructor(this, REF_QUEUE);
     }
 
@@ -385,19 +336,62 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
     }
 
     @Override
+    public T get() {
+      synchronized (mDestructor) {
+        Preconditions.checkState(!mDestructor.isDestroyed());
+        return mSharedReference.get();
+      }
+    }
+
+    @Override
+    public CloseableReference<T> clone() {
+      synchronized (mDestructor) {
+        Preconditions.checkState(!mDestructor.isDestroyed());
+        return new CloseableReferenceWithoutFinalizer<T>(mSharedReference);
+      }
+    }
+
+    @Override
+    public CloseableReference<T> cloneOrNull() {
+      synchronized (mDestructor) {
+        if (!mDestructor.isDestroyed()) {
+          return new CloseableReferenceWithoutFinalizer<T>(mSharedReference);
+        }
+        return null;
+      }
+    }
+
+    @Override
     public boolean isValid() {
       return !mDestructor.isDestroyed();
+    }
+
+    @Override
+    public SharedReference<T> getUnderlyingReferenceTestOnly() {
+      return mSharedReference;
+    }
+
+    @Override
+    public int getValueHash() {
+      synchronized (mDestructor) {
+        return isValid() ? System.identityHashCode(mSharedReference.get()) : 0;
+      }
     }
   }
 
   private static class CloseableReferenceWithFinalizer<T> extends CloseableReference<T> {
 
+    @GuardedBy("this")
+    private boolean mIsClosed = false;
+    private final SharedReference<T> mSharedReference;
+
     private CloseableReferenceWithFinalizer(SharedReference<T> sharedReference) {
-      super(sharedReference);
+      mSharedReference = Preconditions.checkNotNull(sharedReference);
+      sharedReference.addReference();
     }
 
     private CloseableReferenceWithFinalizer(T t, ResourceReleaser<T> resourceReleaser) {
-      super(t, resourceReleaser);
+      mSharedReference = new SharedReference<T>(t, resourceReleaser);
     }
 
     @Override
@@ -422,6 +416,53 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
       } finally {
         super.finalize();
       }
+    }
+
+    @Override
+    public synchronized T get() {
+      Preconditions.checkState(!mIsClosed);
+      return mSharedReference.get();
+    }
+
+    @Override
+    public synchronized CloseableReference<T> clone() {
+      Preconditions.checkState(isValid());
+      return new CloseableReferenceWithFinalizer<T>(mSharedReference);
+    }
+
+    @Override
+    public synchronized CloseableReference<T> cloneOrNull() {
+      if (isValid()) {
+        return clone();
+      }
+      return null;
+    }
+
+    @Override
+    public synchronized boolean isValid() {
+      return !mIsClosed;
+    }
+
+    @Override
+    public synchronized SharedReference<T> getUnderlyingReferenceTestOnly() {
+      return mSharedReference;
+    }
+
+    @Override
+    public int getValueHash() {
+      return isValid() ? System.identityHashCode(mSharedReference.get()) : 0;
+    }
+
+    @Override
+    public void close() {
+      synchronized (this) {
+        if (mIsClosed) {
+          return;
+        }
+        mIsClosed = true;
+      }
+
+      mSharedReference.deleteReference();
     }
   }
 }
