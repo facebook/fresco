@@ -72,6 +72,8 @@ Prefetching images in advance of showing them can sometimes lead to shorter wait
 
 Nonetheless, the image pipeline allows you to prefetch to either disk or bitmap cache. Both will use more data for network URIs, but the disk cache will not do a decode and will therefore use less CPU.
 
+__Note:__ Beware that if your network fetcher doesn't support priorities prefetch requests may slow down images which are immediately required on screen. Neither `OkHttpNetworkFetcher` nor `HttpUrlConnectionNetworkFetcher` currently support priorities.
+
 Prefetch to disk:
 
 ```java

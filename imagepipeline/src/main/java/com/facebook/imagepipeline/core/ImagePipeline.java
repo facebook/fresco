@@ -268,6 +268,10 @@ public class ImagePipeline {
 
   /**
    * Submits a request for prefetching to the bitmap cache.
+   *
+   * <p> Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+   * down images which are immediately required on screen.
+   *
    * @param imageRequest the request to submit
    * @return a DataSource that can safely be ignored.
    */
@@ -293,7 +297,11 @@ public class ImagePipeline {
   }
 
   /**
-   * Submits a request for prefetching to the disk cache with a default priority
+   * Submits a request for prefetching to the disk cache with a default priority.
+   *
+   * <p> Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+   * down images which are immediately required on screen.
+   *
    * @param imageRequest the request to submit
    * @return a DataSource that can safely be ignored.
    */
@@ -305,6 +313,10 @@ public class ImagePipeline {
 
   /**
    * Submits a request for prefetching to the disk cache.
+   *
+   * <p> Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+   * down images which are immediately required on screen.
+   *
    * @param imageRequest the request to submit
    * @param priority custom priority for the fetch
    * @return a DataSource that can safely be ignored.
