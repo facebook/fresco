@@ -10,8 +10,6 @@ package com.facebook.fresco.animation.backend;
 
 import javax.annotation.Nullable;
 
-import java.io.IOException;
-
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -39,8 +37,6 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   private ColorFilter mColorFilter;
   @Nullable
   private Rect mBounds;
-  @Nullable
-  private Drawable mCurrentParent;
 
   public AnimationBackendDelegate(@Nullable T animationBackend) {
     mAnimationBackend = animationBackend;
@@ -63,10 +59,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
 
   @Override
   public boolean drawFrame(Drawable parent, Canvas canvas, int frameNumber) {
-    if (mAnimationBackend != null) {
-      return mAnimationBackend.drawFrame(parent, canvas, frameNumber);
-    }
-    return false;
+    return mAnimationBackend != null && mAnimationBackend.drawFrame(parent, canvas, frameNumber);
   }
 
   @Override
@@ -74,6 +67,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
     if (mAnimationBackend != null) {
       mAnimationBackend.setAlpha(alpha);
     }
+    mAlpha = alpha;
   }
 
   @Override
@@ -81,6 +75,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
     if (mAnimationBackend != null) {
       mAnimationBackend.setColorFilter(colorFilter);
     }
+    mColorFilter = colorFilter;
   }
 
   @Override
@@ -93,10 +88,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
 
   @Override
   public int getSizeInBytes() {
-    if (mAnimationBackend != null) {
-      return mAnimationBackend.getSizeInBytes();
-    }
-    return 0;
+    return mAnimationBackend == null ? 0 : mAnimationBackend.getSizeInBytes();
   }
 
   @Override
@@ -108,18 +100,16 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
 
   @Override
   public int getIntrinsicWidth() {
-    if (mAnimationBackend == null) {
-      return INTRINSIC_DIMENSION_UNSET;
-    }
-    return mAnimationBackend.getIntrinsicWidth();
+    return mAnimationBackend == null
+        ? INTRINSIC_DIMENSION_UNSET
+        : mAnimationBackend.getIntrinsicWidth();
   }
 
   @Override
   public int getIntrinsicHeight() {
-    if (mAnimationBackend == null) {
-      return INTRINSIC_DIMENSION_UNSET;
-    }
-    return mAnimationBackend.getIntrinsicHeight();
+    return mAnimationBackend == null
+        ? INTRINSIC_DIMENSION_UNSET
+        : mAnimationBackend.getIntrinsicHeight();
   }
 
   /**
@@ -131,7 +121,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   public void setAnimationBackend(@Nullable T animationBackend) {
     mAnimationBackend = animationBackend;
     if (mAnimationBackend != null) {
-      applyBackendSettings(mAnimationBackend);
+      applyBackendProperties(mAnimationBackend);
     }
   }
 
@@ -146,11 +136,11 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @SuppressLint("Range")
-  private void applyBackendSettings(AnimationBackend backend) {
+  private void applyBackendProperties(AnimationBackend backend) {
     if (mBounds != null) {
       backend.setBounds(mBounds);
     }
-    if (mAlpha > 0 && mAlpha <= 255) {
+    if (mAlpha >= 0 && mAlpha <= 255) {
       backend.setAlpha(mAlpha);
     }
     if (mColorFilter != null) {
