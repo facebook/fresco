@@ -37,10 +37,6 @@ android {
         }
     }
 
-    packagingOptions {
-        exclude 'lib/*/libfb_jpegturbo.so'
-    }
-
     lintOptions {
         abortOnError false
     }

@@ -32,7 +32,10 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
-LOCAL_SHARED_LIBRARIES += webp fb_jpegturbo
+LOCAL_SHARED_LIBRARIES += webp
+
+LOCAL_STATIC_LIBRARIES += fb_jpegturbo
+LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
 
 LOCAL_LDLIBS += -lz
 

@@ -40,11 +40,6 @@ public class ImagePipelineNativeLoader {
   }
 
   public static void load() {
-    try {
-      SoLoaderShim.loadLibrary("fb_jpegturbo");
-    } catch (UnsatisfiedLinkError ignore) {
-      // safe to ignore on clients that do not use features that depend on this
-    }
     SoLoaderShim.loadLibrary("imagepipeline");
   }
 }

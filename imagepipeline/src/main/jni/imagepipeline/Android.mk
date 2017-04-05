@@ -25,12 +25,12 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
-LOCAL_SHARED_LIBRARIES += fb_jpegturbo
+LOCAL_STATIC_LIBRARIES += fb_jpegturbo
 
 LOCAL_STATIC_LIBRARIES += bitmaps
 LOCAL_STATIC_LIBRARIES += filters
 LOCAL_STATIC_LIBRARIES += memchunk
-LOCAL_LDFLAGS += -Wl,--exclude-libs
+LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
 
 include $(BUILD_SHARED_LIBRARY)
 $(call import-module,libjpeg-turbo-1.5.0)
