@@ -30,6 +30,7 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2DebugDrawListener;
 import com.facebook.samples.animation2.R;
 import com.facebook.samples.animation2.SampleData;
 import com.facebook.samples.animation2.utils.AnimationBackendUtils;
@@ -134,6 +135,7 @@ public class BitmapAnimationDebugFragment extends Fragment {
     mFrameInformationContainer = (LinearLayout) view.findViewById(R.id.frame_information);
 
     mAnimatedDrawable = new AnimatedDrawable2();
+    mAnimatedDrawable.setDrawListener(new AnimatedDrawable2DebugDrawListener());
 
     mAnimationControlsManager = new AnimationControlsManager(
         mAnimatedDrawable,
