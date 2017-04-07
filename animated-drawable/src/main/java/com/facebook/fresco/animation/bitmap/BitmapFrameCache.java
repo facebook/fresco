@@ -88,12 +88,12 @@ public interface BitmapFrameCache {
    * The original reference will be automatically closed after this call.
    *
    * @param frameNumber the frame number that has been rendered
-   * @param bitmap the bitmap that has been rendered
+   * @param bitmapReference the bitmap reference that has been rendered
    * @param frameType the frame type that has been rendered
    */
   void onFrameRendered(
       int frameNumber,
-      CloseableReference<Bitmap> bitmap,
+      CloseableReference<Bitmap> bitmapReference,
       int frameType);
 
   /**

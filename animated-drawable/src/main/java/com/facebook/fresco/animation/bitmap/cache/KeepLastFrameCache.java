@@ -76,18 +76,18 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   @Override
   public synchronized void onFrameRendered(
       int frameNumber,
-      CloseableReference<Bitmap> bitmap,
+      CloseableReference<Bitmap> bitmapReference,
       @BitmapAnimationBackend.FrameType int frameType) {
-    if (bitmap != null
+    if (bitmapReference != null
         && mLastBitmapReference != null
-        && bitmap.get().equals(mLastBitmapReference.get())) {
+        && bitmapReference.get().equals(mLastBitmapReference.get())) {
       return;
     }
     CloseableReference.closeSafely(mLastBitmapReference);
     if (mFrameCacheListener != null && mLastFrameNumber != FRAME_NUMBER_UNSET) {
       mFrameCacheListener.onFrameEvicted(this, mLastFrameNumber);
     }
-    mLastBitmapReference = CloseableReference.cloneOrNull(bitmap);
+    mLastBitmapReference = CloseableReference.cloneOrNull(bitmapReference);
     if (mFrameCacheListener != null) {
       mFrameCacheListener.onFrameCached(this, frameNumber);
     }
