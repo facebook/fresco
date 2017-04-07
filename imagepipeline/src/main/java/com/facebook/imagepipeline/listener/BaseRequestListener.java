@@ -62,6 +62,10 @@ public class BaseRequestListener implements RequestListener {
   }
 
   @Override
+  public void onUltimateProducerReached(String requestId, String producerName, boolean successful) {
+  }
+
+  @Override
   public boolean requiresExtraMap(String requestId) {
     return false;
   }

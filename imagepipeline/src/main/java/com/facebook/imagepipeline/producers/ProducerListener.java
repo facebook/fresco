@@ -70,6 +70,13 @@ public interface ProducerListener {
       @Nullable Map<String, String> extraMap);
 
   /**
+   * Called when the producer which can create the final result for a given request has completed.
+   *
+   * <p> This can be used to determine which producer was best able to satisfy the request.
+   */
+  void onUltimateProducerReached(String requestId, String producerName, boolean successful);
+
+  /**
    * @return true if listener makes use of extra map
    * @param requestId
    */
