@@ -36,6 +36,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
 
   private static final AnimationListener NO_OP_LISTENER = new BaseAnimationListener();
 
+  private static final int DEFAULT_FRAME_SCHEDULING_DELAY_MS = 8;
+  private static final int DEFAULT_FRAME_SCHEDULING_OFFSET_MS = 0;
+
   @Nullable
   private AnimationBackend mAnimationBackend;
   @Nullable
@@ -45,6 +48,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   private volatile boolean mIsRunning;
   private long mStartTimeMs;
   private long mLastFrameAnimationTimeMs;
+
+  private long mFrameSchedulingDelayMs = DEFAULT_FRAME_SCHEDULING_DELAY_MS;
+  private long mFrameSchedulingOffsetMs = DEFAULT_FRAME_SCHEDULING_OFFSET_MS;
 
   // Animation statistics
   private int mDroppedFrames;
@@ -152,7 +158,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     }
     long actualRenderTimeStartMs = now();
     long animationTimeMs = mIsRunning
-        ? actualRenderTimeStartMs - mStartTimeMs
+        ? actualRenderTimeStartMs - mStartTimeMs + mFrameSchedulingOffsetMs
         : Math.max(mLastFrameAnimationTimeMs, 0);
 
     // What frame should be drawn?
@@ -199,7 +205,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
       long targetRenderTimeForNextFrameMs =
           mFrameScheduler.getTargetRenderTimeForNextFrameMs(actualRenderTimeEnd - mStartTimeMs);
       if (targetRenderTimeForNextFrameMs != FrameScheduler.NO_NEXT_TARGET_RENDER_TIME) {
-        scheduleNextFrame(targetRenderTimeForNextFrameMs);
+        scheduleNextFrame(targetRenderTimeForNextFrameMs + mFrameSchedulingDelayMs);
       }
     }
   }
@@ -327,6 +333,28 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     return mAnimationBackend == null
         ? 0
         : mAnimationBackend.getLoopCount();
+  }
+
+  /**
+   * Frame scheduling delay to shift the target render time for a frame within the frame's
+   * visible window. If the value is set to 0, the frame will be scheduled right at the beginning
+   * of the frame's visible window.
+   *
+   * @param frameSchedulingDelayMs the delay to use in ms
+   */
+  public void setFrameSchedulingDelayMs(long frameSchedulingDelayMs) {
+    mFrameSchedulingDelayMs = frameSchedulingDelayMs;
+  }
+
+  /**
+   * Frame scheduling offset to shift the animation time by the given offset.
+   * This is similar to {@link #mFrameSchedulingDelayMs} but instead of delaying the invalidation,
+   * this offsets the animation time by the given value.
+   *
+   * @param frameSchedulingOffsetMs the offset to use in ms
+   */
+  public void setFrameSchedulingOffsetMs(long frameSchedulingOffsetMs) {
+    mFrameSchedulingOffsetMs = frameSchedulingOffsetMs;
   }
 
   /**
