@@ -31,6 +31,8 @@ import org.mockito.stubbing.*;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.*;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 /**
@@ -108,6 +110,14 @@ public class LocalContentUriFetchProducerTest {
     mLocalContentUriFetchProducer.produceResults(mConsumer, mProducerContext);
 
     mExecutor.runUntilIdle();
+
+    assertEquals(
+        2,
+        mCapturedEncodedImage.getByteBufferRef()
+            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
   }
 
   @Test(expected = RuntimeException.class)
@@ -117,5 +127,6 @@ public class LocalContentUriFetchProducerTest {
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
   }
 }

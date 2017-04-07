@@ -118,6 +118,7 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
     verify(mInputProducer, never()).produceResults(any(Consumer.class), any(ProducerContext.class));
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, mExtraOnHit);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
     verify(mConsumer).onNewResult(mImageRef2Clone, true);
     // reference must be closed after `consumer.onNewResult` returns
     Assert.assertFalse(mImageRef2Clone.isValid());
@@ -195,6 +196,8 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
     ArgumentCaptor<Consumer> captor = ArgumentCaptor.forClass(Consumer.class);
     verify(mInputProducer).produceResults(captor.capture(), eq(mProducerContext));
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, mExtraOnMiss);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
     return captor.getValue();
   }
 }

@@ -63,6 +63,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
               listener.requiresExtraMap(requestId)
                   ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
                   : null);
+          listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
           consumer.onProgressUpdate(1f);
           consumer.onNewResult(cachedEncodedImage, true);
           return;
@@ -79,6 +80,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
             listener.requiresExtraMap(requestId)
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                 : null);
+        listener.onUltimateProducerReached(requestId, PRODUCER_NAME, false);
         consumer.onNewResult(null, true);
         return;
       }

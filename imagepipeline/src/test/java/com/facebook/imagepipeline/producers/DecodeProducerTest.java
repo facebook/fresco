@@ -303,6 +303,8 @@ public class DecodeProducerTest {
         eq(mRequestId),
         eq(DecodeProducer.PRODUCER_NAME),
         any(Map.class));
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 
   @Test
@@ -357,6 +359,8 @@ public class DecodeProducerTest {
         eq(DecodeProducer.PRODUCER_NAME),
         eq(exception),
         any(Map.class));
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 
   private void setupNetworkUri() {

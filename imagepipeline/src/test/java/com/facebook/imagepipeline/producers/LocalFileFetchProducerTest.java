@@ -113,6 +113,7 @@ public class LocalFileFetchProducerTest {
     assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
   }
 
   @Test(expected = RuntimeException.class)
@@ -123,6 +124,7 @@ public class LocalFileFetchProducerTest {
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
   }
 
   @After

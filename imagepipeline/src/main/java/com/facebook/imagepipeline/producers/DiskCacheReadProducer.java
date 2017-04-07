@@ -90,6 +90,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
                 requestId,
                 PRODUCER_NAME,
                 getExtraMap(listener, requestId, true, cachedReference.getSize()));
+            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, true);
             cachedReference.close();

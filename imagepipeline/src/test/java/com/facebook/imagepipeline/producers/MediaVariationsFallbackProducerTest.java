@@ -46,6 +46,7 @@ import org.robolectric.annotation.Config;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -622,5 +623,12 @@ public class MediaVariationsFallbackProducerTest {
         .onProducerFinishWithCancellation(anyString(), anyString(), anyMap());
     verify(mProducerListener, never())
         .onProducerFinishWithFailure(anyString(), anyString(), any(Throwable.class), anyMap());
+
+    if (isFinal == TriState.YES) {
+      verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
+    } else {
+      verify(mProducerListener, never())
+          .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+    }
   }
 }

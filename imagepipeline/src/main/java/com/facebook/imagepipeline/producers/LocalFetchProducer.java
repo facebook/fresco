@@ -54,9 +54,11 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
           protected EncodedImage getResult() throws Exception {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
             if (encodedImage == null) {
+              listener.onUltimateProducerReached(requestId, getProducerName(), false);
               return null;
             }
             encodedImage.parseMetaData();
+            listener.onUltimateProducerReached(requestId, getProducerName(), true);
             return encodedImage;
           }
 

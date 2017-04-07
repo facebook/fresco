@@ -67,6 +67,7 @@ public class PostprocessedBitmapMemoryCacheProducer
           requestId,
           getProducerName(),
           listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "true") : null);
+      listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
       consumer.onProgressUpdate(1.0f);
       consumer.onNewResult(cachedReference, true);
       cachedReference.close();

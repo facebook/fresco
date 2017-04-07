@@ -150,8 +150,9 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       PooledByteBufferOutputStream pooledOutputStream,
       FetchState fetchState) {
     Map<String, String> extraMap = getExtraMap(fetchState, pooledOutputStream.size());
-    fetchState.getListener()
-        .onProducerFinishWithSuccess(fetchState.getId(), PRODUCER_NAME, extraMap);
+    ProducerListener listener = fetchState.getListener();
+    listener.onProducerFinishWithSuccess(fetchState.getId(), PRODUCER_NAME, extraMap);
+    listener.onUltimateProducerReached(fetchState.getId(), PRODUCER_NAME, true);
     notifyConsumer(pooledOutputStream, true, fetchState.getConsumer());
   }
 
@@ -175,6 +176,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   private void onFailure(FetchState fetchState, Throwable e) {
     fetchState.getListener()
         .onProducerFinishWithFailure(fetchState.getId(), PRODUCER_NAME, e, null);
+    fetchState.getListener()
+        .onUltimateProducerReached(fetchState.getId(), PRODUCER_NAME, false);
     fetchState.getConsumer().onFailure(e);
   }
 

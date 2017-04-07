@@ -118,6 +118,8 @@ public class NetworkFetchProducerTest {
         eq(NetworkFetchProducer.PRODUCER_NAME),
         any(RuntimeException.class),
         isNull(Map.class));
+    verify(mProducerListener)
+        .onUltimateProducerReached(mRequestId, NetworkFetchProducer.PRODUCER_NAME, false);
   }
 
   @Test(timeout = 5000)
@@ -216,6 +218,8 @@ public class NetworkFetchProducerTest {
         NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
     verify(mProducerListener).onProducerFinishWithSuccess(
         eq(mRequestId), eq(NetworkFetchProducer.PRODUCER_NAME), eq(mExtrasMap));
+    verify(mProducerListener)
+        .onUltimateProducerReached(mRequestId, NetworkFetchProducer.PRODUCER_NAME, true);
     verify(mConsumer, times(1)).onNewResult(any(CloseableReference.class), eq(true));
     verifyPooledByteBufferUsed(3);
 

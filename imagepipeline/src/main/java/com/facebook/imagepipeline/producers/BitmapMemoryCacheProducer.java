@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
@@ -63,6 +62,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
             listener.requiresExtraMap(requestId)
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
                 : null);
+        listener.onUltimateProducerReached(requestId, getProducerName(), true);
         consumer.onProgressUpdate(1f);
       }
       consumer.onNewResult(cachedReference, isFinal);
@@ -80,6 +80,7 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           listener.requiresExtraMap(requestId)
               ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
               : null);
+      listener.onUltimateProducerReached(requestId, getProducerName(), false);
       consumer.onNewResult(null, true);
       return;
     }

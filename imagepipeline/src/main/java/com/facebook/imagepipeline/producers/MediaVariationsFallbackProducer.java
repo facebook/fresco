@@ -287,6 +287,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
                     useAsLastResult));
 
             if (useAsLastResult) {
+              listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
               consumer.onProgressUpdate(1);
             }
             consumer.onNewResult(cachedReference, useAsLastResult);

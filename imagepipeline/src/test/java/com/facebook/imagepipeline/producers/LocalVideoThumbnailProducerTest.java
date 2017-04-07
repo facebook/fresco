@@ -53,7 +53,6 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareForTest(android.media.ThumbnailUtils.class)
 @Config(manifest= Config.NONE)
-@Ignore
 public class LocalVideoThumbnailProducerTest {
   private static final String PRODUCER_NAME = LocalVideoThumbnailProducer.PRODUCER_NAME;
   private static final String TEST_FILENAME = "dummy.jpg";
@@ -100,6 +99,8 @@ public class LocalVideoThumbnailProducerTest {
     mProducerContext.cancel();
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithCancellation(mRequestId, PRODUCER_NAME, null);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
     verify(mConsumer).onCancellation();
   }
 
@@ -127,6 +128,7 @@ public class LocalVideoThumbnailProducerTest {
         mCloseableReference.getUnderlyingReferenceTestOnly().get().getUnderlyingBitmap());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
   }
 
   @Test
@@ -155,6 +157,7 @@ public class LocalVideoThumbnailProducerTest {
         ImmutableMap.of(LocalVideoThumbnailProducer.CREATED_THUMBNAIL, "true");
     verify(mProducerListener).onProducerFinishWithSuccess(
         mRequestId, PRODUCER_NAME, thumbnailFoundMap);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
   }
 
   @Test
@@ -172,6 +175,7 @@ public class LocalVideoThumbnailProducerTest {
         ImmutableMap.of(LocalVideoThumbnailProducer.CREATED_THUMBNAIL, "false");
     verify(mProducerListener).onProducerFinishWithSuccess(
         mRequestId, PRODUCER_NAME, thumbnailNotFoundMap);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
   }
 
   @Test(expected = RuntimeException.class)
@@ -184,6 +188,7 @@ public class LocalVideoThumbnailProducerTest {
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
   }
 
   @After

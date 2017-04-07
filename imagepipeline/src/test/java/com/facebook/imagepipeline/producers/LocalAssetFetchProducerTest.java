@@ -32,6 +32,8 @@ import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 /**
@@ -114,6 +116,15 @@ public class LocalAssetFetchProducerTest {
 
     mLocalAssetFetchProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
+
+    assertEquals(
+        2,
+        mCapturedEncodedImage.getByteBufferRef()
+            .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+    assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
   }
 
   @Test(expected = RuntimeException.class)
@@ -122,10 +133,12 @@ public class LocalAssetFetchProducerTest {
         .thenThrow(mException);
     mLocalAssetFetchProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
+
     verify(mConsumer).onFailure(mException);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithFailure(
         mRequestId, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
   }
 
 }

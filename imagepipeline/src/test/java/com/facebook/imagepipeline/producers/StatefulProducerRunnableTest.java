@@ -99,6 +99,8 @@ public class StatefulProducerRunnableTest {
     verify(mConsumer).onNewResult(mResult, true);
     verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(REQUEST_ID, PRODUCER_NAME, mSuccessMap);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
     verify(mResult).close();
   }
 
@@ -109,6 +111,8 @@ public class StatefulProducerRunnableTest {
     verify(mConsumer).onNewResult(mResult, true);
     verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithSuccess(REQUEST_ID, PRODUCER_NAME, null);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
     verify(mResult).close();
   }
 
@@ -122,6 +126,8 @@ public class StatefulProducerRunnableTest {
         REQUEST_ID,
         PRODUCER_NAME,
         mCancellationMap);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 
   @Test
@@ -130,6 +136,8 @@ public class StatefulProducerRunnableTest {
     verify(mConsumer).onCancellation();
     verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
     verify(mProducerListener).onProducerFinishWithCancellation(REQUEST_ID, PRODUCER_NAME, null);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 
 
@@ -145,6 +153,8 @@ public class StatefulProducerRunnableTest {
         PRODUCER_NAME,
         mException,
         mFailureMap);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 
   @Test
@@ -158,5 +168,7 @@ public class StatefulProducerRunnableTest {
         PRODUCER_NAME,
         mException,
         null);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 }

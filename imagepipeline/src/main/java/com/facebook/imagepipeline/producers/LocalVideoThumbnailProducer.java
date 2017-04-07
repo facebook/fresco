@@ -58,6 +58,18 @@ public class LocalVideoThumbnailProducer implements
             PRODUCER_NAME,
             requestId) {
           @Override
+          protected void onSuccess(CloseableReference<CloseableImage> result) {
+            super.onSuccess(result);
+            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, result != null);
+          }
+
+          @Override
+          protected void onFailure(Exception e) {
+            super.onFailure(e);
+            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, false);
+          }
+
+          @Override
           protected CloseableReference<CloseableImage> getResult() throws Exception {
             Bitmap thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(
                 imageRequest.getSourceFile().getPath(),
