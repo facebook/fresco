@@ -124,7 +124,7 @@
 
   </declare-styleable>
 
-  <declare-styleable name="SimpleDraweeView">
+  <declare-styleable name="SimpleDraweeView" parent="@declare-styleable/GenericDraweeHierarchy">
 
     <!-- An image uri . -->
     <attr name="actualImageUri" format="string"/>
