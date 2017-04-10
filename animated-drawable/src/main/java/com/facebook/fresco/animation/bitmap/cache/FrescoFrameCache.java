@@ -14,6 +14,7 @@ import javax.annotation.concurrent.GuardedBy;
 import android.graphics.Bitmap;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
@@ -106,13 +107,17 @@ public class FrescoFrameCache implements BitmapFrameCache {
     // TODO (t15557326) Not supported for now
   }
 
+  @VisibleForTesting
   @Nullable
-  private static CloseableReference<Bitmap> extractAndClose(
+  static CloseableReference<Bitmap> extractAndClose(
       @Nullable CloseableReference<CloseableImage> closeableImage) {
     try {
       if (CloseableReference.isValid(closeableImage) &&
           closeableImage.get() instanceof CloseableStaticBitmap) {
-        return ((CloseableStaticBitmap) closeableImage.get()).convertToBitmapReference();
+        CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage.get();
+        if (closeableStaticBitmap != null && !closeableStaticBitmap.isClosed()) {
+          return closeableStaticBitmap.convertToBitmapReference();
+        }
       }
       return null;
     } finally {
