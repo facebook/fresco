@@ -187,7 +187,9 @@ public class ImageRequest {
 
   public synchronized File getSourceFile() {
     if (mSourceFile == null) {
-      mSourceFile = new File(mSourceUri.getPath());
+      String filepath = mSourceUri.toString();
+      filepath = filepath.substring("file://".length());
+      mSourceFile = new File(filepath);
     }
     return mSourceFile;
   }
