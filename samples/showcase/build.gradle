@@ -46,6 +46,7 @@ dependencies {
     compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
     compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 
     compile 'com.facebook.keyframes:keyframes:1.0'
 
@@ -54,6 +55,7 @@ dependencies {
 
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-span')
+    compile project(':tools:stetho')
 
     // Only used for the custom SVG decoder
     compile 'com.caverock:androidsvg:1.2.1'
