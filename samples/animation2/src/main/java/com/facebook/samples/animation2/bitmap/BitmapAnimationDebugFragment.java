@@ -64,9 +64,6 @@ public class BitmapAnimationDebugFragment extends Fragment {
             BitmapAnimationBackend backend,
             int frameNumber,
             @BitmapAnimationBackend.FrameType int frameType) {
-          if (frameNumber == mActiveFrameNumber) {
-            return;
-          }
           FrameInformationHolder previousFrame = mFrameInfoMap.get(mActiveFrameNumber);
           if (previousFrame != null) {
             previousFrame.setFrameType(false, frameType);
@@ -130,12 +127,19 @@ public class BitmapAnimationDebugFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
     // Get the animation container
-    ImageView imageView = (ImageView) view.findViewById(R.id.animation_container);
+    final ImageView imageView = (ImageView) view.findViewById(R.id.animation_container);
 
     mFrameInformationContainer = (LinearLayout) view.findViewById(R.id.frame_information);
 
     mAnimatedDrawable = new AnimatedDrawable2();
     mAnimatedDrawable.setDrawListener(new AnimatedDrawable2DebugDrawListener());
+
+    view.findViewById(R.id.invalidate_button).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        imageView.invalidate();
+      }
+    });
 
     mAnimationControlsManager = new AnimationControlsManager(
         mAnimatedDrawable,

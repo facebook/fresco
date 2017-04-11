@@ -13,4 +13,6 @@
   <string name="cache_noop">No-op cache</string>
   <string name="cache_keep_last">Keep last frame</string>
   <string name="cache_naive_cache_all">Naive cache all frames</string>
+
+  <string name="invalidate_image">Invalidate image view</string>
 </resources>

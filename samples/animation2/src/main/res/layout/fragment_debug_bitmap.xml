@@ -29,6 +29,13 @@
     <include android:id="@+id/controls" layout="@layout/controls"/>
   </LinearLayout>
 
+  <Button
+      android:id="@+id/invalidate_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/invalidate_image"
+      />
+
   <include android:id="@+id/cache_selector" layout="@layout/cache_selector"/>
 
   <ScrollView
