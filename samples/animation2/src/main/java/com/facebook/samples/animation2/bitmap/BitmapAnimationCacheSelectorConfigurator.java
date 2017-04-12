@@ -17,10 +17,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
+import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.samples.animation2.R;
 
 /**
@@ -61,6 +65,8 @@ public class BitmapAnimationCacheSelectorConfigurator {
     mArrayAdapter.add(createNoOpCachingStrategy());
     mArrayAdapter.add(createKeepLastCachingStrategy());
     mArrayAdapter.add(createNaiveCacheAllFramesCachingStrategy());
+    mArrayAdapter.add(createFrescoFrameCache(false));
+    mArrayAdapter.add(createFrescoFrameCache(true));
   }
 
   private CachingStrategyEntry createNoOpCachingStrategy() {
@@ -106,6 +112,26 @@ public class BitmapAnimationCacheSelectorConfigurator {
         return R.string.cache_naive_cache_all;
       }
     };
+  }
+
+  private CachingStrategyEntry createFrescoFrameCache(final boolean reuseBitmaps) {
+    return new CachingStrategyEntry() {
+      @Override
+      public BitmapFrameCache createBitmapFrameCache() {
+        return new FrescoFrameCache(createAnimatedFrameCache(), reuseBitmaps);
+      }
+
+      @Override
+      public int getTitleResId() {
+        return reuseBitmaps ? R.string.cache_fresco_reuse : R.string.cache_fresco;
+      }
+    };
+  }
+
+  private AnimatedFrameCache createAnimatedFrameCache() {
+    return new AnimatedFrameCache(
+        new SimpleCacheKey("Sample"),
+        Fresco.getImagePipelineFactory().getBitmapCountingMemoryCache());
   }
 
   private void setupSelector() {

@@ -292,7 +292,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       } else {
         canvas.drawBitmap(bitmapReference.get(), null, mBounds, mPaint);
       }
-      // The calee has to clone the reference if it needs to hold on to the bitmap
+      // The callee has to clone the reference if it needs to hold on to the bitmap
       mBitmapFrameCache.onFrameRendered(
           frameNumber,
           bitmapReference,
