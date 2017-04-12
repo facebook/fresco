@@ -17,6 +17,8 @@ import com.facebook.cache.common.CacheEvent;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
 
+import com.facebook.infer.annotation.ReturnsOwnership;
+
 /**
  * Implementation of {@link CacheEvent} that allows the values to be set and supports recycling of
  * instances.
@@ -38,6 +40,7 @@ public class SettableCacheEvent implements CacheEvent {
   private CacheEventListener.EvictionReason mEvictionReason;
   private SettableCacheEvent mNextRecycledEvent;
 
+  @ReturnsOwnership
   public static SettableCacheEvent obtain() {
     synchronized (RECYCLER_LOCK) {
       if (sFirstRecycledEvent != null) {
