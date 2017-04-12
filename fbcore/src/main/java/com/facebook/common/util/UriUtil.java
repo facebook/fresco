@@ -53,11 +53,12 @@ public class UriUtil {
    */
   public static final String LOCAL_RESOURCE_SCHEME = "res";
 
-  /** Data scheme for URIs */
+  /**
+   * Data scheme for URIs
+   */
   public static final String DATA_SCHEME = "data";
 
   /**
-   * /**
    * Check if uri represents network resource
    *
    * @param uri uri to check
@@ -92,6 +93,7 @@ public class UriUtil {
 
   /**
    * Checks if the given URI is a general Contact URI, and not a specific display photo.
+   *
    * @param uri the URI to check
    * @return true if the uri is a Contact URI, and is not already specifying a display photo.
    */
@@ -103,6 +105,7 @@ public class UriUtil {
 
   /**
    * Checks if the given URI is for a photo from the device's local media store.
+   *
    * @param uri the URI to check
    * @return true if the URI points to a media store photo
    */
@@ -134,7 +137,9 @@ public class UriUtil {
     return LOCAL_RESOURCE_SCHEME.equals(scheme);
   }
 
-  /** Check if the uri is a data uri */
+  /**
+   * Check if the uri is a data uri
+   */
   public static boolean isDataUri(@Nullable Uri uri) {
     return DATA_SCHEME.equals(getSchemeOrNull(uri));
   }
@@ -160,6 +165,7 @@ public class UriUtil {
 
   /**
    * Get the path of a file from the Uri.
+   *
    * @param contentResolver the content resolver which will query for the source file
    * @param srcUri The source uri
    * @return The Path for the file or null if doesn't exists

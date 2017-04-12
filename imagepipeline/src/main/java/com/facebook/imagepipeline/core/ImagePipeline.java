@@ -51,6 +51,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  */
 @ThreadSafe
 public class ImagePipeline {
+
   private static final CancellationException PREFETCH_EXCEPTION =
       new CancellationException("Prefetching is not enabled");
 
@@ -153,9 +154,9 @@ public class ImagePipeline {
    * @return a DataSource representing pending results and completion of the request
    */
   public Supplier<DataSource<CloseableReference<PooledByteBuffer>>>
-      getEncodedImageDataSourceSupplier(
-          final ImageRequest imageRequest,
-          final Object callerContext) {
+  getEncodedImageDataSourceSupplier(
+      final ImageRequest imageRequest,
+      final Object callerContext) {
     return new Supplier<DataSource<CloseableReference<PooledByteBuffer>>>() {
       @Override
       public DataSource<CloseableReference<PooledByteBuffer>> get() {
@@ -191,6 +192,7 @@ public class ImagePipeline {
    * Submits a request for execution and returns a DataSource representing the pending decoded
    * image(s).
    * <p>The returned DataSource must be closed once the client has finished with it.
+   *
    * @param imageRequest the request to submit
    * @param callerContext the caller context for image request
    * @return a DataSource representing the pending decoded image(s)
@@ -205,6 +207,7 @@ public class ImagePipeline {
    * Submits a request for execution and returns a DataSource representing the pending decoded
    * image(s).
    * <p>The returned DataSource must be closed once the client has finished with it.
+   *
    * @param imageRequest the request to submit
    * @param callerContext the caller context for image request
    * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image request
@@ -344,6 +347,7 @@ public class ImagePipeline {
 
   /**
    * Removes all images with the specified {@link Uri} from memory cache.
+   *
    * @param uri The uri of the image to evict
    */
   public void evictFromMemoryCache(final Uri uri) {
@@ -356,6 +360,7 @@ public class ImagePipeline {
    * <p>If you have supplied your own cache key factory when configuring the pipeline, this method
    * may not work correctly. It will only work if the custom factory builds the cache key entirely
    * from the URI. If that is not the case, use {@link #evictFromDiskCache(ImageRequest)}.
+   *
    * @param uri The uri of the image to evict
    */
   public void evictFromDiskCache(final Uri uri) {
@@ -378,6 +383,7 @@ public class ImagePipeline {
    * may not work correctly. It will only work if the custom factory builds the cache key entirely
    * from the URI. If that is not the case, use {@link #evictFromMemoryCache(Uri)} and
    * {@link #evictFromDiskCache(ImageRequest)} separately.
+   *
    * @param uri The uri of the image to evict
    */
   public void evictFromCache(final Uri uri) {
@@ -428,7 +434,7 @@ public class ImagePipeline {
     }
     Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
     return mBitmapMemoryCache.contains(bitmapCachePredicate);
- }
+  }
 
   /**
    * @return The Bitmap MemoryCache
@@ -492,6 +498,7 @@ public class ImagePipeline {
    * Performs disk cache check synchronously. It is not recommended to use this
    * unless you know what exactly you are doing. Disk cache check is a costly operation,
    * the call will block the caller thread until the cache check is completed.
+   *
    * @param imageRequest the imageRequest for the image to be looked up.
    * @return true if the image was found in the disk cache, false otherwise.
    */
@@ -626,11 +633,11 @@ public class ImagePipeline {
 
   private Predicate<CacheKey> predicateForUri(final Uri uri) {
     return new Predicate<CacheKey>() {
-          @Override
-          public boolean apply(CacheKey key) {
-            return key.containsUri(uri);
-          }
-        };
+      @Override
+      public boolean apply(CacheKey key) {
+        return key.containsUri(uri);
+      }
+    };
   }
 
   public void pause() {

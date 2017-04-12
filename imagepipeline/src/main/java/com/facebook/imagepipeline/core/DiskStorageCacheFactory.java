@@ -21,6 +21,7 @@ import com.facebook.cache.disk.FileCache;
  * Factory for the default implementation of the FileCache.
  */
 public class DiskStorageCacheFactory implements FileCacheFactory {
+
   private DiskStorageFactory mDiskStorageFactory;
 
   public DiskStorageCacheFactory(DiskStorageFactory diskStorageFactory) {

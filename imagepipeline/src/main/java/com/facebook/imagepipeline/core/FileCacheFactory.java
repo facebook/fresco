@@ -17,5 +17,6 @@ import com.facebook.cache.disk.FileCache;
  * Used by ImagePipelineConfig/Factory
  */
 public interface FileCacheFactory {
+
   FileCache get(DiskCacheConfig diskCacheConfig);
 }

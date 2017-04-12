@@ -37,7 +37,10 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
+import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -46,9 +49,6 @@ import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-import com.facebook.imagepipeline.cache.MediaVariationsIndex;
-import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
-import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 
 /**
@@ -66,22 +66,30 @@ public class ImagePipelineFactory {
   private static ImagePipelineFactory sInstance = null;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
-  /** Gets the instance of {@link ImagePipelineFactory}. */
+  /**
+   * Gets the instance of {@link ImagePipelineFactory}.
+   */
   public static ImagePipelineFactory getInstance() {
     return Preconditions.checkNotNull(sInstance, "ImagePipelineFactory was not initialized!");
   }
 
-  /** Initializes {@link ImagePipelineFactory} with default config. */
+  /**
+   * Initializes {@link ImagePipelineFactory} with default config.
+   */
   public static void initialize(Context context) {
     initialize(ImagePipelineConfig.newBuilder(context).build());
   }
 
-  /** Initializes {@link ImagePipelineFactory} with the specified config. */
+  /**
+   * Initializes {@link ImagePipelineFactory} with the specified config.
+   */
   public static void initialize(ImagePipelineConfig imagePipelineConfig) {
     sInstance = new ImagePipelineFactory(imagePipelineConfig);
   }
 
-  /** Shuts {@link ImagePipelineFactory} down. */
+  /**
+   * Shuts {@link ImagePipelineFactory} down.
+   */
   public static void shutDown() {
     if (sInstance != null) {
       sInstance.getBitmapMemoryCache().removeAll(AndroidPredicates.<CacheKey>True());
@@ -127,7 +135,7 @@ public class ImagePipelineFactory {
   }
 
   public CountingMemoryCache<CacheKey, CloseableImage>
-      getBitmapCountingMemoryCache() {
+  getBitmapCountingMemoryCache() {
     if (mBitmapCountingMemoryCache == null) {
       mBitmapCountingMemoryCache =
           BitmapCountingMemoryCacheFactory.get(
@@ -374,7 +382,8 @@ public class ImagePipelineFactory {
   public MediaVariationsIndex getMediaVariationsIndex() {
     if (mMediaVariationsIndex == null) {
       mMediaVariationsIndex = mConfig.getExperiments().getMediaVariationsIndexEnabled()
-          ? new MediaVariationsIndexDatabase(mConfig.getContext(),
+          ? new MediaVariationsIndexDatabase(
+              mConfig.getContext(),
               mConfig.getExecutorSupplier().forLocalStorageRead(),
               mConfig.getExecutorSupplier().forLocalStorageWrite())
           : new NoOpMediaVariationsIndex();

@@ -25,6 +25,8 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.DiskCachePolicy;
+import com.facebook.imagepipeline.cache.MediaIdExtractor;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.SmallCacheIfRequestedDiskCachePolicy;
 import com.facebook.imagepipeline.cache.SplitCachesByImageSizeDiskCachePolicy;
@@ -50,9 +52,7 @@ import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
-import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
-import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
@@ -243,24 +243,21 @@ public class ProducerFactory {
     return new LocalAssetFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mAssetManager
-    );
+        mAssetManager);
   }
 
   public LocalContentUriFetchProducer newLocalContentUriFetchProducer() {
     return new LocalContentUriFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mContentResolver
-    );
+        mContentResolver);
   }
 
-    public LocalContentUriThumbnailFetchProducer newLocalContentUriThumbnailFetchProducer() {
+  public LocalContentUriThumbnailFetchProducer newLocalContentUriThumbnailFetchProducer() {
     return new LocalContentUriThumbnailFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mContentResolver
-    );
+        mContentResolver);
   }
 
   public LocalExifThumbnailProducer newLocalExifThumbnailProducer() {
@@ -278,16 +275,14 @@ public class ProducerFactory {
   public LocalFileFetchProducer newLocalFileFetchProducer() {
     return new LocalFileFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
-        mPooledByteBufferFactory
-    );
+        mPooledByteBufferFactory);
   }
 
   public LocalResourceFetchProducer newLocalResourceFetchProducer() {
     return new LocalResourceFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory,
-        mResources
-    );
+        mResources);
   }
 
   public LocalVideoThumbnailProducer newLocalVideoThumbnailProducer() {
