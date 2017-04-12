@@ -123,6 +123,11 @@ public class ForwardingDrawable extends Drawable
   }
 
   @Override
+  public ConstantState getConstantState() {
+    return mCurrentDelegate.getConstantState();
+  }
+
+  @Override
   public boolean isStateful() {
     return mCurrentDelegate.isStateful();
   }
