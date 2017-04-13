@@ -33,22 +33,27 @@ import com.facebook.fresco.samples.showcase.R;
 public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
 
   /**
-   * Total number of images displayed
+   * lorempixel.com image categories.
    */
-  private static final int TOTAL_NUM_ENTRIES = 200;
+  private static final String[] CATEGORIES = {
+     "animals",
+     "sports",
+     "nature",
+     "city",
+     "food",
+     "people",
+     "nightlife",
+     "fashion",
+     "transport",
+     "cats",
+     "business",
+     "technics",
+  };
 
   /**
-   * URIs that will be repeated
+   * How many images per each category.
    */
-  private static final Uri[] URIS = {
-      Uri.parse("http://frescolib.org/static/sample-images/animal_a_s.jpg"),
-      Uri.parse("http://frescolib.org/static/sample-images/animal_b_s.jpg"),
-      Uri.parse("http://frescolib.org/static/sample-images/animal_c_s.jpg"),
-      Uri.parse("http://frescolib.org/static/sample-images/animal_d_s.jpg"),
-      Uri.parse("http://frescolib.org/static/sample-images/animal_e_s.jpg"),
-      Uri.parse("http://frescolib.org/static/sample-images/animal_f_s.jpg"),
-      Uri.parse("http://frescolib.org/static/sample-images/animal_g_s.jpg"),
-  };
+  private static final int NUM_ENTRIES_PER_CATEGORY = 10;
 
   /**
    * Number of recycler view spans
@@ -79,14 +84,11 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
 
   private List<Uri> createDummyData() {
     List<Uri> data = new ArrayList<>();
-    for (int i = 0; i < TOTAL_NUM_ENTRIES; i++) {
-      // We add the URI and append a query parameter (?cache_busting=123) so that each image
-      // will be treated as a separate network image.
-      data.add(
-          URIS[i % URIS.length]
-              .buildUpon()
-              .appendQueryParameter("cache_busting", Integer.toString(i))
-              .build());
+    for (int i = 0; i < NUM_ENTRIES_PER_CATEGORY; i++) {
+      for (int j = 0; j < CATEGORIES.length; j++) {
+        data.add(Uri.parse(String.format(
+            "http://lorempixel.com/400/400/%s/%d", CATEGORIES[j], i + 1)));
+      }
     }
     return data;
   }
