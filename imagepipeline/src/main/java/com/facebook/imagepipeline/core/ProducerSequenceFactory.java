@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProduce
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
@@ -50,6 +51,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWORK;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE;
 
 public class ProducerSequenceFactory {
 
@@ -77,6 +79,7 @@ public class ProducerSequenceFactory {
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalResourceFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalAssetFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mDataFetchSequence;
+  @VisibleForTesting Producer<CloseableReference<CloseableImage>> mQualifiedResourceFetchSequence;
   @VisibleForTesting Map<
       Producer<CloseableReference<CloseableImage>>,
       Producer<CloseableReference<CloseableImage>>>
@@ -235,6 +238,8 @@ public class ProducerSequenceFactory {
         return getLocalAssetFetchSequence();
       case SOURCE_TYPE_LOCAL_RESOURCE:
         return getLocalResourceFetchSequence();
+      case SOURCE_TYPE_QUALIFIED_RESOURCE:
+        return getQualifiedResourceFetchSequence();
       case SOURCE_TYPE_DATA:
         return getDataFetchSequence();
       default:
@@ -396,6 +401,25 @@ public class ProducerSequenceFactory {
           thumbnailProducers);
     }
     return mLocalContentUriFetchSequence;
+  }
+
+  /**
+   * bitmap cache get ->
+   * background thread hand-off -> multiplex -> bitmap cache -> decode ->
+   * branch on separate images
+   *   -> exif resize and rotate -> exif thumbnail creation
+   *   -> local image resize and rotate -> add meta data producer -> multiplex -> encoded cache ->
+   *   (webp transcode) -> qualified resource fetch.
+   */
+  private synchronized Producer<CloseableReference<CloseableImage>>
+  getQualifiedResourceFetchSequence() {
+    if (mQualifiedResourceFetchSequence == null) {
+      QualifiedResourceFetchProducer qualifiedResourceFetchProducer =
+          mProducerFactory.newQualifiedResourceFetchProducer();
+      mQualifiedResourceFetchSequence =
+          newBitmapCacheGetToLocalTransformSequence(qualifiedResourceFetchProducer);
+    }
+    return mQualifiedResourceFetchSequence;
   }
 
   /**

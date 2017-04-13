@@ -13,6 +13,7 @@ import java.lang.annotation.Retention;
 import android.support.annotation.IntDef;
 
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_DATA;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_ASSET;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_CONTENT;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_FILE;
@@ -37,7 +38,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
     SOURCE_TYPE_LOCAL_CONTENT,
     SOURCE_TYPE_LOCAL_ASSET,
     SOURCE_TYPE_LOCAL_RESOURCE,
-    SOURCE_TYPE_DATA
+    SOURCE_TYPE_DATA,
+    SOURCE_TYPE_QUALIFIED_RESOURCE
 })
 public @interface SourceUriType {
 
@@ -50,4 +52,5 @@ public @interface SourceUriType {
   int SOURCE_TYPE_LOCAL_ASSET = 5;
   int SOURCE_TYPE_LOCAL_RESOURCE = 6;
   int SOURCE_TYPE_DATA = 7;
+  int SOURCE_TYPE_QUALIFIED_RESOURCE = 8;
 }

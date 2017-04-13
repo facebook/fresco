@@ -34,6 +34,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWORK;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE;
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 /**
@@ -300,6 +301,8 @@ public class ImageRequest {
       return SOURCE_TYPE_LOCAL_RESOURCE;
     } else if (UriUtil.isDataUri(uri)) {
       return SOURCE_TYPE_DATA;
+    } else if (UriUtil.isQualifiedResourceUri(uri))  {
+      return SOURCE_TYPE_QUALIFIED_RESOURCE;
     } else {
       return SOURCE_TYPE_UNKNOWN;
     }

@@ -45,6 +45,7 @@ import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.DiskCacheWriteProducer;
 import com.facebook.imagepipeline.producers.EncodedCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProducer;
@@ -276,6 +277,13 @@ public class ProducerFactory {
     return new LocalFileFetchProducer(
         mExecutorSupplier.forLocalStorageRead(),
         mPooledByteBufferFactory);
+  }
+
+  public QualifiedResourceFetchProducer newQualifiedResourceFetchProducer() {
+    return new QualifiedResourceFetchProducer(
+        mExecutorSupplier.forLocalStorageRead(),
+        mPooledByteBufferFactory,
+        mContentResolver);
   }
 
   public LocalResourceFetchProducer newLocalResourceFetchProducer() {
