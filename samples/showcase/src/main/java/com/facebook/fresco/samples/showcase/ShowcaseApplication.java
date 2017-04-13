@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
@@ -25,6 +26,10 @@ import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
+import com.facebook.stetho.DumperPluginsProvider;
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.dumpapp.DumperPlugin;
 
 /**
  * Showcase Application implementation where we set up Fresco
@@ -57,5 +62,17 @@ public class ShowcaseApplication extends Application {
         DebugOverlaySupplierSingleton.getInstance(getApplicationContext()));
 
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build());
+
+    final Context context = this;
+    Stetho.initialize(Stetho.newInitializerBuilder(context)
+        .enableDumpapp(new DumperPluginsProvider() {
+          @Override
+          public Iterable<DumperPlugin> get() {
+            return new Stetho.DefaultDumperPluginsBuilder(context)
+                .provide(new FrescoStethoPlugin())
+                .finish();
+          }
+        })
+        .build());
   }
 }
