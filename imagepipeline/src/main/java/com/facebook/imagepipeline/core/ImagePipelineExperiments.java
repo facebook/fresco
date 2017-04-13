@@ -127,7 +127,10 @@ public class ImagePipelineExperiments {
      *
      * <p>This will require the image pipeline to do up to two disk reads, instead of one, before
      * going out to network. Use only if this pattern makes sense for your application.
+     *
+     * @deprecated This experiment will not be promoted to the main config and will soon be removed.
      */
+    @Deprecated
     public ImagePipelineConfig.Builder setForceSmallCacheThresholdBytes(
         int forceSmallCacheThresholdBytes) {
       mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
