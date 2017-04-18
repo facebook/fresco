@@ -73,6 +73,9 @@
   <string name="imagepipeline_media_variations_toast_mode_listed_variants">Using a list of variants added to the image request</string>
   <string name="imagepipeline_media_variations_toast_mode_media_id_extractor">Using a MediaIdExtractor to pull a media ID from the URL</string>
 
+  <string name="imagepipeline_qualified_resource_title">Qualified Resource URI</string>
+  <string name="imagepipeline_qualified_resource_help">Demonstration of loading a resource using a qualifying resource URI. This allows for loading resources that are not part of the application\'s main package.</string>
+
   <string name="category_format">Image Format</string>
 
   <string name="format_switch_checker_board">Checker board background</string>

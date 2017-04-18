@@ -65,6 +65,10 @@
             android:id="@+id/nav_imagepipeline_prefetch"
             android:title="@string/imagepipeline_prefetch_title"
             />
+        <item
+            android:id="@+id/nav_imagepipeline_qualified_resource"
+            android:title="@string/imagepipeline_qualified_resource_title"
+            />
       </group>
     </menu>
   </item>
