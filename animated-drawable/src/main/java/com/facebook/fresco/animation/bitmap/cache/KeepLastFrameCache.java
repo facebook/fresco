@@ -95,6 +95,13 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   }
 
   @Override
+  public void onFramePrepared(
+      int frameNumber,
+      CloseableReference<Bitmap> bitmapReference,
+      @BitmapAnimationBackend.FrameType int frameType) {
+  }
+
+  @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
     mFrameCacheListener = frameCacheListener;
   }

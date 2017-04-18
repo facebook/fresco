@@ -103,6 +103,13 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   @Override
+  public synchronized void onFramePrepared(
+      int frameNumber,
+      CloseableReference<Bitmap> bitmapReference,
+      @BitmapAnimationBackend.FrameType int frameType) {
+  }
+
+  @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
     // TODO (t15557326) Not supported for now
   }

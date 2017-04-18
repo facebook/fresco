@@ -61,6 +61,14 @@ public class NoOpCache implements BitmapFrameCache {
   }
 
   @Override
+  public void onFramePrepared(
+      int frameNumber,
+      CloseableReference<Bitmap> bitmapReference,
+      @BitmapAnimationBackend.FrameType int frameType) {
+    // Does not cache anything
+  }
+
+  @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
     // Does not cache anything
   }

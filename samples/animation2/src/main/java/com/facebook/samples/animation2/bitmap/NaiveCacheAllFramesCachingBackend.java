@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.util.SparseArray;
 
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imageutils.BitmapUtil;
 
@@ -84,6 +85,13 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
     if (mFrameCacheListener != null) {
       mFrameCacheListener.onFrameCached(this, frameNumber);
     }
+  }
+
+  @Override
+  public void onFramePrepared(
+      int frameNumber,
+      CloseableReference<Bitmap> bitmapReference,
+      @BitmapAnimationBackend.FrameType int frameType) {
   }
 
   @Override
