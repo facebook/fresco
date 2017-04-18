@@ -213,9 +213,16 @@ public class CountingMemoryCacheTest {
 
   @Test
   public void testCantReuseNonExclusive() {
-    mCache.cache(KEY, newReference(100), mEntryStateObserver);
-    assertNull(mCache.reuse(KEY));
+    CloseableReference<Integer> cachedRef =
+        mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(0, 0);
+    CloseableReference<Integer> reusedRef = mCache.reuse(KEY);
+    assertNull(reusedRef);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(0, 0);
     verify(mEntryStateObserver, never()).onExclusivityChanged(anyString(), anyBoolean());
+    cachedRef.close();
   }
 
   @Test
@@ -224,11 +231,61 @@ public class CountingMemoryCacheTest {
         mCache.cache(KEY, newReference(100), mEntryStateObserver);
     cachedRef.close();
     verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(1, 100);
     cachedRef = mCache.reuse(KEY);
     assertNotNull(cachedRef);
     verify(mEntryStateObserver).onExclusivityChanged(KEY, false);
+    assertTotalSize(0, 0);
+    assertExclusivelyOwnedSize(0, 0);
     cachedRef.close();
     verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+  }
+
+  @Test
+  public void testReuseExclusive_CacheSameItem() {
+    CloseableReference<Integer> cachedRef =
+        mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    cachedRef.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(1, 100);
+    cachedRef = mCache.reuse(KEY);
+    assertNotNull(cachedRef);
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, false);
+    assertTotalSize(0, 0);
+    assertExclusivelyOwnedSize(0, 0);
+    CloseableReference<Integer> newItem = mCache.cache(KEY, cachedRef);
+    cachedRef.close();
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(0, 0);
+    newItem.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(1, 100);
+  }
+
+  @Test
+  public void testReuseExclusive_CacheSameItemWithDifferentKey() {
+    CloseableReference<Integer> cachedRef =
+        mCache.cache(KEY, newReference(100), mEntryStateObserver);
+    cachedRef.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(1, 100);
+    cachedRef = mCache.reuse(KEY);
+    assertNotNull(cachedRef);
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, false);
+    assertTotalSize(0, 0);
+    assertExclusivelyOwnedSize(0, 0);
+    CloseableReference<Integer> newItem = mCache.cache(KEYS[2], cachedRef);
+    cachedRef.close();
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(0, 0);
+    newItem.close();
+    verify(mEntryStateObserver).onExclusivityChanged(KEY, true);
+    assertTotalSize(1, 100);
+    assertExclusivelyOwnedSize(1, 100);
   }
 
   @Test
