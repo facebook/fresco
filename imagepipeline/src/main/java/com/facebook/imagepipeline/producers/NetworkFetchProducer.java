@@ -188,7 +188,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
   }
 
   private boolean shouldPropagateIntermediateResults(FetchState fetchState) {
-    if (!fetchState.getContext().getImageRequest().getProgressiveRenderingEnabled()) {
+    if (!fetchState.getContext().isIntermediateResultExpected()) {
       return false;
     }
     return mNetworkFetcher.shouldPropagate(fetchState);

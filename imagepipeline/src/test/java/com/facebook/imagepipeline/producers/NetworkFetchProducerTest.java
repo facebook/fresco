@@ -74,7 +74,6 @@ public class NetworkFetchProducerTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     PowerMockito.mockStatic(SystemClock.class);
-    when(mImageRequest.getProgressiveRenderingEnabled()).thenReturn(true);
     mNetworkFetchProducer = new NetworkFetchProducer(
         mPooledByteBufferFactory,
         mByteArrayPool,
