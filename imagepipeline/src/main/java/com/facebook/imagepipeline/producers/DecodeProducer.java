@@ -424,9 +424,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           return false;
         }
         int scanNum = mProgressiveJpegParser.getBestScanNumber();
-        if (scanNum <= mLastScheduledScanNumber ||
-            scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(
-                mLastScheduledScanNumber)) {
+        if (scanNum <= mLastScheduledScanNumber) {
+          // We have already decoded this scan, no need to do so again
+          return false;
+        }
+        if (scanNum < mProgressiveJpegConfig.getNextScanNumberToDecode(mLastScheduledScanNumber)
+            && !mProgressiveJpegParser.isEndMarkerRead()) {
+          // We have not reached the minimum scan set by the configuration and there
+          // are still more scans to be read (the end marker is not reached)
           return false;
         }
         mLastScheduledScanNumber = scanNum;
