@@ -94,7 +94,7 @@ public interface BitmapFrameCache {
   void onFrameRendered(
       int frameNumber,
       CloseableReference<Bitmap> bitmapReference,
-      int frameType);
+      @BitmapAnimationBackend.FrameType int frameType);
 
   /**
    * Callback when a bitmap reference for a given frame has been prepared for future rendering.

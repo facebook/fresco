@@ -80,7 +80,7 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
   public synchronized void onFrameRendered(
       int frameNumber,
       CloseableReference<Bitmap> bitmapReference,
-      int frameType) {
+      @BitmapAnimationBackend.FrameType int frameType) {
       mBitmapSparseArray.put(frameNumber, CloseableReference.cloneOrNull(bitmapReference));
     if (mFrameCacheListener != null) {
       mFrameCacheListener.onFrameCached(this, frameNumber);
