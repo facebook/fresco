@@ -26,6 +26,7 @@ import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
+import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 
@@ -43,7 +44,7 @@ public class ExampleBitmapAnimationFactory {
         bitmapFrameCache,
         new ColorListAnimationInformation(colors, animationDurationMs),
         new ColorAndFrameNumberRenderer(colors),
-        null,
+        new FixedNumberBitmapFramePreparationStrategy(3),
         null);
     bitmapAnimationBackend.setFrameListener(new DebugBitmapAnimationFrameListener());
     return bitmapAnimationBackend;
