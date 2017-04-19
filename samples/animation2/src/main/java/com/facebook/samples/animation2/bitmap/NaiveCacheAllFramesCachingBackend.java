@@ -57,6 +57,11 @@ public class NaiveCacheAllFramesCachingBackend implements BitmapFrameCache {
   }
 
   @Override
+  public synchronized boolean contains(int frameNumber) {
+    return CloseableReference.isValid(mBitmapSparseArray.get(frameNumber));
+  }
+
+  @Override
   public synchronized int getSizeInBytes() {
     int size = 0;
     for (int i = 0; i < mBitmapSparseArray.size(); i++) {

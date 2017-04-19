@@ -67,6 +67,11 @@ public class FrescoFrameCache implements BitmapFrameCache {
   }
 
   @Override
+  public synchronized boolean contains(int frameNumber) {
+    return mAnimatedFrameCache.contains(frameNumber);
+  }
+
+  @Override
   public synchronized int getSizeInBytes() {
     // This currently does not include the size of the frame cache
     return getBitmapSizeBytes(mLastCachedItem);

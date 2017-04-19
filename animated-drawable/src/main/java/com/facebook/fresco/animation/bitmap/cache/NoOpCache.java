@@ -43,6 +43,11 @@ public class NoOpCache implements BitmapFrameCache {
   }
 
   @Override
+  public boolean contains(int frameNumber) {
+    return false;
+  }
+
+  @Override
   public int getSizeInBytes() {
     return 0;
   }

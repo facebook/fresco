@@ -734,6 +734,27 @@ public class CountingMemoryCacheTest {
     inOrder.verify(mReleaser).release(105);
   }
 
+  @Test
+  public void testContains() {
+    assertFalse(mCache.contains(KEY));
+
+    CloseableReference<Integer> newRef = mCache.cache(KEY, newReference(100));
+
+    assertTrue(mCache.contains(KEY));
+    assertFalse(mCache.contains(KEYS[0]));
+
+    newRef.close();
+
+    assertTrue(mCache.contains(KEY));
+    assertFalse(mCache.contains(KEYS[0]));
+
+    CloseableReference<Integer> reuse = mCache.reuse(KEY);
+    reuse.close();
+
+    assertFalse(mCache.contains(KEY));
+    assertFalse(mCache.contains(KEYS[0]));
+  }
+
   private CloseableReference<Integer> newReference(int size) {
     return CloseableReference.of(size, mReleaser);
   }

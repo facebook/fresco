@@ -69,6 +69,14 @@ public interface BitmapFrameCache {
   CloseableReference<Bitmap> getBitmapToReuseForFrame(int frameNumber, int width, int height);
 
   /**
+   * Check whether the cache contains a certain frame.
+   *
+   * @param frameNumber the frame number to check
+   * @return true if the frame is cached
+   */
+  boolean contains(int frameNumber);
+
+  /**
    * @return the size in bytes of all cached data
    */
   int getSizeInBytes();

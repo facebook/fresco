@@ -62,6 +62,11 @@ public class KeepLastFrameCache implements BitmapFrameCache {
   }
 
   @Override
+  public synchronized boolean contains(int frameNumber) {
+    return frameNumber == mLastFrameNumber && CloseableReference.isValid(mLastBitmapReference);
+  }
+
+  @Override
   public synchronized int getSizeInBytes() {
     return mLastBitmapReference == null
         ? 0
