@@ -18,6 +18,8 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationInformation;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 
 import org.junit.Before;
@@ -55,6 +57,8 @@ public class BitmapAnimationBackendTest {
   @Mock public Bitmap mBitmap;
   @Mock public ResourceReleaser<Bitmap> mBitmapResourceReleaser;
   @Mock public BitmapAnimationBackend.FrameListener mFrameListener;
+  @Mock public BitmapFramePreparationStrategy mBitmapFramePreparationStrategy;
+  @Mock public BitmapFramePreparer mBitmapFramePreparer;
 
   @Captor public ArgumentCaptor<CloseableReference<Bitmap>> mCapturedBitmapReference;
 
@@ -70,7 +74,9 @@ public class BitmapAnimationBackendTest {
         mPlatformBitmapFactory,
         mBitmapFrameCache,
         mAnimationInformation,
-        mBitmapFrameRenderer);
+        mBitmapFrameRenderer,
+        mBitmapFramePreparationStrategy,
+        mBitmapFramePreparer);
     mBitmapAnimationBackend.setFrameListener(mFrameListener);
   }
 
@@ -269,6 +275,7 @@ public class BitmapAnimationBackendTest {
     verify(mFrameListener).onDrawFrameStart(mBitmapAnimationBackend, 1);
     verify(mBitmapFrameCache).getCachedFrame(1);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(1);
     verifyListenersCalled(1, mBitmap, BitmapAnimationBackend.FRAME_TYPE_CACHED);
     assertReferencesClosed();
   }
@@ -286,6 +293,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameCache).getBitmapToReuseForFrame(1, 0, 0);
     verify(mBitmapFrameRenderer).renderFrame(1, mBitmap);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(1);
     verifyListenersCalled(1, mBitmap, BitmapAnimationBackend.FRAME_TYPE_REUSED);
     assertReferencesClosed();
   }
@@ -304,6 +312,7 @@ public class BitmapAnimationBackendTest {
     verify(mPlatformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888);
     verify(mBitmapFrameRenderer).renderFrame(2, mBitmap);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(2);
     verifyListenersCalled(2, mBitmap, BitmapAnimationBackend.FRAME_TYPE_CREATED);
     assertReferencesClosed();
   }
@@ -332,6 +341,7 @@ public class BitmapAnimationBackendTest {
     verify(mPlatformBitmapFactory).createBitmap(width, height, Bitmap.Config.ARGB_8888);
     verify(mBitmapFrameRenderer).renderFrame(2, mBitmap);
     verify(mCanvas).drawBitmap(eq(mBitmap), isNull(Rect.class), eq(mBounds), any(Paint.class));
+    verifyFramePreparationStrategyCalled(2);
     verifyListenersCalled(2, mBitmap, BitmapAnimationBackend.FRAME_TYPE_CREATED);
     assertReferencesClosed();
   }
@@ -349,6 +359,7 @@ public class BitmapAnimationBackendTest {
     verify(mPlatformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888);
     verify(mBitmapFrameCache).getFallbackFrame(3);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(3);
     verifyListenersCalled(3, mBitmap, BitmapAnimationBackend.FRAME_TYPE_FALLBACK);
     assertReferencesClosed();
   }
@@ -374,6 +385,7 @@ public class BitmapAnimationBackendTest {
     assertThat(temporaryBitmap.isValid()).isFalse();
     verify(mBitmapFrameCache).getFallbackFrame(3);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(3);
     verifyListenersCalled(3, mBitmap, BitmapAnimationBackend.FRAME_TYPE_FALLBACK);
     assertReferencesClosed();
   }
@@ -388,8 +400,17 @@ public class BitmapAnimationBackendTest {
     verify(mPlatformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888);
     verify(mBitmapFrameCache).getFallbackFrame(4);
     verifyNoMoreInteractions(mCanvas, mBitmapFrameCache);
+    verifyFramePreparationStrategyCalled(4);
     verify(mFrameListener)
         .onFrameDropped(mBitmapAnimationBackend, 4);
+  }
+
+  private void verifyFramePreparationStrategyCalled(int frameNumber) {
+    verify(mBitmapFramePreparationStrategy).prepareFrames(
+        mBitmapFramePreparer,
+        mBitmapFrameCache,
+        mBitmapAnimationBackend,
+        frameNumber);
   }
 
   private void verifyListenersCalled(

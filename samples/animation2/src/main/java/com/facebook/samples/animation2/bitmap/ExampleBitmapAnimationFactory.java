@@ -42,7 +42,9 @@ public class ExampleBitmapAnimationFactory {
         Fresco.getImagePipelineFactory().getPlatformBitmapFactory(),
         bitmapFrameCache,
         new ColorListAnimationInformation(colors, animationDurationMs),
-        new ColorAndFrameNumberRenderer(colors));
+        new ColorAndFrameNumberRenderer(colors),
+        null,
+        null);
     bitmapAnimationBackend.setFrameListener(new DebugBitmapAnimationFrameListener());
     return bitmapAnimationBackend;
   }

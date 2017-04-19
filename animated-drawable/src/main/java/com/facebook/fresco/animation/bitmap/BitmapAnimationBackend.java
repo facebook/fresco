@@ -25,6 +25,8 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.backend.AnimationInformation;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
@@ -91,6 +93,10 @@ public class BitmapAnimationBackend implements AnimationBackend,
   private final BitmapFrameCache mBitmapFrameCache;
   private final AnimationInformation mAnimationInformation;
   private final BitmapFrameRenderer mBitmapFrameRenderer;
+  @Nullable
+  private final BitmapFramePreparationStrategy mBitmapFramePreparationStrategy;
+  @Nullable
+  private final BitmapFramePreparer mBitmapFramePreparer;
   private final Paint mPaint;
 
   @Nullable
@@ -105,11 +111,15 @@ public class BitmapAnimationBackend implements AnimationBackend,
       PlatformBitmapFactory platformBitmapFactory,
       BitmapFrameCache bitmapFrameCache,
       AnimationInformation animationInformation,
-      BitmapFrameRenderer bitmapFrameRenderer) {
+      BitmapFrameRenderer bitmapFrameRenderer,
+      @Nullable BitmapFramePreparationStrategy bitmapFramePreparationStrategy,
+      @Nullable BitmapFramePreparer bitmapFramePreparer) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mBitmapFrameCache = bitmapFrameCache;
     mAnimationInformation = animationInformation;
     mBitmapFrameRenderer = bitmapFrameRenderer;
+    mBitmapFramePreparationStrategy = bitmapFramePreparationStrategy;
+    mBitmapFramePreparer = bitmapFramePreparer;
 
     mPaint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
     updateBitmapDimensions();
@@ -157,6 +167,15 @@ public class BitmapAnimationBackend implements AnimationBackend,
     // We could not draw anything
     if (!drawn && mFrameListener != null) {
       mFrameListener.onFrameDropped(this, frameNumber);
+    }
+
+    // Prepare next frames
+    if (mBitmapFramePreparationStrategy != null && mBitmapFramePreparer != null) {
+      mBitmapFramePreparationStrategy.prepareFrames(
+          mBitmapFramePreparer,
+          mBitmapFrameCache,
+          this,
+          frameNumber);
     }
 
     return drawn;
