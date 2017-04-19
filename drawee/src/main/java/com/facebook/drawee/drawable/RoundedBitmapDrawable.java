@@ -26,6 +26,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -112,6 +113,13 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   @Override
   public boolean isCircle() {
     return mIsCircle;
+  }
+
+  /**
+   * Drawing a round rect or circle is faster than using a path on Android versions 17+.
+   */
+  private boolean shouldDrawCircleFast() {
+    return mIsCircle && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
   }
 
   /**
@@ -238,7 +246,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     updatePaint();
     int saveCount = canvas.save();
     canvas.concat(mInverseParentTransform);
-    if (isCircle()) {
+    if (shouldDrawCircleFast()) {
       // Simplified drawing in the special case
       canvas.drawCircle(
           mRootBounds.centerX(),
@@ -251,7 +259,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     if (mBorderWidth > 0) {
         mBorderPaint.setStrokeWidth(mBorderWidth);
         mBorderPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mPaint.getAlpha()));
-      if (isCircle()) {
+      if (shouldDrawCircleFast()) {
         // Simplified drawing in the special case
         float radius = Math.min(mRootBounds.width(), mRootBounds.height())/2;
         canvas.drawCircle(mRootBounds.centerX(), mRootBounds.centerY(), radius, mBorderPaint);
@@ -305,20 +313,18 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   private void updatePath() {
     if (mIsPathDirty) {
       mRootBounds.inset(mBorderWidth/2, mBorderWidth/2);
-      if (isCircle()) {
+      if (shouldDrawCircleFast()) {
         // Everything below is for the complex case.
         // Circle is a special case, drawn using canvas.drawCircle().
         return;
       }
 
-      // Update border path
       mBorderPath.reset();
       for (int i = 0; i < mBorderRadii.length; i++) {
         mBorderRadii[i] = mCornerRadii[i] + mPadding - mBorderWidth/2;
       }
       mBorderPath.addRoundRect(mRootBounds, mBorderRadii, Path.Direction.CW);
 
-      // Update path
       mRootBounds.inset(-mBorderWidth/2, -mBorderWidth/2);
       mPath.reset();
       mRootBounds.inset(mPadding, mPadding);
@@ -328,7 +334,6 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       mIsPathDirty = false;
     }
   }
-
 
   private void updatePaint() {
     Bitmap bitmap = getBitmap();
