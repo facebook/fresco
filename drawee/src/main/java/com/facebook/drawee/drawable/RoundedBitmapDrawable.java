@@ -245,7 +245,9 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     updatePath();
     updatePaint();
     int saveCount = canvas.save();
-    canvas.concat(mInverseParentTransform);
+    if (!mInverseParentTransform.isIdentity()) {
+      canvas.concat(mInverseParentTransform);
+    }
     if (shouldDrawCircleFast()) {
       // Simplified drawing in the special case
       canvas.drawCircle(
