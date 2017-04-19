@@ -23,14 +23,16 @@ import com.facebook.common.internal.VisibleForTesting;
 import java.util.Arrays;
 
 /**
- * Drawable that draws underlying drawable with rounded corners.
+ * Draws the underlying drawable plus rounded corners of solid color
+ * on top of it (using {@link RoundedColorDrawable}).
+ * Used when {@code RoundingParams.RoundingMethod.OVERLAY_COLOR} is set.
  */
 public class RoundedCornersDrawable extends ForwardingDrawable implements Rounded {
 
   public enum Type {
     /**
-     * Draws rounded corners on top of the underlying drawable by overlaying a solid color which
-     * is specified by {@code setOverlayColor}. This option should only be used when the
+     * Draws rounded corners on top of the underlying drawable by overlaying a solid color path
+     * which is specified by {@code setOverlayColor}. This option should only be used when the
      * background beneath the underlying drawable is static and of the same solid color.
      */
     OVERLAY_COLOR,
