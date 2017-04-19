@@ -190,8 +190,9 @@ public class ImageDecodeOptionsBuilder {
    * Sets which config static image will be decode with;
    * @param bitmapConfig which config static image will be decode with;
    */
-  public void setBitmapConfig(Bitmap.Config bitmapConfig) {
+  public ImageDecodeOptionsBuilder setBitmapConfig(Bitmap.Config bitmapConfig) {
     mBitmapConfig = bitmapConfig;
+    return this;
   }
 
   /**
