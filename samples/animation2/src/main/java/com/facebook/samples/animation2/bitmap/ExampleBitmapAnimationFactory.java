@@ -13,45 +13,65 @@ package com.facebook.samples.animation2.bitmap;
 
 import javax.annotation.Nullable;
 
+import java.util.concurrent.ExecutorService;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.facebook.cache.common.CacheKey;
+import com.facebook.common.executors.DefaultSerialExecutorService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
-import com.facebook.imagepipeline.cache.CountingMemoryCache;
-import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
 
 /**
  * Bitmap animation factory to create backends for the sample app.
  */
 public class ExampleBitmapAnimationFactory {
 
+  private static final int NUMBER_OF_FRAMES_TO_PREPARE = 3;
+
   public static BitmapAnimationBackend createColorBitmapAnimationBackend(
       final int[] colors,
       final int animationDurationMs,
       final BitmapFrameCache bitmapFrameCache) {
+    final PlatformBitmapFactory platformBitmapFactory =
+        Fresco.getImagePipelineFactory().getPlatformBitmapFactory();
+    final BitmapFrameRenderer bitmapFrameRenderer = new ColorAndFrameNumberRenderer(colors);
+    final AnimationInformation animationInformation = new ColorListAnimationInformation(
+        colors,
+        animationDurationMs);
+    final ExecutorService executorServiceForFramePreparer = new DefaultSerialExecutorService(
+        new DefaultExecutorSupplier(1).forDecode());
+    final BitmapFramePreparationStrategy framePreparationStrategy =
+        new FixedNumberBitmapFramePreparationStrategy(NUMBER_OF_FRAMES_TO_PREPARE);
+    final BitmapFramePreparer bitmapFramePreparer = new DefaultBitmapFramePreparer(
+        platformBitmapFactory,
+        bitmapFrameRenderer,
+        Bitmap.Config.ARGB_8888,
+        executorServiceForFramePreparer);
+
     BitmapAnimationBackend bitmapAnimationBackend = new BitmapAnimationBackend(
-        Fresco.getImagePipelineFactory().getPlatformBitmapFactory(),
+        platformBitmapFactory,
         bitmapFrameCache,
-        new ColorListAnimationInformation(colors, animationDurationMs),
-        new ColorAndFrameNumberRenderer(colors),
-        new FixedNumberBitmapFramePreparationStrategy(3),
-        null);
+        animationInformation,
+        bitmapFrameRenderer,
+        framePreparationStrategy,
+        bitmapFramePreparer);
+
     bitmapAnimationBackend.setFrameListener(new DebugBitmapAnimationFrameListener());
     return bitmapAnimationBackend;
-  }
-
-  public static CountingMemoryCache<CacheKey, CloseableImage> createMemoryCache() {
-    return Fresco.getImagePipelineFactory().getBitmapCountingMemoryCache();
   }
 
   public static class ColorListAnimationInformation implements AnimationInformation {
