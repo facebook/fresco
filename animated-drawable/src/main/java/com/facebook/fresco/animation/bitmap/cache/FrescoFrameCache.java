@@ -12,9 +12,11 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
 import android.graphics.Bitmap;
+import android.util.SparseArray;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
@@ -31,16 +33,21 @@ import com.facebook.imageutils.BitmapUtil;
  */
 public class FrescoFrameCache implements BitmapFrameCache {
 
+  private static final Class<?> TAG = FrescoFrameCache.class;
+
   private final AnimatedFrameCache mAnimatedFrameCache;
   private final boolean mEnableBitmapReusing;
+  @GuardedBy("this")
+  private final SparseArray<CloseableReference<CloseableImage>> mPreparedPendingFrames;
 
   @GuardedBy("this")
   @Nullable
-  private CloseableReference<CloseableImage> mLastCachedItem;
+  private CloseableReference<CloseableImage> mLastRenderedItem;
 
   public FrescoFrameCache(AnimatedFrameCache animatedFrameCache, boolean enableBitmapReusing) {
     mAnimatedFrameCache = animatedFrameCache;
     mEnableBitmapReusing = enableBitmapReusing;
+    mPreparedPendingFrames = new SparseArray<>();
   }
 
   @Nullable
@@ -52,7 +59,7 @@ public class FrescoFrameCache implements BitmapFrameCache {
   @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getFallbackFrame(int frameNumber) {
-    return convertToBitmapReference(CloseableReference.cloneOrNull(mLastCachedItem));
+    return convertToBitmapReference(CloseableReference.cloneOrNull(mLastRenderedItem));
   }
 
   @Nullable
@@ -74,14 +81,18 @@ public class FrescoFrameCache implements BitmapFrameCache {
 
   @Override
   public synchronized int getSizeInBytes() {
-    // This currently does not include the size of the frame cache
-    return getBitmapSizeBytes(mLastCachedItem);
+    // This currently does not include the size of the animated frame cache
+    return getBitmapSizeBytes(mLastRenderedItem) + getPreparedPendingFramesSizeBytes();
   }
 
   @Override
   public synchronized void clear() {
-    CloseableReference.closeSafely(mLastCachedItem);
-    mLastCachedItem = null;
+    CloseableReference.closeSafely(mLastRenderedItem);
+    mLastRenderedItem = null;
+    for (int i = 0; i < mPreparedPendingFrames.size(); i++) {
+      CloseableReference.closeSafely(mPreparedPendingFrames.valueAt(i));
+    }
+    mPreparedPendingFrames.clear();
     // The frame cache will free items when needed
   }
 
@@ -91,18 +102,18 @@ public class FrescoFrameCache implements BitmapFrameCache {
       CloseableReference<Bitmap> bitmapReference,
       @BitmapAnimationBackend.FrameType int frameType) {
     Preconditions.checkNotNull(bitmapReference);
+
+    // Close up prepared references.
+    removePreparedReference(frameNumber);
+
+    // Create the new image reference and cache it.
     CloseableReference<CloseableImage> closableReference = null;
     try {
-      // The given CloseableStaticBitmap will be cached and then released by the resource releaser
-      // of the closeable reference
-      CloseableImage closeableImage = new CloseableStaticBitmap(
-          bitmapReference,
-          ImmutableQualityInfo.FULL_QUALITY,
-          0);
-      closableReference = CloseableReference.of(closeableImage);
-      CloseableReference.closeSafely(mLastCachedItem);
-      mLastCachedItem =
-          mAnimatedFrameCache.cache(frameNumber, closableReference);
+      closableReference = createImageReference(bitmapReference);
+      if (closableReference != null) {
+        CloseableReference.closeSafely(mLastRenderedItem);
+        mLastRenderedItem = mAnimatedFrameCache.cache(frameNumber, closableReference);
+      }
     } finally {
       CloseableReference.closeSafely(closableReference);
     }
@@ -113,11 +124,57 @@ public class FrescoFrameCache implements BitmapFrameCache {
       int frameNumber,
       CloseableReference<Bitmap> bitmapReference,
       @BitmapAnimationBackend.FrameType int frameType) {
+    Preconditions.checkNotNull(bitmapReference);
+    CloseableReference<CloseableImage> closableReference = null;
+    try {
+      closableReference = createImageReference(bitmapReference);
+      if (closableReference == null) {
+        return;
+      }
+      CloseableReference<CloseableImage> newReference =
+          mAnimatedFrameCache.cache(frameNumber, closableReference);
+      if (CloseableReference.isValid(newReference)) {
+        CloseableReference<CloseableImage> oldReference = mPreparedPendingFrames.get(frameNumber);
+        CloseableReference.closeSafely(oldReference);
+        // For performance reasons, we don't clone the reference and close the original one
+        // but cache the reference directly.
+        mPreparedPendingFrames.put(frameNumber, newReference);
+        FLog.v(
+            TAG,
+            "cachePreparedFrame(%d) cached. Pending frames: %s",
+            frameNumber,
+            mPreparedPendingFrames);
+      }
+    } finally {
+      CloseableReference.closeSafely(closableReference);
+    }
   }
 
   @Override
   public void setFrameCacheListener(FrameCacheListener frameCacheListener) {
     // TODO (t15557326) Not supported for now
+  }
+
+  private synchronized int getPreparedPendingFramesSizeBytes() {
+    int size = 0;
+    for (int i = 0; i < mPreparedPendingFrames.size(); i++) {
+      size += getBitmapSizeBytes(mPreparedPendingFrames.valueAt(i));
+    }
+    return size;
+  }
+
+  private synchronized void removePreparedReference(int frameNumber) {
+    CloseableReference<CloseableImage> existingPendingReference =
+        mPreparedPendingFrames.get(frameNumber);
+    if (existingPendingReference != null) {
+      mPreparedPendingFrames.delete(frameNumber);
+      CloseableReference.closeSafely(existingPendingReference);
+      FLog.v(
+          TAG,
+          "removePreparedReference(%d) removed. Pending frames: %s",
+          frameNumber,
+          mPreparedPendingFrames);
+    }
   }
 
   @VisibleForTesting
@@ -162,5 +219,17 @@ public class FrescoFrameCache implements BitmapFrameCache {
       return 0;
     }
     return BitmapUtil.getSizeInBytes(((CloseableBitmap) image).getUnderlyingBitmap());
+  }
+
+  @Nullable
+  private static CloseableReference<CloseableImage> createImageReference(
+      CloseableReference<Bitmap> bitmapReference) {
+    // The given CloseableStaticBitmap will be cached and then released by the resource releaser
+    // of the closeable reference
+    CloseableImage closeableImage = new CloseableStaticBitmap(
+        bitmapReference,
+        ImmutableQualityInfo.FULL_QUALITY,
+        0);
+    return CloseableReference.of(closeableImage);
   }
 }
