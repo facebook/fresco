@@ -35,6 +35,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -276,7 +277,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameCache).getCachedFrame(1);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
     verifyFramePreparationStrategyCalled(1);
-    verifyListenersCalled(1, mBitmap, BitmapAnimationBackend.FRAME_TYPE_CACHED);
+    verifyListenersAndCacheNotified(1, BitmapAnimationBackend.FRAME_TYPE_CACHED);
     assertReferencesClosed();
   }
 
@@ -294,7 +295,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameRenderer).renderFrame(1, mBitmap);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
     verifyFramePreparationStrategyCalled(1);
-    verifyListenersCalled(1, mBitmap, BitmapAnimationBackend.FRAME_TYPE_REUSED);
+    verifyListenersAndCacheNotified(1, BitmapAnimationBackend.FRAME_TYPE_REUSED);
     assertReferencesClosed();
   }
 
@@ -313,7 +314,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameRenderer).renderFrame(2, mBitmap);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
     verifyFramePreparationStrategyCalled(2);
-    verifyListenersCalled(2, mBitmap, BitmapAnimationBackend.FRAME_TYPE_CREATED);
+    verifyListenersAndCacheNotified(2, BitmapAnimationBackend.FRAME_TYPE_CREATED);
     assertReferencesClosed();
   }
 
@@ -342,7 +343,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameRenderer).renderFrame(2, mBitmap);
     verify(mCanvas).drawBitmap(eq(mBitmap), isNull(Rect.class), eq(mBounds), any(Paint.class));
     verifyFramePreparationStrategyCalled(2);
-    verifyListenersCalled(2, mBitmap, BitmapAnimationBackend.FRAME_TYPE_CREATED);
+    verifyListenersAndCacheNotified(2, BitmapAnimationBackend.FRAME_TYPE_CREATED);
     assertReferencesClosed();
   }
 
@@ -360,7 +361,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameCache).getFallbackFrame(3);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
     verifyFramePreparationStrategyCalled(3);
-    verifyListenersCalled(3, mBitmap, BitmapAnimationBackend.FRAME_TYPE_FALLBACK);
+    verifyListenersNotifiedWithoutCache(3, BitmapAnimationBackend.FRAME_TYPE_FALLBACK);
     assertReferencesClosed();
   }
 
@@ -386,7 +387,7 @@ public class BitmapAnimationBackendTest {
     verify(mBitmapFrameCache).getFallbackFrame(3);
     verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
     verifyFramePreparationStrategyCalled(3);
-    verifyListenersCalled(3, mBitmap, BitmapAnimationBackend.FRAME_TYPE_FALLBACK);
+    verifyListenersNotifiedWithoutCache(3, BitmapAnimationBackend.FRAME_TYPE_FALLBACK);
     assertReferencesClosed();
   }
 
@@ -413,9 +414,8 @@ public class BitmapAnimationBackendTest {
         frameNumber);
   }
 
-  private void verifyListenersCalled(
+  private void verifyListenersAndCacheNotified(
       int frameNumber,
-      Bitmap bitmap,
       @BitmapAnimationBackend.FrameType int frameType) {
     // Verify cache callback
     verify(mBitmapFrameCache).onFrameRendered(
@@ -423,6 +423,19 @@ public class BitmapAnimationBackendTest {
         mCapturedBitmapReference.capture(),
         eq(frameType));
     assertThat(mCapturedBitmapReference.getValue()).isEqualTo(mBitmapRefererence);
+
+    // Verify frame listener
+    verify(mFrameListener).onFrameDrawn(mBitmapAnimationBackend, frameNumber, frameType);
+  }
+
+  private void verifyListenersNotifiedWithoutCache(
+      int frameNumber,
+      @BitmapAnimationBackend.FrameType int frameType) {
+    // Verify cache callback
+    verify(mBitmapFrameCache, never()).onFrameRendered(
+        anyInt(),
+        mCapturedBitmapReference.capture(),
+        eq(frameType));
 
     // Verify frame listener
     verify(mFrameListener).onFrameDrawn(mBitmapAnimationBackend, frameNumber, frameType);

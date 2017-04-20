@@ -338,11 +338,15 @@ public class BitmapAnimationBackend implements AnimationBackend,
     } else {
       canvas.drawBitmap(bitmapReference.get(), null, mBounds, mPaint);
     }
-    // The callee has to clone the reference if it needs to hold on to the bitmap
-    mBitmapFrameCache.onFrameRendered(
-        frameNumber,
-        bitmapReference,
-        frameType);
+
+    // Notify the cache that a frame has been rendered.
+    // We should not cache fallback frames since they do not represent the actual frame.
+    if (frameType != FRAME_TYPE_FALLBACK) {
+      mBitmapFrameCache.onFrameRendered(
+          frameNumber,
+          bitmapReference,
+          frameType);
+    }
 
     if (mFrameListener != null) {
       mFrameListener.onFrameDrawn(this, frameNumber, frameType);
