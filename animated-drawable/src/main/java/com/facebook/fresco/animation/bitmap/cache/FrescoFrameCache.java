@@ -18,7 +18,6 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
@@ -53,13 +52,13 @@ public class FrescoFrameCache implements BitmapFrameCache {
   @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getCachedFrame(int frameNumber) {
-    return convertToBitmapReference(mAnimatedFrameCache.get(frameNumber));
+    return convertToBitmapReferenceAndClose(mAnimatedFrameCache.get(frameNumber));
   }
 
   @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getFallbackFrame(int frameNumber) {
-    return convertToBitmapReference(CloseableReference.cloneOrNull(mLastRenderedItem));
+    return convertToBitmapReferenceAndClose(CloseableReference.cloneOrNull(mLastRenderedItem));
   }
 
   @Nullable
@@ -71,7 +70,7 @@ public class FrescoFrameCache implements BitmapFrameCache {
     if (!mEnableBitmapReusing) {
       return null;
     }
-    return convertToBitmapReference(mAnimatedFrameCache.getForReuse());
+    return convertToBitmapReferenceAndClose(mAnimatedFrameCache.getForReuse());
   }
 
   @Override
@@ -177,33 +176,34 @@ public class FrescoFrameCache implements BitmapFrameCache {
     }
   }
 
+  /**
+   * Converts the given image reference to a bitmap reference
+   * and closes the original image reference.
+   *
+   * @param closeableImage the image to convert. It will be closed afterwards and will be invalid
+   * @return the closeable bitmap reference to be used
+   */
   @VisibleForTesting
   @Nullable
-  static CloseableReference<Bitmap> convertToBitmapReference(
+  static CloseableReference<Bitmap> convertToBitmapReferenceAndClose(
       final @Nullable CloseableReference<CloseableImage> closeableImage) {
-    if (CloseableReference.isValid(closeableImage) &&
-        closeableImage.get() instanceof CloseableStaticBitmap) {
-      CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage.get();
-      if (closeableStaticBitmap != null && !closeableStaticBitmap.isClosed()) {
-        // For better performance, we directly use the given closeable image and dont clone it.
-        // NOTE: closeableStaticBitmap.convertToBitmapReference() cannot be used here
-        // since this would detach the underlying reference from the CloseableImage
-        // which is required for correct size computations in CountingMemoryCache.
-        // If convertToBitmapReference() is used, the cache cannot correctly compute the
-        // size in bytes, which will slowly increase until no more bitmaps can be cached.
-        return CloseableReference.of(
-            closeableStaticBitmap.getUnderlyingBitmap(),
-            new ResourceReleaser<Bitmap>() {
-              @Override
-              public void release(Bitmap value) {
-                CloseableReference.closeSafely(closeableImage);
-              }
-            });
+    try {
+      if (CloseableReference.isValid(closeableImage) &&
+          closeableImage.get() instanceof CloseableStaticBitmap) {
+
+        CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage.get();
+        if (closeableStaticBitmap != null && !closeableStaticBitmap.isClosed()) {
+          // We return a clone of the underlying bitmap reference that has to be manually closed
+          // and then close the passed CloseableStaticBitmap in order to preserve correct
+          // cache size calculations.
+          return closeableStaticBitmap.cloneUnderlyingBitmapReference();
+        }
       }
+      // Not a bitmap reference, so we return null
+      return null;
+    } finally {
+      CloseableReference.closeSafely(closeableImage);
     }
-    // Not a bitmap reference, so we have to close right away.
-    CloseableReference.closeSafely(closeableImage);
-    return null;
   }
 
   private static int getBitmapSizeBytes(

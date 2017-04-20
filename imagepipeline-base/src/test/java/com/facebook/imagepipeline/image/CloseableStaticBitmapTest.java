@@ -78,4 +78,12 @@ public class CloseableStaticBitmapTest {
     mCloseableStaticBitmap.close();
     mCloseableStaticBitmap.convertToBitmapReference();
   }
+
+  @Test
+  public void testCloneUnderlyingBitmapReference() {
+    CloseableReference<Bitmap> clonedBitmapReference =
+        mCloseableStaticBitmap.cloneUnderlyingBitmapReference();
+    assertThat(clonedBitmapReference).isNotNull();
+    assertThat(clonedBitmapReference.get()).isEqualTo(mBitmap);
+  }
 }

@@ -36,6 +36,7 @@ public class FrescoFrameCacheTest {
   @Mock public CloseableReference<CloseableImage> mImageReference;
   @Mock public CloseableStaticBitmap mCloseableStaticBitmap;
   @Mock public CloseableReference<Bitmap> mBitmapReference;
+  @Mock public CloseableReference<Bitmap> mBitmapReferenceClone;
   @Mock public Bitmap mUnderlyingBitmap;
 
   @Before
@@ -44,10 +45,14 @@ public class FrescoFrameCacheTest {
     when(mBitmapReference.isValid()).thenReturn(true);
     when(mBitmapReference.get()).thenReturn(mUnderlyingBitmap);
 
+    when(mBitmapReferenceClone.isValid()).thenReturn(true);
+    when(mBitmapReferenceClone.get()).thenReturn(mUnderlyingBitmap);
+
     when(mCloseableStaticBitmap.isClosed()).thenReturn(false);
     when(mCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mUnderlyingBitmap);
     when(mCloseableStaticBitmap.convertToBitmapReference())
         .thenReturn(mBitmapReference);
+    when(mCloseableStaticBitmap.cloneUnderlyingBitmapReference()).thenReturn(mBitmapReferenceClone);
 
     when(mImageReference.isValid()).thenReturn(true);
     when(mImageReference.get()).thenReturn(mCloseableStaticBitmap);
@@ -56,15 +61,13 @@ public class FrescoFrameCacheTest {
   @Test
   public void testExtractAndClose() throws Exception {
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(mImageReference);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
 
     assertThat(extractedReference).isNotNull();
     assertThat(extractedReference.get()).isEqualTo(mUnderlyingBitmap);
-    verify(mImageReference, never()).close();
+    verify(mImageReference).close();
 
     extractedReference.close();
-
-    verify(mImageReference).close();
   }
 
   @Test
@@ -72,15 +75,14 @@ public class FrescoFrameCacheTest {
     when(mUnderlyingBitmap.isRecycled()).thenReturn(true);
 
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(mImageReference);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
 
     // We only detach the reference and do not care if the bitmap is valid
     assertThat(extractedReference).isNotNull();
     assertThat(extractedReference.get()).isEqualTo(mUnderlyingBitmap);
+    verify(mImageReference).close();
 
     extractedReference.close();
-
-    verify(mImageReference).close();
   }
 
   @Test
@@ -89,7 +91,7 @@ public class FrescoFrameCacheTest {
     when(mBitmapReference.isValid()).thenReturn(false);
 
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(mImageReference);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
 
     // We only detach the reference and do not care if the bitmap reference is valid
     assertThat(extractedReference).isNotNull();
@@ -106,7 +108,7 @@ public class FrescoFrameCacheTest {
     when(mCloseableStaticBitmap.isClosed()).thenReturn(true);
 
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(mImageReference);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
 
     // We only detach the reference and do not care if the bitmap is valid
     assertThat(extractedReference).isNull();
@@ -118,7 +120,7 @@ public class FrescoFrameCacheTest {
     when(mImageReference.isValid()).thenReturn(false);
 
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(mImageReference);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
 
     // We only detach the reference and do not care if the bitmap is valid
     assertThat(extractedReference).isNull();
@@ -128,7 +130,7 @@ public class FrescoFrameCacheTest {
   @Test
   public void testExtractAndClose_whenInputNull_thenReturnNull() throws Exception {
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(null);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(null);
 
     assertThat(extractedReference).isNull();
     verifyZeroInteractions(mImageReference);
@@ -139,7 +141,7 @@ public class FrescoFrameCacheTest {
     when(mImageReference.get()).thenReturn(null);
 
     CloseableReference<Bitmap> extractedReference =
-        FrescoFrameCache.convertToBitmapReference(mImageReference);
+        FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
 
     assertThat(extractedReference).isNull();
     verify(mImageReference).close();
