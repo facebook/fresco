@@ -9,8 +9,10 @@
 
 package com.facebook.fresco.animation.factory;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 
@@ -22,9 +24,14 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.fresco.animation.bitmap.cache.FrescoFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.KeepLastFrameCache;
 import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
+import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
+import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
@@ -55,24 +62,30 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
 
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final ScheduledExecutorService mScheduledExecutorServiceForUiThread;
+  private final ExecutorService mExecutorServiceForFramePreparing;
   private final MonotonicClock mMonotonicClock;
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
   private final Supplier<Integer> mCachingStrategySupplier;
+  private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
 
   public ExperimentalBitmapAnimationDrawableFactory(
       AnimatedDrawableBackendProvider animatedDrawableBackendProvider,
       ScheduledExecutorService scheduledExecutorServiceForUiThread,
+      ExecutorService executorServiceForFramePreparing,
       MonotonicClock monotonicClock,
       PlatformBitmapFactory platformBitmapFactory,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
-      Supplier<Integer> cachingStrategySupplier) {
+      Supplier<Integer> cachingStrategySupplier,
+      Supplier<Integer> numberOfFramesToPrepareSupplier) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
+    mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
     mMonotonicClock = monotonicClock;
     mPlatformBitmapFactory = platformBitmapFactory;
     mBackingCache = backingCache;
     mCachingStrategySupplier = cachingStrategySupplier;
+    mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
   }
 
   @Override
@@ -92,19 +105,37 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
         createAnimatedDrawableBackend(animatedImageResult);
 
     BitmapFrameCache bitmapFrameCache = createBitmapFrameCache(animatedImageResult);
+    BitmapFrameRenderer bitmapFrameRenderer =
+        new AnimatedDrawableBackendFrameRenderer(bitmapFrameCache, animatedDrawableBackend);
+
+    int numberOfFramesToPrefetch = mNumberOfFramesToPrepareSupplier.get();
+    BitmapFramePreparationStrategy bitmapFramePreparationStrategy = null;
+    BitmapFramePreparer bitmapFramePreparer = null;
+    if (numberOfFramesToPrefetch > 0) {
+      bitmapFramePreparationStrategy = new FixedNumberBitmapFramePreparationStrategy();
+      bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer);
+    }
 
     BitmapAnimationBackend bitmapAnimationBackend = new BitmapAnimationBackend(
         mPlatformBitmapFactory,
         bitmapFrameCache,
         new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
-        new AnimatedDrawableBackendFrameRenderer(bitmapFrameCache, animatedDrawableBackend),
-        null,
-        null);
+        bitmapFrameRenderer,
+        bitmapFramePreparationStrategy,
+        bitmapFramePreparer);
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
         bitmapAnimationBackend,
         mMonotonicClock,
         mScheduledExecutorServiceForUiThread);
+  }
+
+  private BitmapFramePreparer createBitmapFramePreparer(BitmapFrameRenderer bitmapFrameRenderer) {
+    return new DefaultBitmapFramePreparer(
+        mPlatformBitmapFactory,
+        bitmapFrameRenderer,
+        Bitmap.Config.ARGB_8888,
+        mExecutorServiceForFramePreparing);
   }
 
   private AnimatedDrawableBackend createAnimatedDrawableBackend(
