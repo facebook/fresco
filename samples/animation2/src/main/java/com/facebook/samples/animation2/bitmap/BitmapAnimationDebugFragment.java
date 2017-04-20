@@ -255,6 +255,7 @@ public class BitmapAnimationDebugFragment extends Fragment {
           frameColor = mFrameFallbackColor;
           text = "fallback frame";
           break;
+        case BitmapAnimationBackend.FRAME_TYPE_UNKNOWN:
         default:
           text = "unknown";
           frameColor = mFrameUnknownColor;

@@ -90,6 +90,7 @@ public class DebugBitmapAnimationFrameListener implements BitmapAnimationBackend
       case BitmapAnimationBackend.FRAME_TYPE_FALLBACK:
         mFallbackCount++;
         break;
+      case BitmapAnimationBackend.FRAME_TYPE_UNKNOWN:
       default:
         mUnknownCount++;
         break;
@@ -106,6 +107,7 @@ public class DebugBitmapAnimationFrameListener implements BitmapAnimationBackend
         return "created";
       case BitmapAnimationBackend.FRAME_TYPE_FALLBACK:
         return "fallback";
+      case BitmapAnimationBackend.FRAME_TYPE_UNKNOWN:
       default:
         return "unknown";
     }

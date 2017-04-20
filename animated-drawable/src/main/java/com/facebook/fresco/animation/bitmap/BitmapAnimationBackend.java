@@ -75,6 +75,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
    */
   @Retention(SOURCE)
   @IntDef({
+      FRAME_TYPE_UNKNOWN,
       FRAME_TYPE_CACHED,
       FRAME_TYPE_REUSED,
       FRAME_TYPE_CREATED,
@@ -84,6 +85,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
 
   }
 
+  public static final int FRAME_TYPE_UNKNOWN = -1;
   public static final int FRAME_TYPE_CACHED = 0;
   public static final int FRAME_TYPE_REUSED = 1;
   public static final int FRAME_TYPE_CREATED = 2;
@@ -184,7 +186,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   private boolean drawFrameOrFallback(Canvas canvas, int frameNumber, @FrameType int frameType) {
     CloseableReference<Bitmap> bitmapReference = null;
     boolean drawn = false;
-    int nextFrameType = -1;
+    int nextFrameType = FRAME_TYPE_UNKNOWN;
 
     try {
       switch (frameType) {
@@ -224,7 +226,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       CloseableReference.closeSafely(bitmapReference);
     }
 
-    if (drawn || nextFrameType == -1) {
+    if (drawn || nextFrameType == FRAME_TYPE_UNKNOWN) {
       return drawn;
     } else {
       return drawFrameOrFallback(canvas, frameNumber, nextFrameType);
