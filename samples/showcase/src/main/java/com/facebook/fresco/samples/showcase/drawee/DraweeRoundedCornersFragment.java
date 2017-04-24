@@ -171,13 +171,13 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     hierarchy.setActualImageScaleType(scaleType);
     hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
 
-    final RoundingParams roundingParams = Preconditions.checkNotNull(hierarchy.getRoundingParams());
+    final RoundingParams roundingParams = Preconditions.checkNotNull(draweeView.getRoundingParams());
     if (roundingMethod == RoundingParams.RoundingMethod.OVERLAY_COLOR) {
       roundingParams.setOverlayColor(mWindowBackgroundColor);
     } else {
       roundingParams.setRoundingMethod(roundingMethod);
     }
-    hierarchy.setRoundingParams(roundingParams);
+    draweeView.setRoundingParams(roundingParams);
   }
 
   private RoundingParams.RoundingMethod getRoundingMethodForScaleType(ScaleType scaleType) {
