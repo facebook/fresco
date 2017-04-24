@@ -156,8 +156,7 @@
   <string name="drawee_rounded_corners_some">Only rounding some corners</string>
   <string name="drawee_rounded_corners_fancy">Fancy (different radii)</string>
   <string name="drawee_rounded_corners_borders">Borders</string>
-  <string name="drawee_rounded_corners_bitmap_only_toast">Switched to BITMAP_ONLY rounding method</string>
-  <string name="drawee_rounded_corners_overlay_color_toast">Switched to OVERLAY_COLOR rounding method</string>
+  <string name="drawee_rounded_corners_toast">Switched to %1$s rounding method</string>
 
   <string name="drawee_hierarchy_load_success">Load (success)</string>
   <string name="drawee_hierarchy_load_fail">Load (fail)</string>

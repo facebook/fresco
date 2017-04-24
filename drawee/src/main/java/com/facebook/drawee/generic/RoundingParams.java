@@ -36,7 +36,12 @@ public class RoundingParams {
      * {@link ScalingUtils.ScaleType#CENTER_CROP}, {@link ScalingUtils.ScaleType#FOCUS_CROP} and
      * {@link ScalingUtils.ScaleType#FIT_XY}.
      */
-    BITMAP_ONLY
+    BITMAP_ONLY,
+
+    /**
+     * On Android versions >= 21 (Lollipop) uses the {@code View.setClipToOutline} method.
+     */
+    OUTLINE
   }
 
   private RoundingMethod mRoundingMethod = RoundingMethod.BITMAP_ONLY;
