@@ -298,10 +298,7 @@ public class RoundedBitmapDrawable extends BitmapDrawable
       mIsShaderTransformDirty = true;
       mParentTransform.invert(mInverseParentTransform);
       mTransform.set(mParentTransform);
-      if (!mBoundsTransform.isIdentity()) {
-        // Identity for example when center_crop scaling is used and isCircle() is true.
-        mTransform.preConcat(mBoundsTransform);
-      }
+      mTransform.preConcat(mBoundsTransform);
       mPrevParentTransform.set(mParentTransform);
       mPrevBoundsTransform.set(mBoundsTransform);
     }
