@@ -27,7 +27,7 @@
       <com.facebook.drawee.view.SimpleDraweeView
           android:id="@+id/drawee_round"
           style="@style/DraweeRoundedCorners.Drawee"
-          app:actualImageUri="http://lorempixel.com/200/200/animals/1/"
+          app:actualImageUri="http://frescolib.org/static/sample-images/animal_a_l.jpg"
           app:roundAsCircle="true"
           />
 
@@ -53,7 +53,7 @@
       <com.facebook.drawee.view.SimpleDraweeView
           android:id="@+id/drawee_some"
           style="@style/DraweeRoundedCorners.Drawee"
-          app:actualImageUri="http://lorempixel.com/100/100/animals/1/"
+          app:actualImageUri="http://frescolib.org/static/sample-images/animal_c_l.jpg"
           app:roundedCornerRadius="16dp"
           app:roundBottomLeft="false"
           app:roundTopRight="false"
