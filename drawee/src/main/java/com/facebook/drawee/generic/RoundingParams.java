@@ -40,6 +40,9 @@ public class RoundingParams {
 
     /**
      * On Android versions >= 21 (Lollipop) uses the {@code View.setClipToOutline} method.
+     * This method only supports uniform rounded corners - all 4 corners have the same radius,
+     * or the image forms a circle. If you want each corner to have a different radius
+     * use one of the other rounding methods.
      */
     OUTLINE
   }
@@ -117,6 +120,7 @@ public class RoundingParams {
 
   /**
    * Gets the rounded corners radii.
+   * The corners are ordered top-left, top-right, bottom-right, bottom-left.
    *
    * <p> For performance reasons the internal array is returned directly. Do not modify it directly,
    * but use one of the exposed corner radii setters instead.

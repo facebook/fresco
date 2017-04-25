@@ -73,10 +73,11 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
     if (hasHierarchy()) {
       getHierarchy().setRoundingParams(roundingParams);
     }
-    if (Build.VERSION.SDK_INT >= 21) {
+    if (Build.VERSION.SDK_INT >= 21 &&
+        roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OUTLINE) {
       if (roundingParams != null) {
         this.setClipToOutline(true);
-        this.setOutlineProvider(getRoundedClipOutlineProvider());
+        this.setOutlineProvider(getClipOutlineProvider());
       } else {
         this.setClipToOutline(false);
         this.setOutlineProvider(null);
@@ -97,17 +98,18 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   /**
-   * Cached return value of {@link #getRoundedClipOutlineProvider}.
+   * Cached return value of {@link #getClipOutlineProvider}.
    */
-  private static ViewOutlineProvider mRoundedClipOutlineProvider;
+  private static ViewOutlineProvider mClipOutlineProvider;
 
   /**
    * Creates an outline used for clipping the image so that it has rounded corners.
+   * Used only when the rounding method is RoundingMethod.OUTLINE.
    */
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private static ViewOutlineProvider getRoundedClipOutlineProvider() {
-    if (mRoundedClipOutlineProvider == null) {
-      mRoundedClipOutlineProvider = new ViewOutlineProvider() {
+  private static ViewOutlineProvider getClipOutlineProvider() {
+    if (mClipOutlineProvider == null) {
+      mClipOutlineProvider = new ViewOutlineProvider() {
         @Override
         public void getOutline(View view, Outline outline) {
           if (!(view instanceof GenericDraweeView)) {
@@ -127,12 +129,21 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
               outline.setOval(0, t, w, t + w);
             }
           } else {
-            // TODO radius
-            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 16);
+            float[] cornerRadii = roundingParams.getCornersRadii();
+            if (cornerRadii != null) {
+              // The cornerRadii can specify custom radius for each corner. However,
+              // the outline API only supports ovals and rounded rectangles (each corner
+              // has the same radius). When RoundingMethod.OUTLINE is used we simply use
+              // the x radius of the first corner.
+              float topLeftCornerXRadius = cornerRadii[0];
+              if (topLeftCornerXRadius > 0) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), topLeftCornerXRadius);
+              }
+            }
           }
         }
       };
     }
-    return mRoundedClipOutlineProvider;
+    return mClipOutlineProvider;
   }
 }
