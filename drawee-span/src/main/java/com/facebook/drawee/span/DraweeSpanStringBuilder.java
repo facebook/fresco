@@ -147,7 +147,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     final DraweeController controller = draweeHolder.getController();
     if (controller instanceof AbstractDraweeController) {
       ((AbstractDraweeController) controller).addControllerListener(
-          new DrawableChangedListener(draweeSpan, enableResizing, drawableHeightPx, scaleType));
+          new DrawableChangedListener(draweeSpan, enableResizing, drawableWidthPx, drawableHeightPx, scaleType));
     }
     mDraweeSpans.add(draweeSpan);
     setSpan(draweeSpan, startIndex, endIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -306,6 +306,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
     private final boolean mEnableResizing;
 
+    private final int mFixedWidth;
     private final int mFixedHeight;
 
     private final int mScaleType;
@@ -315,7 +316,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     }
 
     public DrawableChangedListener(DraweeSpan draweeSpan, boolean enableResizing) {
-      this(draweeSpan, enableResizing, UNSET_SIZE, SCALE_TYPE_RESIZE);
+      this(draweeSpan, enableResizing, UNSET_SIZE, UNSET_SIZE, SCALE_TYPE_RESIZE);
     }
 
     /**
@@ -332,11 +333,13 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     public DrawableChangedListener(
         DraweeSpan draweeSpan,
         boolean enableResizing,
+        int fixedWidth,
         int fixedHeight,
         int scaleType) {
       Preconditions.checkNotNull(draweeSpan);
       mDraweeSpan = draweeSpan;
       mEnableResizing = enableResizing;
+      mFixedWidth = fixedWidth;
       mFixedHeight = fixedHeight;
       mScaleType = scaleType;
     }
@@ -382,7 +385,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
         }
       } else if (drawableBounds.width() != imageInfo.getWidth() ||
           drawableBounds.height() != imageInfo.getHeight()) {
-          return new Pair<>(imageInfo.getWidth(), imageInfo.getHeight());
+        return new Pair<>(imageInfo.getWidth(), imageInfo.getHeight());
       }
 
       return null;
@@ -392,10 +395,20 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
       int scaledWidth = imageInfo.getWidth();
       int scaledHeight = imageInfo.getHeight();
 
-      if (scaledHeight > mFixedHeight) {
-        final float heightScaleRatio = scaledHeight / (float) mFixedHeight;
-        scaledHeight = mFixedHeight;
-        scaledWidth = (int) (scaledWidth / heightScaleRatio);
+      if (mFixedWidth != UNSET_SIZE) {
+        if (scaledWidth > mFixedWidth) {
+          final float widthScaleRatio = scaledWidth / (float) mFixedWidth;
+          scaledWidth = mFixedWidth;
+          scaledHeight = (int) (scaledHeight / widthScaleRatio);
+        }
+      }
+
+      if (mFixedHeight != UNSET_SIZE) {
+        if (scaledHeight > mFixedHeight) {
+          final float heightScaleRatio = scaledHeight / (float) mFixedHeight;
+          scaledHeight = mFixedHeight;
+          scaledWidth = (int) (scaledWidth / heightScaleRatio);
+        }
       }
 
       return new Pair<>(scaledWidth, scaledHeight);
