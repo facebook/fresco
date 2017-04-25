@@ -56,7 +56,15 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
   public static final int UNSET_SIZE = -1;
 
+  /**
+   * Resizes the drawable according to its requested size, allowing the drawable to grow if needed.
+   */
   public static final int SCALE_TYPE_RESIZE = 0;
+  /**
+   * Scales the drawable to fit within the bounds specified in
+   * {@link #setImageSpan(DraweeHolder, int, int, int, int, boolean, int, int)}, maintaining
+   * its aspect ratio.
+   */
   public static final int SCALE_TYPE_CENTER_INSIDE = 1;
 
   private final Set<DraweeSpan> mDraweeSpans = new HashSet<>();
