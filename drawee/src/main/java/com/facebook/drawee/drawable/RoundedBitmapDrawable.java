@@ -343,7 +343,9 @@ public class RoundedBitmapDrawable extends BitmapDrawable
     }
     if (mIsShaderTransformDirty) {
       // Draw the bitmap at the correct scale
-      if (!mTransform.isIdentity()) {
+      if (mTransform.isIdentity()) {
+        mPaint.getShader().setLocalMatrix(null);
+      } else {
         mPaint.getShader().setLocalMatrix(mTransform);
       }
       mIsShaderTransformDirty = false;
