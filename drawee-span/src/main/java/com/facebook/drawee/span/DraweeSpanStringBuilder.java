@@ -13,13 +13,14 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.lifecycle.AttachDetachListener;
-
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -54,6 +55,9 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
   }
 
   public static final int UNSET_SIZE = -1;
+
+  public static final int SCALE_TYPE_RESIZE = 0;
+  public static final int SCALE_TYPE_CENTER_INSIDE = 1;
 
   private final Set<DraweeSpan> mDraweeSpans = new HashSet<>();
   private final DrawableCallback mDrawableCallback = new DrawableCallback();
@@ -99,6 +103,25 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
       final int drawableHeightPx,
       boolean enableResizing,
       @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
+    setImageSpan(draweeHolder,
+        startIndex,
+        endIndex,
+        drawableWidthPx,
+        drawableHeightPx,
+        enableResizing,
+        verticalAlignment,
+        SCALE_TYPE_RESIZE);
+  }
+
+  public void setImageSpan(
+      DraweeHolder draweeHolder,
+      int startIndex,
+      int endIndex,
+      final int drawableWidthPx,
+      final int drawableHeightPx,
+      boolean enableResizing,
+      @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment,
+      final int scaleType) {
     if (endIndex >= length()) {
       // Unfortunately, some callers use this wrong. The original implementation also swallows
       // an exception if this happens (e.g. if you tap on a video that has a minutiae as well.
@@ -116,7 +139,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     final DraweeController controller = draweeHolder.getController();
     if (controller instanceof AbstractDraweeController) {
       ((AbstractDraweeController) controller).addControllerListener(
-          new DrawableChangedListener(draweeSpan, enableResizing, drawableHeightPx));
+          new DrawableChangedListener(draweeSpan, enableResizing, drawableHeightPx, scaleType));
     }
     mDraweeSpans.add(draweeSpan);
     setSpan(draweeSpan, startIndex, endIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -277,12 +300,14 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
     private final int mFixedHeight;
 
+    private final int mScaleType;
+
     public DrawableChangedListener(DraweeSpan draweeSpan) {
       this(draweeSpan, false);
     }
 
     public DrawableChangedListener(DraweeSpan draweeSpan, boolean enableResizing) {
-      this(draweeSpan, enableResizing, UNSET_SIZE);
+      this(draweeSpan, enableResizing, UNSET_SIZE, SCALE_TYPE_RESIZE);
     }
 
     /**
@@ -299,11 +324,13 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     public DrawableChangedListener(
         DraweeSpan draweeSpan,
         boolean enableResizing,
-        int fixedHeight) {
+        int fixedHeight,
+        int scaleType) {
       Preconditions.checkNotNull(draweeSpan);
       mDraweeSpan = draweeSpan;
       mEnableResizing = enableResizing;
       mFixedHeight = fixedHeight;
+      mScaleType = scaleType;
     }
 
     @Override
@@ -311,31 +338,59 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
         String id,
         ImageInfo imageInfo,
         Animatable animatable) {
-      if (mEnableResizing &&
-          imageInfo != null &&
-          mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
-        Drawable topLevelDrawable = mDraweeSpan.getDraweeHolder().getTopLevelDrawable();
-        Rect topLevelDrawableBounds = topLevelDrawable.getBounds();
-        if (mFixedHeight != UNSET_SIZE) {
-          float imageWidth = ((float) mFixedHeight / imageInfo.getHeight()) * imageInfo.getWidth();
-          int imageWidthPx = (int) imageWidth;
-          if (topLevelDrawableBounds.width() != imageWidthPx ||
-              topLevelDrawableBounds.height() != mFixedHeight) {
-            topLevelDrawable.setBounds(0, 0, imageWidthPx, mFixedHeight);
 
-            if (mDraweeSpanChangedListener != null) {
-              mDraweeSpanChangedListener.onDraweeSpanChanged(DraweeSpanStringBuilder.this);
-            }
-          }
-        } else if (topLevelDrawableBounds.width() != imageInfo.getWidth() ||
-            topLevelDrawableBounds.height() != imageInfo.getHeight()) {
-          topLevelDrawable.setBounds(0, 0, imageInfo.getWidth(), imageInfo.getHeight());
+      if (mFixedHeight != UNSET_SIZE && imageInfo != null) {
+        Drawable topLevelDrawable = mDraweeSpan.getDraweeHolder().getTopLevelDrawable();
+
+        final Pair<Integer, Integer> scaledDimens;
+
+        if (mScaleType == SCALE_TYPE_RESIZE) {
+          scaledDimens = getScaledDimensResize(topLevelDrawable, imageInfo);
+        } else if (mScaleType == SCALE_TYPE_CENTER_INSIDE) {
+          scaledDimens = getScaledDimensCenterInside(imageInfo);
+        } else {
+          throw new RuntimeException("invalid scaleType: " + mScaleType);
+        }
+
+        if (scaledDimens != null) {
+          topLevelDrawable.setBounds(0, 0, scaledDimens.first, scaledDimens.second);
 
           if (mDraweeSpanChangedListener != null) {
             mDraweeSpanChangedListener.onDraweeSpanChanged(DraweeSpanStringBuilder.this);
           }
         }
       }
+    }
+
+    private @Nullable Pair<Integer, Integer> getScaledDimensResize(final Drawable drawable, final ImageInfo imageInfo) {
+      final Rect drawableBounds = drawable.getBounds();
+      if (mEnableResizing && mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
+        float imageWidth = ((float) mFixedHeight / imageInfo.getHeight()) * imageInfo.getWidth();
+        int imageWidthPx = (int) imageWidth;
+        if (drawableBounds.width() != imageWidthPx ||
+            drawableBounds.height() != mFixedHeight) {
+
+          return new Pair<>(imageWidthPx, mFixedHeight);
+        }
+      } else if (drawableBounds.width() != imageInfo.getWidth() ||
+          drawableBounds.height() != imageInfo.getHeight()) {
+          return new Pair<>(imageInfo.getWidth(), imageInfo.getHeight());
+      }
+
+      return null;
+    }
+
+    private Pair<Integer, Integer> getScaledDimensCenterInside(final ImageInfo imageInfo) {
+      int scaledWidth = imageInfo.getWidth();
+      int scaledHeight = imageInfo.getHeight();
+
+      if (scaledHeight > mFixedHeight) {
+        final float heightScaleRatio = scaledHeight / (float) mFixedHeight;
+        scaledHeight = mFixedHeight;
+        scaledWidth = (int) (scaledWidth / heightScaleRatio);
+      }
+
+      return new Pair<>(scaledWidth, scaledHeight);
     }
   }
 }
