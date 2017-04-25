@@ -11,14 +11,10 @@
  */
 package com.facebook.fresco.samples.showcase.drawee;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -38,27 +33,18 @@ import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.common.SimpleRoundingMethodAdapter;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
 
 /**
  * A {@link Fragment} that illustrates using rounded corners with Fresco.
  */
 public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
-  // TODO It looks like BITMAP_ONLY actually works for all scale types?
-  /**
-   * With these scale types, the contents of the picture will be clipped,
-   * either using a shader (on API level < 21) or View.setOutlineProvider (on API level 21+).
-   * For all other scale types we'll paint the rounded corners with a solid color.
-   */
-  private static final List<ScaleType> CLIP_SCALETYPES = Arrays.asList(
-      ScaleType.CENTER_CROP,
-      ScaleType.FOCUS_CROP,
-      ScaleType.FIT_XY);
-
-  private RoundingParams.RoundingMethod mPreviousRoundingMethod = getRoundingMethodForScaleType(ScaleType.CENTER);
-
   private int mWindowBackgroundColor;
   private int mColorPrimary;
+
+  private SimpleScaleTypeAdapter.Entry mScaleType;
+  private RoundingParams.RoundingMethod mRoundingMethod;
 
   private SimpleDraweeView mDraweeRound;
   private SimpleDraweeView mDraweeRadius;
@@ -89,29 +75,49 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     findDrawees(view);
     initColors();
 
-    final Spinner scaleType = (Spinner) view.findViewById(R.id.scaleType);
+    final Spinner scaleTypeSpinner = (Spinner) view.findViewById(R.id.scaleType);
     final SimpleScaleTypeAdapter scaleTypeAdapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
-    scaleType.setAdapter(scaleTypeAdapter);
-    scaleType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    scaleTypeSpinner.setAdapter(scaleTypeAdapter);
+    scaleTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         final SimpleScaleTypeAdapter.Entry spinnerEntry =
             (SimpleScaleTypeAdapter.Entry) scaleTypeAdapter.getItem(position);
-        final ScaleType scaleType = spinnerEntry.scaleType;
 
-        RoundingParams.RoundingMethod roundingMethod = getRoundingMethodForScaleType(scaleType);
-        changeDraweeViewScaleType(mDraweeRound, scaleType, roundingMethod, spinnerEntry.focusPoint);
-        changeDraweeViewScaleType(mDraweeRadius, scaleType, roundingMethod, spinnerEntry.focusPoint);
-        changeDraweeViewScaleType(mDraweeSome, scaleType, roundingMethod, spinnerEntry.focusPoint);
-        changeDraweeViewScaleType(mDraweeFancy, scaleType, roundingMethod, spinnerEntry.focusPoint);
-
-        if (roundingMethod != mPreviousRoundingMethod) {
-          Toast.makeText(
-              getContext(),
-              getString(R.string.drawee_rounded_corners_toast, roundingMethod),
-              Toast.LENGTH_SHORT).show();
+        mScaleType = spinnerEntry;
+        if (mRoundingMethod == null) {
+          return;
         }
-        mPreviousRoundingMethod = roundingMethod;
+        changeDraweeViewScaleType(mDraweeRound, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+        changeDraweeViewScaleType(mDraweeRadius, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+        changeDraweeViewScaleType(mDraweeSome, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+        changeDraweeViewScaleType(mDraweeFancy, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+      }
+    });
+
+    final Spinner roundingMethodSpinner = (Spinner) view.findViewById(R.id.roundingMethod);
+    final SimpleRoundingMethodAdapter roundingMethodAdapter =
+        SimpleRoundingMethodAdapter.createForAllRoundingMethods();
+    roundingMethodSpinner.setAdapter(roundingMethodAdapter);
+    roundingMethodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        final SimpleRoundingMethodAdapter.Entry spinnerEntry =
+            (SimpleRoundingMethodAdapter.Entry) roundingMethodAdapter.getItem(position);
+        final RoundingParams.RoundingMethod roundingMethod = spinnerEntry.roundingMethod;
+
+        mRoundingMethod = roundingMethod;
+        if (mScaleType == null) {
+          return;
+        }
+        changeDraweeViewScaleType(mDraweeRound, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+        changeDraweeViewScaleType(mDraweeRadius, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+        changeDraweeViewScaleType(mDraweeSome, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
+        changeDraweeViewScaleType(mDraweeFancy, mScaleType.scaleType, mRoundingMethod, mScaleType.focusPoint);
       }
 
       @Override
@@ -178,22 +184,6 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
       roundingParams.setRoundingMethod(roundingMethod);
     }
     draweeView.setRoundingParams(roundingParams);
-  }
-
-  private RoundingParams.RoundingMethod getRoundingMethodForScaleType(ScaleType scaleType) {
-    // TODO It looks like BITMAP_ONLY actually works for all scale types?
-//    if (1 == 1) {
-//      return RoundingParams.RoundingMethod.BITMAP_ONLY;
-//    }
-    if (CLIP_SCALETYPES.contains(scaleType)) {
-      if (Build.VERSION.SDK_INT >= 21) {
-        return RoundingParams.RoundingMethod.OUTLINE;
-      } else {
-        return RoundingParams.RoundingMethod.BITMAP_ONLY;
-      }
-    } else {
-      return RoundingParams.RoundingMethod.OVERLAY_COLOR;
-    }
   }
 
   private void setShowBorder(SimpleDraweeView draweeView, boolean show) {

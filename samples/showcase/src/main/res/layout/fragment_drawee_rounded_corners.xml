@@ -75,19 +75,26 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/margin_small"
       android:orientation="horizontal"
       >
     <Spinner
         android:id="@+id/scaleType"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         />
-    <CheckBox
-        android:id="@+id/borders"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/roundingMethod"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="@string/drawee_rounded_corners_borders"
         />
   </LinearLayout>
+  <CheckBox
+      android:id="@+id/borders"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/drawee_rounded_corners_borders"
+      />
 </LinearLayout>
