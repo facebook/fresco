@@ -23,7 +23,6 @@ import com.facebook.imagepipeline.cache.MediaIdExtractor;
  */
 public class ImagePipelineExperiments {
 
-  private final int mForceSmallCacheThresholdBytes;
   private final boolean mWebpSupportEnabled;
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final Supplier<Boolean> mMediaVariationsIndexEnabled;
@@ -35,7 +34,6 @@ public class ImagePipelineExperiments {
   private final boolean mUseDownsamplingRatioForResizing;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
-    mForceSmallCacheThresholdBytes = builder.mForceSmallCacheThresholdBytes;
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     if (builder.mMediaVariationsIndexEnabled != null) {
@@ -58,10 +56,6 @@ public class ImagePipelineExperiments {
 
   public boolean isExternalCreatedBitmapLogEnabled() {
     return mExternalCreatedBitmapLogEnabled;
-  }
-
-  public int getForceSmallCacheThresholdBytes() {
-    return mForceSmallCacheThresholdBytes;
   }
 
   public boolean getMediaVariationsIndexEnabled() {
@@ -100,7 +94,6 @@ public class ImagePipelineExperiments {
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
-    private int mForceSmallCacheThresholdBytes = 0;
     private boolean mWebpSupportEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
@@ -118,22 +111,6 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setExternalCreatedBitmapLogEnabled(
         boolean externalCreatedBitmapLogEnabled) {
       mExternalCreatedBitmapLogEnabled = externalCreatedBitmapLogEnabled;
-      return mConfigBuilder;
-    }
-
-    /**
-     * If this value is nonnegative, then all network-downloaded images below this size will be
-     * written to the small image cache.
-     *
-     * <p>This will require the image pipeline to do up to two disk reads, instead of one, before
-     * going out to network. Use only if this pattern makes sense for your application.
-     *
-     * @deprecated This experiment will not be promoted to the main config and will soon be removed.
-     */
-    @Deprecated
-    public ImagePipelineConfig.Builder setForceSmallCacheThresholdBytes(
-        int forceSmallCacheThresholdBytes) {
-      mForceSmallCacheThresholdBytes = forceSmallCacheThresholdBytes;
       return mConfigBuilder;
     }
 

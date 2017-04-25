@@ -29,7 +29,6 @@ import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.SmallCacheIfRequestedDiskCachePolicy;
-import com.facebook.imagepipeline.cache.SplitCachesByImageSizeDiskCachePolicy;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -120,8 +119,7 @@ public class ProducerFactory {
       MediaVariationsIndex mediaVariationsIndex,
       @Nullable MediaIdExtractor mediaIdExtractor,
       CacheKeyFactory cacheKeyFactory,
-      PlatformBitmapFactory platformBitmapFactory,
-      int forceSmallCacheThresholdBytes) {
+      PlatformBitmapFactory platformBitmapFactory) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -146,19 +144,10 @@ public class ProducerFactory {
 
     mPlatformBitmapFactory = platformBitmapFactory;
 
-    if (forceSmallCacheThresholdBytes > 0) {
-      mMainDiskCachePolicy =
-          new SplitCachesByImageSizeDiskCachePolicy(
-              defaultBufferedDiskCache,
-              smallImageBufferedDiskCache,
-              cacheKeyFactory,
-              forceSmallCacheThresholdBytes);
-    } else {
-      mMainDiskCachePolicy = new SmallCacheIfRequestedDiskCachePolicy(
-          defaultBufferedDiskCache,
-          smallImageBufferedDiskCache,
-          cacheKeyFactory);
-    }
+    mMainDiskCachePolicy = new SmallCacheIfRequestedDiskCachePolicy(
+        defaultBufferedDiskCache,
+        smallImageBufferedDiskCache,
+        cacheKeyFactory);
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
