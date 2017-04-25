@@ -73,12 +73,15 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
     if (hasHierarchy()) {
       getHierarchy().setRoundingParams(roundingParams);
     }
-    if (Build.VERSION.SDK_INT >= 21 &&
-        roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OUTLINE) {
-      if (roundingParams != null) {
+    if (Build.VERSION.SDK_INT >= 21) {
+      if (
+          roundingParams != null &&
+          roundingParams.getRoundingMethod() == RoundingParams.RoundingMethod.OUTLINE) {
         this.setClipToOutline(true);
         this.setOutlineProvider(getClipOutlineProvider());
       } else {
+        // If rounding method was outline and it's now set to something else than outline,
+        // don't forget to disable the clipping.
         this.setClipToOutline(false);
         this.setOutlineProvider(null);
       }
