@@ -21,6 +21,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.lifecycle.AttachDetachListener;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.view.DraweeHolder;
@@ -53,17 +54,6 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
   }
 
   public static final int UNSET_SIZE = -1;
-
-  /**
-   * Resizes the drawable according to its requested size, allowing the drawable to grow if needed.
-   */
-  public static final int SCALE_TYPE_RESIZE = 0;
-  /**
-   * Scales the drawable to fit within the bounds specified in
-   * {@link #setImageSpan(DraweeHolder, int, int, int, int, boolean, int, int)}, maintaining
-   * its aspect ratio.
-   */
-  public static final int SCALE_TYPE_CENTER_INSIDE = 1;
 
   private final Set<DraweeSpan> mDraweeSpans = new HashSet<>();
   private final DrawableCallback mDrawableCallback = new DrawableCallback();
@@ -116,7 +106,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
         drawableHeightPx,
         enableResizing,
         verticalAlignment,
-        SCALE_TYPE_RESIZE);
+        ScalingUtils.ScaleType.CENTER);
   }
 
   public void setImageSpan(
@@ -127,7 +117,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
       final int drawableHeightPx,
       boolean enableResizing,
       @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment,
-      final int scaleType) {
+      final ScalingUtils.ScaleType scaleType) {
     if (endIndex >= length()) {
       // Unfortunately, some callers use this wrong. The original implementation also swallows
       // an exception if this happens (e.g. if you tap on a video that has a minutiae as well.
@@ -307,14 +297,14 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     private final int mFixedWidth;
     private final int mFixedHeight;
 
-    private final int mScaleType;
+    private final ScalingUtils.ScaleType mScaleType;
 
     public DrawableChangedListener(DraweeSpan draweeSpan) {
       this(draweeSpan, false);
     }
 
     public DrawableChangedListener(DraweeSpan draweeSpan, boolean enableResizing) {
-      this(draweeSpan, enableResizing, UNSET_SIZE, UNSET_SIZE, SCALE_TYPE_RESIZE);
+      this(draweeSpan, enableResizing, UNSET_SIZE, UNSET_SIZE, ScalingUtils.ScaleType.CENTER);
     }
 
     /**
@@ -333,7 +323,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
         boolean enableResizing,
         int fixedWidth,
         int fixedHeight,
-        int scaleType) {
+        ScalingUtils.ScaleType scaleType) {
       Preconditions.checkNotNull(draweeSpan);
       mDraweeSpan = draweeSpan;
       mEnableResizing = enableResizing;
@@ -353,9 +343,9 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
         final Dimens scaledDimens;
 
-        if (mScaleType == SCALE_TYPE_RESIZE) {
+        if (mScaleType == ScalingUtils.ScaleType.CENTER) {
           scaledDimens = getScaledDimensResize(topLevelDrawable, imageInfo);
-        } else if (mScaleType == SCALE_TYPE_CENTER_INSIDE) {
+        } else if (mScaleType == ScalingUtils.ScaleType.CENTER_INSIDE) {
           scaledDimens = getScaledDimensCenterInside(imageInfo);
         } else {
           throw new RuntimeException("invalid scaleType: " + mScaleType);
