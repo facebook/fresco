@@ -338,13 +338,13 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
         ImageInfo imageInfo,
         Animatable animatable) {
 
-      if (mFixedHeight != UNSET_SIZE && imageInfo != null) {
+      if (mEnableResizing && mFixedHeight != UNSET_SIZE && imageInfo != null) {
         Drawable topLevelDrawable = mDraweeSpan.getDraweeHolder().getTopLevelDrawable();
 
         final Dimens scaledDimens;
 
         if (mScaleType == ScalingUtils.ScaleType.CENTER) {
-          scaledDimens = getScaledDimensResize(topLevelDrawable, imageInfo);
+          scaledDimens = getScaledDimensCenter(topLevelDrawable, imageInfo);
         } else if (mScaleType == ScalingUtils.ScaleType.CENTER_INSIDE) {
           scaledDimens = getScaledDimensCenterInside(imageInfo);
         } else {
@@ -361,9 +361,9 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
       }
     }
 
-    private Dimens getScaledDimensResize(final Drawable drawable, final ImageInfo imageInfo) {
+    private Dimens getScaledDimensCenter(final Drawable drawable, final ImageInfo imageInfo) {
       final Rect drawableBounds = drawable.getBounds();
-      if (mEnableResizing && mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
+      if (mDraweeSpan.getDraweeHolder().getTopLevelDrawable() != null) {
         float imageWidth = ((float) mFixedHeight / imageInfo.getHeight()) * imageInfo.getWidth();
         int imageWidthPx = (int) imageWidth;
         if (drawableBounds.width() != imageWidthPx ||
