@@ -135,7 +135,12 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     final DraweeController controller = draweeHolder.getController();
     if (controller instanceof AbstractDraweeController) {
       ((AbstractDraweeController) controller).addControllerListener(
-          new DrawableChangedListener(draweeSpan, enableResizing, drawableWidthPx, drawableHeightPx, scaleType));
+          new DrawableChangedListener(
+              draweeSpan,
+              enableResizing,
+              drawableWidthPx,
+              drawableHeightPx,
+              scaleType));
     }
     mDraweeSpans.add(draweeSpan);
     setSpan(draweeSpan, startIndex, endIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
