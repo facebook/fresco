@@ -345,8 +345,8 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
 
         if (mScaleType == ScalingUtils.ScaleType.CENTER) {
           scaledDimens = getScaledDimensCenter(topLevelDrawable, imageInfo);
-        } else if (mScaleType == ScalingUtils.ScaleType.CENTER_INSIDE) {
-          scaledDimens = getScaledDimensCenterInside(imageInfo);
+        } else if (mScaleType == ScalingUtils.ScaleType.FIT_START) {
+          scaledDimens = getScaledDimensFitStart(imageInfo);
         } else {
           throw new RuntimeException("invalid scaleType: " + mScaleType);
         }
@@ -379,7 +379,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
       return null;
     }
 
-    private Dimens getScaledDimensCenterInside(final ImageInfo imageInfo) {
+    private Dimens getScaledDimensFitStart(final ImageInfo imageInfo) {
       int scaledWidth = imageInfo.getWidth();
       int scaledHeight = imageInfo.getHeight();
 
