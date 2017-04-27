@@ -16,11 +16,26 @@ import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapCountingMemoryCacheFactory {
+
+  public static CountingMemoryCache<CacheKey, CloseableImage> get(
+          Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
+          MemoryTrimmableRegistry memoryTrimmableRegistry,
+          PlatformBitmapFactory platformBitmapFactory,
+          boolean isExternalCreatedBitmapLogEnabled) {
+    return get(
+            bitmapMemoryCacheParamsSupplier,
+            memoryTrimmableRegistry,
+            platformBitmapFactory,
+            isExternalCreatedBitmapLogEnabled,
+            new BitmapMemoryCacheTrimStrategy());
+  }
+
   public static CountingMemoryCache<CacheKey, CloseableImage> get(
      Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier,
      MemoryTrimmableRegistry memoryTrimmableRegistry,
      PlatformBitmapFactory platformBitmapFactory,
-     boolean isExternalCreatedBitmapLogEnabled) {
+     boolean isExternalCreatedBitmapLogEnabled,
+     CountingMemoryCache.CacheTrimStrategy trimStrategy) {
 
     ValueDescriptor<CloseableImage> valueDescriptor =
         new ValueDescriptor<CloseableImage>() {
@@ -29,8 +44,6 @@ public class BitmapCountingMemoryCacheFactory {
             return value.getSizeInBytes();
           }
         };
-
-    CountingMemoryCache.CacheTrimStrategy trimStrategy = new BitmapMemoryCacheTrimStrategy();
 
     CountingMemoryCache<CacheKey, CloseableImage> countingCache =
         new CountingMemoryCache<>(

@@ -31,7 +31,9 @@ import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 import com.facebook.imagepipeline.bitmaps.HoneycombBitmapCreator;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.BitmapMemoryCacheTrimStrategy;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.DefaultBitmapMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.cache.DefaultEncodedMemoryCacheParamsSupplier;
@@ -72,6 +74,7 @@ public class ImagePipelineConfig {
   @Nullable private final AnimatedImageFactory mAnimatedImageFactory;
   private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+  private final CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
   private final boolean mDownsampleEnabled;
@@ -105,6 +108,10 @@ public class ImagePipelineConfig {
             new DefaultBitmapMemoryCacheParamsSupplier(
                 (ActivityManager) builder.mContext.getSystemService(Context.ACTIVITY_SERVICE)) :
             builder.mBitmapMemoryCacheParamsSupplier;
+    mBitmapMemoryCacheTrimStrategy =
+        builder.mBitmapMemoryCacheTrimStrategy == null ?
+            new BitmapMemoryCacheTrimStrategy() :
+            builder.mBitmapMemoryCacheTrimStrategy;
     mBitmapConfig =
         builder.mBitmapConfig == null ?
             Bitmap.Config.ARGB_8888 :
@@ -227,6 +234,10 @@ public class ImagePipelineConfig {
     return mBitmapMemoryCacheParamsSupplier;
   }
 
+  public CountingMemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
+    return mBitmapMemoryCacheTrimStrategy;
+  }
+
   public CacheKeyFactory getCacheKeyFactory() {
     return mCacheKeyFactory;
   }
@@ -342,6 +353,7 @@ public class ImagePipelineConfig {
     private AnimatedImageFactory mAnimatedImageFactory;
     private Bitmap.Config mBitmapConfig;
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+    private CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
     private boolean mDownsampleEnabled = false;
@@ -383,6 +395,12 @@ public class ImagePipelineConfig {
         Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier) {
       mBitmapMemoryCacheParamsSupplier =
           Preconditions.checkNotNull(bitmapMemoryCacheParamsSupplier);
+      return this;
+    }
+
+    public Builder setBitmapMemoryCacheTrimStrategy(
+        CountingMemoryCache.CacheTrimStrategy trimStrategy) {
+      mBitmapMemoryCacheTrimStrategy = trimStrategy;
       return this;
     }
 
