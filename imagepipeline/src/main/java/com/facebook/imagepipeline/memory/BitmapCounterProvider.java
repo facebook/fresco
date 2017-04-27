@@ -9,6 +9,8 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.ThreadSafe;
+
 public class BitmapCounterProvider {
   private static final long KB = 1024;
   private static final long MB = 1024 * KB;
@@ -23,7 +25,7 @@ public class BitmapCounterProvider {
   public static final int MAX_BITMAP_TOTAL_SIZE = getMaxSizeHardCap();
   public static final int MAX_BITMAP_COUNT = 384;
 
-  private static BitmapCounter sBitmapCounter;
+  private static volatile BitmapCounter sBitmapCounter;
 
   private static int getMaxSizeHardCap() {
     final int maxMemory = (int) Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
@@ -34,9 +36,14 @@ public class BitmapCounterProvider {
     }
   }
 
+  @ThreadSafe
   public static BitmapCounter get() {
     if (sBitmapCounter == null) {
-      sBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_TOTAL_SIZE);
+      synchronized (BitmapCounterProvider.class) {
+        if (sBitmapCounter == null) {
+         sBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_TOTAL_SIZE);
+        }
+      }
     }
     return sBitmapCounter;
   }
