@@ -8,6 +8,7 @@ dependencies {
     provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compile project(':fbcore')
