@@ -63,6 +63,15 @@ public class PipelineDraweeControllerFactory {
       String id,
       CacheKey cacheKey,
       Object callerContext) {
+    return newController(dataSourceSupplier, id, cacheKey, callerContext, null);
+  }
+
+  public PipelineDraweeController newController(
+      Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
+      String id,
+      CacheKey cacheKey,
+      Object callerContext,
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
     Preconditions.checkState(mResources != null, "init() not called");
     // Field values passed as arguments so that any subclass of PipelineDraweeControllerFactory
     // can simply override internalCreateController() and return a custom Drawee controller
@@ -73,6 +82,7 @@ public class PipelineDraweeControllerFactory {
         mUiThreadExecutor,
         mMemoryCache,
         mDrawableFactories,
+        customDrawableFactories,
         dataSourceSupplier,
         id,
         cacheKey,
@@ -89,12 +99,13 @@ public class PipelineDraweeControllerFactory {
       AnimatedDrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
       MemoryCache<CacheKey, CloseableImage> memoryCache,
-      @Nullable ImmutableList<DrawableFactory> drawableFactories,
+      @Nullable ImmutableList<DrawableFactory> globalDrawableFactories,
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
       Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
       String id,
       CacheKey cacheKey,
       Object callerContext) {
-    return new PipelineDraweeController(
+    PipelineDraweeController controller = new PipelineDraweeController(
         resources,
         deferredReleaser,
         animatedDrawableFactory,
@@ -104,6 +115,8 @@ public class PipelineDraweeControllerFactory {
         id,
         cacheKey,
         callerContext,
-        drawableFactories);
+        globalDrawableFactories);
+    controller.setCustomDrawableFactories(customDrawableFactories);
+    return controller;
   }
 }

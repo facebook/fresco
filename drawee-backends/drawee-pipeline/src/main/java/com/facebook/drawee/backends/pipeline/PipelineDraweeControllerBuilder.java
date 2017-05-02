@@ -17,6 +17,8 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.ImmutableList;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
@@ -42,6 +44,9 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   private final ImagePipeline mImagePipeline;
   private final PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
+
+  @Nullable
+  private ImmutableList<DrawableFactory> mCustomDrawableFactories;
 
   public PipelineDraweeControllerBuilder(
       Context context,
@@ -72,6 +77,23 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     return setUri(Uri.parse(uriString));
   }
 
+  public PipelineDraweeControllerBuilder setCustomDrawableFactories(
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
+    mCustomDrawableFactories = customDrawableFactories;
+    return getThis();
+  }
+
+  public PipelineDraweeControllerBuilder setCustomDrawableFactories(
+      DrawableFactory... drawableFactories) {
+    Preconditions.checkNotNull(drawableFactories);
+    return setCustomDrawableFactories(ImmutableList.of(drawableFactories));
+  }
+
+  public PipelineDraweeControllerBuilder setCustomDrawableFactory(DrawableFactory drawableFactory) {
+    Preconditions.checkNotNull(drawableFactory);
+    return setCustomDrawableFactories(ImmutableList.of(drawableFactory));
+  }
+
   @Override
   protected PipelineDraweeController obtainController() {
     DraweeController oldController = getOldController();
@@ -82,13 +104,15 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
           obtainDataSourceSupplier(),
           generateUniqueControllerId(),
           getCacheKey(),
-          getCallerContext());
+          getCallerContext(),
+          mCustomDrawableFactories);
     } else {
       controller = mPipelineDraweeControllerFactory.newController(
           obtainDataSourceSupplier(),
           generateUniqueControllerId(),
           getCacheKey(),
-          getCallerContext());
+          getCallerContext(),
+          mCustomDrawableFactories);
     }
     return controller;
   }

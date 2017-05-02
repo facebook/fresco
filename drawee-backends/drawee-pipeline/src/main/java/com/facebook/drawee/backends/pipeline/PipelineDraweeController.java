@@ -55,8 +55,9 @@ public class PipelineDraweeController
   // Components
   private final Resources mResources;
   private final AnimatedDrawableFactory mAnimatedDrawableFactory;
+  // Global drawable factories that are set when Fresco is initialized
   @Nullable
-  private final ImmutableList<DrawableFactory> mDrawableFactories;
+  private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
 
   private @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
@@ -66,6 +67,9 @@ public class PipelineDraweeController
   private Supplier<DataSource<CloseableReference<CloseableImage>>> mDataSourceSupplier;
 
   private boolean mDrawDebugOverlay;
+
+  // Drawable factories that are unique for a given image request
+  private @Nullable ImmutableList<DrawableFactory> mCustomDrawableFactories;
 
   private final DrawableFactory mDefaultDrawableFactory = new DrawableFactory() {
 
@@ -127,13 +131,13 @@ public class PipelineDraweeController
       String id,
       CacheKey cacheKey,
       Object callerContext,
-      @Nullable ImmutableList<DrawableFactory> drawableFactories) {
+      @Nullable ImmutableList<DrawableFactory> globalDrawableFactories) {
     super(deferredReleaser, uiThreadExecutor, id, callerContext);
     mResources = resources;
     mAnimatedDrawableFactory = animatedDrawableFactory;
     mMemoryCache = memoryCache;
     mCacheKey = cacheKey;
-    mDrawableFactories = drawableFactories;
+    mGlobalDrawableFactories = globalDrawableFactories;
     init(dataSourceSupplier);
   }
 
@@ -150,14 +154,21 @@ public class PipelineDraweeController
       Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
       String id,
       CacheKey cacheKey,
-      Object callerContext) {
+      Object callerContext,
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
+    setCustomDrawableFactories(customDrawableFactories);
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
     mDrawDebugOverlay = drawDebugOverlay;
+  }
+
+  public void setCustomDrawableFactories(
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
+    mCustomDrawableFactories = customDrawableFactories;
   }
 
   private void init(Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier) {
@@ -185,22 +196,38 @@ public class PipelineDraweeController
 
     maybeUpdateDebugOverlay(closeableImage);
 
-    if (mDrawableFactories != null) {
-      for (DrawableFactory factory : mDrawableFactories) {
-        if (factory.supportsImageType(closeableImage)) {
-          Drawable drawable = factory.createDrawable(closeableImage);
-          if (drawable != null) {
-            return drawable;
-          }
+    Drawable drawable = maybeCreateDrawableFromFactories(mCustomDrawableFactories, closeableImage);
+    if (drawable != null) {
+      return drawable;
+    }
+
+    drawable = maybeCreateDrawableFromFactories(mGlobalDrawableFactories, closeableImage);
+    if (drawable != null) {
+      return drawable;
+    }
+
+    drawable = mDefaultDrawableFactory.createDrawable(closeableImage);
+    if (drawable != null) {
+      return drawable;
+    }
+    throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+  }
+
+  private Drawable maybeCreateDrawableFromFactories(
+      @Nullable ImmutableList<DrawableFactory> drawableFactories,
+      CloseableImage closeableImage) {
+    if (drawableFactories == null) {
+      return null;
+    }
+    for (DrawableFactory factory : drawableFactories) {
+      if (factory.supportsImageType(closeableImage)) {
+        Drawable drawable = factory.createDrawable(closeableImage);
+        if (drawable != null) {
+          return drawable;
         }
       }
     }
-
-    Drawable defaultDrawable = mDefaultDrawableFactory.createDrawable(closeableImage);
-    if (defaultDrawable != null) {
-      return defaultDrawable;
-    }
-    throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+    return null;
   }
 
   @Override
