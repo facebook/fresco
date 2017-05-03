@@ -73,17 +73,19 @@ public class CloseableStaticBitmapTest {
     assertThat(mCloseableStaticBitmap.isClosed()).isTrue();
   }
 
-  @Test(expected = NullPointerException.class)
-  public void testCannotConvertIfClosed() {
-    mCloseableStaticBitmap.close();
-    mCloseableStaticBitmap.convertToBitmapReference();
-  }
-
   @Test
   public void testCloneUnderlyingBitmapReference() {
     CloseableReference<Bitmap> clonedBitmapReference =
         mCloseableStaticBitmap.cloneUnderlyingBitmapReference();
     assertThat(clonedBitmapReference).isNotNull();
     assertThat(clonedBitmapReference.get()).isEqualTo(mBitmap);
+  }
+
+  @Test
+  public void testCloneUnderlyingBitmapReference_whenBitmapClosed_thenReturnNull() {
+    mCloseableStaticBitmap.close();
+    CloseableReference<Bitmap> clonedBitmapReference =
+        mCloseableStaticBitmap.cloneUnderlyingBitmapReference();
+    assertThat(clonedBitmapReference).isNull();
   }
 }

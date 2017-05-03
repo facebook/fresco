@@ -96,6 +96,7 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    * can no longer be used and no longer points to the bitmap.
    * <p>See {@link #cloneUnderlyingBitmapReference()} for an alternative that returns a cloned
    * bitmap reference instead.
+   *
    * @return the underlying bitmap reference after being detached from this instance
    * @throws IllegalArgumentException if this object has already been closed.
    */
@@ -109,12 +110,12 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    * <p>After calling this method, this object can still be used.
    * See {@link #convertToBitmapReference()} for an alternative that detaches the original reference
    * instead.
-   * @return the cloned bitmap reference without altering this instance
-   * @throws IllegalArgumentException if this object has already been closed.
+   *
+   * @return the cloned bitmap reference without altering this instance or null if already closed
    */
+  @Nullable
   public synchronized CloseableReference<Bitmap> cloneUnderlyingBitmapReference() {
-    Preconditions.checkNotNull(mBitmapReference, "Cannot clone a closed bitmap reference");
-    return mBitmapReference.clone();
+    return CloseableReference.cloneOrNull(mBitmapReference);
   }
 
   /**

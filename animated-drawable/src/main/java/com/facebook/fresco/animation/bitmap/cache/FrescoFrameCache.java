@@ -192,7 +192,7 @@ public class FrescoFrameCache implements BitmapFrameCache {
           closeableImage.get() instanceof CloseableStaticBitmap) {
 
         CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage.get();
-        if (closeableStaticBitmap != null && !closeableStaticBitmap.isClosed()) {
+        if (closeableStaticBitmap != null) {
           // We return a clone of the underlying bitmap reference that has to be manually closed
           // and then close the passed CloseableStaticBitmap in order to preserve correct
           // cache size calculations.

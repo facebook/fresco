@@ -106,6 +106,7 @@ public class FrescoFrameCacheTest {
   public void testExtractAndClose_whenCloseableStaticBitmapClosed_thenReturnNull()
       throws Exception {
     when(mCloseableStaticBitmap.isClosed()).thenReturn(true);
+    when(mCloseableStaticBitmap.cloneUnderlyingBitmapReference()).thenReturn(null);
 
     CloseableReference<Bitmap> extractedReference =
         FrescoFrameCache.convertToBitmapReferenceAndClose(mImageReference);
