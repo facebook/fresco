@@ -278,14 +278,15 @@ static ColorMapObject* genDefColorMap(void) {
 ////////////////////////////////////////////////////////////////
 
 bool getGraphicsControlBlockForImage(SavedImage* pSavedImage, GraphicsControlBlock* pGcp) {
+  int resultCode = GIF_ERROR;
+  // If a GIF has multiple graphic control extension blocks, we use the last one
   for (int i = 0; i < pSavedImage->ExtensionBlockCount; i++) {
     ExtensionBlock* pExtensionBlock = &pSavedImage->ExtensionBlocks[i];
     if (pExtensionBlock->Function == GRAPHICS_EXT_FUNC_CODE) {
-      DGifExtensionToGCB(pExtensionBlock->ByteCount, pExtensionBlock->Bytes, pGcp);
-      return true;
+      resultCode = DGifExtensionToGCB(pExtensionBlock->ByteCount, pExtensionBlock->Bytes, pGcp);
     }
   }
-  return false;
+  return resultCode == GIF_OK;
 }
 
 /**
