@@ -24,11 +24,6 @@ import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 
-/**
- * Draws rounded corners of solid color. Does not draw a bitmap.
- * Used as a helper for {@link RoundedCornersDrawable}
- * when {@code RoundingParams.RoundingMethod.OVERLAY_COLOR} is set.
- */
 public class RoundedColorDrawable extends Drawable implements Rounded {
   private final float[] mRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
