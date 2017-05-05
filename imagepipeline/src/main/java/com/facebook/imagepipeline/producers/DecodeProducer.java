@@ -418,8 +418,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @Override
     protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, boolean isLast) {
       boolean ret = super.updateDecodeJob(encodedImage, isLast);
-      if (!isLast && EncodedImage.isValid(encodedImage) &&
-          encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
+      if (!isLast && EncodedImage.isValid(encodedImage)) {
+        if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG) {
+          // decoding a partial image data of none jpeg type and displaying that result bitmap
+          // to the user have no sense.
+          return ret && isNotPartialData(encodedImage);
+        }
         if (!mProgressiveJpegParser.parseMoreData(encodedImage)) {
           return false;
         }
@@ -437,6 +441,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         mLastScheduledScanNumber = scanNum;
       }
       return ret;
+    }
+
+    private boolean isNotPartialData(EncodedImage encodedImage) {
+      return encodedImage.getEncodedCacheKey() != null;
     }
 
     @Override
