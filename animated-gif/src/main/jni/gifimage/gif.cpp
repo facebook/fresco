@@ -313,11 +313,16 @@ int readSingleFrame(
   }
   SavedImage* pSavedImage = &pGifFile->SavedImages[pGifFile->ImageCount - 1];
 
-  // Check size of image.
-  if (pSavedImage->ImageDesc.Width <= 0 &&
-      pSavedImage->ImageDesc.Height <= 0 &&
-      pSavedImage->ImageDesc.Width > (INT_MAX / pSavedImage->ImageDesc.Height)) {
+  // Check size of image. Note: Frames with 0 width or height should be allowed.
+  if (pSavedImage->ImageDesc.Width < 0 || pSavedImage->ImageDesc.Height < 0) {
     return GIF_ERROR;
+  }
+
+  // Check for image size overflow.
+  if (pSavedImage->ImageDesc.Width > 0 &&
+      pSavedImage->ImageDesc.Height > 0 &&
+      pSavedImage->ImageDesc.Width > (INT_MAX / pSavedImage->ImageDesc.Height)) {
+      return GIF_ERROR;
   }
 
   size_t imageSize = pSavedImage->ImageDesc.Width * pSavedImage->ImageDesc.Height;
