@@ -35,6 +35,7 @@ com.facebook.drawee.view
 com.facebook.fresco.animation.backend
 com.facebook.fresco.animation.bitmap
 com.facebook.fresco.animation.bitmap.cache
+com.facebook.fresco.animation.bitmap.preparation
 com.facebook.fresco.animation.bitmap.wrapper
 com.facebook.fresco.animation.drawable
 com.facebook.fresco.animation.drawable.animator

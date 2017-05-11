@@ -219,6 +219,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/preparation/package-summary.html">com.facebook.fresco.animation.bitmap.preparation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
@@ -598,8 +600,11 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setForceSmallCacheThresholdBytes(int)">setForceSmallCacheThresholdBytes</a></span>(int forceSmallCacheThresholdBytes)
         
-        <div class="jd-descrdiv">If this value is nonnegative, then all network-downloaded images below this size will be
- written to the small image cache.</div>
+        <div class="jd-descrdiv">
+      <em>
+  This method is deprecated.
+      This experiment will not be promoted to the main config and will soon be removed.
+</em></div>
   
   </td></tr>
 
@@ -1150,13 +1155,17 @@ From class
 
       </div>
     <div class="jd-details-descr">
-      
+      <p>
+  <p class="caution">
+      <strong>
+  This method is deprecated.</strong><br/> This experiment will not be promoted to the main config and will soon be removed.
+
+  </p>
   <div class="jd-tagdata jd-tagdescr"><p>If this value is nonnegative, then all network-downloaded images below this size will be
  written to the small image cache.
 
  <p>This will require the image pipeline to do up to two disk reads, instead of one, before
- going out to network. Use only if this pattern makes sense for your application.
-</p></div>
+ going out to network. Use only if this pattern makes sense for your application.</p></div>
 
     </div>
 </div>

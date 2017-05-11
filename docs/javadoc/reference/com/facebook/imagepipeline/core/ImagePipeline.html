@@ -219,6 +219,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/preparation/package-summary.html">com.facebook.fresco.animation.bitmap.preparation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
@@ -1045,7 +1047,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html#prefetchToDiskCache(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">prefetchToDiskCache</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext)
         
-        <div class="jd-descrdiv">Submits a request for prefetching to the disk cache with a default priority</div>
+        <div class="jd-descrdiv">Submits a request for prefetching to the disk cache with a default priority.</div>
   
   </td></tr>
 
@@ -2459,7 +2461,10 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Submits a request for prefetching to the bitmap cache.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Submits a request for prefetching to the bitmap cache.
+
+ <p> Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+ down images which are immediately required on screen.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2504,7 +2509,10 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Submits a request for prefetching to the disk cache.</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Submits a request for prefetching to the disk cache.
+
+ <p> Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+ down images which are immediately required on screen.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2553,7 +2561,10 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Submits a request for prefetching to the disk cache with a default priority</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Submits a request for prefetching to the disk cache with a default priority.
+
+ <p> Beware that if your network fetcher doesn't support priorities prefetch requests may slow
+ down images which are immediately required on screen.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

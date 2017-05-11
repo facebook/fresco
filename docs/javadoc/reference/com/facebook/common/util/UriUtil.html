@@ -219,6 +219,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/fresco/animation/bitmap/preparation/package-summary.html">com.facebook.fresco.animation.bitmap.preparation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
@@ -498,7 +500,8 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">String</td>
         <td class="jd-linkcol"><a href="../../../../com/facebook/common/util/UriUtil.html#DATA_SCHEME">DATA_SCHEME</a></td>
-        <td class="jd-descrcol" width="100%">Data scheme for URIs </td>
+        <td class="jd-descrcol" width="100%">Data scheme for URIs
+</td>
     </tr>
     
     
@@ -546,6 +549,14 @@ Summary:
         <td class="jd-linkcol"><a href="../../../../com/facebook/common/util/UriUtil.html#LOCAL_RESOURCE_SCHEME">LOCAL_RESOURCE_SCHEME</a></td>
         <td class="jd-descrcol" width="100%">Resource scheme for URIs
 </td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">String</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/common/util/UriUtil.html#QUALIFIED_RESOURCE_SCHEME">QUALIFIED_RESOURCE_SCHEME</a></td>
+        <td class="jd-descrcol" width="100%">Resource scheme for fully qualified resources which might have a package name that is different
+ than the application one.</td>
     </tr>
     
     
@@ -660,9 +671,9 @@ Summary:
             Uri
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#getUriForResourceId(int)">getUriForResourceId</a></span>(int resourceId)
+        <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#getUriForQualifiedResource(java.lang.String, int)">getUriForQualifiedResource</a></span>(String packageName, int resourceId)
         
-        <div class="jd-descrdiv">Return a URI for the given resource ID.</div>
+        <div class="jd-descrdiv">Returns a URI for the given resource ID in the given package.</div>
   
   </td></tr>
 
@@ -675,18 +686,37 @@ Summary:
             
             static
             
-            boolean
+            Uri
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#isDataUri(android.net.Uri)">isDataUri</a></span>(Uri uri)
+        <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#getUriForResourceId(int)">getUriForResourceId</a></span>(int resourceId)
         
-        <div class="jd-descrdiv">Check if the uri is a data uri </div>
+        <div class="jd-descrdiv">Return a URI for the given resource ID.</div>
   
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#isDataUri(android.net.Uri)">isDataUri</a></span>(Uri uri)
+        
+        <div class="jd-descrdiv">Check if the uri is a data uri
+</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -704,7 +734,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -722,7 +752,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -740,7 +770,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -758,7 +788,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -776,7 +806,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -794,7 +824,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -806,8 +836,25 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#isNetworkUri(android.net.Uri)">isNetworkUri</a></span>(Uri uri)
         
-        <div class="jd-descrdiv">/**
- Check if uri represents network resource</div>
+        <div class="jd-descrdiv">Check if uri represents network resource</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/common/util/UriUtil.html#isQualifiedResourceUri(android.net.Uri)">isQualifiedResourceUri</a></span>(Uri uri)
+        
+        <div class="jd-descrdiv">Check if uri represents fully qualified resource URI.</div>
   
   </td></tr>
 
@@ -1097,7 +1144,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Data scheme for URIs </p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Data scheme for URIs
+</p></div>
 
     
         <div class="jd-tagdata">
@@ -1353,6 +1401,47 @@ From class
 
 
 
+<a id="QUALIFIED_RESOURCE_SCHEME"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        String
+      </span>
+        QUALIFIED_RESOURCE_SCHEME
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Resource scheme for fully qualified resources which might have a package name that is different
+ than the application one. This has the constant value of "android.resource".
+</p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                "android.resource"
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
 
 <!-- Fields -->
 
@@ -1550,6 +1639,56 @@ From class
 </div>
 
 
+<a id="getUriForQualifiedResource(java.lang.String, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        Uri
+      </span>
+      <span class="sympad">getUriForQualifiedResource</span>
+      <span class="normal">(String packageName, int resourceId)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns a URI for the given resource ID in the given package. Use this method only if you need
+ to specify a package name different to your application's main package.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>packageName</th>
+          <td>a package name (e.g. com.facebook.myapp.plugin)</td>
+        </tr>
+        <tr>
+          <th>resourceId</th>
+          <td>to resource ID to use</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the URI
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getUriForResourceId(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1622,7 +1761,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Check if the uri is a data uri </p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Check if the uri is a data uri
+</p></div>
 
     </div>
 </div>
@@ -1923,8 +2063,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>/**
- Check if uri represents network resource</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Check if uri represents network resource</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -1937,6 +2076,51 @@ From class
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>true if uri's scheme is equal to "http" or "https"
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="isQualifiedResourceUri(android.net.Uri)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isQualifiedResourceUri</span>
+      <span class="normal">(Uri uri)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Check if uri represents fully qualified resource URI.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>uri</th>
+          <td>uri to check</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if uri's scheme is equal to <code><a href="../../../../com/facebook/common/util/UriUtil.html#QUALIFIED_RESOURCE_SCHEME">QUALIFIED_RESOURCE_SCHEME</a></code>
 </li></ul>
   </div>
 

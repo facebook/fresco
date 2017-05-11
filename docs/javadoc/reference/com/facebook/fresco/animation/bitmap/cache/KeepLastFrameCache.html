@@ -219,6 +219,8 @@
     <li class="selected api apilevel-">
   <a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/fresco/animation/bitmap/preparation/package-summary.html">com.facebook.fresco.animation.bitmap.preparation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
@@ -560,6 +562,24 @@ Summary:
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/KeepLastFrameCache.html#contains(int)">contains</a></span>(int frameNumber)
+        
+        <div class="jd-descrdiv">Check whether the cache contains a certain frame.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            synchronized
+            
+            
+            
             <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
@@ -571,7 +591,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -589,7 +609,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -607,7 +627,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -623,6 +643,24 @@ Summary:
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/KeepLastFrameCache.html#onFramePrepared(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFramePrepared</a></span>(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference, int frameType)
+        
+        <div class="jd-descrdiv">Callback when a bitmap reference for a given frame has been prepared for future rendering.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
@@ -633,7 +671,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/KeepLastFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered</a></span>(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmap, int frameType)
+        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/cache/KeepLastFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered</a></span>(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference, int frameType)
         
         <div class="jd-descrdiv">Callback when the given bitmap has been drawn to a canvas.</div>
   
@@ -920,6 +958,24 @@ From interface
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#contains(int)">contains</a></span>(int frameNumber)
+        
+        <div class="jd-descrdiv">Check whether the cache contains a certain frame.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
             <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
@@ -931,7 +987,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -949,7 +1005,7 @@ From interface
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -967,7 +1023,7 @@ From interface
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
             
@@ -983,6 +1039,24 @@ From interface
 
 
 	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#onFramePrepared(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFramePrepared</a></span>(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference, int frameType)
+        
+        <div class="jd-descrdiv">Callback when a bitmap reference for a given frame has been prepared for future rendering.</div>
+  
+  </td></tr>
+
+
+	 
     <tr class=" api apilevel-" >
         <td class="jd-typecol">
             abstract
@@ -993,7 +1067,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered</a></span>(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmap, int frameType)
+        <span class="sympad"><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered</a></span>(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference, int frameType)
         
         <div class="jd-descrdiv">Callback when the given bitmap has been drawn to a canvas.</div>
   
@@ -1131,6 +1205,51 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Clear the cache.
 </p></div>
+
+    </div>
+</div>
+
+
+<a id="contains(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+        synchronized 
+        boolean
+      </span>
+      <span class="sympad">contains</span>
+      <span class="normal">(int frameNumber)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Check whether the cache contains a certain frame.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>frameNumber</th>
+          <td>the frame number to check</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the frame is cached
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -1312,6 +1431,71 @@ From interface
 </div>
 
 
+<a id="onFramePrepared(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">onFramePrepared</span>
+      <span class="normal">(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference, int frameType)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Callback when a bitmap reference for a given frame has been prepared for future rendering.
+
+ This method is called ahead of render time (i.e. when future frames have been prepared
+ in the background), whereas <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)">onFrameRendered(int, CloseableReference, int)</a></code>
+ is invoked when the actual frame has been drawn on a Canvas.
+
+ The supplied bitmap reference can either hold a reused bitmap returned by
+ <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#getBitmapToReuseForFrame(int, int, int)">getBitmapToReuseForFrame(int, int, int)</a></code> or a new bitmap as indicated by the
+ frame type parameter.
+
+ Note: the implementation of this interface must manually clone the given bitmap reference
+ if it wants to hold on to the bitmap.
+ The original reference will be automatically closed after this call.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>frameNumber</th>
+          <td>the frame number of the passed bitmapReference</td>
+        </tr>
+        <tr>
+          <th>bitmapReference</th>
+          <td>the bitmap reference that has been prepared for future rendering</td>
+        </tr>
+        <tr>
+          <th>frameType</th>
+          <td>the frame type of the prepared frame</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if the frame has been successfully cached
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="onFrameRendered(int, com.facebook.common.references.CloseableReference<android.graphics.Bitmap>, int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1325,7 +1509,7 @@ From interface
         void
       </span>
       <span class="sympad">onFrameRendered</span>
-      <span class="normal">(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmap, int frameType)</span>
+      <span class="normal">(int frameNumber, <a href="../../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference, int frameType)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1341,7 +1525,7 @@ From interface
  This bitmap can either be a reused bitmap returned by
  <code><a href="../../../../../../com/facebook/fresco/animation/bitmap/BitmapFrameCache.html#getBitmapToReuseForFrame(int, int, int)">getBitmapToReuseForFrame(int, int, int)</a></code> or a new bitmap.
 
- Note: the implementation of this interface has to manually clone the given bitmap reference
+ Note: the implementation of this interface must manually clone the given bitmap reference
  if it wants to hold on to the bitmap.
  The original reference will be automatically closed after this call.</p></div>
   <div class="jd-tagdata">
@@ -1352,8 +1536,8 @@ From interface
           <td>the frame number that has been rendered</td>
         </tr>
         <tr>
-          <th>bitmap</th>
-          <td>the bitmap that has been rendered</td>
+          <th>bitmapReference</th>
+          <td>the bitmap reference that has been rendered</td>
         </tr>
         <tr>
           <th>frameType</th>

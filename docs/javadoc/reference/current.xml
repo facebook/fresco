@@ -8933,11 +8933,19 @@
 >
 <implements name="java.io.Closeable">
 </implements>
+<constructor name="CloseableReference"
+ type="com.facebook.common.references.CloseableReference"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
 <method name="clone"
  return="com.facebook.common.references.CloseableReference&lt;T&gt;"
- abstract="false"
+ abstract="true"
  native="false"
- synchronized="true"
+ synchronized="false"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -8946,9 +8954,9 @@
 </method>
 <method name="cloneOrNull"
  return="com.facebook.common.references.CloseableReference&lt;T&gt;"
- abstract="false"
+ abstract="true"
  native="false"
- synchronized="true"
+ synchronized="false"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -8983,7 +8991,7 @@
 </method>
 <method name="close"
  return="void"
- abstract="false"
+ abstract="true"
  native="false"
  synchronized="false"
  static="false"
@@ -9020,9 +9028,9 @@
 </method>
 <method name="get"
  return="T"
- abstract="false"
+ abstract="true"
  native="false"
- synchronized="true"
+ synchronized="false"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -9031,9 +9039,9 @@
 </method>
 <method name="getUnderlyingReferenceTestOnly"
  return="com.facebook.common.references.SharedReference&lt;T&gt;"
- abstract="false"
+ abstract="true"
  native="false"
- synchronized="true"
+ synchronized="false"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -9042,21 +9050,10 @@
 </method>
 <method name="getValueHash"
  return="int"
- abstract="false"
- native="false"
- synchronized="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="isUnclosedTrackingEnabled"
- return="boolean"
- abstract="false"
+ abstract="true"
  native="false"
  synchronized="false"
- static="true"
+ static="false"
  final="false"
  deprecated="not deprecated"
  visibility="public"
@@ -9064,9 +9061,9 @@
 </method>
 <method name="isValid"
  return="boolean"
- abstract="false"
+ abstract="true"
  native="false"
- synchronized="true"
+ synchronized="false"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -9114,32 +9111,6 @@
 <parameter name="resourceReleaser" type="com.facebook.common.references.ResourceReleaser&lt;T&gt;">
 </parameter>
 </method>
-<method name="setUnclosedReferenceListener"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="unclosedReferenceListener" type="com.facebook.common.references.CloseableReference.UnclosedReferenceListener">
-</parameter>
-</method>
-<method name="setUnclosedRelevantTrance"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="relevantTrance" type="java.lang.Throwable">
-</parameter>
-</method>
 <method name="setUseFinalizers"
  return="void"
  abstract="false"
@@ -9153,60 +9124,7 @@
 <parameter name="useFinalizers" type="boolean">
 </parameter>
 </method>
-<field name="mIsClosed"
- type="boolean"
- transient="false"
- volatile="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="mRelevantTrace"
- type="java.lang.Throwable"
- transient="false"
- volatile="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
-<field name="mSharedReference"
- type="com.facebook.common.references.SharedReference"
- transient="false"
- volatile="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="protected"
->
-</field>
 </class>
-<interface name="CloseableReference.UnclosedReferenceListener"
- abstract="true"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="onUnclosedReferenceFinalized"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="ref" type="com.facebook.common.references.CloseableReference&lt;?&gt;">
-</parameter>
-<parameter name="relevantTrace" type="java.lang.Throwable">
-</parameter>
-</method>
-</interface>
 <class name="OOMSoftReference"
  extends="java.lang.Object"
  abstract="false"
@@ -10583,6 +10501,21 @@
 <parameter name="file" type="java.io.File">
 </parameter>
 </method>
+<method name="getUriForQualifiedResource"
+ return="android.net.Uri"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="packageName" type="java.lang.String">
+</parameter>
+<parameter name="resourceId" type="int">
+</parameter>
+</method>
 <method name="getUriForResourceId"
  return="android.net.Uri"
  abstract="false"
@@ -10700,6 +10633,19 @@
 <parameter name="uri" type="android.net.Uri">
 </parameter>
 </method>
+<method name="isQualifiedResourceUri"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="uri" type="android.net.Uri">
+</parameter>
+</method>
 <method name="parseUriOrNull"
  return="android.net.Uri"
  abstract="false"
@@ -10784,6 +10730,17 @@
  transient="false"
  volatile="false"
  value="&quot;res&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="QUALIFIED_RESOURCE_SCHEME"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;android.resource&quot;"
  static="true"
  final="true"
  deprecated="not deprecated"
@@ -21543,6 +21500,10 @@
 </parameter>
 <parameter name="bitmapFrameRenderer" type="com.facebook.fresco.animation.bitmap.BitmapFrameRenderer">
 </parameter>
+<parameter name="bitmapFramePreparationStrategy" type="com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy">
+</parameter>
+<parameter name="bitmapFramePreparer" type="com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer">
+</parameter>
 </constructor>
 <method name="clear"
  return="void"
@@ -21845,6 +21806,19 @@
  visibility="public"
 >
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+</method>
 <method name="getBitmapToReuseForFrame"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
  abstract="true"
@@ -21899,6 +21873,23 @@
  visibility="public"
 >
 </method>
+<method name="onFramePrepared"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+</parameter>
+<parameter name="frameType" type="int">
+</parameter>
+</method>
 <method name="onFrameRendered"
  return="void"
  abstract="true"
@@ -21911,7 +21902,7 @@
 >
 <parameter name="frameNumber" type="int">
 </parameter>
-<parameter name="bitmap" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
 </parameter>
 <parameter name="frameType" type="int">
 </parameter>
@@ -22062,6 +22053,19 @@
  visibility="public"
 >
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+</method>
 <method name="getBitmapToReuseForFrame"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
  abstract="false"
@@ -22115,6 +22119,23 @@
  deprecated="not deprecated"
  visibility="public"
 >
+</method>
+<method name="onFramePrepared"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+</parameter>
+<parameter name="frameType" type="int">
+</parameter>
 </method>
 <method name="onFrameRendered"
  return="void"
@@ -22176,6 +22197,19 @@
  visibility="public"
 >
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+</method>
 <method name="getBitmapToReuseForFrame"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
  abstract="false"
@@ -22230,6 +22264,23 @@
  visibility="public"
 >
 </method>
+<method name="onFramePrepared"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+</parameter>
+<parameter name="frameType" type="int">
+</parameter>
+</method>
 <method name="onFrameRendered"
  return="void"
  abstract="false"
@@ -22242,7 +22293,7 @@
 >
 <parameter name="frameNumber" type="int">
 </parameter>
-<parameter name="bitmap" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
 </parameter>
 <parameter name="frameType" type="int">
 </parameter>
@@ -22290,6 +22341,19 @@
  visibility="public"
 >
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+</method>
 <method name="getBitmapToReuseForFrame"
  return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
  abstract="false"
@@ -22344,6 +22408,23 @@
  visibility="public"
 >
 </method>
+<method name="onFramePrepared"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameNumber" type="int">
+</parameter>
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+</parameter>
+<parameter name="frameType" type="int">
+</parameter>
+</method>
 <method name="onFrameRendered"
  return="void"
  abstract="false"
@@ -22356,7 +22437,7 @@
 >
 <parameter name="frameNumber" type="int">
 </parameter>
-<parameter name="bitmap" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
+<parameter name="bitmapReference" type="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;">
 </parameter>
 <parameter name="frameType" type="int">
 </parameter>
@@ -22372,6 +22453,109 @@
  visibility="public"
 >
 <parameter name="frameCacheListener" type="com.facebook.fresco.animation.bitmap.BitmapFrameCache.FrameCacheListener">
+</parameter>
+</method>
+</class>
+</package>
+<package name="com.facebook.fresco.animation.bitmap.preparation"
+>
+<interface name="BitmapFramePreparationStrategy"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="prepareFrames"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapFramePreparer" type="com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer">
+</parameter>
+<parameter name="bitmapFrameCache" type="com.facebook.fresco.animation.bitmap.BitmapFrameCache">
+</parameter>
+<parameter name="animationBackend" type="com.facebook.fresco.animation.backend.AnimationBackend">
+</parameter>
+<parameter name="lastDrawnFrameNumber" type="int">
+</parameter>
+</method>
+</interface>
+<interface name="BitmapFramePreparer"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="prepareFrame"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapFrameCache" type="com.facebook.fresco.animation.bitmap.BitmapFrameCache">
+</parameter>
+<parameter name="animationBackend" type="com.facebook.fresco.animation.backend.AnimationBackend">
+</parameter>
+<parameter name="frameNumber" type="int">
+</parameter>
+</method>
+</interface>
+<class name="FixedNumberBitmapFramePreparationStrategy"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy">
+</implements>
+<constructor name="FixedNumberBitmapFramePreparationStrategy"
+ type="com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<constructor name="FixedNumberBitmapFramePreparationStrategy"
+ type="com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="framesToPrepare" type="int">
+</parameter>
+</constructor>
+<method name="prepareFrames"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapFramePreparer" type="com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer">
+</parameter>
+<parameter name="bitmapFrameCache" type="com.facebook.fresco.animation.bitmap.BitmapFrameCache">
+</parameter>
+<parameter name="animationBackend" type="com.facebook.fresco.animation.backend.AnimationBackend">
+</parameter>
+<parameter name="lastDrawnFrameNumber" type="int">
 </parameter>
 </method>
 </class>
@@ -22728,6 +22912,45 @@
 <parameter name="colorFilter" type="android.graphics.ColorFilter">
 </parameter>
 </method>
+<method name="setDrawListener"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="drawListener" type="com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener">
+</parameter>
+</method>
+<method name="setFrameSchedulingDelayMs"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameSchedulingDelayMs" type="long">
+</parameter>
+</method>
+<method name="setFrameSchedulingOffsetMs"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameSchedulingOffsetMs" type="long">
+</parameter>
+</method>
 <method name="start"
  return="void"
  abstract="false"
@@ -22749,6 +22972,103 @@
  deprecated="not deprecated"
  visibility="public"
 >
+</method>
+</class>
+<interface name="AnimatedDrawable2.DrawListener"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="onDraw"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="animatedDrawable" type="com.facebook.fresco.animation.drawable.AnimatedDrawable2">
+</parameter>
+<parameter name="frameScheduler" type="com.facebook.fresco.animation.frame.FrameScheduler">
+</parameter>
+<parameter name="frameNumberToDraw" type="int">
+</parameter>
+<parameter name="frameDrawn" type="boolean">
+</parameter>
+<parameter name="isAnimationRunning" type="boolean">
+</parameter>
+<parameter name="animationStartTimeMs" type="long">
+</parameter>
+<parameter name="animationTimeMs" type="long">
+</parameter>
+<parameter name="lastFrameAnimationTimeMs" type="long">
+</parameter>
+<parameter name="actualRenderTimeStartMs" type="long">
+</parameter>
+<parameter name="actualRenderTimeEndMs" type="long">
+</parameter>
+<parameter name="startRenderTimeForNextFrameMs" type="long">
+</parameter>
+<parameter name="scheduledRenderTimeForNextFrameMs" type="long">
+</parameter>
+</method>
+</interface>
+<class name="AnimatedDrawable2DebugDrawListener"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener">
+</implements>
+<constructor name="AnimatedDrawable2DebugDrawListener"
+ type="com.facebook.fresco.animation.drawable.AnimatedDrawable2DebugDrawListener"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="onDraw"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="animatedDrawable" type="com.facebook.fresco.animation.drawable.AnimatedDrawable2">
+</parameter>
+<parameter name="frameScheduler" type="com.facebook.fresco.animation.frame.FrameScheduler">
+</parameter>
+<parameter name="frameNumberToDraw" type="int">
+</parameter>
+<parameter name="frameDrawn" type="boolean">
+</parameter>
+<parameter name="isAnimationRunning" type="boolean">
+</parameter>
+<parameter name="animationStartTimeMs" type="long">
+</parameter>
+<parameter name="animationTimeMs" type="long">
+</parameter>
+<parameter name="lastFrameAnimationTimeMs" type="long">
+</parameter>
+<parameter name="actualRenderTimeStartMs" type="long">
+</parameter>
+<parameter name="actualRenderTimeEndMs" type="long">
+</parameter>
+<parameter name="startRenderTimeForNextFrameMs" type="long">
+</parameter>
+<parameter name="scheduledRenderTimeForNextFrameMs" type="long">
+</parameter>
 </method>
 </class>
 <interface name="AnimationListener"
@@ -26976,6 +27296,19 @@
 <parameter name="imageRef" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="frameIndex" type="int">
+</parameter>
+</method>
 <method name="get"
  return="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;"
  abstract="false"
@@ -28910,6 +29243,19 @@
 <parameter name="predicate" type="com.android.internal.util.Predicate&lt;K&gt;">
 </parameter>
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="K">
+</parameter>
+</method>
 <method name="get"
  return="com.facebook.common.references.CloseableReference&lt;V&gt;"
  abstract="false"
@@ -30699,7 +31045,7 @@
 >
 </method>
 <method name="setBitmapConfig"
- return="void"
+ return="com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder"
  abstract="false"
  native="false"
  synchronized="false"
@@ -31227,6 +31573,17 @@
  transient="false"
  volatile="false"
  value="0"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SOURCE_TYPE_QUALIFIED_RESOURCE"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="8"
  static="true"
  final="true"
  deprecated="not deprecated"
@@ -32789,7 +33146,7 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="not deprecated"
+ deprecated="deprecated"
  visibility="public"
 >
 <parameter name="forceSmallCacheThresholdBytes" type="int">
@@ -33007,6 +33364,17 @@
  native="false"
  synchronized="false"
  static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getMainBufferedDiskCache"
+ return="com.facebook.imagepipeline.cache.BufferedDiskCache"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
  final="false"
  deprecated="not deprecated"
  visibility="public"
@@ -33486,6 +33854,17 @@
 >
 <parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;">
 </parameter>
+</method>
+<method name="newQualifiedResourceFetchProducer"
+ return="com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
 </method>
 <method name="newResizeAndRotateProducer"
  return="com.facebook.imagepipeline.producers.ResizeAndRotateProducer"
@@ -34323,6 +34702,17 @@
 </method>
 <method name="getBestScanNumber"
  return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="isEndMarkerRead"
+ return="boolean"
  abstract="false"
  native="false"
  synchronized="false"
@@ -35643,6 +36033,23 @@
 <parameter name="isPrefetch" type="boolean">
 </parameter>
 </method>
+<method name="onUltimateProducerReached"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="requestId" type="java.lang.String">
+</parameter>
+<parameter name="producerName" type="java.lang.String">
+</parameter>
+<parameter name="successful" type="boolean">
+</parameter>
+</method>
 <method name="requiresExtraMap"
  return="boolean"
  abstract="false"
@@ -35838,6 +36245,23 @@
 <parameter name="requestId" type="java.lang.String">
 </parameter>
 <parameter name="isPrefetch" type="boolean">
+</parameter>
+</method>
+<method name="onUltimateProducerReached"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="requestId" type="java.lang.String">
+</parameter>
+<parameter name="producerName" type="java.lang.String">
+</parameter>
+<parameter name="successful" type="boolean">
 </parameter>
 </method>
 <method name="requiresExtraMap"
@@ -36101,6 +36525,23 @@
 <parameter name="requestId" type="java.lang.String">
 </parameter>
 <parameter name="isPrefetch" type="boolean">
+</parameter>
+</method>
+<method name="onUltimateProducerReached"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="requestId" type="java.lang.String">
+</parameter>
+<parameter name="producerName" type="java.lang.String">
+</parameter>
+<parameter name="successful" type="boolean">
 </parameter>
 </method>
 <method name="requiresExtraMap"
@@ -41932,6 +42373,23 @@
 <parameter name="producerName" type="java.lang.String">
 </parameter>
 </method>
+<method name="onUltimateProducerReached"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="requestId" type="java.lang.String">
+</parameter>
+<parameter name="producerName" type="java.lang.String">
+</parameter>
+<parameter name="successful" type="boolean">
+</parameter>
+</method>
 <method name="requiresExtraMap"
  return="boolean"
  abstract="true"
@@ -41946,6 +42404,66 @@
 </parameter>
 </method>
 </interface>
+<class name="QualifiedResourceFetchProducer"
+ extends="com.facebook.imagepipeline.producers.LocalFetchProducer"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="QualifiedResourceFetchProducer"
+ type="com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="executor" type="java.util.concurrent.Executor">
+</parameter>
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
+</parameter>
+<parameter name="contentResolver" type="android.content.ContentResolver">
+</parameter>
+</constructor>
+<method name="getEncodedImage"
+ return="com.facebook.imagepipeline.image.EncodedImage"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<exception name="IOException" type="java.io.IOException">
+</exception>
+</method>
+<method name="getProducerName"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+<field name="PRODUCER_NAME"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;QualifiedResourceFetchProducer&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
 <class name="RemoveImageTransformMetaDataProducer"
  extends="java.lang.Object"
  abstract="false"

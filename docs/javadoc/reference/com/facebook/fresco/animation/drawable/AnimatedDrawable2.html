@@ -219,6 +219,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/bitmap/cache/package-summary.html">com.facebook.fresco.animation.bitmap.cache</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/fresco/animation/bitmap/preparation/package-summary.html">com.facebook.fresco.animation.bitmap.preparation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/bitmap/wrapper/package-summary.html">com.facebook.fresco.animation.bitmap.wrapper</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/drawable/package-summary.html">com.facebook.fresco.animation.drawable</a></li>
@@ -286,6 +288,7 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.DrawListener.html">AnimatedDrawable2.DrawListener</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimationListener.html">AnimationListener</a></li>
       </ul>
     </li>
@@ -293,6 +296,7 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="selected api apilevel-"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html">AnimatedDrawable2</a></li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2DebugDrawListener.html">AnimatedDrawable2DebugDrawListener</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/drawable/BaseAnimationListener.html">BaseAnimationListener</a></li>
       </ul>
     </li>
@@ -371,6 +375,8 @@
 
 Summary:
 
+  <a href="#nestedclasses">Nested Classes</a>
+  
 
 
 
@@ -379,7 +385,8 @@ Summary:
 
 
 
-  <a href="#pubctors">Ctors</a>
+
+  &#124; <a href="#pubctors">Ctors</a>
   
 
 
@@ -516,6 +523,27 @@ Summary:
 
 <h2>Summary</h2>
 
+
+
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
+
+
+  
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol">
+        
+         
+         
+        
+        interface</td>
+      <td class="jd-linkcol"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.DrawListener.html">AnimatedDrawable2.DrawListener</a></td>
+      <td class="jd-descrcol" width="100%"><code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#draw(android.graphics.Canvas)">draw(Canvas)</a></code> listener that is notified for each draw call.&nbsp;</td>
+    </tr>
+    
+    
+
+</table>
 
 
 
@@ -903,6 +931,61 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#setDrawListener(com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener)">setDrawListener</a></span>(<a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.DrawListener.html">AnimatedDrawable2.DrawListener</a> drawListener)
+        
+        <div class="jd-descrdiv">Set a draw listener that is notified for each <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#draw(android.graphics.Canvas)">draw(Canvas)</a></code> call.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#setFrameSchedulingDelayMs(long)">setFrameSchedulingDelayMs</a></span>(long frameSchedulingDelayMs)
+        
+        <div class="jd-descrdiv">Frame scheduling delay to shift the target render time for a frame within the frame's
+ visible window.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#setFrameSchedulingOffsetMs(long)">setFrameSchedulingOffsetMs</a></span>(long frameSchedulingOffsetMs)
+        
+        <div class="jd-descrdiv">Frame scheduling offset to shift the animation time by the given offset.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#start()">start</a></span>()
         
         <div class="jd-descrdiv">Start the animation.</div>
@@ -911,7 +994,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -3158,6 +3241,133 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setDrawListener(com.facebook.fresco.animation.drawable.AnimatedDrawable2.DrawListener)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setDrawListener</span>
+      <span class="normal">(<a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.DrawListener.html">AnimatedDrawable2.DrawListener</a> drawListener)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Set a draw listener that is notified for each <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html#draw(android.graphics.Canvas)">draw(Canvas)</a></code> call.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>drawListener</th>
+          <td>the listener to use
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="setFrameSchedulingDelayMs(long)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setFrameSchedulingDelayMs</span>
+      <span class="normal">(long frameSchedulingDelayMs)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Frame scheduling delay to shift the target render time for a frame within the frame's
+ visible window. If the value is set to 0, the frame will be scheduled right at the beginning
+ of the frame's visible window.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>frameSchedulingDelayMs</th>
+          <td>the delay to use in ms
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="setFrameSchedulingOffsetMs(long)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setFrameSchedulingOffsetMs</span>
+      <span class="normal">(long frameSchedulingOffsetMs)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Frame scheduling offset to shift the animation time by the given offset.
+ This is similar to #mFrameSchedulingDelayMs but instead of delaying the invalidation,
+ this offsets the animation time by the given value.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>frameSchedulingOffsetMs</th>
+          <td>the offset to use in ms
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
