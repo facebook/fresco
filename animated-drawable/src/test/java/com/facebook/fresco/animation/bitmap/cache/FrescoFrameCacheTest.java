@@ -19,10 +19,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests {@link FrescoFrameCache}.
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(PowerMockRunner.class)
 public class FrescoFrameCacheTest {
 
   @Mock public CloseableReference<CloseableImage> mImageReference;
