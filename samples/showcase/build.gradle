@@ -55,6 +55,7 @@ dependencies {
 
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-span')
+    compile project(':imagepipeline-backends:imagepipeline-okhttp3')
     compile project(':tools:stetho')
 
     // Only used for the custom SVG decoder

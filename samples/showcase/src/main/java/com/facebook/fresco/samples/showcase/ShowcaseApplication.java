@@ -23,6 +23,7 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.imagepipeline.ShowcaseMediaIdExtractor;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
@@ -30,6 +31,8 @@ import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Showcase Application implementation where we set up Fresco
@@ -43,7 +46,10 @@ public class ShowcaseApplication extends Application {
     Set<RequestListener> listeners = new HashSet<>();
     listeners.add(new RequestLoggingListener());
 
-    ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
+    OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+    ImagePipelineConfig imagePipelineConfig = OkHttpImagePipelineConfigFactory
+        .newBuilder(this, okHttpClient)
         .setRequestListeners(listeners)
         .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
         .experiment().setMediaVariationsIndexEnabled(new Supplier<Boolean>() {
