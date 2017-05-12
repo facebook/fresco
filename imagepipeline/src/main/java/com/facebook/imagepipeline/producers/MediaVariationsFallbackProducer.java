@@ -23,7 +23,6 @@ import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.DiskCachePolicy;
 import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -63,7 +62,6 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private final CacheKeyFactory mCacheKeyFactory;
   private final MediaVariationsIndex mMediaVariationsIndex;
   @Nullable private MediaIdExtractor mMediaIdExtractor;
-  private final DiskCachePolicy mDiskCachePolicy;
   private final Producer<EncodedImage> mInputProducer;
 
   public MediaVariationsFallbackProducer(
@@ -72,14 +70,12 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       CacheKeyFactory cacheKeyFactory,
       MediaVariationsIndex mediaVariationsIndex,
       @Nullable MediaIdExtractor mediaIdExtractor,
-      DiskCachePolicy diskCachePolicy,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mMediaVariationsIndex = mediaVariationsIndex;
     mMediaIdExtractor = mediaIdExtractor;
-    mDiskCachePolicy = diskCachePolicy;
     mInputProducer = inputProducer;
   }
 
@@ -446,8 +442,9 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
         return;
       }
 
-      final ImageRequest.CacheChoice cacheChoice =
-          mDiskCachePolicy.getCacheChoiceForResult(imageRequest, newResult);
+      final ImageRequest.CacheChoice cacheChoice = imageRequest.getCacheChoice() == null
+          ? ImageRequest.CacheChoice.DEFAULT
+          : imageRequest.getCacheChoice();
       final CacheKey cacheKey =
           mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
 

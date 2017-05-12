@@ -220,7 +220,6 @@ public class ProducerFactory {
         mCacheKeyFactory,
         mMediaVariationsIndex,
         mMediaIdExtractor,
-        mMainDiskCachePolicy,
         inputProducer);
   }
 

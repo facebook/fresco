@@ -19,7 +19,6 @@ import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.util.TriState;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.DiskCachePolicy;
 import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.common.Priority;
@@ -104,7 +103,6 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public MediaIdExtractor mMediaIdExtractor;
   @Mock public EncodedImage mIntermediateEncodedImage;
   @Mock public EncodedImage mFinalEncodedImage;
-  @Mock public DiskCachePolicy mDiskCachePolicy;
   @Captor public ArgumentCaptor<Consumer<EncodedImage>> mConsumerCaptor;
   @Captor public ArgumentCaptor<ProducerContext> mProducerContextCaptor;
   @Captor public ArgumentCaptor<Map<String, String>> mListenerExtrasCaptor;
@@ -126,7 +124,6 @@ public class MediaVariationsFallbackProducerTest {
         mCacheKeyFactory,
         mMediaVariationsIndex,
         mMediaIdExtractor,
-        mDiskCachePolicy,
         mInputProducer);
 
     mProducerContext = new SettableProducerContext(
@@ -165,9 +162,6 @@ public class MediaVariationsFallbackProducerTest {
     whenIndexDbContainsNoMatchingVariants();
 
     when(mMediaIdExtractor.getMediaIdFrom(any(Uri.class))).thenReturn(null);
-
-    when(mDiskCachePolicy.getCacheChoiceForResult(any(ImageRequest.class), any(EncodedImage.class)))
-        .thenReturn(CacheChoice.DEFAULT);
 
     when(mDefaultBufferedDiskCache.get(any(CacheKey.class), any(AtomicBoolean.class)))
         .thenReturn(Task.<EncodedImage>forResult(null));
@@ -484,9 +478,8 @@ public class MediaVariationsFallbackProducerTest {
 
   private void testWriteToIndexWithCorrectValuesFor(CacheChoice cacheChoice) {
     when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
+    when(mImageRequest.getCacheChoice()).thenReturn(cacheChoice);
     setupInputProducerSuccess();
-    when(mDiskCachePolicy.getCacheChoiceForResult(any(ImageRequest.class), any(EncodedImage.class)))
-        .thenReturn(cacheChoice);
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
