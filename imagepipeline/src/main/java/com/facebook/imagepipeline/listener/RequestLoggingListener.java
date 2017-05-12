@@ -103,6 +103,7 @@ public class RequestLoggingListener implements RequestListener {
       long currentTime = getTime();
       FLog.w(
           TAG,
+          throwable,
           "time %d: onProducerFinishWithFailure: " +
               "{requestId: %s, stage: %s, elapsedTime: %d ms, extraMap: %s, throwable: %s}",
           currentTime,
