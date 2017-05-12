@@ -9,7 +9,10 @@
 
 package com.facebook.imagepipeline.producers;
 
-import com.facebook.imagepipeline.cache.DiskCachePolicy;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
+import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 
@@ -21,20 +24,28 @@ import com.facebook.imagepipeline.request.ImageRequest;
  *
  * <p>The final result passed to the consumer put into the disk cache as well as being passed on.
  *
- * <p>Disk cache interactions are delegated to a provided {@link DiskCachePolicy}.
+ * <p>This implementation delegates disk cache requests to BufferedDiskCache.
  *
  * <p>This producer is currently used only if the media variations experiment is turned on, to
  * enable another producer to sit between cache read and write.
  */
 public class DiskCacheWriteProducer implements Producer<EncodedImage> {
+  @VisibleForTesting static final String PRODUCER_NAME = "DiskCacheProducer";
+
+  private final BufferedDiskCache mDefaultBufferedDiskCache;
+  private final BufferedDiskCache mSmallImageBufferedDiskCache;
+  private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final DiskCachePolicy mDiskCachePolicy;
 
   public DiskCacheWriteProducer(
-      Producer<EncodedImage> inputProducer,
-      DiskCachePolicy diskCachePolicy) {
+      BufferedDiskCache defaultBufferedDiskCache,
+      BufferedDiskCache smallImageBufferedDiskCache,
+      CacheKeyFactory cacheKeyFactory,
+      Producer<EncodedImage> inputProducer) {
+    mDefaultBufferedDiskCache = defaultBufferedDiskCache;
+    mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+    mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
-    mDiskCachePolicy = diskCachePolicy;
   }
 
   public void produceResults(
@@ -55,7 +66,10 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
         consumer = new DiskCacheWriteConsumer(
             consumerOfDiskCacheWriteProducer,
             producerContext,
-            mDiskCachePolicy);
+            mDefaultBufferedDiskCache,
+            mSmallImageBufferedDiskCache,
+            mCacheKeyFactory
+        );
       } else {
         consumer = consumerOfDiskCacheWriteProducer;
       }
@@ -74,24 +88,35 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
     private final ProducerContext mProducerContext;
-    private final DiskCachePolicy mDiskCachePolicy;
+    private final BufferedDiskCache mDefaultBufferedDiskCache;
+    private final BufferedDiskCache mSmallImageBufferedDiskCache;
+    private final CacheKeyFactory mCacheKeyFactory;
 
     private DiskCacheWriteConsumer(
         final Consumer<EncodedImage> consumer,
         final ProducerContext producerContext,
-        final DiskCachePolicy diskCachePolicy) {
+        final BufferedDiskCache defaultBufferedDiskCache,
+        final BufferedDiskCache smallImageBufferedDiskCache,
+        final CacheKeyFactory cacheKeyFactory) {
       super(consumer);
       mProducerContext = producerContext;
-      mDiskCachePolicy = diskCachePolicy;
+      mDefaultBufferedDiskCache = defaultBufferedDiskCache;
+      mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
+      mCacheKeyFactory = cacheKeyFactory;
     }
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
       if (newResult != null && isLast) {
-        mDiskCachePolicy.writeToCache(
-            newResult,
-            mProducerContext.getImageRequest(),
-            mProducerContext.getCallerContext());
+        final ImageRequest imageRequest = mProducerContext.getImageRequest();
+        final CacheKey cacheKey =
+            mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
+
+        if (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL) {
+          mSmallImageBufferedDiskCache.put(cacheKey, newResult);
+        } else {
+          mDefaultBufferedDiskCache.put(cacheKey, newResult);
+        }
       }
 
       getConsumer().onNewResult(newResult, isLast);
