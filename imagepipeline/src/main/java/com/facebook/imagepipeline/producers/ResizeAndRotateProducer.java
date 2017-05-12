@@ -207,7 +207,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       } catch (Exception e) {
         mProducerContext.getListener().
             onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
-        getConsumer().onFailure(e);
+        if (isLast) {
+          getConsumer().onFailure(e);
+        }
         return;
       } finally {
         Closeables.closeQuietly(is);
