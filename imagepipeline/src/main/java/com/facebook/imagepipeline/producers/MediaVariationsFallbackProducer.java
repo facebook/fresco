@@ -257,10 +257,12 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       public Void then(Task<EncodedImage> task)
           throws Exception {
         final boolean triggerNextProducer;
+        final boolean allowIntermediateResults;
         if (isTaskCancelled(task)) {
           listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
           consumer.onCancellation();
           triggerNextProducer = false;
+          allowIntermediateResults = false;
         } else if (task.isFaulted()) {
           listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
           startInputProducerWithWrappedConsumer(
@@ -268,6 +270,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
               producerContext,
               mediaVariations.getMediaId());
           triggerNextProducer = true;
+          allowIntermediateResults = true;
         } else {
           EncodedImage cachedReference = task.getResult();
           if (cachedReference != null) {
@@ -294,6 +297,9 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
             cachedReference.close();
 
             triggerNextProducer = !useAsLastResult;
+            // Since we've already got an image to display (the variant image) there is no
+            // need to allow intermediate results of the final image
+            allowIntermediateResults = false;
           } else if (variantsIndex < sortedVariants.size() - 1) {
             // TODO t14487493: Remove the item from the index
 
@@ -307,6 +313,9 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
                 isCancelled);
 
             triggerNextProducer = false;
+            // Since the variant image found can be used in place of the requested one, we dont
+            // need to process further intermediate images
+            allowIntermediateResults = false;
           } else {
             listener.onProducerFinishWithSuccess(
                 requestId,
@@ -319,13 +328,25 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
                     mediaVariations.getSource(),
                     false));
             triggerNextProducer = true;
+            allowIntermediateResults = true;
           }
         }
-
         if (triggerNextProducer) {
+          final ProducerContext forwardedProducerContext;
+          if (producerContext.isIntermediateResultExpected()
+              && !allowIntermediateResults) {
+            // Pass the request on, but disable intermediate results
+            final SettableProducerContext settableContext =
+                new SettableProducerContext(producerContext);
+            settableContext.setIsIntermediateResultExpected(false);
+            forwardedProducerContext = settableContext;
+          }
+          else {
+            forwardedProducerContext = producerContext;
+          }
           startInputProducerWithWrappedConsumer(
               consumer,
-              producerContext,
+              forwardedProducerContext,
               mediaVariations.getMediaId());
         }
         return null;

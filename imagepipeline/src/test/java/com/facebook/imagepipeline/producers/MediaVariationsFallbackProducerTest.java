@@ -44,6 +44,7 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static junit.framework.Assert.assertEquals;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -105,6 +106,7 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public EncodedImage mFinalEncodedImage;
   @Mock public DiskCachePolicy mDiskCachePolicy;
   @Captor public ArgumentCaptor<Consumer<EncodedImage>> mConsumerCaptor;
+  @Captor public ArgumentCaptor<ProducerContext> mProducerContextCaptor;
   @Captor public ArgumentCaptor<Map<String, String>> mListenerExtrasCaptor;
   private SettableProducerContext mProducerContext;
   private final String mRequestId = "mRequestId";
@@ -209,7 +211,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(true);
     verifyNoMoreInteractions(
         mConsumer,
         mCacheKeyFactory,
@@ -241,7 +243,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
         NOT_FOUND,
@@ -258,7 +260,7 @@ public class MediaVariationsFallbackProducerTest {
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mMediaIdExtractor).getMediaIdFrom(URI_ORIGINAL);
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
         NOT_FOUND,
@@ -277,7 +279,7 @@ public class MediaVariationsFallbackProducerTest {
 
     verify(mConsumer).onNewResult(mImageS, false);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
         FOUND,
@@ -297,7 +299,7 @@ public class MediaVariationsFallbackProducerTest {
 
     verify(mConsumer).onNewResult(mImageS, false);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
     verifyZeroInteractions(mDefaultBufferedDiskCache, mMediaIdExtractor);
@@ -333,7 +335,7 @@ public class MediaVariationsFallbackProducerTest {
 
     verify(mConsumer).onNewResult(mImageL, false);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
         FOUND,
@@ -398,7 +400,7 @@ public class MediaVariationsFallbackProducerTest {
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(false);
     verifyZeroInteractions(mSmallImageBufferedDiskCache);
   }
 
@@ -435,7 +437,7 @@ public class MediaVariationsFallbackProducerTest {
     inOrder.verify(mDefaultBufferedDiskCache).get(eq(CACHE_KEY_L), any(AtomicBoolean.class));
     inOrder.verify(mDefaultBufferedDiskCache).get(eq(CACHE_KEY_S), any(AtomicBoolean.class));
 
-    verifyInputProducerProduceResultsWithNewConsumer();
+    verifyInputProducerProduceResultsWithNewConsumer(true);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
         NOT_FOUND,
@@ -589,12 +591,28 @@ public class MediaVariationsFallbackProducerTest {
         }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
-  private void verifyInputProducerProduceResultsWithNewConsumer() {
-    verify(mInputProducer).produceResults(mConsumerCaptor.capture(), eq(mProducerContext));
+  private void verifyInputProducerProduceResultsWithNewConsumer(boolean allowIntermediateResult) {
+    verify(mInputProducer)
+        .produceResults(mConsumerCaptor.capture(), mProducerContextCaptor.capture());
 
     Consumer<EncodedImage> consumer = mConsumerCaptor.getValue();
     assertThat(consumer).isInstanceOf(MediaVariationsConsumer.class);
     assertThat(((MediaVariationsConsumer) consumer).getConsumer()).isSameAs(mConsumer);
+
+    SettableProducerContext referenceContext = new SettableProducerContext(mProducerContext);
+    referenceContext.setIsIntermediateResultExpected(allowIntermediateResult);
+    ProducerContext capturedContext = mProducerContextCaptor.getValue();
+    assertEquals(referenceContext.getCallerContext(), capturedContext.getCallerContext());
+    assertEquals(referenceContext.getId(), capturedContext.getId());
+    assertEquals(referenceContext.getImageRequest(), capturedContext.getImageRequest());
+    assertEquals(referenceContext.getListener(), capturedContext.getListener());
+    assertEquals(
+        referenceContext.getLowestPermittedRequestLevel(),
+        capturedContext.getLowestPermittedRequestLevel());
+    assertEquals(referenceContext.getPriority(), capturedContext.getPriority());
+    assertEquals(
+        referenceContext.isIntermediateResultExpected(),
+        capturedContext.isIntermediateResultExpected());
   }
 
   private void verifySuccessSentToListener(
