@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
  * Tests {@link FrescoFrameCache}.
  */
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(CloseableReference.class)
 public class FrescoFrameCacheTest {
 
   @Mock public CloseableReference<CloseableImage> mImageReference;
