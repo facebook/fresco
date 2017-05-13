@@ -1,5 +1,7 @@
 - title: Apps Using Fresco
   items:
+  - name: Book Share
+    url: https://play.google.com/store/apps/details?id=com.rvnd.bookshare
   - name: Vimeo
     url: https://play.google.com/store/apps/details?id=com.vimeo.android.videoapp
   - name: Best Apps Market
