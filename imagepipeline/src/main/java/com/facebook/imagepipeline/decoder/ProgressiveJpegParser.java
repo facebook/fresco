@@ -156,7 +156,13 @@ public class ProgressiveJpegParser {
       int nextByte;
       while (mParserState != NOT_A_JPEG && (nextByte = inputStream.read()) != -1) {
         mBytesParsed++;
-
+        if (mEndMarkerRead) {
+          // There should be no more data after the EOI marker, just in case there is lets
+          // bail out instead of trying to parse the unknown data
+          mParserState = NOT_A_JPEG;
+          mEndMarkerRead = false;
+          return false;
+        }
         switch (mParserState) {
           case READ_FIRST_JPEG_BYTE:
             if (nextByte == JfifUtil.MARKER_FIRST_BYTE) {
