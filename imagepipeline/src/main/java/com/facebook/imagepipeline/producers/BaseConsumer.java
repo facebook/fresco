@@ -90,11 +90,6 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   @Override
-  public void onNewResult(T newResult, boolean isLast) {
-    onNewResult(newResult, simpleStatusForIsLast(isLast));
-  }
-
-  @Override
   public synchronized void onFailure(Throwable t) {
     if (mIsFinished) {
       return;
@@ -138,21 +133,9 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   /**
-   * Called for legacy purposes during change to {@link #onNewResultImpl(Object, int)} if the
-   * newer method has not been implemented.
+   * Called by onNewResult, override this method instead.
    */
-  @Deprecated
-  protected void onNewResultImpl(T newResult, boolean isLast) {
-    // no-op
-  }
-
-  /**
-   * Called by onNewResult, override this method instead. The base implementation currently just
-   * calls the old method for legacy reasons.
-   */
-  protected void onNewResultImpl(T newResult, @Status int status) {
-    onNewResultImpl(newResult, isLast(status));
-  }
+  protected abstract void onNewResultImpl(T newResult, @Status int status);
 
   /**
    * Called by onFailure, override this method instead

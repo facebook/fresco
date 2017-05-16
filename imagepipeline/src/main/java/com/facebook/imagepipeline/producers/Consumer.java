@@ -78,9 +78,6 @@ public interface Consumer<T> {
    */
   void onNewResult(T newResult, @Status int status);
 
-  @Deprecated
-  void onNewResult(T newResult, boolean isLast);
-
   /**
    * Called by a producer whenever it terminates further work due to Throwable being thrown. This
    * method should not throw an exception.
