@@ -59,7 +59,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
       ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue() >=
         ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
-      consumerOfDiskCacheWriteProducer.onNewResult(null, true);
+      consumerOfDiskCacheWriteProducer.onNewResult(null, Consumer.IS_LAST);
     } else {
       Consumer<EncodedImage> consumer;
       if (producerContext.getImageRequest().isDiskCacheEnabled()) {
@@ -106,8 +106,8 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
-      if (newResult != null && isLast) {
+    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
+      if (newResult != null && isLast(status)) {
         final ImageRequest imageRequest = mProducerContext.getImageRequest();
         final CacheKey cacheKey =
             mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
@@ -119,7 +119,7 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
         }
       }
 
-      getConsumer().onNewResult(newResult, isLast);
+      getConsumer().onNewResult(newResult, status);
     }
   }
 }

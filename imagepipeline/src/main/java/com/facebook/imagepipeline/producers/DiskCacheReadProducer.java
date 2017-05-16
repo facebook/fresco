@@ -107,7 +107,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
                 getExtraMap(listener, requestId, true, cachedReference.getSize()));
             listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
             consumer.onProgressUpdate(1);
-            consumer.onNewResult(cachedReference, true);
+            consumer.onNewResult(cachedReference, Consumer.IS_LAST);
             cachedReference.close();
           } else {
             listener.onProducerFinishWithSuccess(
@@ -132,7 +132,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       ProducerContext producerContext) {
     if (producerContext.getLowestPermittedRequestLevel().getValue() >=
         ImageRequest.RequestLevel.DISK_CACHE.getValue()) {
-      consumer.onNewResult(null, true);
+      consumer.onNewResult(null, Consumer.IS_LAST);
       return;
     }
 

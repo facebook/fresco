@@ -135,8 +135,8 @@ public class DiskCacheWriteProducerTest {
     assertSame(
         encodedImage.getByteBufferRef().getUnderlyingReferenceTestOnly(),
         mFinalImageReference.getUnderlyingReferenceTestOnly());
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verifyZeroInteractions(mProducerListener);
   }
 
@@ -147,8 +147,8 @@ public class DiskCacheWriteProducerTest {
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
     verify(mSmallImageBufferedDiskCache, never()).put(mCacheKey, mIntermediateEncodedImage);
     verify(mSmallImageBufferedDiskCache).put(mCacheKey, mFinalEncodedImage);
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verifyZeroInteractions(mProducerListener);
   }
 
@@ -156,7 +156,7 @@ public class DiskCacheWriteProducerTest {
   public void testInputProducerNotFound() {
     setupInputProducerNotFound();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verifyZeroInteractions(
         mProducerListener,
         mDefaultBufferedDiskCache,
@@ -179,8 +179,8 @@ public class DiskCacheWriteProducerTest {
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(false);
     setupInputProducerSuccess();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     verifyNoMoreInteractions(
         mProducerListener,
         mCacheKeyFactory,
@@ -192,7 +192,7 @@ public class DiskCacheWriteProducerTest {
   public void testLowestLevelReached() {
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(false);
     mDiskCacheWriteProducer.produceResults(mConsumer, mLowestLevelProducerContext);
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verifyZeroInteractions(
         mInputProducer,
         mDefaultBufferedDiskCache,
@@ -206,8 +206,8 @@ public class DiskCacheWriteProducerTest {
           @Override
           public Object answer(InvocationOnMock invocation) throws Throwable {
             Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(mIntermediateEncodedImage, false);
-            consumer.onNewResult(mFinalEncodedImage, true);
+            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
             return null;
           }
         }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
@@ -231,7 +231,7 @@ public class DiskCacheWriteProducerTest {
           @Override
           public Object answer(InvocationOnMock invocation) throws Throwable {
             Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(null, true);
+            consumer.onNewResult(null, Consumer.IS_LAST);
             return null;
           }
         }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
