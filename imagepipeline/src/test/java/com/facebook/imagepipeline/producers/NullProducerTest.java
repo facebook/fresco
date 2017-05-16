@@ -37,6 +37,6 @@ public class NullProducerTest {
   @Test
   public void testNullProducerReturnsNull() {
     mNullProducer.produceResults(mConsumer, mProducerContext);
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
   }
 }

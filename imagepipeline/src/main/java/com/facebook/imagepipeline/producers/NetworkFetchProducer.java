@@ -166,7 +166,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     try {
       encodedImage = new EncodedImage(result);
       encodedImage.parseMetaData();
-      consumer.onNewResult(encodedImage, isFinal);
+      consumer.onNewResult(encodedImage, BaseConsumer.simpleStatusForIsLast(isFinal));
     } finally {
       EncodedImage.closeSafely(encodedImage);
       CloseableReference.closeSafely(result);

@@ -211,7 +211,7 @@ public class LocalContentUriThumbnailFetchProducerTest {
   }
 
   private void assertConsumerReceivesNull() {
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verifyNoMoreInteractions(mConsumer);
 
     verifyZeroInteractions(mPooledByteBufferFactory);
@@ -219,7 +219,7 @@ public class LocalContentUriThumbnailFetchProducerTest {
 
   private void assertConsumerReceivesImage() {
     ArgumentCaptor<EncodedImage> resultCaptor = ArgumentCaptor.forClass(EncodedImage.class);
-    verify(mConsumer).onNewResult(resultCaptor.capture(), eq(true));
+    verify(mConsumer).onNewResult(resultCaptor.capture(), eq(Consumer.IS_LAST));
 
     assertNotNull(resultCaptor.getValue());
     assertEquals(THUMBNAIL_FILE_SIZE, resultCaptor.getValue().getSize());

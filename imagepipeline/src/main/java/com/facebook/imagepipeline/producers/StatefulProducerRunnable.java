@@ -46,7 +46,7 @@ public abstract class StatefulProducerRunnable<T>
         mRequestId,
         mProducerName,
         mProducerListener.requiresExtraMap(mRequestId) ? getExtraMapOnSuccess(result) : null);
-    mConsumer.onNewResult(result, true);
+    mConsumer.onNewResult(result, Consumer.IS_LAST);
   }
 
   @Override

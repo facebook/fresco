@@ -109,7 +109,7 @@ public class LocalExifThumbnailProducerTest {
           }
         })
         .when(mConsumer)
-        .onNewResult(notNull(EncodedImage.class), anyBoolean());
+        .onNewResult(notNull(EncodedImage.class), anyInt());
   }
 
   @Test
@@ -135,7 +135,7 @@ public class LocalExifThumbnailProducerTest {
     when(mExifInterface.hasThumbnail()).thenReturn(false);
     mTestLocalExifThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mTestExecutorService.runUntilIdle();
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
   }
 
   private class TestLocalExifThumbnailProducer extends LocalExifThumbnailProducer {

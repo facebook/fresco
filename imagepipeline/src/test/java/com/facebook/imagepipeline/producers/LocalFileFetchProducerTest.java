@@ -85,7 +85,7 @@ public class LocalFileFetchProducerTest {
           }
         })
         .when(mConsumer)
-        .onNewResult(notNull(EncodedImage.class), anyBoolean());
+        .onNewResult(notNull(EncodedImage.class), anyInt());
   }
 
   @Test

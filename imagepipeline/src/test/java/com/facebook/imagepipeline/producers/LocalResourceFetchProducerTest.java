@@ -94,7 +94,7 @@ public class LocalResourceFetchProducerTest {
           }
         })
         .when(mConsumer)
-        .onNewResult(notNull(EncodedImage.class), anyBoolean());
+        .onNewResult(notNull(EncodedImage.class), anyInt());
   }
 
   @After

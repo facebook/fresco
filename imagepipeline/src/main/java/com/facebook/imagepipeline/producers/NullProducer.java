@@ -24,6 +24,6 @@ public class NullProducer<T> implements Producer<T> {
    * @param context
    */
   public void produceResults(Consumer<T> consumer, ProducerContext context) {
-    consumer.onNewResult((T) null, true);
+    consumer.onNewResult((T) null, Consumer.IS_LAST);
   }
 }

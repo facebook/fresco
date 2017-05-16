@@ -119,7 +119,7 @@ public class LocalVideoThumbnailProducerTest {
             mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
             return null;
           }
-        }).when(mConsumer).onNewResult(any(CloseableReference.class), eq(true));
+        }).when(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
     assertEquals(1, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -145,7 +145,7 @@ public class LocalVideoThumbnailProducerTest {
             mCloseableReference = ((CloseableReference) invocation.getArguments()[0]).clone();
             return null;
           }
-        }).when(mConsumer).onNewResult(any(CloseableReference.class), eq(true));
+        }).when(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
     assertEquals(1, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -169,7 +169,7 @@ public class LocalVideoThumbnailProducerTest {
         .thenReturn(null);
     mLocalVideoThumbnailProducer.produceResults(mConsumer, mProducerContext);
     mExecutor.runUntilIdle();
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> thumbnailNotFoundMap =
         ImmutableMap.of(LocalVideoThumbnailProducer.CREATED_THUMBNAIL, "false");
