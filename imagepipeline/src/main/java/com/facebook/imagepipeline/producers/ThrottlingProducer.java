@@ -80,9 +80,9 @@ public class ThrottlingProducer<T> implements Producer<T> {
     }
 
     @Override
-    protected void onNewResultImpl(T newResult, boolean isLast) {
-      getConsumer().onNewResult(newResult, isLast);
-      if (isLast) {
+    protected void onNewResultImpl(T newResult, @Status int status) {
+      getConsumer().onNewResult(newResult, status);
+      if (isLast(status)) {
         onRequestFinished();
       }
     }

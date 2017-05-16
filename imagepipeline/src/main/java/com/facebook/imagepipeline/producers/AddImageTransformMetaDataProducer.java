@@ -37,15 +37,15 @@ public class AddImageTransformMetaDataProducer implements Producer<EncodedImage>
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
       if (newResult == null) {
-        getConsumer().onNewResult(null, isLast);
+        getConsumer().onNewResult(null, status);
         return;
       }
       if (!EncodedImage.isMetaDataAvailable(newResult)) {
         newResult.parseMetaData();
       }
-      getConsumer().onNewResult(newResult, isLast);
+      getConsumer().onNewResult(newResult, status);
     }
   }
 }

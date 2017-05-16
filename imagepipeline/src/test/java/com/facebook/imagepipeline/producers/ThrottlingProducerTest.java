@@ -111,14 +111,14 @@ public class ThrottlingProducerTest {
 
     // Second request gives intermediate result, no new request is kicked off
     Object intermediateResult = mock(Object.class);
-    mThrottlerConsumers[1].onNewResult(intermediateResult, false);
-    verify(mConsumers[1]).onNewResult(intermediateResult, false);
+    mThrottlerConsumers[1].onNewResult(intermediateResult, Consumer.NO_FLAGS);
+    verify(mConsumers[1]).onNewResult(intermediateResult, Consumer.NO_FLAGS);
     assertNull(mThrottlerConsumers[3]);
     assertNull(mThrottlerConsumers[4]);
 
     // Third request finishes, fourth request is kicked off
-    mThrottlerConsumers[2].onNewResult(mResults[2], true);
-    verify(mConsumers[2]).onNewResult(mResults[2], true);
+    mThrottlerConsumers[2].onNewResult(mResults[2], Consumer.IS_LAST);
+    verify(mConsumers[2]).onNewResult(mResults[2], Consumer.IS_LAST);
     assertNotNull(mThrottlerConsumers[3]);
     verify(mProducerListeners[3]).onProducerFinishWithSuccess(mRequestIds[3], PRODUCER_NAME, null);
     assertNull(mThrottlerConsumers[4]);
@@ -130,8 +130,8 @@ public class ThrottlingProducerTest {
     verify(mProducerListeners[4]).onProducerFinishWithSuccess(mRequestIds[4], PRODUCER_NAME, null);
 
     // Fourth and fifth requests finish
-    mThrottlerConsumers[3].onNewResult(mResults[3], true);
-    mThrottlerConsumers[4].onNewResult(mResults[4], true);
+    mThrottlerConsumers[3].onNewResult(mResults[3], Consumer.IS_LAST);
+    mThrottlerConsumers[4].onNewResult(mResults[4], Consumer.IS_LAST);
   }
 
   @Test
@@ -148,8 +148,8 @@ public class ThrottlingProducerTest {
     verify(mProducerListeners[1]).onProducerFinishWithSuccess(mRequestIds[1], PRODUCER_NAME, null);
 
     // First two requests finish
-    mThrottlerConsumers[0].onNewResult(mResults[3], true);
-    mThrottlerConsumers[1].onNewResult(mResults[4], true);
+    mThrottlerConsumers[0].onNewResult(mResults[3], Consumer.IS_LAST);
+    mThrottlerConsumers[1].onNewResult(mResults[4], Consumer.IS_LAST);
 
     // Next two requests are passed on immediately
     mThrottlingProducer.produceResults(mConsumers[2], mProducerContexts[2]);
@@ -163,7 +163,7 @@ public class ThrottlingProducerTest {
     verify(mProducerListeners[3]).onProducerFinishWithSuccess(mRequestIds[3], PRODUCER_NAME, null);
 
     // Next two requests finish
-    mThrottlerConsumers[2].onNewResult(mResults[3], true);
-    mThrottlerConsumers[3].onNewResult(mResults[4], true);
+    mThrottlerConsumers[2].onNewResult(mResults[3], Consumer.IS_LAST);
+    mThrottlerConsumers[3].onNewResult(mResults[4], Consumer.IS_LAST);
   }
 }

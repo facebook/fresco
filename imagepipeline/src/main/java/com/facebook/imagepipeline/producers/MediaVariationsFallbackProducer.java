@@ -289,7 +289,9 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
               listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
               consumer.onProgressUpdate(1);
             }
-            consumer.onNewResult(cachedReference, useAsLastResult);
+            consumer.onNewResult(
+                cachedReference,
+                BaseConsumer.simpleStatusForIsLast(useAsLastResult));
             cachedReference.close();
 
             triggerNextProducer = !useAsLastResult;
@@ -428,11 +430,11 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
-      if (isLast && newResult != null) {
+    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
+      if (isLast(status) && newResult != null) {
         storeResultInDatabase(newResult);
       }
-      getConsumer().onNewResult(newResult, isLast);
+      getConsumer().onNewResult(newResult, status);
     }
 
     private void storeResultInDatabase(EncodedImage newResult) {

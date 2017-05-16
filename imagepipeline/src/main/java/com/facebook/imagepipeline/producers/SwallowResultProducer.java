@@ -25,9 +25,9 @@ public class SwallowResultProducer<T> implements Producer<Void> {
   public void produceResults(Consumer<Void> consumer, ProducerContext producerContext) {
     DelegatingConsumer<T, Void> swallowResultConsumer = new DelegatingConsumer<T, Void>(consumer) {
       @Override
-      protected void onNewResultImpl(T newResult, boolean isLast) {
-        if (isLast) {
-          getConsumer().onNewResult(null, isLast);
+      protected void onNewResultImpl(T newResult, @Status int status) {
+        if (isLast(status)) {
+          getConsumer().onNewResult(null, status);
         }
       }
     };

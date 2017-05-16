@@ -44,13 +44,13 @@ public class RemoveImageTransformMetaDataProducer
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
       CloseableReference<PooledByteBuffer> ret = null;
       try {
         if (EncodedImage.isValid(newResult)) {
           ret = newResult.getByteBufferRef();
         }
-        getConsumer().onNewResult(ret, isLast);
+        getConsumer().onNewResult(ret, status);
       } finally {
         CloseableReference.closeSafely(ret);
       }

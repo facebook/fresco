@@ -69,18 +69,18 @@ public class RemoveImageTransformMetaDataProducerTest {
   public void testOnNewResult() {
     when(mEncodedImage.getByteBufferRef()).thenReturn(mIntermediateResult);
     when(mEncodedImage.isValid()).thenReturn(true);
-    mRemoveMetaDataConsumer.onNewResult(mEncodedImage, false);
+    mRemoveMetaDataConsumer.onNewResult(mEncodedImage, Consumer.NO_FLAGS);
     ArgumentCaptor<CloseableReference> argumentCaptor =
         ArgumentCaptor.forClass(CloseableReference.class);
-    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(false));
+    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(Consumer.NO_FLAGS));
     CloseableReference intermediateResult = argumentCaptor.getValue();
     assertEquals(
         mIntermediateResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly(),
         intermediateResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
 
     when(mEncodedImage.getByteBufferRef()).thenReturn(mFinalResult);
-    mRemoveMetaDataConsumer.onNewResult(mEncodedImage, true);
-    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(false));
+    mRemoveMetaDataConsumer.onNewResult(mEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(Consumer.NO_FLAGS));
     CloseableReference finalResult = argumentCaptor.getValue();
     assertEquals(
         mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly(),
@@ -89,8 +89,8 @@ public class RemoveImageTransformMetaDataProducerTest {
 
   @Test
   public void testOnNullResult() {
-    mRemoveMetaDataConsumer.onNewResult(null, false);
-    verify(mConsumer).onNewResult(null, false);
+    mRemoveMetaDataConsumer.onNewResult(null, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(null, Consumer.NO_FLAGS);
   }
 
   @Test

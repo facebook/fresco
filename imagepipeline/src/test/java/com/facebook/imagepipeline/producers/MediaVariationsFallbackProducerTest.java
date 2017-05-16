@@ -271,7 +271,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, false);
+    verify(mConsumer).onNewResult(mImageS, Consumer.NO_FLAGS);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -291,7 +291,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, false);
+    verify(mConsumer).onNewResult(mImageS, Consumer.NO_FLAGS);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -308,7 +308,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, true);
+    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -327,7 +327,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageL, false);
+    verify(mConsumer).onNewResult(mImageL, Consumer.NO_FLAGS);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -347,7 +347,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, true);
+    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -366,7 +366,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, true);
+    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -390,7 +390,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, false);
+    verify(mConsumer).onNewResult(mImageM, Consumer.NO_FLAGS);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
@@ -407,7 +407,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, true);
+    verify(mConsumer).onNewResult(mImageS, Consumer.IS_LAST);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -455,7 +455,7 @@ public class MediaVariationsFallbackProducerTest {
     inOrder.verify(mDefaultBufferedDiskCache).get(eq(CACHE_KEY_L), any(AtomicBoolean.class));
     verifyNoMoreInteractions(mDefaultBufferedDiskCache);
 
-    verify(mConsumer).onNewResult(mImageL, true);
+    verify(mConsumer).onNewResult(mImageL, Consumer.IS_LAST);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -483,8 +483,8 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
 
     verify(mMediaVariationsIndex).saveCachedVariant(
         MEDIA_ID,
@@ -500,8 +500,8 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
   }
 
   private void whenIndexDbContainsNoMatchingVariants() {
@@ -577,8 +577,8 @@ public class MediaVariationsFallbackProducerTest {
           @Override
           public Object answer(InvocationOnMock invocation) throws Throwable {
             Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(mIntermediateEncodedImage, false);
-            consumer.onNewResult(mFinalEncodedImage, true);
+            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
             return null;
           }
         }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));

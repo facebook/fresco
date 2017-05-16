@@ -13,6 +13,7 @@ import java.lang.annotation.Retention;
 
 import android.support.annotation.IntDef;
 
+
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
@@ -63,7 +64,6 @@ public interface Consumer<T> {
    * Status flag to show whether the result being received is the last one coming or to expect more.
    */
   int IS_LAST = 1;
-  /**
 
   /**
    * Called by a producer whenever new data is produced. This method should not throw an exception.

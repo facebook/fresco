@@ -48,8 +48,8 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
   private Consumer<T> createConsumer() {
     return new BaseConsumer<T>() {
       @Override
-      protected void onNewResultImpl(@Nullable T newResult, boolean isLast) {
-        AbstractProducerToDataSourceAdapter.this.onNewResultImpl(newResult, isLast);
+      protected void onNewResultImpl(@Nullable T newResult, @Status int status) {
+        AbstractProducerToDataSourceAdapter.this.onNewResultImpl(newResult, status);
       }
 
       @Override
@@ -69,7 +69,8 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
     };
   }
 
-  protected void onNewResultImpl(@Nullable T result, boolean isLast) {
+  protected void onNewResultImpl(@Nullable T result, int status) {
+    boolean isLast = BaseConsumer.isLast(status);
     if (super.setResult(result, isLast)) {
       if (isLast) {
         mRequestListener.onRequestSuccess(
