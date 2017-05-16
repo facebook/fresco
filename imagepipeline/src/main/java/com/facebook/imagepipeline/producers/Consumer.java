@@ -9,6 +9,12 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.lang.annotation.Retention;
+
+import android.support.annotation.IntDef;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 /**
  * Consumes data produced by {@link Producer}.<T>
  *
@@ -35,6 +41,31 @@ package com.facebook.imagepipeline.producers;
 public interface Consumer<T> {
 
   /**
+   * Frame type that has been drawn. Can be used for logging.
+   */
+  @Retention(SOURCE)
+  @IntDef(
+      flag = true,
+      value = {
+          IS_LAST,
+      })
+  @interface Status {
+
+  }
+
+  /**
+   * Convenience constant for a status with no flags set. The absence of {@link #IS_LAST} means this
+   * status can be used for intermediate results. This constant should never be used when checking
+   * for flags.
+   */
+  int NO_FLAGS = 0;
+  /**
+   * Status flag to show whether the result being received is the last one coming or to expect more.
+   */
+  int IS_LAST = 1;
+  /**
+
+  /**
    * Called by a producer whenever new data is produced. This method should not throw an exception.
    *
    * <p> In case when result is closeable resource producer will close it after onNewResult returns.
@@ -42,8 +73,12 @@ public interface Consumer<T> {
    * with CloseableReferences, that should not impose too much overhead.
    *
    * @param newResult
-   * @param isLast true if newResult is the last result
+   * @param status bitwise values describing the returned result
+   * @see Status for status flags
    */
+  void onNewResult(T newResult, @Status int status);
+
+  @Deprecated
   void onNewResult(T newResult, boolean isLast);
 
   /**

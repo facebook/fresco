@@ -14,6 +14,7 @@ import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -32,8 +33,8 @@ public class BaseConsumerTest {
     mException = new RuntimeException();
     mBaseConsumer = new BaseConsumer() {
       @Override
-      protected void onNewResultImpl(Object newResult, boolean isLast) {
-        mDelegatedConsumer.onNewResult(newResult, isLast);
+      protected void onNewResultImpl(Object newResult, @Status int status) {
+        mDelegatedConsumer.onNewResult(newResult, status);
       }
 
       @Override
@@ -52,9 +53,9 @@ public class BaseConsumerTest {
   public void testOnNewResultDoesNotThrow() {
     doThrow(new RuntimeException())
         .when(mDelegatedConsumer)
-        .onNewResult(anyObject(), anyBoolean());
-    mBaseConsumer.onNewResult(mResult, false);
-    verify(mDelegatedConsumer).onNewResult(mResult, false);
+        .onNewResult(anyObject(), anyInt());
+    mBaseConsumer.onNewResult(mResult, 0);
+    verify(mDelegatedConsumer).onNewResult(mResult, 0);
   }
 
   @Test
@@ -77,17 +78,17 @@ public class BaseConsumerTest {
 
   @Test
   public void testDoesNotForwardAfterFinalResult() {
-    mBaseConsumer.onNewResult(mResult, true);
+    mBaseConsumer.onNewResult(mResult, Consumer.IS_LAST);
     mBaseConsumer.onFailure(mException);
     mBaseConsumer.onCancellation();
-    verify(mDelegatedConsumer).onNewResult(mResult, true);
+    verify(mDelegatedConsumer).onNewResult(mResult, Consumer.IS_LAST);
     verifyNoMoreInteractions(mDelegatedConsumer);
   }
 
   @Test
   public void testDoesNotForwardAfterOnFailure() {
     mBaseConsumer.onFailure(mException);
-    mBaseConsumer.onNewResult(mResult, true);
+    mBaseConsumer.onNewResult(mResult, Consumer.IS_LAST);
     mBaseConsumer.onCancellation();
     verify(mDelegatedConsumer).onFailure(mException);
     verifyNoMoreInteractions(mDelegatedConsumer);
@@ -96,7 +97,7 @@ public class BaseConsumerTest {
   @Test
   public void testDoesNotForwardAfterOnCancellation() {
     mBaseConsumer.onCancellation();
-    mBaseConsumer.onNewResult(mResult, true);
+    mBaseConsumer.onNewResult(mResult, Consumer.IS_LAST);
     mBaseConsumer.onFailure(mException);
     verify(mDelegatedConsumer).onCancellation();
     verifyNoMoreInteractions(mDelegatedConsumer);
@@ -104,8 +105,20 @@ public class BaseConsumerTest {
 
   @Test
   public void testDoesForwardAfterIntermediateResult() {
-    mBaseConsumer.onNewResult(mResult, false);
-    mBaseConsumer.onNewResult(mResult2, true);
-    verify(mDelegatedConsumer).onNewResult(mResult2, true);
+    mBaseConsumer.onNewResult(mResult, 0);
+    mBaseConsumer.onNewResult(mResult2, Consumer.IS_LAST);
+    verify(mDelegatedConsumer).onNewResult(mResult2, Consumer.IS_LAST);
+  }
+
+  @Test
+  public void testIsLast() {
+    assertThat(BaseConsumer.isLast(Consumer.IS_LAST)).isTrue();
+    assertThat(BaseConsumer.isLast(Consumer.NO_FLAGS)).isFalse();
+  }
+
+  @Test
+  public void testIsNotLast() {
+    assertThat(BaseConsumer.isNotLast(Consumer.IS_LAST)).isFalse();
+    assertThat(BaseConsumer.isNotLast(Consumer.NO_FLAGS)).isTrue();
   }
 }

@@ -39,17 +39,45 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
     mIsFinished = false;
   }
 
+  /**
+   * Checks whether the provided status includes the `IS_LAST` flag, marking this as the last result
+   * the consumer will receive.
+   */
+  public static boolean isLast(@Consumer.Status int status) {
+    return (status & Consumer.IS_LAST) == Consumer.IS_LAST;
+  }
+
+  /**
+   * Checks whether the provided status includes the `IS_LAST` flag, marking this as the last result
+   * the consumer will receive.
+   */
+  public static boolean isNotLast(@Consumer.Status int status) {
+    return !isLast(status);
+  }
+
+  /**
+   * Creates a simple status value which only identifies whether this is the last result.
+   */
+  public static @Status int simpleStatusForIsLast(boolean isLast) {
+    return isLast ? IS_LAST : NO_FLAGS;
+  }
+
   @Override
-  public synchronized void onNewResult(@Nullable T newResult, boolean isLast) {
+  public synchronized void onNewResult(@Nullable T newResult, @Status int status) {
     if (mIsFinished) {
       return;
     }
-    mIsFinished = isLast;
+    mIsFinished = isLast(status);
     try {
-      onNewResultImpl(newResult, isLast);
+      onNewResultImpl(newResult, status);
     } catch (Exception e) {
       onUnhandledException(e);
     }
+  }
+
+  @Override
+  public void onNewResult(T newResult, boolean isLast) {
+    onNewResult(newResult, simpleStatusForIsLast(isLast));
   }
 
   @Override
@@ -96,9 +124,21 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   /**
-   * Called by onNewResult, override this method instead.
+   * Called for legacy purposes during change to {@link #onNewResultImpl(Object, int)} if the
+   * newer method has not been implemented.
    */
-  protected abstract void onNewResultImpl(T newResult, boolean isLast);
+  @Deprecated
+  protected void onNewResultImpl(T newResult, boolean isLast) {
+    // no-op
+  }
+
+  /**
+   * Called by onNewResult, override this method instead. The base implementation currently just
+   * calls the old method for legacy reasons.
+   */
+  protected void onNewResultImpl(T newResult, @Status int status) {
+    onNewResultImpl(newResult, isLast(status));
+  }
 
   /**
    * Called by onFailure, override this method instead
