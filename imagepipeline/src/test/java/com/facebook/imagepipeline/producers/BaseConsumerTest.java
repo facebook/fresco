@@ -121,4 +121,16 @@ public class BaseConsumerTest {
     assertThat(BaseConsumer.isNotLast(Consumer.IS_LAST)).isFalse();
     assertThat(BaseConsumer.isNotLast(Consumer.NO_FLAGS)).isTrue();
   }
+
+  @Test
+  public void testTurnOnStatusFlag() {
+    int turnedOn = BaseConsumer.turnOnStatusFlag(Consumer.NO_FLAGS, Consumer.IS_LAST);
+    assertThat(BaseConsumer.isLast(turnedOn)).isTrue();
+  }
+
+  @Test
+  public void testTurnOffStatusFlag() {
+    int turnedOff = BaseConsumer.turnOffStatusFlag(Consumer.IS_LAST, Consumer.IS_LAST);
+    assertThat(BaseConsumer.isNotLast(turnedOff)).isTrue();
+  }
 }

@@ -56,6 +56,20 @@ public abstract class BaseConsumer<T> implements Consumer<T> {
   }
 
   /**
+   * Updates a provided status by ensuring the specified flag is turned on.
+   */
+  public static @Status int turnOnStatusFlag(@Status int status, @Status int flag) {
+    return status | flag;
+  }
+
+  /**
+   * Updates a provided status by ensuring the specified flag is turned off.
+   */
+  public static @Status int turnOffStatusFlag(@Status int status, @Status int flag) {
+    return status & ~flag;
+  }
+
+  /**
    * Creates a simple status value which only identifies whether this is the last result.
    */
   public static @Status int simpleStatusForIsLast(boolean isLast) {

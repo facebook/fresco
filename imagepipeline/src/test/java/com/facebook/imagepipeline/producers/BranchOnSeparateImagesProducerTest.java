@@ -16,19 +16,25 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
-import org.mockito.invocation.*;
-import org.mockito.stubbing.*;
-import org.robolectric.*;
-import org.robolectric.annotation.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
@@ -100,16 +106,16 @@ public class BranchOnSeparateImagesProducerTest {
     intermediateEncodedImage.setRotationAngle(-1);
     intermediateEncodedImage.setWidth(WIDTH);
     intermediateEncodedImage.setHeight(HEIGHT);
-    mFirstProducerConsumer.onNewResult(intermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(intermediateEncodedImage, false);
+    mFirstProducerConsumer.onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
     EncodedImage finalEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
     finalEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     finalEncodedImage.setRotationAngle(-1);
     finalEncodedImage.setWidth(WIDTH);
     finalEncodedImage.setHeight(HEIGHT);
-    mFirstProducerConsumer.onNewResult(finalEncodedImage, true);
-    verify(mConsumer).onNewResult(finalEncodedImage, true);
+    mFirstProducerConsumer.onNewResult(finalEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(finalEncodedImage, Consumer.IS_LAST);
     verify(mInputProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
@@ -120,33 +126,32 @@ public class BranchOnSeparateImagesProducerTest {
     firstProducerEncodedImage.setRotationAngle(-1);
     firstProducerEncodedImage.setWidth(WIDTH / 2);
     firstProducerEncodedImage.setHeight(HEIGHT / 2);
-    mFirstProducerConsumer.onNewResult(firstProducerEncodedImage, true);
-    verify(mConsumer).onNewResult(firstProducerEncodedImage, false);
+    mFirstProducerConsumer.onNewResult(firstProducerEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(firstProducerEncodedImage, Consumer.NO_FLAGS);
 
     EncodedImage intermediateEncodedImage = new EncodedImage(
         mIntermediateResult.getByteBufferRef());
     intermediateEncodedImage.setRotationAngle(-1);
     intermediateEncodedImage.setWidth(WIDTH / 2);
     intermediateEncodedImage.setHeight(HEIGHT / 2);
-    mSecondProducerConsumer.onNewResult(intermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(intermediateEncodedImage, false);
+    mSecondProducerConsumer.onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
     EncodedImage secondProducerEncodedImage = new EncodedImage(
         mSecondProducerFinalResult.getByteBufferRef());
     secondProducerEncodedImage.setRotationAngle(-1);
     secondProducerEncodedImage.setWidth(WIDTH / 2);
     secondProducerEncodedImage.setHeight(HEIGHT / 2);
-    mSecondProducerConsumer.onNewResult(secondProducerEncodedImage, true);
-    verify(mConsumer).onNewResult(secondProducerEncodedImage, true);
+    mSecondProducerConsumer.onNewResult(secondProducerEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(secondProducerEncodedImage, Consumer.IS_LAST);
   }
 
   @Test
   public void testFirstProducerReturnsNull() {
-    mFirstProducerConsumer.onNewResult(null, true);
-    verify(mConsumer, never()).onNewResult(isNull(EncodedImage.class), anyBoolean());
+    mFirstProducerConsumer.onNewResult(null, Consumer.IS_LAST);
+    verify(mConsumer, never()).onNewResult(isNull(EncodedImage.class), anyInt());
     EncodedImage finalEncodedImage = new EncodedImage(mIntermediateResult.getByteBufferRef());
-    mSecondProducerConsumer.onNewResult(finalEncodedImage, true);
-    verify(mConsumer).onNewResult(finalEncodedImage, true);
-
+    mSecondProducerConsumer.onNewResult(finalEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(finalEncodedImage, Consumer.IS_LAST);
   }
 
   @Test
@@ -154,8 +159,8 @@ public class BranchOnSeparateImagesProducerTest {
     mFirstProducerConsumer.onFailure(mException);
     verify(mConsumer, never()).onFailure(mException);
     EncodedImage finalEncodedImage = new EncodedImage(mIntermediateResult.getByteBufferRef());
-    mSecondProducerConsumer.onNewResult(finalEncodedImage, true);
-    verify(mConsumer).onNewResult(finalEncodedImage, true);
+    mSecondProducerConsumer.onNewResult(finalEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(finalEncodedImage, Consumer.IS_LAST);
   }
 
   @Test
@@ -174,16 +179,16 @@ public class BranchOnSeparateImagesProducerTest {
     intermediateEncodedImage.setRotationAngle(-1);
     intermediateEncodedImage.setWidth(WIDTH / 2);
     intermediateEncodedImage.setHeight(HEIGHT / 2);
-    mFirstProducerConsumer.onNewResult(intermediateEncodedImage, false);
-    verify(mConsumer, never()).onNewResult(intermediateEncodedImage, false);
+    mFirstProducerConsumer.onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer, never()).onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
     EncodedImage finalEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
     finalEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
     finalEncodedImage.setRotationAngle(-1);
     finalEncodedImage.setWidth(WIDTH);
     finalEncodedImage.setHeight(HEIGHT);
-    mFirstProducerConsumer.onNewResult(finalEncodedImage, true);
-    verify(mConsumer).onNewResult(finalEncodedImage, true);
+    mFirstProducerConsumer.onNewResult(finalEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(finalEncodedImage, Consumer.IS_LAST);
     verify(mInputProducer2, never()).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
@@ -195,23 +200,23 @@ public class BranchOnSeparateImagesProducerTest {
     firstProducerEncodedImage.setRotationAngle(-1);
     firstProducerEncodedImage.setWidth(WIDTH / 2);
     firstProducerEncodedImage.setHeight(HEIGHT / 2);
-    mFirstProducerConsumer.onNewResult(firstProducerEncodedImage, true);
-    verify(mConsumer, never()).onNewResult(firstProducerEncodedImage, false);
+    mFirstProducerConsumer.onNewResult(firstProducerEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer, never()).onNewResult(firstProducerEncodedImage, Consumer.NO_FLAGS);
 
     EncodedImage intermediateEncodedImage = new EncodedImage(
         mIntermediateResult.getByteBufferRef());
     intermediateEncodedImage.setRotationAngle(-1);
     intermediateEncodedImage.setWidth(WIDTH / 2);
     intermediateEncodedImage.setHeight(HEIGHT / 2);
-    mSecondProducerConsumer.onNewResult(intermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(intermediateEncodedImage, false);
+    mSecondProducerConsumer.onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(intermediateEncodedImage, Consumer.NO_FLAGS);
     EncodedImage secondProducerEncodedImage = new EncodedImage(
         mFirstProducerFinalResult.getByteBufferRef());
     secondProducerEncodedImage.setRotationAngle(-1);
     secondProducerEncodedImage.setWidth(WIDTH / 2);
     secondProducerEncodedImage.setHeight(HEIGHT / 2);
-    mSecondProducerConsumer.onNewResult(secondProducerEncodedImage, true);
-    verify(mConsumer).onNewResult(secondProducerEncodedImage, true);
+    mSecondProducerConsumer.onNewResult(secondProducerEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(secondProducerEncodedImage, Consumer.IS_LAST);
   }
 
 }

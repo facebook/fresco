@@ -49,12 +49,18 @@ public class BranchOnSeparateImagesProducer
     }
 
     @Override
-    protected void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+    protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
       ImageRequest request = mProducerContext.getImageRequest();
+      boolean isLast = isLast(status);
       boolean isGoodEnough =
           ThumbnailSizeChecker.isImageBigEnough(newResult, request.getResizeOptions());
       if (newResult != null && (isGoodEnough || request.getLocalThumbnailPreviewsEnabled())) {
-        getConsumer().onNewResult(newResult, isLast && isGoodEnough);
+        if (isLast && isGoodEnough) {
+          getConsumer().onNewResult(newResult, status);
+        } else {
+          int alteredStatus = turnOffStatusFlag(status, IS_LAST);
+          getConsumer().onNewResult(newResult, alteredStatus);
+        }
       }
       if (isLast && !isGoodEnough) {
         EncodedImage.closeSafely(newResult);
