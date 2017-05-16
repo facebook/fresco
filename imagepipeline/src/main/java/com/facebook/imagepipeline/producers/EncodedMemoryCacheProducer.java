@@ -65,7 +65,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
                   : null);
           listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
           consumer.onProgressUpdate(1f);
-          consumer.onNewResult(cachedEncodedImage, true);
+          consumer.onNewResult(cachedEncodedImage, Consumer.IS_LAST);
           return;
         } finally {
           EncodedImage.closeSafely(cachedEncodedImage);
@@ -81,7 +81,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                 : null);
         listener.onUltimateProducerReached(requestId, PRODUCER_NAME, false);
-        consumer.onNewResult(null, true);
+        consumer.onNewResult(null, Consumer.IS_LAST);
         return;
       }
 
@@ -115,10 +115,10 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     }
 
     @Override
-    public void onNewResultImpl(EncodedImage newResult, boolean isLast) {
+    public void onNewResultImpl(EncodedImage newResult, @Status int status) {
       // intermediate or null results are not cached, so we just forward them
-      if (!isLast || newResult == null) {
-        getConsumer().onNewResult(newResult, isLast);
+      if (isNotLast(status) || newResult == null) {
+        getConsumer().onNewResult(newResult, status);
         return;
       }
       // cache and forward the last result
@@ -142,14 +142,14 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           }
           try {
             getConsumer().onProgressUpdate(1f);
-            getConsumer().onNewResult(cachedEncodedImage, true);
+            getConsumer().onNewResult(cachedEncodedImage, status);
             return;
           } finally {
             EncodedImage.closeSafely(cachedEncodedImage);
           }
         }
       }
-      getConsumer().onNewResult(newResult, true);
+      getConsumer().onNewResult(newResult, status);
     }
   }
 }

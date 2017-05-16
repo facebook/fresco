@@ -108,7 +108,7 @@ public class EncodedMemoryCacheProducerTest {
         .thenReturn(ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE);
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
     ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
-    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(true));
+    verify(mConsumer).onNewResult(argumentCaptor.capture(), eq(Consumer.IS_LAST));
     EncodedImage encodedImage = argumentCaptor.getValue();
     Assert.assertSame(
         mFinalEncodedImage.getUnderlyingReferenceTestOnly(),
@@ -136,8 +136,8 @@ public class EncodedMemoryCacheProducerTest {
     Assert.assertSame(
         mFinalImageReference.getUnderlyingReferenceTestOnly(),
         capturedRef.getUnderlyingReferenceTestOnly());
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =
@@ -152,7 +152,7 @@ public class EncodedMemoryCacheProducerTest {
     setupEncodedMemoryCacheGetNotFound();
     setupInputProducerNotFound();
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
@@ -181,7 +181,7 @@ public class EncodedMemoryCacheProducerTest {
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE);
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
-    verify(mConsumer).onNewResult(null, true);
+    verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
@@ -229,7 +229,7 @@ public class EncodedMemoryCacheProducerTest {
       Iterator<EncodedImage> iterator = mResults.iterator();
       while (iterator.hasNext()) {
         EncodedImage result = iterator.next();
-        consumer.onNewResult(result, !iterator.hasNext());
+        consumer.onNewResult(result, BaseConsumer.simpleStatusForIsLast(!iterator.hasNext()));
       }
       return null;
     }
