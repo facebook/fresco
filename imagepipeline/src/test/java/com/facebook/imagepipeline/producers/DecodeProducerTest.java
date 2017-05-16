@@ -128,10 +128,10 @@ public class DecodeProducerTest {
     setupNetworkUri();
     Consumer<EncodedImage> consumer = produceResults();
 
-    when(mJobScheduler.updateJob(mEncodedImage, true)).thenReturn(true);
-    consumer.onNewResult(mEncodedImage, true);
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.IS_LAST)).thenReturn(true);
+    consumer.onNewResult(mEncodedImage, Consumer.IS_LAST);
 
-    verify(mJobScheduler).updateJob(mEncodedImage, true);
+    verify(mJobScheduler).updateJob(mEncodedImage, Consumer.IS_LAST);
     verify(mJobScheduler).scheduleJob();
     verifyZeroInteractions(mProgressiveJpegParser);
   }
@@ -141,10 +141,10 @@ public class DecodeProducerTest {
     setupLocalUri();
     Consumer<EncodedImage> consumer = produceResults();
 
-    when(mJobScheduler.updateJob(mEncodedImage, true)).thenReturn(true);
-    consumer.onNewResult(mEncodedImage, true);
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.IS_LAST)).thenReturn(true);
+    consumer.onNewResult(mEncodedImage, Consumer.IS_LAST);
 
-    verify(mJobScheduler).updateJob(mEncodedImage, true);
+    verify(mJobScheduler).updateJob(mEncodedImage, Consumer.IS_LAST);
     verify(mJobScheduler).scheduleJob();
     verifyZeroInteractions(mProgressiveJpegParser);
   }
@@ -155,11 +155,11 @@ public class DecodeProducerTest {
     setupNetworkUri();
     Consumer<EncodedImage> consumer = produceResults();
 
-    when(mJobScheduler.updateJob(mEncodedImage, false)).thenReturn(true);
-    consumer.onNewResult(mEncodedImage, false);
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.NO_FLAGS)).thenReturn(true);
+    consumer.onNewResult(mEncodedImage, Consumer.NO_FLAGS);
 
     InOrder inOrder = inOrder(mJobScheduler);
-    inOrder.verify(mJobScheduler).updateJob(mEncodedImage, false);
+    inOrder.verify(mJobScheduler).updateJob(mEncodedImage, Consumer.NO_FLAGS);
     inOrder.verify(mJobScheduler).scheduleJob();
     verifyZeroInteractions(mProgressiveJpegParser);
   }
@@ -169,10 +169,10 @@ public class DecodeProducerTest {
     setupLocalUri();
     Consumer<EncodedImage> consumer = produceResults();
 
-    when(mJobScheduler.updateJob(mEncodedImage, false)).thenReturn(true);
-    consumer.onNewResult(mEncodedImage, false);
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.NO_FLAGS)).thenReturn(true);
+    consumer.onNewResult(mEncodedImage, Consumer.NO_FLAGS);
 
-    verify(mJobScheduler, never()).updateJob(mEncodedImage, false);
+    verify(mJobScheduler, never()).updateJob(mEncodedImage, Consumer.NO_FLAGS);
     verify(mProgressiveJpegParser, never()).parseMoreData(mEncodedImage);
     verify(mJobScheduler, never()).scheduleJob();
   }
@@ -188,11 +188,11 @@ public class DecodeProducerTest {
         ArgumentCaptor.forClass(EncodedImage.class);
 
     // preview scan; schedule
-    when(mJobScheduler.updateJob(mEncodedImage, false)).thenReturn(true);
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.NO_FLAGS)).thenReturn(true);
     when(mProgressiveJpegParser.parseMoreData(any(EncodedImage.class))).thenReturn(true);
     when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(PREVIEW_SCAN);
-    consumer.onNewResult(mEncodedImage, false);
-    inOrder.verify(mJobScheduler).updateJob(mEncodedImage, false);
+    consumer.onNewResult(mEncodedImage, Consumer.NO_FLAGS);
+    inOrder.verify(mJobScheduler).updateJob(mEncodedImage, Consumer.NO_FLAGS);
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler).scheduleJob();
     assertSame(
@@ -204,11 +204,11 @@ public class DecodeProducerTest {
     PooledByteBuffer pooledByteBuffer2 = mockPooledByteBuffer(210);
     CloseableReference<PooledByteBuffer> ref2 = CloseableReference.of(pooledByteBuffer2);
     EncodedImage encodedImage2 = mockEncodedJpeg(ref2);
-    when(mJobScheduler.updateJob(encodedImage2, false)).thenReturn(true);
+    when(mJobScheduler.updateJob(encodedImage2, Consumer.NO_FLAGS)).thenReturn(true);
     when(mProgressiveJpegParser.parseMoreData(encodedImage2)).thenReturn(false);
     when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(PREVIEW_SCAN);
-    consumer.onNewResult(encodedImage2, false);
-    inOrder.verify(mJobScheduler).updateJob(encodedImage2, false);
+    consumer.onNewResult(encodedImage2, Consumer.NO_FLAGS);
+    inOrder.verify(mJobScheduler).updateJob(encodedImage2, Consumer.NO_FLAGS);
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler, never()).scheduleJob();
     assertSame(
@@ -220,11 +220,11 @@ public class DecodeProducerTest {
     PooledByteBuffer pooledByteBuffer3 = mockPooledByteBuffer(220);
     CloseableReference<PooledByteBuffer> ref3 = CloseableReference.of(pooledByteBuffer3);
     EncodedImage encodedImage3 = mockEncodedJpeg(ref3);
-    when(mJobScheduler.updateJob(encodedImage3, false)).thenReturn(true);
+    when(mJobScheduler.updateJob(encodedImage3, Consumer.NO_FLAGS)).thenReturn(true);
     when(mProgressiveJpegParser.parseMoreData(encodedImage3)).thenReturn(true);
     when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(PREVIEW_SCAN);
-    consumer.onNewResult(encodedImage3, false);
-    inOrder.verify(mJobScheduler).updateJob(encodedImage3, false);
+    consumer.onNewResult(encodedImage3, Consumer.NO_FLAGS);
+    inOrder.verify(mJobScheduler).updateJob(encodedImage3, Consumer.NO_FLAGS);
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler, never()).scheduleJob();
     assertSame(
@@ -236,11 +236,11 @@ public class DecodeProducerTest {
     PooledByteBuffer pooledByteBuffer4 = mockPooledByteBuffer(300);
     CloseableReference<PooledByteBuffer> ref4 = CloseableReference.of(pooledByteBuffer4);
     EncodedImage encodedImage4 = mockEncodedJpeg(ref4);
-    when(mJobScheduler.updateJob(encodedImage4, false)).thenReturn(true);
+    when(mJobScheduler.updateJob(encodedImage4, Consumer.NO_FLAGS)).thenReturn(true);
     when(mProgressiveJpegParser.parseMoreData(encodedImage4)).thenReturn(true);
     when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(IGNORED_SCAN);
-    consumer.onNewResult(encodedImage4, false);
-    inOrder.verify(mJobScheduler).updateJob(encodedImage4, false);
+    consumer.onNewResult(encodedImage4, Consumer.NO_FLAGS);
+    inOrder.verify(mJobScheduler).updateJob(encodedImage4, Consumer.NO_FLAGS);
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler, never()).scheduleJob();
     assertSame(
@@ -252,11 +252,11 @@ public class DecodeProducerTest {
     PooledByteBuffer pooledByteBuffer5 = mockPooledByteBuffer(500);
     CloseableReference<PooledByteBuffer> ref5 = CloseableReference.of(pooledByteBuffer5);
     EncodedImage encodedImage5 = mockEncodedJpeg(ref5);
-    when(mJobScheduler.updateJob(encodedImage5, false)).thenReturn(true);
+    when(mJobScheduler.updateJob(encodedImage5, Consumer.NO_FLAGS)).thenReturn(true);
     when(mProgressiveJpegParser.parseMoreData(encodedImage5)).thenReturn(true);
     when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(GOOD_ENOUGH_SCAN);
-    consumer.onNewResult(encodedImage5, false);
-    inOrder.verify(mJobScheduler).updateJob(encodedImage5, false);
+    consumer.onNewResult(encodedImage5, Consumer.NO_FLAGS);
+    inOrder.verify(mJobScheduler).updateJob(encodedImage5, Consumer.NO_FLAGS);
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler).scheduleJob();
     assertSame(
@@ -290,7 +290,7 @@ public class DecodeProducerTest {
     produceResults();
     JobScheduler.JobRunnable jobRunnable = getJobRunnable();
 
-    jobRunnable.run(mEncodedImage, true);
+    jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
@@ -316,7 +316,7 @@ public class DecodeProducerTest {
     when(mProgressiveJpegParser.isJpeg()).thenReturn(true);
     when(mProgressiveJpegParser.getBestScanEndOffset()).thenReturn(200);
     when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(PREVIEW_SCAN);
-    jobRunnable.run(mEncodedImage, false);
+    jobRunnable.run(mEncodedImage, Consumer.NO_FLAGS);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
@@ -345,7 +345,7 @@ public class DecodeProducerTest {
         ImmutableQualityInfo.FULL_QUALITY,
         IMAGE_DECODE_OPTIONS))
         .thenThrow(exception);
-    jobRunnable.run(mEncodedImage, true);
+    jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);

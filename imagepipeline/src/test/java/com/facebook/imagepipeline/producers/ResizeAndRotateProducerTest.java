@@ -482,19 +482,19 @@ public class ResizeAndRotateProducerTest {
   }
 
   private void verifyIntermediateResultPassedThroughUnchanged() {
-    verify(mConsumer).onNewResult(mIntermediateEncodedImage, false);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
   }
 
   private void verifyNoIntermediateResultPassedThrough() {
-    verify(mConsumer, never()).onNewResult(any(EncodedImage.class), eq(false));
+    verify(mConsumer, never()).onNewResult(any(EncodedImage.class), eq(Consumer.NO_FLAGS));
   }
 
   private void verifyFinalResultPassedThroughUnchanged() {
-    verify(mConsumer).onNewResult(mFinalEncodedImage, true);
+    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
   }
 
   private void verifyAFinalResultPassedThrough() {
-    verify(mConsumer).onNewResult(any(EncodedImage.class), eq(true));
+    verify(mConsumer).onNewResult(any(EncodedImage.class), eq(Consumer.IS_LAST));
   }
 
   private static void verifyJpegTranscoderInteractions(int numerator, int rotationAngle) {
@@ -536,7 +536,7 @@ public class ResizeAndRotateProducerTest {
       int rotationAngle) {
     mIntermediateEncodedImage =
         buildEncodedImage(mIntermediateResult, imageFormat, width, height, rotationAngle);
-    mResizeAndRotateProducerConsumer.onNewResult(mIntermediateEncodedImage, false);
+    mResizeAndRotateProducerConsumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
   }
 
   private void provideFinalResult(ImageFormat imageFormat) {
@@ -550,7 +550,7 @@ public class ResizeAndRotateProducerTest {
       int rotationAngle) {
     mFinalEncodedImage =
         buildEncodedImage(mFinalResult, imageFormat, width, height, rotationAngle);
-    mResizeAndRotateProducerConsumer.onNewResult(mFinalEncodedImage, true);
+    mResizeAndRotateProducerConsumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
     mFakeClockForScheduled.incrementBy(MIN_TRANSFORM_INTERVAL_MS);
     mFakeClockForWorker.incrementBy(MIN_TRANSFORM_INTERVAL_MS);
   }
