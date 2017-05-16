@@ -96,7 +96,7 @@ public class AnimatedSingleUsePostprocessorProducerTest {
             return null;
           }
         }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyBoolean());
+    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
 
     mSourceBitmap = mock(Bitmap.class);
@@ -115,11 +115,11 @@ public class AnimatedSingleUsePostprocessorProducerTest {
     CloseableAnimatedImage sourceCloseableAnimatedImage = mock(CloseableAnimatedImage.class);
     CloseableReference<CloseableImage> sourceCloseableImageRef =
         CloseableReference.<CloseableImage>of(sourceCloseableAnimatedImage);
-    postprocessorConsumer.onNewResult(sourceCloseableImageRef, true);
+    postprocessorConsumer.onNewResult(sourceCloseableImageRef, Consumer.IS_LAST);
     sourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
-    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(true));
+    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mInOrder.verifyNoMoreInteractions();
 
     assertEquals(1, mResults.size());

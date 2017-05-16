@@ -40,7 +40,6 @@ import org.robolectric.annotation.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -106,7 +105,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
             return null;
           }
         }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyBoolean());
+    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
   }
 
@@ -118,11 +117,11 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     CloseableAnimatedImage sourceCloseableAnimatedImage = mock(CloseableAnimatedImage.class);
     CloseableReference<CloseableImage> sourceCloseableImageRef =
         CloseableReference.<CloseableImage>of(sourceCloseableAnimatedImage);
-    postprocessorConsumer.onNewResult(sourceCloseableImageRef, true);
+    postprocessorConsumer.onNewResult(sourceCloseableImageRef, Consumer.IS_LAST);
     sourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
-    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(false));
+    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 
     assertEquals(1, mResults.size());
@@ -168,7 +167,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
   private void performNewResult(RepeatedPostprocessorConsumer postprocessorConsumer, boolean run) {
     setupNewSourceImage();
     setupNewDestinationImage();
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, true);
+    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, Consumer.IS_LAST);
     mSourceCloseableImageRef.close();
     if (run) {
       mTestExecutorService.runUntilIdle();
@@ -231,7 +230,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
     mInOrder.verify(mProducerListener)
         .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
-    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(false));
+    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 
     assertEquals(index + 1, mResults.size());

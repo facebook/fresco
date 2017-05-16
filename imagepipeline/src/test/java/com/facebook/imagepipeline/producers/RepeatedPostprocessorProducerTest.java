@@ -105,7 +105,7 @@ public class RepeatedPostprocessorProducerTest {
             return null;
           }
         }
-    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyBoolean());
+    ).when(mConsumer).onNewResult(any(CloseableReference.class), anyInt());
     mInOrder = inOrder(mPostprocessor, mProducerListener, mConsumer);
   }
 
@@ -115,7 +115,7 @@ public class RepeatedPostprocessorProducerTest {
     RepeatedPostprocessorRunner repeatedPostprocessorRunner = getRunner();
 
     setupNewSourceImage();
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, false);
+    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, Consumer.NO_FLAGS);
     mSourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
@@ -265,7 +265,7 @@ public class RepeatedPostprocessorProducerTest {
   private void performNewResult(RepeatedPostprocessorConsumer postprocessorConsumer, boolean run) {
     setupNewSourceImage();
     setupNewDestinationImage();
-    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, true);
+    postprocessorConsumer.onNewResult(mSourceCloseableImageRef, Consumer.IS_LAST);
     mSourceCloseableImageRef.close();
     if (run) {
       mTestExecutorService.runUntilIdle();
@@ -328,7 +328,7 @@ public class RepeatedPostprocessorProducerTest {
     mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
     mInOrder.verify(mProducerListener)
         .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
-    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(false));
+    mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 
     assertEquals(index + 1, mResults.size());
