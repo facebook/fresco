@@ -148,7 +148,7 @@ public class LocalExifThumbnailProducerTest {
     }
 
     @Override
-    ExifInterface getExifInterface(Uri uri) throws IOException {
+    ExifInterface getExifInterface(Uri uri) {
       if (uri.equals(mUri)) {
         return mExifInterface;
       }

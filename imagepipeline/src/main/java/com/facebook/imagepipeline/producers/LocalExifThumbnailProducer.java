@@ -9,16 +9,16 @@
 
 package com.facebook.imagepipeline.producers;
 
+import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Pair;
 
 import com.facebook.common.internal.ImmutableMap;
@@ -130,10 +130,14 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     mExecutor.execute(cancellableProducerRunnable);
   }
 
-  @VisibleForTesting ExifInterface getExifInterface(Uri uri) throws IOException {
+  @VisibleForTesting @Nullable ExifInterface getExifInterface(Uri uri) {
     final String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
-    if (canReadAsFile(realPath)) {
+    try {
+      if (canReadAsFile(realPath)) {
         return new ExifInterface(realPath);
+      }
+    } catch (IOException e) {
+      // If we cannot get the exif interface, return null as there is no thumbnail available
     }
     return null;
   }
