@@ -271,7 +271,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mImageS, Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -291,7 +291,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mImageS, Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -308,7 +308,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -327,7 +327,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageL, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mImageL, Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -347,7 +347,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -366,7 +366,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -390,7 +390,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mImageM, Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
@@ -407,7 +407,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(mImageS, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
@@ -455,7 +455,7 @@ public class MediaVariationsFallbackProducerTest {
     inOrder.verify(mDefaultBufferedDiskCache).get(eq(CACHE_KEY_L), any(AtomicBoolean.class));
     verifyNoMoreInteractions(mDefaultBufferedDiskCache);
 
-    verify(mConsumer).onNewResult(mImageL, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(mImageL, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer).onProgressUpdate(1L);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(
