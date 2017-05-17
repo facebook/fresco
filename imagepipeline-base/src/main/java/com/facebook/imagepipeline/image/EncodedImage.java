@@ -209,6 +209,7 @@ public class EncodedImage implements Closeable {
    * Sets the key related to this image for encoded caches
    * @param encodedCacheKey
    */
+  @Deprecated
   public void setEncodedCacheKey(@Nullable CacheKey encodedCacheKey) {
     mEncodedCacheKey = encodedCacheKey;
   }
@@ -258,6 +259,7 @@ public class EncodedImage implements Closeable {
    * @return the encoded cache key
    */
   @Nullable
+  @Deprecated
   public CacheKey getEncodedCacheKey() {
     return mEncodedCacheKey;
   }

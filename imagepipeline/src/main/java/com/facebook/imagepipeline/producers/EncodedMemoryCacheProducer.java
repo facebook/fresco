@@ -127,9 +127,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
       if (ref != null) {
         CloseableReference<PooledByteBuffer> cachedResult;
         try {
-          final CacheKey cacheKey = newResult.getEncodedCacheKey() != null ?
-              newResult.getEncodedCacheKey() : mRequestedCacheKey;
-          cachedResult = mMemoryCache.cache(cacheKey, ref);
+          cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
         } finally {
           CloseableReference.closeSafely(ref);
         }

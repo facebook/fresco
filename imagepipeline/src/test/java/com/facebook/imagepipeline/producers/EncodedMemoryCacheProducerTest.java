@@ -113,7 +113,6 @@ public class EncodedMemoryCacheProducerTest {
     Assert.assertSame(
         mFinalEncodedImage.getUnderlyingReferenceTestOnly(),
         encodedImage.getUnderlyingReferenceTestOnly());
-    assertEquals(mCacheKey, encodedImage.getEncodedCacheKey());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =
         ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "true");
