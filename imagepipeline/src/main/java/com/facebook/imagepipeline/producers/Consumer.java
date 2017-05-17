@@ -49,6 +49,7 @@ public interface Consumer<T> {
       flag = true,
       value = {
           IS_LAST,
+          DO_NOT_CACHE_ENCODED,
       })
   @interface Status {
 
@@ -64,6 +65,11 @@ public interface Consumer<T> {
    * Status flag to show whether the result being received is the last one coming or to expect more.
    */
   int IS_LAST = 1;
+  /**
+   * Status flag to show the result should not be cached in disk or encoded caches, even if it's the
+   * last result.
+   */
+  int DO_NOT_CACHE_ENCODED = 1 << 1;
 
   /**
    * Called by a producer whenever new data is produced. This method should not throw an exception.

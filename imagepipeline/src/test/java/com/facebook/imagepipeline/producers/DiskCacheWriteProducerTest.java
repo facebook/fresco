@@ -189,6 +189,20 @@ public class DiskCacheWriteProducerTest {
   }
 
   @Test
+  public void testDoesNotWriteResultToCacheIfResultStatusSaysNotTo() {
+    setupInputProducerSuccessWithStatusFlags(Consumer.DO_NOT_CACHE_ENCODED);
+    mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mConsumer)
+        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
+    verifyNoMoreInteractions(
+        mProducerListener,
+        mCacheKeyFactory,
+        mDefaultBufferedDiskCache,
+        mSmallImageBufferedDiskCache);
+  }
+
+  @Test
   public void testLowestLevelReached() {
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(false);
     mDiskCacheWriteProducer.produceResults(mConsumer, mLowestLevelProducerContext);
@@ -201,13 +215,17 @@ public class DiskCacheWriteProducerTest {
   }
 
   private void setupInputProducerSuccess() {
+    setupInputProducerSuccessWithStatusFlags(0);
+  }
+
+  private void setupInputProducerSuccessWithStatusFlags(final @Consumer.Status int statusFlags) {
     doAnswer(
         new Answer<Object>() {
           @Override
           public Object answer(InvocationOnMock invocation) throws Throwable {
             Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
-            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS | statusFlags);
+            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST | statusFlags);
             return null;
           }
         }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));

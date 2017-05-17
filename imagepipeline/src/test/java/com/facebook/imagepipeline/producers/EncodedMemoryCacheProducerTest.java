@@ -148,6 +148,26 @@ public class EncodedMemoryCacheProducerTest {
   }
 
   @Test
+  public void testEncodedMemoryCacheGetNotFoundInputProducerSuccessButResultNotCacheable() {
+    setupEncodedMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccessWithStatusFlags(Consumer.DO_NOT_CACHE_ENCODED);
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
+    verify(mConsumer)
+        .onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS | Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mConsumer)
+        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
+    Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    Map<String, String> extraMap =
+        ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
+    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
+    verify(mProducerListener, never())
+        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+  }
+
+  @Test
   public void testEncodedMemoryCacheGetNotFoundInputProducerNotFound() {
     setupEncodedMemoryCacheGetNotFound();
     setupInputProducerNotFound();
@@ -199,15 +219,19 @@ public class EncodedMemoryCacheProducerTest {
   }
 
   private void setupInputProducerStreamingSuccess() {
+    setupInputProducerStreamingSuccessWithStatusFlags(0);
+  }
+
+  private void setupInputProducerStreamingSuccessWithStatusFlags(@Consumer.Status int statusFlags) {
     doAnswer(new ProduceResultsNewResultAnswer(
-            Arrays.asList(mIntermediateEncodedImage, mFinalEncodedImage)))
+            Arrays.asList(mIntermediateEncodedImage, mFinalEncodedImage), statusFlags))
         .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerNotFound() {
     final List<EncodedImage> nullArray = new ArrayList<EncodedImage>(1);
     nullArray.add(null);
-    doAnswer(new ProduceResultsNewResultAnswer(nullArray))
+    doAnswer(new ProduceResultsNewResultAnswer(nullArray, 0))
         .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
@@ -218,9 +242,11 @@ public class EncodedMemoryCacheProducerTest {
 
   private static class ProduceResultsNewResultAnswer implements Answer<Void> {
     private final List<EncodedImage> mResults;
+    private final @Consumer.Status int mExtraStatusFlags;
 
-    private ProduceResultsNewResultAnswer(List<EncodedImage> results) {
+    private ProduceResultsNewResultAnswer(List<EncodedImage> results, int extraStatusFlags) {
       mResults = results;
+      mExtraStatusFlags = extraStatusFlags;
     }
 
     @Override
@@ -229,7 +255,9 @@ public class EncodedMemoryCacheProducerTest {
       Iterator<EncodedImage> iterator = mResults.iterator();
       while (iterator.hasNext()) {
         EncodedImage result = iterator.next();
-        consumer.onNewResult(result, BaseConsumer.simpleStatusForIsLast(!iterator.hasNext()));
+        consumer.onNewResult(
+            result,
+            BaseConsumer.simpleStatusForIsLast(!iterator.hasNext()) | mExtraStatusFlags);
       }
       return null;
     }

@@ -116,11 +116,12 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
-      // intermediate or null results are not cached, so we just forward them
-      if (isNotLast(status) || newResult == null) {
+      // intermediate, null or uncacheable results are not cached, so we just forward them
+      if (isNotLast(status) || newResult == null || statusHasFlag(status, DO_NOT_CACHE_ENCODED)) {
         getConsumer().onNewResult(newResult, status);
         return;
       }
+
       // cache and forward the last result
       CloseableReference<PooledByteBuffer> ref = newResult.getByteBufferRef();
       if (ref != null) {

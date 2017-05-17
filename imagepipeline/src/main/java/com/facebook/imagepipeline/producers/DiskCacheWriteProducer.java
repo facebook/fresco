@@ -107,16 +107,20 @@ public class DiskCacheWriteProducer implements Producer<EncodedImage> {
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
-      if (newResult != null && isLast(status)) {
-        final ImageRequest imageRequest = mProducerContext.getImageRequest();
-        final CacheKey cacheKey =
-            mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
+      // intermediate, null or uncacheable results are not cached, so we just forward them
+      if (isNotLast(status) || newResult == null || statusHasFlag(status, DO_NOT_CACHE_ENCODED)) {
+        getConsumer().onNewResult(newResult, status);
+        return;
+      }
 
-        if (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL) {
-          mSmallImageBufferedDiskCache.put(cacheKey, newResult);
-        } else {
-          mDefaultBufferedDiskCache.put(cacheKey, newResult);
-        }
+      final ImageRequest imageRequest = mProducerContext.getImageRequest();
+      final CacheKey cacheKey =
+          mCacheKeyFactory.getEncodedCacheKey(imageRequest, mProducerContext.getCallerContext());
+
+      if (imageRequest.getCacheChoice() == ImageRequest.CacheChoice.SMALL) {
+        mSmallImageBufferedDiskCache.put(cacheKey, newResult);
+      } else {
+        mDefaultBufferedDiskCache.put(cacheKey, newResult);
       }
 
       getConsumer().onNewResult(newResult, status);
