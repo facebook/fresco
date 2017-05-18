@@ -167,7 +167,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
-      boolean isLast = isLast(status);
+      final boolean isLast = isLast(status);
       if (isLast && !EncodedImage.isValid(newResult)) {
         handleError(new ExceptionWithNoStacktrace("Encoded image is not valid."));
         return;
@@ -175,7 +175,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       if (!updateDecodeJob(newResult, status)) {
         return;
       }
-      if (isLast || mProducerContext.isIntermediateResultExpected()) {
+      final boolean isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER);
+      if (isLast || isPlaceholder || mProducerContext.isIntermediateResultExpected()) {
         mJobScheduler.scheduleJob();
       }
     }
@@ -214,7 +215,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
       final String encodedImageSize;
       final String sampleSize;
-      boolean isLast = isLast(status);
+      final boolean isLast = isLast(status);
+      final boolean isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER);
       if (encodedImage != null) {
         encodedImageSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
         sampleSize = String.valueOf(encodedImage.getSampleSize());
@@ -232,9 +234,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
       try {
         long queueTime = mJobScheduler.getQueuedTime();
-        int length = isLast ?
+        int length = isLast || isPlaceholder ?
             encodedImage.getSize() : getIntermediateImageEndOffset(encodedImage);
-        QualityInfo quality = isLast ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo();
+        QualityInfo quality =
+            isLast || isPlaceholder ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo();
 
         mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
         CloseableImage image = null;
@@ -420,8 +423,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @Override
     protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, @Status int status) {
       boolean ret = super.updateDecodeJob(encodedImage, status);
-      if (isNotLast(status) && EncodedImage.isValid(encodedImage) &&
-          encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
+      if (isNotLast(status)
+          && !statusHasFlag(status, IS_PLACEHOLDER)
+          && EncodedImage.isValid(encodedImage)
+          && encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
         if (!mProgressiveJpegParser.parseMoreData(encodedImage)) {
           return false;
         }

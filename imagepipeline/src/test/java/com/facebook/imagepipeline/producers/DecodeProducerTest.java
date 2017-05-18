@@ -178,6 +178,19 @@ public class DecodeProducerTest {
   }
 
   @Test
+  public void testNewResult_Placeholder() {
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.IS_PLACEHOLDER)).thenReturn(true);
+    consumer.onNewResult(mEncodedImage, Consumer.IS_PLACEHOLDER);
+
+    verify(mJobScheduler, times(1)).updateJob(mEncodedImage, Consumer.IS_PLACEHOLDER);
+    verify(mProgressiveJpegParser, never()).parseMoreData(mEncodedImage);
+    verify(mJobScheduler, times(1)).scheduleJob();
+  }
+
+  @Test
   public void testNewResult_Intermediate_pJPEG() {
     setupNetworkUri();
     Consumer<EncodedImage> consumer = produceResults();

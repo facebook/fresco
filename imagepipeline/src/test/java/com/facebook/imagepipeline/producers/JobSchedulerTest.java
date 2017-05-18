@@ -167,6 +167,18 @@ public class JobSchedulerTest {
   }
 
   @Test
+  public void testUpdate_Placeholder() {
+    EncodedImage encodedImage = fakeEncodedImage();
+    assertTrue(mJobScheduler.updateJob(encodedImage, Consumer.IS_PLACEHOLDER));
+    assertNotSame(encodedImage, mJobScheduler.mEncodedImage);
+    assertReferencesEqual(encodedImage, mJobScheduler.mEncodedImage);
+    assertEquals(Consumer.IS_PLACEHOLDER, mJobScheduler.mStatus);
+    assertEquals(0, mTestScheduledExecutorService.getPendingCount());
+    assertEquals(0, mTestExecutorService.getPendingCount());
+    assertEquals(0, mTestJobRunnable.jobs.size());
+  }
+
+  @Test
   public void testUpdate_Last_Null() {
     assertTrue(mJobScheduler.updateJob(fakeEncodedImage(), Consumer.NO_FLAGS));
     assertTrue(mJobScheduler.updateJob(null, Consumer.IS_LAST));

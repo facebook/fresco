@@ -50,6 +50,7 @@ public interface Consumer<T> {
       value = {
           IS_LAST,
           DO_NOT_CACHE_ENCODED,
+          IS_PLACEHOLDER,
       })
   @interface Status {
 
@@ -70,6 +71,11 @@ public interface Consumer<T> {
    * last result.
    */
   int DO_NOT_CACHE_ENCODED = 1 << 1;
+  /**
+   * Status flag to show whether the result is a placeholder for the final result. Should only be
+   * set if IS_LAST is not set.
+   */
+  int IS_PLACEHOLDER = 1 << 2;
 
   /**
    * Called by a producer whenever new data is produced. This method should not throw an exception.

@@ -234,7 +234,9 @@ public class JobScheduler {
   private static boolean shouldProcess(EncodedImage encodedImage, @Consumer.Status int status) {
     // the last result should always be processed, whereas
     // an intermediate result should be processed only if valid
-    return BaseConsumer.isLast(status) || EncodedImage.isValid(encodedImage);
+    return BaseConsumer.isLast(status)
+        || BaseConsumer.statusHasFlag(status, Consumer.IS_PLACEHOLDER)
+        || EncodedImage.isValid(encodedImage);
   }
 
   /**

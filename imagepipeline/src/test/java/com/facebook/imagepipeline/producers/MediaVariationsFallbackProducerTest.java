@@ -271,7 +271,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mConsumer).onNewResult(mImageS, Consumer.DO_NOT_CACHE_ENCODED | Consumer.IS_PLACEHOLDER);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -291,7 +291,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageS, Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mConsumer).onNewResult(mImageS, Consumer.DO_NOT_CACHE_ENCODED | Consumer.IS_PLACEHOLDER);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -327,7 +327,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageL, Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mConsumer).onNewResult(mImageL, Consumer.DO_NOT_CACHE_ENCODED | Consumer.IS_PLACEHOLDER);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
@@ -390,7 +390,7 @@ public class MediaVariationsFallbackProducerTest {
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mConsumer).onNewResult(mImageM, Consumer.DO_NOT_CACHE_ENCODED);
+    verify(mConsumer).onNewResult(mImageM, Consumer.DO_NOT_CACHE_ENCODED | Consumer.IS_PLACEHOLDER);
     verify(mConsumer, never()).onProgressUpdate(anyFloat());
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
