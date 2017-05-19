@@ -160,7 +160,7 @@ class CustomView extends View {
 Use a [controller builder](using-controllerbuilder.html), but call `setController` on the holder instead of a View:
 
 ```java
-DraweeController controller = Fresco.newControllerBuilder()
+DraweeController controller = Fresco.newDraweeControllerBuilder()
     .setUri(uri)
     .setOldController(mDraweeHolder.getController())
     .build();
