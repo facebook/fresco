@@ -40,18 +40,6 @@ SimpleDraweeView.initialize(mControllerBuilderSupplier);
 
 Do not let the `VolleyDraweeControllerBuilderSupplier` out of scope; you need it to build controllers, unless you always use `SimpleDraweeView.setImageURI.`
 
-#### Using DraweeControllers with Volley ImageLoader
-
-Instead of calling `Fresco.newControllerBuilder`, call
-
-```java
-VolleyController controller = mControllerBuilderSupplier
-    .newControllerBuilder()
-    . // setters
-    .build();
-mSimpleDraweeView.setController(controller);
-```
-
 ### Using Drawee with other image loaders
 
 No other Drawee backends have been built yet, though it is possible to do so using the [Volley example](https://github.com/facebook/fresco/tree/master/drawee-backends/drawee-volley/src/main/java/com/facebook/drawee/backends/volley) as a model.
