@@ -485,6 +485,25 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setFailureImage(int resourceId, ScaleType scaleType) {
     setFailureImage(mResources.getDrawable(resourceId), scaleType);
   }
+  
+  /**
+   * Sets a new failure drawable with old scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   */
+  public void setFailureImage(int resourceId) {
+    setFailureImage(mResources.getDrawable(resourceId));
+  }
+  
+  /**
+   * Sets a new failure drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setFailureImage(int resourceId, ScaleType scaleType) {
+    setFailureImage(mResources.getDrawable(resourceId), scaleType);
+  }
 
   /** Sets a new retry drawable with old scale type. */
   public void setRetryImage(@Nullable Drawable drawable) {
@@ -495,6 +514,25 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setRetryImage(Drawable drawable, ScaleType scaleType) {
     setChildDrawableAtIndex(RETRY_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(RETRY_IMAGE_INDEX).setScaleType(scaleType);
+  }
+  
+  /**
+   * Sets a new retry drawable with old scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   */
+  public void setRetryImage(int resourceId) {
+    setRetryImage(mResources.getDrawable(resourceId));
+  }
+  
+  /**
+   * Sets a new retry drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setRetryImage(int resourceId, ScaleType scaleType) {
+    setRetryImage(mResources.getDrawable(resourceId), scaleType);
   }
   
   /**
@@ -569,6 +607,25 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   /** Sets the overlay image if allowed. */
   public void setOverlayImage(@Nullable Drawable drawable) {
     setOverlayImage(0, drawable);
+  }
+  
+  /**
+   * Sets a new progress bar drawable with old scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   */
+  public void setProgressBarImage(int resourceId) {
+    setProgressBarImage(mResources.getDrawable(resourceId));
+  }
+  
+  /**
+   * Sets a new progress bar drawable with scale type.
+   *
+   * @param resourceId an identifier of an Android drawable or color resource.
+   * @param scaleType a new scale type.
+   */
+  public void setProgressBarImage(int resourceId, ScaleType scaleType) {
+    setProgressBarImage(mResources.getDrawable(resourceId), scaleType);
   }
 
   /** Sets the rounding params. */
