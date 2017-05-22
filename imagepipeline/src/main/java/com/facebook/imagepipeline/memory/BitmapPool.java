@@ -45,7 +45,7 @@ public class BitmapPool extends BasePool<Bitmap> {
   }
 
   /**
-   * Allocate a bitmap that has a backing memory allocacation of 'size' bytes.
+   * Allocate a bitmap that has a backing memory allocation of 'size' bytes.
    * This is configuration agnostic so the size is the actual size in bytes of the bitmap.
    * @param size the 'size' in bytes of the bitmap
    * @return a new bitmap with the specified size in memory
