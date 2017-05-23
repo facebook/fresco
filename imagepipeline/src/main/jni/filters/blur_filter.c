@@ -19,6 +19,11 @@ typedef struct {
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 #define UNUSED(expr) ((void) (expr));
 
+// These values are chosen arbitrarily but small enough to avoid integer-overflows
+#define BITMAP_MAX_DIMENSION 65536
+#define BLUR_MAX_ITERATIONS 65536
+#define BLUR_MAX_RADIUS 65536
+
 static jclass runtime_exception_class;
 
 static inline int max(int a, int b) { return a > b ? a : b;}
@@ -159,6 +164,16 @@ static void BlurFilter_iterativeBoxBlur(
     jint radius) {
   UNUSED(clazz);
 
+  if (iterations <= 0 || iterations > BLUR_MAX_ITERATIONS) {
+    safe_throw_exception(env, "Iterations argument out of bounds");
+    return;
+  }
+
+  if (radius <= 0 || radius > BLUR_MAX_RADIUS) {
+    safe_throw_exception(env, "Blur radius argument out of bounds");
+    return;
+  }
+
   AndroidBitmapInfo bitmapInfo;
 
   int rc = AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
@@ -176,6 +191,11 @@ static void BlurFilter_iterativeBoxBlur(
 
   const int w = bitmapInfo.width;
   const int h = bitmapInfo.height;
+
+  if (w > BITMAP_MAX_DIMENSION || h > BITMAP_MAX_DIMENSION) {
+    safe_throw_exception(env, "Bitmap dimensions too large");
+    return;
+  }
 
   // locking pixels such that they will not get moved around during processing
   rc = AndroidBitmap_lockPixels(env, bitmap, (void*) &pixelPtr);

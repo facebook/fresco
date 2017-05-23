@@ -38,9 +38,11 @@ public class NativeBlurFilter {
    * <p>
    * Asymptotic memory: O(radius + max(width, height))
    *
-   * @param bitmap The targeted bitmap that will be blurred in-place
-   * @param iterations The number of iterations to run. Must be greater than 0.
-   * @param blurRadius The given blur radius. Must be greater than 0.
+   * @param bitmap The targeted bitmap that will be blurred in-place. Each dimension must not be
+   * greater than 65536.
+   * @param iterations The number of iterations to run. Must be greater than 0 and not greater than
+   * 65536.
+   * @param blurRadius The given blur radius. Must be greater than 0 and not greater than 65536.
    */
   public static void iterativeBoxBlur(Bitmap bitmap, int iterations, int blurRadius) {
     Preconditions.checkNotNull(bitmap);
