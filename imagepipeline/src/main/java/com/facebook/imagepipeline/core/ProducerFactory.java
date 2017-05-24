@@ -35,6 +35,7 @@ import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.BitmapPrepareProducer;
 import com.facebook.imagepipeline.producers.BranchOnSeparateImagesProducer;
 import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
@@ -347,5 +348,10 @@ public class ProducerFactory {
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
         inputProducer);
+  }
+
+  public BitmapPrepareProducer newBitmapPrepareProducer(
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    return new BitmapPrepareProducer(inputProducer);
   }
 }

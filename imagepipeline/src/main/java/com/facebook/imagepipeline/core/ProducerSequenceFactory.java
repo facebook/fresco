@@ -25,7 +25,6 @@ import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProduce
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.DecodeProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
-import com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
@@ -35,6 +34,7 @@ import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
+import com.facebook.imagepipeline.producers.QualifiedResourceFetchProducer;
 import com.facebook.imagepipeline.producers.RemoveImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.SwallowResultProducer;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducer;
@@ -61,6 +61,7 @@ public class ProducerSequenceFactory {
   private final boolean mWebpSupportEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private final boolean mUseDownsamplingRatio;
+  private final boolean mUseBitmapPrepareToDraw;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -86,6 +87,10 @@ public class ProducerSequenceFactory {
       mPostprocessorSequences;
   @VisibleForTesting Map<Producer<CloseableReference<CloseableImage>>, Producer<Void>>
       mCloseableImagePrefetchSequences;
+  @VisibleForTesting Map<
+      Producer<CloseableReference<CloseableImage>>,
+      Producer<CloseableReference<CloseableImage>>>
+      mBitmapPrepareSequences;
 
   public ProducerSequenceFactory(
       ProducerFactory producerFactory,
@@ -93,15 +98,18 @@ public class ProducerSequenceFactory {
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
-      boolean useDownsamplingRatio) {
+      boolean useDownsamplingRatio,
+      boolean useBitmapPrepareToDraw) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mWebpSupportEnabled = webpSupportEnabled;
     mPostprocessorSequences = new HashMap<>();
     mCloseableImagePrefetchSequences = new HashMap<>();
+    mBitmapPrepareSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
     mUseDownsamplingRatio = useDownsamplingRatio;
+    mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
   }
 
   /**
@@ -200,11 +208,16 @@ public class ProducerSequenceFactory {
       ImageRequest imageRequest) {
     Producer<CloseableReference<CloseableImage>> pipelineSequence =
         getBasicDecodedImageSequence(imageRequest);
+
     if (imageRequest.getPostprocessor() != null) {
-      return getPostprocessorSequence(pipelineSequence);
-    } else {
-      return pipelineSequence;
+      pipelineSequence = getPostprocessorSequence(pipelineSequence);
     }
+
+    if (mUseBitmapPrepareToDraw) {
+      pipelineSequence = getBitmapPrepareSequence(pipelineSequence);
+    }
+
+    return pipelineSequence;
   }
 
   /**
@@ -627,6 +640,22 @@ public class ProducerSequenceFactory {
       mCloseableImagePrefetchSequences.put(inputProducer, swallowResultProducer);
     }
     return mCloseableImagePrefetchSequences.get(inputProducer);
+  }
+
+  /**
+   * bitmap prepare producer -> inputProducer
+   */
+  private synchronized Producer<CloseableReference<CloseableImage>> getBitmapPrepareSequence(
+      Producer<CloseableReference<CloseableImage>> inputProducer) {
+    Producer<CloseableReference<CloseableImage>> bitmapPrepareProducer =
+        mBitmapPrepareSequences.get(inputProducer);
+
+    if (bitmapPrepareProducer == null) {
+      bitmapPrepareProducer = mProducerFactory.newBitmapPrepareProducer(inputProducer);
+      mBitmapPrepareSequences.put(inputProducer, bitmapPrepareProducer);
+    }
+
+    return bitmapPrepareProducer;
   }
 
   private static String getShortenedUriString(Uri uri) {

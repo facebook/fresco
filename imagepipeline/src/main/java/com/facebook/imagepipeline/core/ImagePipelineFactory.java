@@ -344,6 +344,10 @@ public class ImagePipelineFactory {
   }
 
   private ProducerSequenceFactory getProducerSequenceFactory() {
+    // before Android N the Bitmap#prepareToDraw method is no-op so do not need this
+    final boolean useBitmapPrepareToDraw = Build.VERSION.SDK_INT >= 24 //Build.VERSION_CODES.NOUGAT
+        && mConfig.getExperiments().getUseBitmapPrepareToDraw();
+
     if (mProducerSequenceFactory == null) {
       mProducerSequenceFactory =
           new ProducerSequenceFactory(
@@ -352,7 +356,8 @@ public class ImagePipelineFactory {
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExperiments().isWebpSupportEnabled(),
               mThreadHandoffProducerQueue,
-              mConfig.getExperiments().getUseDownsamplingRatioForResizing());
+              mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
+              useBitmapPrepareToDraw);
     }
     return mProducerSequenceFactory;
   }

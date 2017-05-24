@@ -72,7 +72,7 @@ public class ProducerSequenceFactoryTest {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
 
     mProducerSequenceFactory =
-        new ProducerSequenceFactory(producerFactory, null, true, false, null, false);
+        new ProducerSequenceFactory(producerFactory, null, true, false, null, false, false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -285,5 +285,45 @@ public class ProducerSequenceFactoryTest {
     assertNull(
         mProducerSequenceFactory.mPostprocessorSequences.get(
             mProducerSequenceFactory.mBackgroundNetworkFetchToEncodedMemorySequence));
+  }
+
+  @Test
+  public void testPrepareBitmapFactoryDefault() {
+    internalUseSequenceFactoryWithBitmapPrepare();
+
+    PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+    assertSame(
+        producer,
+        mProducerSequenceFactory.mBitmapPrepareSequences.get(
+        mProducerSequenceFactory.mNetworkFetchSequence));
+  }
+
+  @Test
+  public void testPrepareBitmapFactoryWithPostprocessor() {
+    internalUseSequenceFactoryWithBitmapPrepare();
+
+    PowerMockito.when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+    when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+    assertSame(
+        producer,
+        mProducerSequenceFactory.mBitmapPrepareSequences.get(
+        mProducerSequenceFactory.mPostprocessorSequences
+            .get(mProducerSequenceFactory.mNetworkFetchSequence)));
+  }
+
+  private void internalUseSequenceFactoryWithBitmapPrepare() {
+    ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    mProducerSequenceFactory = new ProducerSequenceFactory(
+        producerFactory,
+        null,
+        true,
+        false,
+        null,
+        false,
+        /* useBitmapPrepareToDraw */ true);
   }
 }
