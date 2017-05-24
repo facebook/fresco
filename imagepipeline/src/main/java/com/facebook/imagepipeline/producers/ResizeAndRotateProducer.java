@@ -142,6 +142,12 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       }
       // just forward the result if we know that it shouldn't be transformed
       if (shouldTransform != TriState.YES) {
+        if (!mProducerContext.getImageRequest().getRotationOptions().canDeferUntilRendered() &&
+            newResult.getRotationAngle() != 0 &&
+            newResult.getRotationAngle() != EncodedImage.UNKNOWN_ROTATION_ANGLE) {
+          newResult = moveImage(newResult); // for thread-safety sake
+          newResult.setRotationAngle(0);
+        }
         getConsumer().onNewResult(newResult, status);
         return;
       }
@@ -152,6 +158,12 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       if (isLast || mProducerContext.isIntermediateResultExpected()) {
         mJobScheduler.scheduleJob();
       }
+    }
+
+    private EncodedImage moveImage(EncodedImage newResult) {
+      EncodedImage cloned = EncodedImage.cloneOrNull(newResult);
+      newResult.close();
+      return cloned;
     }
 
     private void doTransform(EncodedImage encodedImage, @Status int status) {
