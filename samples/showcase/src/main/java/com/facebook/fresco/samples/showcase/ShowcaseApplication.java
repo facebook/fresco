@@ -59,6 +59,7 @@ public class ShowcaseApplication extends Application {
           }
         })
         .experiment().setMediaIdExtractor(new ShowcaseMediaIdExtractor())
+        .experiment().setBitmapPrepareToDraw(true)
         .build();
 
     DraweeConfig.Builder draweeConfigBuilder = DraweeConfig.newBuilder();
