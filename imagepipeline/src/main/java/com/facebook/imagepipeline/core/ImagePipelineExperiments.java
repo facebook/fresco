@@ -32,6 +32,7 @@ public class ImagePipelineExperiments {
   private final WebpBitmapFactory mWebpBitmapFactory;
   private final boolean mSuppressBitmapPrefetching;
   private final boolean mUseDownsamplingRatioForResizing;
+  private final boolean mUseBitmapPrepareToDraw;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -52,6 +53,7 @@ public class ImagePipelineExperiments {
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
     mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
     mUseDownsamplingRatioForResizing = builder.mUseDownsamplingRatioForResizing;
+    mUseBitmapPrepareToDraw = builder.mUseBitmapPrepareToDraw;
   }
 
   public boolean isExternalCreatedBitmapLogEnabled() {
@@ -86,6 +88,10 @@ public class ImagePipelineExperiments {
     return mWebpBitmapFactory;
   }
 
+  public boolean getUseBitmapPrepareToDraw() {
+    return mUseBitmapPrepareToDraw;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);
@@ -103,6 +109,7 @@ public class ImagePipelineExperiments {
     private WebpBitmapFactory mWebpBitmapFactory;
     private boolean mSuppressBitmapPrefetching = false;
     private boolean mUseDownsamplingRatioForResizing = false;
+    private boolean mUseBitmapPrepareToDraw = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -173,6 +180,19 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setSuppressBitmapPrefetching(
         boolean suppressBitmapPrefetching) {
       mSuppressBitmapPrefetching = suppressBitmapPrefetching;
+      return mConfigBuilder;
+    }
+
+    /**
+     * If enabled, the pipeline will call {@link android.graphics.Bitmap#prepareToDraw()} after
+     * decoding for non-prefetched images. This potentially reduces lag on Android N+ as this step
+     * now happens async when the RendererThread is idle.
+     *
+     * @param useBitmapPrepareToDraw
+     * @return The Builder itself for chaining
+     */
+    public ImagePipelineConfig.Builder setBitmapPrepareToDraw(boolean useBitmapPrepareToDraw) {
+      mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
       return mConfigBuilder;
     }
 
