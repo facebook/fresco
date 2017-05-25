@@ -99,11 +99,11 @@ Most apps need only a single disk cache. But in some circumstances you may want 
 
 To do this, just call both `setMainDiskCacheConfig` and `setSmallImageDiskCacheConfig` methods when [configuring the image pipeline](configure-image-pipeline.html).
 
-What defines *small?* Your app does. When [making an image request](image-requests.html), you set its [ImageType](../javadoc/reference/com/facebook/imagepipeline/request/ImageRequest.ImageType.html):
+What defines *small?* Your app does. When [making an image request](image-requests.html), you set its [CacheChoice](../javadoc/reference/com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html):
 
 ```java
-ImageRequest request = ImageRequest.newBuilderWithSourceUri(uri)
-    .setImageType(ImageType.SMALL)
+ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+    .setCacheChoice(ImageRequest.CacheChoice.SMALL)
 ```
 
 If you need only one cache, you can simply avoid calling `setSmallImageDiskCacheConfig`. The pipeline will default to using the same cache for both and `ImageType` will be ignored.
