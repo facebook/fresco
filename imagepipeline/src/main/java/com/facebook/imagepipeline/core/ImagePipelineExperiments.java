@@ -33,6 +33,7 @@ public class ImagePipelineExperiments {
   private final boolean mSuppressBitmapPrefetching;
   private final boolean mUseDownsamplingRatioForResizing;
   private final boolean mUseBitmapPrepareToDraw;
+  private final boolean mPartialImageCachingEnabled;
 
   private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -54,6 +55,7 @@ public class ImagePipelineExperiments {
     mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
     mUseDownsamplingRatioForResizing = builder.mUseDownsamplingRatioForResizing;
     mUseBitmapPrepareToDraw = builder.mUseBitmapPrepareToDraw;
+    mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
   }
 
   public boolean isExternalCreatedBitmapLogEnabled() {
@@ -110,6 +112,7 @@ public class ImagePipelineExperiments {
     private boolean mSuppressBitmapPrefetching = false;
     private boolean mUseDownsamplingRatioForResizing = false;
     private boolean mUseBitmapPrepareToDraw = false;
+    private boolean mPartialImageCachingEnabled = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -152,6 +155,20 @@ public class ImagePipelineExperiments {
         boolean useDownsamplingRatioForResizing) {
       mUseDownsamplingRatioForResizing = useDownsamplingRatioForResizing;
       return mConfigBuilder;
+    }
+
+    /**
+     * Enables the caching of partial image data, for example if the request is cancelled or fails
+     * after some data has been received.
+     */
+    public ImagePipelineConfig.Builder setPartialImageCachingEnabled(
+        boolean partialImageCachingEnabled) {
+      mPartialImageCachingEnabled = partialImageCachingEnabled;
+      return mConfigBuilder;
+    }
+
+    public boolean isPartialImageCachingEnabled() {
+      return mPartialImageCachingEnabled;
     }
 
     /**
