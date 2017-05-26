@@ -106,7 +106,7 @@ ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
     .setCacheChoice(ImageRequest.CacheChoice.SMALL)
 ```
 
-If you need only one cache, you can simply avoid calling `setSmallImageDiskCacheConfig`. The pipeline will default to using the same cache for both and `ImageType` will be ignored.
+If you need only one cache, you can simply avoid calling `setSmallImageDiskCacheConfig`. The pipeline will default to using the same cache for both and `CacheChoice` will be ignored.
 
 ### Trimming the caches
 
