@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -105,8 +104,7 @@ public class ImagePipelineConfig {
     mAnimatedImageFactory = builder.mAnimatedImageFactory;
     mBitmapMemoryCacheParamsSupplier =
         builder.mBitmapMemoryCacheParamsSupplier == null ?
-            new DefaultBitmapMemoryCacheParamsSupplier(
-                (ActivityManager) builder.mContext.getSystemService(Context.ACTIVITY_SERVICE)) :
+            new DefaultBitmapMemoryCacheParamsSupplier(builder.mContext) :
             builder.mBitmapMemoryCacheParamsSupplier;
     mBitmapMemoryCacheTrimStrategy =
         builder.mBitmapMemoryCacheTrimStrategy == null ?
