@@ -17,13 +17,17 @@ import java.util.List;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -34,6 +38,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.GenericDraweeView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
@@ -161,6 +166,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     }
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void changeDraweeViewScaleType(
       SimpleDraweeView draweeView,
       ScaleType scaleType,
@@ -170,11 +176,32 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
 
     final RoundingParams roundingParams = Preconditions.checkNotNull(hierarchy.getRoundingParams());
-    if (BITMAP_ONLY_SCALETYPES.contains(scaleType)) {
-      roundingParams.setRoundingMethod(RoundingParams.RoundingMethod.BITMAP_ONLY);
-    } else {
-      roundingParams.setOverlayColor(mWindowBackgroundColor);
-    }
+
+    draweeView.setClipToOutline(true);
+    draweeView.setOutlineProvider(new ViewOutlineProvider() {
+      @Override
+      public void getOutline(View view, Outline outline) {
+        if (!(view instanceof GenericDraweeView)) {
+          throw new AssertionError(
+              "For rounded corners using the outline API, View must be a GenericDraweeView");
+        }
+        final GenericDraweeView dv = (GenericDraweeView) view;
+        RoundingParams roundingParams = dv.getHierarchy().getRoundingParams();
+        if (roundingParams.getRoundAsCircle()) {
+          int w = view.getWidth();
+          int h = view.getHeight();
+          if (w > h) {
+            int l = (w - h) / 2;
+            outline.setOval(l, 0, l + h, h);
+          } else {
+            int t = (h - w) / 2;
+            outline.setOval(0, t, w, t + w);
+          }
+        } else {
+          outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 16);
+        }
+      }
+    });
     hierarchy.setRoundingParams(roundingParams);
   }
 
