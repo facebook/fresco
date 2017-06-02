@@ -1,0 +1,125 @@
+package com.facebook.drawee.view;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.gazman.scoregame.R;
+
+/**
+ * Created by Ilya Gazman on 11/27/2015.
+ */
+public class WrapContentDraweeView extends SimpleDraweeView {
+
+    private int outWidth;
+    private int outHeight;
+    private boolean adjustViewBounds;
+
+    public WrapContentDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
+        super(context, hierarchy);
+    }
+
+    public WrapContentDraweeView(Context context) {
+        super(context);
+    }
+
+    public WrapContentDraweeView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs);
+    }
+
+    public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context, attrs);
+    }
+
+    public WrapContentDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
+
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= 16) {
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                updateLayoutParams();
+            }
+        });
+
+        TypedArray gdhAttrs = context.obtainStyledAttributes(
+                attrs,
+                R.styleable.GenericDraweeView);
+        // Been trying to show a preview in edit mode, so far no luck
+        try {
+            int placeholderId = gdhAttrs.getResourceId(
+                    R.styleable.GenericDraweeView_placeholderImage,
+                    0);
+            if (placeholderId != 0) {
+                if (isInEditMode()) {
+                    setImageDrawable(context.getResources().getDrawable(placeholderId));
+                } else {
+                    loadSize(placeholderId, context.getResources());
+                }
+            }
+        } finally {
+            gdhAttrs.recycle();
+        }
+    }
+
+    private void loadSize(int placeholderId, Resources resources) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(resources, placeholderId, options);
+        outWidth = options.outWidth;
+        outHeight = options.outHeight;
+    }
+
+    @Override
+    public void setAdjustViewBounds(boolean adjustViewBounds) {
+        super.setAdjustViewBounds(adjustViewBounds);
+        this.adjustViewBounds = adjustViewBounds;
+    }
+
+
+    private void updateLayoutParams() {
+        ViewGroup.LayoutParams params = getLayoutParams();
+        if (params.width == ViewGroup.LayoutParams.WRAP_CONTENT && params.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            params.width = outWidth;
+            params.height = outHeight;
+        }
+        else if(adjustViewBounds){
+            float ratio = outWidth / outHeight;
+
+            if (params.width == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                params.width = Math.round(getHeight() * ratio);
+            }
+
+            if (params.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                params.height = Math.round(getWidth() / ratio);
+            }
+        }
+        else{
+            if(params.width == ViewGroup.LayoutParams.WRAP_CONTENT){
+                params.width = outWidth;
+            }
+            else{
+                params.height = outHeight;
+            }
+        }
+        setLayoutParams(params);
+    }
+}
