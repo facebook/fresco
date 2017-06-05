@@ -414,12 +414,7 @@ public abstract class AbstractDraweeControllerBuilder <
     if (!mTapToRetryEnabled) {
       return;
     }
-    RetryManager retryManager = controller.getRetryManager();
-    if (retryManager == null) {
-      retryManager = new RetryManager();
-      controller.setRetryManager(retryManager);
-    }
-    retryManager.setTapToRetryEnabled(mTapToRetryEnabled);
+    controller.getRetryManager().setTapToRetryEnabled(mTapToRetryEnabled);
     maybeBuildAndSetGestureDetector(controller);
   }
 

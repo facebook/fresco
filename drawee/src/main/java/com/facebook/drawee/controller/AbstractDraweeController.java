@@ -31,6 +31,7 @@ import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.infer.annotation.ReturnsOwnership;
 
 import static com.facebook.drawee.components.DraweeEventTracker.Event;
 
@@ -208,13 +209,11 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   /** Gets retry manager. */
-  protected @Nullable RetryManager getRetryManager() {
+  @ReturnsOwnership protected RetryManager getRetryManager() {
+    if (mRetryManager == null) {
+      mRetryManager = new RetryManager();
+    }
     return mRetryManager;
-  }
-
-  /** Sets retry manager. */
-  protected void setRetryManager(@Nullable RetryManager retryManager) {
-    mRetryManager = retryManager;
   }
 
   /** Gets gesture detector. */
