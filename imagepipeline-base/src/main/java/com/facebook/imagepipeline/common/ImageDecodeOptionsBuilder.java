@@ -21,7 +21,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 public class ImageDecodeOptionsBuilder {
 
   private int mMinDecodeIntervalMs = 100;
-  private boolean mDecodePreviewFrame;
+  private boolean mDecodePreviewFrame = true;//备注修改了gif预览图
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;

@@ -19,6 +19,7 @@ import android.util.AttributeSet;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchyInflater;
+import com.facebook.drawee.interfaces.FrescoPainterDraweeInterceptor;
 
 /**
  * DraweeView that uses GenericDraweeHierarchy.
@@ -59,5 +60,9 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
         GenericDraweeHierarchyInflater.inflateBuilder(context, attrs);
     setAspectRatio(builder.getDesiredAspectRatio());
     setHierarchy(builder.build());
+  }
+
+  public void setInterceptor(FrescoPainterDraweeInterceptor frescoPainterDraweeInterceptor){
+    getHierarchy().setFrescoPainterDraweeInterceptor(frescoPainterDraweeInterceptor);
   }
 }

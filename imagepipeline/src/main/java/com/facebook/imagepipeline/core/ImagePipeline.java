@@ -91,6 +91,23 @@ public class ImagePipeline {
   }
 
   /**
+   * 不安全做法
+   * @param url
+   */
+  public BufferedDiskCache getMainBufferdDiskCache(){
+    return mMainBufferedDiskCache;
+  }
+
+  /**
+   * 不安全做法
+   * @param url
+   */
+  public BufferedDiskCache getSmallImageBufferedDiskCache(){
+    return mSmallImageBufferedDiskCache;
+  }
+
+
+  /**
    * Generates unique id for RequestFuture.
    *
    * @return unique id

@@ -2,7 +2,7 @@
 apply from: rootProject.file('gradle/android-tasks.gradle')
 
 // Upload to Bintray
-apply from: project.rootProject.file('release-bintray.gradle')
+apply from: project.rootProject.file('mvn.gradle')
 
-// Upload to Sonatype
-apply from: project.rootProject.file('release-sonatype.gradle')
+//// Upload to Sonatype
+//apply from: project.rootProject.file('release-sonatype.gradle')

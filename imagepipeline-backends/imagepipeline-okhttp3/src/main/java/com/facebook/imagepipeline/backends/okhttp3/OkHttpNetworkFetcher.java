@@ -20,7 +20,10 @@ import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.FetchState;
 import com.facebook.imagepipeline.producers.ProducerContext;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import okhttp3.CacheControl;
@@ -57,6 +60,9 @@ public class OkHttpNetworkFetcher extends
   private final Call.Factory mCallFactory;
 
   private Executor mCancellationExecutor;
+
+  //新增需求:如果文件404就不再请求
+  private List<String> m404Store = new ArrayList<String>();
 
   /**
    * @param okHttpClient client to use
@@ -120,6 +126,7 @@ public class OkHttpNetworkFetcher extends
       final OkHttpNetworkFetchState fetchState,
       final Callback callback,
       final Request request) {
+    final Uri uri = fetchState.getUri();
     final Call call = mCallFactory.newCall(request);
 
     fetchState.getContext().addCallbacks(
@@ -138,42 +145,56 @@ public class OkHttpNetworkFetcher extends
           }
         });
 
-    call.enqueue(
-        new okhttp3.Callback() {
-          @Override
-          public void onResponse(Call call, Response response) throws IOException {
-            fetchState.responseTime = SystemClock.elapsedRealtime();
-            final ResponseBody body = response.body();
-            try {
-              if (!response.isSuccessful()) {
-                handleException(
-                    call,
-                    new IOException("Unexpected HTTP code " + response),
-                    callback);
-                return;
+    if (m404Store.contains(uri.toString())) {
+      //已经请求过,为404
+      //请求失败
+      handleException(call, new Exception("文件不存在,404 not found"), callback);
+    } else {
+      //不是404
+      call.enqueue(
+          new okhttp3.Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+              fetchState.responseTime = SystemClock.elapsedRealtime();
+              int code = response.code();
+              if (code == HttpURLConnection.HTTP_NOT_FOUND
+                      && uri.toString().contains(".seeyouyima.com/avatar_")) {
+                //404,添加到列表队列
+                m404Store.add(uri.toString());
               }
-
-              long contentLength = body.contentLength();
-              if (contentLength < 0) {
-                contentLength = 0;
-              }
-              callback.onResponse(body.byteStream(), (int) contentLength);
-            } catch (Exception e) {
-              handleException(call, e, callback);
-            } finally {
+              final ResponseBody body = response.body();
               try {
-                body.close();
+                if (!response.isSuccessful()) {
+                  handleException(
+                      call,
+                      new IOException("Unexpected HTTP code " + response),
+                      callback);
+                  return;
+                }
+
+                long contentLength = body.contentLength();
+                if (contentLength < 0) {
+                  contentLength = 0;
+                }
+                callback.onResponse(body.byteStream(), (int) contentLength);
               } catch (Exception e) {
-                FLog.w(TAG, "Exception when closing response body", e);
+                handleException(call, e, callback);
+              } finally {
+                try {
+                  body.close();
+                } catch (Exception e) {
+                  FLog.w(TAG, "Exception when closing response body", e);
+                }
               }
             }
-          }
 
-          @Override
-          public void onFailure(Call call, IOException e) {
-            handleException(call, e, callback);
-          }
-        });
+            @Override
+            public void onFailure(Call call, IOException e) {
+              handleException(call, e, callback);
+            }
+          });
+
+    }
   }
 
   /**

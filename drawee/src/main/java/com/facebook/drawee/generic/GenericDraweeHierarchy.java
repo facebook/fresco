@@ -26,7 +26,9 @@ import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
+import com.facebook.drawee.drawable.RichDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.drawee.interfaces.FrescoPainterDraweeInterceptor;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
@@ -97,14 +99,17 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private final Resources mResources;
   private @Nullable RoundingParams mRoundingParams;
-
+  private RichDrawable mHongHongDrawable;
   private final RootDrawable mTopLevelDrawable;
   private final FadeDrawable mFadeDrawable;
   private final ForwardingDrawable mActualImageWrapper;
+  private FrescoPainterDraweeInterceptor mFrescoPainterDraweeInterceptor;
+
 
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
     mResources = builder.getResources();
     mRoundingParams = builder.getRoundingParams();
+    mFrescoPainterDraweeInterceptor = builder.getFrescoPainterDraweeInterceptor();
 
     mActualImageWrapper = new ForwardingDrawable(mEmptyActualImageDrawable);
 
@@ -443,7 +448,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param resourceId an identifier of an Android drawable or color resource.
    */
   public void setPlaceholderImage(int resourceId) {
-    setPlaceholderImage(mResources.getDrawable(resourceId));
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetPlaceholderImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setPlaceholderImage(drawable);
   }
 
   /**
@@ -453,7 +465,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param scaleType a new scale type.
    */
   public void setPlaceholderImage(int resourceId, ScaleType scaleType) {
-    setPlaceholderImage(mResources.getDrawable(resourceId), scaleType);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetPlaceholderImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setPlaceholderImage(drawable, scaleType);
   }
 
   /** Sets a new failure drawable with old scale type. */
@@ -473,9 +492,16 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param resourceId an identifier of an Android drawable or color resource.
    */
   public void setFailureImage(int resourceId) {
-    setFailureImage(mResources.getDrawable(resourceId));
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetFailureImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setFailureImage(drawable);
   }
-  
+
   /**
    * Sets a new failure drawable with scale type.
    *
@@ -483,7 +509,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param scaleType a new scale type.
    */
   public void setFailureImage(int resourceId, ScaleType scaleType) {
-    setFailureImage(mResources.getDrawable(resourceId), scaleType);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetFailureImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setFailureImage(drawable, scaleType);
   }
 
   /** Sets a new retry drawable with old scale type. */
@@ -503,9 +536,16 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param resourceId an identifier of an Android drawable or color resource.
    */
   public void setRetryImage(int resourceId) {
-    setRetryImage(mResources.getDrawable(resourceId));
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetRetryImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setRetryImage(drawable);
   }
-  
+
   /**
    * Sets a new retry drawable with scale type.
    *
@@ -513,7 +553,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param scaleType a new scale type.
    */
   public void setRetryImage(int resourceId, ScaleType scaleType) {
-    setRetryImage(mResources.getDrawable(resourceId), scaleType);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetRetryImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setRetryImage(drawable, scaleType);
   }
 
   /** Sets a new progress bar drawable with old scale type. */
@@ -533,9 +580,16 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param resourceId an identifier of an Android drawable or color resource.
    */
   public void setProgressBarImage(int resourceId) {
-    setProgressBarImage(mResources.getDrawable(resourceId));
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetProgressBarImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setProgressBarImage(drawable);
   }
-  
+
   /**
    * Sets a new progress bar drawable with scale type.
    *
@@ -543,7 +597,14 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
    * @param scaleType a new scale type.
    */
   public void setProgressBarImage(int resourceId, ScaleType scaleType) {
-    setProgressBarImage(mResources.getDrawable(resourceId), scaleType);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetProgressBarImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setProgressBarImage(drawable, scaleType);
   }
 
   /** Sets the background image if allowed. */
@@ -566,6 +627,22 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(OVERLAY_IMAGES_INDEX + index, drawable);
   }
 
+  public void setFrescoPainterDraweeInterceptor(FrescoPainterDraweeInterceptor frescoPainterDraweeInterceptor){
+    mFrescoPainterDraweeInterceptor = frescoPainterDraweeInterceptor;
+  }
+
+  public void setBackgroundImage(int resourceId){
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetBackground(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    setBackgroundImage(drawable);
+  }
+
+
   /** Sets the overlay image if allowed. */
   public void setOverlayImage(@Nullable Drawable drawable) {
     setOverlayImage(0, drawable);
@@ -578,6 +655,15 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     for (int i = 0; i < mFadeDrawable.getNumberOfLayers(); i++) {
       WrappingUtils.updateLeafRounding(getParentDrawableAtIndex(i), mRoundingParams, mResources);
     }
+  }
+
+  public void setHongHongDrawable(RichDrawable drawable){
+    mHongHongDrawable = drawable;
+    setOverlayImage(drawable);
+  }
+
+  public RichDrawable getHongHongDrawable(){
+    return mHongHongDrawable;
   }
 
   /** Gets the rounding params. */

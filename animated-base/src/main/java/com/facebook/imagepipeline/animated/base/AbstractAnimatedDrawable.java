@@ -216,6 +216,10 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     mAnimatedDrawableBackend.dropCaches();
   }
 
+  public Paint getPaint(){
+    return mPaint;
+  }
+
   private void onStart() {
     if (!mIsRunning) {
       return;
@@ -602,7 +606,7 @@ public abstract class AbstractAnimatedDrawable extends Drawable
     return mLoopCount;
   }
 
-  protected AnimatedDrawableCachingBackend getAnimatedDrawableBackend() {
+  public AnimatedDrawableCachingBackend getAnimatedDrawableBackend() {
     return mAnimatedDrawableBackend;
   }
 }

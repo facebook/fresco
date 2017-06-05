@@ -88,4 +88,8 @@ dependencies {
     mavenWithAllAnimationsCompile "com.facebook.fresco:animated-gif:${VERSION_NAME}"
     mavenWithAllAnimationsCompile "com.facebook.fresco:animated-webp:${VERSION_NAME}"
     mavenWithAllAnimationsCompile "com.facebook.fresco:webpsupport:${VERSION_NAME}"
+    compile project(path: ':imagepipeline-backends:imagepipeline-okhttp3')
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile project(':frescopainter')
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
 }

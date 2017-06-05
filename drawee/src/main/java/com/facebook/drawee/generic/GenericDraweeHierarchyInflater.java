@@ -19,6 +19,8 @@ import android.util.AttributeSet;
 
 import com.facebook.drawee.R;
 import com.facebook.drawee.drawable.AutoRotateDrawable;
+import com.facebook.drawee.interfaces.FrescoPainterDraweeInterceptor;
+
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 /**
@@ -76,6 +78,16 @@ public class GenericDraweeHierarchyInflater {
     GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources);
     return updateBuilder(builder, context, attrs);
   }
+
+
+  public static GenericDraweeHierarchyBuilder inflateBuilder(
+          Context context,
+          @Nullable AttributeSet attrs, FrescoPainterDraweeInterceptor interceptor) {
+    Resources resources = context.getResources();
+    GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources,interceptor);
+    return updateBuilder(builder, context, attrs);
+  }
+
 
   /**
    * Updates the existing hierarchy builder based on the XML attributes.

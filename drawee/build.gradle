@@ -11,7 +11,8 @@ dependencies {
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
     compile project(':fbcore')
-
+    compile project(':animated-base')
+    compile project(':animated-base-support')
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {

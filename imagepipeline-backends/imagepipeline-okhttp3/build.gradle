@@ -4,7 +4,7 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-  compile "com.squareup.okhttp3:okhttp:${OKHTTP3_VERSION}"
+  provided "com.squareup.okhttp3:okhttp:${OKHTTP3_VERSION}"
 
   compile project(':fbcore')
   compile project(':imagepipeline')

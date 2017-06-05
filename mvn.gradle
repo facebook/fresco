@@ -1,0 +1,35 @@
+apply plugin: 'maven'
+//apply plugin: 'com.github.dcendents.android-maven'
+repositories {
+    mavenCentral()
+}
+
+//for project dependency
+project.group = GROUP_ID
+project.version = DEPLOY_VERSION
+
+uploadArchives {
+    def typePattern = ~"[0-9]\\.[0-9]\\.[0-9]\$"
+    def depolyTypeUrl
+    if(typePattern.matcher(DEPLOY_VERSION)){
+        println "warn ! find release version! will deploy release aar! version is $DEPLOY_VERSION  "
+        depolyTypeUrl= deployToUrl.replace("snapshots","releases")
+    }else{
+        depolyTypeUrl =deployToUrl
+    }
+    
+    println "depolyTypeUrl " + depolyTypeUrl
+
+    repositories.mavenDeployer {
+        repository(url: depolyTypeUrl) {
+            authentication(userName: deployUserName, password: deployPassword)
+        }
+        pom.project {
+            groupId GROUP_ID
+            artifactId POM_ARTIFACT_ID
+            packaging PACKAGE_FORMAT
+            version DEPLOY_VERSION
+
+        }
+    }
+}

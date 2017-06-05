@@ -20,14 +20,18 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.drawee.drawable.CustomPainterDrawable;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
+import com.facebook.drawee.drawable.RichDrawable;
 import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawable;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableSupport;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
@@ -268,6 +272,16 @@ public class WrappingUtils {
       Drawable drawable,
       RoundingParams roundingParams,
       Resources resources) {
+    if (drawable instanceof CustomPainterDrawable){
+      final RichDrawable gifDrawable = (RichDrawable) drawable;
+//      RoundedBitmapDrawable roundedBitmapDrawable =
+//          new RoundedBitmapDrawable(
+//              resources,
+//              bitmapDrawable.getBitmap(),
+//              bitmapDrawable.getPaint());
+//      applyRoundingParams(roundedBitmapDrawable, roundingParams);
+      return gifDrawable;
+    }
     if (drawable instanceof BitmapDrawable) {
       final BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
       RoundedBitmapDrawable roundedBitmapDrawable =
@@ -284,6 +298,29 @@ public class WrappingUtils {
           RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
       applyRoundingParams(roundedColorDrawable, roundingParams);
       return roundedColorDrawable;
+    }
+    if(roundingParams != null && (roundingParams.getOverlayColor() != 0 || roundingParams.getCornersRadii() != null || roundingParams.getRoundAsCircle())) {
+      //新需求,将gif改为圆角显示
+      if (drawable instanceof AnimatedDrawable) {
+        final AnimatedDrawable bitmapDrawable = (AnimatedDrawable) drawable;
+        RoundedBitmapDrawable roundedBitmapDrawable =
+                new RoundedBitmapDrawable(
+                        resources,
+                        bitmapDrawable.getAnimatedDrawableBackend().getPreviewBitmap().get(),
+                        bitmapDrawable.getPaint());
+        applyRoundingParams(roundedBitmapDrawable, roundingParams);
+        return roundedBitmapDrawable;
+      }
+      if (drawable instanceof AnimatedDrawableSupport) {
+        final AnimatedDrawableSupport bitmapDrawable = (AnimatedDrawableSupport) drawable;
+        RoundedBitmapDrawable roundedBitmapDrawable =
+                new RoundedBitmapDrawable(
+                        resources,
+                        bitmapDrawable.getAnimatedDrawableBackend().getPreviewBitmap().get(),
+                        bitmapDrawable.getPaint());
+        applyRoundingParams(roundedBitmapDrawable, roundingParams);
+        return roundedBitmapDrawable;
+      }
     }
     return drawable;
   }

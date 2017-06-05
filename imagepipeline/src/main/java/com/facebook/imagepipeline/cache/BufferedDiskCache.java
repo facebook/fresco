@@ -75,6 +75,14 @@ public class BufferedDiskCache {
   }
 
   /**
+   * 不安全
+   * @return
+   */
+  public FileCache getFileCache(){
+    return mFileCache;
+  }
+
+  /**
    * Performs a key-value look up in the disk cache. If no value is found in the staging area,
    * then disk cache checks are scheduled on a background thread. Any error manifests itself as a
    * cache miss, i.e. the returned Task resolves to false.
@@ -161,6 +169,54 @@ public class BufferedDiskCache {
       }
     }
   }
+
+
+  /**
+   * 获得同步缓存
+   * @param key
+   * @return
+   */
+  public EncodedImage getSyncCache(final CacheKey key){
+    try {
+      EncodedImage result = mStagingArea.get(key);
+      if (result != null) {
+        //有缓存
+        FLog.v(TAG, "Found image for %s in staging area", key.toString());
+        mImageCacheStatsTracker.onStagingAreaHit(key);
+      } else {
+        //没有缓存
+        FLog.v(TAG, "Did not find image for %s in staging area", key.toString());
+        mImageCacheStatsTracker.onStagingAreaMiss();
+
+        try {
+          //从disk读取缓存图片
+          final PooledByteBuffer buffer = readFromDiskCache(key);
+          CloseableReference<PooledByteBuffer> ref = CloseableReference.of(buffer);
+          try {
+            result = new EncodedImage(ref);
+          } finally {
+            CloseableReference.closeSafely(ref);
+          }
+        } catch (Exception exception) {
+          return null;
+        }
+      }
+
+      if (Thread.interrupted()) {
+        FLog.v(TAG, "Host thread was interrupted, decreasing reference count");
+        if (result != null) {
+          result.close();
+        }
+        throw new InterruptedException();
+      } else {
+        return result;
+      }
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
+  }
+
 
   private Task<EncodedImage> getAsync(final CacheKey key, final AtomicBoolean isCancelled) {
     try {

@@ -14,32 +14,32 @@ package com.facebook.samples.demo;
 import android.app.Application;
 
 import com.facebook.common.logging.FLog;
-import com.facebook.drawee.backends.pipeline.DraweeConfig;
-import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import com.meetyou.frescopainter.FrescoPainter;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Demo Application implementation where we set up Fresco
  */
 public class DemoApplication extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();
         FLog.setMinimumLoggingLevel(FLog.VERBOSE);
         Set<RequestListener> listeners = new HashSet<>();
         listeners.add(new RequestLoggingListener());
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
+        ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.newBuilder(this,new OkHttpClient())
                 .setRequestListeners(listeners)
+                .setDownsampleEnabled(true)
                 .build();
-        DraweeConfig draweeConfig = DraweeConfig.newBuilder()
-            .setDrawDebugOverlay(DebugOverlayHelper.isDebugOverlayEnabled(this))
-            .build();
-        Fresco.initialize(this, config, draweeConfig);
+        FrescoPainter.initialize(this,config);
+//        Fresco.initialize(this, config);
     }
 }

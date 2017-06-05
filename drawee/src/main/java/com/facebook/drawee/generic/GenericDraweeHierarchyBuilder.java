@@ -23,6 +23,7 @@ import android.graphics.drawable.StateListDrawable;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ArrayDrawable;
+import com.facebook.drawee.interfaces.FrescoPainterDraweeInterceptor;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
@@ -53,6 +54,8 @@ public class GenericDraweeHierarchyBuilder {
   private Drawable mRetryImage;
   private ScaleType mRetryImageScaleType;
 
+  private FrescoPainterDraweeInterceptor mFrescoPainterDraweeInterceptor;
+
   private Drawable mFailureImage;
   private ScaleType mFailureImageScaleType;
 
@@ -71,8 +74,13 @@ public class GenericDraweeHierarchyBuilder {
   private RoundingParams mRoundingParams;
 
   public GenericDraweeHierarchyBuilder(Resources resources) {
+    this(resources, null);
+  }
+
+  public GenericDraweeHierarchyBuilder(Resources resources, FrescoPainterDraweeInterceptor frescoPainterDraweeInterceptor) {
     mResources = resources;
     init();
+    mFrescoPainterDraweeInterceptor = frescoPainterDraweeInterceptor;
   }
 
   public static GenericDraweeHierarchyBuilder newInstance(Resources resources) {
@@ -189,7 +197,14 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setPlaceholderImage(int resourceId) {
-    mPlaceholderImage = mResources.getDrawable(resourceId);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetPlaceholderImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    mPlaceholderImage = drawable;
     return this;
   }
 
@@ -246,7 +261,7 @@ public class GenericDraweeHierarchyBuilder {
   public GenericDraweeHierarchyBuilder setPlaceholderImage(
       int resourceId,
       @Nullable ScaleType placeholderImageScaleType) {
-    mPlaceholderImage = mResources.getDrawable(resourceId);
+    setPlaceholderImage(resourceId);
     mPlaceholderImageScaleType = placeholderImageScaleType;
     return this;
   }
@@ -269,7 +284,14 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setRetryImage(int resourceId) {
-    mRetryImage = mResources.getDrawable(resourceId);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetRetryImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    mRetryImage = drawable;
     return this;
   }
 
@@ -326,7 +348,7 @@ public class GenericDraweeHierarchyBuilder {
   public GenericDraweeHierarchyBuilder setRetryImage(
       int resourceId,
       @Nullable ScaleType retryImageScaleType) {
-    mRetryImage = mResources.getDrawable(resourceId);
+    setRetryImage(resourceId);
     mRetryImageScaleType = retryImageScaleType;
     return this;
   }
@@ -349,7 +371,14 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setFailureImage(int resourceId) {
-    mFailureImage = mResources.getDrawable(resourceId);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetFailureImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    mFailureImage = drawable;
     return this;
   }
 
@@ -406,7 +435,7 @@ public class GenericDraweeHierarchyBuilder {
   public GenericDraweeHierarchyBuilder setFailureImage(
       int resourceId,
       @Nullable ScaleType failureImageScaleType) {
-    mFailureImage = mResources.getDrawable(resourceId);
+    setFailureImage(resourceId);
     mFailureImageScaleType = failureImageScaleType;
     return this;
   }
@@ -429,7 +458,14 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setProgressBarImage(int resourceId) {
-    mProgressBarImage = mResources.getDrawable(resourceId);
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetProgressBarImage(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    mProgressBarImage = drawable;
     return this;
   }
 
@@ -486,7 +522,7 @@ public class GenericDraweeHierarchyBuilder {
   public GenericDraweeHierarchyBuilder setProgressBarImage(
       int resourceId,
       @Nullable ScaleType progressBarImageScaleType) {
-    mProgressBarImage = mResources.getDrawable(resourceId);
+    setProgressBarImage(resourceId);
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
   }
@@ -587,6 +623,18 @@ public class GenericDraweeHierarchyBuilder {
     return this;
   }
 
+  public GenericDraweeHierarchyBuilder setBackground(int resourceId){
+    Drawable drawable = null;
+    if(mFrescoPainterDraweeInterceptor != null){
+      drawable = mFrescoPainterDraweeInterceptor.onSetBackground(resourceId);
+    }
+    if(drawable == null){
+      drawable = mResources.getDrawable(resourceId);
+    }
+    mBackground = drawable;
+    return this;
+  }
+
   /**
    * Gets the background.
    */
@@ -671,6 +719,10 @@ public class GenericDraweeHierarchyBuilder {
   @Nullable
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
+  }
+
+  public FrescoPainterDraweeInterceptor getFrescoPainterDraweeInterceptor(){
+    return mFrescoPainterDraweeInterceptor;
   }
 
   private void validate() {

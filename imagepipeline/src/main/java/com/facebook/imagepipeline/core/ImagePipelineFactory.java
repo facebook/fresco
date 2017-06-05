@@ -173,7 +173,7 @@ public class ImagePipelineFactory {
     return mEncodedMemoryCache;
   }
 
-  private ImageDecoder getImageDecoder() {
+  public ImageDecoder getImageDecoder() {
     if (mImageDecoder == null) {
       if (mConfig.getImageDecoder() != null) {
         mImageDecoder = mConfig.getImageDecoder();

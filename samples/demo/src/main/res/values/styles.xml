@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-  <style name="Theme.FrescoSample" parent="Theme.AppCompat">
-    <!-- Set AppCompat’s color theming attrs -->
-    <item name="colorPrimary">@color/primary</item>
-    <item name="colorPrimaryDark">@color/primaryDark</item>
-    <item name="colorAccent">@color/accent</item>
-  </style>
-
   <style name="sample_layout">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">0dp</item>
