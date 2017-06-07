@@ -231,16 +231,14 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Only valid if the image format is JPEG.
-   * @return width if the width is known, else -1.
+   * Returns the image width if known, else -1.
    */
   public int getWidth() {
     return mWidth;
   }
 
   /**
-   * Only valid if the image format is JPEG.
-   * @return height if the height is known, else -1.
+   * Returns the image height if known, else -1.
    */
   public int getHeight() {
     return mHeight;
