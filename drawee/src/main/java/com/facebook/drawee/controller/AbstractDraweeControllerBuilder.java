@@ -452,7 +452,7 @@ public abstract class AbstractDraweeControllerBuilder <
       final CacheLevel cacheLevel);
 
   /** Concrete builder classes should override this method to return {#code this}. */
-  protected abstract BUILDER getThis();
+  @ReturnsOwnership protected abstract BUILDER getThis();
 
   public enum CacheLevel {
     /* Fetch (from the network or local storage) */
