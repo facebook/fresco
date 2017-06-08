@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import android.os.Environment;
+import android.support.annotation.StringDef;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
@@ -571,24 +572,22 @@ public class DefaultDiskStorage implements DiskStorage {
    * CONTENT: the file that has the content
    * TEMP: temporal files, used to write the content until they are switched to CONTENT files
    */
-  private static enum FileType {
-    CONTENT(CONTENT_FILE_EXTENSION),
-    TEMP(TEMP_FILE_EXTENSION);
+  @StringDef ({
+      FileType.CONTENT,
+      FileType.TEMP,
+  })
+  private @interface FileType {
+    String CONTENT = CONTENT_FILE_EXTENSION;
+    String TEMP = TEMP_FILE_EXTENSION;
+  }
 
-    public final String extension;
-
-    FileType(String extension) {
-      this.extension = extension;
+  private static @Nullable @FileType String getFileTypefromExtension(String extension) {
+    if (CONTENT_FILE_EXTENSION.equals(extension)) {
+      return FileType.CONTENT;
+    } else if (TEMP_FILE_EXTENSION.equals(extension)) {
+      return FileType.TEMP;
     }
-
-    public static FileType fromExtension(String extension) {
-      if (CONTENT_FILE_EXTENSION.equals(extension)) {
-        return CONTENT;
-      } else if (TEMP_FILE_EXTENSION.equals(extension)) {
-        return TEMP;
-      }
-      return null;
-    }
+    return null;
   }
 
   /**
@@ -598,10 +597,10 @@ public class DefaultDiskStorage implements DiskStorage {
    */
   private static class FileInfo {
 
-    public final FileType type;
+    public final @FileType String type;
     public final String resourceId;
 
-    private FileInfo(FileType type, String resourceId) {
+    private FileInfo(@FileType String type, String resourceId) {
       this.type = type;
       this.resourceId = resourceId;
     }
@@ -612,7 +611,7 @@ public class DefaultDiskStorage implements DiskStorage {
     }
 
     public String toPath(String parentPath) {
-      return parentPath + File.separator + resourceId + type.extension;
+      return parentPath + File.separator + resourceId + type;
     }
 
     public File createTempFile(File parent) throws IOException {
@@ -628,7 +627,7 @@ public class DefaultDiskStorage implements DiskStorage {
         return null; // no name part
       }
       String ext = name.substring(pos);
-      FileType type = FileType.fromExtension(ext);
+      @FileType String type = getFileTypefromExtension(ext);
       if (type == null) {
         return null; // unknown!
       }
