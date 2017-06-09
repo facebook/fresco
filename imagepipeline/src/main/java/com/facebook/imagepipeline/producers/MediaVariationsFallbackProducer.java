@@ -436,7 +436,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
     @Override
     protected void onNewResultImpl(EncodedImage newResult, @Status int status) {
-      if (isLast(status) && newResult != null) {
+      if (isLast(status) && newResult != null && !statusHasFlag(status, IS_PARTIAL_RESULT)) {
         storeResultInDatabase(newResult);
       }
       getConsumer().onNewResult(newResult, status);

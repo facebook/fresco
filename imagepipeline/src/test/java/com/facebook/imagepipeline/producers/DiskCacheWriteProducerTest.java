@@ -153,6 +153,19 @@ public class DiskCacheWriteProducerTest {
   }
 
   @Test
+  public void testDoesNotWriteToCacheIfPartialResult() {
+    setupInputProducerSuccessWithStatusFlags(Consumer.IS_PARTIAL_RESULT);
+
+    mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.IS_PARTIAL_RESULT);
+    verify(mConsumer)
+        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
+
+    verifyZeroInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
+  }
+
+  @Test
   public void testInputProducerNotFound() {
     setupInputProducerNotFound();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);

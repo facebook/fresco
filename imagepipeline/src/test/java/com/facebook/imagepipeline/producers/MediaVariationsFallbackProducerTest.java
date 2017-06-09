@@ -479,7 +479,7 @@ public class MediaVariationsFallbackProducerTest {
   private void testWriteToIndexWithCorrectValuesFor(CacheChoice cacheChoice) {
     when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
     when(mImageRequest.getCacheChoice()).thenReturn(cacheChoice);
-    setupInputProducerSuccess();
+    setupInputProducerSuccessWithStatusFlags();
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
@@ -494,9 +494,27 @@ public class MediaVariationsFallbackProducerTest {
   }
 
   @Test
+  public void testDoesNotWriteToIndexIfPartialResult() {
+    when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
+    setupInputProducerSuccessWithStatusFlags(Consumer.IS_PARTIAL_RESULT);
+
+    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.IS_PARTIAL_RESULT);
+    verify(mConsumer)
+        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
+
+    verify(mMediaVariationsIndex, never()).saveCachedVariant(
+        anyString(),
+        any(CacheChoice.class),
+        any(CacheKey.class),
+        any(EncodedImage.class));
+  }
+
+  @Test
   public void testInputProducerSuccess() {
     when(mImageRequest.getMediaVariations()).thenReturn(mEmptyMediaVariations);
-    setupInputProducerSuccess();
+    setupInputProducerSuccessWithStatusFlags();
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
 
@@ -571,14 +589,19 @@ public class MediaVariationsFallbackProducerTest {
     }
   }
 
-  private void setupInputProducerSuccess() {
+  private void setupInputProducerSuccessWithStatusFlags() {
+    setupInputProducerSuccessWithStatusFlags(Consumer.NO_FLAGS);
+  }
+
+  private void setupInputProducerSuccessWithStatusFlags(
+      final @Consumer.Status int extraStatusFlags) {
     doAnswer(
         new Answer<Object>() {
           @Override
           public Object answer(InvocationOnMock invocation) throws Throwable {
             Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
-            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS | extraStatusFlags);
+            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST | extraStatusFlags);
             return null;
           }
         }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));

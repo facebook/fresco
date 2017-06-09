@@ -216,6 +216,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final String encodedImageSize;
       final String sampleSize;
       final boolean isLast = isLast(status);
+      final boolean isLastAndComplete = isLast && !statusHasFlag(status, IS_PARTIAL_RESULT);
       final boolean isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER);
       if (encodedImage != null) {
         encodedImageSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
@@ -234,10 +235,12 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
       try {
         long queueTime = mJobScheduler.getQueuedTime();
-        int length = isLast || isPlaceholder ?
-            encodedImage.getSize() : getIntermediateImageEndOffset(encodedImage);
-        QualityInfo quality =
-            isLast || isPlaceholder ? ImmutableQualityInfo.FULL_QUALITY : getQualityInfo();
+        int length = isLastAndComplete || isPlaceholder
+            ? encodedImage.getSize()
+            : getIntermediateImageEndOffset(encodedImage);
+        QualityInfo quality = isLastAndComplete || isPlaceholder
+            ? ImmutableQualityInfo.FULL_QUALITY
+            : getQualityInfo();
 
         mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
         CloseableImage image = null;

@@ -148,15 +148,24 @@ public class EncodedMemoryCacheProducerTest {
 
   @Test
   public void testEncodedMemoryCacheGetNotFoundInputProducerSuccessButResultNotCacheable() {
-    setupEncodedMemoryCacheGetNotFound();
-    setupInputProducerStreamingSuccessWithStatusFlags(Consumer.DO_NOT_CACHE_ENCODED);
+    testInputProducerSuccessButResultNotCacheableDueToStatusFlags(Consumer.DO_NOT_CACHE_ENCODED);
+  }
+
+  @Test
+  public void testEncodedMemoryCacheGetNotFoundInputProducerSuccessButResultIsPartial() {
+    testInputProducerSuccessButResultNotCacheableDueToStatusFlags(Consumer.IS_PARTIAL_RESULT);
+  }
+
+  private void testInputProducerSuccessButResultNotCacheableDueToStatusFlags(
+      final @Consumer.Status int statusFlags) {
+    setupInputProducerStreamingSuccessWithStatusFlags(statusFlags);
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
     verify(mConsumer)
-        .onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS | Consumer.DO_NOT_CACHE_ENCODED);
+        .onNewResult(mIntermediateEncodedImage, statusFlags);
     verify(mConsumer)
-        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
+        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | statusFlags);
     Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =

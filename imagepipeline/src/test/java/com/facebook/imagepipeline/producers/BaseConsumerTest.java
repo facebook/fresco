@@ -133,4 +133,30 @@ public class BaseConsumerTest {
     int turnedOff = BaseConsumer.turnOffStatusFlag(Consumer.IS_LAST, Consumer.IS_LAST);
     assertThat(BaseConsumer.isNotLast(turnedOff)).isTrue();
   }
+
+  @Test
+  public void testStatusHasFlag() {
+    assertThat(BaseConsumer
+        .statusHasFlag(Consumer.IS_PLACEHOLDER | Consumer.IS_LAST, Consumer.IS_PLACEHOLDER))
+        .isTrue();
+
+    assertThat(BaseConsumer
+        .statusHasFlag(Consumer.DO_NOT_CACHE_ENCODED | Consumer.IS_LAST, Consumer.IS_PLACEHOLDER))
+        .isFalse();
+  }
+
+  @Test
+  public void testStatusHasAnyFlag() {
+    assertThat(BaseConsumer
+        .statusHasAnyFlag(
+            Consumer.IS_PLACEHOLDER | Consumer.IS_LAST,
+            Consumer.IS_PLACEHOLDER | Consumer.DO_NOT_CACHE_ENCODED))
+        .isTrue();
+
+    assertThat(BaseConsumer
+        .statusHasAnyFlag(
+            Consumer.IS_PLACEHOLDER | Consumer.IS_LAST,
+            Consumer.IS_PARTIAL_RESULT | Consumer.DO_NOT_CACHE_ENCODED))
+        .isFalse();
+  }
 }

@@ -113,8 +113,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           }
           return;
         }
-        // stateful results cannot be cached and are just forwarded
-        if (newResult.get().isStateful()) {
+        // stateful and partial results cannot be cached and are just forwarded
+        if (newResult.get().isStateful() || statusHasFlag(status, IS_PARTIAL_RESULT)) {
           getConsumer().onNewResult(newResult, status);
           return;
         }

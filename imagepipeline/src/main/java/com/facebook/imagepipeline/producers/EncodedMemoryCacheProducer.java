@@ -108,7 +108,8 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
     public EncodedMemoryCacheConsumer(
         Consumer<EncodedImage> consumer,
-        MemoryCache<CacheKey, PooledByteBuffer> memoryCache, CacheKey requestedCacheKey) {
+        MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
+        CacheKey requestedCacheKey) {
       super(consumer);
       mMemoryCache = memoryCache;
       mRequestedCacheKey = requestedCacheKey;
@@ -117,7 +118,8 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
       // intermediate, null or uncacheable results are not cached, so we just forward them
-      if (isNotLast(status) || newResult == null || statusHasFlag(status, DO_NOT_CACHE_ENCODED)) {
+      if (isNotLast(status) || newResult == null ||
+          statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)) {
         getConsumer().onNewResult(newResult, status);
         return;
       }

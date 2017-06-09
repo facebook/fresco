@@ -51,6 +51,7 @@ public interface Consumer<T> {
           IS_LAST,
           DO_NOT_CACHE_ENCODED,
           IS_PLACEHOLDER,
+          IS_PARTIAL_RESULT,
       })
   @interface Status {
 
@@ -76,6 +77,12 @@ public interface Consumer<T> {
    * set if IS_LAST is not set.
    */
   int IS_PLACEHOLDER = 1 << 2;
+  /**
+   * Status flag to show the result does not represent the whole image, just part of it. This may be
+   * due to a cancellation or failure while the file was being downloaded or because only part of
+   * the image was requested.
+   */
+  int IS_PARTIAL_RESULT = 1 << 3;
 
   /**
    * Called by a producer whenever new data is produced. This method should not throw an exception.
