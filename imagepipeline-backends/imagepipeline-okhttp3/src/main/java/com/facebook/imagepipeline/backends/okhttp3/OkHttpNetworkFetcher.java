@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Looper;
 import android.os.SystemClock;
 import com.facebook.common.logging.FLog;
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.producers.BaseNetworkFetcher;
 import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
@@ -88,13 +89,17 @@ public class OkHttpNetworkFetcher extends
     final Uri uri = fetchState.getUri();
 
     try {
-      Request request = new Request.Builder()
-        .cacheControl(new CacheControl.Builder().noStore().build())
-        .url(uri.toString())
-        .get()
-        .build();
+      final Request.Builder requestBuilder = new Request.Builder()
+          .cacheControl(new CacheControl.Builder().noStore().build())
+          .url(uri.toString())
+          .get();
 
-      fetchWithRequest(fetchState, callback, request);
+      final BytesRange bytesRange = fetchState.getContext().getImageRequest().getBytesRange();
+      if (bytesRange != null) {
+        requestBuilder.addHeader("Range", bytesRange.toHttpRangeHeaderValue());
+      }
+
+      fetchWithRequest(fetchState, callback, requestBuilder.build());
     } catch (Exception e) {
       // handle error while creating the request
       callback.onFailure(e);
