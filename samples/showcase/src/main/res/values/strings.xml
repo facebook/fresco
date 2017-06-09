@@ -74,6 +74,10 @@
   <string name="imagepipeline_media_variations_toast_mode_listed_variants">Using a list of variants added to the image request</string>
   <string name="imagepipeline_media_variations_toast_mode_media_id_extractor">Using a MediaIdExtractor to pull a media ID from the URL</string>
 
+  <string name="imagepipeline_partial_request_title">Partial Image Loading</string>
+  <string name="button_load_partial">Load Partial</string>
+  <string name="button_load_full">Load Full</string>
+
   <string name="imagepipeline_qualified_resource_title">Qualified Resource URI</string>
   <string name="imagepipeline_qualified_resource_help">Demonstration of loading a resource using a qualifying resource URI. This allows for loading resources that are not part of the application\'s main package.</string>
 
@@ -163,5 +167,4 @@
   <string name="drawee_hierarchy_load_success">Load (success)</string>
   <string name="drawee_hierarchy_load_fail">Load (fail)</string>
   <string name="drawee_hierarchy_clear">Clear</string>
-
 </resources>

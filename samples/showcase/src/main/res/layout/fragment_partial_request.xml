@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.facebook.fresco.samples.showcase.imagepipeline.PartialRequestFragment"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/clear_cache"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/button_clear_cache"
+            />
+        <Button
+            android:id="@+id/prefetch_now"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/button_load_partial"
+            />
+        <Button
+            android:id="@+id/load_full"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/button_load_full"
+            />
+    </LinearLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/drawee_partial_img"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:placeholderImage="@mipmap/ic_launcher"
+        app:placeholderImageScaleType="center"
+        app:actualImageScaleType="centerCrop"
+        />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/drawee_full_img"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:placeholderImage="@mipmap/ic_launcher"
+        app:placeholderImageScaleType="center"
+        app:actualImageScaleType="centerCrop"
+        />
+
+</LinearLayout>

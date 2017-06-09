@@ -69,6 +69,10 @@
             android:id="@+id/nav_imagepipeline_qualified_resource"
             android:title="@string/imagepipeline_qualified_resource_title"
             />
+        <item
+            android:id="@+id/nav_imagepipeline_partial_request"
+            android:title="@string/imagepipeline_partial_request_title"
+            />
       </group>
     </menu>
   </item>

@@ -47,6 +47,7 @@ import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificat
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePostProcessorFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.MediaVariationsFragment;
+import com.facebook.fresco.samples.showcase.imagepipeline.PartialRequestFragment;
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 
@@ -172,6 +173,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_imagepipeline_qualified_resource:
         fragment = new ImagePipelineQualifiedResourceFragment();
+        break;
+      case R.id.nav_imagepipeline_partial_request:
+        fragment = new PartialRequestFragment();
         break;
 
       // Image Formats
