@@ -54,6 +54,7 @@ import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
+import com.facebook.imagepipeline.producers.PartialDiskCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.PostprocessorProducer;
 import com.facebook.imagepipeline.producers.Producer;
@@ -213,6 +214,16 @@ public class ProducerFactory {
         mCacheKeyFactory,
         mMediaVariationsIndex,
         mMediaIdExtractor,
+        inputProducer);
+  }
+
+  public PartialDiskCacheProducer newPartialDiskCacheProducer(
+      Producer<EncodedImage> inputProducer) {
+    return new PartialDiskCacheProducer(
+        mDefaultBufferedDiskCache,
+        mCacheKeyFactory,
+        mPooledByteBufferFactory,
+        mByteArrayPool,
         inputProducer);
   }
 

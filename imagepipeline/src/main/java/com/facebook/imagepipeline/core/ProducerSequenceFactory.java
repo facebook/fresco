@@ -59,6 +59,7 @@ public class ProducerSequenceFactory {
   private final NetworkFetcher mNetworkFetcher;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final boolean mWebpSupportEnabled;
+  private final boolean mPartialImageCachingEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private final boolean mUseDownsamplingRatio;
   private final boolean mUseBitmapPrepareToDraw;
@@ -99,7 +100,8 @@ public class ProducerSequenceFactory {
       boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
       boolean useDownsamplingRatio,
-      boolean useBitmapPrepareToDraw) {
+      boolean useBitmapPrepareToDraw,
+      boolean partialImageCachingEnabled) {
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -110,6 +112,7 @@ public class ProducerSequenceFactory {
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
     mUseDownsamplingRatio = useDownsamplingRatio;
     mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
+    mPartialImageCachingEnabled = partialImageCachingEnabled;
   }
 
   /**
@@ -551,8 +554,14 @@ public class ProducerSequenceFactory {
   }
 
   private Producer<EncodedImage> newDiskCacheSequence(Producer<EncodedImage> inputProducer) {
-    Producer<EncodedImage> cacheWriteProducer =
-        mProducerFactory.newDiskCacheWriteProducer(inputProducer);
+    Producer<EncodedImage> cacheWriteProducer;
+    if (mPartialImageCachingEnabled) {
+      Producer<EncodedImage> partialDiskCacheProducer =
+          mProducerFactory.newPartialDiskCacheProducer(inputProducer);
+      cacheWriteProducer = mProducerFactory.newDiskCacheWriteProducer(partialDiskCacheProducer);
+    } else {
+      cacheWriteProducer = mProducerFactory.newDiskCacheWriteProducer(inputProducer);
+    }
     Producer<EncodedImage> mediaVariationsProducer =
         mProducerFactory.newMediaVariationsProducer(cacheWriteProducer);
     return mProducerFactory.newDiskCacheReadProducer(mediaVariationsProducer);

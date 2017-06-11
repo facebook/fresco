@@ -94,6 +94,10 @@ public class ImagePipelineExperiments {
     return mUseBitmapPrepareToDraw;
   }
 
+  public boolean isPartialImageCachingEnabled() {
+    return mPartialImageCachingEnabled;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);

@@ -72,7 +72,7 @@ public class ProducerSequenceFactoryTest {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
 
     mProducerSequenceFactory =
-        new ProducerSequenceFactory(producerFactory, null, true, false, null, false, false);
+        new ProducerSequenceFactory(producerFactory, null, true, false, null, false, false, false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -297,7 +297,7 @@ public class ProducerSequenceFactoryTest {
     assertSame(
         producer,
         mProducerSequenceFactory.mBitmapPrepareSequences.get(
-        mProducerSequenceFactory.mNetworkFetchSequence));
+            mProducerSequenceFactory.mNetworkFetchSequence));
   }
 
   @Test
@@ -311,8 +311,8 @@ public class ProducerSequenceFactoryTest {
     assertSame(
         producer,
         mProducerSequenceFactory.mBitmapPrepareSequences.get(
-        mProducerSequenceFactory.mPostprocessorSequences
-            .get(mProducerSequenceFactory.mNetworkFetchSequence)));
+            mProducerSequenceFactory.mPostprocessorSequences
+                .get(mProducerSequenceFactory.mNetworkFetchSequence)));
   }
 
   private void internalUseSequenceFactoryWithBitmapPrepare() {
@@ -324,6 +324,7 @@ public class ProducerSequenceFactoryTest {
         false,
         null,
         false,
-        /* useBitmapPrepareToDraw */ true);
+        /* useBitmapPrepareToDraw */ true,
+        false);
   }
 }
