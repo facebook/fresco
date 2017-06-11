@@ -38,7 +38,7 @@ import com.facebook.common.internal.Preconditions;
 @Immutable
 public class BytesRange {
 
-  public static final int TO_END_OF_CONTENT = Integer.MIN_VALUE;
+  public static final int TO_END_OF_CONTENT = Integer.MAX_VALUE;
 
   private static @Nullable Pattern sHeaderParsingRegEx;
 
@@ -60,6 +60,19 @@ public class BytesRange {
 
   public String toHttpRangeHeaderValue() {
     return String.format((Locale) null, "bytes=%s-%s", valueOrEmpty(from), valueOrEmpty(to));
+  }
+
+  /**
+   * Checks whether a provided range is within this one.
+   *
+   * @return true if the provided range is within this one, false if given null
+   */
+  public boolean contains(@Nullable BytesRange compare) {
+    if (compare == null) {
+      return false;
+    }
+
+    return from <= compare.from && to >= compare.to;
   }
 
   @Override

@@ -32,6 +32,18 @@ public class SettableProducerContext extends BaseProducerContext {
         context.getPriority());
   }
 
+  public SettableProducerContext(ImageRequest overrideRequest, ProducerContext context) {
+    this(
+        overrideRequest,
+        context.getId(),
+        context.getListener(),
+        context.getCallerContext(),
+        context.getLowestPermittedRequestLevel(),
+        context.isPrefetch(),
+        context.isIntermediateResultExpected(),
+        context.getPriority());
+  }
+
   public SettableProducerContext(
       ImageRequest imageRequest,
       String id,
