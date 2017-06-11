@@ -23,6 +23,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
@@ -142,7 +143,11 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       fetchState.setLastIntermediateResultTimeMs(nowMs);
       fetchState.getListener()
           .onProducerEvent(fetchState.getId(), PRODUCER_NAME, INTERMEDIATE_RESULT_PRODUCER_EVENT);
-      notifyConsumer(pooledOutputStream, false, fetchState.getConsumer());
+      notifyConsumer(
+          pooledOutputStream,
+          fetchState.getOnNewResultStatusFlags(),
+          fetchState.getResponseBytesRange(),
+          fetchState.getConsumer());
     }
   }
 
@@ -153,20 +158,26 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     ProducerListener listener = fetchState.getListener();
     listener.onProducerFinishWithSuccess(fetchState.getId(), PRODUCER_NAME, extraMap);
     listener.onUltimateProducerReached(fetchState.getId(), PRODUCER_NAME, true);
-    notifyConsumer(pooledOutputStream, true, fetchState.getConsumer());
+    notifyConsumer(
+        pooledOutputStream,
+        Consumer.IS_LAST | fetchState.getOnNewResultStatusFlags(),
+        fetchState.getResponseBytesRange(),
+        fetchState.getConsumer());
   }
 
   private void notifyConsumer(
       PooledByteBufferOutputStream pooledOutputStream,
-      boolean isFinal,
+      @Consumer.Status int status,
+      @Nullable BytesRange responseBytesRange,
       Consumer<EncodedImage> consumer) {
     CloseableReference<PooledByteBuffer> result =
         CloseableReference.of(pooledOutputStream.toByteBuffer());
     EncodedImage encodedImage = null;
     try {
       encodedImage = new EncodedImage(result);
+      encodedImage.setBytesRange(responseBytesRange);
       encodedImage.parseMetaData();
-      consumer.onNewResult(encodedImage, BaseConsumer.simpleStatusForIsLast(isFinal));
+      consumer.onNewResult(encodedImage, status);
     } finally {
       EncodedImage.closeSafely(encodedImage);
       CloseableReference.closeSafely(result);

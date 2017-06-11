@@ -20,6 +20,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
 
@@ -78,6 +79,7 @@ public class EncodedImageTest {
     encodedImage.setHeight(2);
     encodedImage.setSampleSize(4);
     encodedImage.setEncodedCacheKey(new SimpleCacheKey("key"));
+    encodedImage.setBytesRange(BytesRange.toMax(1000));
     EncodedImage encodedImage2 = EncodedImage.cloneOrNull(encodedImage);
     assertEquals(3, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(
@@ -89,6 +91,7 @@ public class EncodedImageTest {
     assertEquals(encodedImage.getWidth(), encodedImage2.getWidth());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
     assertEquals(encodedImage.getEncodedCacheKey(), encodedImage2.getEncodedCacheKey());
+    assertEquals(encodedImage.getBytesRange(), encodedImage2.getBytesRange());
 
     encodedImage = new EncodedImage(mInputStreamSupplier, 100);
     encodedImage.setImageFormat(DefaultImageFormats.JPEG);

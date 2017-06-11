@@ -9,36 +9,51 @@
 
 package com.facebook.imagepipeline.common;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import com.facebook.common.internal.Preconditions;
 
 /**
- * An optional part of image requests which limits the range of bytes which should be requested from
- * the network.
+ * A representation of the range of bytes requested or contained in a piece of content.
+ *
+ * <p> This is based on the spec of the HTTP "Content-Range" header so includes methods to parse and
+ * output appropriate strings for the header.
+ *
+ * <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
+ *
+ *  <p> As per that spec, the from and to values are inclusive. Requesting the first 100 bytes of an
+ * image can be achieved by calling <code>BytesRange.toMax(99)</code>.
  *
  * <p> This might be useful because you want to limit the maximum size of a specific download or it
- * might be that you already have part of the image data.
+ * might be that you already have part of the image data and only want the remainder.
  *
- * <p> Even without explicitly including the variants, by using the same media ID across multiple
- * image requests, the pipeline may build up a knowledge of these and fulfil requests accordingly.
- *
- * <p> This extra functionality is currently only enabled if
+ * <p> These objects are currently only respected in image requests and only taken from responses if
  * {@code ImagePipelineExperiments.isPartialImageCachingEnabled()} is true in the image pipeline
- * config. It is also dependent on a {@code NetworkFetcher} which applies the range using the HTTP
- * "Range" header.
+ * config. It is also dependent on a {@code NetworkFetcher} which writes and reads these headers.
  */
 @Immutable
 public class BytesRange {
 
-  private static final int UNSPECIFIED_END = Integer.MIN_VALUE;
+  public static final int TO_END_OF_CONTENT = Integer.MIN_VALUE;
 
-  private final int from;
-  private final int to;
+  private static @Nullable Pattern sHeaderParsingRegEx;
 
-  private BytesRange(int from, int to) {
+  /**
+   * The first byte of the range. Values begin at 0.
+   */
+  public final int from;
+  /**
+   * The final byte of the range inclusive, or {@link #TO_END_OF_CONTENT} if it reaches to the end.
+   *
+   * <p> If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
+   */
+  public final int to;
+
+  public BytesRange(int from, int to) {
     this.from = from;
     this.to = to;
   }
@@ -53,7 +68,7 @@ public class BytesRange {
   }
 
   private static String valueOrEmpty(int n) {
-    if (n == UNSPECIFIED_END) {
+    if (n == TO_END_OF_CONTENT) {
       return "";
     }
     return Integer.toString(n);
@@ -67,7 +82,7 @@ public class BytesRange {
    */
   public static BytesRange from(int from) {
     Preconditions.checkArgument(from >= 0);
-    return new BytesRange(from, UNSPECIFIED_END);
+    return new BytesRange(from, TO_END_OF_CONTENT);
   }
 
   /**
@@ -79,5 +94,53 @@ public class BytesRange {
   public static BytesRange toMax(int to) {
     Preconditions.checkArgument(to > 0);
     return new BytesRange(0, to);
+  }
+
+  /**
+   * Creates an instance of BytesRange by parsing the value of a returned HTTP "Content-Range"
+   * header.
+   *
+   * <p> If the range runs to the end of the available content, the end of the range will be set to
+   * TO_END_OF_CONTENT.
+   *
+   * <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
+   *
+   * @param header
+   * @throws IllegalArgumentException if the header is non-null but fails to match the format per
+   * the spec
+   * @return the parsed range
+   */
+  @Nullable
+  public static BytesRange fromContentRangeHeader(@Nullable String header)
+      throws IllegalArgumentException {
+    if (header == null) {
+      return null;
+    }
+
+    if (sHeaderParsingRegEx == null) {
+      sHeaderParsingRegEx = Pattern.compile("[-/ ]");
+    }
+
+    try {
+      final String[] headerParts = sHeaderParsingRegEx.split(header);
+      Preconditions.checkArgument(headerParts.length == 4);
+      Preconditions.checkArgument(headerParts[0].equals("bytes"));
+
+      final int from = Integer.parseInt(headerParts[1]);
+      final int to = Integer.parseInt(headerParts[2]);
+      final int length = Integer.parseInt(headerParts[3]);
+      Preconditions.checkArgument(to > from);
+      Preconditions.checkArgument(length > to);
+
+      if (to < length - 1) {
+        return new BytesRange(from, to);
+      } else {
+        return new BytesRange(from, TO_END_OF_CONTENT);
+      }
+    } catch (IllegalArgumentException x) {
+      throw new IllegalArgumentException(
+          String.format((Locale) null, "Invalid Content-Range header value: \"%s\"", header),
+          x);
+    }
   }
 }

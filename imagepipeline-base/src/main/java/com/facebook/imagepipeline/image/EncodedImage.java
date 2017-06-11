@@ -30,6 +30,7 @@ import com.facebook.common.references.SharedReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.imageutils.WebpUtil;
@@ -67,6 +68,7 @@ public class EncodedImage implements Closeable {
   private int mSampleSize = DEFAULT_SAMPLE_SIZE;
   private int mStreamSize = UNKNOWN_STREAM_SIZE;
   private @Nullable CacheKey mEncodedCacheKey;
+  private @Nullable BytesRange mBytesRange;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -214,6 +216,10 @@ public class EncodedImage implements Closeable {
     mEncodedCacheKey = encodedCacheKey;
   }
 
+  public void setBytesRange(@Nullable BytesRange bytesRange) {
+    mBytesRange = bytesRange;
+  }
+
   /**
    * Returns the image format if known, otherwise ImageFormat.UNKNOWN.
    */
@@ -260,6 +266,11 @@ public class EncodedImage implements Closeable {
   @Deprecated
   public CacheKey getEncodedCacheKey() {
     return mEncodedCacheKey;
+  }
+
+  @Nullable
+  public BytesRange getBytesRange() {
+    return mBytesRange;
   }
 
   /**
@@ -370,6 +381,7 @@ public class EncodedImage implements Closeable {
     mSampleSize = encodedImage.getSampleSize();
     mStreamSize = encodedImage.getSize();
     mEncodedCacheKey = encodedImage.getEncodedCacheKey();
+    mBytesRange = encodedImage.getBytesRange();
   }
 
   /**

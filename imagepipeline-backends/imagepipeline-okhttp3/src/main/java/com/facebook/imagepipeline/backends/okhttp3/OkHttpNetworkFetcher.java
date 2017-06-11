@@ -158,6 +158,13 @@ public class OkHttpNetworkFetcher extends
                 return;
               }
 
+              BytesRange responseRange =
+                  BytesRange.fromContentRangeHeader(response.header("Content-Range"));
+              if (responseRange != null) {
+                fetchState.setResponseBytesRange(responseRange);
+                fetchState.setOnNewResultStatusFlags(Consumer.IS_PARTIAL_RESULT);
+              }
+
               long contentLength = body.contentLength();
               if (contentLength < 0) {
                 contentLength = 0;

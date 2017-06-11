@@ -9,8 +9,11 @@
 
 package com.facebook.imagepipeline.producers;
 
+import javax.annotation.Nullable;
+
 import android.net.Uri;
 
+import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 
 /**
@@ -23,6 +26,8 @@ public class FetchState {
   private final Consumer<EncodedImage> mConsumer;
   private final ProducerContext mContext;
   private long mLastIntermediateResultTimeMs;
+  private int mOnNewResultStatusFlags;
+  private @Nullable BytesRange mResponseBytesRange;
 
   public FetchState(
       Consumer<EncodedImage> consumer,
@@ -58,5 +63,30 @@ public class FetchState {
 
   public void setLastIntermediateResultTimeMs(long lastIntermediateResultTimeMs) {
     mLastIntermediateResultTimeMs = lastIntermediateResultTimeMs;
+  }
+
+  @Consumer.Status public int getOnNewResultStatusFlags() {
+    return mOnNewResultStatusFlags;
+  }
+
+  /**
+   * EXPERIMENTAL: Allows the fetcher to set extra status flags to be included in calls to
+   * {@link Consumer#onNewResult(Object, int)}.
+   */
+  public void setOnNewResultStatusFlags(@Consumer.Status int onNewResultStatusFlags) {
+    mOnNewResultStatusFlags = onNewResultStatusFlags;
+  }
+
+  @Nullable
+  public BytesRange getResponseBytesRange() {
+    return mResponseBytesRange;
+  }
+
+  /**
+   * EXPERIMENTAL: Allows the fetcher to identify that the reponse is for an imcomplete portion of
+   * the whole image by defining the range of bytes being provided.
+   */
+  public void setResponseBytesRange(BytesRange bytesRange) {
+    mResponseBytesRange = bytesRange;
   }
 }
