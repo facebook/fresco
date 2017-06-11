@@ -221,6 +221,11 @@ public class ImageRequestBuilder {
    * Set the range of bytes to request from the network (in the case of an HTTP request). This is
    * only used if {@link ImagePipelineExperiments#isPartialImageCachingEnabled()} is true and your
    * {@link com.facebook.imagepipeline.producers.NetworkFetcher} makes use of it.
+   *
+   * <p> Even where this is supported, there is no contract that this must be followed. The response
+   * may contain the full image data, more than is requested or less, depending on what's already in
+   * cache and external factors.
+   *
    * @param bytesRange the range of bytes
    * @return the modified builder instance
    */

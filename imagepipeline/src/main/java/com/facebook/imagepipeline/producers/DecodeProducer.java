@@ -426,7 +426,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @Override
     protected synchronized boolean updateDecodeJob(EncodedImage encodedImage, @Status int status) {
       boolean ret = super.updateDecodeJob(encodedImage, status);
-      if (isNotLast(status)
+      if ((isNotLast(status) || statusHasFlag(status, IS_PARTIAL_RESULT))
           && !statusHasFlag(status, IS_PLACEHOLDER)
           && EncodedImage.isValid(encodedImage)
           && encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {

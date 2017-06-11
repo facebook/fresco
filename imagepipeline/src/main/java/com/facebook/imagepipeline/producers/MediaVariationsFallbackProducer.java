@@ -89,7 +89,8 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
     if (!imageRequest.isDiskCacheEnabled() ||
         resizeOptions == null ||
         resizeOptions.height <= 0 ||
-        resizeOptions.width <= 0) {
+        resizeOptions.width <= 0 ||
+        imageRequest.getBytesRange() != null) {
       startInputProducerWithExistingConsumer(consumer, producerContext);
       return;
     }
