@@ -48,9 +48,6 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private static final Class<?> TAG = ZoomableDraweeView.class;
 
   private static final float HUGE_IMAGE_SCALE_FACTOR_THRESHOLD = 1.1f;
-  private static final boolean DEFAULT_ALLOW_TOUCH_INTERCEPTION_WHILE_ZOOMED = true;
-
-  private boolean mUseSimpleTouchHandling = false;
 
   private final RectF mImageBounds = new RectF();
   private final RectF mViewBounds = new RectF();
@@ -58,8 +55,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private DraweeController mHugeImageController;
   private ZoomableController mZoomableController;
   private GestureDetector mTapGestureDetector;
-  private boolean mAllowTouchInterceptionWhileZoomed =
-      DEFAULT_ALLOW_TOUCH_INTERCEPTION_WHILE_ZOOMED;
+  private boolean mAllowTouchInterceptionWhileZoomed = true;
 
   private final ControllerListener mControllerListener = new BaseControllerListener<Object>() {
     @Override
@@ -288,23 +284,15 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
       return true;
     }
 
-    if (mUseSimpleTouchHandling) {
-      if (mZoomableController.onTouchEvent(event)) {
-        return true;
-      }
-    } else if (mZoomableController.onTouchEvent(event)) {
-      // Do not allow the parent to intercept touch events if:
-      // - we do not allow swiping while zoomed and the image is zoomed
-      // - we allow swiping while zoomed and the transform was corrected
-      if ((!mAllowTouchInterceptionWhileZoomed && !mZoomableController.isIdentity()) ||
-          (mAllowTouchInterceptionWhileZoomed && !mZoomableController.wasTransformCorrected())) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-      }
+    if (mZoomableController.onTouchEvent(event)) {
       FLog.v(
           getLogTag(),
           "onTouchEvent: %d, view %x, handled by zoomable controller",
           a,
           this.hashCode());
+      if (!mAllowTouchInterceptionWhileZoomed && !mZoomableController.isIdentity()) {
+        getParent().requestDisallowInterceptTouchEvent(true);
+      }
       return true;
     }
     if (super.onTouchEvent(event)) {
@@ -313,7 +301,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     }
     // None of our components reported that they handled the touch event. Upon returning false
     // from this method, our parent won't send us any more events for this gesture. Unfortunately,
-    // some componentes may have started a delayed action, such as a long-press timer, and since we
+    // some components may have started a delayed action, such as a long-press timer, and since we
     // won't receive an ACTION_UP that would cancel that timer, a false event may be triggered.
     // To prevent that we explicitly send one last cancel event when returning false.
     MotionEvent cancelEvent = MotionEvent.obtain(event);
@@ -394,9 +382,5 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   protected ZoomableController createZoomableController() {
     return AnimatedZoomableController.newInstance();
-  }
-
-  public void setExperimentalSimpleTouchHandlingEnabled(boolean enabled) {
-    mUseSimpleTouchHandling = enabled;
   }
 }
