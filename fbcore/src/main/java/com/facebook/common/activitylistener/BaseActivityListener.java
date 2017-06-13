@@ -30,6 +30,11 @@ public class BaseActivityListener implements ActivityListener {
   }
 
   @Override
+  public int getPriority() {
+    return ActivityListener.MIN_PRIORITY;
+  }
+
+  @Override
   public void onPause(Activity activity) {
   }
 

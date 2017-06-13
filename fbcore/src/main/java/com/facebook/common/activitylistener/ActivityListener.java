@@ -18,6 +18,8 @@ import android.app.Activity;
  * interface that has no-state.
  */
 public interface ActivityListener {
+  static final int MIN_PRIORITY = 1;
+  static final int MAX_PRIORITY = 10;
 
   /**
    * Called by the Activity base class after the Activity's <code>onActivityCreate</code>
@@ -61,4 +63,10 @@ public interface ActivityListener {
    * @param activity the activity
    */
   void onDestroy(Activity activity);
+
+  /**
+   * Listeners are fired in order of priority. Listeners with higher priority are fired first.
+   * @return priority level
+   */
+  int getPriority();
 }
