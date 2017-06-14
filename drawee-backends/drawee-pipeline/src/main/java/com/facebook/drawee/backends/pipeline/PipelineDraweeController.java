@@ -31,7 +31,6 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
-import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -54,7 +53,7 @@ public class PipelineDraweeController
 
   // Components
   private final Resources mResources;
-  private final AnimatedDrawableFactory mAnimatedDrawableFactory;
+  private final DrawableFactory mAnimatedDrawableFactory;
   // Global drawable factories that are set when Fresco is initialized
   @Nullable
   private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
@@ -91,8 +90,9 @@ public class PipelineDraweeController
         } else {
           return new OrientedDrawable(bitmapDrawable, closeableStaticBitmap.getRotationAngle());
         }
-      } else if (mAnimatedDrawableFactory != null) {
-        return mAnimatedDrawableFactory.create(closeableImage);
+      } else if (mAnimatedDrawableFactory != null &&
+          mAnimatedDrawableFactory.supportsImageType(closeableImage)) {
+        return mAnimatedDrawableFactory.createDrawable(closeableImage);
       }
       return null;
     }
@@ -101,7 +101,7 @@ public class PipelineDraweeController
   public PipelineDraweeController(
           Resources resources,
           DeferredReleaser deferredReleaser,
-          AnimatedDrawableFactory animatedDrawableFactory,
+          DrawableFactory animatedDrawableFactory,
           Executor uiThreadExecutor,
           MemoryCache<CacheKey, CloseableImage> memoryCache,
           Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
@@ -124,7 +124,7 @@ public class PipelineDraweeController
   public PipelineDraweeController(
       Resources resources,
       DeferredReleaser deferredReleaser,
-      AnimatedDrawableFactory animatedDrawableFactory,
+      DrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,

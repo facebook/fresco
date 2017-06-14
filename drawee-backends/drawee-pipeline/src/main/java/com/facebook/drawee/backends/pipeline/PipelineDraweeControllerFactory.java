@@ -12,6 +12,7 @@ package com.facebook.drawee.backends.pipeline;
 import java.util.concurrent.Executor;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
@@ -33,7 +34,7 @@ public class PipelineDraweeControllerFactory {
 
   private Resources mResources;
   private DeferredReleaser mDeferredReleaser;
-  private AnimatedDrawableFactory mAnimatedDrawableFactory;
+  private DrawableFactory mAnimatedDrawableFactory;
   private Executor mUiThreadExecutor;
   private MemoryCache<CacheKey, CloseableImage> mMemoryCache;
   @Nullable
@@ -51,7 +52,7 @@ public class PipelineDraweeControllerFactory {
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     mResources = resources;
     mDeferredReleaser = deferredReleaser;
-    mAnimatedDrawableFactory = animatedDrawableFactory;
+    mAnimatedDrawableFactory = wrapAnimatedDrawableFactory(animatedDrawableFactory);
     mUiThreadExecutor = uiThreadExecutor;
     mMemoryCache = memoryCache;
     mDrawableFactories = drawableFactories;
@@ -96,7 +97,7 @@ public class PipelineDraweeControllerFactory {
   protected PipelineDraweeController internalCreateController(
       Resources resources,
       DeferredReleaser deferredReleaser,
-      AnimatedDrawableFactory animatedDrawableFactory,
+      DrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> globalDrawableFactories,
@@ -118,5 +119,29 @@ public class PipelineDraweeControllerFactory {
         globalDrawableFactories);
     controller.setCustomDrawableFactories(customDrawableFactories);
     return controller;
+  }
+
+  @Nullable
+  public static DrawableFactory wrapAnimatedDrawableFactory(
+      final @Nullable AnimatedDrawableFactory animatedDrawableFactory) {
+    if (animatedDrawableFactory == null) {
+      return null;
+    }
+    return new DrawableFactory() {
+      @Override
+      public boolean supportsImageType(CloseableImage image) {
+        // Both current AnimatedDrawableFactory implementations require a CloseableAnimatedImage.
+        // but it lives in animated-base, which we don't have.
+        // Since we do not rely on this method anyway, we can simply ignore it.
+        // return image instanceof CloseableAnimatedImage;
+        return true;
+      }
+
+      @Nullable
+      @Override
+      public Drawable createDrawable(CloseableImage image) {
+        return animatedDrawableFactory.create(image);
+      }
+    };
   }
 }
