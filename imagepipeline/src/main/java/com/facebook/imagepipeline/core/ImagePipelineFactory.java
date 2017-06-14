@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.core;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v4.util.Pools;
 
@@ -41,9 +42,12 @@ import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
+import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
@@ -191,16 +195,45 @@ public class ImagePipelineFactory {
         } else {
           animatedImageFactory = null;
         }
+
+        final Bitmap.Config bitmapConfig = mConfig.getBitmapConfig();
+
+        ImageDecoder gifDecoder = null;
+        ImageDecoder webPDecoder = null;
+
+        if (animatedImageFactory != null) {
+          gifDecoder = new ImageDecoder() {
+            @Override
+            public CloseableImage decode(
+                EncodedImage encodedImage,
+                int length,
+                QualityInfo qualityInfo,
+                ImageDecodeOptions options) {
+              return animatedImageFactory.decodeGif(encodedImage, options, bitmapConfig);
+            }
+          };
+          webPDecoder = new ImageDecoder() {
+            @Override
+            public CloseableImage decode(
+                EncodedImage encodedImage,
+                int length,
+                QualityInfo qualityInfo,
+                ImageDecodeOptions options) {
+              return animatedImageFactory.decodeWebP(encodedImage, options, bitmapConfig);
+            }
+          };
+        }
+
         if (mConfig.getImageDecoderConfig() == null) {
           mImageDecoder = new DefaultImageDecoder(
-              animatedImageFactory,
-              getPlatformDecoder(),
-              mConfig.getBitmapConfig());
+              gifDecoder,
+              webPDecoder,
+              getPlatformDecoder());
         } else {
           mImageDecoder = new DefaultImageDecoder(
-              animatedImageFactory,
+              gifDecoder,
+              webPDecoder,
               getPlatformDecoder(),
-              mConfig.getBitmapConfig(),
               mConfig.getImageDecoderConfig().getCustomImageDecoders());
           // Add custom image formats if needed
           ImageFormatChecker.getInstance()
