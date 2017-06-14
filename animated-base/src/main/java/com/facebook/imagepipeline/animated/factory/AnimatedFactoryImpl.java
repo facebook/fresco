@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.animated.factory;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.annotation.concurrent.NotThreadSafe;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -31,8 +32,13 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendIm
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.common.internal.DoNotStrip;
+import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.image.QualityInfo;
 
 @NotThreadSafe
 @DoNotStrip
@@ -141,12 +147,39 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
     return new AnimatedImageFactoryImpl(animatedDrawableBackendProvider, mPlatformBitmapFactory);
   }
 
-  @Override
-  public AnimatedImageFactory getAnimatedImageFactory() {
+  private AnimatedImageFactory getAnimatedImageFactory() {
     if (mAnimatedImageFactory == null) {
       mAnimatedImageFactory = buildAnimatedImageFactory();
     }
     return mAnimatedImageFactory;
+  }
+
+  @Override
+  public ImageDecoder getGifDecoder(final Bitmap.Config bitmapConfig) {
+    return new ImageDecoder() {
+      @Override
+      public CloseableImage decode(
+          EncodedImage encodedImage,
+          int length,
+          QualityInfo qualityInfo,
+          ImageDecodeOptions options) {
+        return getAnimatedImageFactory().decodeGif(encodedImage, options, bitmapConfig);
+      }
+    };
+  }
+
+  @Override
+  public ImageDecoder getWebPDecoder(final Bitmap.Config bitmapConfig) {
+    return new ImageDecoder() {
+      @Override
+      public CloseableImage decode(
+          EncodedImage encodedImage,
+          int length,
+          QualityInfo qualityInfo,
+          ImageDecodeOptions options) {
+        return getAnimatedImageFactory().decodeWebP(encodedImage, options, bitmapConfig);
+      }
+    };
   }
 
   protected AnimatedDrawableFactory createAnimatedDrawableFactory(

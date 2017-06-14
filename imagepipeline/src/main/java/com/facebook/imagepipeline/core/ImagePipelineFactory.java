@@ -12,7 +12,6 @@ package com.facebook.imagepipeline.core;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v4.util.Pools;
 
@@ -26,7 +25,6 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
-import com.facebook.imagepipeline.animated.factory.AnimatedImageFactory;
 import com.facebook.imagepipeline.bitmaps.ArtBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
 import com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory;
@@ -42,12 +40,9 @@ import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
-import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
@@ -189,39 +184,13 @@ public class ImagePipelineFactory {
         mImageDecoder = mConfig.getImageDecoder();
       } else {
         final AnimatedFactory animatedFactory = getAnimatedFactory();
-        final AnimatedImageFactory animatedImageFactory;
-        if (animatedFactory != null) {
-          animatedImageFactory = getAnimatedFactory().getAnimatedImageFactory();
-        } else {
-          animatedImageFactory = null;
-        }
-
-        final Bitmap.Config bitmapConfig = mConfig.getBitmapConfig();
 
         ImageDecoder gifDecoder = null;
         ImageDecoder webPDecoder = null;
 
-        if (animatedImageFactory != null) {
-          gifDecoder = new ImageDecoder() {
-            @Override
-            public CloseableImage decode(
-                EncodedImage encodedImage,
-                int length,
-                QualityInfo qualityInfo,
-                ImageDecodeOptions options) {
-              return animatedImageFactory.decodeGif(encodedImage, options, bitmapConfig);
-            }
-          };
-          webPDecoder = new ImageDecoder() {
-            @Override
-            public CloseableImage decode(
-                EncodedImage encodedImage,
-                int length,
-                QualityInfo qualityInfo,
-                ImageDecodeOptions options) {
-              return animatedImageFactory.decodeWebP(encodedImage, options, bitmapConfig);
-            }
-          };
+        if (animatedFactory != null) {
+          gifDecoder = animatedFactory.getGifDecoder(mConfig.getBitmapConfig());
+          webPDecoder = animatedFactory.getWebPDecoder(mConfig.getBitmapConfig());
         }
 
         if (mConfig.getImageDecoderConfig() == null) {
