@@ -12,8 +12,8 @@ package com.facebook.drawee.backends.pipeline;
 import java.util.concurrent.Executor;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 
+import android.graphics.drawable.Drawable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
@@ -21,9 +21,9 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.components.DeferredReleaser;
+import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 
 import javax.annotation.Nullable;
 
@@ -45,14 +45,14 @@ public class PipelineDraweeControllerFactory {
   public void init(
       Resources resources,
       DeferredReleaser deferredReleaser,
-      AnimatedDrawableFactory animatedDrawableFactory,
+      DrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
       MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> drawableFactories,
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     mResources = resources;
     mDeferredReleaser = deferredReleaser;
-    mAnimatedDrawableFactory = wrapAnimatedDrawableFactory(animatedDrawableFactory);
+    mAnimatedDrawableFactory = animatedDrawableFactory;
     mUiThreadExecutor = uiThreadExecutor;
     mMemoryCache = memoryCache;
     mDrawableFactories = drawableFactories;
@@ -123,7 +123,7 @@ public class PipelineDraweeControllerFactory {
 
   @Nullable
   public static DrawableFactory wrapAnimatedDrawableFactory(
-      final @Nullable AnimatedDrawableFactory animatedDrawableFactory) {
+          final @Nullable AnimatedDrawableFactory animatedDrawableFactory) {
     if (animatedDrawableFactory == null) {
       return null;
     }

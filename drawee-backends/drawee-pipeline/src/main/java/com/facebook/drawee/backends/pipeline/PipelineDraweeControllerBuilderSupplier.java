@@ -57,11 +57,6 @@ public class PipelineDraweeControllerBuilderSupplier implements
     mContext = context;
     mImagePipeline = imagePipelineFactory.getImagePipeline();
 
-    final AnimatedFactory animatedFactory = imagePipelineFactory.getAnimatedFactory();
-    AnimatedDrawableFactory animatedDrawableFactory = null;
-    if (animatedFactory != null) {
-      animatedDrawableFactory = animatedFactory.getAnimatedDrawableFactory(context);
-    }
     if (draweeConfig != null && draweeConfig.getPipelineDraweeControllerFactory() != null) {
       mPipelineDraweeControllerFactory = draweeConfig.getPipelineDraweeControllerFactory();
     } else {
@@ -70,7 +65,7 @@ public class PipelineDraweeControllerBuilderSupplier implements
     mPipelineDraweeControllerFactory.init(
         context.getResources(),
         DeferredReleaser.getInstance(),
-        animatedDrawableFactory,
+        createAnimatedDrawableFactory(context, imagePipelineFactory),
         UiThreadImmediateExecutorService.getInstance(),
         mImagePipeline.getBitmapMemoryCache(),
         draweeConfig != null
@@ -89,5 +84,21 @@ public class PipelineDraweeControllerBuilderSupplier implements
         mPipelineDraweeControllerFactory,
         mImagePipeline,
         mBoundControllerListeners);
+  }
+
+  @Nullable
+  private DrawableFactory createAnimatedDrawableFactory(
+      final Context context,
+      final ImagePipelineFactory imagePipelineFactory) {
+
+    final AnimatedFactory animatedFactory = imagePipelineFactory.getAnimatedFactory();
+    final AnimatedDrawableFactory animatedDrawableFactory = animatedFactory != null
+        ? animatedFactory.getAnimatedDrawableFactory(context)
+        : null;
+
+    if (animatedDrawableFactory == null) {
+      return null;
+    }
+    return PipelineDraweeControllerFactory.wrapAnimatedDrawableFactory(animatedDrawableFactory);
   }
 }
