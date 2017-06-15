@@ -29,12 +29,13 @@ import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * Example that overrides the decoder for a given image request.
  *
- * If your decoder needs a custom {@link com.facebook.drawee.backends.pipeline.DrawableFactory}
+ * If your decoder needs a custom {@link DrawableFactory}
  * to render the image, don't forget to add it when you initialize Fresco.
  * For this color example, we add this factory in
  * {@link CustomImageFormatConfigurator#addCustomDrawableFactories(Context, DraweeConfig.Builder)}.

@@ -17,7 +17,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 
-import com.facebook.drawee.backends.pipeline.DrawableFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.drawee.backends.pipeline;
+package com.facebook.imagepipeline.drawable;
 
 import javax.annotation.Nullable;
 

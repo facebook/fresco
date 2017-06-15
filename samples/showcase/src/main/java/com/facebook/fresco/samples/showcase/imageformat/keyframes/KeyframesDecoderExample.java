@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 
 import com.facebook.common.internal.Closeables;
-import com.facebook.drawee.backends.pipeline.DrawableFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;

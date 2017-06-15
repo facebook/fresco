@@ -19,7 +19,7 @@ import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.drawee.backends.pipeline.DrawableFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;

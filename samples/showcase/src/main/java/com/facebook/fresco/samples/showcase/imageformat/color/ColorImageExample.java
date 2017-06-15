@@ -21,7 +21,7 @@ import android.support.annotation.ColorInt;
 import android.support.v4.graphics.ColorUtils;
 
 import com.facebook.common.internal.ByteStreams;
-import com.facebook.drawee.backends.pipeline.DrawableFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;

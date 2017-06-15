@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 
 import java.util.Set;
 

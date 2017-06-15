@@ -23,6 +23,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 
 import javax.annotation.Nullable;

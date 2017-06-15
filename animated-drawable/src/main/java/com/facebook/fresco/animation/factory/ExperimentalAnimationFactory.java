@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import android.graphics.Rect;
 
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.drawee.backends.pipeline.DrawableFactory;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
