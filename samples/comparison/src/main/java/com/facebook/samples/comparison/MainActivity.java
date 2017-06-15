@@ -12,7 +12,13 @@
 
 package com.facebook.samples.comparison;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
@@ -23,6 +29,8 @@ import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,13 +60,11 @@ import com.facebook.samples.comparison.urlsfetcher.ImageSize;
 import com.facebook.samples.comparison.urlsfetcher.ImageUrlsFetcher;
 import com.facebook.samples.comparison.urlsfetcher.ImageUrlsRequestBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 public class MainActivity extends ActionBarActivity {
 
   private static final String TAG = "FrescoSample";
+
+  private static final int PERMISSION_REQUEST_CODE = 42;
 
   // These need to be in sync with {@link R.array.image_loaders}
   public static final int FRESCO_INDEX = 1;
@@ -70,6 +76,7 @@ public class MainActivity extends ActionBarActivity {
   public static final int AQUERY_INDEX = 7;
 
   // These need to be in sync with {@link R.array.image_sources}
+  public static final int NONE_INDEX = 0;
   public static final int NETWORK_INDEX = 1;
   public static final int LOCAL_INDEX = 2;
 
@@ -91,6 +98,8 @@ public class MainActivity extends ActionBarActivity {
   private Spinner mLoaderSelect;
   private Spinner mSourceSelect;
 
+  private boolean mHasStoragePermissions;
+  private boolean mRequestedLocalSource;
   private boolean mUseDrawee;
   private boolean mAllowAnimations;
   private int mCurrentLoaderAdapterIndex;
@@ -164,6 +173,9 @@ public class MainActivity extends ActionBarActivity {
           }
         });
     mSourceSelect.setSelection(mCurrentSourceAdapterIndex);
+    mHasStoragePermissions =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            PackageManager.PERMISSION_GRANTED;
   }
 
   @Override
@@ -231,6 +243,38 @@ public class MainActivity extends ActionBarActivity {
     supportInvalidateOptionsMenu();
     setLoaderAdapter(mCurrentLoaderAdapterIndex);
     setSourceAdapter(mCurrentSourceAdapterIndex);
+  }
+
+  private void requestStoragePermissions() {
+    if (mHasStoragePermissions) {
+      return;
+    }
+
+    ActivityCompat.requestPermissions(
+        this,
+        new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+        PERMISSION_REQUEST_CODE);
+  }
+
+  @Override
+  public void onRequestPermissionsResult(
+      int requestCode,
+      String[] permissions,
+      int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    for (int i = 0; i < permissions.length; ++i) {
+      if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        mHasStoragePermissions = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+        if (mHasStoragePermissions && mRequestedLocalSource) {
+          mRequestedLocalSource = false;
+          setSourceAdapter(LOCAL_INDEX);
+        } else if (!mHasStoragePermissions && mRequestedLocalSource) {
+          // If the user chose to deny the permission, update the source selection to none for
+          // visual consistency.
+          mSourceSelect.setSelection(NONE_INDEX);
+        }
+      }
+    }
   }
 
   private void resetAdapter() {
@@ -308,8 +352,15 @@ public class MainActivity extends ActionBarActivity {
 
   private void loadUrls() {
     if (mUrlsLocal) {
+      if (!mHasStoragePermissions) {
+        mRequestedLocalSource = true;
+        requestStoragePermissions();
+        return;
+      }
+
       loadLocalUrls();
     } else {
+      mRequestedLocalSource = false;
       loadNetworkUrls();
     }
   }
