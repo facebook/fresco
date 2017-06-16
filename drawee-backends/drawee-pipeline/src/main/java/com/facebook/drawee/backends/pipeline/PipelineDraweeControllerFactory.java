@@ -13,7 +13,6 @@ import java.util.concurrent.Executor;
 
 import android.content.res.Resources;
 
-import android.graphics.drawable.Drawable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
@@ -21,7 +20,6 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.components.DeferredReleaser;
-import com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -120,29 +118,5 @@ public class PipelineDraweeControllerFactory {
         globalDrawableFactories);
     controller.setCustomDrawableFactories(customDrawableFactories);
     return controller;
-  }
-
-  @Nullable
-  public static DrawableFactory wrapAnimatedDrawableFactory(
-          final @Nullable AnimatedDrawableFactory animatedDrawableFactory) {
-    if (animatedDrawableFactory == null) {
-      return null;
-    }
-    return new DrawableFactory() {
-      @Override
-      public boolean supportsImageType(CloseableImage image) {
-        // Both current AnimatedDrawableFactory implementations require a CloseableAnimatedImage.
-        // but it lives in animated-base, which we don't have.
-        // Since we do not rely on this method anyway, we can simply ignore it.
-        // return image instanceof CloseableAnimatedImage;
-        return true;
-      }
-
-      @Nullable
-      @Override
-      public Drawable createDrawable(CloseableImage image) {
-        return animatedDrawableFactory.create(image);
-      }
-    };
   }
 }

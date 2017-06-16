@@ -9,6 +9,8 @@
 package com.facebook.imagepipeline.animated.factory;
 
 import java.util.concurrent.ScheduledExecutorService;
+
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import android.graphics.Bitmap;
@@ -16,6 +18,8 @@ import android.graphics.Rect;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.common.executors.DefaultSerialExecutorService;
@@ -36,6 +40,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
@@ -108,8 +113,9 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
     return mAnimatedDrawableBackendProvider;
   }
 
+  @Nullable
   @Override
-  public AnimatedDrawableFactory getAnimatedDrawableFactory(Context context) {
+  public DrawableFactory getAnimatedDrawableFactory(Context context) {
     if (mAnimatedDrawableFactory == null) {
       SerialExecutorService serialExecutorService =
           new DefaultSerialExecutorService(mExecutorSupplier.forDecode());
@@ -124,7 +130,7 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
           RealtimeSinceBootClock.get(),
           context.getResources());
     }
-    return mAnimatedDrawableFactory;
+    return wrapAnimatedDrawableFactory(mAnimatedDrawableFactory);
   }
 
   // We need some of these methods public for now so internal code can use them.
@@ -194,5 +200,29 @@ public class AnimatedFactoryImpl implements AnimatedFactory {
         animatedDrawableUtil,
         scheduledExecutorService,
         resources);
+  }
+
+  @Nullable
+  public static DrawableFactory wrapAnimatedDrawableFactory(
+      final @Nullable AnimatedDrawableFactory animatedDrawableFactory) {
+    if (animatedDrawableFactory == null) {
+      return null;
+    }
+    return new DrawableFactory() {
+      @Override
+      public boolean supportsImageType(CloseableImage image) {
+        // Both current AnimatedDrawableFactory implementations require a CloseableAnimatedImage.
+        // but it lives in animated-base, which we don't have.
+        // Since we do not rely on this method anyway, we can simply ignore it.
+        // return image instanceof CloseableAnimatedImage;
+        return true;
+      }
+
+      @Nullable
+      @Override
+      public Drawable createDrawable(CloseableImage image) {
+        return animatedDrawableFactory.create(image);
+      }
+    };
   }
 }

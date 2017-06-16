@@ -16,11 +16,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 
 @NotThreadSafe
 public interface AnimatedFactory {
 
-  AnimatedDrawableFactory getAnimatedDrawableFactory(Context context);
+  @Nullable DrawableFactory getAnimatedDrawableFactory(Context context);
 
   @Nullable ImageDecoder getGifDecoder(Bitmap.Config config);
 
