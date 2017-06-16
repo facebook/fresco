@@ -15,10 +15,8 @@ import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
-import com.facebook.imagepipeline.drawable.DrawableFactory;
 
 import java.util.Set;
 
@@ -65,7 +63,7 @@ public class PipelineDraweeControllerBuilderSupplier implements
     mPipelineDraweeControllerFactory.init(
         context.getResources(),
         DeferredReleaser.getInstance(),
-        createAnimatedDrawableFactory(context, imagePipelineFactory),
+        imagePipelineFactory.getAnimatedDrawableFactory(context),
         UiThreadImmediateExecutorService.getInstance(),
         mImagePipeline.getBitmapMemoryCache(),
         draweeConfig != null
@@ -84,16 +82,5 @@ public class PipelineDraweeControllerBuilderSupplier implements
         mPipelineDraweeControllerFactory,
         mImagePipeline,
         mBoundControllerListeners);
-  }
-
-  @Nullable
-  private DrawableFactory createAnimatedDrawableFactory(
-      final Context context,
-      final ImagePipelineFactory imagePipelineFactory) {
-    final AnimatedFactory animatedFactory = imagePipelineFactory.getAnimatedFactory();
-    if (animatedFactory == null) {
-      return null;
-    }
-    return animatedFactory.getAnimatedDrawableFactory(context);
   }
 }

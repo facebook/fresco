@@ -13,6 +13,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pools;
 
 import com.facebook.cache.common.CacheKey;
@@ -42,6 +43,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.ArtDecoder;
@@ -124,13 +126,18 @@ public class ImagePipelineFactory {
         config.getExecutorSupplier().forLightweightBackgroundTasks());
   }
 
-  public AnimatedFactory getAnimatedFactory() {
+  private AnimatedFactory getAnimatedFactory() {
     if (mAnimatedFactory == null) {
       mAnimatedFactory = AnimatedFactoryProvider.getAnimatedFactory(
           getPlatformBitmapFactory(),
           mConfig.getExecutorSupplier());
     }
     return mAnimatedFactory;
+  }
+
+  @Nullable
+  public DrawableFactory getAnimatedDrawableFactory(Context context) {
+    return getAnimatedFactory().getAnimatedDrawableFactory(context);
   }
 
   public CountingMemoryCache<CacheKey, CloseableImage>
