@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+
+buildscript {
+    ext.KOTLIN_VERSION = '1.1.2-5'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}"
+    }
+}
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.facebook.fresco.samples.kotlin"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "${VERSION_NAME}"
+
+        testApplicationId "com.facebook.fresco.samples.kotlin.test"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true // needed for tinting
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro', 'proguard-showcase.pro'
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
+        abortOnError false
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'arm64-v8a', 'armeabi-v7a', 'armeabi'
+            universalApk false
+        }
+    }
+}
+
+dependencies {
+    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}"
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+
+    compile project(':drawee-backends:drawee-pipeline')
+    compile project(':drawee-span')
+    compile project(':imagepipeline-backends:imagepipeline-okhttp3')
+    compile project(':tools:stetho')
+    compile project(path: ':imagepipeline-backends:imagepipeline-okhttp3')
+}
