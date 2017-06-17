@@ -126,6 +126,7 @@ public class ImagePipelineFactory {
         config.getExecutorSupplier().forLightweightBackgroundTasks());
   }
 
+  @Nullable
   private AnimatedFactory getAnimatedFactory() {
     if (mAnimatedFactory == null) {
       mAnimatedFactory = AnimatedFactoryProvider.getAnimatedFactory(
@@ -137,7 +138,8 @@ public class ImagePipelineFactory {
 
   @Nullable
   public DrawableFactory getAnimatedDrawableFactory(Context context) {
-    return getAnimatedFactory().getAnimatedDrawableFactory(context);
+    AnimatedFactory animatedFactory = getAnimatedFactory();
+    return animatedFactory == null ? null : animatedFactory.getAnimatedDrawableFactory(context);
   }
 
   public CountingMemoryCache<CacheKey, CloseableImage>
