@@ -18,6 +18,7 @@ import android.graphics.Rect;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
@@ -39,6 +40,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   private final int[] mFrameTimestampsMs;
   private final int mDurationMs;
   private final AnimatedDrawableFrameInfo[] mFrameInfos;
+  private final ResourceReleaser<Bitmap> mResourceReleaserForBitmaps;
 
   @GuardedBy("this")
   private Bitmap mTempBitmap;
@@ -59,6 +61,12 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     for (int i = 0; i < mAnimatedImage.getFrameCount(); i++) {
       mFrameInfos[i] = mAnimatedImage.getFrameInfo(i);
     }
+    mResourceReleaserForBitmaps = new ResourceReleaser<Bitmap>() {
+      @Override
+      public void release(Bitmap value) {
+        releaseBitmapInternal(value);
+      }
+    };
   }
 
   private static Rect getBoundsToUse(AnimatedImage image, Rect targetBounds) {
@@ -154,9 +162,6 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
   @Override
   public synchronized int getMemoryUsage() {
     int bytes = 0;
-    if (mTempBitmap != null) {
-      bytes += mAnimatedDrawableUtil.getSizeOfBitmap(mTempBitmap);
-    }
     bytes += mAnimatedImage.getSizeInBytes();
     return bytes;
   }
@@ -194,16 +199,13 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     int xOffset = (int) (frame.getXOffset() * xScale);
     int yOffset = (int) (frame.getYOffset() * yScale);
 
-    synchronized (this) {
-      if (mTempBitmap == null) {
-        mTempBitmap = Bitmap.createBitmap(
-            mRenderedBounds.width(),
-            mRenderedBounds.height(),
-            Bitmap.Config.ARGB_8888);
-      }
-      mTempBitmap.eraseColor(Color.TRANSPARENT);
-      frame.renderFrame(frameWidth, frameHeight, mTempBitmap);
-      canvas.drawBitmap(mTempBitmap, xOffset, yOffset, null);
+    CloseableReference<Bitmap> bitmapReference = obtainBitmapInternal();
+    try {
+      bitmapReference.get().eraseColor(Color.TRANSPARENT);
+      frame.renderFrame(frameWidth, frameHeight, bitmapReference.get());
+      canvas.drawBitmap(bitmapReference.get(), xOffset, yOffset, null);
+    } finally {
+      bitmapReference.close();
     }
   }
 
@@ -212,23 +214,42 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     int frameHeight = frame.getHeight();
     int xOffset = frame.getXOffset();
     int yOffset = frame.getYOffset();
-    synchronized (this) {
-      if (mTempBitmap == null) {
-        mTempBitmap = Bitmap.createBitmap(
-            mAnimatedImage.getWidth(),
-            mAnimatedImage.getHeight(),
-            Bitmap.Config.ARGB_8888);
-      }
-      mTempBitmap.eraseColor(Color.TRANSPARENT);
-      frame.renderFrame(frameWidth, frameHeight, mTempBitmap);
+    CloseableReference<Bitmap> bitmapReference = obtainBitmapInternal();
+    try {
+      bitmapReference.get().eraseColor(Color.TRANSPARENT);
+      frame.renderFrame(frameWidth, frameHeight, bitmapReference.get());
 
       float xScale = (float) mRenderedBounds.width() / (float) mAnimatedImage.getWidth();
       float yScale = (float) mRenderedBounds.height() / (float) mAnimatedImage.getHeight();
       canvas.save();
       canvas.scale(xScale, yScale);
       canvas.translate(xOffset, yOffset);
-      canvas.drawBitmap(mTempBitmap, 0, 0, null);
+      canvas.drawBitmap(bitmapReference.get(), 0, 0, null);
       canvas.restore();
+    } finally {
+      bitmapReference.close();
+    }
+  }
+
+  private synchronized CloseableReference<Bitmap> obtainBitmapInternal() {
+    Bitmap bitmap;
+    if (mTempBitmap != null) {
+      bitmap = mTempBitmap;
+      mTempBitmap = null;
+    } else {
+      bitmap = Bitmap.createBitmap(
+          mAnimatedImage.getWidth(),
+          mAnimatedImage.getHeight(),
+          Bitmap.Config.ARGB_8888);
+    }
+    return CloseableReference.of(bitmap, mResourceReleaserForBitmaps);
+  }
+
+  private synchronized void releaseBitmapInternal(Bitmap bitmap) {
+    if (mTempBitmap != null) {
+      bitmap.recycle();
+    } else {
+      mTempBitmap = bitmap;
     }
   }
 

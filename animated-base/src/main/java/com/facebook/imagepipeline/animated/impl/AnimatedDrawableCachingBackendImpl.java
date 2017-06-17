@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.ActivityManager;
@@ -326,18 +325,6 @@ public class AnimatedDrawableCachingBackendImpl extends DelegatingAnimatedDrawab
   private CloseableReference<Bitmap> obtainBitmapInternal() {
     Bitmap bitmap;
     synchronized (this) {
-      long nowNanos = System.nanoTime();
-      long waitUntilNanos = nowNanos + TimeUnit.NANOSECONDS.convert(20, TimeUnit.MILLISECONDS);
-      while (mFreeBitmaps.isEmpty() && nowNanos < waitUntilNanos) {
-        try {
-          TimeUnit.NANOSECONDS.timedWait(this, waitUntilNanos - nowNanos);
-          nowNanos = System.nanoTime();
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-          throw new RuntimeException(e);
-        }
-      }
-
       if (mFreeBitmaps.isEmpty()) {
         bitmap = createNewBitmap();
       } else {
