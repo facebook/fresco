@@ -48,10 +48,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 /**
  * Animation factory for {@link AnimatedDrawable2}.
  *
- * This factory is similar to {@link ExperimentalAnimationFactory} but it wraps around the new
- * {@link BitmapAnimationBackend} and does not rely on
- * {@link com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend}
- * to do the caching.
  */
 public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
 
