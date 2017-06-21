@@ -60,5 +60,6 @@ public class AnimatedDrawable2ValueAnimatorHelper {
     };
   }
 
-  private AnimatedDrawable2ValueAnimatorHelper() {}
+  private AnimatedDrawable2ValueAnimatorHelper() {
+  }
 }

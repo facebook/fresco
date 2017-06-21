@@ -23,6 +23,7 @@ public interface BitmapFrameCache {
 
     /**
      * Called when the frame for the given frame number has been put in the frame cache.
+     *
      * @param bitmapFrameCache the frame cache that holds the frame
      * @param frameNumber the cached frame number
      */

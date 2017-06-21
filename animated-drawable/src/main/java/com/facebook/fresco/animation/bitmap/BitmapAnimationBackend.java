@@ -233,7 +233,6 @@ public class BitmapAnimationBackend implements AnimationBackend,
     }
   }
 
-
   @Override
   public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {
     mPaint.setAlpha(alpha);

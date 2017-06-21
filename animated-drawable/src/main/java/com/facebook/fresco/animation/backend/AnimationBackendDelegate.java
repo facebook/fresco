@@ -31,7 +31,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   private T mAnimationBackend;
 
   // Animation backend parameters
-  @IntRange(from=-1,to=255)
+  @IntRange(from = -1, to = 255)
   private int mAlpha = ALPHA_UNSET;
   @Nullable
   private ColorFilter mColorFilter;
@@ -63,7 +63,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
   }
 
   @Override
-  public void setAlpha(@IntRange(from=0,to=255) int alpha) {
+  public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {
     if (mAnimationBackend != null) {
       mAnimationBackend.setAlpha(alpha);
     }

@@ -29,6 +29,7 @@ public class AnimatedDrawableValueAnimatorHelper {
 
   /**
    * Create a value animator for the given animation drawable and max animation duration in ms.
+   *
    * @param drawable the drawable to create the animator for
    * @param maxDurationMs the max duration in ms
    * @return the animator to use
@@ -53,6 +54,7 @@ public class AnimatedDrawableValueAnimatorHelper {
 
   /**
    * Create a value animator for the given animation drawable.
+   *
    * @param drawable the drawable to create the animator for
    * @return the animator to use
    */
@@ -71,8 +73,10 @@ public class AnimatedDrawableValueAnimatorHelper {
     }
     return null;
   }
+
   /**
    * Create an animator update listener to be used to update the drawable to be animated.
+   *
    * @param drawable the drawable to create the animator update listener for
    * @return the listener to use
    */
@@ -94,5 +98,6 @@ public class AnimatedDrawableValueAnimatorHelper {
     return null;
   }
 
-  private AnimatedDrawableValueAnimatorHelper() {}
+  private AnimatedDrawableValueAnimatorHelper() {
+  }
 }
