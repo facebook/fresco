@@ -33,8 +33,7 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     testCompile project(':imagepipeline-test')
-
-    compile project(':drawee-backends:drawee-pipeline')
+    
     compile project(':imagepipeline-base')
     compile project(':imagepipeline')
     compile project(':drawee')
