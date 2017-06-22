@@ -13,14 +13,17 @@ dependencies {
     compile project(':fbcore')
     compile project(':imagepipeline-base')
     compile project(':imagepipeline')
+    compile project(':animated-drawable')
 
     testCompile project(':animated-base-test')
     testCompile project(':imagepipeline-test')
     testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
     testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
+    testCompile "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
     testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
     testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
     testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {

@@ -7,7 +7,7 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-    compile project(':animated-drawable')
+    compile project(':animated-base')
     compile project(':drawee-backends:drawee-pipeline')
 
 }

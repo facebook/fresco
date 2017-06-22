@@ -38,5 +38,4 @@ dependencies {
     compile project(':imagepipeline')
     compile project(':drawee')
     compile project(':fbcore')
-    compile project(':animated-base')
 }
