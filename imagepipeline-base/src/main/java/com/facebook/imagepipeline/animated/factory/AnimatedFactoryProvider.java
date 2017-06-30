@@ -10,8 +10,11 @@ package com.facebook.imagepipeline.animated.factory;
 
 import java.lang.reflect.Constructor;
 
+import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
+import com.facebook.imagepipeline.image.CloseableImage;
 
 public class AnimatedFactoryProvider {
 
@@ -21,8 +24,27 @@ public class AnimatedFactoryProvider {
 
   public static AnimatedFactory getAnimatedFactory(
       PlatformBitmapFactory platformBitmapFactory,
-      ExecutorSupplier executorSupplier) {
+      ExecutorSupplier executorSupplier,
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
     if (!sImplLoaded) {
+      try {
+        final Class<?> clazz =
+            Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl");
+        final Constructor<?> constructor = clazz.getConstructor(
+            PlatformBitmapFactory.class,
+            ExecutorSupplier.class,
+            CountingMemoryCache.class);
+        sImpl = (AnimatedFactory) constructor.newInstance(
+            platformBitmapFactory,
+            executorSupplier,
+            backingCache);
+      } catch (Throwable e) {
+        // Head in the sand
+      }
+      if (sImpl != null) {
+        sImplLoaded = true;
+        return sImpl;
+      }
       try {
         final Class<?> clazz =
             Class.forName("com.facebook.imagepipeline.animated.factory.AnimatedFactoryImplSupport");

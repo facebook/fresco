@@ -131,7 +131,8 @@ public class ImagePipelineFactory {
     if (mAnimatedFactory == null) {
       mAnimatedFactory = AnimatedFactoryProvider.getAnimatedFactory(
           getPlatformBitmapFactory(),
-          mConfig.getExecutorSupplier());
+          mConfig.getExecutorSupplier(),
+          getBitmapCountingMemoryCache());
     }
     return mAnimatedFactory;
   }
