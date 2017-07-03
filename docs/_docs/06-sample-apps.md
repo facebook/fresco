@@ -12,6 +12,11 @@ Fresco's GitHub repository contains several samples to demonstrate how to use Fr
 
 The samples are available in source form only. Follow the [build instructions](building-from-source.html) to set up your dev environment to build and run them.
 
+### The Showcase app
+
+The [Showcase App](https://github.com/facebook/fresco/blob/master/samples/showcase) demonstrates various features and allows to customize parameters to show their effect.
+It includes samples for Drawee and for the image pipeline. Furthermore, it showcases how to use both built-in and custom image formats.
+
 ### The zoomable library
 
 The [zoomable library](https://github.com/facebook/fresco/blob/master/samples/zoomable) features a `ZoomableDraweeView` class that supports gestures such as pinch-to-zoom and panning of a Drawee image.
