@@ -43,39 +43,8 @@ public class AnimatedFactoryProvider {
       }
       if (sImpl != null) {
         sImplLoaded = true;
-        return sImpl;
       }
-      try {
-        final Class<?> clazz =
-            Class.forName("com.facebook.imagepipeline.animated.factory.AnimatedFactoryImplSupport");
-        final Constructor<?> constructor = clazz.getConstructor(
-            PlatformBitmapFactory.class,
-            ExecutorSupplier.class);
-        sImpl = (AnimatedFactory) constructor.newInstance(
-            platformBitmapFactory,
-            executorSupplier);
-      } catch (Throwable e) {
-        // Head in the sand
-      }
-      if (sImpl != null) {
-        sImplLoaded = true;
-        return sImpl;
-      }
-      try {
-        final Class<?> clazz =
-            Class.forName("com.facebook.imagepipeline.animated.factory.AnimatedFactoryImpl");
-        final Constructor<?> constructor = clazz.getConstructor(
-            PlatformBitmapFactory.class,
-            ExecutorSupplier.class);
-        sImpl = (AnimatedFactory) constructor.newInstance(
-            platformBitmapFactory,
-            executorSupplier);
-      } catch (Throwable e) {
-        // Head in the sand
-      }
-      sImplLoaded = true;
     }
     return sImpl;
   }
-
 }
