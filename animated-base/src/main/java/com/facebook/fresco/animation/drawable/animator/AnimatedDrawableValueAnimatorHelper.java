@@ -15,14 +15,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
-import com.facebook.imagepipeline.animated.base.AnimatableDrawable;
 
 /**
  * Helper class to create {@link ValueAnimator}s for animated drawables.
  * Currently, this class only supports API 11 (Honeycomb) and above.
  *
  * Supported drawable types:
- * - {@link AnimatableDrawable}
  * - {@link AnimatedDrawable2}
  */
 public class AnimatedDrawableValueAnimatorHelper {
@@ -38,10 +36,6 @@ public class AnimatedDrawableValueAnimatorHelper {
   public static ValueAnimator createValueAnimator(Drawable drawable, int maxDurationMs) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       return null;
-    }
-
-    if (drawable instanceof AnimatableDrawable) {
-      return ((AnimatableDrawable) drawable).createValueAnimator(maxDurationMs);
     }
 
     if (drawable instanceof AnimatedDrawable2) {
@@ -64,10 +58,6 @@ public class AnimatedDrawableValueAnimatorHelper {
       return null;
     }
 
-    if (drawable instanceof AnimatableDrawable) {
-      return ((AnimatableDrawable) drawable).createValueAnimator();
-    }
-
     if (drawable instanceof AnimatedDrawable2) {
       return AnimatedDrawable2ValueAnimatorHelper.createValueAnimator((AnimatedDrawable2) drawable);
     }
@@ -85,10 +75,6 @@ public class AnimatedDrawableValueAnimatorHelper {
       final Drawable drawable) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       return null;
-    }
-
-    if (drawable instanceof AnimatableDrawable) {
-      return ((AnimatableDrawable) drawable).createAnimatorUpdateListener();
     }
 
     if (drawable instanceof AnimatedDrawable2) {

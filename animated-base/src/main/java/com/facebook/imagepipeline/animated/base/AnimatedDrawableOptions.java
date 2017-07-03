@@ -12,7 +12,7 @@ package com.facebook.imagepipeline.animated.base;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Options for creating {@link AnimatableDrawable}.
+ * Options for creating {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2}.
  */
 @Immutable
 public class AnimatedDrawableOptions {

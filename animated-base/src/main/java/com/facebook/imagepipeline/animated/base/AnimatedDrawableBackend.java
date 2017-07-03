@@ -16,9 +16,9 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import com.facebook.common.references.CloseableReference;
-
 /**
- * Interface that {@link AnimatedDrawable} uses that abstracts out the image format.
+ * Interface that {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2} uses
+ * that abstracts out the image format.
  */
 public interface AnimatedDrawableBackend {
 
