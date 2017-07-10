@@ -6,7 +6,7 @@ android {
 
     dexOptions {
         maxProcessCount 2
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "1g"
     }
 
     defaultConfig {
