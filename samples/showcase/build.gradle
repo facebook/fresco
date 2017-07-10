@@ -4,6 +4,11 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    dexOptions {
+        maxProcessCount 2
+        javaMaxHeapSize "2g"
+    }
+
     defaultConfig {
         applicationId "com.facebook.fresco.samples.showcase"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -20,6 +25,11 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro', 'proguard-showcase.pro'
+        }
+    }
+    productFlavors {
+        instantRunConfig {
+            minSdkVersion 21
         }
     }
 
