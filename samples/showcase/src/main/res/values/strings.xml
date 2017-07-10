@@ -127,6 +127,23 @@
   <string name="preference_debug_show_overlay_summary_enabled">Debug overlay is shown for all Drawees</string>
   <string name="preference_debug_show_overlay_summary_disabled">Debug overlay is not shown</string>
 
+  <string name="preferences_category_uri">URI Modifications</string>
+
+  <string name="preference_uri_override_title">URI Override</string>
+  <string name="preference_uri_override_summary_none">&lt;none set&gt;</string>
+  <string name="preference_uri_override_summary_given">%1$s</string>
+
+  <string name="preference_uri_override_dialog_message">New URI to use in all requests instead of the default sample images</string>
+  <string name="preference_uri_override_dialog_edittext_hint">https://example.org/cute_animal.jpg</string>
+  <string name="preference_uri_override_dialog_edittext_error_bad_uri">Bad URI: %1$s</string>
+  <string name="preference_uri_override_dialog_button_set">Set</string>
+  <string name="preference_uri_override_dialog_button_cancel">Cancel</string>
+  <string name="preference_uri_override_dialog_button_remove">Remove Override</string>
+
+  <string name="preference_uri_cache_breaking_title">Cache Breaking</string>
+  <string name="preference_uri_cache_breaking_summary_enabled">Using unique URI parameters</string>
+  <string name="preference_uri_cache_breaking_summary_disabled">Not modifying URI</string>
+
   <string name="preferences_category_details">Version and Device Details</string>
 
   <string name="preference_details_android_version_title">Android Version</string>

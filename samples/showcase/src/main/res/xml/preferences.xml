@@ -17,6 +17,19 @@
         />
   </PreferenceCategory>
 
+  <PreferenceCategory android:title="@string/preferences_category_uri">
+    <Preference
+        android:key="uri_override"
+        android:title="@string/preference_uri_override_title"
+        />
+    <CheckBoxPreference
+        android:key="uri_cache_breaking"
+        android:title="@string/preference_uri_cache_breaking_title"
+        android:summaryOn="@string/preference_uri_cache_breaking_summary_enabled"
+        android:summaryOff="@string/preference_uri_cache_breaking_summary_disabled"
+        />
+  </PreferenceCategory>
+
   <PreferenceCategory android:title="@string/preferences_category_details">
     <Preference
         android:key="android_version"
