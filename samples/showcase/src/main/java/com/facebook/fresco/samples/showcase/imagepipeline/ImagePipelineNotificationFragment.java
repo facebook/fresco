@@ -31,6 +31,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -43,8 +44,6 @@ import com.facebook.imagepipeline.request.ImageRequest;
 public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
 
   private static final int NOTIFICATION_ID = 1;
-  private static final Uri URI =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_b_s.jpg");
 
   @Nullable
   @Override
@@ -68,7 +67,9 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
 
   private void createNotification() {
     final ImagePipeline imagePipeline = Fresco.getImagePipeline();
-    final ImageRequest imageRequest = ImageRequest.fromUri(URI);
+    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    final ImageRequest imageRequest = ImageRequest.fromUri(
+        imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.S));
 
     final DataSource<CloseableReference<CloseableImage>> dataSource =
         imagePipeline.fetchDecodedImage(imageRequest, null);
