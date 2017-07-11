@@ -174,6 +174,8 @@ public class WrappingUtils {
    * its rounding parameters are updated.
    * <li>If rounding mode is not BITMAP_ONLY and the child is rounded,
    * its rounding parameters are reset so that no rounding occurs.
+   * <li>If rounding mode is OUTLINE no rounding happens here at the leaf drawable level.
+   * Instead rounding is done at the view level.
    * </ul>
    */
   static void updateLeafRounding(
