@@ -27,6 +27,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.Orientation;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
@@ -35,10 +38,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
  */
 public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
 
-  private static final String[] URLS = {
-      "http://frescolib.org/static/sample-images/animal_a.png",
-      "http://frescolib.org/static/sample-images/animal_c.png",
-  };
+  private Uri[] mUris;
 
   private Button mPrefetchButton;
   private TextView mPrefetchStatus;
@@ -67,11 +67,11 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
     }
 
     private void updateDisplay() {
-      if (mSuccessful + mFailed == URLS.length) {
+      if (mSuccessful + mFailed == mUris.length) {
         mPrefetchButton.setEnabled(true);
       }
       mPrefetchStatus.setText(
-          getString(R.string.prefetch_status, mSuccessful, URLS.length, mFailed));
+          getString(R.string.prefetch_status, mSuccessful, mUris.length, mFailed));
     }
   }
 
@@ -91,12 +91,18 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    mUris = new Uri[] {
+        imageUriProvider.createSampleUri(ImageSize.L, Orientation.LANDSCAPE),
+        imageUriProvider.createSampleUri(ImageSize.L, Orientation.PORTRAIT),
+    };
+
     final Button clearCacheButton = (Button) view.findViewById(R.id.clear_cache);
     clearCacheButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        for (String url : URLS) {
-          Fresco.getImagePipeline().evictFromCache(Uri.parse(url));
+        for (Uri uri : mUris) {
+          Fresco.getImagePipeline().evictFromCache(uri);
         }
       }
     });
@@ -108,9 +114,9 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
       public void onClick(View v) {
         mPrefetchButton.setEnabled(false);
         final PrefetchSubscriber subscriber = new PrefetchSubscriber();
-        for (String url : URLS) {
+        for (Uri uri : mUris) {
           final DataSource<Void> ds =
-              Fresco.getImagePipeline().prefetchToDiskCache(ImageRequest.fromUri(url), null);
+              Fresco.getImagePipeline().prefetchToDiskCache(ImageRequest.fromUri(uri), null);
           ds.subscribe(subscriber, UiThreadImmediateExecutorService.getInstance());
         }
       }
@@ -124,7 +130,7 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
       public void onClick(View v) {
         if (!mShowing) {
           for (int i = 0; i < mDraweesHolder.getChildCount(); i++) {
-            ((SimpleDraweeView) mDraweesHolder.getChildAt(i)).setImageURI(URLS[i]);
+            ((SimpleDraweeView) mDraweesHolder.getChildAt(i)).setImageURI(mUris[i]);
           }
         } else {
           for (int i = 0; i < mDraweesHolder.getChildCount(); i++) {
