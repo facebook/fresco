@@ -16,7 +16,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +33,16 @@ import com.facebook.drawee.span.SimpleDraweeSpanTextView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
 /**
  * Simple fragment that displays text with inline images using {@link DraweeSpan}.
  */
 public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
 
-  private static final Uri INLINE_IMAGE_URI =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_a_m.jpg");
-
   private SimpleDraweeSpanTextView mDraweeSpanTextView;
   private ScalingUtils.ScaleType mScaleType;
+  private Uri mInlineImageUri;
 
   @Nullable
   @Override
@@ -55,6 +53,9 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    mInlineImageUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
+
     mDraweeSpanTextView = (SimpleDraweeSpanTextView) view.findViewById(R.id.drawee_text_view);
     final Spinner scaleType = (Spinner) view.findViewById(R.id.scaleType);
 
@@ -89,7 +90,7 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
         .setActualImageScaleType(mScaleType)
         .build();
     DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setUri(INLINE_IMAGE_URI)
+        .setUri(mInlineImageUri)
         .build();
 
     draweeSpanStringBuilder.setImageSpan(
