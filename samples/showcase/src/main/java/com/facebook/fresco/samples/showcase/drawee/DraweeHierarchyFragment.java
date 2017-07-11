@@ -29,15 +29,12 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
 /**
  * A {@link Fragment} that illustrates the different drawables one can set in a hierarchy.
  */
 public class DraweeHierarchyFragment extends BaseShowcaseFragment {
-  private static final Uri URI_SUCCESS =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_a.png");
-  private static final Uri URI_FAIL =
-      Uri.parse("http://frescolib.org/static/sample-images/pancakes.png");
 
   public DraweeHierarchyFragment() {
     // Required empty public constructor
@@ -53,6 +50,12 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    final Uri uriSuccess = imageUriProvider.createSampleUri(
+        ImageUriProvider.ImageSize.XL,
+        ImageUriProvider.UriModification.CACHE_BREAKER);
+    final Uri uriFailure = imageUriProvider.createNonExistingUri();
+
     final SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.drawee);
 
     //noinspection deprecation
@@ -71,14 +74,14 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
     view.findViewById(R.id.load_success).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        draweeView.setImageURI(URI_SUCCESS);
+        draweeView.setImageURI(uriSuccess);
       }
     });
 
     view.findViewById(R.id.load_fail).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        draweeView.setImageURI(URI_FAIL);
+        draweeView.setImageURI(uriFailure);
       }
     });
 
@@ -86,7 +89,7 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
       @Override
       public void onClick(View v) {
         draweeView.setController(null);
-        Fresco.getImagePipeline().evictFromCache(URI_SUCCESS);
+        Fresco.getImagePipeline().evictFromCache(uriSuccess);
       }
     });
   }
