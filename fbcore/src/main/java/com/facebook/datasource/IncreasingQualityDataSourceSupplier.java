@@ -92,10 +92,16 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     @GuardedBy("IncreasingQualityDataSource.this")
     private int mIndexOfDataSourceWithResult;
 
+    private Throwable mDelayedError;
+
+    private int mCountDown;
+
     public IncreasingQualityDataSource() {
       final int n = mDataSourceSuppliers.size();
       mIndexOfDataSourceWithResult = n;
       mDataSources = new ArrayList<>(n);
+      mCountDown = n;
+
       for (int i = 0; i < n; i++) {
         DataSource<T> dataSource = mDataSourceSuppliers.get(i).get();
         mDataSources.add(dataSource);
@@ -163,12 +169,24 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       if (dataSource == getDataSourceWithResult()) {
         setResult(null, (index == 0) && dataSource.isFinished());
       }
+
+      onDataSourceReport(index, null);
     }
 
     private void onDataSourceFailed(int index, DataSource<T> dataSource) {
       closeSafely(tryGetAndClearDataSource(index, dataSource));
-      if (index == 0) {
-        setFailure(dataSource.getFailureCause());
+
+      onDataSourceReport(index, dataSource.getFailureCause());
+    }
+
+    private void onDataSourceReport(int index, Throwable cause) {
+      if (cause != null && index == 0) {
+        mDelayedError = cause;
+      }
+
+      mCountDown--;
+      if (mCountDown == 0 && mDelayedError != null) {
+        setFailure(mDelayedError);
       }
     }
 
