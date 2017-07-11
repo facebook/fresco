@@ -27,16 +27,12 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
 /**
  * Simple drawee fragment that illustrates different scale types
  */
 public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
-
-  private static final Uri URI_1 =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_a_m.jpg");
-  private static final Uri URI_2 =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_d_m.jpg");
 
   private SimpleDraweeView mDraweeTop1;
   private SimpleDraweeView mDraweeTop2;
@@ -51,28 +47,36 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_drawee_scale_type, container, false);
 
+    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    final Uri uri1 = imageUriProvider.createSampleUri(
+        ImageUriProvider.ImageSize.M,
+        ImageUriProvider.Orientation.LANDSCAPE);
+    final Uri uri2 = imageUriProvider.createSampleUri(
+        ImageUriProvider.ImageSize.M,
+        ImageUriProvider.Orientation.PORTRAIT);
+
     mDraweeTop1 = (SimpleDraweeView) view.findViewById(R.id.drawee_view_top_1);
     mDraweeTop2 = (SimpleDraweeView) view.findViewById(R.id.drawee_view_top_2);
     mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     mSpinner = (Spinner) view.findViewById(R.id.spinner);
 
-    mDraweeTop1.setImageURI(URI_1);
+    mDraweeTop1.setImageURI(uri1);
     mDraweeTop1.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        changeMainDraweeUri(URI_1);
+        changeMainDraweeUri(uri1);
       }
     });
 
-    mDraweeTop2.setImageURI(URI_2);
+    mDraweeTop2.setImageURI(uri2);
     mDraweeTop2.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        changeMainDraweeUri(URI_2);
+        changeMainDraweeUri(uri2);
       }
     });
 
-    changeMainDraweeUri(URI_1);
+    changeMainDraweeUri(uri1);
 
     final SimpleScaleTypeAdapter adapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
     mSpinner.setAdapter(adapter);
