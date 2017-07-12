@@ -71,7 +71,7 @@ public class IncreasingQualityDataSourceSupplierTest extends AbstractDataSourceS
     DataSource<Object> dataSource = getAndSubscribe();
     DataSubscriber<Object> subscriber1 = verifyGetAndSubscribeM(mDataSourceSupplier1, mSrc1);
     DataSubscriber<Object> subscriber2 = verifyGetAndSubscribeM(mDataSourceSupplier2, mSrc2);
-    DataSubscriber<Object> subscriber3 = verifyGetAndSubscribe(mDataSourceSupplier3, mSrc3);
+    DataSubscriber<Object> subscriber3 = verifyGetAndSubscribeM(mDataSourceSupplier3, mSrc3);
 
     setState(mSrc2, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, mock(Throwable.class));
     subscriber2.onFailure(mSrc2);
@@ -79,21 +79,24 @@ public class IncreasingQualityDataSourceSupplierTest extends AbstractDataSourceS
     verifySubscriber(dataSource, mSrc2, NO_INTERACTIONS);
     verifyState(dataSource, null, NOT_CLOSED, NOT_FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
 
+    // src1 is closed and failure cause stored, but dataSource is not failed
     Throwable throwable = mock(Throwable.class);
     setState(mSrc1, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
     subscriber1.onFailure(mSrc1);
     mInOrder.verify(mSrc1).close();
-    verifySubscriber(dataSource, mSrc1, ON_FAILURE);
-    verifyState(dataSource, null, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+    mInOrder.verify(mSrc1).getFailureCause();
+    verifySubscriber(dataSource, mSrc1, NO_INTERACTIONS);
+    verifyState(dataSource, null, NOT_CLOSED, NOT_FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
 
-    // gets ignored because DS1 failed
-    setState(mSrc3, NOT_CLOSED, FINISHED, WITH_RESULT, mock(Object.class), NOT_FAILED, null);
-    subscriber3.onFailure(mSrc3);
-    mInOrder.verify(mSrc3).close();
-    verifySubscriber(dataSource, mSrc3, NO_INTERACTIONS);
-    verifyState(dataSource, null, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+    // src3's result is used but datasource is marked failed with the original cause from src1
+    final Object result = mock(Object.class);
+    setState(mSrc3, NOT_CLOSED, FINISHED, WITH_RESULT, result, NOT_FAILED, null);
+    subscriber3.onNewResult(mSrc3);
+    mInOrder.verify(mDataSubscriber).onNewResult(dataSource);
+    mInOrder.verify(mDataSubscriber).onFailure(dataSource);
+    verifyState(dataSource, mSrc3, NOT_CLOSED, FINISHED, WITH_RESULT, result, FAILED, throwable);
 
-    testClose(dataSource);
+    testClose(dataSource, mSrc3);
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
   }
 

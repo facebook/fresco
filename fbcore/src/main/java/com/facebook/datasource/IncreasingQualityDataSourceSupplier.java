@@ -15,6 +15,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Objects;
@@ -91,9 +92,14 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     private @Nullable ArrayList<DataSource<T>> mDataSources;
     @GuardedBy("IncreasingQualityDataSource.this")
     private int mIndexOfDataSourceWithResult;
+    private final int mNumberOfDataSources;
+    private final AtomicInteger mFinishedDataSources;
+    private @Nullable Throwable mDelayedError;
 
     public IncreasingQualityDataSource() {
+      mFinishedDataSources = new AtomicInteger(0);
       final int n = mDataSourceSuppliers.size();
+      mNumberOfDataSources = n;
       mIndexOfDataSourceWithResult = n;
       mDataSources = new ArrayList<>(n);
       for (int i = 0; i < n; i++) {
@@ -163,12 +169,21 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       if (dataSource == getDataSourceWithResult()) {
         setResult(null, (index == 0) && dataSource.isFinished());
       }
+      maybeSetFailure();
     }
 
     private void onDataSourceFailed(int index, DataSource<T> dataSource) {
       closeSafely(tryGetAndClearDataSource(index, dataSource));
       if (index == 0) {
-        setFailure(dataSource.getFailureCause());
+        mDelayedError = dataSource.getFailureCause();
+      }
+      maybeSetFailure();
+    }
+
+    private void maybeSetFailure() {
+      int finished = mFinishedDataSources.incrementAndGet();
+      if (finished == mNumberOfDataSources && mDelayedError != null) {
+        setFailure(mDelayedError);
       }
     }
 
