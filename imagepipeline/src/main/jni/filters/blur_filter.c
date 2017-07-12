@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <android/bitmap.h>
