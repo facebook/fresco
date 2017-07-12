@@ -1,5 +1,0 @@
-<resources>
-  <string name="app_name">Fresco Uri App</string>
-  <string name="uri_edit_text_hint">Type uri here!</string>
-  <string name="clear_uri">Clear</string>
-</resources>
