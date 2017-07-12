@@ -170,6 +170,9 @@
   <string name="button_toggle_images">Toggle images</string>
   <string name="prefetch_status">%1$d/%2$d prefetched, %3$d failed.</string>
 
+  <string name="snackbar_uri_override_reminder_text">URI override is active</string>
+  <string name="snackbar_uri_override_reminder_change_button">Change</string>
+
   <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
   <string translatable="false" name="message_restart_now">Kill Now</string>
 
