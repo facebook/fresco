@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">TransitionDemo</string>
-    <string name="start_transition">Start Transition</string>
-    <string name="transition_name">image_transition</string>
-</resources>
