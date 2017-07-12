@@ -42,6 +42,10 @@
             android:id="@+id/nav_drawee_recycler"
             android:title="@string/drawee_recycler_title"
             />
+        <item
+            android:id="@+id/nav_drawee_transition"
+            android:title="@string/drawee_transition_title"
+            />
       </group>
     </menu>
   </item>

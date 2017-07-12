@@ -6,6 +6,9 @@
     <!-- Preference Theme -->
     <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
   </style>
+  <style name="AppTheme.ImageDetails">
+    <item name="android:windowBackground">@android:color/black</item>
+  </style>
   <style name="AppTheme.NoActionBar">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>

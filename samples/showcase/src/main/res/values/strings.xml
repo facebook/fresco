@@ -39,6 +39,11 @@
 
   <string name="drawee_recycler_title">Recycler View</string>
 
+  <string name="drawee_transition_title">Drawee Transition</string>
+  <string name="drawee_transition_help">Tap the image to start the activity transition.</string>
+  <string name="drawee_transition_details_title">Image Detail Activity</string>
+  <string name="drawee_transition_details_help">This is the second activity. Press back to reverse the transition.</string>
+
   <string name="category_pipeline">Image Pipeline</string>
 
   <string name="imagepipeline_notification_title">Notifications</string>
@@ -187,4 +192,6 @@
   <string name="drawee_hierarchy_load_success">Load (success)</string>
   <string name="drawee_hierarchy_load_fail">Load (fail)</string>
   <string name="drawee_hierarchy_clear">Clear</string>
+
+  <string name="transition_name">image_transition</string>
 </resources>

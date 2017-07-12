@@ -38,6 +38,7 @@ import com.facebook.fresco.samples.showcase.drawee.DraweeRoundedCornersFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeScaleTypeFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSimpleFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeSpanSimpleTextFragment;
+import com.facebook.fresco.samples.showcase.drawee.transition.DraweeTransitionFragment;
 import com.facebook.fresco.samples.showcase.imageformat.color.ImageFormatColorFragment;
 import com.facebook.fresco.samples.showcase.imageformat.gif.ImageFormatGifFragment;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.ImageFormatKeyframesFragment;
@@ -165,6 +166,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_drawee_recycler:
         fragment = new DraweeRecyclerViewFragment();
+        break;
+      case R.id.nav_drawee_transition:
+        fragment = new DraweeTransitionFragment();
         break;
 
       // Imagepipline

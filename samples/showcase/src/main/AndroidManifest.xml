@@ -11,7 +11,7 @@
 
   <!-- Keyframes requires API level 15 and without this the build will fail,
        version checking is performed in runtime instead.-->
-  <uses-sdk tools:overrideLibrary="com.facebook.keyframes"/>
+  <uses-sdk tools:overrideLibrary="com.facebook.keyframes" />
 
   <application
       android:name=".ShowcaseApplication"
@@ -26,10 +26,22 @@
         android:theme="@style/AppTheme.NoActionBar"
         >
       <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER"/>
+        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".drawee.transition.ImageDetailsActivity"
+        android:label="@string/drawee_transition_details_title"
+        android:parentActivityName=".MainActivity"
+        android:theme="@style/AppTheme.ImageDetails"
+        >
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value=".MainActivity"
+          />
     </activity>
   </application>
 </manifest>
