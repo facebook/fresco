@@ -12,7 +12,7 @@ dependencies:
     - if [ ! -d "/usr/local/android-sdk-linux/build-tools/26.0.0" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-26.0.0"; fi
     - if [ ! -d "/usr/local/android_sdk/extras/android/m2repository/com/android/support/support-core-utils/25.1.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
     # setup NDK r15b
-    - if [ ! -d "/home/ubuntu/android-ndk-r15b" ] then wget https://dl.google.com/android/repository/android-ndk-r15b-linux-x86_64.zip; unzip android-ndk-r15b-linux-x86_64.zip; fi;
+    - if [ ! -d "/home/ubuntu/android-ndk-r15b" ]; then wget https://dl.google.com/android/repository/android-ndk-r15b-linux-x86_64.zip; unzip android-ndk-r15b-linux-x86_64.zip; fi
     - echo "ndk.dir=/home/ubuntu/android-ndk-r15b" >> "/home/ubuntu/fresco/local.properties"
 
 test:
