@@ -118,6 +118,9 @@
   <string name="format_override_title">Decoder Override</string>
   <string name="format_override_help">This example overrides the decoder to be used for the given image. You can use this approach if you do not want to set a global custom decoder. The image will be decoded correctly even if global color decoding is disabled.</string>
 
+  <string name="format_datauri_title">Data URI</string>
+  <string name="format_datauri_help">Images can also be provided by data URIs such as the one below:</string>
+
   <!-- Preferences -->
 
   <string name="preferences_category_cache">Cache</string>

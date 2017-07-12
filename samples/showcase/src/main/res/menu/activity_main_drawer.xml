@@ -108,6 +108,10 @@
             android:id="@+id/nav_format_override"
             android:title="@string/format_override_title"
             />
+        <item
+            android:id="@+id/nav_format_datauri"
+            android:title="@string/format_datauri_title"
+            />
       </group>
     </menu>
   </item>
