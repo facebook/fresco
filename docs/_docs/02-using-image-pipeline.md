@@ -4,7 +4,7 @@ title: Using the Image Pipeline Directly
 layout: docs
 permalink: /docs/using-image-pipeline.html
 prev: caching.html
-next: datasources-datasubscribers.html
+next: prefetching.html
 ---
 
 This page is intended for advanced usage only. Most apps should be using [Drawees](using-drawees-xml.html) to interact with Fresco's image pipeline.
@@ -66,42 +66,8 @@ try {
 
 Do **not** skip these `finally` blocks!
 
-#### Prefetching
-
-Prefetching images in advance of showing them can sometimes lead to shorter wait times for users. Remember, however, that there are trade-offs. Prefetching takes up your users' data, and uses up its share of CPU and memory. As a rule, prefetching is not recommended for most apps.
-
-Nonetheless, the image pipeline allows you to prefetch to either disk or bitmap cache. Both will use more data for network URIs, but the disk cache will not do a decode and will therefore use less CPU.
-
-__Note:__ Beware that if your network fetcher doesn't support priorities prefetch requests may slow down images which are immediately required on screen. Neither `OkHttpNetworkFetcher` nor `HttpUrlConnectionNetworkFetcher` currently support priorities.
-
-Prefetch to disk:
-
-```java
-imagePipeline.prefetchToDiskCache(imageRequest, callerContext);
-```
-
-Prefetch to bitmap cache:
-
-```java
-imagePipeline.prefetchToBitmapCache(imageRequest, callerContext);
-```
-
-Cancelling prefetch:
-
-```java
-// keep the reference to the returned data source.
-DataSource<Void> prefetchDataSource = imagePipeline.prefetchTo...;
-
-// later on, if/when you need to cancel the prefetch:
-prefetchDataSource.close();
-```
-
-Closing a prefetch data source after the prefetch has already completed is a no-op and completely safe to do.
-
 #### The caller Context
 
 As we can see, most of the `ImagePipeline` fetch methods contains a second parameter named `callerContext` of type `Object`. We can see it as an implementation of the [Context Object Design Pattern](https://www.dre.vanderbilt.edu/~schmidt/PDF/Context-Object-Pattern.pdf). It's basically an object we bind to a specific `ImageRequest` that can be used for different purposes (e.g. Log). The same object can also be accessed by all the `Producer` implementations into the `ImagePipeline`.
 
 The caller Context can also be `null`.
-
-

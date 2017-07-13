@@ -25,6 +25,7 @@
   - id: image-requests
   - id: configure-image-pipeline
   - id: caching
+  - id: prefetching
   - id: using-image-pipeline
   - id: datasources-datasubscribers
   - id: closeable-references
