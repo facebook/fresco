@@ -15,6 +15,7 @@
   - id: proguard
 - title: Advanced Features
   items:
+  - id: media-variations
   - id: requesting-multiple-images
   - id: listening-download-events
   - id: shared-transitions
