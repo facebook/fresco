@@ -1,50 +1,49 @@
-- title: Quick Start
+- title: Getting Started
   items:
   - id: index
   - id: getting-started
   - id: concepts
-  - id: supported-uris
-- title: Drawee Guide
+- title: Basic Use Cases
   items:
   - id: using-drawees-xml
   - id: using-drawees-code
-  - id: drawee-branches
   - id: progress-bars
+  - id: resizing-rotating
+  - id: supported-uris
   - id: scaling
   - id: rounded-corners-and-circles
-  - id: using-controllerbuilder
-  - id: progressive-jpegs
-  - id: animations
+  - id: proguard
+- title: Advanced Features
+  items:
   - id: requesting-multiple-images
   - id: listening-download-events
-  - id: resizing-rotating
+  - id: shared-transitions
+  - id: drawee-branches
+  - id: writing-custom-views
   - id: modifying-image
   - id: image-requests
-  - id: writing-custom-views
-- title: Image Pipeline Guide
-  items:
-  - id: intro-image-pipeline
   - id: configure-image-pipeline
   - id: caching
   - id: using-image-pipeline
   - id: datasources-datasubscribers
   - id: closeable-references
+- title: Image formats
+  items:
+  - id: progressive-jpegs
+  - id: animations
   - id: webp-support
-- title: Solving Problems
+- title: Trouble shooting & FAQ
   items:
   - id: troubleshooting
   - id: gotchas
   - id: wrap-content
-  - id: shared-transitions
-- title: Third Party Libraries
-  items:
-  - id: using-other-network-layers
-  - id: using-other-image-loaders
-- title: Shipping your App
-  items:
-  - id: proguard
-  - id: multiple-apks
-- title: Contributors' Guide
+- title: Contributors Guide
   items:
   - id: building-from-source
   - id: sample-code
+  - id: intro-image-pipeline
+- title: To be removed
+  items:
+  - id: multiple-apks
+  - id: using-controllerbuilder
+  - id: using-other-network-layers
