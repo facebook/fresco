@@ -20,7 +20,6 @@
   - id: requesting-multiple-images
   - id: listening-download-events
   - id: shared-transitions
-  - id: drawee-branches
   - id: writing-custom-views
   - id: post-processor
   - id: image-requests
@@ -47,3 +46,4 @@
   - id: building-from-source
   - id: sample-code
   - id: intro-image-pipeline
+  - id: drawee-branches
