@@ -37,7 +37,7 @@
   - id: progressive-jpegs
   - id: animations
   - id: webp-support
-- title: Trouble shooting & FAQ
+- title: Troubleshooting & FAQ
   items:
   - id: troubleshooting
   - id: gotchas
