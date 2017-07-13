@@ -144,6 +144,7 @@
   <string name="preference_uri_override_dialog_message">New URI to use in all requests instead of the default sample images</string>
   <string name="preference_uri_override_dialog_edittext_hint">https://example.org/cute_animal.jpg</string>
   <string name="preference_uri_override_dialog_edittext_error_bad_uri">Bad URI: %1$s</string>
+  <string name="preference_uri_override_dialog_history">Last used: %1$s</string>
   <string name="preference_uri_override_dialog_button_set">Set</string>
   <string name="preference_uri_override_dialog_button_cancel">Cancel</string>
   <string name="preference_uri_override_dialog_button_remove">Remove Override</string>

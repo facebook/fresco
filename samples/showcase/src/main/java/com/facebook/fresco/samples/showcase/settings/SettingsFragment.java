@@ -23,7 +23,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -46,6 +50,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public static final String KEY_DETAILS_ANDROID_VERSION = "android_version";
   public static final String KEY_DETAILS_CPU_ARCHITECTURE = "cpu_architecture";
   public static final String KEY_DETAILS_DEVICE_NAME = "device_name";
+
+  public static final String KEY_URI_OVERRIDE_HISTORY = "uri_override_previous";
 
   private UriOverrideDialog mSetUriOverrideDialog;
 
@@ -167,21 +173,42 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     private ImageUriProvider mImageUriProvider;
     private EditText mEditText;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       mImageUriProvider = ImageUriProvider.getInstance(getContext());
-      mEditText = new EditText(getContext());
+      mSharedPreferences  = PreferenceManager.getDefaultSharedPreferences(getContext());
 
+      final View view = getActivity().getLayoutInflater().inflate(
+          R.layout.dialog_fragment_uri_override,
+          null);
+
+      // setup edit text
+      mEditText = view.findViewById(R.id.dialog_uri_override_edittext);
       final String previousUri = mImageUriProvider.getUriOverride();
-      if (previousUri != null && !previousUri.isEmpty()) {
+      if (!TextUtils.isEmpty(previousUri)) {
         mEditText.setText(mImageUriProvider.getUriOverride());
       }
-      mEditText.setHint(R.string.preference_uri_override_dialog_edittext_hint);
+
+      // setup history text view
+      final TextView historyTextView = view.findViewById(R.id.dialog_uri_override_history_textview);
+      final String historyUri = mSharedPreferences.getString(KEY_URI_OVERRIDE_HISTORY, null);
+      if (!TextUtils.isEmpty(historyUri)) {
+        historyTextView.setText(
+            getString(R.string.preference_uri_override_dialog_history, historyUri));
+        historyTextView.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            mEditText.setText(historyUri);
+          }
+        });
+        historyTextView.setVisibility(View.VISIBLE);
+      }
 
       final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setMessage(R.string.preference_uri_override_dialog_message)
-          .setView(mEditText)
+          .setView(view)
           .setPositiveButton(R.string.preference_uri_override_dialog_button_set, this)
           .setNeutralButton(R.string.preference_uri_override_dialog_button_cancel, null)
           .setNegativeButton(R.string.preference_uri_override_dialog_button_remove, this);
@@ -190,10 +217,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+      final String oldUri = mImageUriProvider.getUriOverride();
+      final String newUri = mEditText.getText().toString();
       switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
           try {
-            mImageUriProvider.setUriOverride(mEditText.getText().toString());
+            if (oldUri != null) {
+              mSharedPreferences.edit()
+                  .putString(KEY_URI_OVERRIDE_HISTORY, oldUri)
+                  .apply();
+            }
+            mImageUriProvider.setUriOverride(newUri);
           } catch (IllegalArgumentException e) {
             Toast.makeText(
                 getContext(),
@@ -204,7 +238,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
           }
           break;
         case DialogInterface.BUTTON_NEGATIVE:
+          if (oldUri != null) {
+            mSharedPreferences.edit()
+                .putString(KEY_URI_OVERRIDE_HISTORY, oldUri)
+                .apply();
+          }
           mImageUriProvider.setUriOverride(null);
+
           break;
       }
     }
