@@ -7,9 +7,9 @@
   items:
   - id: using-simpledraweeview
   - id: progress-bars
+  - id: scaletypes
   - id: resizing-rotating
   - id: supported-uris
-  - id: scaling
   - id: rounded-corners-and-circles
   - id: proguard
 - title: Advanced Features

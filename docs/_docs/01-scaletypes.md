@@ -1,13 +1,13 @@
 ---
-docid: scaling
-title: Scaling
+docid: scaletypes
+title: ScaleTypes
 layout: docs
-permalink: /docs/scaling.html
+permalink: /docs/scaletypes.html
 prev: progress-bars.html
 next: rounded-corners-and-circles.html
 ---
 
-You can specify a different scale type for each of the [different drawables](drawee-components.html) in your Drawee. The
+You can specify a different scale type for each of the [different drawables](drawee-components.html) in your Drawee.
 
 ### Available scale types
 
@@ -25,11 +25,11 @@ You can specify a different scale type for each of the [different drawables](dra
 
 These are mostly the same as those supported by the Android [ImageView](http://developer.android.com/reference/android/widget/ImageView.ScaleType.html) class.
 
-The one unsupported type is `matrix.` In its place, Fresco offers `focusCrop,` which will usually work better.
+The one unsupported type is `matrix`. In its place, Fresco offers `focusCrop,` which will usually work better.
 
 ### How to set
 
-Actual, placeholder, retry, and failure images can all be [set in XML](using-drawees-xml.html), using attributes like `fresco:actualImageScaleType`. You can also set them [in code](using-drawees-code.html) using the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class.
+Actual, placeholder, retry, and failure images can all be set in XML, using attributes like `fresco:actualImageScaleType`. You can also set them in code using the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class.
 
 Even after your hierarchy is built, the actual image scale type can be modified on the fly using  [GenericDraweeHierarchy](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchy.html).
 
@@ -92,12 +92,12 @@ Congratulations! You just implemented the `FIT_CENTER` scale type:
       final float scaleX = (float) parentRect.width() / (float) childWidth;
       final float scaleY = (float) parentRect.height() / (float) childHeight;
       float scale = Math.min(scaleX, scaleY);
-      
+
       // calculate translation; we offset by parent bounds, and by half of the empty space
       // note that the child dimensions need to be adjusted by the scale factor
       float dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
       float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
-      
+
       // finally, set and return the transform
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
@@ -110,4 +110,3 @@ Congratulations! You just implemented the `FIT_CENTER` scale type:
 ### none
 
 If you are using Drawables that make use of Android's tile mode, you need to use the `none` scale type for this to work correctly.
-
