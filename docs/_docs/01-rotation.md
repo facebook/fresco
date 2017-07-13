@@ -30,3 +30,9 @@ mSimpleDraweeView.setController(
         .setImageRequest(imageRequest)
         .build());
 ```
+
+### Full Sample
+
+For a full sample see the `DraweeRotationFragment` in the showcase app: [DraweeRotationFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRotationFragment.java)
+
+![Showcase app with a rotation sample](/static/images/docs/01-rotation-sample.png)
