@@ -15,6 +15,7 @@
   - id: proguard
 - title: Advanced Features
   items:
+  - id: using-controllerbuilder
   - id: media-variations
   - id: requesting-multiple-images
   - id: listening-download-events
@@ -30,6 +31,7 @@
   - id: using-image-pipeline
   - id: datasources-datasubscribers
   - id: closeable-references
+  - id: using-other-network-layers
 - title: Image formats
   items:
   - id: progressive-jpegs
@@ -45,8 +47,3 @@
   - id: building-from-source
   - id: sample-code
   - id: intro-image-pipeline
-- title: To be removed
-  items:
-  - id: multiple-apks
-  - id: using-controllerbuilder
-  - id: using-other-network-layers
