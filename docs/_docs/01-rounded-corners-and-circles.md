@@ -29,13 +29,14 @@ The `SimpleDraweeView` class will forward several attributes over to `RoundingPa
 
 ```xml
 <com.facebook.drawee.view.SimpleDraweeView
-   ...
-   fresco:roundedCornerRadius="5dp"
-   fresco:roundBottomLeft="false"
-   fresco:roundBottomRight="false"
-   fresco:roundWithOverlayColor="@color/blue"
-   fresco:roundingBorderWidth="1dp"
-   fresco:roundingBorderColor="@color/red"
+  ...
+  fresco:roundedCornerRadius="5dp"
+  fresco:roundBottomLeft="false"
+  fresco:roundBottomRight="false"
+  fresco:roundWithOverlayColor="@color/blue"
+  fresco:roundingBorderWidth="1dp"
+  fresco:roundingBorderColor="@color/red"
+>
 ```
 
 ### In code
@@ -76,3 +77,9 @@ Drawee internally has an implementation for `CLIPPING` mode, but this mode has b
 Finally, all of those issues could be avoided by using a temporary bitmap, but this imposes a significant memory overhead and has not been supported because of that.
 
 As explained above, there is no really good solution for rounding corners on Android and one has to choose between the aforementioned trade-offs.
+
+### Full Sample
+
+For a full sample see the `DraweeRoundedCornersFragment` in the showcase app: [DraweeRoundedCornersFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRoundedCornersFragment.java)
+
+![Showcase app with a scale type example](/static/images/docs/01-rounded-corners-and-circles-sample.png)
