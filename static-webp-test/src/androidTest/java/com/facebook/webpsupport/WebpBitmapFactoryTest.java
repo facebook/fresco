@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Override;
 
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
@@ -24,7 +23,6 @@ import android.graphics.Rect;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
 import android.os.Build;
 
 import com.facebook.common.internal.ByteStreams;
@@ -32,18 +30,18 @@ import com.facebook.common.internal.Throwables;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.*;
+
 @RunWith(AndroidJUnit4.class)
-public class WebpBitmapFactoryTest extends InstrumentationTestCase {
+public class WebpBitmapFactoryTest {
   private Instrumentation mInstrumentation;
 
   private WebpBitmapFactoryImpl mWebpBitmapFactory;
 
-  @Override
   @Before
   public void setUp() {
     mInstrumentation = InstrumentationRegistry.getInstrumentation();
@@ -120,12 +118,6 @@ public class WebpBitmapFactoryTest extends InstrumentationTestCase {
     assertEquals("Height should be decoded properly", 20, bitmap.getHeight());
 
     assertEquals("Bitmap pixels should be red", 0xFFFF0100, bitmap.getPixel(5, 8));
-
-    // Alternatively, load image manually adb pull /mnt/sdcard/resulthooked.jpg
-    bitmap.compress(
-        Bitmap.CompressFormat.JPEG,
-        90,
-        new FileOutputStream(Environment.getExternalStorageDirectory() + "/resulthooked.jpg"));
   }
 
   @Test

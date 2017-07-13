@@ -18,7 +18,18 @@ dependencies:
 test:
   override:
     - ./gradlew test assembleDebug -PdisablePreDex
+
+    # android instrument test
+    - emulator -avd circleci-android22 -no-window:
+        background: true
+        parallel: true
+    - circle-android wait-for-boot
+    - ./gradlew :static-webp-test:connectedAndroidTest
+
   post:
     # copy test report for Circle CI to display
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - find . -type f -regex ".*/build/test-results/debug/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+    - mkdir -p $CIRCLE_TEST_REPORTS/androidTests
+    - cp -r static-webp-test/build/reports/androidTests/connected/* $CIRCLE_TEST_REPORTS/androidTests
+
