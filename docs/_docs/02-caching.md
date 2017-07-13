@@ -7,15 +7,15 @@ prev: configure-image-pipeline.html
 next: using-image-pipeline.html
 ---
 
-###  The three caches
+Fresco stores images in three different types of caches, organized hierarchically, with the cost of retrieving an image increasing the deeper you go.  
 
 #### 1. Bitmap cache
 
-The bitmap cache stores Android `Bitmap` objects. These are fully decoded images ready for display or [postprocessing](modifying-image.html).
+The bitmap cache stores decoded images as Android `Bitmap` objects. These are ready for display or [postprocessing](modifying-image.html).
 
 On Android 4.x and lower, the bitmap cache's data lives in the *ashmem* heap, not in the Java heap. This means that images don't force extra runs of the garbage collector, slowing down your app.
 
-Android 5.0 has much improved memory management than earlier versions, so it is safer to leave the bitmap cache on the Java heap.
+Android 5.0 and newer has much improved memory management than earlier versions, so it is safer to leave the bitmap cache on the Java heap.
 
 Your app should [clear this cache](#clearing-the-cache) when it is backgrounded.
 
