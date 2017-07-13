@@ -8,7 +8,8 @@
   - id: progress-bars
   - id: scaletypes
   - id: placeholder-failure-retry
-  - id: resizing-rotating
+  - id: rotation
+  - id: resizing
   - id: supported-uris
   - id: rounded-corners-and-circles
   - id: proguard
