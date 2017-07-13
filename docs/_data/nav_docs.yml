@@ -5,13 +5,13 @@
 - title: Basic Features
   items:
   - id: using-simpledraweeview
+  - id: rounded-corners-and-circles
   - id: progress-bars
   - id: scaletypes
   - id: placeholder-failure-retry
   - id: rotation
   - id: resizing
   - id: supported-uris
-  - id: rounded-corners-and-circles
   - id: proguard
 - title: Advanced Features
   items:
