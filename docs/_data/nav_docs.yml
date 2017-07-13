@@ -1,6 +1,7 @@
 - title: Getting Started
   items:
   - id: index
+  - id: proguard
   - id: concepts
 - title: Basic Features
   items:
@@ -12,7 +13,6 @@
   - id: rotation
   - id: resizing
   - id: supported-uris
-  - id: proguard
 - title: Advanced Features
   items:
   - id: using-controllerbuilder
