@@ -176,7 +176,6 @@ public class BufferedDiskCache {
               if (result != null) {
                 FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
                 mImageCacheStatsTracker.onStagingAreaHit(key);
-                result.setEncodedCacheKey(key);
               } else {
                 FLog.v(TAG, "Did not find image for %s in staging area", key.getUriString());
                 mImageCacheStatsTracker.onStagingAreaMiss();
@@ -186,7 +185,6 @@ public class BufferedDiskCache {
                   CloseableReference<PooledByteBuffer> ref = CloseableReference.of(buffer);
                   try {
                     result = new EncodedImage(ref);
-                    result.setEncodedCacheKey(key);
                   } finally {
                     CloseableReference.closeSafely(ref);
                   }
@@ -231,7 +229,6 @@ public class BufferedDiskCache {
 
     // Store encodedImage in staging area
     mStagingArea.put(key, encodedImage);
-    encodedImage.setEncodedCacheKey(key);
 
     // Write to disk cache. This will be executed on background thread, so increment the ref count.
     // When this write completes (with success/failure), then we will bump down the ref count

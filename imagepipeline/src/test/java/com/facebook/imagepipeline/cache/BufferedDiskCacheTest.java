@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import bolts.Task;
-
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.MultiCacheKey;
@@ -32,6 +30,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 
+import bolts.Task;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -152,7 +151,6 @@ public class BufferedDiskCacheTest {
         2,
         result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(mPooledByteBuffer, result.getByteBufferRef().get());
-    assertEquals(mCacheKey, result.getEncodedCacheKey());
   }
 
   @Test
@@ -193,7 +191,6 @@ public class BufferedDiskCacheTest {
     // Ref count should be equal to 2 ('owned' by the mCloseableReference and other 'owned' by
     // mEncodedImage)
     assertEquals(2, mCloseableReference.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertEquals(mCacheKey, mEncodedImage.getEncodedCacheKey());
   }
 
   @Test
@@ -250,7 +247,6 @@ public class BufferedDiskCacheTest {
     assertEquals(
         3,
         result.getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
-    assertEquals(mCacheKey, result.getEncodedCacheKey());
   }
 
   @Test

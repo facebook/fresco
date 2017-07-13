@@ -11,9 +11,7 @@ package com.facebook.imagepipeline.image;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.Override;
 
-import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -24,12 +22,16 @@ import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
 
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link EncodedImage}
@@ -78,7 +80,6 @@ public class EncodedImageTest {
     encodedImage.setWidth(1);
     encodedImage.setHeight(2);
     encodedImage.setSampleSize(4);
-    encodedImage.setEncodedCacheKey(new SimpleCacheKey("key"));
     encodedImage.setBytesRange(BytesRange.toMax(1000));
     EncodedImage encodedImage2 = EncodedImage.cloneOrNull(encodedImage);
     assertEquals(3, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
@@ -90,7 +91,6 @@ public class EncodedImageTest {
     assertEquals(encodedImage.getHeight(), encodedImage2.getHeight());
     assertEquals(encodedImage.getWidth(), encodedImage2.getWidth());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
-    assertEquals(encodedImage.getEncodedCacheKey(), encodedImage2.getEncodedCacheKey());
     assertEquals(encodedImage.getBytesRange(), encodedImage2.getBytesRange());
 
     encodedImage = new EncodedImage(mInputStreamSupplier, 100);

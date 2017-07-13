@@ -55,7 +55,6 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     try {
       if (cachedReference != null) {
         EncodedImage cachedEncodedImage = new EncodedImage(cachedReference);
-        cachedEncodedImage.setEncodedCacheKey(cacheKey);
         try {
           listener.onProducerFinishWithSuccess(
               requestId,
