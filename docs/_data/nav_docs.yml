@@ -22,7 +22,7 @@
   - id: shared-transitions
   - id: drawee-branches
   - id: writing-custom-views
-  - id: modifying-image
+  - id: post-processor
   - id: image-requests
   - id: images-in-notifications
   - id: configure-image-pipeline
