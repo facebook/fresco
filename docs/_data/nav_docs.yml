@@ -2,7 +2,7 @@
   items:
   - id: index
   - id: concepts
-- title: Basic Use Cases
+- title: Basic Features
   items:
   - id: using-simpledraweeview
   - id: progress-bars
