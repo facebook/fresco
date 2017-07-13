@@ -3,8 +3,6 @@ docid: listening-download-events
 title: Listening to Download Events
 layout: docs
 permalink: /docs/listening-download-events.html
-prev: requesting-multiple-images.html
-next: resizing-rotating.html
 ---
 
 #### Motivation

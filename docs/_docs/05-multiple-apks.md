@@ -3,8 +3,6 @@ docid: multiple-apks
 title: Shipping Multiple APKs
 layout: docs
 permalink: /docs/multiple-apks.html
-prev: proguard.html
-next: building-from-source.html
 ---
 
 Fresco is written mostly in Java, but there is some C++ as well. C++ code has to be compiled for each of the CPU types (called "ABIs") Android can run on. Currently, Fresco supports five ABIs.

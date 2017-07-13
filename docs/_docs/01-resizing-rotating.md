@@ -3,8 +3,6 @@ docid: resizing-rotating
 title: Resizing and Rotating
 layout: docs
 permalink: /docs/resizing-rotating.html
-prev: listening-download-events.html
-next: modifying-image.html
 ---
 
 These features require you to [construct an image request](using-controllerbuilder.html#ImageRequest) directly.

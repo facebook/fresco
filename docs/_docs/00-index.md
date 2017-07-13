@@ -3,7 +3,6 @@ docid: index
 title: Adding Fresco to your Project
 layout: docs
 permalink: /docs/index.html
-next: getting-started.html
 ---
 
 Here's how to add Fresco to your Android project.

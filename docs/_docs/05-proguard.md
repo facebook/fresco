@@ -3,8 +3,6 @@ docid: proguard
 title: Using ProGuard with Fresco
 layout: docs
 permalink: /docs/proguard.html
-prev: using-other-image-loaders.html
-next: multiple-apks.html
 ---
 
 Fresco's large download may seem intimidating, but it need not leave you with a large application. We strongly recommend use of the ProGuard tool.

@@ -3,8 +3,6 @@ docid: building-from-source
 title: Building from Source
 layout: docs
 permalink: /docs/building-from-source.html
-prev: multiple-apks.html
-next: sample-code.html
 ---
 
 You should only build from source if you need to modify Fresco code itself. Most applications should simply [include](index.html#_) Fresco in their project.

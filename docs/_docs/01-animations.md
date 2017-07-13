@@ -3,8 +3,6 @@ docid: animations
 title: Animated Images
 layout: docs
 permalink: /docs/animations.html
-prev: progressive-jpegs.html
-next: requesting-multiple-images.html
 ---
 
 Fresco supports animated GIF and WebP images.

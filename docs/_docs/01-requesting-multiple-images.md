@@ -3,8 +3,6 @@ docid: requesting-multiple-images
 title: Requesting Multiple Images (Multi-URI)
 layout: docs
 permalink: /docs/requesting-multiple-images.html
-prev: animations.html
-next: listening-download-events.html
 ---
 
 The methods on this page require [setting your own image request](using-controllerbuilder.html).

@@ -3,8 +3,6 @@ docid: modifying-image
 title: Modifying the Image (Postprocessing)
 layout: docs
 permalink: /docs/modifying-image.html
-prev: resizing-rotating.html
-next: image-requests.html
 ---
 
 #### Motivation

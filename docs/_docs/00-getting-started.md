@@ -3,8 +3,6 @@ docid: getting-started
 title: Getting started with Fresco
 layout: docs
 permalink: /docs/getting-started.html
-prev: index.html
-next: concepts.html
 ---
 
 If you just want to download an image and display it, showing a placeholder until it comes, use a [SimpleDraweeView](../javadoc/reference/com/facebook/drawee/view/SimpleDraweeView.html).

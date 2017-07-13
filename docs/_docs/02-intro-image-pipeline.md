@@ -3,8 +3,6 @@ docid: intro-image-pipeline
 title: Introduction to the Image Pipeline
 layout: docs
 permalink: /docs/intro-image-pipeline.html
-prev: intrinsic-dimensions.html
-next: configure-image-pipeline.html
 ---
 
 The image pipeline does everything necessary to get an image into a form where it can be rendered into an Android device.

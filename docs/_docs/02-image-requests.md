@@ -3,8 +3,6 @@ docid: image-requests
 title: Image Requests
 layout: docs
 permalink: /docs/image-requests.html
-prev: modifying-image.html
-next: writing-custom-views.html
 ---
 
 If you need an `ImageRequest` that consists only of a URI, you can use the helper method `ImageRequest.fromURI`. Loading [multiple-images](requesting-multiple-images.html) is a common case of this.

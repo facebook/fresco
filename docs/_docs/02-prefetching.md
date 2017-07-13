@@ -3,8 +3,6 @@ docid: prefetching
 title: Prefetching Images
 layout: docs
 permalink: /docs/prefetching.html
-prev: using-image-pipeline.html
-next: datasources-datasubscribers.html
 ---
 
 Prefetching images in advance of showing them can sometimes lead to shorter wait times for users. Remember, however, that there are trade-offs. Prefetching takes up your users' data, and uses up its share of CPU and memory. As a rule, prefetching is not recommended for most apps.

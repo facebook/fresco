@@ -3,8 +3,6 @@ docid: using-controllerbuilder
 title: Using the ControllerBuilder
 layout: docs
 permalink: /docs/using-controllerbuilder.html
-prev: rounded-corners-and-circles.html
-next: progressive-jpegs.html
 ---
 
 `SimpleDraweeView` has two methods for specifying an image. The easy way is to just call `setImageURI.`

@@ -3,8 +3,6 @@ docid: closeable-references
 title: Closeable References
 layout: docs
 permalink: /docs/closeable-references.html
-prev: datasources-datasubscribers.html
-next: webp-support.html
 ---
 
 **This page is intended for advanced usage only.**

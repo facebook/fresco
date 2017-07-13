@@ -3,8 +3,6 @@ docid: webp-support
 title: Webp images
 layout: docs
 permalink: /docs/webp-support.html
-prev: closeable-references.html
-next: troubleshooting.html
 ---
 
 Android added webp support in version 4.0 and improved it in 4.2.1:

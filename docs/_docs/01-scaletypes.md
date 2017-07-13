@@ -3,8 +3,6 @@ docid: scaletypes
 title: ScaleTypes
 layout: docs
 permalink: /docs/scaletypes.html
-prev: progress-bars.html
-next: rounded-corners-and-circles.html
 ---
 
 You can specify a different scale type for each of the [different drawables](drawee-components.html) in your Drawee.

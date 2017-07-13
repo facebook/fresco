@@ -3,8 +3,6 @@ docid: using-other-network-layers
 title: Using Other Network Layers
 layout: docs
 permalink: /docs/using-other-network-layers.html
-prev: shared-transitions.html
-next: using-other-image-loaders.html
 ---
 
 By default, the image pipeline uses the [HttpURLConnection](https://developer.android.com/training/basics/network-ops/connecting.html) networking library bundled with Android. Apps may have their own network layer they may wish to use instead.

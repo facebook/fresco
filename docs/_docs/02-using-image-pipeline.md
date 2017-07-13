@@ -3,8 +3,6 @@ docid: using-image-pipeline
 title: Using the Image Pipeline Directly
 layout: docs
 permalink: /docs/using-image-pipeline.html
-prev: caching.html
-next: prefetching.html
 ---
 
 This page is intended for advanced usage only. Most apps should be using [Drawees](using-drawees-xml.html) to interact with Fresco's image pipeline.

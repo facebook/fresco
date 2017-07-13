@@ -3,8 +3,6 @@ docid: caching
 title: Caching
 layout: docs
 permalink: /docs/caching.html
-prev: configure-image-pipeline.html
-next: using-image-pipeline.html
 ---
 
 Fresco stores images in three different types of caches, organized hierarchically, with the cost of retrieving an image increasing the deeper you go.  

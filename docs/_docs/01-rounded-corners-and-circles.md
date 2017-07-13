@@ -3,8 +3,6 @@ docid: rounded-corners-and-circles
 title: Rounded Corners and Circles
 layout: docs
 permalink: /docs/rounded-corners-and-circles.html
-prev: scaling.html
-next: using-controllerbuilder.html
 ---
 
 Not every image is a rectangle. Apps frequently need images that appear with softer, rounded corners, or as circles. Drawee supports a variety of scenarios, all without the memory overhead of copying bitmaps.

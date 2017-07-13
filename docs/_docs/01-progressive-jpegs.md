@@ -3,8 +3,6 @@ docid: progressive-jpegs
 title: Progressive JPEGs
 layout: docs
 permalink: /docs/progressive-jpegs.html
-prev: using-controllerbuilder.html
-next: animations.html
 ---
 
 Fresco supports the streaming of progressive JPEG images over the network.

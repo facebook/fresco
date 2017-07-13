@@ -3,8 +3,6 @@ docid: datasources-datasubscribers
 title: DataSources and DataSubscribers
 layout: docs
 permalink: /docs/datasources-datasubscribers.html
-prev: using-image-pipeline.html
-next: closeable-references.html
 ---
 
 A [DataSource](../javadoc/reference/com/facebook/datasource/DataSource.html) is, like a Java [Future](http://developer.android.com/reference/java/util/concurrent/Future.html), the result of an asynchronous computation. The different is that, unlike a Future, a DataSource can return you a whole series of results from a single command, not just one.

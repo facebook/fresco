@@ -3,8 +3,6 @@ docid: concepts
 title: Concepts
 layout: docs
 permalink: /docs/concepts.html
-prev: index.html
-next: supported-uris.html
 ---
 
 ## Drawees

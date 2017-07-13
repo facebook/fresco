@@ -3,8 +3,6 @@ docid: wrap-content
 title: Wrap_content
 layout: docs
 permalink: /docs/wrap-content.html
-prev: gotchas.html
-next: shared-transitions.html
 ---
 
 ### Why `wrap_content` is not supported

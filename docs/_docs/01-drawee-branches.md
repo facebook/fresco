@@ -3,8 +3,6 @@ docid: drawee-branches
 title: Drawee Branches
 layout: docs
 permalink: /docs/drawee-branches.html
-prev: using-drawees-code.html
-next: progress-bars.html
 ---
 
 ## Contents

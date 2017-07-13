@@ -3,8 +3,6 @@ docid: supported-uris
 title: Supported URIs
 layout: docs
 permalink: /docs/supported-uris.html
-prev: concepts.html
-next: using-drawees-xml.html
 ---
 
 Fresco supports images in a variety of locations.
