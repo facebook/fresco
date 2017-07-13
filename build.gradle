@@ -32,9 +32,10 @@ project.ext {
 subprojects {
 
     repositories {
-        mavenLocal()
         jcenter()
-        mavenCentral()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 
     task allclean {
