@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public static final String KEY_DETAILS_DEVICE_NAME = "device_name";
 
   private UriOverrideDialog mSetUriOverrideDialog;
-  private ShowRestartMessageDialog mShowRestartMessageDialog;
 
   private ImageUriProvider mImageUriProvider;
 
@@ -96,16 +95,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
       mSetUriOverrideDialog = new UriOverrideDialog();
     }
     mSetUriOverrideDialog.show(getFragmentManager(), "uri_override");
-  }
-
-  /**
-   * @return The reference to the Dialog for asking restart
-   */
-  private ShowRestartMessageDialog getShowRestartMessageDialog() {
-    if (mShowRestartMessageDialog == null) {
-      mShowRestartMessageDialog = new ShowRestartMessageDialog();
-    }
-    return mShowRestartMessageDialog;
   }
 
   private void populateUriOverride() {
@@ -218,26 +207,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
           mImageUriProvider.setUriOverride(null);
           break;
       }
-    }
-  }
-
-  /**
-   * Dialog to show when we ask to restart the application after a change
-   */
-  public static class ShowRestartMessageDialog extends DialogFragment {
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-      builder.setMessage(R.string.message_application_needs_restart)
-          .setPositiveButton(android.R.string.ok, null)
-          .setNeutralButton(R.string.message_restart_now, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              System.exit(0);
-            }
-          });
-      return builder.create();
     }
   }
 }
