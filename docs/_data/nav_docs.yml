@@ -13,7 +13,7 @@
   - id: rotation
   - id: resizing
   - id: supported-uris
-- title: Advanced Features
+- title: Advanced Topics
   items:
   - id: using-controllerbuilder
   - id: media-variations
