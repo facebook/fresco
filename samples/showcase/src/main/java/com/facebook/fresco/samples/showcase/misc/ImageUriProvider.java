@@ -118,6 +118,15 @@ public class ImageUriProvider {
   private static final String NON_EXISTING_URI =
       "http://frescolib.org/static/sample-images/does_not_exist.jpg";
 
+  private static final String SAMPLE_URI_WEBP_STATIC =
+      "http://www.gstatic.com/webp/gallery/2.webp";
+
+  private static final String SAMPLE_URI_WEBP_TRANSLUCENT =
+      "https://www.gstatic.com/webp/gallery3/5_webp_ll.webp";
+
+  private static final String SAMPLE_URI_WEBP_ANIMATED =
+      "https://www.gstatic.com/webp/animated/1.webp";
+
   private static ImageUriProvider sInstance;
 
   private final SharedPreferences mSharedPreferences;
@@ -170,6 +179,18 @@ public class ImageUriProvider {
 
     final String fullUri = String.format((Locale) null, baseUri, imageSize.sizeSuffix);
     return applyOverrideSettings(fullUri, urlModification);
+  }
+
+  public Uri createWebpStaticUri() {
+    return applyOverrideSettings(SAMPLE_URI_WEBP_STATIC, UriModification.NONE);
+  }
+
+  public Uri createWebpTranslucentUri() {
+    return applyOverrideSettings(SAMPLE_URI_WEBP_TRANSLUCENT, UriModification.NONE);
+  }
+
+  public Uri createWebpAnimatedUri() {
+    return applyOverrideSettings(SAMPLE_URI_WEBP_ANIMATED, UriModification.NONE);
   }
 
   public void setUriOverride(String uri) {

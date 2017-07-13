@@ -60,6 +60,8 @@ dependencies {
 
     compile project(':animated-base')
     compile project(':animated-gif')
+    compile project(':animated-webp')
+    compile project(':static-webp')
 
     compile project(':drawee-backends:drawee-pipeline')
     compile project(':drawee-span')
