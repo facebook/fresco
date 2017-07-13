@@ -514,28 +514,6 @@ public class GenericDraweeHierarchyBuilder {
   }
 
   /**
-   * Sets the transformation matrix, and removes the scale type, for the actual image.
-   *
-   * @param actualImageMatrix matrix for the actual image
-   * @return modified instance of this builder
-   *
-   * @deprecated implement and set a custom {@link ScaleType} instead.
-   */
-  @Deprecated
-  public GenericDraweeHierarchyBuilder setActualImageMatrix(@Nullable Matrix actualImageMatrix) {
-    mActualImageMatrix = actualImageMatrix;
-    mActualImageScaleType = null;
-    return this;
-  }
-
-  /**
-   * Gets the matrix for the actual image.
-   */
-  public @Nullable Matrix getActualImageMatrix() {
-    return mActualImageMatrix;
-  }
-
-  /**
    * Sets the focus point for the actual image.
    *
    * If a focus point aware scale type is used (e.g. FOCUS_CROP), the focus point of the image

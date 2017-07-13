@@ -56,7 +56,6 @@ public class GenericDraweeHierarchyTest {
   private BitmapDrawable mActualImage2;
   private ColorDrawable mWrappedLeaf;
   private ForwardingDrawable mWrappedImage;
-  private Matrix mActualImageMatrix;
   private PointF mFocusPoint;
 
   @Before
@@ -74,7 +73,6 @@ public class GenericDraweeHierarchyTest {
     mActualImage2 = DrawableTestUtils.mockBitmapDrawable();
     mWrappedLeaf = new ColorDrawable(Color.BLUE);
     mWrappedImage = new ForwardingDrawable(new ForwardingDrawable(mWrappedLeaf));
-    mActualImageMatrix = mock(Matrix.class);
     mFocusPoint = new PointF(0.1f, 0.4f);
   }
 
@@ -98,31 +96,6 @@ public class GenericDraweeHierarchyTest {
     assertScaleTypeAndDrawable(mRetryImage, ScaleType.FIT_CENTER, fadeDrawable.getDrawable(4));
     assertScaleTypeAndDrawable(mFailureImage, ScaleType.CENTER_INSIDE, fadeDrawable.getDrawable(5));
     assertNull(fadeDrawable.getDrawable(6));
-    verifyCallback(rootDrawable, mPlaceholderImage);
-  }
-
-  @Test
-  public void testHierarchy_WithMatrix() throws Exception {
-    GenericDraweeHierarchy dh = mBuilder
-        .setPlaceholderImage(mPlaceholderImage, null)
-        .setRetryImage(mRetryImage, null)
-        .setFailureImage(mFailureImage, null)
-        .setProgressBarImage(mProgressBarImage, null)
-        .setActualImageMatrix(mActualImageMatrix)
-        .build();
-    RootDrawable rootDrawable = (RootDrawable) dh.getTopLevelDrawable();
-    FadeDrawable fadeDrawable = (FadeDrawable) rootDrawable.getCurrent();
-    assertEquals(7, fadeDrawable.getNumberOfLayers());
-    assertNull(fadeDrawable.getDrawable(0));
-    assertSame(mPlaceholderImage, fadeDrawable.getDrawable(1));
-    assertSame(mProgressBarImage, fadeDrawable.getDrawable(3));
-    assertSame(mRetryImage, fadeDrawable.getDrawable(4));
-    assertSame(mFailureImage, fadeDrawable.getDrawable(5));
-    assertNull(fadeDrawable.getDrawable(6));
-    MatrixDrawable matrixDrawable = (MatrixDrawable) fadeDrawable.getDrawable(2);
-    assertNotNull(matrixDrawable);
-    assertEquals(mActualImageMatrix, matrixDrawable.getMatrix());
-    assertSame(ForwardingDrawable.class, matrixDrawable.getCurrent().getClass());
     verifyCallback(rootDrawable, mPlaceholderImage);
   }
 

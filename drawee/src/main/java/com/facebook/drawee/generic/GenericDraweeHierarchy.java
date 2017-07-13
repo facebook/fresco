@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
@@ -124,7 +123,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         mActualImageWrapper,
         builder.getActualImageScaleType(),
         builder.getActualImageFocusPoint(),
-        builder.getActualImageMatrix(),
         builder.getActualImageColorFilter());
     layers[PROGRESS_BAR_IMAGE_INDEX] = buildBranch(
         builder.getProgressBarImage(),
@@ -169,11 +167,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
       Drawable drawable,
       @Nullable ScaleType scaleType,
       @Nullable PointF focusPoint,
-      @Nullable Matrix matrix,
       @Nullable ColorFilter colorFilter) {
     drawable.setColorFilter(colorFilter);
     drawable = WrappingUtils.maybeWrapWithScaleType(drawable, scaleType, focusPoint);
-    drawable = WrappingUtils.maybeWrapWithMatrix(drawable, matrix);
     return drawable;
   }
 

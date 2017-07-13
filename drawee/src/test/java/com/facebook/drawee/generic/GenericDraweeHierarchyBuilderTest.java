@@ -11,24 +11,23 @@ package com.facebook.drawee.generic;
 
 import java.util.Arrays;
 
-import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
-import com.facebook.drawee.drawable.ArrayDrawable;
-import com.facebook.drawee.drawable.ScalingUtils;
-import org.robolectric.RobolectricTestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import org.robolectric.RobolectricTestRunner;
 
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyBuilderTest {
@@ -46,7 +45,6 @@ public class GenericDraweeHierarchyBuilderTest {
   private final BitmapDrawable mProgressBarDrawable1 = mock(BitmapDrawable.class);
   private final BitmapDrawable mProgressBarDrawable2 = mock(BitmapDrawable.class);
   private final BitmapDrawable mPressedStateDrawable = mock(BitmapDrawable.class);
-  private final Matrix mActualImageMatrix = mock(Matrix.class);
   private final PointF mFocusPoint = mock(PointF.class);
   private final RoundingParams mRoundingParams = mock(RoundingParams.class);
 
@@ -62,7 +60,6 @@ public class GenericDraweeHierarchyBuilderTest {
     assertEquals(null, builder.getProgressBarImage());
     assertEquals(ScaleType.CENTER_INSIDE, builder.getProgressBarImageScaleType());
     assertEquals(ScaleType.CENTER_CROP, builder.getActualImageScaleType());
-    assertEquals(null, builder.getActualImageMatrix());
     assertEquals(null, builder.getActualImageFocusPoint());
     assertEquals(null, builder.getBackground());
     assertEquals(null, builder.getOverlays());
@@ -126,11 +123,6 @@ public class GenericDraweeHierarchyBuilderTest {
     assertEquals(mProgressBarDrawable1, builder.getProgressBarImage());
     assertEquals(ScaleType.CENTER_CROP, builder.getProgressBarImageScaleType());
 
-    // test actual image matrix
-    builder.setActualImageMatrix(mActualImageMatrix);
-    assertSame(mActualImageMatrix, builder.getActualImageMatrix());
-    assertSame(null, builder.getActualImageScaleType());
-
     // test actual image scale type
     builder.setActualImageScaleType(ScaleType.FIT_START);
     assertEquals(ScaleType.FIT_START, builder.getActualImageScaleType());
@@ -140,7 +132,6 @@ public class GenericDraweeHierarchyBuilderTest {
     AndroidGraphicsTestUtils.assertEquals(mFocusPoint, builder.getActualImageFocusPoint(), 0f);
     builder.setActualImageScaleType(ScaleType.FOCUS_CROP);
     assertSame(ScaleType.FOCUS_CROP, builder.getActualImageScaleType());
-    assertSame(null, builder.getActualImageMatrix());
 
     // test backgrounds & overlays
     builder.setOverlays(Arrays.asList(mOverlayDrawable1, mOverlayDrawable2));
