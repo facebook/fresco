@@ -21,6 +21,7 @@
   - id: writing-custom-views
   - id: modifying-image
   - id: image-requests
+  - id: images-in-notifications
   - id: configure-image-pipeline
   - id: caching
   - id: prefetching
