@@ -5,8 +5,7 @@
   - id: concepts
 - title: Basic Use Cases
   items:
-  - id: using-drawees-xml
-  - id: using-drawees-code
+  - id: using-simpledraweeview
   - id: progress-bars
   - id: resizing-rotating
   - id: supported-uris
