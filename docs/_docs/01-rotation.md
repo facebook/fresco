@@ -31,8 +31,12 @@ mSimpleDraweeView.setController(
         .build());
 ```
 
-### Full Sample
+### Combining rotations
 
-For a full sample see the `DraweeRotationFragment` in the showcase app: [DraweeRotationFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRotationFragment.java)
+If you're loading a JPEG file that has rotation information in its EXIF data, calling `forceRotation` will **add** to the default rotation of the image. For example, if the EXIF header specifies 90 degrees, and you call `forceRotation(ROTATE_90)`, the raw image will be rotated 180 degrees.
+
+### Examples
+
+The Fresco showcase app has a [DraweeRotationFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRotationFragment.java) that demonstrates the various rotation settings. You can use it for example with the sample images [from here](https://github.com/recurser/exif-orientation-examples).
 
 ![Showcase app with a rotation sample](/static/images/docs/01-rotation-sample.png)
