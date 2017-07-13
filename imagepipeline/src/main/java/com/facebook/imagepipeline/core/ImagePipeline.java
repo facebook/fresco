@@ -101,24 +101,6 @@ public class ImagePipeline {
   }
 
   /**
-   * @deprecated Use {@link #getDataSourceSupplier(ImageRequest, Object, ImageRequest.RequestLevel)}
-   * instead.
-   */
-  @Deprecated
-  public Supplier<DataSource<CloseableReference<CloseableImage>>> getDataSourceSupplier(
-      final ImageRequest imageRequest,
-      final Object callerContext,
-      final boolean bitmapCacheOnly) {
-    ImageRequest.RequestLevel requestLevel = bitmapCacheOnly ?
-        ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE :
-        ImageRequest.RequestLevel.FULL_FETCH;
-    return getDataSourceSupplier(
-        imageRequest,
-        callerContext,
-        requestLevel);
-  }
-
-  /**
    * Returns a DataSource supplier that will on get submit the request for execution and return a
    * DataSource representing the pending results of the task.
    *

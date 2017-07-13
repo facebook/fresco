@@ -341,7 +341,10 @@ public class ImagePipelineTest {
   @Test
   public void testGetBitmapCacheGetSupplier() {
     Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier =
-        mImagePipeline.getDataSourceSupplier(mImageRequest, mCallerContext, true);
+        mImagePipeline.getDataSourceSupplier(
+            mImageRequest,
+            mCallerContext,
+            ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
     Producer<CloseableReference<CloseableImage>> bitmapCacheSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
         .thenReturn(bitmapCacheSequence);
@@ -358,8 +361,8 @@ public class ImagePipelineTest {
 
   @Test
   public void testGetFullFetchSupplier() {
-    Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier =
-        mImagePipeline.getDataSourceSupplier(mImageRequest, mCallerContext, false);
+    Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier = mImagePipeline
+        .getDataSourceSupplier(mImageRequest, mCallerContext, ImageRequest.RequestLevel.FULL_FETCH);
     Producer<CloseableReference<CloseableImage>> decodedSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
         .thenReturn(decodedSequence);
