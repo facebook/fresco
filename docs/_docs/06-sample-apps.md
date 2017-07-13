@@ -33,10 +33,6 @@ You can build, install, and run a controlled test of any combination of loaders 
 
 ```./run_comparison.py -c armeabi-v7a```
 
-### The demo app
-
-The demo app shows the wide variety of images Fresco supports - baseline and progressive JPEG, both simple, extended, and animated WebP, PNG, and animated GIF. We also show an image from a data URI.
-
 ### The round app
 
 The round app shows the same image scaled in several different ways, with and without a circle applied.
