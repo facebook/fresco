@@ -21,7 +21,6 @@
   - id: image-requests
   - id: images-in-notifications
   - id: listening-to-events
-  - id: media-variations
   - id: prefetching
   - id: post-processor
   - id: requesting-multiple-images

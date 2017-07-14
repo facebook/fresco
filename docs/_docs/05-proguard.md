@@ -2,12 +2,13 @@
 docid: proguard
 title: Shipping Your App with Fresco
 layout: docs
-permalink: /docs/proguard.html
+redirect_from: /docs/proguard.html
+permalink: /docs/shipping.html
 ---
 
 Fresco's large size may seem intimidating, but it need not leave you with a large app. We strongly recommend use of the ProGuard tool as well as building split APKs to keep your app small.
 
-## ProGuard
+### ProGuard
 
 You can download Fresco's ProGuard file, [proguard-fresco.pro](https://raw.githubusercontent.com/facebook/fresco/master/proguard-fresco.pro), and add it to your project.
 
@@ -25,7 +26,7 @@ android {
 }
 ```
 
-## Build Multiple APKs
+### Build Multiple APKs
 
 Fresco is written mostly in Java, but there is some C++ as well. C++ code has to be compiled for each of the CPU types (called "ABIs") Android can run on. Currently, Fresco supports five ABIs.
 

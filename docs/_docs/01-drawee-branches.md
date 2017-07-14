@@ -5,19 +5,7 @@ layout: docs
 permalink: /docs/drawee-branches.html
 ---
 
-## Contents
-
-* [What are Branches?](#what-are-branches)
-* [Actual](#Actual)
-* [Placeholder](#Placeholder)
-* [Failure](#Failure)
-* [Retry](#Retry)
-* [Progress Bar](#ProgressBar)
-* [Backgrounds](#Backgrounds)
-* [Overlays](#Overlays)
-* [Pressed State Overlay](#PressedStateOverlay)
-
-## What are Branches?
+### What are Branches?
 
 Drawees are made up of different image "branches", one or more of which may be actually displayed at a time.
 
@@ -31,7 +19,7 @@ Some of the items can even be changed on the fly after the hierarchy has been bu
 
 Several of the drawables can be [scaled](scaletypes.html).
 
-## Actual
+### Actual
 
 The _actual_ image is the target; everything else is either an alternative or a decoration. This is specified using a URI, which can point to an image over the Internet, a local file, a resource, or a content provider.
 
@@ -46,7 +34,7 @@ In addition to the scale type, the hierarchy exposes other methods only for the 
 
 Default scale type: `centerCrop`
 
-## Placeholder
+### Placeholder
 
 The _placeholder_ is shown in the Drawee when it first appears on screen. After you have called `setController` or `setImageURI` to load an image, the placeholder continues to be shown until the image has loaded.
 
@@ -58,7 +46,7 @@ Hierarchy mutation method: `setPlaceholderImage`
 Default value: None
 Default scale type: `centerInside`
 
-## Failure
+### Failure
 
 The _failure_ image appears if there is an error loading your image. The most common cause of this is an invalid URI, or lack of connection to the network.
 
@@ -68,7 +56,7 @@ Hierarchy mutation method: `setFailureImage`
 Default value: None
 Default scale type: `centerInside`
 
-## Retry
+### Retry
 
 The _retry_ image appears instead of the failure image if you have set your controller to enable the tap-to-retry feature.
 
@@ -86,7 +74,7 @@ Hierarchy mutation method: `setRetryImage`
 Default value: None
 Default scale type: `centerInside`
 
-## <a name="ProgressBar"></a>Progress Bar
+### <a name="ProgressBar"></a>Progress Bar
 
 If specified, the _progress bar_ image is shown as an overlay over the Drawee until the final image is set.
 
@@ -98,7 +86,7 @@ Hierarchy mutation method: `setProgressBarImage`
 Default value: None
 Default scale type: `centerInside`
 
-## Backgrounds
+### Backgrounds
 
 _Background_ drawables are drawn first, "under" the rest of the hierarchy.
 
@@ -111,7 +99,7 @@ Hierarchy builder method: `setBackground,` `setBackgrounds`
 Default value: None
 Default scale type: N/A
 
-## Overlays
+### Overlays
 
 _Overlay_ drawables are drawn last, "over" the rest of the hierarchy.
 
@@ -124,7 +112,7 @@ Hierarchy builder method: `setOverlay,` `setOverlays`
 Default value: None
 Default scale type: N/A
 
-## <a name="PressedStateOverlay"></a>Pressed State Overlay
+### <a name="PressedStateOverlay"></a>Pressed State Overlay
 
 The _pressed state overlay_ is a special overlay shown only when the user presses the screen area of the Drawee. For example, if the Drawee is showing a button, this overlay could have the button change color when pressed.
 

@@ -18,7 +18,7 @@ When using Fresco, you will use `SimpleDraweeView` to display images. These can 
   />
 ```
 
-**NOTE:** `SimpleDraweeView` does not support `wrap_content` for `layout_width` or `layout_height` attributes. More information can be found [here](wrap-content.html). The only exception to this is when you are setting an aspect ratio, like so:
+**NOTE:** `SimpleDraweeView` does not support `wrap_content` for `layout_width` or `layout_height` attributes. More information can be found [here](faq.html). The only exception to this is when you are setting an aspect ratio, like so:
 
 ```xml
 <com.facebook.drawee.view.SimpleDraweeView

@@ -94,7 +94,7 @@ Then add the ```SimpleDraweeView``` to the layout:
     android:layout_width="130dp"
     android:layout_height="130dp"
     fresco:placeholderImage="@drawable/my_drawable"
-  />
+    />
 ```
 
 To show an image, you need only do this:
