@@ -30,10 +30,10 @@ ImageRequest request = ImageRequestBuilder
 #### Fields in ImageRequest
 
 - `uri` - the only mandatory field. See [Supported URIs](supported-uris.html)
-- `autoRotateEnabled` - whether to enable [auto-rotation](resizing--rotating.html#rotate).
+- `autoRotateEnabled` - whether to enable [auto-rotation](rotation.html).
 - `progressiveEnabled` - whether to enable [progressive loading](progressive-jpegs.html).
 - `postprocessor` - component to [postprocess](modifying-image.html) the decoded image.
-- `resizeOptions` - desired width and height. Use with caution. See [Resizing](resizing-rotating.html).
+- `resizeOptions` - desired width and height. Use with caution. See [Resizing](resizing.html).
 
 #### Lowest Permitted Request Level
 
@@ -52,5 +52,3 @@ The `setLowestPermittedRequestLevel` field lets you control how far down this li
 - `FULL_FETCH`
 
 This is useful in situations where you need an instant, or at least relatively fast, image or none at all.
-
-

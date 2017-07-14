@@ -30,7 +30,7 @@ You should call `setOldController` when building a new controller. This will all
 
 More details:
 
-* [Controller Listeners](listening-download-events.html)
+* [Controller Listeners](listening-to-events.html)
 
 ### <a name="ImageRequest"></a>Customizing the ImageRequest
 
@@ -54,4 +54,5 @@ More details:
 
 * [Postprocessors](modifying-image.html)
 * [Requesting Multiple Images](requesting-multiple-images.html)
-* [Resizing and Rotating](resizing-rotating.html)
+* [Resizing](resizing.html)
+* [Rotation](rotation.html)

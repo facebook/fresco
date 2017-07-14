@@ -21,7 +21,7 @@ Your app should [clear this cache](#clearing-the-cache) when it is backgrounded.
 
 This cache stores images in their original compressed form. Images retrieved from this cache must be decoded before display.
 
-If other transformations, such as [resizing, rotating](resizing-rotating.html) or [transcoding](#webp) were requested, that happens before decode.
+If other transformations, such as [resizing](resizing.html), [rotation](rotation.html) or [transcoding](#webp) were requested, that happens before decode.
 
 #### 3. Disk cache
 

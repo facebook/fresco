@@ -60,7 +60,7 @@ For complete control on how the networking layer should behave, you can provide 
 
 Our implementation for `OkHttp 3` can be used as an example. See [its source code](https://github.com/facebook/fresco/blob/master/imagepipeline-backends/imagepipeline-okhttp3/src/main/java/com/facebook/imagepipeline/backends/okhttp3/OkHttpNetworkFetcher.java).
 
-You must pass your network producer to the image pipeline when [configuring it](configuring-image-pipeline.html):
+You must pass your network producer to the image pipeline when [configuring it](configure-image-pipeline.html):
 
 ```java
 ImagePipelineConfig config = ImagePipelineConfig.newBuilder()

@@ -5,7 +5,7 @@ layout: docs
 permalink: /docs/using-image-pipeline.html
 ---
 
-This page is intended for advanced usage only. Most apps should be using [Drawees](using-drawees-xml.html) to interact with Fresco's image pipeline.
+This page is intended for advanced usage only. Most apps should be using [Drawees](using-simpledraweeview.html) to interact with Fresco's image pipeline.
 
 Using the image pipeline directly is challenging because of the memory usage. Drawees automatically keep track of whether or not your images need to be in memory. They will swap them out and load them back as soon as they need to be displayed. If you are using the image pipeline directly, your app must repeat this logic.
 

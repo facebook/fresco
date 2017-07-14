@@ -7,7 +7,7 @@ permalink: /docs/closeable-references.html
 
 **This page is intended for advanced usage only.**
 
-Most apps should use [Drawees](using-drawees-xml.html) and not worry about closing.
+Most apps should use [Drawees](using-simpledraweeview.html) and not worry about closing.
 
 The Java language is garbage-collected and most developers are used to creating objects willy-nilly and taking it for granted they will eventually disappear from memory.
 
@@ -66,7 +66,7 @@ The `finally` block is almost always the best way to do this.
   Val val = ref.get();
   // do something with val
   // ...
-  
+
   // Do NOT close the value!
   //// val.close();
 
