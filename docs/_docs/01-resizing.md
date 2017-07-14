@@ -3,6 +3,8 @@ docid: resizing
 title: Resizing
 layout: docs
 permalink: /docs/resizing.html
+redirect_from:
+  - /docs/resizing-rotating.html
 ---
 
 - **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn downscaled or upscaled. See [ScaleTypes](scaletypes.html).
