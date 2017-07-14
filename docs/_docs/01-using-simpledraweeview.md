@@ -3,6 +3,9 @@ docid: using-simpledraweeview
 title: Using SimpleDraweeView
 layout: docs
 permalink: /docs/using-simpledraweeview.html
+redirect_from:
+  - /docs/using-drawees-xml.html
+  - /docs/using-drawees-code.html
 ---
 
 When using Fresco, you will use `SimpleDraweeView` to display images. These can be used in XML layouts. The simplest usage example of `SimpleDraweeView` is:
