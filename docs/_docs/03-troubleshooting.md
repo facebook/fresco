@@ -32,7 +32,7 @@ If that throws an exception, the issue is likely not in Fresco, **but** it may b
 
 #### OOMs and failing to allocate a bitmap
 
-The most common reason for this happening is loading too big images. If the image to be loaded is of considerably bigger size than the view hosting it, it should be [resized] (http://frescolib.org/docs/resizing-rotating.html#_).
+The most common reason for this happening is loading too big images. If the image to be loaded is of considerably bigger size than the view hosting it, it should be [resized](resizing.html).
 
 #### Bitmap too large to be uploaded to a texture
 

@@ -25,11 +25,11 @@ This page outlines the different branches that can be displayed in a Drawee, and
 
 Except for the actual image, all of them can be set by an XML attribute. The value in XML must be either an Android drawable or color resource.
 
- They can also be set by a method in the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class, if [setting programmatically](using-drawees-code.html). In code, the value can either be from resources or be a custom subclass of [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html).
+ They can also be set by a method in the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class, if setting programmatically. In code, the value can either be from resources or be a custom subclass of [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html).
 
 Some of the items can even be changed on the fly after the hierarchy has been built. These have a method in the [GenericDraweeHierarchy](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchy.html) class.
 
-Several of the drawables can be [scaled](scaling.html).
+Several of the drawables can be [scaled](scaletypes.html).
 
 ## Actual
 
@@ -41,7 +41,7 @@ Instead, use the `setImageURI` method or [set a controller](using-controllerbuil
 
 In addition to the scale type, the hierarchy exposes other methods only for the actual image. These are:
 
-* the focus point (used for the [focusCrop](scaling.html#FocusCrop) scale type only)
+* the focus point (used for the [focusCrop](scaletypes.html#FocusCrop) scale type only)
 * a color filter
 
 Default scale type: `centerCrop`
