@@ -17,14 +17,13 @@ Ideally, the implemented post-processor should provide a cache key for given par
 
 All post-processors are executed using background executors. However, naive iteration or complex computations can still take a long time and should be avoided. If you aim for computations that are non-linear in the number of pixels, there is a section which contains tips for you how you can use native code to speed your post-processor up.
 
-
 ### Example: Creating a Grey-Scale Filter
 
 Let's start with something simple: a post-processor that converts the bitmap into a grey-scale version. For this we need to iterate over the bitmap's pixels and replace their color value.
 
 The image is copied before it enters the post-processor. The original image in cache is *not* affected by any changes you make in your post-processor. On Android 4.x and lower, the copy is stored outside the Java heap, just as the original image was.
 
-The `BasePostprocessor` expects our sub-class to override its `BasePostprocessor#process(Bitmap)` method and perform in-place modifications of the provided bitmap. The image is copied before it enters the post-processor. Thus, the original image in cache is *not* affected by any changes you make in the post-processor. We will later discuss how we can also modify the configuration and size of the output bitmap.
+The `BasePostprocessor` expects our sub-class to override one of its `BasePostprocessor#process` method. The simplest one performs in-place modifications of the provided bitmap. Here, the image is copied before it enters the post-processor. Thus, the original of the image in cache is *not* affected by any changes you make in the post-processor. We will later discuss how we can also modify the configuration and size of the outputted bitmap.
 
 ```java
 public class FastGreyScalePostprocessor extends BasePostprocessor {
@@ -110,7 +109,9 @@ public class ScalingBlurPostprocessor extends FullResolutionBlurPostprocessor {
   private static final int SCALE_RATIO = 4;
 
   @Override
-  public void process(Bitmap bitmap) {
+  public CloseableReference<Bitmap> process(
+      Bitmap sourceBitmap,
+      PlatformBitmapFactory bitmapFactory) {
     final CloseableReference<Bitmap> bitmapRef = bitmapFactory.createBitmap(
         sourceBitmap.getWidth() / SCALE_RATIO,
         sourceBitmap.getHeight() / SCALE_RATIO);
@@ -145,9 +146,9 @@ Please keep the following rules in mind when creating post-processors
 * Post-processors are not currently supported for [animated](animations.html) images.
 * If you use transparency in your post-processor, call `destinationBitmap.setHasAlpha(true);`
 * Do **not** override more than one of the three `process` methods. Doing so can produce unpredictable results.
-* Do **not** modify the source Bitmap. In future releases this will throw an exception.
+* Do **not** modify the source Bitmap when using a `process` methods that requires you to create a new destination bitmap.
 * Do **not** keep a reference to either bitmap. Both have their memory managed by the image pipeline. The destBitmap will end up in your Drawee or DataSource normally.
-* Do **not** use the Android `Bitmap.createBitmap` method, which creates a bitmap on the Java heap.
+* Do **not** use the Android `Bitmap.createBitmap` method for creating a new Bitmap. This would work against the central Bitmap pool in Fresco.
 
 ### Full Sample
 

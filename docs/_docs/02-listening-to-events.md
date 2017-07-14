@@ -7,7 +7,7 @@ permalink: /docs/listening-to-events.html
 
 ### Motivation
 
-Loading and displaying images is an eventful happening. And you'll be curious how to employ instrumentation to track both performance and to react to events.
+The image pipeline and the view controller in Fresco have built-in instrumentation interfaces. One can employ this to track both performance and to react to events.
 
 Fresco comes with two main instrumentation interfaces:
 
