@@ -14,6 +14,46 @@ Fresco comes with two main instrumentation interfaces:
  - The `RequestListener` is globally registered in the `ImagePipelineConfig` and logs all requests that are handled by the producer-consumer chain
  - The `ControllerListener` is added to an individual `DraweeView` and is convenient for reacting on events such as "this image is fully loaded"
 
+### ControllerListener
+
+While the `RequestListener` is a global listener, the `ControllerListener` is local to a certain `DraweeView`. It is a good way to react to changes to the displayed view such as "image failed to load" or "image is fully loaded". Again, it's best to extend `BaseControllerListener` for this.
+
+A simple listener might look like the following:
+
+```java
+public class MyControllerListener extends new BaseControllerListener<ImageInfo>() {
+
+  @Override
+  public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+    Log.i("DraweeUpdate", "Image is fully loaded!");
+  }
+
+  @Override
+  public void onIntermediateImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+    Log.i("DraweeUpdate", "Image is partly loaded! (maybe it's a progressive JPEG?)");
+    if (imageInfo != null) {
+      int quality = imageInfo.getQualityInfo().getQuality();
+      Log.i("DraweeUpdate", "Image quality (number scans) is: " + quality);
+    }
+  }
+
+  @Override
+  public void onFailure(String id, Throwable throwable) {
+    Log.i("DraweeUpdate", "Image failed to load: " + throwable.getMessage());
+  }
+}
+```
+
+You add it to your `DraweeController` in the following way:
+
+```java
+DraweeController controller = Fresco.newDraweeControllerBuilder()
+    .setImageRequest(request)
+    .setControllerListener(new MyControllerListener())
+    .build();
+mSimpleDraweeView.setController(controller);
+```
+
 ### RequestListener
 
 The `RequestListener` comes with a large interface of callback methods. Most importantly, you will notice that they all provide the unique `requestId` which allows to track a request across multiple stages.
