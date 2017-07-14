@@ -29,3 +29,9 @@ class CustomProgressBar extends Drawable {
    }
 }
 ```
+
+### Example
+
+The Fresco showcase app has a [DraweeHierarchyFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeHierarchyFragment.java) that demonstrates using a progress bar drawable.
+
+![Showcase app with progress bar](/static/images/docs/01-progress-bar-sample.png)
