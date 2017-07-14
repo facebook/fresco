@@ -7,6 +7,8 @@ redirect_from:
   - /docs/resizing-rotating.html
 ---
 
+We use the following terminology for this section:
+
 - **Scaling** is a canvas operation and is usually hardware accelerated. The bitmap itself is always the same size. It just gets drawn downscaled or upscaled. See [ScaleTypes](scaletypes.html).
 - **Resizing** is a pipeline operation executed in software. This changes the encoded image in memory before it is being decoded. The decoded bitmap will be smaller than the original image.
 - **Downsampling** is also a pipeline operation implemented in software. Rather than creating a new encoded image, it simply decodes only a subset of the pixels, resulting in a smaller output bitmap.
