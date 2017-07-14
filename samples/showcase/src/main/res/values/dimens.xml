@@ -13,6 +13,7 @@
   <dimen name="nav_header_padding_top">24dp</dimen>
   <dimen name="nav_header_height">80dp</dimen>
 
+  <dimen name="switch_padding">8dp</dimen>
 
   <dimen name="drawee_width_small">100dp</dimen>
   <dimen name="drawee_height_small">100dp</dimen>
@@ -22,8 +23,6 @@
 
   <dimen name="drawee_width_large">300dp</dimen>
   <dimen name="drawee_height_large">300dp</dimen>
-
-  <dimen name="switch_padding">300dp</dimen>
 
   <dimen name="drawee_rounded_corners_border_width">8dp</dimen>
   <dimen name="drawee_rounded_corners_fancy_top_left">8dp</dimen>
