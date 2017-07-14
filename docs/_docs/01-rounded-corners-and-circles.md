@@ -41,15 +41,14 @@ The `SimpleDraweeView` class will forward several attributes over to `RoundingPa
 
 ### In code
 
-When [constructing a hierarchy](using-drawees-code.html), you can pass an instance of [RoundingParams](../javadoc/reference/com/facebook/drawee/generic/RoundingParams.html) to your `GenericDraweeHierarchyBuilder:`
+When constructing a hierarchy, you can pass an instance of [RoundingParams](../javadoc/reference/com/facebook/drawee/generic/RoundingParams.html) to your `GenericDraweeHierarchyBuilder:`
 
 ```java
 int overlayColor = getResources().getColor(R.color.green);
 RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
-// alternatively use fromCornersRadii or asCircle
-roundingParams.setOverlayColor(overlayColor);
-genericDraweeHierarchyBuilder
-    .setRoundingParams(roundingParams);
+mSimpleDraweeView.setHierarchy(new GenericDraweeHierarchyBuilder(getResources())
+        .setRoundingParams(roundingParams)
+        .build());
 ```
 
 You can also change all of the rounding parameters after the hierarchy has been built:

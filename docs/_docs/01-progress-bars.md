@@ -5,7 +5,7 @@ layout: docs
 permalink: /docs/progress-bars.html
 ---
 
-The easiest way to set a progress bar in your application is to use the [ProgressBarDrawable](../javadoc/reference/com/facebook/drawee/drawable/ProgressBarDrawable.html) class when [building a hierarchy](using-drawees-code.html):
+The easiest way to set a progress bar in your application is to use the [ProgressBarDrawable](../javadoc/reference/com/facebook/drawee/drawable/ProgressBarDrawable.html) class when building a hierarchy:
 
 ```java
 .setProgressBarImage(new ProgressBarDrawable())
