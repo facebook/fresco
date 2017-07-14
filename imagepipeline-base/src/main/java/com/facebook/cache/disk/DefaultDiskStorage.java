@@ -576,7 +576,7 @@ public class DefaultDiskStorage implements DiskStorage {
       FileType.CONTENT,
       FileType.TEMP,
   })
-  private @interface FileType {
+  public @interface FileType {
     String CONTENT = CONTENT_FILE_EXTENSION;
     String TEMP = TEMP_FILE_EXTENSION;
   }
