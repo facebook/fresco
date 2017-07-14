@@ -2,7 +2,6 @@
   items:
   - id: index
   - id: proguard
-  - id: concepts
 - title: Basic Features
   items:
   - id: using-simpledraweeview
@@ -45,5 +44,6 @@
   items:
   - id: building-from-source
   - id: sample-code
-  - id: intro-image-pipeline
+  - id: concepts
   - id: drawee-branches
+  - id: intro-image-pipeline
