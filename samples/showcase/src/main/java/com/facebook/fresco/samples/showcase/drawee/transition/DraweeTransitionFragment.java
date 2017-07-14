@@ -44,6 +44,8 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
 
     final SimpleDraweeView simpleDraweeView =
         (SimpleDraweeView) view.findViewById(R.id.drawee_view);
+    // You have to enable legacy visibility handling for the start view in order for this to work
+    simpleDraweeView.setLegacyVisibilityHandlingEnabled(true);
     simpleDraweeView.setImageURI(imageUri);
     simpleDraweeView.setOnClickListener(new View.OnClickListener() {
       @Override
