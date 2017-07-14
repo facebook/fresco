@@ -28,3 +28,9 @@ mSimpleDraweeView.setController(controller);
 ```
 
 We hope to add support for using progressive images with `setImageURI` in a future release.
+
+### Full Sample
+
+For the full sample see the `ImageFormatProgressiveJpegFragment` in the showcase app:
+[ImageFormatProgressiveJpegFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/pjpeg/ImageFormatProgressiveJpegFragment.java)
+<iframe width="544" height="960" src="/static/pjpeg.mp4" frameborder="0"></iframe>
