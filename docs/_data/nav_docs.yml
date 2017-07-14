@@ -15,22 +15,22 @@
   - id: supported-uris
 - title: Advanced Topics
   items:
-  - id: using-controllerbuilder
-  - id: media-variations
-  - id: requesting-multiple-images
-  - id: listening-to-events
-  - id: shared-transitions
-  - id: writing-custom-views
-  - id: post-processor
+  - id: caching
+  - id: closeable-references
+  - id: configure-image-pipeline
+  - id: datasources-datasubscribers
   - id: image-requests
   - id: images-in-notifications
-  - id: configure-image-pipeline
-  - id: caching
+  - id: listening-to-events
+  - id: media-variations
   - id: prefetching
+  - id: post-processor
+  - id: requesting-multiple-images
+  - id: shared-transitions
+  - id: using-controllerbuilder
   - id: using-image-pipeline
-  - id: datasources-datasubscribers
-  - id: closeable-references
   - id: using-other-network-layers
+  - id: writing-custom-views
 - title: Image formats
   items:
   - id: progressive-jpegs
