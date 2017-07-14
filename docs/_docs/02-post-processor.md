@@ -7,24 +7,24 @@ permalink: /docs/modifying-image.html
 
 ### Motivation
 
-Post-processors allow custom modifications of the fetched bitmap. In most cases image processing should already be done by the server before the image is sent down to the client, as the mobile device's resources are usually more limited. However, there are many instances where client side processing is legit. For instance, if one does not have control about the image offering service or one deals with local images.
+Post-processors allow custom modifications of the fetched image. In most cases image processing should already be done by the server before the image is sent down to the client, as the mobile device's resources are usually more limited. However, there are many instances where client side processing is a valid option. For instance, if the images are being served by a third party which you do not control or if the images are local (on the device).
 
 ### Background
 
 In Fresco's pipeline, post-processors are applied at the very end when the image already has been decoded as a bitmap and the original version is stored in the in-memory Bitmap cache. While the post-processor can directly work on the provided Bitmap, it can also create a new Bitmap with a different dimension.
 
-Ideally, the implemented post-processor should provide a cache key for given parameters. By doing this, the newly generated bitmap are also cached in the in-memory Bitmap cache and don't need to be re-drawn.
+Ideally, the implemented post-processor should provide a cache key for given parameters. By doing this, the newly generated bitmap is also cached in the in-memory Bitmap cache and don't need to be re-created.
 
 All post-processors are executed using background executors. However, naive iteration or complex computations can still take a long time and should be avoided. If you aim for computations that are non-linear in the number of pixels, there is a section which contains tips for you how you can use native code to speed your post-processor up.
 
 
 ### Example: Creating a Grey-Scale Filter
 
-Let's start with something simple: a post-processor that converts the bitmap into a grey-scaled version. For this we need to iterate over the bitmap's pixels and replace their color value.
+Let's start with something simple: a post-processor that converts the bitmap into a grey-scale version. For this we need to iterate over the bitmap's pixels and replace their color value.
 
-The image is copied before it enters the post-processor. The original of the image in cache is *not* affected by any changes you make in your post-processor. On Android 4.x and lower, the copy is stored outside the Java heap, just as the original image was.
+The image is copied before it enters the post-processor. The original image in cache is *not* affected by any changes you make in your post-processor. On Android 4.x and lower, the copy is stored outside the Java heap, just as the original image was.
 
-The `BasePostprocessor` expects our sub-class to override its `BasePostprocessor#process(Bitmap)` method and perform in-place modifications of the provided bitmap. The image is copied before it enters the post-processor. Thus, the original of the image in cache is *not* affected by any changes you make in the post-processor. We will later discuss how we can also modify the configuration and size of the outputted bitmap.
+The `BasePostprocessor` expects our sub-class to override its `BasePostprocessor#process(Bitmap)` method and perform in-place modifications of the provided bitmap. The image is copied before it enters the post-processor. Thus, the original image in cache is *not* affected by any changes you make in the post-processor. We will later discuss how we can also modify the configuration and size of the output bitmap.
 
 ```java
 public class FastGreyScalePostprocessor extends BasePostprocessor {
@@ -89,7 +89,7 @@ public class CachedWatermarkPostprocessor extends WatermarkPostprocessor {
 
 ### Advanced: JNI and Blurring
 
-One of the most commonly asked for post-processing is blurring. Luckily, Fresco ships with a very efficient implementation in native C code  accessible through `NativeBlurFilter#iterativeBoxBlur`.
+One of the most commonly asked for post-processing effects is blurring. Luckily, Fresco ships with a very efficient implementation in native C code  accessible through `NativeBlurFilter#iterativeBoxBlur`.
 
 When you are considering more advanced post-processing, using native code is a great way to improve performance. If you go down this path, have a look at the implementation in  `blur_filter.c` on how to work with bitmaps in native code. Most importantly it explains you how to lock the pixels in memory and other important tricks.
 
