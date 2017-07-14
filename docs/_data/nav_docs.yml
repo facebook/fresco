@@ -18,7 +18,7 @@
   - id: using-controllerbuilder
   - id: media-variations
   - id: requesting-multiple-images
-  - id: listening-download-events
+  - id: listening-to-events
   - id: shared-transitions
   - id: writing-custom-views
   - id: post-processor
