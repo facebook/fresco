@@ -37,9 +37,9 @@
   - id: webp-support
 - title: Troubleshooting & FAQ
   items:
+  - id: faq
   - id: troubleshooting
   - id: gotchas
-  - id: wrap-content
 - title: Contributors Guide
   items:
   - id: building-from-source
