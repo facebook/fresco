@@ -205,6 +205,7 @@
   <string name="drawee_hierarchy_load_success">Load (success)</string>
   <string name="drawee_hierarchy_load_fail">Load (fail)</string>
   <string name="drawee_hierarchy_clear">Clear</string>
+  <string name="drawee_hierarchy_retry">Enable Retry</string>
 
   <string name="transition_name">image_transition</string>
 </resources>

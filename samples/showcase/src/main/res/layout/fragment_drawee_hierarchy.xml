@@ -33,6 +33,14 @@
         android:text="@string/drawee_hierarchy_clear"
         />
   </LinearLayout>
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/retry_enabled"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:text="@string/drawee_hierarchy_retry"
+      />
   <com.facebook.drawee.view.SimpleDraweeView
       android:id="@+id/drawee"
       android:layout_width="match_parent"
@@ -40,5 +48,6 @@
       android:layout_marginTop="@dimen/margin_medium"
       app:placeholderImageScaleType="centerInside"
       app:placeholderImage="@drawable/logo"
+      app:retryImage="@drawable/ic_retry_black_48dp"
       />
 </LinearLayout>
