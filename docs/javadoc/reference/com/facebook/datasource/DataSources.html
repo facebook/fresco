@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -551,6 +551,25 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../com/facebook/datasource/DataSources.html#immediateFailedDataSource(java.lang.Throwable)">immediateFailedDataSource</a></span>(Throwable failure)
         
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            &lt;T&gt;
+            T
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/DataSources.html#waitForFinalResult(com.facebook.datasource.DataSource<T>)">waitForFinalResult</a></span>(<a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">This methods blocks the calling thread until the <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> has a final result, has
+ been cancelled or has failed.</div>
+  
   </td></tr>
 
 
@@ -900,6 +919,63 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="waitForFinalResult(com.facebook.datasource.DataSource<T>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        T
+      </span>
+      <span class="sympad">waitForFinalResult</span>
+      <span class="normal">(<a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>This methods blocks the calling thread until the <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> has a final result, has
+ been cancelled or has failed.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>dataSource</th>
+          <td>The <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> to wait for. The caller MUST close the data source
+ after this method returned!</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The final result of the <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code>. Intermediate results are ignored. Might be
+ <code>null</code> if the data source has been cancelled.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>Throwable</td>
+            <td>if the <code><a href="../../../com/facebook/datasource/DataSource.html">DataSource</a></code> has failed
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>

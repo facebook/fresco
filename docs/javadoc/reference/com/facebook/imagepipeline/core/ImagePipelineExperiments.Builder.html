@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -561,6 +561,41 @@ Summary:
             
             
             
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#isPartialImageCachingEnabled()">isPartialImageCachingEnabled</a></span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setBitmapPrepareToDraw(boolean)">setBitmapPrepareToDraw</a></span>(boolean useBitmapPrepareToDraw)
+        
+        <div class="jd-descrdiv">If enabled, the pipeline will call <code><a href="null#prepareToDraw()">prepareToDraw()</a></code> after
+ decoding for non-prefetched images.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
@@ -598,13 +633,9 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setForceSmallCacheThresholdBytes(int)">setForceSmallCacheThresholdBytes</a></span>(int forceSmallCacheThresholdBytes)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)">setMediaIdExtractor</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor)
         
-        <div class="jd-descrdiv">
-      <em>
-  This method is deprecated.
-      This experiment will not be promoted to the main config and will soon be removed.
-</em></div>
+        <div class="jd-descrdiv">Sets experimental media ID extractor to pull IDs from URIs.</div>
   
   </td></tr>
 
@@ -620,9 +651,12 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)">setMediaIdExtractor</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setMediaVariationsIndexEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)
         
-        <div class="jd-descrdiv">Sets experimental media ID extractor to pull IDs from URIs.</div>
+        <div class="jd-descrdiv">If true, this will allow the image pipeline to keep an index of the ID in each request's
+ <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
+ provide fallback images which are present in cache, without the need to explicitly provide
+ alternative variants of the image in the request.</div>
   
   </td></tr>
 
@@ -638,12 +672,10 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setMediaVariationsIndexEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setPartialImageCachingEnabled(boolean)">setPartialImageCachingEnabled</a></span>(boolean partialImageCachingEnabled)
         
-        <div class="jd-descrdiv">If true, this will allow the image pipeline to keep an index of the ID in each request's
- <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
- provide fallback images which are present in cache, without the need to explicitly provide
- alternative variants of the image in the request.</div>
+        <div class="jd-descrdiv">Enables the caching of partial image data, for example if the request is cancelled or fails
+ after some data has been received.</div>
   
   </td></tr>
 
@@ -1055,6 +1087,75 @@ From class
 </div>
 
 
+<a id="isPartialImageCachingEnabled()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isPartialImageCachingEnabled</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setBitmapPrepareToDraw(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+      </span>
+      <span class="sympad">setBitmapPrepareToDraw</span>
+      <span class="normal">(boolean useBitmapPrepareToDraw)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>If enabled, the pipeline will call <code><a href="null#prepareToDraw()">prepareToDraw()</a></code> after
+ decoding for non-prefetched images. This potentially reduces lag on Android N+ as this step
+ now happens async when the RendererThread is idle.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The Builder itself for chaining
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="setDecodeCancellationEnabled(boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1131,46 +1232,6 @@ From class
 </div>
 
 
-<a id="setForceSmallCacheThresholdBytes(int)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setForceSmallCacheThresholdBytes</span>
-      <span class="normal">(int forceSmallCacheThresholdBytes)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      <p>
-  <p class="caution">
-      <strong>
-  This method is deprecated.</strong><br/> This experiment will not be promoted to the main config and will soon be removed.
-
-  </p>
-  <div class="jd-tagdata jd-tagdescr"><p>If this value is nonnegative, then all network-downloaded images below this size will be
- written to the small image cache.
-
- <p>This will require the image pipeline to do up to two disk reads, instead of one, before
- going out to network. Use only if this pattern makes sense for your application.</p></div>
-
-    </div>
-</div>
-
-
 <a id="setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1234,6 +1295,39 @@ From class
  <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
  provide fallback images which are present in cache, without the need to explicitly provide
  alternative variants of the image in the request.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="setPartialImageCachingEnabled(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+      </span>
+      <span class="sympad">setPartialImageCachingEnabled</span>
+      <span class="normal">(boolean partialImageCachingEnabled)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Enables the caching of partial image data, for example if the request is cancelled or fails
+ after some data has been received.
 </p></div>
 
     </div>

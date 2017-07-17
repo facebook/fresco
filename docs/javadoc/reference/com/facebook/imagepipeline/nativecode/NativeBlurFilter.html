@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -889,15 +889,17 @@ From class
       <table class="jd-tagtable">
         <tr>
           <th>bitmap</th>
-          <td>The targeted bitmap that will be blurred in-place</td>
+          <td>The targeted bitmap that will be blurred in-place. Each dimension must not be
+ greater than 65536.</td>
         </tr>
         <tr>
           <th>iterations</th>
-          <td>The number of iterations to run. Must be greater than 0.</td>
+          <td>The number of iterations to run. Must be greater than 0 and not greater than
+ 65536.</td>
         </tr>
         <tr>
           <th>blurRadius</th>
-          <td>The given blur radius. Must be greater than 0.
+          <td>The given blur radius. Must be greater than 0 and not greater than 65536.
 </td>
         </tr>
       </table>

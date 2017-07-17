@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -291,7 +291,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></li>
@@ -321,8 +320,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SmallCacheIfRequestedDiskCachePolicy.html">SmallCacheIfRequestedDiskCachePolicy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html">SplitCachesByImageSizeDiskCachePolicy</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></li>
       </ul>
     </li>
@@ -564,6 +561,22 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html#get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, boolean)">get</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, boolean isExternalCreatedBitmapLogEnabled)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html#get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, boolean, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy)">get</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, boolean isExternalCreatedBitmapLogEnabled, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> trimStrategy)
         
   </td></tr>
 
@@ -878,6 +891,37 @@ From class
       </span>
       <span class="sympad">get</span>
       <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, boolean isExternalCreatedBitmapLogEnabled)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="get(com.facebook.common.internal.Supplier<com.facebook.imagepipeline.cache.MemoryCacheParams>, com.facebook.common.memory.MemoryTrimmableRegistry, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, boolean, com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;
+      </span>
+      <span class="sympad">get</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt; bitmapMemoryCacheParamsSupplier, <a href="../../../../com/facebook/common/memory/MemoryTrimmableRegistry.html">MemoryTrimmableRegistry</a> memoryTrimmableRegistry, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, boolean isExternalCreatedBitmapLogEnabled, <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a> trimStrategy)</span>
     </h4>
       <div class="api-level">
         <div>

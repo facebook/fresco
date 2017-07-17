@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -286,11 +286,6 @@
           <div id="classes-nav">
             <ul>
               
-    <li><h2>Interfaces</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">DrawableFactory</a></li>
-      </ul>
-    </li>
               
     <li><h2>Classes</h2>
       <ul>
@@ -547,7 +542,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#init(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.drawee.backends.pipeline.DrawableFactory>, com.facebook.common.internal.Supplier<java.lang.Boolean>)">init</a></span>(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">DrawableFactory</a>&gt; drawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; debugOverlayEnabledSupplier)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#init(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.drawable.DrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.common.internal.Supplier<java.lang.Boolean>)">init</a></span>(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; drawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; debugOverlayEnabledSupplier)
         
   </td></tr>
 
@@ -564,6 +559,22 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)">newController</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>)">newController</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories)
         
   </td></tr>
 
@@ -590,7 +601,7 @@ Summary:
             <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#internalCreateController(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.drawee.backends.pipeline.DrawableFactory>, com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)">internalCreateController</a></span>(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">DrawableFactory</a>&gt; drawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#internalCreateController(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.drawable.DrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)">internalCreateController</a></span>(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; globalDrawableFactories, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)
         
   </td></tr>
 
@@ -889,7 +900,7 @@ From class
 
 
 
-<a id="init(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.drawee.backends.pipeline.DrawableFactory>, com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
+<a id="init(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.drawable.DrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -902,7 +913,7 @@ From class
         void
       </span>
       <span class="sympad">init</span>
-      <span class="normal">(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">DrawableFactory</a>&gt; drawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; debugOverlayEnabledSupplier)</span>
+      <span class="normal">(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; drawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; debugOverlayEnabledSupplier)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -951,6 +962,37 @@ From class
 </div>
 
 
+<a id="newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
+      </span>
+      <span class="sympad">newController</span>
+      <span class="normal">(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 
 
 
@@ -960,7 +1002,7 @@ From class
 
 
 
-<a id="internalCreateController(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.drawee.backends.pipeline.DrawableFactory>, com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)"></a>
+<a id="internalCreateController(android.content.res.Resources, com.facebook.drawee.components.DeferredReleaser, com.facebook.imagepipeline.drawable.DrawableFactory, java.util.concurrent.Executor, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -973,7 +1015,7 @@ From class
         <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
       </span>
       <span class="sympad">internalCreateController</span>
-      <span class="normal">(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">DrawableFactory</a>&gt; drawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)</span>
+      <span class="normal">(Resources resources, <a href="../../../../../com/facebook/drawee/components/DeferredReleaser.html">DeferredReleaser</a> deferredReleaser, <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a> animatedDrawableFactory, Executor uiThreadExecutor, <a href="../../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; globalDrawableFactories, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)</span>
     </h4>
       <div class="api-level">
         <div>

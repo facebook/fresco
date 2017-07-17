@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -310,6 +310,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheGetProducer.html">BitmapMemoryCacheGetProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheKeyMultiplexProducer.html">BitmapMemoryCacheKeyMultiplexProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.html">BitmapMemoryCacheProducer</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapPrepareProducer.html">BitmapPrepareProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BranchOnSeparateImagesProducer.html">BranchOnSeparateImagesProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DecodeProducer.html">DecodeProducer</a></li>
@@ -334,6 +335,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PartialDiskCacheProducer.html">PartialDiskCacheProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.html">PostprocessedBitmapMemoryCacheProducer</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html">PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessorProducer.html">PostprocessorProducer</a></li>
@@ -352,6 +354,11 @@
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.Status.html">Consumer.Status</a></li>
+      </ul>
+    </li>
               
               
               
@@ -417,6 +424,8 @@
    
   
   
+   
+  
   
   
 
@@ -431,10 +440,13 @@ Summary:
 
 
 
+  <a href="#inhconstants">Inherited Constants</a>
+  
 
 
 
-  <a href="#pubctors">Ctors</a>
+
+  &#124; <a href="#pubctors">Ctors</a>
   
 
 
@@ -587,6 +599,80 @@ Summary:
 
 
 
+<!-- =========== ENUM CONSTANT SUMMARY =========== -->
+<table id="inhconstants" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Constants</div></th></tr>
+
+
+
+
+
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-constants-com.facebook.imagepipeline.producers.Consumer" class="jd-expando-trigger closed"
+          ><img id="inherited-constants-com.facebook.imagepipeline.producers.Consumer-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From interface
+<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">com.facebook.imagepipeline.producers.Consumer</a>
+<div id="inherited-constants-com.facebook.imagepipeline.producers.Consumer">
+  <div id="inherited-constants-com.facebook.imagepipeline.producers.Consumer-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-constants-com.facebook.imagepipeline.producers.Consumer-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#DO_NOT_CACHE_ENCODED">DO_NOT_CACHE_ENCODED</a></td>
+        <td class="jd-descrcol" width="100%">Status flag to show the result should not be cached in disk or encoded caches, even if it's the
+ last result.</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#IS_LAST">IS_LAST</a></td>
+        <td class="jd-descrcol" width="100%">Status flag to show whether the result being received is the last one coming or to expect more.</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#IS_PARTIAL_RESULT">IS_PARTIAL_RESULT</a></td>
+        <td class="jd-descrcol" width="100%">Status flag to show the result does not represent the whole image, just part of it.</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#IS_PLACEHOLDER">IS_PLACEHOLDER</a></td>
+        <td class="jd-descrcol" width="100%">Status flag to show whether the result is a placeholder for the final result.</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#NO_FLAGS">NO_FLAGS</a></td>
+        <td class="jd-descrcol" width="100%">Convenience constant for a status with no flags set.</td>
+    </tr>
+    
+    
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
+
+
 
 
 
@@ -641,7 +727,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html#onNewResultImpl(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>, boolean)">onNewResultImpl</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; newResult, boolean isLast)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html#onNewResultImpl(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>, int)">onNewResultImpl</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; newResult, int status)
         
         <div class="jd-descrdiv">Called by onNewResult, override this method instead.</div>
   
@@ -783,6 +869,44 @@ From class
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#isLast(int)">isLast</a></span>(int status)
+        
+        <div class="jd-descrdiv">Checks whether the provided status includes the `IS_LAST` flag, marking this as the last result
+ the consumer will receive.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#isNotLast(int)">isNotLast</a></span>(int status)
+        
+        <div class="jd-descrdiv">Checks whether the provided status includes the `IS_LAST` flag, marking this as the last result
+ the consumer will receive.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
             synchronized
             
             
@@ -865,7 +989,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#onNewResult(T, boolean)">onNewResult</a></span>(T newResult, boolean isLast)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#onNewResult(T, int)">onNewResult</a></span>(T newResult, int status)
         
         <div class="jd-descrdiv">Called by a producer whenever new data is produced.</div>
   
@@ -883,7 +1007,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#onNewResultImpl(T, boolean)">onNewResultImpl</a></span>(T newResult, boolean isLast)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#onNewResultImpl(T, int)">onNewResultImpl</a></span>(T newResult, int status)
         
         <div class="jd-descrdiv">Called by onNewResult, override this method instead.</div>
   
@@ -942,6 +1066,96 @@ From class
         
         <div class="jd-descrdiv">Called whenever onNewResultImpl or onFailureImpl throw an exception
 </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#simpleStatusForIsLast(boolean)">simpleStatusForIsLast</a></span>(boolean isLast)
+        
+        <div class="jd-descrdiv">Creates a simple status value which only identifies whether this is the last result.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#statusHasAnyFlag(int, int)">statusHasAnyFlag</a></span>(int status, int flag)
+        
+        <div class="jd-descrdiv">Checks whether the provided status contains any of the specified flags.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#statusHasFlag(int, int)">statusHasFlag</a></span>(int status, int flag)
+        
+        <div class="jd-descrdiv">Checks whether the provided status contains a specified flag.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#turnOffStatusFlag(int, int)">turnOffStatusFlag</a></span>(int status, int flag)
+        
+        <div class="jd-descrdiv">Updates a provided status by ensuring the specified flag is turned off.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html#turnOnStatusFlag(int, int)">turnOnStatusFlag</a></span>(int status, int flag)
+        
+        <div class="jd-descrdiv">Updates a provided status by ensuring the specified flag is turned on.</div>
   
   </td></tr>
 
@@ -1222,7 +1436,7 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#onNewResult(T, boolean)">onNewResult</a></span>(T newResult, boolean isLast)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html#onNewResult(T, int)">onNewResult</a></span>(T newResult, int status)
         
         <div class="jd-descrdiv">Called by a producer whenever new data is produced.</div>
   
@@ -1337,7 +1551,7 @@ From interface
 
 
 
-<a id="onNewResultImpl(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>, boolean)"></a>
+<a id="onNewResultImpl(com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1350,7 +1564,7 @@ From interface
         void
       </span>
       <span class="sympad">onNewResultImpl</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; newResult, boolean isLast)</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; newResult, int status)</span>
     </h4>
       <div class="api-level">
         <div>

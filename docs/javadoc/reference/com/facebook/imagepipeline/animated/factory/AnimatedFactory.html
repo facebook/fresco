@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -288,7 +288,6 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a></li>
           <li class="selected api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactory.html">AnimatedFactory</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageDecoder.html">AnimatedImageDecoder</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a></li>
@@ -297,10 +296,6 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactoryImpl.html">AnimatedDrawableFactoryImpl</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactoryImplSupport.html">AnimatedDrawableFactoryImplSupport</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryImpl.html">AnimatedFactoryImpl</a></li>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryImplSupport.html">AnimatedFactoryImplSupport</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryProvider.html">AnimatedFactoryProvider</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactoryImpl.html">AnimatedImageFactoryImpl</a></li>
       </ul>
@@ -433,9 +428,7 @@ Summary:
               >
           
             
-              <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryImpl.html">AnimatedFactoryImpl</a>,
-            
-              <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryImplSupport.html">AnimatedFactoryImplSupport</a>
+              <a href="../../../../../com/facebook/fresco/animation/factory/AnimatedFactoryV2Impl.html">AnimatedFactoryV2Impl</a>
             
           
       </div>
@@ -444,12 +437,8 @@ Summary:
               >
   <table class="jd-sumtable-expando">
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryImpl.html">AnimatedFactoryImpl</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
-          </tr>
-        <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactoryImplSupport.html">AnimatedFactoryImplSupport</a></td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../../com/facebook/fresco/animation/factory/AnimatedFactoryV2Impl.html">AnimatedFactoryV2Impl</a></td>
+              <td class="jd-descrcol" width="100%"><code><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactory.html">AnimatedFactory</a></code> for animations v2 that creates <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html">AnimatedDrawable2</a></code> drawables.&nbsp;</td>
           </tr>
   </table>
       </div>
@@ -525,7 +514,7 @@ Summary:
             
             
             
-            <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a>
+            <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactory.html#getAnimatedDrawableFactory(android.content.Context)">getAnimatedDrawableFactory</a></span>(Context context)
@@ -541,10 +530,26 @@ Summary:
             
             
             
-            <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a>
+            <a href="../../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactory.html#getAnimatedImageFactory()">getAnimatedImageFactory</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactory.html#getGifDecoder(android.graphics.Bitmap.Config)">getGifDecoder</a></span>(Bitmap.Config config)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            <a href="../../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedFactory.html#getWebPDecoder(android.graphics.Bitmap.Config)">getWebPDecoder</a></span>(Bitmap.Config config)
         
   </td></tr>
 
@@ -607,7 +612,7 @@ Summary:
          
         abstract 
          
-        <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedDrawableFactory.html">AnimatedDrawableFactory</a>
+        <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>
       </span>
       <span class="sympad">getAnimatedDrawableFactory</span>
       <span class="normal">(Context context)</span>
@@ -628,7 +633,7 @@ Summary:
 </div>
 
 
-<a id="getAnimatedImageFactory()"></a>
+<a id="getGifDecoder(android.graphics.Bitmap.Config)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -638,10 +643,41 @@ Summary:
          
         abstract 
          
-        <a href="../../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a>
+        <a href="../../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>
       </span>
-      <span class="sympad">getAnimatedImageFactory</span>
-      <span class="normal">()</span>
+      <span class="sympad">getGifDecoder</span>
+      <span class="normal">(Bitmap.Config config)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getWebPDecoder(android.graphics.Bitmap.Config)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        abstract 
+         
+        <a href="../../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>
+      </span>
+      <span class="sympad">getWebPDecoder</span>
+      <span class="normal">(Bitmap.Config config)</span>
     </h4>
       <div class="api-level">
         <div>

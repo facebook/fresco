@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -1104,6 +1104,10 @@ From interface
  method. It doesn't support animations, and it does not support any scale types other than
  <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#CENTER_CROP">CENTER_CROP</a></code>, <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FOCUS_CROP">FOCUS_CROP</a></code> and
  <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#FIT_XY">FIT_XY</a></code>.
+
+ If you use this rounding method with other scale types, such as
+ <code><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.ScaleType.html#CENTER">CENTER</a></code>, you won't get an Exception but the image might look
+ wrong (e.g. repeated edges), especially in cases the source image is smaller than the view.
 </p></div>
 
     

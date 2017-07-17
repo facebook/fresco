@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -544,7 +544,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#DefaultImageDecoder(com.facebook.imagepipeline.animated.factory.AnimatedImageFactory, com.facebook.imagepipeline.platform.PlatformDecoder, android.graphics.Bitmap.Config)">DefaultImageDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a> animatedImageFactory, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder, Bitmap.Config bitmapConfig)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#DefaultImageDecoder(com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.platform.PlatformDecoder)">DefaultImageDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedGifDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedWebPDecoder, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder)
         
   </td></tr>
 
@@ -560,7 +560,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#DefaultImageDecoder(com.facebook.imagepipeline.animated.factory.AnimatedImageFactory, com.facebook.imagepipeline.platform.PlatformDecoder, android.graphics.Bitmap.Config, java.util.Map<com.facebook.imageformat.ImageFormat, com.facebook.imagepipeline.decoder.ImageDecoder>)">DefaultImageDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a> animatedImageFactory, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder, Bitmap.Config bitmapConfig, Map&lt;<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>&gt; customDecoders)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#DefaultImageDecoder(com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.platform.PlatformDecoder, java.util.Map<com.facebook.imageformat.ImageFormat, com.facebook.imagepipeline.decoder.ImageDecoder>)">DefaultImageDecoder</a></span>(<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedGifDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedWebPDecoder, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder, Map&lt;<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>&gt; customDecoders)
         
   </td></tr>
 
@@ -607,7 +607,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#decodeAnimatedWebp(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeAnimatedWebp</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#decodeAnimatedWebp(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeAnimatedWebp</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)
         
         <div class="jd-descrdiv">Decode a webp animated image into a CloseableImage.</div>
   
@@ -625,7 +625,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#decodeGif(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeGif</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/decoder/DefaultImageDecoder.html#decodeGif(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, com.facebook.imagepipeline.common.ImageDecodeOptions)">decodeGif</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)
         
         <div class="jd-descrdiv">Decodes gif into CloseableImage.</div>
   
@@ -958,7 +958,7 @@ From interface
 
 
 
-<a id="DefaultImageDecoder(com.facebook.imagepipeline.animated.factory.AnimatedImageFactory, com.facebook.imagepipeline.platform.PlatformDecoder, android.graphics.Bitmap.Config)"></a>
+<a id="DefaultImageDecoder(com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.platform.PlatformDecoder)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -971,7 +971,7 @@ From interface
         
       </span>
       <span class="sympad">DefaultImageDecoder</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a> animatedImageFactory, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder, Bitmap.Config bitmapConfig)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedGifDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedWebPDecoder, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -989,7 +989,7 @@ From interface
 </div>
 
 
-<a id="DefaultImageDecoder(com.facebook.imagepipeline.animated.factory.AnimatedImageFactory, com.facebook.imagepipeline.platform.PlatformDecoder, android.graphics.Bitmap.Config, java.util.Map<com.facebook.imageformat.ImageFormat, com.facebook.imagepipeline.decoder.ImageDecoder>)"></a>
+<a id="DefaultImageDecoder(com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.platform.PlatformDecoder, java.util.Map<com.facebook.imageformat.ImageFormat, com.facebook.imagepipeline.decoder.ImageDecoder>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1002,7 +1002,7 @@ From interface
         
       </span>
       <span class="sympad">DefaultImageDecoder</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a> animatedImageFactory, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder, Bitmap.Config bitmapConfig, Map&lt;<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>&gt; customDecoders)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedGifDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> animatedWebPDecoder, <a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html">PlatformDecoder</a> platformDecoder, Map&lt;<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a>&gt; customDecoders)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1089,7 +1089,7 @@ From interface
 </div>
 
 
-<a id="decodeAnimatedWebp(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+<a id="decodeAnimatedWebp(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1102,7 +1102,7 @@ From interface
         <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
       </span>
       <span class="sympad">decodeAnimatedWebp</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1136,7 +1136,7 @@ From interface
 </div>
 
 
-<a id="decodeGif(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
+<a id="decodeGif(com.facebook.imagepipeline.image.EncodedImage, int, com.facebook.imagepipeline.image.QualityInfo, com.facebook.imagepipeline.common.ImageDecodeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1149,7 +1149,7 @@ From interface
         <a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>
       </span>
       <span class="sympad">decodeGif</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, int length, <a href="../../../../com/facebook/imagepipeline/image/QualityInfo.html">QualityInfo</a> qualityInfo, <a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a> options)</span>
     </h4>
       <div class="api-level">
         <div>

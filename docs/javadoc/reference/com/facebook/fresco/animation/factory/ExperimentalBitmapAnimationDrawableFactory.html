@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -289,7 +289,7 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalAnimationFactory.html">ExperimentalAnimationFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/AnimatedFactoryV2Impl.html">AnimatedFactoryV2Impl</a></li>
           <li class="selected api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.html">ExperimentalBitmapAnimationDrawableFactory</a></li>
           <li class="api apilevel-"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey.html">ExperimentalBitmapAnimationDrawableFactory.AnimationFrameCacheKey</a></li>
       </ul>
@@ -417,7 +417,7 @@ Summary:
   
       implements 
       
-        <a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">DrawableFactory</a> 
+        <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a> 
       
   
   
@@ -459,10 +459,6 @@ Summary:
 <h2>Class Overview</h2>
 <p>Animation factory for <code><a href="../../../../../com/facebook/fresco/animation/drawable/AnimatedDrawable2.html">AnimatedDrawable2</a></code>.
 
- This factory is similar to <code><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalAnimationFactory.html">ExperimentalAnimationFactory</a></code> but it wraps around the new
- <code><a href="../../../../../com/facebook/fresco/animation/bitmap/BitmapAnimationBackend.html">BitmapAnimationBackend</a></code> and does not rely on
- <code><a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawableCachingBackend.html">AnimatedDrawableCachingBackend</a></code>
- to do the caching.
 </p>
 
 
@@ -587,7 +583,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.html#ExperimentalBitmapAnimationDrawableFactory(com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider, java.util.concurrent.ScheduledExecutorService, com.facebook.common.time.MonotonicClock, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, com.facebook.imagepipeline.cache.CountingMemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.Supplier<java.lang.Integer>)">ExperimentalBitmapAnimationDrawableFactory</a></span>(<a href="../../../../../com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a> animatedDrawableBackendProvider, ScheduledExecutorService scheduledExecutorServiceForUiThread, <a href="../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, <a href="../../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; backingCache, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Integer&gt; cachingStrategySupplier)
+        <span class="sympad"><a href="../../../../../com/facebook/fresco/animation/factory/ExperimentalBitmapAnimationDrawableFactory.html#ExperimentalBitmapAnimationDrawableFactory(com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider, java.util.concurrent.ScheduledExecutorService, java.util.concurrent.ExecutorService, com.facebook.common.time.MonotonicClock, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, com.facebook.imagepipeline.cache.CountingMemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.Supplier<java.lang.Integer>, com.facebook.common.internal.Supplier<java.lang.Integer>)">ExperimentalBitmapAnimationDrawableFactory</a></span>(<a href="../../../../../com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a> animatedDrawableBackendProvider, ScheduledExecutorService scheduledExecutorServiceForUiThread, ExecutorService executorServiceForFramePreparing, <a href="../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, <a href="../../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; backingCache, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Integer&gt; cachingStrategySupplier, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Integer&gt; numberOfFramesToPrepareSupplier)
         
   </td></tr>
 
@@ -860,19 +856,19 @@ From class
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.backends.pipeline.DrawableFactory" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.drawee.backends.pipeline.DrawableFactory-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.drawable.DrawableFactory" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.imagepipeline.drawable.DrawableFactory-trigger"
           src="../../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From interface
 
-  <a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html">com.facebook.drawee.backends.pipeline.DrawableFactory</a>
+  <a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">com.facebook.imagepipeline.drawable.DrawableFactory</a>
 
-<div id="inherited-methods-com.facebook.drawee.backends.pipeline.DrawableFactory">
-  <div id="inherited-methods-com.facebook.drawee.backends.pipeline.DrawableFactory-list"
+<div id="inherited-methods-com.facebook.imagepipeline.drawable.DrawableFactory">
+  <div id="inherited-methods-com.facebook.imagepipeline.drawable.DrawableFactory-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-com.facebook.drawee.backends.pipeline.DrawableFactory-summary" style="display: none;">
+  <div id="inherited-methods-com.facebook.imagepipeline.drawable.DrawableFactory-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -888,7 +884,7 @@ From interface
             Drawable
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html#createDrawable(com.facebook.imagepipeline.image.CloseableImage)">createDrawable</a></span>(<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a> image)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html#createDrawable(com.facebook.imagepipeline.image.CloseableImage)">createDrawable</a></span>(<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a> image)
         
         <div class="jd-descrdiv">Create a drawable for the given image.</div>
   
@@ -906,7 +902,7 @@ From interface
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html#supportsImageType(com.facebook.imagepipeline.image.CloseableImage)">supportsImageType</a></span>(<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a> image)
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html#supportsImageType(com.facebook.imagepipeline.image.CloseableImage)">supportsImageType</a></span>(<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a> image)
         
         <div class="jd-descrdiv">Returns true if the factory can create a Drawable for the given image.</div>
   
@@ -1120,7 +1116,7 @@ From interface
 
 
 
-<a id="ExperimentalBitmapAnimationDrawableFactory(com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider, java.util.concurrent.ScheduledExecutorService, com.facebook.common.time.MonotonicClock, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, com.facebook.imagepipeline.cache.CountingMemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.Supplier<java.lang.Integer>)"></a>
+<a id="ExperimentalBitmapAnimationDrawableFactory(com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider, java.util.concurrent.ScheduledExecutorService, java.util.concurrent.ExecutorService, com.facebook.common.time.MonotonicClock, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, com.facebook.imagepipeline.cache.CountingMemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.common.internal.Supplier<java.lang.Integer>, com.facebook.common.internal.Supplier<java.lang.Integer>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1133,7 +1129,7 @@ From interface
         
       </span>
       <span class="sympad">ExperimentalBitmapAnimationDrawableFactory</span>
-      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a> animatedDrawableBackendProvider, ScheduledExecutorService scheduledExecutorServiceForUiThread, <a href="../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, <a href="../../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; backingCache, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Integer&gt; cachingStrategySupplier)</span>
+      <span class="normal">(<a href="../../../../../com/facebook/imagepipeline/animated/impl/AnimatedDrawableBackendProvider.html">AnimatedDrawableBackendProvider</a> animatedDrawableBackendProvider, ScheduledExecutorService scheduledExecutorServiceForUiThread, ExecutorService executorServiceForFramePreparing, <a href="../../../../../com/facebook/common/time/MonotonicClock.html">MonotonicClock</a> monotonicClock, <a href="../../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, <a href="../../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;<a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; backingCache, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Integer&gt; cachingStrategySupplier, <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Integer&gt; numberOfFramesToPrepareSupplier)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1193,7 +1189,7 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Create a drawable for the given image.
  It is guaranteed that this method is only called if
- <code><a href="../../../../../com/facebook/drawee/backends/pipeline/DrawableFactory.html#supportsImageType(com.facebook.imagepipeline.image.CloseableImage)">supportsImageType(CloseableImage)</a></code> returned true.</p></div>
+ <code><a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html#supportsImageType(com.facebook.imagepipeline.image.CloseableImage)">supportsImageType(CloseableImage)</a></code> returned true.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">

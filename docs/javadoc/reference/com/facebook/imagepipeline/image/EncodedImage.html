@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -295,7 +295,6 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableAnimatedBitmap.html">CloseableAnimatedBitmap</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableAnimatedImage.html">CloseableAnimatedImage</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableBitmap.html">CloseableBitmap</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></li>
@@ -755,13 +754,11 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
+            <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getEncodedCacheKey()">getEncodedCacheKey</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getBytesRange()">getBytesRange</a></span>()
         
-        <div class="jd-descrdiv">Gets the key to use when storing this image in encoded caches</div>
-  
   </td></tr>
 
 
@@ -778,7 +775,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getHeight()">getHeight</a></span>()
         
-        <div class="jd-descrdiv">Only valid if the image format is JPEG.</div>
+        <div class="jd-descrdiv">Returns the image height if known, else -1.</div>
   
   </td></tr>
 
@@ -904,7 +901,7 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getWidth()">getWidth</a></span>()
         
-        <div class="jd-descrdiv">Only valid if the image format is JPEG.</div>
+        <div class="jd-descrdiv">Returns the image width if known, else -1.</div>
   
   </td></tr>
 
@@ -1012,10 +1009,8 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#setEncodedCacheKey(com.facebook.cache.common.CacheKey)">setEncodedCacheKey</a></span>(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> encodedCacheKey)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#setBytesRange(com.facebook.imagepipeline.common.BytesRange)">setBytesRange</a></span>(<a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a> bytesRange)
         
-        <div class="jd-descrdiv">Sets the key related to this image for encoded caches</div>
-  
   </td></tr>
 
 
@@ -2004,7 +1999,7 @@ From interface
 </div>
 
 
-<a id="getEncodedCacheKey()"></a>
+<a id="getBytesRange()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2014,9 +2009,9 @@ From interface
          
          
          
-        <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>
+        <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
       </span>
-      <span class="sympad">getEncodedCacheKey</span>
+      <span class="sympad">getBytesRange</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -2029,12 +2024,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the key to use when storing this image in encoded caches</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>the encoded cache key
-</li></ul>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
@@ -2065,12 +2055,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Only valid if the image format is JPEG.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>height if the height is known, else -1.
-</li></ul>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the image height if known, else -1.
+</p></div>
 
     </div>
 </div>
@@ -2310,12 +2296,8 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Only valid if the image format is JPEG.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>width if the width is known, else -1.
-</li></ul>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the image width if known, else -1.
+</p></div>
 
     </div>
 </div>
@@ -2487,7 +2469,7 @@ From interface
 </div>
 
 
-<a id="setEncodedCacheKey(com.facebook.cache.common.CacheKey)"></a>
+<a id="setBytesRange(com.facebook.imagepipeline.common.BytesRange)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2499,8 +2481,8 @@ From interface
          
         void
       </span>
-      <span class="sympad">setEncodedCacheKey</span>
-      <span class="normal">(<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> encodedCacheKey)</span>
+      <span class="sympad">setBytesRange</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a> bytesRange)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2512,7 +2494,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the key related to this image for encoded caches</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

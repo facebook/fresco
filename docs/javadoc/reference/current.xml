@@ -804,6 +804,127 @@
 </package>
 <package name="com.facebook.cache.common"
 >
+<class name="BaseCacheEventListener"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.cache.common.CacheEventListener">
+</implements>
+<constructor name="BaseCacheEventListener"
+ type="com.facebook.cache.common.BaseCacheEventListener"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="onCleared"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="onEviction"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+<method name="onHit"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+<method name="onMiss"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+<method name="onReadException"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+<method name="onWriteAttempt"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+<method name="onWriteException"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+<method name="onWriteSuccess"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheEvent" type="com.facebook.cache.common.CacheEvent">
+</parameter>
+</method>
+</class>
 <interface name="CacheErrorLogger"
  abstract="true"
  static="false"
@@ -1221,9 +1342,22 @@
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
+<parameter name="sourceUri" type="android.net.Uri">
+</parameter>
 </constructor>
 <method name="getCallerContext"
  return="java.lang.Object"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getSourceUri"
+ return="android.net.Uri"
  abstract="false"
  native="false"
  synchronized="false"
@@ -1762,6 +1896,39 @@
 <parameter name="debugInfo" type="java.lang.Object">
 </parameter>
 </method>
+</class>
+<class name="DefaultDiskStorage.FileType"
+ extends="java.lang.Object"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+<field name="CONTENT"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;.cnt&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="TEMP"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;.tmp&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 </class>
 <class name="DefaultEntryEvictionComparatorSupplier"
  extends="java.lang.Object"
@@ -3460,6 +3627,17 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<method name="getPriority"
+ return="int"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="onActivityCreate"
  return="void"
  abstract="true"
@@ -3538,6 +3716,28 @@
 <parameter name="activity" type="android.app.Activity">
 </parameter>
 </method>
+<field name="MAX_PRIORITY"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="10"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="MIN_PRIORITY"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="1"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 </interface>
 <class name="ActivityListenerManager"
  extends="java.lang.Object"
@@ -3589,6 +3789,17 @@
  visibility="public"
 >
 </constructor>
+<method name="getPriority"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="onActivityCreate"
  return="void"
  abstract="false"
@@ -8925,27 +9136,19 @@
 >
 <class name="CloseableReference"
  extends="java.lang.Object"
- abstract="true"
+ abstract="false"
  static="false"
- final="false"
+ final="true"
  deprecated="not deprecated"
  visibility="public"
 >
 <implements name="java.io.Closeable">
 </implements>
-<constructor name="CloseableReference"
- type="com.facebook.common.references.CloseableReference"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
 <method name="clone"
  return="com.facebook.common.references.CloseableReference&lt;T&gt;"
- abstract="true"
+ abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -8954,9 +9157,9 @@
 </method>
 <method name="cloneOrNull"
  return="com.facebook.common.references.CloseableReference&lt;T&gt;"
- abstract="true"
+ abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -8991,7 +9194,7 @@
 </method>
 <method name="close"
  return="void"
- abstract="true"
+ abstract="false"
  native="false"
  synchronized="false"
  static="false"
@@ -9028,9 +9231,9 @@
 </method>
 <method name="get"
  return="T"
- abstract="true"
+ abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -9039,9 +9242,9 @@
 </method>
 <method name="getUnderlyingReferenceTestOnly"
  return="com.facebook.common.references.SharedReference&lt;T&gt;"
- abstract="true"
+ abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -9050,7 +9253,7 @@
 </method>
 <method name="getValueHash"
  return="int"
- abstract="true"
+ abstract="false"
  native="false"
  synchronized="false"
  static="false"
@@ -9061,9 +9264,9 @@
 </method>
 <method name="isValid"
  return="boolean"
- abstract="true"
+ abstract="false"
  native="false"
- synchronized="false"
+ synchronized="true"
  static="false"
  final="false"
  deprecated="not deprecated"
@@ -9109,19 +9312,6 @@
 <parameter name="t" type="T">
 </parameter>
 <parameter name="resourceReleaser" type="com.facebook.common.references.ResourceReleaser&lt;T&gt;">
-</parameter>
-</method>
-<method name="setUseFinalizers"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="useFinalizers" type="boolean">
 </parameter>
 </method>
 </class>
@@ -11622,6 +11812,21 @@
 <parameter name="failure" type="java.lang.Throwable">
 </parameter>
 </method>
+<method name="waitForFinalResult"
+ return="T"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="dataSource" type="com.facebook.datasource.DataSource&lt;T&gt;">
+</parameter>
+<exception name="Throwable" type="java.lang.Throwable">
+</exception>
+</method>
 </class>
 <interface name="DataSubscriber"
  abstract="true"
@@ -11852,40 +12057,6 @@
 </package>
 <package name="com.facebook.drawee.backends.pipeline"
 >
-<interface name="DrawableFactory"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="createDrawable"
- return="android.graphics.drawable.Drawable"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="image" type="com.facebook.imagepipeline.image.CloseableImage">
-</parameter>
-</method>
-<method name="supportsImageType"
- return="boolean"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="image" type="com.facebook.imagepipeline.image.CloseableImage">
-</parameter>
-</method>
-</interface>
 <class name="DraweeConfig"
  extends="java.lang.Object"
  abstract="false"
@@ -11895,7 +12066,7 @@
  visibility="public"
 >
 <method name="getCustomDrawableFactories"
- return="com.facebook.common.internal.ImmutableList&lt;com.facebook.drawee.backends.pipeline.DrawableFactory&gt;"
+ return="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;"
  abstract="false"
  native="false"
  synchronized="false"
@@ -11965,7 +12136,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="factory" type="com.facebook.drawee.backends.pipeline.DrawableFactory">
+<parameter name="factory" type="com.facebook.imagepipeline.drawable.DrawableFactory">
 </parameter>
 </method>
 <method name="build"
@@ -12158,7 +12329,7 @@
 </parameter>
 <parameter name="deferredReleaser" type="com.facebook.drawee.components.DeferredReleaser">
 </parameter>
-<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
+<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.drawable.DrawableFactory">
 </parameter>
 <parameter name="uiThreadExecutor" type="java.util.concurrent.Executor">
 </parameter>
@@ -12184,7 +12355,7 @@
 </parameter>
 <parameter name="deferredReleaser" type="com.facebook.drawee.components.DeferredReleaser">
 </parameter>
-<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
+<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.drawable.DrawableFactory">
 </parameter>
 <parameter name="uiThreadExecutor" type="java.util.concurrent.Executor">
 </parameter>
@@ -12198,7 +12369,7 @@
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
-<parameter name="drawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.drawee.backends.pipeline.DrawableFactory&gt;">
+<parameter name="globalDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
 </parameter>
 </constructor>
 <method name="createDrawable"
@@ -12280,6 +12451,8 @@
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
 </parameter>
+<parameter name="customDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
+</parameter>
 </method>
 <method name="releaseDrawable"
  return="void"
@@ -12305,6 +12478,19 @@
  visibility="protected"
 >
 <parameter name="image" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;">
+</parameter>
+</method>
+<method name="setCustomDrawableFactories"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="customDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
 </parameter>
 </method>
 <method name="setDrawDebugOverlay"
@@ -12396,6 +12582,45 @@
  deprecated="not deprecated"
  visibility="protected"
 >
+</method>
+<method name="setCustomDrawableFactories"
+ return="com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="customDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
+</parameter>
+</method>
+<method name="setCustomDrawableFactories"
+ return="com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="drawableFactories" type="com.facebook.imagepipeline.drawable.DrawableFactory...">
+</parameter>
+</method>
+<method name="setCustomDrawableFactory"
+ return="com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="drawableFactory" type="com.facebook.imagepipeline.drawable.DrawableFactory">
+</parameter>
 </method>
 <method name="setUri"
  return="com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder"
@@ -12528,13 +12753,13 @@
 </parameter>
 <parameter name="deferredReleaser" type="com.facebook.drawee.components.DeferredReleaser">
 </parameter>
-<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
+<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.drawable.DrawableFactory">
 </parameter>
 <parameter name="uiThreadExecutor" type="java.util.concurrent.Executor">
 </parameter>
 <parameter name="memoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
-<parameter name="drawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.drawee.backends.pipeline.DrawableFactory&gt;">
+<parameter name="drawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
 </parameter>
 <parameter name="debugOverlayEnabledSupplier" type="com.facebook.common.internal.Supplier&lt;java.lang.Boolean&gt;">
 </parameter>
@@ -12553,13 +12778,15 @@
 </parameter>
 <parameter name="deferredReleaser" type="com.facebook.drawee.components.DeferredReleaser">
 </parameter>
-<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
+<parameter name="animatedDrawableFactory" type="com.facebook.imagepipeline.drawable.DrawableFactory">
 </parameter>
 <parameter name="uiThreadExecutor" type="java.util.concurrent.Executor">
 </parameter>
 <parameter name="memoryCache" type="com.facebook.imagepipeline.cache.MemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
-<parameter name="drawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.drawee.backends.pipeline.DrawableFactory&gt;">
+<parameter name="globalDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
+</parameter>
+<parameter name="customDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
 </parameter>
 <parameter name="dataSourceSupplier" type="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;&gt;">
 </parameter>
@@ -12587,6 +12814,27 @@
 <parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
 </parameter>
 <parameter name="callerContext" type="java.lang.Object">
+</parameter>
+</method>
+<method name="newController"
+ return="com.facebook.drawee.backends.pipeline.PipelineDraweeController"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="dataSourceSupplier" type="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;&gt;">
+</parameter>
+<parameter name="id" type="java.lang.String">
+</parameter>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+<parameter name="callerContext" type="java.lang.Object">
+</parameter>
+<parameter name="customDrawableFactories" type="com.facebook.common.internal.ImmutableList&lt;com.facebook.imagepipeline.drawable.DrawableFactory&gt;">
 </parameter>
 </method>
 </class>
@@ -13608,19 +13856,6 @@
  visibility="protected"
 >
 <parameter name="enabled" type="boolean">
-</parameter>
-</method>
-<method name="setRetryManager"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="retryManager" type="com.facebook.drawee.components.RetryManager">
 </parameter>
 </method>
 <method name="shouldHandleGesture"
@@ -18033,17 +18268,6 @@
  visibility="public"
 >
 </method>
-<method name="getActualImageMatrix"
- return="android.graphics.Matrix"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
 <method name="getActualImageScaleType"
  return="com.facebook.drawee.drawable.ScalingUtils.ScaleType"
  abstract="false"
@@ -18268,19 +18492,6 @@
  visibility="public"
 >
 <parameter name="focusPoint" type="android.graphics.PointF">
-</parameter>
-</method>
-<method name="setActualImageMatrix"
- return="com.facebook.drawee.generic.GenericDraweeHierarchyBuilder"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="deprecated"
- visibility="public"
->
-<parameter name="actualImageMatrix" type="android.graphics.Matrix">
 </parameter>
 </method>
 <method name="setActualImageScaleType"
@@ -20552,6 +20763,19 @@
 <parameter name="draweeController" type="com.facebook.drawee.interfaces.DraweeController">
 </parameter>
 </method>
+<method name="setGlobalLegacyVisibilityHandlingEnabled"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="legacyVisibilityHandlingEnabled" type="boolean">
+</parameter>
+</method>
 <method name="setHierarchy"
  return="void"
  abstract="false"
@@ -20563,6 +20787,19 @@
  visibility="public"
 >
 <parameter name="hierarchy" type="DH">
+</parameter>
+</method>
+<method name="setLegacyVisibilityHandlingEnabled"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="legacyVisibilityHandlingEnabled" type="boolean">
 </parameter>
 </method>
 </class>
@@ -21721,6 +21958,17 @@
  visibility="public"
 >
 </field>
+<field name="FRAME_TYPE_UNKNOWN"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="-1"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 </class>
 <interface name="BitmapAnimationBackend.FrameListener"
  abstract="true"
@@ -22511,6 +22759,50 @@
 </parameter>
 </method>
 </interface>
+<class name="DefaultBitmapFramePreparer"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer">
+</implements>
+<constructor name="DefaultBitmapFramePreparer"
+ type="com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
+</parameter>
+<parameter name="bitmapFrameRenderer" type="com.facebook.fresco.animation.bitmap.BitmapFrameRenderer">
+</parameter>
+<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
+</parameter>
+<parameter name="executorService" type="java.util.concurrent.ExecutorService">
+</parameter>
+</constructor>
+<method name="prepareFrame"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapFrameCache" type="com.facebook.fresco.animation.bitmap.BitmapFrameCache">
+</parameter>
+<parameter name="animationBackend" type="com.facebook.fresco.animation.backend.AnimationBackend">
+</parameter>
+<parameter name="frameNumber" type="int">
+</parameter>
+</method>
+</class>
 <class name="FixedNumberBitmapFramePreparationStrategy"
  extends="java.lang.Object"
  abstract="false"
@@ -23338,7 +23630,7 @@
 </package>
 <package name="com.facebook.fresco.animation.factory"
 >
-<class name="ExperimentalAnimationFactory"
+<class name="AnimatedFactoryV2Impl"
  extends="java.lang.Object"
  abstract="false"
  static="false"
@@ -23346,26 +23638,24 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.drawee.backends.pipeline.DrawableFactory">
+<implements name="com.facebook.imagepipeline.animated.factory.AnimatedFactory">
 </implements>
-<constructor name="ExperimentalAnimationFactory"
- type="com.facebook.fresco.animation.factory.ExperimentalAnimationFactory"
+<constructor name="AnimatedFactoryV2Impl"
+ type="com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl"
  static="false"
  final="false"
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="animatedDrawableBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider">
+<parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
 </parameter>
-<parameter name="animatedDrawableCachingBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider">
+<parameter name="executorSupplier" type="com.facebook.imagepipeline.core.ExecutorSupplier">
 </parameter>
-<parameter name="scheduledExecutorServiceForUiThread" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="monotonicClock" type="com.facebook.common.time.MonotonicClock">
+<parameter name="backingCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
 </constructor>
-<method name="createDrawable"
- return="com.facebook.fresco.animation.drawable.AnimatedDrawable2"
+<method name="getAnimatedDrawableFactory"
+ return="com.facebook.imagepipeline.drawable.DrawableFactory"
  abstract="false"
  native="false"
  synchronized="false"
@@ -23374,11 +23664,11 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="image" type="com.facebook.imagepipeline.image.CloseableImage">
+<parameter name="context" type="android.content.Context">
 </parameter>
 </method>
-<method name="supportsImageType"
- return="boolean"
+<method name="getGifDecoder"
+ return="com.facebook.imagepipeline.decoder.ImageDecoder"
  abstract="false"
  native="false"
  synchronized="false"
@@ -23387,7 +23677,20 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="image" type="com.facebook.imagepipeline.image.CloseableImage">
+<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="getWebPDecoder"
+ return="com.facebook.imagepipeline.decoder.ImageDecoder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
 </parameter>
 </method>
 </class>
@@ -23399,7 +23702,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="com.facebook.drawee.backends.pipeline.DrawableFactory">
+<implements name="com.facebook.imagepipeline.drawable.DrawableFactory">
 </implements>
 <constructor name="ExperimentalBitmapAnimationDrawableFactory"
  type="com.facebook.fresco.animation.factory.ExperimentalBitmapAnimationDrawableFactory"
@@ -23412,6 +23715,8 @@
 </parameter>
 <parameter name="scheduledExecutorServiceForUiThread" type="java.util.concurrent.ScheduledExecutorService">
 </parameter>
+<parameter name="executorServiceForFramePreparing" type="java.util.concurrent.ExecutorService">
+</parameter>
 <parameter name="monotonicClock" type="com.facebook.common.time.MonotonicClock">
 </parameter>
 <parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
@@ -23419,6 +23724,8 @@
 <parameter name="backingCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
 <parameter name="cachingStrategySupplier" type="com.facebook.common.internal.Supplier&lt;java.lang.Integer&gt;">
+</parameter>
+<parameter name="numberOfFramesToPrepareSupplier" type="com.facebook.common.internal.Supplier&lt;java.lang.Integer&gt;">
 </parameter>
 </constructor>
 <method name="createDrawable"
@@ -23717,178 +24024,6 @@
 >
 </field>
 </interface>
-</package>
-<package name="com.facebook.fresco.animation.wrapper"
->
-<class name="AnimatedDrawableCachingBackendWrapper"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.fresco.animation.backend.AnimationBackend">
-</implements>
-<implements name="com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.InactivityListener">
-</implements>
-<constructor name="AnimatedDrawableCachingBackendWrapper"
- type="com.facebook.fresco.animation.wrapper.AnimatedDrawableCachingBackendWrapper"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableCachingBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</parameter>
-</constructor>
-<method name="clear"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="drawFrame"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="parent" type="android.graphics.drawable.Drawable">
-</parameter>
-<parameter name="canvas" type="android.graphics.Canvas">
-</parameter>
-<parameter name="frameNumber" type="int">
-</parameter>
-</method>
-<method name="getFrameCount"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getFrameDurationMs"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="frameNumber" type="int">
-</parameter>
-</method>
-<method name="getIntrinsicHeight"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getIntrinsicWidth"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getLoopCount"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getSizeInBytes"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onInactive"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="setAlpha"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="alpha" type="int">
-</parameter>
-</method>
-<method name="setBounds"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="bounds" type="android.graphics.Rect">
-</parameter>
-</method>
-<method name="setColorFilter"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="colorFilter" type="android.graphics.ColorFilter">
-</parameter>
-</method>
-</class>
 </package>
 <package name="com.facebook.imageformat"
 >
@@ -24289,360 +24424,6 @@
 </package>
 <package name="com.facebook.imagepipeline.animated.base"
 >
-<class name="AbstractAnimatedDrawable"
- extends="android.graphics.drawable.Drawable"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="android.graphics.drawable.Animatable">
-</implements>
-<implements name="com.facebook.drawable.base.DrawableWithCaches">
-</implements>
-<constructor name="AbstractAnimatedDrawable"
- type="com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="scheduledExecutorServiceForUiThread" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</parameter>
-<parameter name="animatedDrawableDiagnostics" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableDiagnostics">
-</parameter>
-<parameter name="monotonicClock" type="com.facebook.common.time.MonotonicClock">
-</parameter>
-</constructor>
-<method name="didLastDrawRender"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="draw"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="canvas" type="android.graphics.Canvas">
-</parameter>
-</method>
-<method name="dropCaches"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getAnimatedDrawableBackend"
- return="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-</method>
-<method name="getDuration"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getFrameCount"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getLoopCount"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getOpacity"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="isRunning"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="pause"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="setAlpha"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="alpha" type="int">
-</parameter>
-</method>
-<method name="setColorFilter"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="cf" type="android.graphics.ColorFilter">
-</parameter>
-</method>
-<method name="setLogId"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="logId" type="java.lang.String">
-</parameter>
-</method>
-<method name="start"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="stop"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<interface name="AnimatableDrawable"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="android.graphics.drawable.Animatable">
-</implements>
-<method name="createAnimatorUpdateListener"
- return="android.animation.ValueAnimator.AnimatorUpdateListener"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="createValueAnimator"
- return="android.animation.ValueAnimator"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="createValueAnimator"
- return="android.animation.ValueAnimator"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="maxDurationMs" type="int">
-</parameter>
-</method>
-</interface>
-<interface name="AnimatableDrawableSupport"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="android.graphics.drawable.Animatable">
-</implements>
-<method name="createAnimatorUpdateListener"
- return="com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="createValueAnimator"
- return="com.nineoldandroids.animation.ValueAnimator"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="createValueAnimator"
- return="com.nineoldandroids.animation.ValueAnimator"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="maxDurationMs" type="int">
-</parameter>
-</method>
-</interface>
-<class name="AnimatedDrawable"
- extends="com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.base.AnimatableDrawable">
-</implements>
-<constructor name="AnimatedDrawable"
- type="com.facebook.imagepipeline.animated.base.AnimatedDrawable"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="scheduledExecutorServiceForUiThread" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</parameter>
-<parameter name="animatedDrawableDiagnostics" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableDiagnostics">
-</parameter>
-<parameter name="monotonicClock" type="com.facebook.common.time.MonotonicClock">
-</parameter>
-</constructor>
-<method name="createAnimatorUpdateListener"
- return="android.animation.ValueAnimator.AnimatorUpdateListener"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="createValueAnimator"
- return="android.animation.ValueAnimator"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="maxDurationMs" type="int">
-</parameter>
-</method>
-<method name="createValueAnimator"
- return="android.animation.ValueAnimator"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
 <interface name="AnimatedDrawableBackend"
  abstract="true"
  static="false"
@@ -24875,194 +24656,6 @@
 <parameter name="frameNumber" type="int">
 </parameter>
 <parameter name="canvas" type="android.graphics.Canvas">
-</parameter>
-</method>
-</interface>
-<interface name="AnimatedDrawableCachingBackend"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend">
-</implements>
-<method name="appendDebugOptionString"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="sb" type="java.lang.StringBuilder">
-</parameter>
-</method>
-<method name="forNewBounds"
- return="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="bounds" type="android.graphics.Rect">
-</parameter>
-</method>
-<method name="getBitmapForFrame"
- return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="frameNumber" type="int">
-</parameter>
-</method>
-<method name="getPreviewBitmap"
- return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</interface>
-<interface name="AnimatedDrawableDiagnostics"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="drawDebugOverlay"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="canvas" type="android.graphics.Canvas">
-</parameter>
-<parameter name="destRect" type="android.graphics.Rect">
-</parameter>
-</method>
-<method name="incrementDrawnFrames"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="drawnFrames" type="int">
-</parameter>
-</method>
-<method name="incrementDroppedFrames"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="droppedFrames" type="int">
-</parameter>
-</method>
-<method name="onDrawMethodBegin"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onDrawMethodEnd"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onNextFrameMethodBegin"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onNextFrameMethodEnd"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onStartMethodBegin"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onStartMethodEnd"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="setBackend"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
 </parameter>
 </method>
 </interface>
@@ -25435,68 +25028,6 @@
 >
 <parameter name="maximumBytes" type="int">
 </parameter>
-</method>
-</class>
-<class name="AnimatedDrawableSupport"
- extends="com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.base.AnimatableDrawableSupport">
-</implements>
-<constructor name="AnimatedDrawableSupport"
- type="com.facebook.imagepipeline.animated.base.AnimatedDrawableSupport"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="scheduledExecutorServiceForUiThread" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</parameter>
-<parameter name="animatedDrawableDiagnostics" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableDiagnostics">
-</parameter>
-<parameter name="monotonicClock" type="com.facebook.common.time.MonotonicClock">
-</parameter>
-</constructor>
-<method name="createAnimatorUpdateListener"
- return="com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="createValueAnimator"
- return="com.nineoldandroids.animation.ValueAnimator"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="maxDurationMs" type="int">
-</parameter>
-</method>
-<method name="createValueAnimator"
- return="com.nineoldandroids.animation.ValueAnimator"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
 </method>
 </class>
 <interface name="AnimatedImage"
@@ -26191,111 +25722,6 @@
 </package>
 <package name="com.facebook.imagepipeline.animated.factory"
 >
-<interface name="AnimatedDrawableFactory"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="create"
- return="android.graphics.drawable.Drawable"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="closeableImage" type="com.facebook.imagepipeline.image.CloseableImage">
-</parameter>
-</method>
-</interface>
-<class name="AnimatedDrawableFactoryImpl"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
-</implements>
-<constructor name="AnimatedDrawableFactoryImpl"
- type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactoryImpl"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider">
-</parameter>
-<parameter name="animatedDrawableCachingBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider">
-</parameter>
-<parameter name="animatedDrawableUtil" type="com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil">
-</parameter>
-<parameter name="scheduledExecutorService" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="resources" type="android.content.res.Resources">
-</parameter>
-</constructor>
-<method name="create"
- return="android.graphics.drawable.Drawable"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="closeableImage" type="com.facebook.imagepipeline.image.CloseableImage">
-</parameter>
-</method>
-</class>
-<class name="AnimatedDrawableFactoryImplSupport"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory">
-</implements>
-<constructor name="AnimatedDrawableFactoryImplSupport"
- type="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactoryImplSupport"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider">
-</parameter>
-<parameter name="animatedDrawableCachingBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider">
-</parameter>
-<parameter name="animatedDrawableUtil" type="com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil">
-</parameter>
-<parameter name="scheduledExecutorService" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="resources" type="android.content.res.Resources">
-</parameter>
-</constructor>
-<method name="create"
- return="android.graphics.drawable.Drawable"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="closeableImage" type="com.facebook.imagepipeline.image.CloseableImage">
-</parameter>
-</method>
-</class>
 <interface name="AnimatedFactory"
  abstract="true"
  static="false"
@@ -26304,7 +25730,7 @@
  visibility="public"
 >
 <method name="getAnimatedDrawableFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory"
+ return="com.facebook.imagepipeline.drawable.DrawableFactory"
  abstract="true"
  native="false"
  synchronized="false"
@@ -26316,8 +25742,8 @@
 <parameter name="context" type="android.content.Context">
 </parameter>
 </method>
-<method name="getAnimatedImageFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedImageFactory"
+<method name="getGifDecoder"
+ return="com.facebook.imagepipeline.decoder.ImageDecoder"
  abstract="true"
  native="false"
  synchronized="false"
@@ -26326,97 +25752,23 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
+</method>
+<method name="getWebPDecoder"
+ return="com.facebook.imagepipeline.decoder.ImageDecoder"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="config" type="android.graphics.Bitmap.Config">
+</parameter>
 </method>
 </interface>
-<class name="AnimatedFactoryImpl"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.factory.AnimatedFactory">
-</implements>
-<constructor name="AnimatedFactoryImpl"
- type="com.facebook.imagepipeline.animated.factory.AnimatedFactoryImpl"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
-</parameter>
-<parameter name="executorSupplier" type="com.facebook.imagepipeline.core.ExecutorSupplier">
-</parameter>
-</constructor>
-<method name="createAnimatedDrawableFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="protected"
->
-<parameter name="animatedDrawableBackendProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider">
-</parameter>
-<parameter name="animatedDrawableCachingBackendImplProvider" type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImplProvider">
-</parameter>
-<parameter name="animatedDrawableUtil" type="com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil">
-</parameter>
-<parameter name="scheduledExecutorService" type="java.util.concurrent.ScheduledExecutorService">
-</parameter>
-<parameter name="resources" type="android.content.res.Resources">
-</parameter>
-</method>
-<method name="getAnimatedDrawableFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedDrawableFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="context" type="android.content.Context">
-</parameter>
-</method>
-<method name="getAnimatedImageFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedImageFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<class name="AnimatedFactoryImplSupport"
- extends="com.facebook.imagepipeline.animated.factory.AnimatedFactoryImpl"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="AnimatedFactoryImplSupport"
- type="com.facebook.imagepipeline.animated.factory.AnimatedFactoryImplSupport"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
-</parameter>
-<parameter name="executorSupplier" type="com.facebook.imagepipeline.core.ExecutorSupplier">
-</parameter>
-</constructor>
-</class>
 <class name="AnimatedFactoryProvider"
  extends="java.lang.Object"
  abstract="false"
@@ -26446,6 +25798,8 @@
 <parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
 </parameter>
 <parameter name="executorSupplier" type="com.facebook.imagepipeline.core.ExecutorSupplier">
+</parameter>
+<parameter name="backingCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
 </method>
 </class>
@@ -26864,403 +26218,6 @@
 </parameter>
 </method>
 </interface>
-<class name="AnimatedDrawableCachingBackendImpl"
- extends="com.facebook.imagepipeline.animated.base.DelegatingAnimatedDrawableBackend"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</implements>
-<constructor name="AnimatedDrawableCachingBackendImpl"
- type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="executorService" type="com.facebook.common.executors.SerialExecutorService">
-</parameter>
-<parameter name="activityManager" type="android.app.ActivityManager">
-</parameter>
-<parameter name="animatedDrawableUtil" type="com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil">
-</parameter>
-<parameter name="monotonicClock" type="com.facebook.common.time.MonotonicClock">
-</parameter>
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend">
-</parameter>
-<parameter name="options" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions">
-</parameter>
-</constructor>
-<method name="appendDebugOptionString"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="sb" type="java.lang.StringBuilder">
-</parameter>
-</method>
-<method name="forNewBounds"
- return="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="bounds" type="android.graphics.Rect">
-</parameter>
-</method>
-<method name="getBitmapForFrame"
- return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="frameNumber" type="int">
-</parameter>
-</method>
-<method name="getPreviewBitmap"
- return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
-<interface name="AnimatedDrawableCachingBackendImplProvider"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="get"
- return="com.facebook.imagepipeline.animated.impl.AnimatedDrawableCachingBackendImpl"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend">
-</parameter>
-<parameter name="options" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableOptions">
-</parameter>
-</method>
-</interface>
-<class name="AnimatedDrawableDiagnosticsImpl"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.base.AnimatedDrawableDiagnostics">
-</implements>
-<constructor name="AnimatedDrawableDiagnosticsImpl"
- type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsImpl"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableUtil" type="com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil">
-</parameter>
-<parameter name="displayMetrics" type="android.util.DisplayMetrics">
-</parameter>
-</constructor>
-<method name="drawDebugOverlay"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="canvas" type="android.graphics.Canvas">
-</parameter>
-<parameter name="destRect" type="android.graphics.Rect">
-</parameter>
-</method>
-<method name="incrementDrawnFrames"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="drawnFrames" type="int">
-</parameter>
-</method>
-<method name="incrementDroppedFrames"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="droppedFrames" type="int">
-</parameter>
-</method>
-<method name="onDrawMethodBegin"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onDrawMethodEnd"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onNextFrameMethodBegin"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onNextFrameMethodEnd"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onStartMethodBegin"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onStartMethodEnd"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="setBackend"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</parameter>
-</method>
-</class>
-<class name="AnimatedDrawableDiagnosticsNoop"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.animated.base.AnimatedDrawableDiagnostics">
-</implements>
-<constructor name="AnimatedDrawableDiagnosticsNoop"
- type="com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsNoop"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</constructor>
-<method name="drawDebugOverlay"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="canvas" type="android.graphics.Canvas">
-</parameter>
-<parameter name="destRect" type="android.graphics.Rect">
-</parameter>
-</method>
-<method name="getInstance"
- return="com.facebook.imagepipeline.animated.impl.AnimatedDrawableDiagnosticsNoop"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="incrementDrawnFrames"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="drawnFrames" type="int">
-</parameter>
-</method>
-<method name="incrementDroppedFrames"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="droppedFrames" type="int">
-</parameter>
-</method>
-<method name="onDrawMethodBegin"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onDrawMethodEnd"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onNextFrameMethodBegin"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onNextFrameMethodEnd"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onStartMethodBegin"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="onStartMethodEnd"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="setBackend"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedDrawableBackend" type="com.facebook.imagepipeline.animated.base.AnimatedDrawableCachingBackend">
-</parameter>
-</method>
-</class>
 <class name="AnimatedFrameCache"
  extends="java.lang.Object"
  abstract="false"
@@ -27440,21 +26397,6 @@
  visibility="public"
 >
 </constructor>
-<method name="appendMemoryString"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="sb" type="java.lang.StringBuilder">
-</parameter>
-<parameter name="kiloBytes" type="int">
-</parameter>
-</method>
 <method name="fixFrameDurations"
  return="void"
  abstract="false"
@@ -27571,7 +26513,7 @@
 >
 <parameter name="context" type="android.content.Context">
 </parameter>
-<parameter name="okHttpClient" type="okhttp3.OkHttpClient">
+<parameter name="okHttpClient" type="OkHttpClient">
 </parameter>
 </method>
 </class>
@@ -27590,7 +26532,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="okHttpClient" type="okhttp3.OkHttpClient">
+<parameter name="okHttpClient" type="OkHttpClient">
 </parameter>
 </constructor>
 <constructor name="OkHttpNetworkFetcher"
@@ -27600,7 +26542,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="callFactory" type="okhttp3.Call.Factory">
+<parameter name="callFactory" type="Call.Factory">
 </parameter>
 <parameter name="cancellationExecutor" type="java.util.concurrent.Executor">
 </parameter>
@@ -27649,7 +26591,7 @@
 </parameter>
 <parameter name="callback" type="com.facebook.imagepipeline.producers.NetworkFetcher.Callback">
 </parameter>
-<parameter name="request" type="okhttp3.Request">
+<parameter name="request" type="Request">
 </parameter>
 </method>
 <method name="getExtraMap"
@@ -28667,6 +27609,27 @@
 <parameter name="isExternalCreatedBitmapLogEnabled" type="boolean">
 </parameter>
 </method>
+<method name="get"
+ return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bitmapMemoryCacheParamsSupplier" type="com.facebook.common.internal.Supplier&lt;com.facebook.imagepipeline.cache.MemoryCacheParams&gt;">
+</parameter>
+<parameter name="memoryTrimmableRegistry" type="com.facebook.common.memory.MemoryTrimmableRegistry">
+</parameter>
+<parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
+</parameter>
+<parameter name="isExternalCreatedBitmapLogEnabled" type="boolean">
+</parameter>
+<parameter name="trimStrategy" type="com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy">
+</parameter>
+</method>
 </class>
 <class name="BitmapMemoryCacheFactory"
  extends="java.lang.Object"
@@ -29596,63 +28559,6 @@
 >
 </method>
 </class>
-<interface name="DiskCachePolicy"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="createAndStartCacheReadTask"
- return="bolts.Task&lt;com.facebook.imagepipeline.image.EncodedImage&gt;"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-<parameter name="isCancelled" type="java.util.concurrent.atomic.AtomicBoolean">
-</parameter>
-</method>
-<method name="getCacheChoiceForResult"
- return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-</method>
-<method name="writeToCache"
- return="void"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="newResult" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-</method>
-</interface>
 <class name="EncodedCountingMemoryCacheFactory"
  extends="java.lang.Object"
  abstract="false"
@@ -30555,156 +29461,6 @@
 </parameter>
 </method>
 </class>
-<class name="SmallCacheIfRequestedDiskCachePolicy"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.cache.DiskCachePolicy">
-</implements>
-<constructor name="SmallCacheIfRequestedDiskCachePolicy"
- type="com.facebook.imagepipeline.cache.SmallCacheIfRequestedDiskCachePolicy"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="defaultBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
-</parameter>
-<parameter name="smallImageBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
-</parameter>
-<parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
-</parameter>
-</constructor>
-<method name="createAndStartCacheReadTask"
- return="bolts.Task&lt;com.facebook.imagepipeline.image.EncodedImage&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-<parameter name="isCancelled" type="java.util.concurrent.atomic.AtomicBoolean">
-</parameter>
-</method>
-<method name="getCacheChoiceForResult"
- return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-</method>
-<method name="writeToCache"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="newResult" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-</method>
-</class>
-<class name="SplitCachesByImageSizeDiskCachePolicy"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<implements name="com.facebook.imagepipeline.cache.DiskCachePolicy">
-</implements>
-<constructor name="SplitCachesByImageSizeDiskCachePolicy"
- type="com.facebook.imagepipeline.cache.SplitCachesByImageSizeDiskCachePolicy"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="defaultBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
-</parameter>
-<parameter name="smallImageBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
-</parameter>
-<parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
-</parameter>
-<parameter name="forceSmallCacheThresholdBytes" type="int">
-</parameter>
-</constructor>
-<method name="createAndStartCacheReadTask"
- return="bolts.Task&lt;com.facebook.imagepipeline.image.EncodedImage&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-<parameter name="isCancelled" type="java.util.concurrent.atomic.AtomicBoolean">
-</parameter>
-</method>
-<method name="getCacheChoiceForResult"
- return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-</method>
-<method name="writeToCache"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="newResult" type="com.facebook.imagepipeline.image.EncodedImage">
-</parameter>
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-</method>
-</class>
 <class name="StagingArea"
  extends="java.lang.Object"
  abstract="false"
@@ -30829,6 +29585,123 @@
 </package>
 <package name="com.facebook.imagepipeline.common"
 >
+<class name="BytesRange"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="BytesRange"
+ type="com.facebook.imagepipeline.common.BytesRange"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="from" type="int">
+</parameter>
+<parameter name="to" type="int">
+</parameter>
+</constructor>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="compare" type="com.facebook.imagepipeline.common.BytesRange">
+</parameter>
+</method>
+<method name="from"
+ return="com.facebook.imagepipeline.common.BytesRange"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="from" type="int">
+</parameter>
+</method>
+<method name="fromContentRangeHeader"
+ return="com.facebook.imagepipeline.common.BytesRange"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="header" type="java.lang.String">
+</parameter>
+<exception name="IllegalArgumentException" type="java.lang.IllegalArgumentException">
+</exception>
+</method>
+<method name="toHttpRangeHeaderValue"
+ return="java.lang.String"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="toMax"
+ return="com.facebook.imagepipeline.common.BytesRange"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="to" type="int">
+</parameter>
+</method>
+<field name="TO_END_OF_CONTENT"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="2147483647"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="from"
+ type="int"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="to"
+ type="int"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
 <class name="ImageDecodeOptions"
  extends="java.lang.Object"
  abstract="false"
@@ -32113,23 +30986,6 @@
  synchronized="false"
  static="false"
  final="false"
- deprecated="deprecated"
- visibility="public"
->
-<parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
-</parameter>
-<parameter name="callerContext" type="java.lang.Object">
-</parameter>
-<parameter name="bitmapCacheOnly" type="boolean">
-</parameter>
-</method>
-<method name="getDataSourceSupplier"
- return="com.facebook.common.internal.Supplier&lt;com.facebook.datasource.DataSource&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
  deprecated="not deprecated"
  visibility="public"
 >
@@ -32337,17 +31193,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<method name="getAnimatedImageFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedImageFactory"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
 <method name="getBitmapConfig"
  return="android.graphics.Bitmap.Config"
  abstract="false"
@@ -32361,6 +31206,17 @@
 </method>
 <method name="getBitmapMemoryCacheParamsSupplier"
  return="com.facebook.common.internal.Supplier&lt;com.facebook.imagepipeline.cache.MemoryCacheParams&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getBitmapMemoryCacheTrimStrategy"
+ return="com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32656,19 +31512,6 @@
  visibility="public"
 >
 </method>
-<method name="setAnimatedImageFactory"
- return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="animatedImageFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedImageFactory">
-</parameter>
-</method>
 <method name="setBitmapMemoryCacheParamsSupplier"
  return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
  abstract="false"
@@ -32680,6 +31523,19 @@
  visibility="public"
 >
 <parameter name="bitmapMemoryCacheParamsSupplier" type="com.facebook.common.internal.Supplier&lt;com.facebook.imagepipeline.cache.MemoryCacheParams&gt;">
+</parameter>
+</method>
+<method name="setBitmapMemoryCacheTrimStrategy"
+ return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="trimStrategy" type="com.facebook.imagepipeline.cache.CountingMemoryCache.CacheTrimStrategy">
 </parameter>
 </method>
 <method name="setBitmapsConfig"
@@ -32971,17 +31827,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<method name="getForceSmallCacheThresholdBytes"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
 <method name="getMediaIdExtractor"
  return="com.facebook.imagepipeline.cache.MediaIdExtractor"
  abstract="false"
@@ -32994,6 +31839,17 @@
 >
 </method>
 <method name="getMediaVariationsIndexEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getUseBitmapPrepareToDraw"
  return="boolean"
  abstract="false"
  native="false"
@@ -33059,6 +31915,17 @@
  visibility="public"
 >
 </method>
+<method name="isPartialImageCachingEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="isWebpSupportEnabled"
  return="boolean"
  abstract="false"
@@ -33113,6 +31980,30 @@
  visibility="public"
 >
 </method>
+<method name="isPartialImageCachingEnabled"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="setBitmapPrepareToDraw"
+ return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="useBitmapPrepareToDraw" type="boolean">
+</parameter>
+</method>
 <method name="setDecodeCancellationEnabled"
  return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
  abstract="false"
@@ -33139,19 +32030,6 @@
 <parameter name="externalCreatedBitmapLogEnabled" type="boolean">
 </parameter>
 </method>
-<method name="setForceSmallCacheThresholdBytes"
- return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="deprecated"
- visibility="public"
->
-<parameter name="forceSmallCacheThresholdBytes" type="int">
-</parameter>
-</method>
 <method name="setMediaIdExtractor"
  return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
  abstract="false"
@@ -33176,6 +32054,19 @@
  visibility="public"
 >
 <parameter name="mediaVariationsIndexEnabled" type="com.facebook.common.internal.Supplier&lt;java.lang.Boolean&gt;">
+</parameter>
+</method>
+<method name="setPartialImageCachingEnabled"
+ return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="partialImageCachingEnabled" type="boolean">
 </parameter>
 </method>
 <method name="setSuppressBitmapPrefetching"
@@ -33292,8 +32183,8 @@
 <parameter name="directWebpDirectDecodingEnabled" type="boolean">
 </parameter>
 </method>
-<method name="getAnimatedFactory"
- return="com.facebook.imagepipeline.animated.factory.AnimatedFactory"
+<method name="getAnimatedDrawableFactory"
+ return="com.facebook.imagepipeline.drawable.DrawableFactory"
  abstract="false"
  native="false"
  synchronized="false"
@@ -33302,6 +32193,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="context" type="android.content.Context">
+</parameter>
 </method>
 <method name="getBitmapCountingMemoryCache"
  return="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;"
@@ -33554,8 +32447,6 @@
 </parameter>
 <parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
 </parameter>
-<parameter name="forceSmallCacheThresholdBytes" type="int">
-</parameter>
 </constructor>
 <method name="newAddImageTransformMetaDataProducer"
  return="com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer"
@@ -33613,6 +32504,19 @@
 </method>
 <method name="newBitmapMemoryCacheProducer"
  return="com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;">
+</parameter>
+</method>
+<method name="newBitmapPrepareProducer"
+ return="com.facebook.imagepipeline.producers.BitmapPrepareProducer"
  abstract="false"
  native="false"
  synchronized="false"
@@ -33829,6 +32733,19 @@
  visibility="public"
 >
 </method>
+<method name="newPartialDiskCacheProducer"
+ return="com.facebook.imagepipeline.producers.PartialDiskCacheProducer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
+</parameter>
+</method>
 <method name="newPostprocessorBitmapMemoryCacheProducer"
  return="com.facebook.imagepipeline.producers.PostprocessedBitmapMemoryCacheProducer"
  abstract="false"
@@ -33963,6 +32880,10 @@
 </parameter>
 <parameter name="useDownsamplingRatio" type="boolean">
 </parameter>
+<parameter name="useBitmapPrepareToDraw" type="boolean">
+</parameter>
+<parameter name="partialImageCachingEnabled" type="boolean">
+</parameter>
 </constructor>
 <method name="getDecodedImagePrefetchProducerSequence"
  return="com.facebook.imagepipeline.producers.Producer&lt;java.lang.Void&gt;"
@@ -34076,7 +32997,7 @@
 >
 <parameter name="result" type="T">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 </class>
@@ -34216,7 +33137,7 @@
 >
 <parameter name="result" type="com.facebook.common.references.CloseableReference&lt;T&gt;">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 </class>
@@ -34401,11 +33322,11 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="animatedImageFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedImageFactory">
+<parameter name="animatedGifDecoder" type="com.facebook.imagepipeline.decoder.ImageDecoder">
+</parameter>
+<parameter name="animatedWebPDecoder" type="com.facebook.imagepipeline.decoder.ImageDecoder">
 </parameter>
 <parameter name="platformDecoder" type="com.facebook.imagepipeline.platform.PlatformDecoder">
-</parameter>
-<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
 </parameter>
 </constructor>
 <constructor name="DefaultImageDecoder"
@@ -34415,11 +33336,11 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="animatedImageFactory" type="com.facebook.imagepipeline.animated.factory.AnimatedImageFactory">
+<parameter name="animatedGifDecoder" type="com.facebook.imagepipeline.decoder.ImageDecoder">
+</parameter>
+<parameter name="animatedWebPDecoder" type="com.facebook.imagepipeline.decoder.ImageDecoder">
 </parameter>
 <parameter name="platformDecoder" type="com.facebook.imagepipeline.platform.PlatformDecoder">
-</parameter>
-<parameter name="bitmapConfig" type="android.graphics.Bitmap.Config">
 </parameter>
 <parameter name="customDecoders" type="java.util.Map&lt;com.facebook.imageformat.ImageFormat, com.facebook.imagepipeline.decoder.ImageDecoder&gt;">
 </parameter>
@@ -34455,6 +33376,10 @@
 >
 <parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
+<parameter name="length" type="int">
+</parameter>
+<parameter name="qualityInfo" type="com.facebook.imagepipeline.image.QualityInfo">
+</parameter>
 <parameter name="options" type="com.facebook.imagepipeline.common.ImageDecodeOptions">
 </parameter>
 </method>
@@ -34469,6 +33394,10 @@
  visibility="public"
 >
 <parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
+</parameter>
+<parameter name="length" type="int">
+</parameter>
+<parameter name="qualityInfo" type="com.facebook.imagepipeline.image.QualityInfo">
 </parameter>
 <parameter name="options" type="com.facebook.imagepipeline.common.ImageDecodeOptions">
 </parameter>
@@ -34833,131 +33762,45 @@
 </method>
 </interface>
 </package>
+<package name="com.facebook.imagepipeline.drawable"
+>
+<interface name="DrawableFactory"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="createDrawable"
+ return="android.graphics.drawable.Drawable"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="image" type="com.facebook.imagepipeline.image.CloseableImage">
+</parameter>
+</method>
+<method name="supportsImageType"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="image" type="com.facebook.imagepipeline.image.CloseableImage">
+</parameter>
+</method>
+</interface>
+</package>
 <package name="com.facebook.imagepipeline.image"
 >
-<class name="CloseableAnimatedBitmap"
- extends="com.facebook.imagepipeline.image.CloseableBitmap"
- abstract="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="CloseableAnimatedBitmap"
- type="com.facebook.imagepipeline.image.CloseableAnimatedBitmap"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="bitmapReferences" type="java.util.List&lt;com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;&gt;">
-</parameter>
-<parameter name="durations" type="java.util.List&lt;java.lang.Integer&gt;">
-</parameter>
-</constructor>
-<constructor name="CloseableAnimatedBitmap"
- type="com.facebook.imagepipeline.image.CloseableAnimatedBitmap"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="bitmaps" type="java.util.List&lt;android.graphics.Bitmap&gt;">
-</parameter>
-<parameter name="durations" type="java.util.List&lt;java.lang.Integer&gt;">
-</parameter>
-<parameter name="resourceReleaser" type="com.facebook.common.references.ResourceReleaser&lt;android.graphics.Bitmap&gt;">
-</parameter>
-</constructor>
-<method name="close"
- return="void"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getBitmaps"
- return="java.util.List&lt;android.graphics.Bitmap&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getDurations"
- return="java.util.List&lt;java.lang.Integer&gt;"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getHeight"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getSizeInBytes"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getUnderlyingBitmap"
- return="android.graphics.Bitmap"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="getWidth"
- return="int"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-<method name="isClosed"
- return="boolean"
- abstract="false"
- native="false"
- synchronized="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-</method>
-</class>
 <class name="CloseableAnimatedImage"
  extends="com.facebook.imagepipeline.image.CloseableImage"
  abstract="false"
@@ -35196,6 +34039,17 @@
 <parameter name="rotationAngle" type="int">
 </parameter>
 </constructor>
+<method name="cloneUnderlyingBitmapReference"
+ return="com.facebook.common.references.CloseableReference&lt;android.graphics.Bitmap&gt;"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="close"
  return="void"
  abstract="false"
@@ -35399,8 +34253,8 @@
  visibility="public"
 >
 </method>
-<method name="getEncodedCacheKey"
- return="com.facebook.cache.common.CacheKey"
+<method name="getBytesRange"
+ return="com.facebook.imagepipeline.common.BytesRange"
  abstract="false"
  native="false"
  synchronized="false"
@@ -35559,7 +34413,7 @@
  visibility="public"
 >
 </method>
-<method name="setEncodedCacheKey"
+<method name="setBytesRange"
  return="void"
  abstract="false"
  native="false"
@@ -35569,7 +34423,7 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="encodedCacheKey" type="com.facebook.cache.common.CacheKey">
+<parameter name="bytesRange" type="com.facebook.imagepipeline.common.BytesRange">
 </parameter>
 </method>
 <method name="setHeight"
@@ -39207,7 +38061,7 @@
 </parameter>
 <parameter name="maxNumThreads" type="int">
 </parameter>
-<parameter name="decodeBuffers" type="SynchronizedPool">
+<parameter name="decodeBuffers" type="android.support.v4.util.Pools.SynchronizedPool">
 </parameter>
 </constructor>
 <method name="decodeFromEncodedImage"
@@ -39508,6 +38362,32 @@
  visibility="public"
 >
 </constructor>
+<method name="isLast"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="status" type="int">
+</parameter>
+</method>
+<method name="isNotLast"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="status" type="int">
+</parameter>
+</method>
 <method name="onCancellation"
  return="void"
  abstract="false"
@@ -39568,7 +38448,7 @@
 >
 <parameter name="newResult" type="T">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 <method name="onNewResultImpl"
@@ -39583,7 +38463,7 @@
 >
 <parameter name="newResult" type="T">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 <method name="onProgressUpdate"
@@ -39623,6 +38503,79 @@
  visibility="protected"
 >
 <parameter name="e" type="java.lang.Exception">
+</parameter>
+</method>
+<method name="simpleStatusForIsLast"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="isLast" type="boolean">
+</parameter>
+</method>
+<method name="statusHasAnyFlag"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="status" type="int">
+</parameter>
+<parameter name="flag" type="int">
+</parameter>
+</method>
+<method name="statusHasFlag"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="status" type="int">
+</parameter>
+<parameter name="flag" type="int">
+</parameter>
+</method>
+<method name="turnOffStatusFlag"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="status" type="int">
+</parameter>
+<parameter name="flag" type="int">
+</parameter>
+</method>
+<method name="turnOnStatusFlag"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="status" type="int">
+</parameter>
+<parameter name="flag" type="int">
 </parameter>
 </method>
 </class>
@@ -40180,6 +39133,53 @@
 >
 </field>
 </class>
+<class name="BitmapPrepareProducer"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.imagepipeline.producers.Producer">
+</implements>
+<constructor name="BitmapPrepareProducer"
+ type="com.facebook.imagepipeline.producers.BitmapPrepareProducer"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;">
+</parameter>
+</constructor>
+<method name="produceResults"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="consumer" type="com.facebook.imagepipeline.producers.Consumer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;">
+</parameter>
+<parameter name="producerContext" type="com.facebook.imagepipeline.producers.ProducerContext">
+</parameter>
+</method>
+<field name="PRODUCER_NAME"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;BitmapPrepareProducer&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
 <class name="BranchOnSeparateImagesProducer"
  extends="java.lang.Object"
  abstract="false"
@@ -40261,7 +39261,7 @@
 >
 <parameter name="newResult" type="T">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 <method name="onProgressUpdate"
@@ -40277,7 +39277,73 @@
 <parameter name="progress" type="float">
 </parameter>
 </method>
+<field name="DO_NOT_CACHE_ENCODED"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="2"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="IS_LAST"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="1"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="IS_PARTIAL_RESULT"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="8"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="IS_PLACEHOLDER"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="4"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="NO_FLAGS"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="0"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 </interface>
+<class name="Consumer.Status"
+ extends="java.lang.Object"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+</class>
 <class name="DataFetchProducer"
  extends="com.facebook.imagepipeline.producers.LocalFetchProducer"
  abstract="false"
@@ -40543,9 +39609,13 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
+<parameter name="defaultBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
-<parameter name="diskCachePolicy" type="com.facebook.imagepipeline.cache.DiskCachePolicy">
+<parameter name="smallImageBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
+</parameter>
+<parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
+</parameter>
+<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
 </parameter>
 </constructor>
 <method name="produceResults"
@@ -40614,9 +39684,13 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
+<parameter name="defaultBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
 </parameter>
-<parameter name="diskCachePolicy" type="com.facebook.imagepipeline.cache.DiskCachePolicy">
+<parameter name="smallImageBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
+</parameter>
+<parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
+</parameter>
+<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
 </parameter>
 </constructor>
 <method name="produceResults"
@@ -40843,6 +39917,28 @@
  visibility="public"
 >
 </method>
+<method name="getOnNewResultStatusFlags"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getResponseBytesRange"
+ return="com.facebook.imagepipeline.common.BytesRange"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getUri"
  return="android.net.Uri"
  abstract="false"
@@ -40865,6 +39961,32 @@
  visibility="public"
 >
 <parameter name="lastIntermediateResultTimeMs" type="long">
+</parameter>
+</method>
+<method name="setOnNewResultStatusFlags"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="onNewResultStatusFlags" type="int">
+</parameter>
+</method>
+<method name="setResponseBytesRange"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bytesRange" type="com.facebook.imagepipeline.common.BytesRange">
 </parameter>
 </method>
 </class>
@@ -41004,7 +40126,7 @@
 >
 <parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 </class>
@@ -41027,7 +40149,7 @@
 >
 <parameter name="encodedImage" type="com.facebook.imagepipeline.image.EncodedImage">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 </interface>
@@ -41580,8 +40702,6 @@
 </parameter>
 <parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
 </parameter>
-<parameter name="diskCachePolicy" type="com.facebook.imagepipeline.cache.DiskCachePolicy">
-</parameter>
 <parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
 </parameter>
 </constructor>
@@ -41944,6 +41064,83 @@
 </parameter>
 </method>
 </class>
+<class name="PartialDiskCacheProducer"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.imagepipeline.producers.Producer">
+</implements>
+<constructor name="PartialDiskCacheProducer"
+ type="com.facebook.imagepipeline.producers.PartialDiskCacheProducer"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="defaultBufferedDiskCache" type="com.facebook.imagepipeline.cache.BufferedDiskCache">
+</parameter>
+<parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
+</parameter>
+<parameter name="pooledByteBufferFactory" type="com.facebook.common.memory.PooledByteBufferFactory">
+</parameter>
+<parameter name="byteArrayPool" type="com.facebook.common.memory.ByteArrayPool">
+</parameter>
+<parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
+</parameter>
+</constructor>
+<method name="produceResults"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="consumer" type="com.facebook.imagepipeline.producers.Consumer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
+</parameter>
+<parameter name="producerContext" type="com.facebook.imagepipeline.producers.ProducerContext">
+</parameter>
+</method>
+<field name="ENCODED_IMAGE_SIZE"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;encodedImageSize&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="EXTRA_CACHED_VALUE_FOUND"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;cached_value_found&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="PRODUCER_NAME"
+ type="java.lang.String"
+ transient="false"
+ volatile="false"
+ value="&quot;PartialDiskCacheProducer&quot;"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
 <class name="PostprocessedBitmapMemoryCacheProducer"
  extends="java.lang.Object"
  abstract="false"
@@ -42042,7 +41239,7 @@
 >
 <parameter name="newResult" type="com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
-<parameter name="isLast" type="boolean">
+<parameter name="status" type="int">
 </parameter>
 </method>
 </class>
@@ -42563,6 +41760,28 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<constructor name="SettableProducerContext"
+ type="com.facebook.imagepipeline.producers.SettableProducerContext"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="context" type="com.facebook.imagepipeline.producers.ProducerContext">
+</parameter>
+</constructor>
+<constructor name="SettableProducerContext"
+ type="com.facebook.imagepipeline.producers.SettableProducerContext"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="overrideRequest" type="com.facebook.imagepipeline.request.ImageRequest">
+</parameter>
+<parameter name="context" type="com.facebook.imagepipeline.producers.ProducerContext">
+</parameter>
+</constructor>
 <constructor name="SettableProducerContext"
  type="com.facebook.imagepipeline.producers.SettableProducerContext"
  static="false"
@@ -43307,6 +42526,17 @@
  visibility="public"
 >
 </method>
+<method name="getBytesRange"
+ return="com.facebook.imagepipeline.common.BytesRange"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getCacheChoice"
  return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
  abstract="false"
@@ -43630,6 +42860,17 @@
 <parameter name="imageRequest" type="com.facebook.imagepipeline.request.ImageRequest">
 </parameter>
 </method>
+<method name="getBytesRange"
+ return="com.facebook.imagepipeline.common.BytesRange"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getCacheChoice"
  return="com.facebook.imagepipeline.request.ImageRequest.CacheChoice"
  abstract="false"
@@ -43810,6 +43051,19 @@
  visibility="public"
 >
 <parameter name="enabled" type="boolean">
+</parameter>
+</method>
+<method name="setBytesRange"
+ return="com.facebook.imagepipeline.request.ImageRequestBuilder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="bytesRange" type="com.facebook.imagepipeline.common.BytesRange">
 </parameter>
 </method>
 <method name="setCacheChoice"

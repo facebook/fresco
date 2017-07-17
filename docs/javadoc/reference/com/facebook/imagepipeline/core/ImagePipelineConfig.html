@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -570,10 +570,10 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a>
+            Bitmap.Config
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html#getAnimatedImageFactory()">getAnimatedImageFactory</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html#getBitmapConfig()">getBitmapConfig</a></span>()
         
   </td></tr>
 
@@ -586,10 +586,10 @@ Summary:
             
             
             
-            Bitmap.Config
+            <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html#getBitmapConfig()">getBitmapConfig</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html#getBitmapMemoryCacheParamsSupplier()">getBitmapMemoryCacheParamsSupplier</a></span>()
         
   </td></tr>
 
@@ -602,10 +602,10 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt;
+            <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html#getBitmapMemoryCacheParamsSupplier()">getBitmapMemoryCacheParamsSupplier</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html#getBitmapMemoryCacheTrimStrategy()">getBitmapMemoryCacheTrimStrategy</a></span>()
         
   </td></tr>
 
@@ -1220,37 +1220,6 @@ From class
 
 
 
-<a id="getAnimatedImageFactory()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/animated/factory/AnimatedImageFactory.html">AnimatedImageFactory</a>
-      </span>
-      <span class="sympad">getAnimatedImageFactory</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
 <a id="getBitmapConfig()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1295,6 +1264,37 @@ From class
         <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a>&gt;
       </span>
       <span class="sympad">getBitmapMemoryCacheParamsSupplier</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="getBitmapMemoryCacheTrimStrategy()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a>
+      </span>
+      <span class="sympad">getBitmapMemoryCacheTrimStrategy</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">

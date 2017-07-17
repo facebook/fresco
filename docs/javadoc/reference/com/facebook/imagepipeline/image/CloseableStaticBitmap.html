@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -295,7 +295,6 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableAnimatedBitmap.html">CloseableAnimatedBitmap</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableAnimatedImage.html">CloseableAnimatedImage</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableBitmap.html">CloseableBitmap</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a></li>
@@ -623,6 +622,24 @@ Summary:
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
+            synchronized
+            
+            
+            
+            <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html#cloneUnderlyingBitmapReference()">cloneUnderlyingBitmapReference</a></span>()
+        
+        <div class="jd-descrdiv">Get a cloned bitmap reference for the underlying original CloseableReference&lt;Bitmap&gt;.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
             
             
             
@@ -638,7 +655,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -656,7 +673,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -672,7 +689,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -690,7 +707,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -706,7 +723,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -722,7 +739,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -740,7 +757,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -756,7 +773,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             synchronized
@@ -1460,6 +1477,45 @@ From interface
 
 
 
+<a id="cloneUnderlyingBitmapReference()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+        synchronized 
+        <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
+      </span>
+      <span class="sympad">cloneUnderlyingBitmapReference</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Get a cloned bitmap reference for the underlying original CloseableReference&lt;Bitmap&gt;.
+ <p>After calling this method, this object can still be used.
+ See <code><a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html#convertToBitmapReference()">convertToBitmapReference()</a></code> for an alternative that detaches the original reference
+ instead.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the cloned bitmap reference without altering this instance or null if already closed
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="close()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1520,7 +1576,13 @@ From interface
   <div class="jd-tagdata jd-tagdescr"><p>Convert this object to a CloseableReference&lt;Bitmap&gt;.
  <p>You cannot call this method on an object that has already been closed.
  <p>The reference count of the bitmap is preserved. After calling this method, this object
- can no longer be used and no longer points to the bitmap.</p></div>
+ can no longer be used and no longer points to the bitmap.
+ <p>See <code><a href="../../../../com/facebook/imagepipeline/image/CloseableStaticBitmap.html#cloneUnderlyingBitmapReference()">cloneUnderlyingBitmapReference()</a></code> for an alternative that returns a cloned
+ bitmap reference instead.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the underlying bitmap reference after being detached from this instance</li></ul>
+  </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  

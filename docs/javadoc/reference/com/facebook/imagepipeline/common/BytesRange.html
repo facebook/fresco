@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  SplitCachesByImageSizeDiskCachePolicy - Fresco API
+  BytesRange - Fresco API
 
 
 | Fresco
@@ -231,8 +231,6 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/fresco/animation/frame/package-summary.html">com.facebook.fresco.animation.frame</a></li>
     <li class="api apilevel-">
-  <a href="../../../../com/facebook/fresco/animation/wrapper/package-summary.html">com.facebook.fresco.animation.wrapper</a></li>
-    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageformat/package-summary.html">com.facebook.imageformat</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/animated/base/package-summary.html">com.facebook.imagepipeline.animated.base</a></li>
@@ -248,9 +246,9 @@
   <a href="../../../../com/facebook/imagepipeline/backends/volley/package-summary.html">com.facebook.imagepipeline.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
-    <li class="selected api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/core/package-summary.html">com.facebook.imagepipeline.core</a></li>
@@ -258,6 +256,8 @@
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
@@ -286,49 +286,35 @@
           <div id="classes-nav">
             <ul>
               
-    <li><h2>Interfaces</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.CacheTrimStrategy.html">CountingMemoryCache.CacheTrimStrategy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.EntryStateObserver.html">CountingMemoryCache.EntryStateObserver</a>&lt;K&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ImageCacheStatsTracker.html">ImageCacheStatsTracker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheTracker.html">MemoryCacheTracker</a>&lt;K&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/ValueDescriptor.html">ValueDescriptor</a>&lt;V&gt;</li>
-      </ul>
-    </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapCountingMemoryCacheFactory.html">BitmapCountingMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheFactory.html">BitmapMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheKey.html">BitmapMemoryCacheKey</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BitmapMemoryCacheTrimStrategy.html">BitmapMemoryCacheTrimStrategy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingLruMap.html">CountingLruMap</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/CountingMemoryCache.html">CountingMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultBitmapMemoryCacheParamsSupplier.html">DefaultBitmapMemoryCacheParamsSupplier</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultCacheKeyFactory.html">DefaultCacheKeyFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/DefaultEncodedMemoryCacheParamsSupplier.html">DefaultEncodedMemoryCacheParamsSupplier</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedCountingMemoryCacheFactory.html">EncodedCountingMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/EncodedMemoryCacheFactory.html">EncodedMemoryCacheFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/InstrumentedMemoryCache.html">InstrumentedMemoryCache</a>&lt;K,&nbsp;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndexDatabase.html">MediaVariationsIndexDatabase</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/MemoryCacheParams.html">MemoryCacheParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NativeMemoryCacheTrimStrategy.html">NativeMemoryCacheTrimStrategy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpImageCacheStatsTracker.html">NoOpImageCacheStatsTracker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/NoOpMediaVariationsIndex.html">NoOpMediaVariationsIndex</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SmallCacheIfRequestedDiskCachePolicy.html">SmallCacheIfRequestedDiskCachePolicy</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html">SplitCachesByImageSizeDiskCachePolicy</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/cache/StagingArea.html">StagingArea</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptions.html">ImageDecodeOptions</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ImageDecodeOptionsBuilder.html">ImageDecodeOptionsBuilder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a></li>
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.RotationAngle.html">RotationOptions.RotationAngle</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/SourceUriType.html">SourceUriType</a></li>
+      </ul>
+    </li>
               
+    <li><h2>Enums</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/Priority.html">Priority</a></li>
+      </ul>
+    </li>
               
+    <li><h2>Exceptions</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/common/TooManyBitmapsException.html">TooManyBitmapsException</a></li>
+      </ul>
+    </li>
               
             </ul><br/>
           </div><!-- end classes -->
@@ -374,13 +360,6 @@
   
   
 
-  
-   
-  
-  
-  
-  
-
 
 <div class="sum-details-links">
 
@@ -391,11 +370,17 @@ Summary:
 
 
 
+  <a href="#constants">Constants</a>
+  
 
 
 
+  &#124; <a href="#lfields">Fields</a>
+  
 
-  <a href="#pubctors">Ctors</a>
+
+
+  &#124; <a href="#pubctors">Ctors</a>
   
 
 
@@ -429,7 +414,7 @@ Summary:
      
     
     class
-<h1>SplitCachesByImageSizeDiskCachePolicy</h1>
+<h1>BytesRange</h1>
 
 
 
@@ -440,11 +425,6 @@ Summary:
   
 
   
-  
-      implements 
-      
-        <a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">DiskCachePolicy</a> 
-      
   
   
 
@@ -467,7 +447,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.cache.SplitCachesByImageSizeDiskCachePolicy</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.common.BytesRange</td>
     </tr>
     
 
@@ -483,8 +463,22 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Task factory to attempt to load an image from either the main or small disk cache and then
- fallback to the other if the first attempt was unsuccessful.
+<p>A representation of the range of bytes requested or contained in a piece of content.
+
+ <p> This is based on the spec of the HTTP "Content-Range" header so includes methods to parse and
+ output appropriate strings for the header.
+
+ <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16
+
+  <p> As per that spec, the from and to values are inclusive. Requesting the first 100 bytes of an
+ image can be achieved by calling <code>BytesRange.toMax(99)</code>.
+
+ <p> This might be useful because you want to limit the maximum size of a specific download or it
+ might be that you already have part of the image data and only want the remainder.
+
+ <p> These objects are currently only respected in image requests and only taken from responses if
+ <code>ImagePipelineExperiments.isPartialImageCachingEnabled()</code> is true in the image pipeline
+ config. It is also dependent on a <code>NetworkFetcher</code> which writes and reads these headers.
 </p>
 
 
@@ -525,9 +519,56 @@ Summary:
 
 
 
+<!-- =========== ENUM CONSTANT SUMMARY =========== -->
+<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
+
+
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#TO_END_OF_CONTENT">TO_END_OF_CONTENT</a></td>
+        <td class="jd-descrcol" width="100%"></td>
+    </tr>
+    
+    
+
+</table>
 
 
 
+
+
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          final
+          int</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#from">from</a></td>
+          <td class="jd-descrcol" width="100%">The first byte of the range.</td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          final
+          int</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#to">to</a></td>
+          <td class="jd-descrcol" width="100%">The final byte of the range inclusive, or <code><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#TO_END_OF_CONTENT">TO_END_OF_CONTENT</a></code> if it reaches to the end.</td>
+      </tr>
+      
+    
+
+</table>
 
 
 
@@ -551,7 +592,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html#SplitCachesByImageSizeDiskCachePolicy(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, int)">SplitCachesByImageSizeDiskCachePolicy</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, int forceSmallCacheThresholdBytes)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#BytesRange(int, int)">BytesRange</a></span>(int from, int to)
         
   </td></tr>
 
@@ -577,13 +618,50 @@ Summary:
             
             
             
-            Task&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt;
+            boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html#createAndStartCacheReadTask(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, java.util.concurrent.atomic.AtomicBoolean)">createAndStartCacheReadTask</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, AtomicBoolean isCancelled)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#contains(com.facebook.imagepipeline.common.BytesRange)">contains</a></span>(<a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a> compare)
         
-        <div class="jd-descrdiv">Creates and starts the task to carry out a disk cache read, using whichever caches and keys are
- appropriate for this policy.</div>
+        <div class="jd-descrdiv">Checks whether a provided range is within this one.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#from(int)">from</a></span>(int from)
+        
+        <div class="jd-descrdiv">Specifies a bytes range to request only the bytes from a specified index up to the end of the
+ data.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#fromContentRangeHeader(java.lang.String)">fromContentRangeHeader</a></span>(String header)
+        
+        <div class="jd-descrdiv">Creates an instance of BytesRange by parsing the value of a returned HTTP "Content-Range"
+ header.</div>
   
   </td></tr>
 
@@ -596,13 +674,11 @@ Summary:
             
             
             
-            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
+            String
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html#getCacheChoiceForResult(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)">getCacheChoiceForResult</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#toHttpRangeHeaderValue()">toHttpRangeHeaderValue</a></span>()
         
-        <div class="jd-descrdiv">Determines the cache in which to store the provided image.</div>
-  
   </td></tr>
 
 
@@ -612,16 +688,31 @@ Summary:
             
             
             
+            static
             
-            
-            void
+            <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/SplitCachesByImageSizeDiskCachePolicy.html#writeToCache(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">writeToCache</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> newResult, <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#toMax(int)">toMax</a></span>(int to)
         
-        <div class="jd-descrdiv">Writes the new image data to whichever cache and with whichever key is appropriate for this
- policy.</div>
+        <div class="jd-descrdiv">Specifies a bytes range to request no more than a specified number of bytes.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#toString()">toString</a></span>()
+        
   </td></tr>
 
 
@@ -841,88 +932,6 @@ From class
 </td></tr>
 
 
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.cache.DiskCachePolicy" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.cache.DiskCachePolicy-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  <a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html">com.facebook.imagepipeline.cache.DiskCachePolicy</a>
-
-<div id="inherited-methods-com.facebook.imagepipeline.cache.DiskCachePolicy">
-  <div id="inherited-methods-com.facebook.imagepipeline.cache.DiskCachePolicy-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.cache.DiskCachePolicy-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            Task&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt;
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html#createAndStartCacheReadTask(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, java.util.concurrent.atomic.AtomicBoolean)">createAndStartCacheReadTask</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, AtomicBoolean isCancelled)
-        
-        <div class="jd-descrdiv">Creates and starts the task to carry out a disk cache read, using whichever caches and keys are
- appropriate for this policy.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html#getCacheChoiceForResult(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)">getCacheChoiceForResult</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)
-        
-        <div class="jd-descrdiv">Determines the cache in which to store the provided image.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/cache/DiskCachePolicy.html#writeToCache(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)">writeToCache</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> newResult, <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext)
-        
-        <div class="jd-descrdiv">Writes the new image data to whichever cache and with whichever key is appropriate for this
- policy.</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
 </table>
 
 
@@ -946,7 +955,125 @@ From interface
 <!-- Constants -->
 
 
+<!-- ========= ENUM CONSTANTS DETAIL ======== -->
+<h2>Constants</h2>
+
+
+
+
+<a id="TO_END_OF_CONTENT"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        int
+      </span>
+        TO_END_OF_CONTENT
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                2147483647
+                (0x7fffffff)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+
 <!-- Fields -->
+
+
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
+
+
+
+
+<a id="from"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+        final 
+        int
+      </span>
+        from
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The first byte of the range. Values begin at 0.
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="to"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+        final 
+        int
+      </span>
+        to
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The final byte of the range inclusive, or <code><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#TO_END_OF_CONTENT">TO_END_OF_CONTENT</a></code> if it reaches to the end.
+
+ <p> If not TO_END_OF_CONTENT, values are inclusive. e.g. for the first 100 bytes this is 99.
+</p></div>
+
+    
+    </div>
+</div>
+
+
 
 
 <!-- Public ctors -->
@@ -957,7 +1084,7 @@ From interface
 
 
 
-<a id="SplitCachesByImageSizeDiskCachePolicy(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, int)"></a>
+<a id="BytesRange(int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -969,8 +1096,8 @@ From interface
          
         
       </span>
-      <span class="sympad">SplitCachesByImageSizeDiskCachePolicy</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, int forceSmallCacheThresholdBytes)</span>
+      <span class="sympad">BytesRange</span>
+      <span class="normal">(int from, int to)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1003,7 +1130,7 @@ From interface
 
 
 
-<a id="createAndStartCacheReadTask(com.facebook.imagepipeline.request.ImageRequest, java.lang.Object, java.util.concurrent.atomic.AtomicBoolean)"></a>
+<a id="contains(com.facebook.imagepipeline.common.BytesRange)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1013,10 +1140,10 @@ From interface
          
          
          
-        Task&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt;
+        boolean
       </span>
-      <span class="sympad">createAndStartCacheReadTask</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext, AtomicBoolean isCancelled)</span>
+      <span class="sympad">contains</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a> compare)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1028,56 +1155,10 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Creates and starts the task to carry out a disk cache read, using whichever caches and keys are
- appropriate for this policy.
-</p></div>
-
-    </div>
-</div>
-
-
-<a id="getCacheChoiceForResult(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.CacheChoice.html">ImageRequest.CacheChoice</a>
-      </span>
-      <span class="sympad">getCacheChoiceForResult</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Determines the cache in which to store the provided image.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageRequest</th>
-          <td>request which resulted in loading the image</td>
-        </tr>
-        <tr>
-          <th>encodedImage</th>
-          <td>the image to store in cache</td>
-        </tr>
-      </table>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p>Checks whether a provided range is within this one.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>cache choice that represents the cache to use
+      <ul class="nolist"><li>true if the provided range is within this one, false if given null
 </li></ul>
   </div>
 
@@ -1085,20 +1166,20 @@ From interface
 </div>
 
 
-<a id="writeToCache(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.request.ImageRequest, java.lang.Object)"></a>
+<a id="from(int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
+        static 
          
          
          
-         
-        void
+        <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
       </span>
-      <span class="sympad">writeToCache</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> newResult, <a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, Object callerContext)</span>
+      <span class="sympad">from</span>
+      <span class="normal">(int from)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1110,9 +1191,174 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Writes the new image data to whichever cache and with whichever key is appropriate for this
- policy.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Specifies a bytes range to request only the bytes from a specified index up to the end of the
+ data.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>from</th>
+          <td>the first byte to request, must be positive or zero
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="fromContentRangeHeader(java.lang.String)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
+      </span>
+      <span class="sympad">fromContentRangeHeader</span>
+      <span class="normal">(String header)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates an instance of BytesRange by parsing the value of a returned HTTP "Content-Range"
+ header.
+
+ <p> If the range runs to the end of the available content, the end of the range will be set to
+ TO_END_OF_CONTENT.
+
+ <p> The header spec is at https://tools.ietf.org/html/rfc2616#section-14.16</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the parsed range
+</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IllegalArgumentException</td>
+            <td>if the header is non-null but fails to match the format per
+ the spec</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="toHttpRangeHeaderValue()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">toHttpRangeHeaderValue</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="toMax(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
+      </span>
+      <span class="sympad">toMax</span>
+      <span class="normal">(int to)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Specifies a bytes range to request no more than a specified number of bytes. If the encoded
+ image is less than the requested maximum you may still get the entire result.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>to</th>
+          <td>the maximum byte to be requested, must be positive
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="toString()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">toString</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
