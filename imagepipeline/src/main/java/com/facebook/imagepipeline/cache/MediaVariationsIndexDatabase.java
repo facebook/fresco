@@ -20,6 +20,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -173,7 +174,13 @@ public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
       } catch (Exception x) {
         FLog.e(TAG, x, "Error writing for %s", mediaId);
       } finally {
-        db.endTransaction();
+        try {
+          db.endTransaction();
+        } catch (SQLiteException e) {
+          // Some devices (like the Advan S4Z) throws a SQLiteException when endTransaction()
+          // is called. Supposedly due to no disk space although this would be more likely to
+          // cause an exception during the insert.
+        }
       }
     }
   }
