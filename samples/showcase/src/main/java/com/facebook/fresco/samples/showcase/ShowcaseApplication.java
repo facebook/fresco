@@ -67,7 +67,6 @@ public class ShowcaseApplication extends Application {
         })
         .experiment().setMediaIdExtractor(new ShowcaseMediaIdExtractor())
         .experiment().setBitmapPrepareToDraw(true)
-        .experiment().setPartialImageCachingEnabled(true)
         .build();
 
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);

@@ -76,6 +76,7 @@
         <item
             android:id="@+id/nav_imagepipeline_partial_request"
             android:title="@string/imagepipeline_partial_request_title"
+            android:visible="false"
             />
         <item
             android:id="@+id/nav_imagepipeline_bitmap_factory"
