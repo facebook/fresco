@@ -3,8 +3,6 @@ docid: using-controllerbuilder
 title: Using the ControllerBuilder
 layout: docs
 permalink: /docs/using-controllerbuilder.html
-prev: rounded-corners-and-circles.html
-next: progressive-jpegs.html
 ---
 
 `SimpleDraweeView` has two methods for specifying an image. The easy way is to just call `setImageURI.`
@@ -32,7 +30,7 @@ You should call `setOldController` when building a new controller. This will all
 
 More details:
 
-* [Controller Listeners](listening-download-events.html)
+* [Controller Listeners](listening-to-events.html)
 
 ### <a name="ImageRequest"></a>Customizing the ImageRequest
 
@@ -56,4 +54,5 @@ More details:
 
 * [Postprocessors](modifying-image.html)
 * [Requesting Multiple Images](requesting-multiple-images.html)
-* [Resizing and Rotating](resizing-rotating.html)
+* [Resizing](resizing.html)
+* [Rotation](rotation.html)

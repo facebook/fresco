@@ -1,14 +1,13 @@
 ---
 docid: index
-title: Adding Fresco to your Project
+title: Getting Started with Fresco
 layout: docs
 permalink: /docs/index.html
-next: getting-started.html
 ---
 
-Here's how to add Fresco to your Android project.
+This Guide will walk you through the steps needed to start using Fresco in your app, including loading your first image.
 
-### Android Studio or Gradle
+### 1. Update Gradle configuration
 
 Edit your `build.gradle` file. You must add the following line to the `dependencies` section:
 
@@ -41,21 +40,70 @@ dependencies {
 }
 ```
 
-### Eclipse ADT
+### 2. Initialize Fresco & Declare Permissions
 
-Download the [zip file](https://github.com/facebook/fresco/archive/v{{site.current_version}}.zip).
+Fresco needs to be initialized. You should only do this 1 time, so placing the initialization in your Application is a good idea. An example for this would be:
 
-When you expand it, it will create a directory called 'frescolib'. Note the location of this directory.
+```java
+[MyApplication.java]
+public class MyApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fresco.initialize(this);
+    }
+}
+```
 
-1. From the File menu, choose Import.
-2. Expand Android, select "Existing Android Code into Workspace", and click Next.
-3. Click Browse, navigate to the frescolib directory, and click OK.
-4. A number of projects should be added. Make sure that at least the following are checked: `drawee`, `fbcore`, `fresco`, `imagepipeline`, `imagepipeline-base`. The others are optional depending on your app's needs similar to the breakdown above for Gradle.
-5. Right-click (Ctrl-click on Mac) on your project and choose Properties, then click Android.
-6. Click the Add button in the bottom right, select Fresco, and click OK, then click OK again.
+*NOTE:* Remember to also declare you Application class in the ```AndroidManifest.xml``` as well as add the required permissions. In most cases you will need the INTERNET permission.
 
-You should now be able to build your app with Fresco.
+```xml
+  <manifest
+    ...
+    >
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+      ...
+      android:label="@string/app_name"
+      android:name=".MyApplication"
+      >
+      ...
+    </application>
+    ...
+  </manifest>
+```
 
-If you want to use OkHttp as the network layer, see the [separate instructions](using-other-network-layers.html#_).
+### 3. Create a Layout
 
-If you get a `Jar Mismatch` warning about `android-support-v4.jar`, delete the one in `frescolib/imagepipeline/libs.`
+In your layout XML, add a custom namespace to the top-level element. This is needed to access the custom `fresco:` attributes which allows you to control how the image is loaded and displayed.
+
+```xml
+<!-- Any valid element will do here -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+```
+
+Then add the ```SimpleDraweeView``` to the layout:
+
+```xml
+<com.facebook.drawee.view.SimpleDraweeView
+    android:id="@+id/my_image_view"
+    android:layout_width="130dp"
+    android:layout_height="130dp"
+    fresco:placeholderImage="@drawable/my_drawable"
+    />
+```
+
+To show an image, you need only do this:
+
+```java
+Uri uri = Uri.parse("https://raw.githubusercontent.com/facebook/fresco/master/docs/static/logo.png");
+SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.my_image_view);
+draweeView.setImageURI(uri);
+```
+and Fresco does the rest.
+
+The placeholder is shown until the image is ready. The image will be downloaded, cached, displayed, and cleared from memory when your view goes off-screen.

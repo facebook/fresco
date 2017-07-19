@@ -1,50 +1,48 @@
-- title: Quick Start
+- title: Getting Started
   items:
   - id: index
-  - id: getting-started
-  - id: concepts
-  - id: supported-uris
-- title: Drawee Guide
+  - id: proguard
+- title: Basic Features
   items:
-  - id: using-drawees-xml
-  - id: using-drawees-code
-  - id: drawee-branches
-  - id: progress-bars
-  - id: scaling
+  - id: using-simpledraweeview
   - id: rounded-corners-and-circles
+  - id: progress-bars
+  - id: scaletypes
+  - id: placeholder-failure-retry
+  - id: rotation
+  - id: resizing
+  - id: supported-uris
+- title: Advanced Topics
+  items:
+  - id: caching
+  - id: closeable-references
+  - id: configure-image-pipeline
+  - id: datasources-datasubscribers
+  - id: image-requests
+  - id: images-in-notifications
+  - id: listening-to-events
+  - id: prefetching
+  - id: post-processor
+  - id: requesting-multiple-images
+  - id: shared-transitions
   - id: using-controllerbuilder
+  - id: using-image-pipeline
+  - id: using-other-network-layers
+  - id: writing-custom-views
+- title: Image formats
+  items:
   - id: progressive-jpegs
   - id: animations
-  - id: requesting-multiple-images
-  - id: listening-download-events
-  - id: resizing-rotating
-  - id: modifying-image
-  - id: image-requests
-  - id: writing-custom-views
-- title: Image Pipeline Guide
-  items:
-  - id: intro-image-pipeline
-  - id: configure-image-pipeline
-  - id: caching
-  - id: using-image-pipeline
-  - id: datasources-datasubscribers
-  - id: closeable-references
   - id: webp-support
-- title: Solving Problems
+- title: Troubleshooting & FAQ
   items:
+  - id: faq
   - id: troubleshooting
   - id: gotchas
-  - id: wrap-content
-  - id: shared-transitions
-- title: Third Party Libraries
-  items:
-  - id: using-other-network-layers
-  - id: using-other-image-loaders
-- title: Shipping your App
-  items:
-  - id: proguard
-  - id: multiple-apks
-- title: Contributors' Guide
+- title: Contributors Guide
   items:
   - id: building-from-source
   - id: sample-code
+  - id: concepts
+  - id: drawee-branches
+  - id: intro-image-pipeline

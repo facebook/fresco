@@ -3,8 +3,6 @@ docid: rounded-corners-and-circles
 title: Rounded Corners and Circles
 layout: docs
 permalink: /docs/rounded-corners-and-circles.html
-prev: scaling.html
-next: using-controllerbuilder.html
 ---
 
 Not every image is a rectangle. Apps frequently need images that appear with softer, rounded corners, or as circles. Drawee supports a variety of scenarios, all without the memory overhead of copying bitmaps.
@@ -31,26 +29,26 @@ The `SimpleDraweeView` class will forward several attributes over to `RoundingPa
 
 ```xml
 <com.facebook.drawee.view.SimpleDraweeView
-   ...
-   fresco:roundedCornerRadius="5dp"
-   fresco:roundBottomLeft="false"
-   fresco:roundBottomRight="false"
-   fresco:roundWithOverlayColor="@color/blue"
-   fresco:roundingBorderWidth="1dp"
-   fresco:roundingBorderColor="@color/red"
+  ...
+  fresco:roundedCornerRadius="5dp"
+  fresco:roundBottomLeft="false"
+  fresco:roundBottomRight="false"
+  fresco:roundWithOverlayColor="@color/blue"
+  fresco:roundingBorderWidth="1dp"
+  fresco:roundingBorderColor="@color/red"
+>
 ```
 
 ### In code
 
-When [constructing a hierarchy](using-drawees-code.html), you can pass an instance of [RoundingParams](../javadoc/reference/com/facebook/drawee/generic/RoundingParams.html) to your `GenericDraweeHierarchyBuilder:`
+When constructing a hierarchy, you can pass an instance of [RoundingParams](../javadoc/reference/com/facebook/drawee/generic/RoundingParams.html) to your `GenericDraweeHierarchyBuilder:`
 
 ```java
 int overlayColor = getResources().getColor(R.color.green);
 RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
-// alternatively use fromCornersRadii or asCircle
-roundingParams.setOverlayColor(overlayColor);
-genericDraweeHierarchyBuilder
-    .setRoundingParams(roundingParams);
+mSimpleDraweeView.setHierarchy(new GenericDraweeHierarchyBuilder(getResources())
+        .setRoundingParams(roundingParams)
+        .build());
 ```
 
 You can also change all of the rounding parameters after the hierarchy has been built:
@@ -78,3 +76,9 @@ Drawee internally has an implementation for `CLIPPING` mode, but this mode has b
 Finally, all of those issues could be avoided by using a temporary bitmap, but this imposes a significant memory overhead and has not been supported because of that.
 
 As explained above, there is no really good solution for rounding corners on Android and one has to choose between the aforementioned trade-offs.
+
+### Full Sample
+
+For a full sample see the `DraweeRoundedCornersFragment` in the showcase app: [DraweeRoundedCornersFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeRoundedCornersFragment.java)
+
+![Showcase app with a scale type example](/static/images/docs/01-rounded-corners-and-circles-sample.png)

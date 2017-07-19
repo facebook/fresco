@@ -3,8 +3,6 @@ docid: concepts
 title: Concepts
 layout: docs
 permalink: /docs/concepts.html
-prev: index.html
-next: supported-uris.html
 ---
 
 ## Drawees
@@ -17,13 +15,13 @@ Descended from the Android [View](http://developer.android.com/reference/android
 
 Most apps should use the `SimpleDraweeView` class. Place these in your application using XML or Java code. Set the URI to load with the `setImageURI` method, as explained in the [Getting Started](index.html) page.
 
-You can [customize its appearance in XML](using-drawees-xml.html).
+See [Using SimpleDraweeView](using-simpledraweeview.html).
 
 ### DraweeHierarchy
 
 This is the hierarchy of Android [Drawable](http://developer.android.com/reference/android/graphics/drawable/Drawable.html) objects that will actually render your content. Think of it as the Model in an MVC.
 
-If you need to [customize your image's appearance in Java](using-drawees-code.html), this is the class you will deal with.
+See [Using SimpleDraweeView](using-simpledraweeview.html).
 
 ### DraweeController
 
@@ -37,7 +35,7 @@ If you need something more than a single URI to specify the image you want to di
 
 ### Listeners
 
-One use of a builder is to specify a [Listener](listening-download-events.html) to execute code upon the arrival, full or partial, of image data from the server.
+One use of a builder is to specify a [Listener](listening-to-events.html) to execute code upon the arrival, full or partial, of image data from the server.
 
 ## The Image Pipeline
 

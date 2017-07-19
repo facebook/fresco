@@ -3,8 +3,6 @@ docid: building-from-source
 title: Building from Source
 layout: docs
 permalink: /docs/building-from-source.html
-prev: multiple-apks.html
-next: sample-code.html
 ---
 
 You should only build from source if you need to modify Fresco code itself. Most applications should simply [include](index.html#_) Fresco in their project.
@@ -20,7 +18,7 @@ The following tools must be installed on your system in order to build Fresco:
 
 You don't need to download Gradle itself; the build scripts or Android Studio will do that for you.
 
-Fresco does not support source builds with Eclipse, Ant, or Maven. We do not plan to ever add such support. Eclipse users can [include](index.html#eclipse-adt) Fresco in their projects instead.
+Fresco does not support source builds with Eclipse, Ant, or Maven. We do not plan to ever add such support.
 
 ### Configuring Gradle
 

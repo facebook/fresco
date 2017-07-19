@@ -3,8 +3,6 @@ docid: requesting-multiple-images
 title: Requesting Multiple Images (Multi-URI)
 layout: docs
 permalink: /docs/requesting-multiple-images.html
-prev: animations.html
-next: listening-download-events.html
 ---
 
 The methods on this page require [setting your own image request](using-controllerbuilder.html).
@@ -73,7 +71,7 @@ mSimpleDraweeView.setController(controller);
 Only one of the requests will be displayed. The first one found, whether at memory, disk, or network level, will be the one returned. The pipeline will assume the order of requests in the array is the preference order.
 
 
-### Specifying a custom `DataSource` `Supplier`
+### Specifying a custom DataSource Supplier
 
 For even more flexibility, it is possible to specify a custom `DataSource` `Supplier` while building a Drawee controller. You can implement your own supplier or just compose the existing ones in whichever way you like. See  `FirstAvailableDataSourceSupplier` and `IncreasingQualityDataSourceSupplier` for an example implementation. See `AbstractDraweeControllerBuilder` for how those suppliers can be composed together.
 

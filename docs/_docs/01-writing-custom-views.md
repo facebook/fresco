@@ -3,8 +3,6 @@ docid: writing-custom-views
 title: Writing Custom Views
 layout: docs
 permalink: /docs/writing-custom-views.html
-prev: image-requests.html
-next: intro-image-pipeline.html
 ---
 
 ### DraweeHolders
@@ -63,7 +61,7 @@ It is important that `Holder` receives all the attach/detach events that the vie
 
 #### Handling touch events
 
-If you have enabled [tap to retry](drawee-components.html#Retry) in your Drawee, it will not work unless you tell it that the user has touched the screen. Like this:
+If you have enabled [tap to retry](placeholder-failure-retry.html) in your Drawee, it will not work unless you tell it that the user has touched the screen. Like this:
 
 ```java
 @Override
@@ -90,7 +88,7 @@ or the Drawee won't appear at all.
 
 #### Other responsibilities
 
-* Set [Drawable.Callback] (http://developer.android.com/reference/android/graphics/drawable/Drawable.Callback.html)
+* Set [Drawable.Callback](http://developer.android.com/reference/android/graphics/drawable/Drawable.Callback.html)
 
 ```java
 // When a holder is set to the view for the first time,
@@ -116,7 +114,7 @@ protected boolean verifyDrawable(Drawable who) {
 }
 ```
 
-* Make sure `invalidateDrawable` invalidates the region occupied by your Drawee. If you apply some canvas transformations on the drawable before it gets drawn, then those transformations needs to be taken into account in invalidation. The simplest thing to do is what Android ImageView does in its [invalidateDrawable] (http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/4.4.4_r1/android/widget/ImageView.java#192) method. That is, to just invalidate the whole view when the drawable gets invalidated.
+* Make sure `invalidateDrawable` invalidates the region occupied by your Drawee. If you apply some canvas transformations on the drawable before it gets drawn, then those transformations needs to be taken into account in invalidation. The simplest thing to do is what Android ImageView does in its [invalidateDrawable](http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/4.4.4_r1/android/widget/ImageView.java#192) method. That is, to just invalidate the whole view when the drawable gets invalidated.
 
 
 ### Constructing the View and DraweeHolder
@@ -185,5 +183,3 @@ private void init() {
 ```
 
 You must override system events, set bounds, and do all the same responsibilities as for a single `DraweeHolder.`
-
-

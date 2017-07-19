@@ -3,7 +3,6 @@ docid: sample-code
 title: Sample code
 layout: docs
 permalink: /docs/sample-code.html
-prev: building-from-source.html
 ---
 
 *Note: the samples are licensed for non-commercial or evaluation purposes only, not the BSD license used for Fresco itself.*

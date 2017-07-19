@@ -1,41 +1,37 @@
 ---
-docid: scaling
-title: Scaling
+docid: scaletypes
+title: ScaleTypes
 layout: docs
-permalink: /docs/scaling.html
-prev: progress-bars.html
-next: rounded-corners-and-circles.html
+permalink: /docs/scaletypes.html
 ---
 
-You can specify a different scale type for each of the [different drawables](drawee-components.html) in your Drawee. The
+You can specify a different scale type for each of the different drawables in your Drawee.
 
-### Available scale types
+### Available Scale Types
 
-| Scale Type | Explanation |
-| --------- | ----------- |
-| center | Center the image in the view, but perform no scaling. |
-| centerCrop | Scales the image so that both dimensions will be greater than or equal to the corresponding dimension of the parent. <br>One of width or height will fit exactly. <br>The image is centered within parent's bounds. |
-| [focusCrop](#focusCrop) | Same as centerCrop, but based around a caller-specified focus point instead of the center.
-| centerInside | Downscales the image so that it fits entirely inside the parent. <br>Unlike `fitCenter,` no upscaling will be performed. <br>Aspect ratio is preserved. <br>The image is centered within parent's bounds. |
-| fitCenter | Scales the image so that it fits entirely inside the parent. <br>One of width or height will fit exactly. <br>Aspect ratio is preserved. <br>The image is centered within the parent's bounds. |
-| fitStart | Scales the image so that it fits entirely inside the parent. <br>One of width or height will fit exactly. <br>Aspect ratio is preserved. <br>The image is aligned to the top-left corner of the parent.
-| fitEnd | Scales the image so that it fits entirely inside the parent. <br>One of width or height will fit exactly. <br>Aspect ratio is preserved. <br>The image is aligned to the bottom-right corner of the parent.
-| fitXY | Scales width and height independently, so that the image matches the parent exactly. <br>Aspect ratio is not preserved.
-| [none](#none) | Used for Android's tile mode. |
+| Scale Type              | Preserves Aspect Ratio | Always Fills Entire View | Performs Scaling | Explanation |
+| ---------               | :-:                    | :-:               | :-:              | ----------- |
+| center                  | ✓                      |                   |                  | Center the image in the view, but perform no scaling. |
+| centerCrop              | ✓                      | ✓                 | ✓                | Scales the image so that both dimensions will be greater than or equal<br/> to the corresponding dimension of the parent. <br/>One of width or height will fit exactly. <br/>The image is centered within parent's bounds. |
+| focusCrop               | ✓                      | ✓                 | ✓                | Same as centerCrop, but based around <br/>a caller-specified focus point instead of the center.
+| centerInside            | ✓                      |                   | ✓                | Downscales the image so that it fits entirely inside the parent. <br/>Unlike `fitCenter,` no upscaling will be performed. <br/>Aspect ratio is preserved. <br/>The image is centered within parent's bounds. |
+| fitCenter               | ✓                      |                   | ✓                | Scales the image so that it fits entirely inside the parent. <br/>One of width or height will fit exactly. <br/>Aspect ratio is preserved. <br/>The image is centered within the parent's bounds. |
+| fitStart                | ✓                      |                   | ✓                | Scales the image so that it fits entirely inside the parent. <br/>One of width or height will fit exactly. <br/>Aspect ratio is preserved. <br/>The image is aligned to the top-left corner of the parent.
+| fitEnd                  | ✓                      |                   | ✓                | Scales the image so that it fits entirely inside the parent. <br/>One of width or height will fit exactly. <br/>Aspect ratio is preserved. <br/>The image is aligned to the bottom-right corner of the parent.
+| fitXY                   |                        | ✓                 | ✓                | Scales width and height independently.<br/> The image will match the parent exactly. <br/>Aspect ratio is not preserved.
+| none                    | ✓                      |                   |                  | Used for Android's tile mode. |
 
-These are mostly the same as those supported by the Android [ImageView](http://developer.android.com/reference/android/widget/ImageView.ScaleType.html) class.
+These are mostly the same as those supported by the Android [ImageView](http://developer.android.com/reference/android/widget/ImageView.ScaleType.html) class. The one unsupported type is `matrix`. In its place, Fresco offers `focusCrop,` which will usually work better.
 
-The one unsupported type is `matrix.` In its place, Fresco offers `focusCrop,` which will usually work better.
+### How to Set a Scale Type
 
-### How to set
-
-Actual, placeholder, retry, and failure images can all be [set in XML](using-drawees-xml.html), using attributes like `fresco:actualImageScaleType`. You can also set them [in code](using-drawees-code.html) using the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class.
+ScaleTypes of actual, placeholder, retry, and failure images can all be set in XML, using attributes like `fresco:actualImageScaleType`. You can also set them in code using the [GenericDraweeHierarchyBuilder](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchyBuilder.html) class.
 
 Even after your hierarchy is built, the actual image scale type can be modified on the fly using  [GenericDraweeHierarchy](../javadoc/reference/com/facebook/drawee/generic/GenericDraweeHierarchy.html).
 
 However, do **not** use the `android:scaleType` attribute, nor the `.setScaleType` method. These have no effect on Drawees.
 
-### focusCrop
+### Scale Type: "focusCrop"
 
 Android, and Fresco, offer a `centerCrop` scale type, which will fill the entire viewing area while preserving the aspect ratio of the image, cropping as necessary.
 
@@ -56,14 +52,17 @@ To use focus points, you must first set the right scale type in your XML:
 In your Java code, you must programmatically set the correct focus point for your image:
 
 ```java
-PointF focusPoint;
-// your app populates the focus point
+PointF focusPoint = new PointF(0f, 0.5f);
 mSimpleDraweeView
     .getHierarchy()
     .setActualImageFocusPoint(focusPoint);
 ```
 
-### A custom ScaleType
+### ScaleType: "none"
+
+If you are using Drawables that make use of Android's tile mode, you need to use the `none` scale type for this to work correctly.
+
+### Scale Type: A Custom ScaleType
 
 Sometimes you need to scale the image in a way that none of the existing scale types does. Drawee allows you to do that easily by implementing your own `ScalingUtils.ScaleType`. There is only one method in that interface, `getTransform`, which is supposed to compute the transformation matrix based on:
 
@@ -91,13 +90,13 @@ Congratulations! You just implemented the `FIT_CENTER` scale type:
       // calculate scale; we take the smaller of the horizontal and vertical scale factor so that the image always fits
       final float scaleX = (float) parentRect.width() / (float) childWidth;
       final float scaleY = (float) parentRect.height() / (float) childHeight;
-      float scale = Math.min(scaleX, scaleY);
-      
+      final float scale = Math.min(scaleX, scaleY);
+
       // calculate translation; we offset by parent bounds, and by half of the empty space
       // note that the child dimensions need to be adjusted by the scale factor
-      float dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
-      float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
-      
+      final float dx = parentRect.left + (parentRect.width() - childWidth * scale) * 0.5f;
+      final float dy = parentRect.top + (parentRect.height() - childHeight * scale) * 0.5f;
+
       // finally, set and return the transform
       outTransform.setScale(scale, scale);
       outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
@@ -106,8 +105,10 @@ Congratulations! You just implemented the `FIT_CENTER` scale type:
   }
 ```
 
+### Full Sample
 
-### none
+For a full sample see the `DraweeScaleTypeFragment` in the showcase app: [DraweeScaleTypeFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeScaleTypeFragment.java)
 
-If you are using Drawables that make use of Android's tile mode, you need to use the `none` scale type for this to work correctly.
+![Showcase app with a scale type example](/static/images/docs/01-scaletypes-sample-1.png)
 
+![Showcase app with a scale type example](/static/images/docs/01-scaletypes-sample-2.png)

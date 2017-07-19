@@ -3,8 +3,6 @@ docid: progressive-jpegs
 title: Progressive JPEGs
 layout: docs
 permalink: /docs/progressive-jpegs.html
-prev: using-controllerbuilder.html
-next: animations.html
 ---
 
 Fresco supports the streaming of progressive JPEG images over the network.
@@ -30,3 +28,12 @@ mSimpleDraweeView.setController(controller);
 ```
 
 We hope to add support for using progressive images with `setImageURI` in a future release.
+
+### Full Sample
+
+For the full sample see the `ImageFormatProgressiveJpegFragment` in the showcase app:
+[ImageFormatProgressiveJpegFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imageformat/pjpeg/ImageFormatProgressiveJpegFragment.java)
+
+<video controls="" autoplay="">
+  <source src="/static/videos/01-progressive-jpegs.mp4" type="video/mp4">
+</video>

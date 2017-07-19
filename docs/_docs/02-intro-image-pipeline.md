@@ -3,8 +3,6 @@ docid: intro-image-pipeline
 title: Introduction to the Image Pipeline
 layout: docs
 permalink: /docs/intro-image-pipeline.html
-prev: intrinsic-dimensions.html
-next: configure-image-pipeline.html
 ---
 
 The image pipeline does everything necessary to get an image into a form where it can be rendered into an Android device.
@@ -25,11 +23,3 @@ This being an image library, an image is worth a thousand words:
 
 
 The pipeline can read from [local files](supported-uris.html) as well as network. PNG, GIF, and WebP are supported as well as JPEG.
-
-
-
-### WebP on older platforms
-
-WebP is often a useful image format, but Android did not support it at all until Android 3.0. Extended WebP format was not supported until Android 4.1.2.
-
-The image pipeline transcodes unsupported WebP images into JPEG for you. This allows you to use WebP in your app all the way back to Android 2.3.

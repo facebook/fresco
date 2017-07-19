@@ -3,11 +3,9 @@ docid: progress-bars
 title: Progress Bars
 layout: docs
 permalink: /docs/progress-bars.html
-prev: drawee-branches.html
-next: scaling.html
 ---
 
-The easiest way to set a progress bar in your application is to use the [ProgressBarDrawable](../javadoc/reference/com/facebook/drawee/drawable/ProgressBarDrawable.html) class when [building a hierarchy](using-drawees-code.html):
+The easiest way to set a progress bar in your application is to use the [ProgressBarDrawable](../javadoc/reference/com/facebook/drawee/drawable/ProgressBarDrawable.html) class when building a hierarchy:
 
 ```java
 .setProgressBarImage(new ProgressBarDrawable())
@@ -31,3 +29,11 @@ class CustomProgressBar extends Drawable {
    }
 }
 ```
+
+### Example
+
+The Fresco showcase app has a [DraweeHierarchyFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeHierarchyFragment.java) that demonstrates using a progress bar drawable.
+
+<video controls="" autoplay="">
+  <source src="/static/videos/01-progress-bars.mp4" type="video/mp4">
+</video>

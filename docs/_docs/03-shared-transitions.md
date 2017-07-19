@@ -3,8 +3,6 @@ docid: shared-transitions
 title: Shared Transitions
 layout: docs
 permalink: /docs/shared-transitions.html
-prev: wrap-content.html
-next: using-other-network-layers.html
 ---
 
 ## Use ChangeBounds, not ChangeImageTransform

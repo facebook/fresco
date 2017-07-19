@@ -3,8 +3,6 @@ docid: gotchas
 title: Gotchas
 layout: docs
 permalink: /docs/gotchas.html
-prev: troubleshooting.html
-next: wrap-content.html
 ---
 
 #### Don't use ScrollViews

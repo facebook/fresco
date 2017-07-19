@@ -3,8 +3,6 @@ docid: configure-image-pipeline
 title: Configuring the Image Pipeline
 layout: docs
 permalink: /docs/configure-image-pipeline.html
-prev: intro-image-pipeline.html
-next: caching.html
 ---
 
 Most apps can initialize Fresco completely by the simple command:

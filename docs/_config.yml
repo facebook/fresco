@@ -53,6 +53,7 @@ gems:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-redirect-from
 
 # Set default open graph image for all pages
 defaults:
