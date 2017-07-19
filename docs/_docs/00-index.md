@@ -22,8 +22,6 @@ The following optional modules may also be added, depending on the needs of your
 
 ```groovy
 dependencies {
-  // If your app supports Android versions before Ice Cream Sandwich (API level 14)
-  compile 'com.facebook.fresco:animated-base-support:{{site.current_version}}'
 
   // For animated GIF support
   compile 'com.facebook.fresco:animated-gif:{{site.current_version}}'
@@ -83,7 +81,8 @@ In your layout XML, add a custom namespace to the top-level element. This is nee
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    >
 ```
 
 Then add the ```SimpleDraweeView``` to the layout:
