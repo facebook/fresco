@@ -1,10 +1,7 @@
 - type: plugin_row
   children:
   - type: button
-    href: docs/getting-started.html
-    text: Get Started
-  - type: button
     href: docs/index.html
-    text: Download
+    text: Get Started
 
 - type: github_star
