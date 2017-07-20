@@ -9,21 +9,25 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.Map;
-import java.util.concurrent.Executor;
-
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * A producer that creates video thumbnails.
@@ -38,9 +42,11 @@ public class LocalVideoThumbnailProducer implements
   @VisibleForTesting static final String CREATED_THUMBNAIL = "createdThumbnail";
 
   private final Executor mExecutor;
+  private final ContentResolver mContentResolver;
 
-  public LocalVideoThumbnailProducer(Executor executor) {
+  public LocalVideoThumbnailProducer(Executor executor, ContentResolver contentResolver) {
     mExecutor = executor;
+    mContentResolver = contentResolver;
   }
 
   @Override
@@ -72,8 +78,7 @@ public class LocalVideoThumbnailProducer implements
           @Override
           protected CloseableReference<CloseableImage> getResult() throws Exception {
             Bitmap thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(
-                imageRequest.getSourceFile().getPath(),
-                calculateKind(imageRequest));
+              getLocalFilePath(imageRequest), calculateKind(imageRequest));
             if (thumbnailBitmap == null) {
               return null;
             }
@@ -112,5 +117,23 @@ public class LocalVideoThumbnailProducer implements
       return MediaStore.Images.Thumbnails.MINI_KIND;
     }
     return MediaStore.Images.Thumbnails.MICRO_KIND;
+  }
+
+  private String getLocalFilePath(ImageRequest imageRequest) {
+    Uri uri = imageRequest.getSourceUri();
+    if (UriUtil.isLocalFileUri(uri)) {
+      return imageRequest.getSourceFile().getPath();
+    } else if (UriUtil.isLocalContentUri(uri)) {
+      Cursor cursor = mContentResolver.query(uri, new String[] {MediaStore.Video.Media.DATA},
+        null, null, null);
+      try {
+        if (cursor.moveToFirst()) {
+          return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+        }
+      } finally {
+        cursor.close();
+      }
+    }
+    return "";
   }
 }

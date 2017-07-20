@@ -31,6 +31,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_ASSET;
@@ -71,8 +72,9 @@ public class ProducerSequenceFactoryTest {
 
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
 
-    mProducerSequenceFactory =
-        new ProducerSequenceFactory(producerFactory, null, true, false, null, false, false, false);
+    mProducerSequenceFactory = new ProducerSequenceFactory(
+        RuntimeEnvironment.application,
+        producerFactory, null, true, false, null, false, false, false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -318,6 +320,7 @@ public class ProducerSequenceFactoryTest {
   private void internalUseSequenceFactoryWithBitmapPrepare() {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
     mProducerSequenceFactory = new ProducerSequenceFactory(
+        RuntimeEnvironment.application,
         producerFactory,
         null,
         true,
