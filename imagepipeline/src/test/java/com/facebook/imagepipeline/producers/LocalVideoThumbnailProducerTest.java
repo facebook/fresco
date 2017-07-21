@@ -14,6 +14,7 @@ import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.facebook.common.internal.ImmutableMap;
@@ -56,6 +57,8 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class LocalVideoThumbnailProducerTest {
   private static final String PRODUCER_NAME = LocalVideoThumbnailProducer.PRODUCER_NAME;
   private static final String TEST_FILENAME = "dummy.jpg";
+  private static final android.net.Uri LOCAL_VIDEO_URI = Uri.parse("file:///dancing_hotdog.mp4");
+
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public ImageRequest mImageRequest;
@@ -77,7 +80,9 @@ public class LocalVideoThumbnailProducerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalVideoThumbnailProducer = new LocalVideoThumbnailProducer(mExecutor);
+    mLocalVideoThumbnailProducer = new LocalVideoThumbnailProducer(
+        mExecutor,
+        RuntimeEnvironment.application.getContentResolver());
     mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
 
     mockStatic(ThumbnailUtils.class);
@@ -108,6 +113,7 @@ public class LocalVideoThumbnailProducerTest {
   public void testLocalVideoMiniThumbnailSuccess() throws Exception {
     when(mImageRequest.getPreferredWidth()).thenReturn(100);
     when(mImageRequest.getPreferredHeight()).thenReturn(100);
+    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
     when(
         android.media.ThumbnailUtils.createVideoThumbnail(
             mFile.getPath(), MediaStore.Images.Thumbnails.MINI_KIND))
@@ -133,6 +139,7 @@ public class LocalVideoThumbnailProducerTest {
 
   @Test
   public void testLocalVideoMicroThumbnailSuccess() throws Exception {
+    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
     when(
         android.media.ThumbnailUtils.createVideoThumbnail(

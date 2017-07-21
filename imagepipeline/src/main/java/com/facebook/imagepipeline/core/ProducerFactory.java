@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.core;
 
-import javax.annotation.Nullable;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -67,6 +65,8 @@ import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
+
+import javax.annotation.Nullable;
 
 public class ProducerFactory {
 
@@ -296,7 +296,9 @@ public class ProducerFactory {
   }
 
   public LocalVideoThumbnailProducer newLocalVideoThumbnailProducer() {
-    return new LocalVideoThumbnailProducer(mExecutorSupplier.forLocalStorageRead());
+    return new LocalVideoThumbnailProducer(
+        mExecutorSupplier.forLocalStorageRead(),
+        mContentResolver);
   }
 
   public NetworkFetchProducer newNetworkFetchProducer(NetworkFetcher networkFetcher) {
