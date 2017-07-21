@@ -73,7 +73,7 @@ public class ProducerSequenceFactoryTest {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
 
     mProducerSequenceFactory = new ProducerSequenceFactory(
-        RuntimeEnvironment.application,
+        RuntimeEnvironment.application.getContentResolver(),
         producerFactory, null, true, false, null, false, false, false);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
@@ -320,7 +320,7 @@ public class ProducerSequenceFactoryTest {
   private void internalUseSequenceFactoryWithBitmapPrepare() {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
     mProducerSequenceFactory = new ProducerSequenceFactory(
-        RuntimeEnvironment.application,
+        RuntimeEnvironment.application.getContentResolver(),
         producerFactory,
         null,
         true,

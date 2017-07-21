@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.net.Uri;
 
 import com.facebook.common.internal.Preconditions;
@@ -98,7 +97,7 @@ public class ProducerSequenceFactory {
       mBitmapPrepareSequences;
 
   public ProducerSequenceFactory(
-      Context context,
+      ContentResolver contentResolver,
       ProducerFactory producerFactory,
       NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork,
@@ -107,7 +106,7 @@ public class ProducerSequenceFactory {
       boolean useDownsamplingRatio,
       boolean useBitmapPrepareToDraw,
       boolean partialImageCachingEnabled) {
-    mContentResolver = context.getApplicationContext().getContentResolver();
+    mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;

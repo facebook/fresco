@@ -9,12 +9,16 @@
 
 package com.facebook.imagepipeline.producers;
 
+import java.util.Map;
+import java.util.concurrent.Executor;
+
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
@@ -25,9 +29,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
-
-import java.util.Map;
-import java.util.concurrent.Executor;
 
 /**
  * A producer that creates video thumbnails.
@@ -77,8 +78,12 @@ public class LocalVideoThumbnailProducer implements
 
           @Override
           protected CloseableReference<CloseableImage> getResult() throws Exception {
-            Bitmap thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(
-              getLocalFilePath(imageRequest), calculateKind(imageRequest));
+            String path = getLocalFilePath(imageRequest);
+            if (path == null) {
+              return null;
+            }
+            Bitmap thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(path,
+                calculateKind(imageRequest));
             if (thumbnailBitmap == null) {
               return null;
             }
@@ -119,7 +124,7 @@ public class LocalVideoThumbnailProducer implements
     return MediaStore.Images.Thumbnails.MICRO_KIND;
   }
 
-  private String getLocalFilePath(ImageRequest imageRequest) {
+  @Nullable private String getLocalFilePath(ImageRequest imageRequest) {
     Uri uri = imageRequest.getSourceUri();
     if (UriUtil.isLocalFileUri(uri)) {
       return imageRequest.getSourceFile().getPath();
@@ -134,6 +139,6 @@ public class LocalVideoThumbnailProducer implements
         cursor.close();
       }
     }
-    return "";
+    return null;
   }
 }

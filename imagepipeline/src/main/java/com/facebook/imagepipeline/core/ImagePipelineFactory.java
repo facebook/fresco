@@ -363,7 +363,7 @@ public class ImagePipelineFactory {
     if (mProducerSequenceFactory == null) {
       mProducerSequenceFactory =
           new ProducerSequenceFactory(
-              mConfig.getContext(),
+              mConfig.getContext().getApplicationContext().getContentResolver(),
               getProducerFactory(),
               mConfig.getNetworkFetcher(),
               mConfig.isResizeAndRotateEnabledForNetwork(),
