@@ -77,7 +77,8 @@ public class LocalVideoThumbnailProducerTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     mExecutor = new TestExecutorService(new FakeClock());
-    mLocalVideoThumbnailProducer = new LocalVideoThumbnailProducer(mExecutor);
+    mLocalVideoThumbnailProducer = new LocalVideoThumbnailProducer(mExecutor,
+        RuntimeEnvironment.application.getContentResolver());
     mFile = new File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME);
 
     mockStatic(ThumbnailUtils.class);

@@ -12,10 +12,12 @@ package com.facebook.imagepipeline.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.ContentResolver;
 import android.net.Uri;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.media.MediaUtils;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.webp.WebpSupportStatus;
@@ -55,6 +57,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 
 public class ProducerSequenceFactory {
 
+  private final ContentResolver mContentResolver;
   private final ProducerFactory mProducerFactory;
   private final NetworkFetcher mNetworkFetcher;
   private final boolean mResizeAndRotateEnabledForNetwork;
@@ -94,6 +97,7 @@ public class ProducerSequenceFactory {
       mBitmapPrepareSequences;
 
   public ProducerSequenceFactory(
+      ContentResolver contentResolver,
       ProducerFactory producerFactory,
       NetworkFetcher networkFetcher,
       boolean resizeAndRotateEnabledForNetwork,
@@ -102,6 +106,7 @@ public class ProducerSequenceFactory {
       boolean useDownsamplingRatio,
       boolean useBitmapPrepareToDraw,
       boolean partialImageCachingEnabled) {
+    mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
@@ -249,6 +254,9 @@ public class ProducerSequenceFactory {
       case SOURCE_TYPE_LOCAL_IMAGE_FILE:
         return getLocalImageFileFetchSequence();
       case SOURCE_TYPE_LOCAL_CONTENT:
+        if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
+          return getLocalVideoFileFetchSequence();
+        }
         return getLocalContentUriFetchSequence();
       case SOURCE_TYPE_LOCAL_ASSET:
         return getLocalAssetFetchSequence();
