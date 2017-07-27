@@ -9,9 +9,12 @@
 
 package com.facebook.common.time;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * Interface for getting the current time.
  */
+@ThreadSafe
 public interface Clock {
 
   /**

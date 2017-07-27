@@ -10,10 +10,12 @@
 package com.facebook.common.time;
 
 import com.facebook.common.internal.DoNotStrip;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A clock that is guaranteed not to go backward.
  */
+@ThreadSafe
 public interface MonotonicClock {
 
   /**
