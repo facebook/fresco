@@ -245,11 +245,11 @@ public class RoundedBitmapDrawable extends BitmapDrawable
   }
 
   /**
-   * If both the radii and border width are zero, there is nothing to round.
+   * If both the radii and border width are zero or bitmap is null, there is nothing to round.
    */
   @VisibleForTesting
   boolean shouldRound() {
-    return mIsCircle || mRadiiNonZero || mBorderWidth > 0;
+    return (mIsCircle || mRadiiNonZero || mBorderWidth > 0) && getBitmap() != null;
   }
 
   private void updateTransform() {
