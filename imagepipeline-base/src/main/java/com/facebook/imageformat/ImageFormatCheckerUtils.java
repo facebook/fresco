@@ -75,9 +75,10 @@ public class ImageFormatCheckerUtils {
     }
 
     for (int i = 0; i < (byteArray.length - pattern.length); i++) {
-      if (byteArray[i] == pattern[i]) {
-        for (int j = 0; j < pattern.length; j++) {
-          if (byteArray[i + j] == pattern[j]) return i;
+      if (byteArray[i] == pattern[0]) {
+        for (int j = 1; j < pattern.length; j++) {
+          if (byteArray[i + j] != pattern[j]) break;
+          if (j == pattern.length - 1) return i;
         }
       }
     }
