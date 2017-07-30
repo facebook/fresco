@@ -28,6 +28,10 @@ public class PooledByteBufferInputStream extends InputStream {
 
   @VisibleForTesting
   int mOffset; // current offset in the chunk
+
+  // TODO: determine better name for this
+  public static int byteOffset = -1;
+
   @VisibleForTesting
   int mMark; // position of 'mark' if any
 
@@ -39,7 +43,7 @@ public class PooledByteBufferInputStream extends InputStream {
     super();
     Preconditions.checkArgument(!pooledByteBuffer.isClosed());
     mPooledByteBuffer = Preconditions.checkNotNull(pooledByteBuffer);
-    mOffset = 0;
+    mOffset = byteOffset != -1 ? byteOffset : 0;
     mMark = 0;
   }
 

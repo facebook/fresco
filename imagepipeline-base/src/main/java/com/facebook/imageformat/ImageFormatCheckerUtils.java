@@ -59,5 +59,30 @@ public class ImageFormatCheckerUtils {
     return true;
   }
 
+  /**
+   * Checks if byteArray interpreted as sequence of bytes contains the pattern.
+   * @param byteArray the byte array to be checked
+   * @param pattern the pattern to check
+   * @return index of beginning of pattern, if found; otherwise -1
+   */
+  public static int containsPattern(
+      final byte[] byteArray,
+      final byte[] pattern) {
+    Preconditions.checkNotNull(byteArray);
+    Preconditions.checkNotNull(pattern);
+    if (pattern.length > byteArray.length) {
+      return -1;
+    }
+
+    for (int i = 0; i < (byteArray.length - pattern.length); i++) {
+      if (byteArray[i] == pattern[i]) {
+        for (int j = 0; j < pattern.length; j++) {
+          if (byteArray[i + j] == pattern[j]) return i;
+        }
+      }
+    }
+    return -1;
+  }
+
   private ImageFormatCheckerUtils() {}
 }

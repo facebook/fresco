@@ -13,10 +13,15 @@ package com.facebook.fresco.samples.showcase.imageformat.svg;
 
 import javax.annotation.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 
+import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
@@ -50,13 +55,22 @@ public class SvgDecoderExample {
 
     @Nullable
     @Override
-    public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
+    public ImageFormat determineFormat(byte[] headerBytes, int headerSize, InputStream is)
+        throws IOException {
       if (headerSize < getHeaderSize()) {
         return null;
       }
       if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, HEADER)) {
         return SVG_FORMAT;
       }
+
+      // TODO: is passing the InputStream to this method the best way to achieve this result?
+      int index = ImageFormatCheckerUtils.containsPattern(ByteStreams.toByteArray(is), HEADER);
+      if (index != -1) {
+        PooledByteBufferInputStream.byteOffset = index;
+        return SVG_FORMAT;
+      }
+
       return null;
     }
   }

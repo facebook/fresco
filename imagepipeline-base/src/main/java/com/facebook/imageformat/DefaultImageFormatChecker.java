@@ -10,6 +10,7 @@ package com.facebook.imageformat;
 
 import javax.annotation.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import com.facebook.common.internal.Ints;
@@ -51,7 +52,8 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
    */
   @Nullable
   @Override
-  public final ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
+  public final ImageFormat determineFormat(byte[] headerBytes, int headerSize, InputStream is)
+      throws IOException {
     Preconditions.checkNotNull(headerBytes);
 
     if (WebpSupportStatus.isWebpHeader(headerBytes, 0, headerSize)) {
