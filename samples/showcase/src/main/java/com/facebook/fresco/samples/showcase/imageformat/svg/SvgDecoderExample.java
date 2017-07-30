@@ -64,10 +64,11 @@ public class SvgDecoderExample {
         return SVG_FORMAT;
       }
 
-      // TODO: is passing the InputStream to this method the best way to achieve this result?
-      int index = ImageFormatCheckerUtils.containsPattern(ByteStreams.toByteArray(is), HEADER);
-      if (index != -1) {
-        PooledByteBufferInputStream.byteOffset = index;
+      // TODO: (1) Determine if passing the InputStream to this method is the best way to achieve this result.
+      // TODO: (2) Determine if searching the whole array of bytes in the stream is best practice, according to the repository authors.
+      int indexOfPattern = ImageFormatCheckerUtils.containsPattern(ByteStreams.toByteArray(is), HEADER);
+      if (indexOfPattern != -1) {
+        PooledByteBufferInputStream.byteOffset = indexOfPattern;
         return SVG_FORMAT;
       }
 
