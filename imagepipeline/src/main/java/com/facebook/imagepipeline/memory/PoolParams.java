@@ -40,7 +40,7 @@ import com.facebook.common.internal.Preconditions;
  * <p>
  * {@link #minBucketSize}
  * This represents the minimum size of the buckets in the pool. This assures that all buckets can
- * hold any element smaller or equal to this size.
+ * hold any element larger or equal to this size.
  * <p>
  * {@link #maxBucketSize}
  * This represents the maximum size of the buckets in the pool. This restricts all buckets to only
