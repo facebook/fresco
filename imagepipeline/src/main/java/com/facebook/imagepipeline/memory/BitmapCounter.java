@@ -105,6 +105,14 @@ public class BitmapCounter {
         return mSize;
       }
 
+  public synchronized int getMaxCount() {
+    return mMaxCount;
+  }
+
+  public synchronized int getMaxSize() {
+    return mMaxSize;
+  }
+
   public ResourceReleaser<Bitmap> getReleaser() {
     return mUnpooledBitmapsReleaser;
   }
