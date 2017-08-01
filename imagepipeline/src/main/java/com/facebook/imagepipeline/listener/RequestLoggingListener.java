@@ -9,17 +9,14 @@
 
 package com.facebook.imagepipeline.listener;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import android.os.SystemClock;
 import android.util.Pair;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Logging for {@link ImageRequest}s.

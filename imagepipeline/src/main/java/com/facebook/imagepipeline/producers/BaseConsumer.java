@@ -9,10 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.concurrent.ThreadSafe;
-import javax.annotation.Nullable;
-
 import com.facebook.common.logging.FLog;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Base implementation of Consumer that implements error handling conforming to the

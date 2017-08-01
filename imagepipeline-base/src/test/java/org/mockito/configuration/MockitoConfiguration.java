@@ -9,7 +9,6 @@
 
 package org.mockito.configuration;
 
-import org.mockito.configuration.DefaultMockitoConfiguration;
 
 /**
  * To build the imagepipeline-base module on gradle we need this class which must be in the

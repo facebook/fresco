@@ -9,17 +9,15 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.common.references.CloseableReference;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A factory to provide instances of {@link NativePooledByteBuffer} and

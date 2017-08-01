@@ -13,13 +13,11 @@
 package com.facebook.samples.comparison.configs.uil;
 
 import android.content.Context;
-
+import com.facebook.samples.comparison.Drawables;
+import com.facebook.samples.comparison.configs.ConfigConstants;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import com.facebook.samples.comparison.Drawables;
-import com.facebook.samples.comparison.configs.ConfigConstants;
 
 /**
  * Provides instance of ImageLoader with appropriately configured caches and placeholder/failure

@@ -9,12 +9,6 @@
 
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-
+import bolts.Task;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.CacheKeyUtil;
 import com.facebook.common.internal.VisibleForTesting;
@@ -33,8 +27,10 @@ import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.MediaVariations;
-
-import bolts.Task;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 public class MediaVariationsIndexDatabase implements MediaVariationsIndex {
 

@@ -9,17 +9,15 @@
 
 package com.facebook.drawee.drawable;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class RoundedCornersDrawableTest {

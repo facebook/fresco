@@ -9,12 +9,11 @@
 
 package com.facebook.cache.disk;
 
-import java.io.IOException;
-
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.WriterCallback;
 import com.facebook.common.disk.DiskTrimmable;
+import java.io.IOException;
 
 /**
  * Interface that caches based on disk should implement.

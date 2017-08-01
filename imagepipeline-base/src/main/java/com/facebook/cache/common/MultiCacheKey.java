@@ -8,11 +8,9 @@
  */
 package com.facebook.cache.common;
 
-import java.util.List;
-
 import android.net.Uri;
-
 import com.facebook.common.internal.Preconditions;
+import java.util.List;
 
 /**
  * A cache key that wraps multiple cache keys.

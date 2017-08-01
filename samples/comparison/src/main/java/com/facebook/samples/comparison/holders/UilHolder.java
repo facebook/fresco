@@ -14,10 +14,8 @@ package com.facebook.samples.comparison.holders;
 
 import android.content.Context;
 import android.view.View;
-
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**

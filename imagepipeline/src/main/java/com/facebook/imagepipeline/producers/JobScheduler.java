@@ -8,17 +8,14 @@
  */
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.concurrent.GuardedBy;
-
+import android.os.SystemClock;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.image.EncodedImage;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import android.os.SystemClock;
-
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.imagepipeline.image.EncodedImage;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Manages jobs so that only one can be executed at a time and no more often than once in

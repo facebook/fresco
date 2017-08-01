@@ -9,15 +9,12 @@
 
 package com.facebook.imagepipeline.memory;
 
-import java.io.Closeable;
-
 import android.util.Log;
-
+import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.internal.DoNotStrip;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.nativecode.ImagePipelineNativeLoader;
+import java.io.Closeable;
 
 /**
  * Wrapper around chunk of native memory.

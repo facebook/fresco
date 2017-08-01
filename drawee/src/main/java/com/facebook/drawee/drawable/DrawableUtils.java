@@ -9,10 +9,9 @@
 
 package com.facebook.drawee.drawable;
 
-import javax.annotation.Nullable;
-
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import javax.annotation.Nullable;
 
 /**
  * Helper class containing functionality commonly used by drawables.

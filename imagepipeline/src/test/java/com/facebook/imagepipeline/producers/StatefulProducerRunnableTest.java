@@ -9,21 +9,19 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static org.mockito.Mockito.*;
+
+import com.facebook.common.internal.Supplier;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.facebook.common.internal.Supplier;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)

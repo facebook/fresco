@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.SparseIntArray;
-
 import com.facebook.common.util.ByteConstants;
 
 /**

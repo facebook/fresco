@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.cache;
 
 import android.os.Build;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 

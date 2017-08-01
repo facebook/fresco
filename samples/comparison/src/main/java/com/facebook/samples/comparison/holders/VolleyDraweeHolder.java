@@ -15,7 +15,6 @@ package com.facebook.samples.comparison.holders;
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
-
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 

@@ -9,13 +9,11 @@
 
 package com.facebook.drawee.components;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.os.Handler;
 import android.os.Looper;
-
 import com.facebook.common.internal.Preconditions;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Component that defers {@code release} until after the main Looper has completed its current

@@ -9,16 +9,9 @@
 
 package com.facebook.imagepipeline.core;
 
-import javax.annotation.Nullable;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -48,6 +41,10 @@ import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Master configuration class for the image pipeline library.

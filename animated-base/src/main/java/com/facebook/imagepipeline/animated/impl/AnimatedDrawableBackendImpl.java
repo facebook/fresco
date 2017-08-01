@@ -9,13 +9,10 @@
 
 package com.facebook.imagepipeline.animated.impl;
 
-import javax.annotation.concurrent.GuardedBy;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
@@ -24,6 +21,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.animated.util.AnimatedDrawableUtil;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * An {@link AnimatedDrawableBackend} that renders {@link AnimatedImage}.

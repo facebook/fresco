@@ -9,16 +9,14 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.Executor;
-
 import android.content.ContentResolver;
 import android.net.Uri;
-
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.Executor;
 
 /**
  * The {@link QualifiedResourceFetchProducer} uses the {@link ContentResolver} to allow fetching

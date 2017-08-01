@@ -9,18 +9,10 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
 import android.content.ContentResolver;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
-
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -34,6 +26,11 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * A producer that retrieves exif thumbnails.

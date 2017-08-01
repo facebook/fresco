@@ -11,15 +11,14 @@
  */
 package com.facebook.samples.animation2.utils;
 
+import static com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.createForBackend;
+
 import android.content.Context;
 import android.widget.Toast;
-
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
-
-import static com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.createForBackend;
 
 /**
  * Animation backend utilities shared between multiple examples.

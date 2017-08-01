@@ -9,16 +9,14 @@
 
 package com.facebook.drawee.view;
 
-import javax.annotation.Nullable;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchyInflater;
+import javax.annotation.Nullable;
 
 /**
  * DraweeView that uses GenericDraweeHierarchy.

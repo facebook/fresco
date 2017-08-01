@@ -9,15 +9,12 @@
 
 package com.facebook.datasource;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
+import android.util.Pair;
+import com.facebook.common.internal.Preconditions;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
-
-import android.util.Pair;
-
-import com.facebook.common.internal.Preconditions;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * An abstract implementation of {@link DataSource} interface.

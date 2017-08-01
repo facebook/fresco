@@ -9,15 +9,13 @@
 
 package com.facebook.common.util;
 
-import java.util.Random;
+import static org.junit.Assert.assertEquals;
 
 import com.facebook.common.internal.Objects;
-import org.robolectric.RobolectricTestRunner;
-
+import java.util.Random;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class HashCodeUtilTest {

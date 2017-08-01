@@ -9,16 +9,14 @@
 
 package com.facebook.drawee.view;
 
-import java.util.ArrayList;
-
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
+import java.util.ArrayList;
 
 /**
  * Contains multiple Drawee holders.

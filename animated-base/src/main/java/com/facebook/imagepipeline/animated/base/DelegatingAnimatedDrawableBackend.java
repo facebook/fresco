@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.animated.base;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-
 import com.facebook.common.references.CloseableReference;
 
 /**

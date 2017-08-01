@@ -11,7 +11,6 @@ package com.facebook.imagepipeline.cache;
 
 import android.app.ActivityManager;
 import android.os.Build;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
 

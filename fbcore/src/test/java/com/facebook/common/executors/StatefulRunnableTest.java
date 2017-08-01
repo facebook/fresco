@@ -9,19 +9,17 @@
 
 package com.facebook.common.executors;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import java.lang.reflect.Field;
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class StatefulRunnableTest {

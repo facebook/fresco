@@ -9,12 +9,10 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.util.SparseIntArray;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Manages a pool of native memory chunks ({@link NativeMemoryChunk})

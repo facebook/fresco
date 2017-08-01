@@ -9,23 +9,20 @@
 
 package com.facebook.datasource;
 
-import javax.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Executor;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Supplier;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.verification.VerificationMode;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class DataSourceTestUtils {
 

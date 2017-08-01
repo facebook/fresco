@@ -11,7 +11,6 @@ package com.facebook.fresco.animation.drawable.animator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.os.Build;
-
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 

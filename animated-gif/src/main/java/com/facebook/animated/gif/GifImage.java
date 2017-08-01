@@ -9,10 +9,6 @@
 
 package com.facebook.animated.gif;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.nio.ByteBuffer;
-
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.soloader.SoLoaderShim;
@@ -20,6 +16,8 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
+import java.nio.ByteBuffer;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A representation of a GIF image. An instance of this class will hold a copy of the encoded

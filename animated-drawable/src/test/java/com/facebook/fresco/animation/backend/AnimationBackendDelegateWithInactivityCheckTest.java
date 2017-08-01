@@ -8,19 +8,17 @@
  */
 package com.facebook.fresco.animation.backend;
 
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-
-import com.facebook.imagepipeline.testing.FakeClock;
-import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import static com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck.INACTIVITY_THRESHOLD_MS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import com.facebook.imagepipeline.testing.FakeClock;
+import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests {@link AnimationBackendDelegateWithInactivityCheck}

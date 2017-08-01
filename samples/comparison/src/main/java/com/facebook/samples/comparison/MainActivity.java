@@ -12,10 +12,6 @@
 
 package com.facebook.samples.comparison;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -42,7 +38,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.comparison.adapters.AQueryAdapter;
@@ -59,6 +54,9 @@ import com.facebook.samples.comparison.urlsfetcher.ImageFormat;
 import com.facebook.samples.comparison.urlsfetcher.ImageSize;
 import com.facebook.samples.comparison.urlsfetcher.ImageUrlsFetcher;
 import com.facebook.samples.comparison.urlsfetcher.ImageUrlsRequestBuilder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends ActionBarActivity {
 

@@ -11,11 +11,10 @@
  */
 package com.facebook.fresco.samples.showcase.postprocessor;
 
-import java.util.Locale;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
+import java.util.Locale;
 
 /**
  * Adds a watermark at random positions to the bitmap like {@link WatermarkPostprocessor}. However,

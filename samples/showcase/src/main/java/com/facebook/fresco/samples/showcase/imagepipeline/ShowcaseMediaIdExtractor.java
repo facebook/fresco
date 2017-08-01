@@ -11,14 +11,11 @@
  */
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
-import javax.annotation.Nullable;
-
-import java.util.Locale;
-
 import android.net.Uri;
 import android.util.Log;
-
 import com.facebook.imagepipeline.cache.MediaIdExtractor;
+import java.util.Locale;
+import javax.annotation.Nullable;
 
 public class ShowcaseMediaIdExtractor implements MediaIdExtractor {
 

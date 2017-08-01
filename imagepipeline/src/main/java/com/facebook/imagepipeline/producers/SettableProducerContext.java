@@ -9,10 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * ProducerContext that allows the client to change its internal state.

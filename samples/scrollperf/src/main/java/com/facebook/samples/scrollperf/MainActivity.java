@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 import com.facebook.samples.scrollperf.fragments.MainFragment;
 import com.facebook.samples.scrollperf.fragments.SettingsFragment;
 import com.facebook.samples.scrollperf.util.SizeUtil;

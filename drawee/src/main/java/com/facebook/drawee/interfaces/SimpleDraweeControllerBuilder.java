@@ -9,9 +9,8 @@
 
 package com.facebook.drawee.interfaces;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
+import javax.annotation.Nullable;
 
 /**
  * Interface for simple Drawee controller builders.

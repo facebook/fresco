@@ -9,12 +9,6 @@
 
 package com.facebook.cache.disk;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.common.file.FileTree;
@@ -23,6 +17,10 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import javax.annotation.Nullable;
 
 /**
  * A supplier of a DiskStorage concrete implementation.

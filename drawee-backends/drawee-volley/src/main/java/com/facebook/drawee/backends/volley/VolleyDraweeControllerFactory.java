@@ -11,11 +11,9 @@ package com.facebook.drawee.backends.volley;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.components.DeferredReleaser;
-
 import java.util.concurrent.Executor;
 
 /**

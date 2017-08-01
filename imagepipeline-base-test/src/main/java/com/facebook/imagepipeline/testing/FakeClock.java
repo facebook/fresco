@@ -9,10 +9,9 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.common.time.MonotonicClock;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.facebook.common.time.MonotonicClock;
 
 /**
  *

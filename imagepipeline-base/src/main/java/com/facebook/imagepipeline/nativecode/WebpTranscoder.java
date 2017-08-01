@@ -9,10 +9,10 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import com.facebook.imageformat.ImageFormat;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-import com.facebook.imageformat.ImageFormat;
 
 /**
  * The abstraction for WebpTranscoder

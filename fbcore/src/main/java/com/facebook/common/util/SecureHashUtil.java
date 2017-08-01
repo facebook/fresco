@@ -9,11 +9,10 @@
 
 package com.facebook.common.util;
 
+import android.util.Base64;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import android.util.Base64;
 
 /**
  * Static methods for secure hashing.

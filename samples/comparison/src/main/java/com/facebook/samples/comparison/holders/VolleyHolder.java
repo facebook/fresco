@@ -14,9 +14,7 @@ package com.facebook.samples.comparison.holders;
 
 import android.content.Context;
 import android.view.View;
-
 import com.android.volley.toolbox.ImageLoader;
-
 import com.facebook.samples.comparison.instrumentation.InstrumentedNetworkImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 

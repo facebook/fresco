@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-
 import com.facebook.common.references.CloseableReference;
+import javax.annotation.Nullable;
 /**
  * Interface that {@link com.facebook.fresco.animation.drawable.AnimatedDrawable2} uses
  * that abstracts out the image format.

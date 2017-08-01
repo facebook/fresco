@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.nativecode;
 
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 

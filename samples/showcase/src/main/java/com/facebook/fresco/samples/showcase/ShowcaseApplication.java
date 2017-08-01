@@ -11,12 +11,8 @@
  */
 package com.facebook.fresco.samples.showcase;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Application;
 import android.content.Context;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
@@ -33,9 +29,8 @@ import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-
-import okhttp3.OkHttpClient;
-
+import java.util.HashSet;
+import java.util.Set;
 import okhttp3.OkHttpClient;
 
 /**

@@ -13,7 +13,6 @@ package com.facebook.fresco.samples.showcase.common;
 
 import android.graphics.Matrix;
 import android.graphics.Rect;
-
 import com.facebook.drawee.drawable.ScalingUtils;
 
 /**

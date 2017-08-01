@@ -9,14 +9,12 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.TimeUnit;
+import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calculateDownsampleNumerator;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import android.net.Uri;
 import android.os.SystemClock;
-
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -34,11 +32,14 @@ import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.junit.runner.*;
-import org.mockito.Mock;
 import org.mockito.*;
+import org.mockito.Mock;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.powermock.api.mockito.*;
@@ -46,10 +47,6 @@ import org.powermock.core.classloader.annotations.*;
 import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calculateDownsampleNumerator;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })

@@ -9,12 +9,10 @@
 
 package com.facebook.datasource;
 
-import javax.annotation.Nullable;
-
+import com.facebook.common.internal.Supplier;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
-
-import com.facebook.common.internal.Supplier;
+import javax.annotation.Nullable;
 
 /**
  * Static utility methods pertaining to the {@link DataSource} interface.

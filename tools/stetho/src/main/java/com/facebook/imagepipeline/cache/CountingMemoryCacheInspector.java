@@ -9,16 +9,14 @@
 
 package com.facebook.imagepipeline.cache;
 
+import android.graphics.Bitmap;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.references.CloseableReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.graphics.Bitmap;
-
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.references.CloseableReference;
 
 /**
  * Inspects values cached in bitmap memory cache.

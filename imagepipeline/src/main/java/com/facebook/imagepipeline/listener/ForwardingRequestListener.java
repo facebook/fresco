@@ -9,16 +9,13 @@
 
 package com.facebook.imagepipeline.listener;
 
-import javax.annotation.Nullable;
-
+import com.facebook.common.logging.FLog;
+import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.facebook.common.logging.FLog;
-import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.Nullable;
 
 public class ForwardingRequestListener implements RequestListener {
   private static final String TAG = "ForwardingRequestListener";

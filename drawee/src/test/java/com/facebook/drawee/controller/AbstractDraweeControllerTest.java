@@ -9,32 +9,6 @@
 
 package com.facebook.drawee.controller;
 
-import javax.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executor;
-
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
-
-import com.facebook.common.executors.CallerThreadExecutor;
-import com.facebook.common.internal.Supplier;
-import com.facebook.common.internal.Throwables;
-import com.facebook.datasource.DataSource;
-import com.facebook.datasource.SimpleDataSource;
-import com.facebook.drawee.components.DeferredReleaser;
-import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
-import org.robolectric.RobolectricTestRunner;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -54,6 +28,28 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
+import com.facebook.common.executors.CallerThreadExecutor;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Throwables;
+import com.facebook.datasource.DataSource;
+import com.facebook.datasource.SimpleDataSource;
+import com.facebook.drawee.components.DeferredReleaser;
+import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
 
 /** * Tests for AbstractDraweeController */
 @RunWith(RobolectricTestRunner.class)

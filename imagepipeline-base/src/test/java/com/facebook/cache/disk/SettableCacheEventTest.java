@@ -9,15 +9,13 @@
 
 package com.facebook.cache.disk;
 
-import java.io.IOException;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.CacheKey;
-
+import java.io.IOException;
 import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 public class SettableCacheEventTest {
 

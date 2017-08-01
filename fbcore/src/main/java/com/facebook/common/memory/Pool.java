@@ -9,21 +9,18 @@
 
 package com.facebook.common.memory;
 
-import com.facebook.common.memory.MemoryTrimType;
-import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.references.ResourceReleaser;
 
 /**
  * Manages a pool of reusable values of type V. The sizes of the values are described by the type S
- * The pool supports two main operations
- * {@link #get(Object)} - returns a value of size that's the same or larger than the requested size
- * {@link #release(Object)}  - releases the value to the pool
- * <p>
- * In addition, the pool subscribes to the memory manager, and responds to low-memory events via
- * calls to {@link MemoryTrimmable#trim(MemoryTrimType)}. Some percent (perhaps all) of the
- * values in the pool are then 'freed'.
- * <p>
- * Known implementations: BasePool (GenericByteArrayPool, SingleByteArrayPool, BitmapPool)
+ * The pool supports two main operations {@link #get(Object)} - returns a value of size that's the
+ * same or larger than the requested size {@link #release(Object)} - releases the value to the pool
+ *
+ * <p>In addition, the pool subscribes to the memory manager, and responds to low-memory events via
+ * calls to {@link com.facebook.common.memory.MemoryTrimmable#trim(MemoryTrimType)}. Some percent
+ * (perhaps all) of the values in the pool are then 'freed'.
+ *
+ * <p>Known implementations: BasePool (GenericByteArrayPool, SingleByteArrayPool, BitmapPool)
  */
 public interface Pool<V> extends ResourceReleaser<V>, MemoryTrimmable {
 

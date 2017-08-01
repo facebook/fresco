@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
+import com.facebook.imagepipeline.image.EncodedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
-import com.facebook.imagepipeline.image.EncodedImage;
+import javax.annotation.Nullable;
 
 /**
  * Interface that specifies network fetcher used by the image pipeline.

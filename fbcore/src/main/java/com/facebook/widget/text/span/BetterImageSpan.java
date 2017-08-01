@@ -9,9 +9,6 @@
 
 package com.facebook.widget.text.span;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -19,6 +16,8 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ReplacementSpan;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * A better implementation of image spans that also supports centering images against the text.

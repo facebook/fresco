@@ -9,9 +9,7 @@
 
 package com.facebook.animated.webp;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.nio.ByteBuffer;
+import static com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader.ensure;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
@@ -20,7 +18,8 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendO
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.DisposalMethod;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
-import static com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader.ensure;
+import java.nio.ByteBuffer;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A representation of a WebP image. An instance of this class will hold a copy of the encoded

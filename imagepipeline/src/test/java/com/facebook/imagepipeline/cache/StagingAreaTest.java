@@ -9,18 +9,17 @@
 
 package com.facebook.imagepipeline.cache;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.robolectric.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class StagingAreaTest {

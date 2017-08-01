@@ -9,20 +9,18 @@
 
 package com.facebook.imagepipeline.memory;
 
-import android.util.SparseIntArray;
+import static org.mockito.Mockito.mock;
 
+import android.util.SparseIntArray;
+import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.memory.BasePool.PoolSizeViolationException;
-import org.robolectric.RobolectricTestRunner;
-
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.ImmutableMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.mockito.Mockito.mock;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for BasePool

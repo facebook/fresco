@@ -9,19 +9,17 @@
 
 package com.facebook.common.references;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
+import com.facebook.common.internal.Closeables;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import com.facebook.common.internal.Closeables;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.logging.FLog;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * A smart pointer-like class for Java.

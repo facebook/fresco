@@ -10,10 +10,9 @@
 package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
-
+import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 /**

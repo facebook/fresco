@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.core;
 
 import android.os.Process;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;

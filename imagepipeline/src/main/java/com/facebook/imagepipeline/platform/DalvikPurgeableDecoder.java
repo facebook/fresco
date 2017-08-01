@@ -9,12 +9,9 @@
 
 package com.facebook.imagepipeline.platform;
 
-import java.util.Locale;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -26,6 +23,7 @@ import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import java.util.Locale;
 
 /**
  * Base class for bitmap decodes for Dalvik VM (Gingerbread to KitKat).

@@ -8,11 +8,9 @@
  */
 package com.facebook.fresco.animation.bitmap;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.CloseableReference;
+import javax.annotation.Nullable;
 
 /**
  * Bitmap frame cache that is used for animated images.

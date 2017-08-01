@@ -8,9 +8,8 @@
  */
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
+import javax.annotation.Nullable;
 
 /**
  * Experimental interface for a helper to extract media IDs from URLs. This can be useful in cases

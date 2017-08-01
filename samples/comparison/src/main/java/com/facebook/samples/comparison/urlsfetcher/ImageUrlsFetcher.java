@@ -13,14 +13,8 @@
 package com.facebook.samples.comparison.urlsfetcher;
 
 import android.os.AsyncTask;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,8 +25,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Helper that asynchronously fetches the list of image URIs from Imgur.

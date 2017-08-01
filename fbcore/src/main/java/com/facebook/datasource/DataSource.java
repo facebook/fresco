@@ -9,9 +9,8 @@
 
 package com.facebook.datasource;
 
-import javax.annotation.Nullable;
-
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * An alternative to Java Futures for the image pipeline.

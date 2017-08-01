@@ -9,11 +9,9 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
-import java.util.LinkedList;
-
 import com.facebook.common.references.OOMSoftReference;
+import java.util.LinkedList;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A Bucket that uses OOMSoftReferences to store its free list.

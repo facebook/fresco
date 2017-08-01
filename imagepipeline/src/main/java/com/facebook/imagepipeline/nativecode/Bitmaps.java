@@ -11,12 +11,9 @@ package com.facebook.imagepipeline.nativecode;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageutils.BitmapUtil;
-
 import java.nio.ByteBuffer;
 
 /**

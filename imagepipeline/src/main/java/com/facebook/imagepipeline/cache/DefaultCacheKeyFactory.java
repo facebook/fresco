@@ -9,14 +9,12 @@
 
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
+import javax.annotation.Nullable;
 
 /**
  * Default implementation of {@link CacheKeyFactory}.

@@ -10,16 +10,13 @@
 package com.facebook.drawee.backends.pipeline;
 
 import android.content.Context;
-
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
-
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 public class PipelineDraweeControllerBuilderSupplier implements

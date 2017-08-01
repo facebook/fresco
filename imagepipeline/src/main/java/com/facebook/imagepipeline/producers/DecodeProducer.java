@@ -9,15 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executor;
+import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
 
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.ByteArrayPool;
@@ -37,8 +31,11 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
-
-import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Decodes images.

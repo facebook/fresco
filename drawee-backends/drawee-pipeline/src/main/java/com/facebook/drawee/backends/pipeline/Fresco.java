@@ -9,15 +9,13 @@
 
 package com.facebook.drawee.backends.pipeline;
 
-import javax.annotation.Nullable;
-
 import android.content.Context;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import javax.annotation.Nullable;
 
 /**
  * Fresco entry point.

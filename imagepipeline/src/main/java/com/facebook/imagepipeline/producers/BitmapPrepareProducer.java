@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.producers;
 
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;

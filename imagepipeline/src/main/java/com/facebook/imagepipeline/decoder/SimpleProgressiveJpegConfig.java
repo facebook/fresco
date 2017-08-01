@@ -9,12 +9,11 @@
 
 package com.facebook.imagepipeline.decoder;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Simple {@link ProgressiveJpegConfig} with predefined scans to decode and good-enough scan number.

@@ -8,15 +8,14 @@
  */
 package com.facebook.fresco.animation.bitmap.wrapper;
 
-import com.facebook.fresco.animation.backend.AnimationBackend;
-import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests {@link AnimatedDrawableBackendAnimationInformation}.

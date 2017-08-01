@@ -11,16 +11,15 @@
  */
 package com.facebook.samples.scrollperf.data.impl;
 
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.test.AndroidTestCase;
-
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
-
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 
 /**
  * We test the InfiniteSimpleAdapter

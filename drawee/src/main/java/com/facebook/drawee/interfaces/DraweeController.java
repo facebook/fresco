@@ -9,10 +9,9 @@
 
 package com.facebook.drawee.interfaces;
 
-import javax.annotation.Nullable;
-
 import android.graphics.drawable.Animatable;
 import android.view.MotionEvent;
+import javax.annotation.Nullable;
 
 /**
  * Interface that represents a Drawee controller used by a DraweeView.

@@ -15,7 +15,6 @@ package com.facebook.samples.comparison.holders;
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
-
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;

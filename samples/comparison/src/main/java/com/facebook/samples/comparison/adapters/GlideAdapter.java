@@ -14,7 +14,6 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
 import com.bumptech.glide.Glide;
 import com.facebook.samples.comparison.holders.GlideHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;

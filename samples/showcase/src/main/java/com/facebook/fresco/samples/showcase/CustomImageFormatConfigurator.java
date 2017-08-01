@@ -14,7 +14,6 @@ package com.facebook.fresco.samples.showcase;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
-
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.fresco.samples.showcase.imageformat.color.ColorImageExample;
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample;

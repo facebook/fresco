@@ -9,20 +9,6 @@
 
 package com.facebook.drawee.view;
 
-import android.graphics.drawable.Drawable;
-import android.view.MotionEvent;
-
-import com.facebook.drawee.drawable.DrawableTestUtils;
-import com.facebook.drawee.interfaces.DraweeHierarchy;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.testing.DraweeMocks;
-import org.robolectric.RobolectricTestRunner;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -34,6 +20,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
+import com.facebook.drawee.drawable.DrawableTestUtils;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.interfaces.DraweeHierarchy;
+import com.facebook.drawee.testing.DraweeMocks;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class DraweeHolderTest {

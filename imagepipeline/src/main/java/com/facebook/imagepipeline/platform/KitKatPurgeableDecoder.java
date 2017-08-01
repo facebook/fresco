@@ -9,18 +9,16 @@
 
 package com.facebook.imagepipeline.platform;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imageutils.JfifUtil;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Bitmap Decoder implementation for KitKat

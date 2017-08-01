@@ -10,22 +10,20 @@
 
 package com.facebook.drawee.span;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.widget.text.span.BetterImageSpan;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests {@link DraweeSpan}

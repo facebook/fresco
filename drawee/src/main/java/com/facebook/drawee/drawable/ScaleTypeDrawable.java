@@ -9,17 +9,16 @@
 
 package com.facebook.drawee.drawable;
 
+import static com.facebook.drawee.drawable.ScalingUtils.*;
+
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
-
-import static com.facebook.drawee.drawable.ScalingUtils.*;
 
 /**
  * Drawable that can scale underlying drawable based on specified {@link ScaleType}

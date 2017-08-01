@@ -9,12 +9,7 @@
 
 package com.facebook.cache.disk;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-
 import android.content.Context;
-
 import com.facebook.cache.common.CacheErrorLogger;
 import com.facebook.cache.common.CacheEventListener;
 import com.facebook.cache.common.NoOpCacheErrorLogger;
@@ -26,6 +21,8 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.util.ByteConstants;
+import java.io.File;
+import javax.annotation.Nullable;
 
 /**
  * Configuration class for a {@link DiskStorageCache}.

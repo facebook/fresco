@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.animated.testing;
 
 import android.graphics.Bitmap;
-
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.robolectric.internal.Shadow;

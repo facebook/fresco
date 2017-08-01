@@ -8,14 +8,13 @@
  */
 package com.facebook.fresco.animation.backend;
 
-import javax.annotation.Nullable;
-
 import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
+import javax.annotation.Nullable;
 
 /**
  * Animation backend delegate that forwards all calls to a given {@link AnimationBackend}

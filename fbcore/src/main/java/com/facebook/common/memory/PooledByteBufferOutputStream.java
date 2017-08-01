@@ -9,11 +9,9 @@
 
 package com.facebook.common.memory;
 
+import com.facebook.common.internal.Throwables;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import com.facebook.common.internal.Throwables;
-import com.facebook.common.memory.PooledByteBuffer;
 
 /**
  * An OutputStream that produces a PooledByteBuffer.

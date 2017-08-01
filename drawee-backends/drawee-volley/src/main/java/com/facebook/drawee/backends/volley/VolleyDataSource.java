@@ -13,13 +13,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.facebook.datasource.AbstractDataSource;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 
 /**
  * {@link DataSource} that wraps Volley {@link ImageLoader}.

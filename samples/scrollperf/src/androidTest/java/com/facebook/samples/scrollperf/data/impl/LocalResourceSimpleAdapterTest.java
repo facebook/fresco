@@ -15,10 +15,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.test.AndroidTestCase;
-
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
-
 import org.junit.Assert;
 
 /**

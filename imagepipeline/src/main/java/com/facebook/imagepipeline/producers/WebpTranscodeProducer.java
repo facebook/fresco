@@ -9,11 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
-import java.io.InputStream;
-import java.util.concurrent.Executor;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -26,6 +21,9 @@ import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.WebpTranscoder;
 import com.facebook.imagepipeline.nativecode.WebpTranscoderFactory;
+import java.io.InputStream;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * Transcodes WebP to JPEG / PNG.

@@ -11,16 +11,11 @@
  */
 package com.facebook.samples.animation2.bitmap;
 
-import javax.annotation.Nullable;
-
-import java.util.concurrent.ExecutorService;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-
 import com.facebook.common.executors.DefaultSerialExecutorService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.animation.backend.AnimationBackend;
@@ -30,10 +25,12 @@ import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
-import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
+import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
+import java.util.concurrent.ExecutorService;
+import javax.annotation.Nullable;
 
 /**
  * Bitmap animation factory to create backends for the sample app.

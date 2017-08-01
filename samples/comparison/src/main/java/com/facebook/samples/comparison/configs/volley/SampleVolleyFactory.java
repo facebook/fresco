@@ -13,14 +13,12 @@
 package com.facebook.samples.comparison.configs.volley;
 
 import android.content.Context;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.samples.comparison.configs.ConfigConstants;
-
 import java.io.File;
 
 /**

@@ -10,9 +10,11 @@
 
 package com.facebook.imagepipeline.animated.factory;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-
 import com.facebook.animated.gif.GifImage;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -21,7 +23,6 @@ import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
-import com.facebook.imagepipeline.animated.factory.AnimatedImageFactoryImpl;
 import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
@@ -30,7 +31,6 @@ import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,9 +40,6 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link AnimatedImageFactory}

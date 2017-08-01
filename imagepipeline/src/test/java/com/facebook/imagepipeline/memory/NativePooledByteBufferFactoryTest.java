@@ -9,21 +9,19 @@
 
 package com.facebook.imagepipeline.memory;
 
-import java.io.ByteArrayInputStream;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteStreams;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-
+import java.io.ByteArrayInputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Basic tests for {@link NativePooledByteBufferFactory}

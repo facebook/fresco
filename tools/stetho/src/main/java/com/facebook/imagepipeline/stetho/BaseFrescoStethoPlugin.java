@@ -9,19 +9,10 @@
 
 package com.facebook.imagepipeline.stetho;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.SparseArray;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskStorage;
 import com.facebook.cache.disk.FileCache;
@@ -35,6 +26,13 @@ import com.facebook.stetho.dumpapp.DumpException;
 import com.facebook.stetho.dumpapp.DumpUsageException;
 import com.facebook.stetho.dumpapp.DumperContext;
 import com.facebook.stetho.dumpapp.DumperPlugin;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for the Fresco Stetho plugin.

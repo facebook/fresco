@@ -10,10 +10,8 @@
 package com.facebook.imagepipeline.memory;
 
 import android.util.SparseIntArray;
-
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunk;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

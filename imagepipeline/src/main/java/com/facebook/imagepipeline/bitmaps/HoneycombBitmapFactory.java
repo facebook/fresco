@@ -9,18 +9,16 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
-
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Factory implementation for Honeycomb through Kitkat

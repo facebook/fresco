@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.request;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import javax.annotation.Nullable;
 
 /**
  * Use an instance of this class to perform post-process operations on a bitmap.

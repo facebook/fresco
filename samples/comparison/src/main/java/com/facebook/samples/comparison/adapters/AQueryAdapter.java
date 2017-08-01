@@ -14,12 +14,10 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
 import com.androidquery.AQuery;
-
+import com.facebook.samples.comparison.holders.AQueryHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-import com.facebook.samples.comparison.holders.AQueryHolder;
 
 /**
  * RecyclerView Adapter for Android Query

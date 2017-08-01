@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.internal.Preconditions;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.Executor;

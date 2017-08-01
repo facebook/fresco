@@ -8,8 +8,6 @@
  */
 package com.facebook.drawee.debug;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -19,9 +17,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
-
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import javax.annotation.Nullable;
 
 /**
  * Drawee Controller overlay that displays debug information.

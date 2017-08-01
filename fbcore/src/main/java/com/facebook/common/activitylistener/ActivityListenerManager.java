@@ -9,13 +9,11 @@
 
 package com.facebook.common.activitylistener;
 
-import java.lang.ref.WeakReference;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-
 import com.facebook.common.internal.Preconditions;
+import java.lang.ref.WeakReference;
 
 /**
  * Registers ActivityListener with ActivityListener.

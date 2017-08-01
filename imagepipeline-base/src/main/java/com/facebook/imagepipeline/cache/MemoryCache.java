@@ -9,11 +9,9 @@
 
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-
-import com.facebook.common.references.CloseableReference;
-
 import com.android.internal.util.Predicate;
+import com.facebook.common.references.CloseableReference;
+import javax.annotation.Nullable;
 
 /**
  * Interface for the image pipeline memory cache.

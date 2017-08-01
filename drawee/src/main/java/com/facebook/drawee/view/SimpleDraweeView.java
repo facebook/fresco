@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.view;
 
-import javax.annotation.Nullable;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,7 +16,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.UriUtil;
@@ -26,6 +23,7 @@ import com.facebook.drawee.R;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
+import javax.annotation.Nullable;
 
 /**
  * This view takes a uri as input and internally builds and sets a controller.

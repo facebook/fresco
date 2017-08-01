@@ -9,9 +9,8 @@
 
 package com.facebook.cache.common;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
+import javax.annotation.Nullable;
 
 /**
  * Extension of {@link SimpleCacheKey} which adds the ability to hold a caller context. This can be

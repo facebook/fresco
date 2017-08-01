@@ -8,17 +8,14 @@
  */
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
-
+import com.android.internal.util.Predicate;
+import com.facebook.common.internal.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-
-import com.facebook.common.internal.VisibleForTesting;
-
-import com.android.internal.util.Predicate;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Map that keeps track of the elements order (according to the LRU policy) and their size.

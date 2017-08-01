@@ -11,14 +11,12 @@
  */
 package com.facebook.samples.scrollperf.internal;
 
+import android.os.Process;
+import com.facebook.imagepipeline.core.ExecutorSupplier;
+import com.facebook.imagepipeline.core.PriorityThreadFactory;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-import android.os.Process;
-
-import com.facebook.imagepipeline.core.ExecutorSupplier;
-import com.facebook.imagepipeline.core.PriorityThreadFactory;
 
 /**
  * An ExecutorSupplier we use just for ScrollPerf

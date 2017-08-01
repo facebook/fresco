@@ -9,8 +9,10 @@
 
 package com.facebook.imagepipeline.producers;
 
-import com.facebook.common.executors.CallerThreadExecutor;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import com.facebook.common.executors.CallerThreadExecutor;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -18,9 +20,6 @@ import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)

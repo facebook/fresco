@@ -9,15 +9,13 @@
 
 package com.facebook.drawee.generic;
 
+import static org.junit.Assert.*;
+
 import android.graphics.Color;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class RoundingParamsTest {

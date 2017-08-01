@@ -8,16 +8,13 @@
  */
 package com.facebook.fresco.animation.backend;
 
-import javax.annotation.Nullable;
-
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.time.MonotonicClock;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 
 /**
  * Animation backend delegate for animation backends that implement {@link InactivityListener}.

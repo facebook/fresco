@@ -11,9 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.drawee;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,10 +19,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Simple drawee recycler view fragment that displays a grid of images.

@@ -9,14 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import java.util.Map;
-import java.util.concurrent.Executor;
-
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -27,6 +20,10 @@ import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessorRunner;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Runs a caller-supplied post-processor object.

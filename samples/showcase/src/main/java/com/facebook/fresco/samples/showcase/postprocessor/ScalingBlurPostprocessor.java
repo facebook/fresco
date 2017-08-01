@@ -15,7 +15,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;

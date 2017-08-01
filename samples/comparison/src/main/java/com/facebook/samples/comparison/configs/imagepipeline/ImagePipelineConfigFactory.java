@@ -14,7 +14,6 @@ package com.facebook.samples.comparison.configs.imagepipeline;
 
 
 import android.content.Context;
-
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -24,10 +23,8 @@ import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.samples.comparison.configs.ConfigConstants;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-
 import java.util.HashSet;
 import java.util.Set;
-
 import okhttp3.OkHttpClient;
 
 /**

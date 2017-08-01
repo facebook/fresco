@@ -9,14 +9,12 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import java.util.LinkedList;
-import java.util.Queue;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import java.util.LinkedList;
+import java.util.Queue;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * The Bucket is a constituent class of {@link BasePool}. The pool maintains its free values

@@ -9,16 +9,7 @@
 
 package com.facebook.imagepipeline.image;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-
-import java.io.Closeable;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.util.Pair;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
@@ -33,6 +24,12 @@ import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.imageutils.WebpUtil;
+import java.io.Closeable;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Class that contains all the information for an encoded image, both the image bytes (held on

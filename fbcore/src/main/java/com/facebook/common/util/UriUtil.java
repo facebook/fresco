@@ -9,15 +9,13 @@
 
 package com.facebook.common.util;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import java.io.File;
+import javax.annotation.Nullable;
 
 public class UriUtil {
 

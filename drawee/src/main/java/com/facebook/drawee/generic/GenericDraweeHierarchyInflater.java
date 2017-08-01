@@ -9,18 +9,17 @@
 
 package com.facebook.drawee.generic;
 
-import javax.annotation.Nullable;
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-
 import com.facebook.drawee.R;
 import com.facebook.drawee.drawable.AutoRotateDrawable;
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.infer.annotation.ReturnsOwnership;
+import javax.annotation.Nullable;
 
 /**
  * Inflater for the {@code GenericDraweeHierarchy}.

@@ -9,14 +9,12 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
-import java.io.IOException;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
+import java.io.IOException;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * An implementation of {@link PooledByteBufferOutputStream} that produces a

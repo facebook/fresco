@@ -9,17 +9,15 @@
 
 package com.facebook.imageformat;
 
-import javax.annotation.Nullable;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Detects the format of an encoded image.

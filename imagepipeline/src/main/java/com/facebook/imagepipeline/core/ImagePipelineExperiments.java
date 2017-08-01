@@ -8,11 +8,10 @@
  */
 package com.facebook.imagepipeline.core;
 
-import javax.annotation.Nullable;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.cache.MediaIdExtractor;
+import javax.annotation.Nullable;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an

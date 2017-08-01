@@ -9,9 +9,8 @@
 
 package com.facebook.imageformat;
 
-import java.io.UnsupportedEncodingException;
-
 import com.facebook.common.internal.Preconditions;
+import java.io.UnsupportedEncodingException;
 
 /**
  * {@link ImageFormatChecker} utility methods

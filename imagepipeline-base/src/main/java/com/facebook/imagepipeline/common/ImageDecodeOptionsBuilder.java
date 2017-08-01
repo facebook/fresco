@@ -9,11 +9,9 @@
 
 package com.facebook.imagepipeline.common;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
-
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import javax.annotation.Nullable;
 
 /**
  * Builder for {@link ImageDecodeOptions}.

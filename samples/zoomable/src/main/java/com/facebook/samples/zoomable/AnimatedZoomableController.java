@@ -11,18 +11,16 @@
  */
 package com.facebook.samples.zoomable;
 
-import javax.annotation.Nullable;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
 import android.view.animation.DecelerateInterpolator;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.gestures.TransformGestureDetector;
+import javax.annotation.Nullable;
 
 /**
  * ZoomableController that adds animation capabilities to DefaultZoomableController using standard

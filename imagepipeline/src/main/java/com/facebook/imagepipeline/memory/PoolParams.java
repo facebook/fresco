@@ -9,11 +9,9 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.Nullable;
-
 import android.util.SparseIntArray;
-
 import com.facebook.common.internal.Preconditions;
+import javax.annotation.Nullable;
 
 /**
  * Config parameters for pools ({@link BasePool}. Supplied via a provider.

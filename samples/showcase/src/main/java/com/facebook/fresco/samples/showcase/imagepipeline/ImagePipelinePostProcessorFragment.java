@@ -11,8 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
-import java.util.Locale;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +23,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -41,6 +38,7 @@ import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import java.util.Locale;
 
 /**
  * Fragment that illustrates how to use the image pipeline directly in order to create

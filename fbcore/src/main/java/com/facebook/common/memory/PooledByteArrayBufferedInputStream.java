@@ -9,14 +9,12 @@
 
 package com.facebook.common.memory;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.ResourceReleaser;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * InputStream that wraps another input stream and buffers all reads.

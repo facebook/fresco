@@ -11,11 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.common;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -23,8 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.facebook.drawee.drawable.ScalingUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class SimpleScaleTypeAdapter extends BaseAdapter {
 

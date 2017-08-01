@@ -9,9 +9,9 @@
 
 package com.facebook.common.util;
 
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 /** Unit test for {@link TriState}. */
 public class TriStateTest {

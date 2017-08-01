@@ -10,8 +10,6 @@
 package com.facebook.imagepipeline.bitmaps;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.facebook.common.references.CloseableReference;
 
 /**

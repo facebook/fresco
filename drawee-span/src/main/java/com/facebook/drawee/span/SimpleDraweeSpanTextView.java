@@ -9,11 +9,10 @@
 
 package com.facebook.drawee.span;
 
-import javax.annotation.Nullable;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import javax.annotation.Nullable;
 
 /**
  * DraweeSpan text view that can be used to bind to a {@link DraweeSpanStringBuilder} to

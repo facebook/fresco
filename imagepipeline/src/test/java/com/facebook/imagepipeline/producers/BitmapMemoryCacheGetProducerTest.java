@@ -9,7 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.Map;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
@@ -20,7 +22,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
-
+import java.util.Map;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -28,10 +30,6 @@ import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.*;
 
 /**
  * Checks basic properties of bitmap memory cache producer operation, that is:

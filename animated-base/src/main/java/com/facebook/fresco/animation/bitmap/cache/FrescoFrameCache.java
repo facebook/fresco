@@ -8,12 +8,8 @@
  */
 package com.facebook.fresco.animation.bitmap.cache;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
 import android.graphics.Bitmap;
 import android.util.SparseArray;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -26,6 +22,8 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imageutils.BitmapUtil;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Bitmap frame cache that uses Fresco's {@link AnimatedFrameCache} to cache frames.

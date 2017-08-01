@@ -9,12 +9,11 @@
 
 package com.facebook.imagepipeline.testing;
 
-import android.graphics.Bitmap;
+import static org.mockito.Mockito.*;
 
+import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imageutils.BitmapUtil;
-
-import static org.mockito.Mockito.*;
 
 /**
  * Helper class for creating bitmap mocks in tests.

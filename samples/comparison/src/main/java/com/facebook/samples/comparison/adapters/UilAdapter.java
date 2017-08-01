@@ -14,7 +14,6 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
 import com.facebook.samples.comparison.configs.uil.SampleUilFactory;
 import com.facebook.samples.comparison.holders.UilHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;

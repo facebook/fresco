@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.common;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-
+import com.facebook.common.internal.Preconditions;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
-import com.facebook.common.internal.Preconditions;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * A representation of the range of bytes requested or contained in a piece of content.

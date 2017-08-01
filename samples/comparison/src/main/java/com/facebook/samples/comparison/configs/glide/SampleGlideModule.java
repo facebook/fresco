@@ -13,14 +13,12 @@
 package com.facebook.samples.comparison.configs.glide;
 
 import android.content.Context;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.engine.cache.DiskCache;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper;
 import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.bumptech.glide.module.GlideModule;
-
 import com.facebook.samples.comparison.configs.ConfigConstants;
 
 /**

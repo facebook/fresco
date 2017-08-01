@@ -9,13 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
@@ -32,6 +25,11 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.JpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * Resizes and rotates JPEG image according to the EXIF orientation data or a specified rotation

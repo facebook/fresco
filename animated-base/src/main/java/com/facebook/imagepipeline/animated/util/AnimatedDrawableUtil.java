@@ -9,11 +9,10 @@
 
 package com.facebook.imagepipeline.animated.util;
 
-import java.util.Arrays;
-
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
+import java.util.Arrays;
 
 /**
  * Utility methods for AnimatedDrawable.

@@ -9,10 +9,7 @@
 
 package com.facebook.drawee.generic;
 
-import javax.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
@@ -20,11 +17,10 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-
 import com.facebook.common.internal.Preconditions;
-import com.facebook.drawee.drawable.ArrayDrawable;
-
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import java.util.Arrays;
+import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Class to construct a {@link GenericDraweeHierarchy}.

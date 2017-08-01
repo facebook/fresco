@@ -9,11 +9,6 @@
 
 package com.facebook.drawee.drawable;
 
-import javax.annotation.Nullable;
-
-import java.lang.ref.WeakReference;
-import java.util.Arrays;
-
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -26,9 +21,11 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import javax.annotation.Nullable;
 
 /**
 * A drawable that can have rounded corners.

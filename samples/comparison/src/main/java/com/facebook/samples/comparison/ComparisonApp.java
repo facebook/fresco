@@ -14,7 +14,6 @@ package com.facebook.samples.comparison;
 
 import android.app.Application;
 import android.content.Context;
-
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;

@@ -9,15 +9,13 @@
 
 package com.facebook.datasource;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.util.List;
-
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import java.util.List;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * {@link DataSource} supplier that provides a data source which will forward results of the first

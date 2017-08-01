@@ -9,17 +9,14 @@
 
 package com.facebook.imagepipeline.postprocessors;
 
-import javax.annotation.Nullable;
-
-import java.util.Locale;
-
 import android.graphics.Bitmap;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.facebook.imagepipeline.request.BasePostprocessor;
+import java.util.Locale;
+import javax.annotation.Nullable;
 
 /**
  * A fast and memory-efficient post processor performing an iterative box blur.  For details see

@@ -9,6 +9,7 @@
 
 package com.facebook.common.executors;
 
+import com.facebook.common.logging.FLog;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.BlockingQueue;
@@ -17,8 +18,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.facebook.common.logging.FLog;
 
 
 /**

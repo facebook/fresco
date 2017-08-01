@@ -9,12 +9,11 @@
 
 package com.facebook.imagepipeline.platform;
 
-import javax.annotation.Nullable;
+import static com.facebook.common.webp.WebpSupportStatus.sWebpBitmapFactory;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.MemoryFile;
-
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
@@ -23,13 +22,11 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
-
-import static com.facebook.common.webp.WebpSupportStatus.sWebpBitmapFactory;
-
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import javax.annotation.Nullable;
 
 /**
  * Bitmap decoder (Gingerbread to Jelly Bean).

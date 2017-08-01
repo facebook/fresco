@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.util.SparseIntArray;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * A pool of byte arrays.

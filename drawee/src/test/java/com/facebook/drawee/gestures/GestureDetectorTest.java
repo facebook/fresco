@@ -8,20 +8,17 @@
  */
 package com.facebook.drawee.gestures;
 
-import android.view.MotionEvent;
-import android.view.ViewConfiguration;
-
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RuntimeEnvironment;
-
 import static android.view.MotionEvent.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
+import android.view.MotionEvent;
+import android.view.ViewConfiguration;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 /**
  * Tests for {@link GestureDetector}

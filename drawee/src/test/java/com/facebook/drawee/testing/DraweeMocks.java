@@ -9,24 +9,21 @@
 
 package com.facebook.drawee.testing;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import static org.mockito.Mockito.*;
 
 import android.graphics.drawable.Drawable;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.controller.ForwardingControllerListener;
 import com.facebook.drawee.drawable.DrawableTestUtils;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.interfaces.DraweeHierarchy;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import static org.mockito.Mockito.*;
 
 /**
  * Drawee mocks

@@ -11,8 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.settings;
 
-import java.util.Arrays;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -29,11 +27,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.ShowcaseFragment;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import java.util.Arrays;
 
 /**
  * The Fragment for settings

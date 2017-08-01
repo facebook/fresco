@@ -9,17 +9,15 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of {@link DataSubscriber} for cases where the client wants to access

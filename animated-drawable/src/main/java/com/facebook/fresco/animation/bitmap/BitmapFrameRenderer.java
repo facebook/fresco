@@ -8,12 +8,10 @@
  */
 package com.facebook.fresco.animation.bitmap;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import javax.annotation.Nullable;
 
 /**
  * Bitmap frame renderer used by {@link BitmapAnimationBackend} to render

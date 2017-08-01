@@ -9,12 +9,10 @@
 
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.Nullable;
 
 /**
  * Factory methods for creating cache keys for the pipeline.

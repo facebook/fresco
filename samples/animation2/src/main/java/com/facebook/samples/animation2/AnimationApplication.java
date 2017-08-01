@@ -11,16 +11,14 @@
  */
 package com.facebook.samples.animation2;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Application;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Animation Application implementation where we set up Fresco

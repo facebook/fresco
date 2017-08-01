@@ -9,12 +9,10 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.support.annotation.IntDef;
-
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import java.lang.annotation.Retention;
 
 /**
  * Consumes data produced by {@link Producer}.<T>

@@ -17,7 +17,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 

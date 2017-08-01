@@ -9,10 +9,7 @@
 
 package com.facebook.drawee.backends.pipeline;
 
-import java.util.concurrent.Executor;
-
 import android.content.res.Resources;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
@@ -23,7 +20,7 @@ import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
-
+import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /**

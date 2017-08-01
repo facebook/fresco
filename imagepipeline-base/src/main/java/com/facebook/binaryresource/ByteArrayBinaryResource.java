@@ -9,11 +9,10 @@
 
 package com.facebook.binaryresource;
 
+import com.facebook.common.internal.Preconditions;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.facebook.common.internal.Preconditions;
 
 /**
  * A trivial implementation of BinaryResource that wraps a byte array

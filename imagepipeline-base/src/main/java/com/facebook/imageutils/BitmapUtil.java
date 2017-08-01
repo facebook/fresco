@@ -15,13 +15,10 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.util.Pools;
 import android.util.Pair;
-
 import com.facebook.common.internal.Preconditions;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-
 import javax.annotation.Nullable;
 
 /**

@@ -19,7 +19,6 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.transition.TransitionValues;
 import android.view.ViewGroup;
-
 import com.facebook.drawee.drawable.ScalingUtils;
 
 /**

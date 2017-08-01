@@ -11,15 +11,13 @@
  */
 package com.facebook.samples.animation2.bitmap;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 import android.util.SparseArray;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imageutils.BitmapUtil;
+import javax.annotation.Nullable;
 
 /**
  * This naive implementation does not share Fresco's bitmap cache but has its own LRU.

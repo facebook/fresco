@@ -9,16 +9,15 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.datasource.AbstractDataSource;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
-import com.facebook.imagepipeline.listener.RequestListener;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * DataSource<T> backed by a Producer<T>

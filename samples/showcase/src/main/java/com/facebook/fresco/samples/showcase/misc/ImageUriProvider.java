@@ -12,18 +12,16 @@
 
 package com.facebook.fresco.samples.showcase.misc;
 
-import java.util.Locale;
-import java.util.Random;
-import java.util.UUID;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
-
 import com.facebook.common.internal.Preconditions;
+import java.util.Locale;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Provider for sample URIs that are used by the samples in the showcase app

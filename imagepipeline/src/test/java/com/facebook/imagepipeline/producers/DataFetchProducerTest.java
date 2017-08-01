@@ -9,18 +9,16 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import static org.junit.Assert.*;
 
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormatChecker;
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import org.junit.*;
 import org.junit.runner.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.junit.Assert.*;
 
 /**
  * Unit test for DataFetchProducer

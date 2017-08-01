@@ -13,9 +13,8 @@
 package com.facebook.samples.comparison.urlsfetcher;
 
 import com.facebook.common.internal.Preconditions;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Builds ImageUrlsRequest.

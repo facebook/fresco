@@ -9,16 +9,14 @@
 
 package com.facebook.common.media;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import android.webkit.MimeTypeMap;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowMimeTypeMap;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaUtilsTest {

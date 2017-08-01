@@ -10,7 +10,6 @@
 package com.facebook.cache.common;
 
 import java.io.IOException;
-
 import org.fest.assertions.api.AbstractAssert;
 import org.fest.assertions.api.Assertions;
 

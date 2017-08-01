@@ -9,14 +9,12 @@
 
 package com.facebook.drawee.drawable;
 
-import java.util.Arrays;
-
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import java.util.Arrays;
 
 /**
  * A drawable that fades to the specific layer.

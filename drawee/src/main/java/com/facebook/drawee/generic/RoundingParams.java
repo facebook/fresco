@@ -9,13 +9,11 @@
 
 package com.facebook.drawee.generic;
 
-import java.util.Arrays;
-
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
+import java.util.Arrays;
 
 /**
  * Class that encapsulates rounding parameters.

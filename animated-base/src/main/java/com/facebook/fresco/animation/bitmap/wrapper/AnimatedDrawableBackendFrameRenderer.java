@@ -8,16 +8,14 @@
  */
 package com.facebook.fresco.animation.bitmap.wrapper;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.impl.AnimatedImageCompositor;
+import javax.annotation.Nullable;
 
 /**
  * {@link BitmapFrameRenderer} that wraps around an {@link AnimatedDrawableBackend}.

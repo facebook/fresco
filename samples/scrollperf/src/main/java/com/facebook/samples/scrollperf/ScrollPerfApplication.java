@@ -12,7 +12,6 @@
 package com.facebook.samples.scrollperf;
 
 import android.app.Application;
-
 import com.facebook.common.webp.WebpSupportStatus;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;

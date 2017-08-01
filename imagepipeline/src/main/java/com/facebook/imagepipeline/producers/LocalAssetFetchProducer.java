@@ -9,15 +9,13 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.IOException;
-import java.util.concurrent.Executor;
-
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.io.IOException;
+import java.util.concurrent.Executor;
 
 /**
  * Executes a local fetch from an asset.

@@ -9,17 +9,15 @@
 
 package com.facebook.drawee.drawable;
 
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+
 import android.graphics.Matrix;
 import android.graphics.Rect;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for scale type calculations.
