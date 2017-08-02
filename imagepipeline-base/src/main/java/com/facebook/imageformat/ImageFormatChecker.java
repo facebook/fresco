@@ -52,13 +52,13 @@ public class ImageFormatChecker {
 
     if (mCustomImageFormatCheckers != null) {
       for (ImageFormat.FormatChecker formatChecker : mCustomImageFormatCheckers) {
-        ImageFormat format = formatChecker.determineFormat(imageHeaderBytes, headerSize, is);
+        ImageFormat format = formatChecker.determineFormat(imageHeaderBytes, headerSize);
         if (format != null && format != ImageFormat.UNKNOWN) {
           return format;
         }
       }
     }
-    ImageFormat format = mDefaultFormatChecker.determineFormat(imageHeaderBytes, headerSize, is);
+    ImageFormat format = mDefaultFormatChecker.determineFormat(imageHeaderBytes, headerSize);
     if (format == null) {
       format = ImageFormat.UNKNOWN;
     }

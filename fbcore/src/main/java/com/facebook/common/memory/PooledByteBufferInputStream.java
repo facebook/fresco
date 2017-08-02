@@ -32,9 +32,6 @@ public class PooledByteBufferInputStream extends InputStream {
   @VisibleForTesting
   int mMark; // position of 'mark' if any
 
-  // TODO: determine better name for this
-  public static int byteOffset;
-
   /**
    * Creates a new inputstream instance over the specific buffer.
    * @param pooledByteBuffer the buffer to read from
@@ -43,7 +40,7 @@ public class PooledByteBufferInputStream extends InputStream {
     super();
     Preconditions.checkArgument(!pooledByteBuffer.isClosed());
     mPooledByteBuffer = Preconditions.checkNotNull(pooledByteBuffer);
-    mOffset = byteOffset;
+    mOffset = 0;
     mMark = 0;
   }
 

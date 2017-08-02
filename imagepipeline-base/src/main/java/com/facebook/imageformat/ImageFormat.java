@@ -11,9 +11,6 @@ package com.facebook.imageformat;
 
 import javax.annotation.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * Class representing all used image formats.
  */
@@ -35,8 +32,7 @@ public class ImageFormat {
      * @return the image format or null if unknown
      */
     @Nullable
-    ImageFormat determineFormat(byte[] headerBytes, int headerSize, InputStream is)
-      throws IOException;
+    ImageFormat determineFormat(byte[] headerBytes, int headerSize);
   }
 
   // Unknown image format

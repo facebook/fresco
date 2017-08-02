@@ -20,8 +20,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 
-import com.facebook.common.internal.ByteStreams;
-import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
@@ -55,23 +53,13 @@ public class SvgDecoderExample {
 
     @Nullable
     @Override
-    public ImageFormat determineFormat(byte[] headerBytes, int headerSize, InputStream is)
-        throws IOException {
+    public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
       if (headerSize < getHeaderSize()) {
         return null;
       }
       if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, HEADER)) {
         return SVG_FORMAT;
       }
-
-      // TODO: (1) Determine if passing the InputStream to this method is the best way to achieve this result.
-      // TODO: (2) Determine if searching the whole array of bytes in the stream is best practice, according to the repository authors.
-      int indexOfPattern = ImageFormatCheckerUtils.containsPattern(ByteStreams.toByteArray(is), HEADER);
-      if (indexOfPattern != -1) {
-        PooledByteBufferInputStream.byteOffset = indexOfPattern;
-        return SVG_FORMAT;
-      }
-
       return null;
     }
   }

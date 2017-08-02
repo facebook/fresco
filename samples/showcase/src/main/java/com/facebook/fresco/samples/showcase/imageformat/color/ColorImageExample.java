@@ -14,7 +14,6 @@ package com.facebook.fresco.samples.showcase.imageformat.color;
 import javax.annotation.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -84,8 +83,7 @@ public class ColorImageExample {
 
     @Nullable
     @Override
-    public ImageFormat determineFormat(byte[] headerBytes, int headerSize, InputStream is)
-        throws IOException {
+    public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
       if (headerSize < getHeaderSize()) {
         return null;
       }

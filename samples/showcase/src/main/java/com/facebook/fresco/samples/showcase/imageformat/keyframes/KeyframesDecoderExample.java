@@ -67,8 +67,7 @@ public class KeyframesDecoderExample {
      */
     @Nullable
     @Override
-    public ImageFormat determineFormat(byte[] headerBytes, int headerSize, InputStream is)
-        throws IOException {
+    public ImageFormat determineFormat(byte[] headerBytes, int headerSize) {
       // JSON files must start with a opening curly brace
       if (!ImageFormatCheckerUtils.startsWithPattern(
           headerBytes,
