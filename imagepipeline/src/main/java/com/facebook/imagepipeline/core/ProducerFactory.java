@@ -21,7 +21,6 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -64,7 +63,6 @@ import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
-import javax.annotation.Nullable;
 
 public class ProducerFactory {
 
@@ -94,7 +92,6 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final MediaVariationsIndex mMediaVariationsIndex;
-  @Nullable private final MediaIdExtractor mMediaIdExtractor;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -114,7 +111,6 @@ public class ProducerFactory {
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       MediaVariationsIndex mediaVariationsIndex,
-      @Nullable MediaIdExtractor mediaIdExtractor,
       CacheKeyFactory cacheKeyFactory,
       PlatformBitmapFactory platformBitmapFactory) {
     mContentResolver = context.getApplicationContext().getContentResolver();
@@ -136,7 +132,6 @@ public class ProducerFactory {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mMediaVariationsIndex = mediaVariationsIndex;
-    mMediaIdExtractor = mediaIdExtractor;
     mCacheKeyFactory = cacheKeyFactory;
 
     mPlatformBitmapFactory = platformBitmapFactory;

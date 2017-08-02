@@ -17,7 +17,6 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.fresco.samples.showcase.imagepipeline.ShowcaseMediaIdExtractor;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -60,7 +59,6 @@ public class ShowcaseApplication extends Application {
             return true;
           }
         })
-        .experiment().setMediaIdExtractor(new ShowcaseMediaIdExtractor())
         .experiment().setBitmapPrepareToDraw(true)
         .build();
 

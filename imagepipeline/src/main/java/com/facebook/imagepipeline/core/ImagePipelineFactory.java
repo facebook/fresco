@@ -346,7 +346,6 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               getMediaVariationsIndex(),
-              mConfig.getExperiments().getMediaIdExtractor(),
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory());
     }
