@@ -13,9 +13,6 @@ package com.facebook.fresco.samples.showcase.imageformat.svg;
 
 import javax.annotation.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
