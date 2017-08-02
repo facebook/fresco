@@ -251,7 +251,7 @@ public class MediaVariationsFragment extends BaseShowcaseFragment {
   }
 
   private void clearMainImageAndBitmapCache() {
-    Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full"));
+    Uri uri = Uri.parse(String.format(URI_TEMPLATE, "full", "jpg"));
     setDraweeControllerForRequest(ImageRequest.fromUri(uri));
 
     Fresco.getImagePipeline().clearMemoryCaches();
