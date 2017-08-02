@@ -65,7 +65,7 @@ public class ImageFormatCheckerUtils {
    * @param pattern the pattern to check
    * @return index of beginning of pattern, if found; otherwise -1
    */
-  public static int containsPattern(
+  public static int indexOfPattern(
       final byte[] byteArray,
       final byte[] pattern) {
     Preconditions.checkNotNull(byteArray);
@@ -77,8 +77,12 @@ public class ImageFormatCheckerUtils {
     for (int i = 0; i < (byteArray.length - pattern.length); i++) {
       if (byteArray[i] == pattern[0]) {
         for (int j = 1; j < pattern.length; j++) {
-          if (byteArray[i + j] != pattern[j]) break;
-          if (j == pattern.length - 1) return i;
+          if (byteArray[i + j] != pattern[j]) {
+            break;
+          }
+          if (j == pattern.length - 1) {
+            return i;
+          }
         }
       }
     }

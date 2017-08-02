@@ -51,7 +51,9 @@ public class ImageFormatChecker {
     final int headerSize = readHeaderFromStream(mMaxHeaderLength, is, imageHeaderBytes);
 
     ImageFormat format = mDefaultFormatChecker.determineFormat(imageHeaderBytes, headerSize);
-    if (format != null) return format;
+    if (format != null) {
+      return format;
+    }
 
     if (mCustomImageFormatCheckers != null) {
       for (ImageFormat.FormatChecker formatChecker : mCustomImageFormatCheckers) {
