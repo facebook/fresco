@@ -175,6 +175,19 @@ public class ScalingUtilsTest {
     test(0.80f, 0.80f,   10,   -4, 500, 400, 1.00f, 1.00f, ScaleType.FOCUS_CROP);
   }
 
+  @Test
+  public void testFitBottomStart() {
+    test(1.60f, 1.60f, 10, 75, 250, 150, ScaleType.FIT_BOTTOM_START);
+    test(0.50f, 0.50f, 10, 215, 800, 200, ScaleType.FIT_BOTTOM_START);
+    test(0.50f, 0.50f, 10, 115, 800, 400, ScaleType.FIT_BOTTOM_START);
+    test(2.00f, 2.00f, 10, 15, 200, 150, ScaleType.FIT_BOTTOM_START);
+    test(1.00f, 1.00f, 10, 15, 400, 300, ScaleType.FIT_BOTTOM_START);
+    test(0.50f, 0.50f, 10, 15, 800, 600, ScaleType.FIT_BOTTOM_START);
+    test(1.50f, 1.50f, 10, 15, 200, 200, ScaleType.FIT_BOTTOM_START);
+    test(0.75f, 0.75f, 10, 15, 200, 400, ScaleType.FIT_BOTTOM_START);
+    test(0.75f, 0.75f, 10, 15, 500, 400, ScaleType.FIT_BOTTOM_START);
+  }
+
   private void test(
       // expected
       float scaleX,

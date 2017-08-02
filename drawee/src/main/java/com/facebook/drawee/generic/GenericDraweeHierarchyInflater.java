@@ -255,6 +255,8 @@ public class GenericDraweeHierarchyInflater {
         return ScaleType.CENTER_CROP;
       case 7: // focusCrop
         return ScaleType.FOCUS_CROP;
+      case 8: // fitBottomStart
+        return ScaleType.FIT_BOTTOM_START;
       default:
         // this method is supposed to be called only when XML attribute is specified.
         throw new RuntimeException("XML attribute not specified!");
