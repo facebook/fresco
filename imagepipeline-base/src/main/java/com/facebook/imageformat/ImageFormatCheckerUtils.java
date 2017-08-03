@@ -67,22 +67,33 @@ public class ImageFormatCheckerUtils {
    */
   public static int indexOfPattern(
       final byte[] byteArray,
-      final byte[] pattern) {
+      final int byteArrayLen,
+      final byte[] pattern,
+      final int patternLen) {
     Preconditions.checkNotNull(byteArray);
     Preconditions.checkNotNull(pattern);
-    if (pattern.length > byteArray.length) {
+    if (patternLen > byteArrayLen) {
       return -1;
     }
 
-    for (int i = 0; i < (byteArray.length - pattern.length); i++) {
-      if (byteArray[i] == pattern[0]) {
-        for (int j = 1; j < pattern.length; j++) {
-          if (byteArray[i + j] != pattern[j]) {
-            break;
-          }
-          if (j == pattern.length - 1) {
-            return i;
-          }
+    byte first = pattern[0];
+    int max = byteArrayLen - patternLen;
+
+    for (int i = 0; i <= max; i++) {
+      // Look for first byte
+      if (byteArray[i] != first) {
+        while (++i <= max && byteArray[i] != first);
+      }
+
+      // Found first byte, now look for the rest
+      if (i <= max) {
+        int j = i + 1;
+        int end = j + patternLen - 1;
+        for (int k = 1; j < end && byteArray[j] == pattern[k]; j++, k++);
+
+        if (j == end) {
+          // found whole pattern
+          return i;
         }
       }
     }

@@ -28,7 +28,6 @@ public class PooledByteBufferInputStream extends InputStream {
 
   @VisibleForTesting
   int mOffset; // current offset in the chunk
-
   @VisibleForTesting
   int mMark; // position of 'mark' if any
 
