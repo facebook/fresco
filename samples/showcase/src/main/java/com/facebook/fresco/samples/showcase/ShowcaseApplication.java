@@ -59,7 +59,7 @@ public class ShowcaseApplication extends Application {
             return true;
           }
         })
-        .experiment().setBitmapPrepareToDraw(true)
+        .experiment().setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE)
         .build();
 
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);

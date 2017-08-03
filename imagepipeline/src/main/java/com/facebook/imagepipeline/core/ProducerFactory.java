@@ -96,6 +96,10 @@ public class ProducerFactory {
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
 
+  // BitmapPrepare dependencies
+  private final int mBitmapPrepareToDrawMinSizeBytes;
+  private final int mBitmapPrepareToDrawMaxSizeBytes;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
@@ -112,7 +116,9 @@ public class ProducerFactory {
       BufferedDiskCache smallImageBufferedDiskCache,
       MediaVariationsIndex mediaVariationsIndex,
       CacheKeyFactory cacheKeyFactory,
-      PlatformBitmapFactory platformBitmapFactory) {
+      PlatformBitmapFactory platformBitmapFactory,
+      int bitmapPrepareToDrawMinSizeBytes,
+      int bitmapPrepareToDrawMaxSizeBytes) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -135,6 +141,8 @@ public class ProducerFactory {
     mCacheKeyFactory = cacheKeyFactory;
 
     mPlatformBitmapFactory = platformBitmapFactory;
+    mBitmapPrepareToDrawMinSizeBytes = bitmapPrepareToDrawMinSizeBytes;
+    mBitmapPrepareToDrawMaxSizeBytes = bitmapPrepareToDrawMaxSizeBytes;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -357,6 +365,7 @@ public class ProducerFactory {
 
   public BitmapPrepareProducer newBitmapPrepareProducer(
       Producer<CloseableReference<CloseableImage>> inputProducer) {
-    return new BitmapPrepareProducer(inputProducer);
+    return new BitmapPrepareProducer(
+        inputProducer, mBitmapPrepareToDrawMinSizeBytes, mBitmapPrepareToDrawMaxSizeBytes);
   }
 }

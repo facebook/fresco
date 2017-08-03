@@ -35,6 +35,9 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class BitmapPrepareProducerTest {
 
+  public static final int MIN_BITMAP_SIZE_BYTES = 1000;
+  public static final int MAX_BITMAP_SIZE_BYTES = 2000;
+
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public ProducerContext mProducerContext;
@@ -48,10 +51,15 @@ public class BitmapPrepareProducerTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mBitmapPrepareProducer = new BitmapPrepareProducer(mInputProducer);
+    mBitmapPrepareProducer =
+        new BitmapPrepareProducer(mInputProducer, MIN_BITMAP_SIZE_BYTES, MAX_BITMAP_SIZE_BYTES);
 
     mImageReference = CloseableReference.of((CloseableImage) mCloseableStaticBitmap);
     when(mCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mBitmap);
+
+    // 100 * 15 = 1500 (between MIN_BITMAP_SIZE_BYTES and MAX_BITMAP_SIZE_BYTES)
+    when(mBitmap.getRowBytes()).thenReturn(100);
+    when(mBitmap.getHeight()).thenReturn(15);
 
     doAnswer(new Answer() {
       @Override
@@ -83,6 +91,15 @@ public class BitmapPrepareProducerTest {
   }
 
   @Test
+  public void testProduceResults_whenPrefetch_thenBitmapPrepareToDrawNotCalled() {
+    when(mProducerContext.isPrefetch()).thenReturn(true);
+
+    mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mBitmap, never()).prepareToDraw();
+  }
+
+  @Test
   public void testProduceResults_whenNotPrefetch_thenBitmapPrepareToDrawCalled() {
     when(mProducerContext.isPrefetch()).thenReturn(false);
 
@@ -92,8 +109,28 @@ public class BitmapPrepareProducerTest {
   }
 
   @Test
-  public void testProduceResults_whenPrefetch_thenBitmapPrepareToDrawCalled() {
-    when(mProducerContext.isPrefetch()).thenReturn(true);
+  public void
+      testProduceResults_whenNotPrefetchButBitmapTooSmall_thenBitmapPrepareToDrawNotCalled() {
+    when(mProducerContext.isPrefetch()).thenReturn(false);
+
+    // 100 * 9 = 900 (< MIN_BITMAP_SIZE_BYTES)
+    when(mBitmap.getRowBytes()).thenReturn(100);
+    when(mBitmap.getHeight()).thenReturn(9);
+
+    mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mBitmap, never()).prepareToDraw();
+  }
+
+  @Test
+  public void
+      testProduceResults_whenNotPrefetchButBitmapTooLarge_thenBitmapPrepareToDrawNotCalled() {
+    when(mProducerContext.isPrefetch()).thenReturn(false);
+
+    // 100 * 21 = 2100 (> MAX_BITMAP_SIZE_BYTES)
+    when(mBitmap.getRowBytes()).thenReturn(100);
+    when(mBitmap.getHeight()).thenReturn(21);
+    when(mBitmap.getByteCount()).thenReturn(MAX_BITMAP_SIZE_BYTES + 1);
 
     mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
 
