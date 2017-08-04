@@ -35,6 +35,7 @@ public class SvgDecoderExample {
 
   // We do not include the closing ">" since there can be additional information
   private static final String HEADER_TAG = "<svg";
+  private static final byte[][] POSSIBLE_HEADER_TAGS = { ImageFormatCheckerUtils.asciiBytes("<?xml") };
 
   public static class SvgFormatChecker implements ImageFormat.FormatChecker {
 
@@ -54,7 +55,14 @@ public class SvgDecoderExample {
       if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, HEADER)) {
         return SVG_FORMAT;
       }
+      for (byte[] possibleHeaderTag : POSSIBLE_HEADER_TAGS) {
+        if (ImageFormatCheckerUtils.startsWithPattern(headerBytes, possibleHeaderTag) &&
+            ImageFormatCheckerUtils.indexOfPattern(headerBytes, headerBytes.length, HEADER, HEADER.length) > -1) {
+          return SVG_FORMAT;
+        }
+      }
       return null;
+
     }
   }
 
