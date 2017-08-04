@@ -62,3 +62,9 @@ For network images, try to download an image as close as possible to the size yo
 If the image is bigger than the view, by not resizing it the memory gets wasted. However, there is also a performance trade-off to be considered.
 Clearly, resizing imposes additional CPU cost on its own. But, by not resizing images bigger than the view, more bytes need to be transferred to the GPU, and images get evicted from the bitmap cache more often resulting in more decodes. In other words, not resizing when you should also imposes additional CPU cost.
 Therefore, there is no silver bullet and depending on the device characteristics there is a threshold point after which it becomes more performant to go with resize than without it.
+
+### Example
+
+The Fresco showcase app has a [ImagePipelineResizingFragment](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/imagepipeline/ImagePipelineResizingFragment.java) that demonstrates using placeholder, failure and retry images.
+
+![Showcase app with resized example image](/static/images/docs/01-resizing-sample.png)
