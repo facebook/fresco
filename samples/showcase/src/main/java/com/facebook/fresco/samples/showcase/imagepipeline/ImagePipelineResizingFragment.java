@@ -14,6 +14,7 @@ package com.facebook.fresco.samples.showcase.imagepipeline;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -39,27 +39,30 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  */
 public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
 
-  private final Entry[] SPINNER_ENTRIES = new Entry[]{
-      new Entry(null),
-      new Entry(ResizeOptions.forDimensions(2560, 1440)),
-      new Entry(ResizeOptions.forDimensions(1920, 1080)),
-      new Entry(ResizeOptions.forDimensions(1200, 1200)),
-      new Entry(ResizeOptions.forDimensions(720, 1280)),
-      new Entry(ResizeOptions.forSquareSize(800)),
-      new Entry(ResizeOptions.forDimensions(800, 600)),
-      new Entry(ResizeOptions.forSquareSize(480)),
-      new Entry(ResizeOptions.forDimensions(320, 240)),
-      new Entry(ResizeOptions.forDimensions(240, 320)),
-      new Entry(ResizeOptions.forDimensions(160, 90)),
-      new Entry(ResizeOptions.forSquareSize(100)),
-      new Entry(ResizeOptions.forSquareSize(64)),
-      new Entry(ResizeOptions.forSquareSize(16)),
-  };
+  private final SizeEntry[] SPINNER_ENTRIES_SIZE =
+      new SizeEntry[] {
+        new SizeEntry(null),
+        new SizeEntry(ResizeOptions.forDimensions(2560, 1440)),
+        new SizeEntry(ResizeOptions.forDimensions(1920, 1080)),
+        new SizeEntry(ResizeOptions.forDimensions(1200, 1200)),
+        new SizeEntry(ResizeOptions.forDimensions(720, 1280)),
+        new SizeEntry(ResizeOptions.forSquareSize(800)),
+        new SizeEntry(ResizeOptions.forDimensions(800, 600)),
+        new SizeEntry(ResizeOptions.forSquareSize(480)),
+        new SizeEntry(ResizeOptions.forDimensions(320, 240)),
+        new SizeEntry(ResizeOptions.forDimensions(240, 320)),
+        new SizeEntry(ResizeOptions.forDimensions(160, 90)),
+        new SizeEntry(ResizeOptions.forSquareSize(100)),
+        new SizeEntry(ResizeOptions.forSquareSize(64)),
+        new SizeEntry(ResizeOptions.forSquareSize(16)),
+      };
+
+  private ImageFormatEntry[] mImageFormatEntries;
 
   private Button mButton;
   private SimpleDraweeView mDraweeMain;
-  private Spinner mSpinner;
-  private Uri mUri;
+  private Spinner mSizeSpinner;
+  private Spinner mFormatSpinner;
 
   @Nullable
   @Override
@@ -73,32 +76,79 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    mUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.L);
+    setupImageFormatEntries(imageUriProvider);
 
     mButton = (Button) view.findViewById(R.id.button);
     mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSpinner = (Spinner) view.findViewById(R.id.spinner);
+    mSizeSpinner = (Spinner) view.findViewById(R.id.spinner_size);
+    mFormatSpinner = (Spinner) view.findViewById(R.id.spinner_format);
 
-    mSpinner.setAdapter(new SimpleResizeOptionsAdapter());
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        reloadImageUsingResizeOptions(SPINNER_ENTRIES[position].resizeOptions);
-      }
+    mSizeSpinner.setAdapter(new SimpleResizeOptionsAdapter());
+    mSizeSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            reloadImage(
+                mImageFormatEntries[mFormatSpinner.getSelectedItemPosition()].uri,
+                SPINNER_ENTRIES_SIZE[position].resizeOptions);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
-    mSpinner.setSelection(0);
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    mSizeSpinner.setSelection(0);
 
-    mButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        reloadImageUsingResizeOptions(
-            SPINNER_ENTRIES[mSpinner.getSelectedItemPosition()].resizeOptions);
-      }
-    });
+    mFormatSpinner.setAdapter(new SimpleImageFormatAdapter(mImageFormatEntries));
+    mFormatSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            reloadImage(
+                mImageFormatEntries[position].uri,
+                SPINNER_ENTRIES_SIZE[mSizeSpinner.getSelectedItemPosition()].resizeOptions);
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    mFormatSpinner.setSelection(0);
+
+    mButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            reloadImage(
+                mImageFormatEntries[mFormatSpinner.getSelectedItemPosition()].uri,
+                SPINNER_ENTRIES_SIZE[mSizeSpinner.getSelectedItemPosition()].resizeOptions);
+          }
+        });
+  }
+
+  private void setupImageFormatEntries(ImageUriProvider imageUriProvider) {
+    mImageFormatEntries =
+        new ImageFormatEntry[] {
+          new ImageFormatEntry(
+              R.string.format_name_jpeg_landscape,
+              imageUriProvider.createSampleUri(
+                  ImageUriProvider.ImageSize.XXL, ImageUriProvider.Orientation.LANDSCAPE)),
+          new ImageFormatEntry(
+              R.string.format_name_jpeg_portrait,
+              imageUriProvider.createSampleUri(
+                  ImageUriProvider.ImageSize.XXL, ImageUriProvider.Orientation.PORTRAIT)),
+          new ImageFormatEntry(
+              R.string.format_name_png_landscape,
+              imageUriProvider.createPngUri(
+                  ImageUriProvider.Orientation.LANDSCAPE, ImageUriProvider.UriModification.NONE)),
+          new ImageFormatEntry(
+              R.string.format_name_png_portrait,
+              imageUriProvider.createPngUri(
+                  ImageUriProvider.Orientation.PORTRAIT, ImageUriProvider.UriModification.NONE)),
+          new ImageFormatEntry(R.string.format_name_webp, imageUriProvider.createWebpStaticUri()),
+          new ImageFormatEntry(
+              R.string.format_name_animated_webp, imageUriProvider.createWebpAnimatedUri()),
+          new ImageFormatEntry(
+              R.string.format_name_translucent_webp, imageUriProvider.createWebpTranslucentUri()),
+        };
   }
 
   @Override
@@ -106,10 +156,9 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
     return R.string.imagepipeline_resizing_title;
   }
 
-  private void reloadImageUsingResizeOptions(@Nullable ResizeOptions resizeOptions) {
-    final ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(mUri)
-        .setResizeOptions(resizeOptions)
-        .build();
+  private void reloadImage(Uri imageUri, @Nullable ResizeOptions resizeOptions) {
+    final ImageRequest imageRequest =
+        ImageRequestBuilder.newBuilderWithSource(imageUri).setResizeOptions(resizeOptions).build();
 
     final DraweeController draweeController = Fresco.newDraweeControllerBuilder()
         .setOldController(mDraweeMain.getController())
@@ -123,12 +172,12 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
 
     @Override
     public int getCount() {
-      return SPINNER_ENTRIES.length;
+      return SPINNER_ENTRIES_SIZE.length;
     }
 
     @Override
     public Object getItem(int position) {
-      return SPINNER_ENTRIES[position];
+      return SPINNER_ENTRIES_SIZE[position];
     }
 
     @Override
@@ -145,17 +194,17 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
           : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-      textView.setText(SPINNER_ENTRIES[position].toString());
+      textView.setText(SPINNER_ENTRIES_SIZE[position].toString());
 
       return view;
     }
   }
 
-  private class Entry {
+  private class SizeEntry {
 
     final @Nullable ResizeOptions resizeOptions;
 
-    Entry(@Nullable ResizeOptions resizeOptions) {
+    SizeEntry(@Nullable ResizeOptions resizeOptions) {
       this.resizeOptions = resizeOptions;
     }
 
@@ -164,6 +213,57 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
       return resizeOptions == null
           ? getString(R.string.imagepipeline_resizing_disabled)
           : resizeOptions.toString();
+    }
+  }
+
+  private class SimpleImageFormatAdapter extends BaseAdapter {
+
+    private final ImageFormatEntry[] mImageFormatEntries;
+
+    public SimpleImageFormatAdapter(ImageFormatEntry[] imageFormatEntries) {
+      mImageFormatEntries = imageFormatEntries;
+    }
+
+    @Override
+    public int getCount() {
+      return mImageFormatEntries.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+      return mImageFormatEntries[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      final LayoutInflater layoutInflater = getLayoutInflater();
+
+      final View view =
+          convertView != null
+              ? convertView
+              : layoutInflater.inflate(
+                  android.R.layout.simple_spinner_dropdown_item, parent, false);
+
+      final TextView textView = (TextView) view.findViewById(android.R.id.text1);
+      textView.setText(mImageFormatEntries[position].nameResId);
+
+      return view;
+    }
+  }
+
+  private class ImageFormatEntry {
+
+    final @StringRes int nameResId;
+    final Uri uri;
+
+    private ImageFormatEntry(@StringRes int nameResId, Uri uri) {
+      this.nameResId = nameResId;
+      this.uri = uri;
     }
   }
 }

@@ -211,4 +211,12 @@
   <string name="drawee_hierarchy_retry">Enable Retry</string>
 
   <string name="transition_name">image_transition</string>
+
+  <string name="format_name_jpeg_landscape">JPEG landscape</string>
+  <string name="format_name_jpeg_portrait">JPEG portrait</string>
+  <string name="format_name_png_landscape">PNG landscape</string>
+  <string name="format_name_png_portrait">PNG portrait</string>
+  <string name="format_name_webp">WebP</string>
+  <string name="format_name_animated_webp">animated WebP</string>
+  <string name="format_name_translucent_webp">translucent WebP</string>
 </resources>
