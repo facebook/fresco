@@ -516,15 +516,14 @@ Summary:
 
 <h2>Class Overview</h2>
 <p>Manages a pool of reusable values of type V. The sizes of the values are described by the type S
- The pool supports two main operations
- #get(Object) - returns a value of size that's the same or larger than the requested size
- <code><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release(Object)</a></code>  - releases the value to the pool
- <p>
- In addition, the pool subscribes to the memory manager, and responds to low-memory events via
- calls to <code><a href="../../../../com/facebook/common/memory/MemoryTrimmable.html#trim(com.facebook.common.memory.MemoryTrimType)">trim(MemoryTrimType)</a></code>. Some percent (perhaps all) of the
- values in the pool are then 'freed'.
- <p>
- Known implementations: BasePool (GenericByteArrayPool, SingleByteArrayPool, BitmapPool)
+ The pool supports two main operations #get(Object) - returns a value of size that's the
+ same or larger than the requested size <code><a href="../../../../com/facebook/common/references/ResourceReleaser.html#release(T)">release(Object)</a></code> - releases the value to the pool
+
+ <p>In addition, the pool subscribes to the memory manager, and responds to low-memory events via
+ calls to <code><a href="../../../../com/facebook/common/memory/MemoryTrimmable.html#trim(com.facebook.common.memory.MemoryTrimType)">trim(MemoryTrimType)</a></code>. Some percent
+ (perhaps all) of the values in the pool are then 'freed'.
+
+ <p>Known implementations: BasePool (GenericByteArrayPool, SingleByteArrayPool, BitmapPool)
 </p>
 
 

@@ -605,7 +605,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BitmapPrepareProducer.html#BitmapPrepareProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>)">BitmapPrepareProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; inputProducer)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BitmapPrepareProducer.html#BitmapPrepareProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, int, int)">BitmapPrepareProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; inputProducer, int minBitmapSizeBytes, int maxBitmapSizeBytes)
         
   </td></tr>
 
@@ -979,7 +979,7 @@ From interface
 
 
 
-<a id="BitmapPrepareProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>)"></a>
+<a id="BitmapPrepareProducer(com.facebook.imagepipeline.producers.Producer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -992,7 +992,7 @@ From interface
         
       </span>
       <span class="sympad">BitmapPrepareProducer</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; inputProducer)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; inputProducer, int minBitmapSizeBytes, int maxBitmapSizeBytes)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1005,6 +1005,26 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>inputProducer</th>
+          <td>The next producer in the pipeline</td>
+        </tr>
+        <tr>
+          <th>minBitmapSizeBytes</th>
+          <td>Bitmaps with a <code><a href="null#getByteCount()">getByteCount()</a></code> smaller than this value
+     are not uploaded</td>
+        </tr>
+        <tr>
+          <th>maxBitmapSizeBytes</th>
+          <td>Bitmaps with a <code><a href="null#getByteCount()">getByteCount()</a></code> larger than this value
+     are not uploaded
+</td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
