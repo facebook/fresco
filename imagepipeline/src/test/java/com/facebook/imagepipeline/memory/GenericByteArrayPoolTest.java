@@ -9,17 +9,15 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.mockito.Mockito.mock;
+
 import android.util.SparseIntArray;
-
 import com.facebook.common.memory.MemoryTrimmableRegistry;
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.mockito.Mockito.mock;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Basic tests for GenericByteArrayPool

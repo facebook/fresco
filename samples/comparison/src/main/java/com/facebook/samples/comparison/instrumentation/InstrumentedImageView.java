@@ -17,9 +17,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
-
 import com.facebook.samples.comparison.Drawables;
-import com.facebook.common.internal.Preconditions;
 
 /**
  * {@link ImageView} that notifies its instance of {@link Instrumentation} whenever an image request

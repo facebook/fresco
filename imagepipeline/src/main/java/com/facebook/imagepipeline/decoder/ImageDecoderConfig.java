@@ -8,12 +8,11 @@
  */
 package com.facebook.imagepipeline.decoder;
 
+import com.facebook.imageformat.ImageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.facebook.imageformat.ImageFormat;
 
 /**
  * Configuration for {@link ImageDecoder}.

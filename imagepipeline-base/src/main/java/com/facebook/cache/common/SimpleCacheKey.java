@@ -10,7 +10,6 @@
 package com.facebook.cache.common;
 
 import android.net.Uri;
-
 import com.facebook.common.internal.Preconditions;
 
 /**

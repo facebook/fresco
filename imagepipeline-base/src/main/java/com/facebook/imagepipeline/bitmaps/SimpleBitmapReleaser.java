@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.bitmaps;
 
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.ResourceReleaser;
 
 /**

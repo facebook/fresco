@@ -9,9 +9,8 @@
 
 package com.facebook.drawee.controller;
 
-import javax.annotation.Nullable;
-
 import android.graphics.drawable.Animatable;
+import javax.annotation.Nullable;
 
 /**
  * Interface for {@link AbstractDraweeController} listener.

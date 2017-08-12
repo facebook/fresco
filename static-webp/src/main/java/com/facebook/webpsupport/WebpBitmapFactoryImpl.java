@@ -9,29 +9,27 @@
 
 package com.facebook.webpsupport;
 
+import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
+
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import com.facebook.common.internal.DoNotStrip;
+import com.facebook.common.webp.BitmapCreator;
+import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.common.webp.WebpSupportStatus;
+import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
 import java.io.BufferedInputStream;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nullable;
-
-import android.annotation.SuppressLint;
-import android.content.res.Resources;
-import android.graphics.Rect;
-import android.os.Build;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-
-import com.facebook.common.internal.DoNotStrip;
-import com.facebook.common.webp.BitmapCreator;
-import com.facebook.common.webp.WebpBitmapFactory;
-import com.facebook.common.webp.WebpSupportStatus;
-import com.facebook.imagepipeline.nativecode.StaticWebpNativeLoader;
-
-import static com.facebook.common.webp.WebpSupportStatus.isWebpHeader;
 
 @DoNotStrip
 public class WebpBitmapFactoryImpl implements WebpBitmapFactory {

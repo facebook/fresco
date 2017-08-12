@@ -9,16 +9,16 @@
 
 package com.facebook.imagepipeline.cache;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import android.net.Uri;
-
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.MediaVariations;
-
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,9 +27,6 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)

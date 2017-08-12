@@ -9,7 +9,6 @@
 package com.facebook.imagepipeline.platform;
 
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 

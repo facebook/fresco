@@ -8,18 +8,16 @@
  */
 package com.facebook.imageutils;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import android.util.Pair;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.*;
+
+import android.util.Pair;
+import java.io.IOException;
+import java.io.InputStream;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests {@link WebpUtil}

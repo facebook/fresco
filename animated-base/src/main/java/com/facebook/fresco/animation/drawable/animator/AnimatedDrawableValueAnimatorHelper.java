@@ -8,13 +8,11 @@
  */
 package com.facebook.fresco.animation.drawable.animator;
 
-import javax.annotation.Nullable;
-
 import android.animation.ValueAnimator;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import javax.annotation.Nullable;
 
 /**
  * Helper class to create {@link ValueAnimator}s for animated drawables.

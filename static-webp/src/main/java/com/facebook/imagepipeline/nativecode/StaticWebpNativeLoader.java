@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.nativecode;
 
 import android.os.Build;
-
 import com.facebook.common.soloader.SoLoaderShim;
 
 /**

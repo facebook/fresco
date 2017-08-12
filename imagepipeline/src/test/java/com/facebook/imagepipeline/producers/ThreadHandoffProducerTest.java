@@ -9,19 +9,17 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static org.mockito.Mockito.*;
+
 import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)

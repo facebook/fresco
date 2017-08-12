@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.producers;
 
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -28,9 +27,24 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
   public static final String PRODUCER_NAME = "BitmapPrepareProducer";
 
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
+  private final int mMinBitmapSizeBytes;
+  private final int mMaxBitmapSizeBytes;
 
-  public BitmapPrepareProducer(final Producer<CloseableReference<CloseableImage>> inputProducer) {
+  /**
+   * @param inputProducer The next producer in the pipeline
+   * @param minBitmapSizeBytes Bitmaps with a {@link Bitmap#getByteCount()} smaller than this value
+   *     are not uploaded
+   * @param maxBitmapSizeBytes Bitmaps with a {@link Bitmap#getByteCount()} larger than this value
+   *     are not uploaded
+   */
+  public BitmapPrepareProducer(
+      final Producer<CloseableReference<CloseableImage>> inputProducer,
+      int minBitmapSizeBytes,
+      int maxBitmapSizeBytes) {
+    Preconditions.checkArgument(minBitmapSizeBytes <= maxBitmapSizeBytes);
     mInputProducer = Preconditions.checkNotNull(inputProducer);
+    mMinBitmapSizeBytes = minBitmapSizeBytes;
+    mMaxBitmapSizeBytes = maxBitmapSizeBytes;
   }
 
   @Override
@@ -41,15 +55,25 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
       // do not prepare bitmaps that are pre-fetcheds
       mInputProducer.produceResults(consumer, producerContext);
     } else {
-      mInputProducer.produceResults(new BitmapPrepareConsumer(consumer), producerContext);
+      mInputProducer.produceResults(
+          new BitmapPrepareConsumer(consumer, mMinBitmapSizeBytes, mMaxBitmapSizeBytes),
+          producerContext);
     }
   }
 
   private static class BitmapPrepareConsumer extends
       DelegatingConsumer<CloseableReference<CloseableImage>, CloseableReference<CloseableImage>> {
 
-    BitmapPrepareConsumer(Consumer<CloseableReference<CloseableImage>> consumer) {
+    private final int mMinBitmapSizeBytes;
+    private final int mMaxBitmapSizeBytes;
+
+    BitmapPrepareConsumer(
+        Consumer<CloseableReference<CloseableImage>> consumer,
+        int minBitmapSizeBytes,
+        int maxBitmapSizeBytes) {
       super(consumer);
+      mMinBitmapSizeBytes = minBitmapSizeBytes;
+      mMaxBitmapSizeBytes = maxBitmapSizeBytes;
     }
 
     @Override
@@ -60,7 +84,7 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
       getConsumer().onNewResult(newResult, status);
     }
 
-    private static void internalPrepareBitmap(CloseableReference<CloseableImage> newResult) {
+    private void internalPrepareBitmap(CloseableReference<CloseableImage> newResult) {
       if (newResult == null || !newResult.isValid()) {
         return;
       }
@@ -74,6 +98,14 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
         final CloseableStaticBitmap staticBitmap = (CloseableStaticBitmap) closeableImage;
         final Bitmap bitmap = staticBitmap.getUnderlyingBitmap();
         if (bitmap == null) {
+          return;
+        }
+
+        final int bitmapByteCount = bitmap.getRowBytes() * bitmap.getHeight();
+        if (bitmapByteCount < mMinBitmapSizeBytes) {
+          return;
+        }
+        if (bitmapByteCount > mMaxBitmapSizeBytes) {
           return;
         }
 

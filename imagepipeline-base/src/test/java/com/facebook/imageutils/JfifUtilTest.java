@@ -9,15 +9,13 @@
 
 package com.facebook.imageutils;
 
-import android.graphics.Rect;
+
+import static com.facebook.imageutils.JfifTestUtils.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import static com.facebook.imageutils.JfifTestUtils.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests {@link JfifUtil}

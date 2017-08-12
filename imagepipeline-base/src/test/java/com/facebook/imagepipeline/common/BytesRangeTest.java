@@ -9,10 +9,10 @@
 
 package com.facebook.imagepipeline.common;
 
-import org.junit.Test;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
+
+import org.junit.Test;
 
 public class BytesRangeTest {
 

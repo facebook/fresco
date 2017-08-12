@@ -10,7 +10,6 @@
 package com.facebook.drawee.debug;
 
 import com.facebook.drawee.drawable.ScalingUtils;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

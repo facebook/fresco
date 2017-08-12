@@ -12,7 +12,6 @@ package com.facebook.drawee.drawable;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-
 import javax.annotation.Nullable;
 
 /**
@@ -88,7 +87,15 @@ public class ScalingUtils {
     static final ScaleType FOCUS_CROP = ScaleTypeFocusCrop.INSTANCE;
 
     /**
+     * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
+     * height) will fit exactly. Aspect ratio is preserved. Child is aligned to the bottom-left
+     * corner of the parent.
+     */
+    static final ScaleType FIT_BOTTOM_START = ScaleTypeFitBottomStart.INSTANCE;
+
+    /**
      * Gets transformation matrix based on the scale type.
+     *
      * @param outTransform out matrix to store result
      * @param parentBounds parent bounds
      * @param childWidth child width
@@ -210,6 +217,33 @@ public class ScalingUtils {
     @Override
     public String toString() {
       return "fit_start";
+    }
+  }
+
+  private static class ScaleTypeFitBottomStart extends AbstractScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeFitBottomStart();
+
+    @Override
+    public void getTransformImpl(
+        Matrix outTransform,
+        Rect parentRect,
+        int childWidth,
+        int childHeight,
+        float focusX,
+        float focusY,
+        float scaleX,
+        float scaleY) {
+      float scale = Math.min(scaleX, scaleY);
+      float dx = parentRect.left;
+      float dy = parentRect.top + (parentRect.height() - childHeight * scale);
+      outTransform.setScale(scale, scale);
+      outTransform.postTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "fit_bottom_start";
     }
   }
 

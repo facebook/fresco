@@ -9,14 +9,13 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
-import com.facebook.imagepipeline.listener.RequestListener;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * DataSource<CloseableReference<T>> backed by a Producer<CloseableReference<T>>

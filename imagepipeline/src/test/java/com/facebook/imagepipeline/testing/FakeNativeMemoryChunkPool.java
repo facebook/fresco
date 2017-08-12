@@ -9,15 +9,14 @@
 
 package com.facebook.imagepipeline.testing;
 
-import android.util.SparseIntArray;
+import static org.mockito.Mockito.*;
 
+import android.util.SparseIntArray;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imagepipeline.memory.NativeMemoryChunk;
 import com.facebook.imagepipeline.memory.NativeMemoryChunkPool;
 import com.facebook.imagepipeline.memory.PoolParams;
 import com.facebook.imagepipeline.memory.PoolStatsTracker;
-
-import static org.mockito.Mockito.*;
 
 /**
  * A 'fake' {@link NativeMemoryChunkPool} instance as a test helper

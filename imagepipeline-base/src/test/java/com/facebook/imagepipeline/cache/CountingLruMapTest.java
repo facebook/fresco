@@ -9,15 +9,14 @@
 
 package com.facebook.imagepipeline.cache;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import static org.junit.Assert.*;
 
 import com.android.internal.util.Predicate;
+import java.util.LinkedHashMap;
+import java.util.List;
 import org.junit.*;
 import org.junit.runner.*;
 import org.robolectric.*;
-
-import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class CountingLruMapTest {

@@ -12,13 +12,11 @@
 package com.facebook.samples.zoomableapp;
 
 import android.app.Application;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
-
 import java.util.HashSet;
 import java.util.Set;
 

@@ -9,19 +9,9 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.annotation.SuppressLint;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.Throwables;
@@ -30,6 +20,13 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.Pool;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A base pool class that manages a pool of values (of type V). <p>
@@ -311,7 +308,7 @@ public abstract class BasePool<V> implements Pool<V> {
     final int bucketedSize = getBucketedSizeForValue(value);
     final int sizeInBytes = getSizeInBytes(bucketedSize);
     synchronized (this) {
-      final Bucket<V> bucket = getBucket(bucketedSize);
+      final Bucket<V> bucket = getBucketIfPresent(bucketedSize);
       if (!mInUseValues.remove(value)) {
         // This value was not 'known' to the pool (i.e.) allocated via the pool.
         // Something is going wrong, so let's free the value and report soft error.
@@ -598,6 +595,15 @@ public abstract class BasePool<V> implements Pool<V> {
     }
   }
 
+  /**
+   * Gets the freelist for the specified bucket if it exists.
+   *
+   * @param bucketedSize the bucket size
+   * @return the freelist for the bucket
+   */
+  private synchronized Bucket<V> getBucketIfPresent(int bucketedSize) {
+    return mBuckets.get(bucketedSize);
+  }
 
   /**
    * Gets the freelist for the specified bucket. Create the freelist if there isn't one

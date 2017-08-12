@@ -9,9 +9,8 @@
 
 package com.facebook.imageformat;
 
-import java.io.UnsupportedEncodingException;
-
 import com.facebook.common.internal.Preconditions;
+import java.io.UnsupportedEncodingException;
 
 /**
  * {@link ImageFormatChecker} utility methods
@@ -82,14 +81,16 @@ public class ImageFormatCheckerUtils {
     for (int i = 0; i <= max; i++) {
       // Look for first byte
       if (byteArray[i] != first) {
-        while (++i <= max && byteArray[i] != first);
+        while (++i <= max && byteArray[i] != first) {
+        }
       }
 
       // Found first byte, now look for the rest
       if (i <= max) {
         int j = i + 1;
         int end = j + patternLen - 1;
-        for (int k = 1; j < end && byteArray[j] == pattern[k]; j++, k++);
+        for (int k = 1; j < end && byteArray[j] == pattern[k]; j++, k++) {
+        }
 
         if (j == end) {
           // found whole pattern

@@ -9,7 +9,6 @@
 package com.facebook.imagepipeline.memory;
 
 import com.facebook.common.soloader.SoLoaderShim;
-
 import org.junit.BeforeClass;
 
 /**

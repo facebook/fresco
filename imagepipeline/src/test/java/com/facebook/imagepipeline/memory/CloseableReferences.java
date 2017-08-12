@@ -9,14 +9,12 @@
 
 package com.facebook.imagepipeline.memory;
 
-import java.io.Closeable;
+import static org.mockito.Matchers.*;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
-
+import java.io.Closeable;
 import org.mockito.*;
-
-import static org.mockito.Matchers.*;
 
 /**
  * Utilities for testing {@link CloseableReference}.

@@ -8,13 +8,12 @@
  */
 package com.facebook.imagepipeline.animated.factory;
 
-import java.lang.reflect.Constructor;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.core.ExecutorSupplier;
 import com.facebook.imagepipeline.image.CloseableImage;
+import java.lang.reflect.Constructor;
 
 public class AnimatedFactoryProvider {
 

@@ -9,17 +9,15 @@
 
 package com.facebook.imagepipeline.image;
 
+import static org.mockito.Mockito.*;
+
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.ResourceReleaser;
-
 import junit.framework.Assert;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
-
-import static org.mockito.Mockito.*;
 /**
  * Basic tests for closeable bitmap
  */

@@ -9,12 +9,11 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import com.facebook.common.internal.DoNotStrip;
+import com.facebook.common.internal.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.facebook.common.internal.DoNotStrip;
-import com.facebook.common.internal.Preconditions;
 
 /**
  * Helper methods for modifying jpeg images.

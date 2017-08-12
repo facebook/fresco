@@ -11,17 +11,15 @@
  */
 package com.facebook.samples.animation2.utils;
 
-import javax.annotation.Nullable;
-
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.ToggleButton;
-
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.fresco.animation.drawable.AnimationListener;
 import com.facebook.fresco.animation.drawable.BaseAnimationListener;
+import javax.annotation.Nullable;
 
 /**
  * Helper class that manages animation controls: Play / pause, reset and a seekbar.

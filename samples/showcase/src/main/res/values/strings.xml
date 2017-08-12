@@ -66,6 +66,11 @@
   <string name="imagepipeline_prefetch_title">Prefetch</string>
   <string name="imagepipeline_prefetch_help">1. Clear the cache\n2. Toggle images, they show slowly\n3. Hide the images\n4. Clear the cache\n5. Prefetch\n6. Show the images, they load fast!</string>
 
+  <string name="imagepipeline_resizing_title">Resizing</string>
+  <string name="imagepipeline_resizing_help">Change the resizing mode using the drop-down menu on top. Enable the debug overlay to see image dimensions.</string>
+  <string name="imagepipeline_resizing_refresh">Refresh</string>
+  <string name="imagepipeline_resizing_disabled">No resizing</string>
+
   <string name="imagepipeline_media_variations_title">Media Variations</string>
   <string name="imagepipeline_media_variations_individual_variants">Individual variants (click to load)</string>
   <string name="imagepipeline_media_variations_combined_request">Combined image request (click to refresh)</string>
@@ -74,10 +79,8 @@
   <string name="imagepipeline_media_variations_mode_title">Mode</string>
   <string name="imagepipeline_media_variations_mode_media_id">Media ID in request</string>
   <string name="imagepipeline_media_variations_mode_listed_variants">Variants listed in request</string>
-  <string name="imagepipeline_media_variations_mode_media_id_extractor">Media ID extractor</string>
   <string name="imagepipeline_media_variations_toast_mode_media_id">Using a media ID added to the image request</string>
   <string name="imagepipeline_media_variations_toast_mode_listed_variants">Using a list of variants added to the image request</string>
-  <string name="imagepipeline_media_variations_toast_mode_media_id_extractor">Using a MediaIdExtractor to pull a media ID from the URL</string>
 
   <string name="imagepipeline_partial_request_title">Partial Image Loading</string>
   <string name="button_load_partial">Load Partial</string>
@@ -208,4 +211,12 @@
   <string name="drawee_hierarchy_retry">Enable Retry</string>
 
   <string name="transition_name">image_transition</string>
+
+  <string name="format_name_jpeg_landscape">JPEG landscape</string>
+  <string name="format_name_jpeg_portrait">JPEG portrait</string>
+  <string name="format_name_png_landscape">PNG landscape</string>
+  <string name="format_name_png_portrait">PNG portrait</string>
+  <string name="format_name_webp">WebP</string>
+  <string name="format_name_animated_webp">animated WebP</string>
+  <string name="format_name_translucent_webp">translucent WebP</string>
 </resources>

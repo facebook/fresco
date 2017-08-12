@@ -9,9 +9,6 @@
 
 package com.facebook.imagepipeline.decoder;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
@@ -20,6 +17,8 @@ import com.facebook.common.memory.PooledByteArrayBufferedInputStream;
 import com.facebook.common.util.StreamUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.JfifUtil;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Progressively scans jpeg data and instructs caller when enough data is available to decode

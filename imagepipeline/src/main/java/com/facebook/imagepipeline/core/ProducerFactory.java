@@ -13,7 +13,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -22,7 +21,6 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.MediaIdExtractor;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -66,8 +64,6 @@ import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
 
-import javax.annotation.Nullable;
-
 public class ProducerFactory {
 
   private static final int MAX_SIMULTANEOUS_REQUESTS = 5;
@@ -96,10 +92,13 @@ public class ProducerFactory {
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final MediaVariationsIndex mMediaVariationsIndex;
-  @Nullable private final MediaIdExtractor mMediaIdExtractor;
 
   // Postproc dependencies
   private final PlatformBitmapFactory mPlatformBitmapFactory;
+
+  // BitmapPrepare dependencies
+  private final int mBitmapPrepareToDrawMinSizeBytes;
+  private final int mBitmapPrepareToDrawMaxSizeBytes;
 
   public ProducerFactory(
       Context context,
@@ -116,9 +115,10 @@ public class ProducerFactory {
       BufferedDiskCache defaultBufferedDiskCache,
       BufferedDiskCache smallImageBufferedDiskCache,
       MediaVariationsIndex mediaVariationsIndex,
-      @Nullable MediaIdExtractor mediaIdExtractor,
       CacheKeyFactory cacheKeyFactory,
-      PlatformBitmapFactory platformBitmapFactory) {
+      PlatformBitmapFactory platformBitmapFactory,
+      int bitmapPrepareToDrawMinSizeBytes,
+      int bitmapPrepareToDrawMaxSizeBytes) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -138,10 +138,11 @@ public class ProducerFactory {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mMediaVariationsIndex = mediaVariationsIndex;
-    mMediaIdExtractor = mediaIdExtractor;
     mCacheKeyFactory = cacheKeyFactory;
 
     mPlatformBitmapFactory = platformBitmapFactory;
+    mBitmapPrepareToDrawMinSizeBytes = bitmapPrepareToDrawMinSizeBytes;
+    mBitmapPrepareToDrawMaxSizeBytes = bitmapPrepareToDrawMaxSizeBytes;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -213,7 +214,6 @@ public class ProducerFactory {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mMediaVariationsIndex,
-        mMediaIdExtractor,
         inputProducer);
   }
 
@@ -365,6 +365,7 @@ public class ProducerFactory {
 
   public BitmapPrepareProducer newBitmapPrepareProducer(
       Producer<CloseableReference<CloseableImage>> inputProducer) {
-    return new BitmapPrepareProducer(inputProducer);
+    return new BitmapPrepareProducer(
+        inputProducer, mBitmapPrepareToDrawMinSizeBytes, mBitmapPrepareToDrawMaxSizeBytes);
   }
 }

@@ -9,12 +9,11 @@
 
 package com.facebook.common.util;
 
+import com.facebook.common.internal.ByteStreams;
+import com.facebook.common.internal.Preconditions;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.facebook.common.internal.ByteStreams;
-import com.facebook.common.internal.Preconditions;
 
 /**
  * Utility method for dealing with Streams.

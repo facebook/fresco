@@ -9,10 +9,9 @@
 
 package com.facebook.imageutils;
 
+import com.facebook.common.util.Hex;
 import java.lang.String;
 import java.lang.StringBuffer;
-
-import com.facebook.common.util.Hex;
 
 /**
  * Provide test use functions for JfifUtilTest.

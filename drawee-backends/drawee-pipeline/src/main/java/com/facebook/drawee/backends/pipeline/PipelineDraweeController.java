@@ -12,7 +12,6 @@ package com.facebook.drawee.backends.pipeline;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Objects;
@@ -37,9 +36,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImageInfo;
-
 import java.util.concurrent.Executor;
-
 import javax.annotation.Nullable;
 
 /**

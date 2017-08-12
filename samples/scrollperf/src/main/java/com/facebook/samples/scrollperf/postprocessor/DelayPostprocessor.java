@@ -12,7 +12,6 @@
 package com.facebook.samples.scrollperf.postprocessor;
 
 import android.graphics.Bitmap;
-
 import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.samples.scrollperf.util.TimeWaster;
 

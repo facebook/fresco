@@ -8,20 +8,17 @@
  */
 package com.facebook.fresco.animation.frame;
 
-import javax.annotation.Nullable;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
-
 import com.facebook.fresco.animation.backend.AnimationBackend;
-
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Tests {@link DropFramesFrameScheduler}.

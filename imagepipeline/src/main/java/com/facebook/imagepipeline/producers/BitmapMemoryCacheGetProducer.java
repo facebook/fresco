@@ -10,11 +10,10 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.common.references.CloseableReference;
 
 /**
  * Bitmap memory cache producer that is read-only.

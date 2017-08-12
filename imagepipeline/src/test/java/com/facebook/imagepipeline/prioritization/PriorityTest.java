@@ -9,14 +9,13 @@
 
 package com.facebook.imagepipeline.prioritization;
 
-import com.facebook.imagepipeline.common.Priority;
-
-import org.junit.*;
-
 import static com.facebook.imagepipeline.common.Priority.HIGH;
 import static com.facebook.imagepipeline.common.Priority.LOW;
 import static com.facebook.imagepipeline.common.Priority.MEDIUM;
 import static org.junit.Assert.*;
+
+import com.facebook.imagepipeline.common.Priority;
+import org.junit.*;
 
 /**
  * Tests for Priority enum

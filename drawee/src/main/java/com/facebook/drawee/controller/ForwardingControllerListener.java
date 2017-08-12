@@ -9,14 +9,12 @@
 
 package com.facebook.drawee.controller;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.drawable.Animatable;
 import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Listener that forwards controller events to multiple listeners.

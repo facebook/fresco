@@ -9,19 +9,17 @@
 
 package com.facebook.imagepipeline.producers;
 
-import android.net.Uri;
+import static org.fest.assertions.api.Assertions.assertThat;
 
+import android.net.Uri;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer.VariantComparator;
 import com.facebook.imagepipeline.request.MediaVariations.Variant;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)

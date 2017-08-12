@@ -9,17 +9,16 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for {@link SharedByteArray}

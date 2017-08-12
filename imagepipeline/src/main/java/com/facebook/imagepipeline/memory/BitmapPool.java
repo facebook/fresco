@@ -9,14 +9,12 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imageutils.BitmapUtil;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Manages a pool of bitmaps. This allows us to reuse bitmaps instead of constantly allocating

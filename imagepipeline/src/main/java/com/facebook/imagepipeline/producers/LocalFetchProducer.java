@@ -9,16 +9,15 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.Executor;
-
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.Executor;
 
 /**
  * Represents a local fetch producer.

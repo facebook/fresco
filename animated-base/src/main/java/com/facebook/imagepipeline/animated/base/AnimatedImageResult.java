@@ -9,14 +9,11 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-import javax.annotation.Nullable;
-
-import java.util.List;
-
 import android.graphics.Bitmap;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
+import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * The result of decoding an animated image. Contains the {@link AnimatedImage} as well as

@@ -12,8 +12,14 @@
 
 package com.facebook.samples.gestures;
 
-import android.view.MotionEvent;
+import static com.facebook.samples.gestures.MotionEventTestUtils.obtainMotionEvent;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 
+import android.view.MotionEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,13 +27,6 @@ import org.mockito.InOrder;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import robolectric3.shadows.ShadowMotionEvent;
-
-import static com.facebook.samples.gestures.MotionEventTestUtils.obtainMotionEvent;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link MultiPointerGestureDetector}

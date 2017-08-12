@@ -9,14 +9,11 @@
 
 package com.facebook.imagepipeline.common;
 
+import android.graphics.Bitmap;
+import com.facebook.imagepipeline.decoder.ImageDecoder;
+import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
-
-import android.graphics.Bitmap;
-
-import java.util.Locale;
-
-import com.facebook.imagepipeline.decoder.ImageDecoder;
 
 /**
  * Options for changing the behavior of the {@code ImageDecoder}.

@@ -8,11 +8,8 @@
  */
 package com.facebook.fresco.animation.bitmap.preparation;
 
-import java.util.concurrent.ExecutorService;
-
 import android.graphics.Bitmap;
 import android.util.SparseArray;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.backend.AnimationBackend;
@@ -20,6 +17,7 @@ import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Default bitmap frame preparer that uses the given {@link ExecutorService} to schedule jobs.

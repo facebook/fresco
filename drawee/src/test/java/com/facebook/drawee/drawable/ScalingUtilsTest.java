@@ -9,17 +9,15 @@
 
 package com.facebook.drawee.drawable;
 
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+
 import android.graphics.Matrix;
 import android.graphics.Rect;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for scale type calculations.
@@ -175,6 +173,19 @@ public class ScalingUtilsTest {
     test(2.00f, 2.00f,   10,  -84, 200, 200, 1.00f, 1.00f, ScaleType.FOCUS_CROP);
     test(2.00f, 2.00f,   10, -484, 200, 400, 1.00f, 1.00f, ScaleType.FOCUS_CROP);
     test(0.80f, 0.80f,   10,   -4, 500, 400, 1.00f, 1.00f, ScaleType.FOCUS_CROP);
+  }
+
+  @Test
+  public void testFitBottomStart() {
+    test(1.60f, 1.60f, 10, 75, 250, 150, ScaleType.FIT_BOTTOM_START);
+    test(0.50f, 0.50f, 10, 215, 800, 200, ScaleType.FIT_BOTTOM_START);
+    test(0.50f, 0.50f, 10, 115, 800, 400, ScaleType.FIT_BOTTOM_START);
+    test(2.00f, 2.00f, 10, 15, 200, 150, ScaleType.FIT_BOTTOM_START);
+    test(1.00f, 1.00f, 10, 15, 400, 300, ScaleType.FIT_BOTTOM_START);
+    test(0.50f, 0.50f, 10, 15, 800, 600, ScaleType.FIT_BOTTOM_START);
+    test(1.50f, 1.50f, 10, 15, 200, 200, ScaleType.FIT_BOTTOM_START);
+    test(0.75f, 0.75f, 10, 15, 200, 400, ScaleType.FIT_BOTTOM_START);
+    test(0.75f, 0.75f, 10, 15, 500, 400, ScaleType.FIT_BOTTOM_START);
   }
 
   private void test(

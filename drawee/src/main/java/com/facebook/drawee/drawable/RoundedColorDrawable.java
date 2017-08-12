@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.drawable;
 
-import java.util.Arrays;
-
 import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,9 +20,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import java.util.Arrays;
 
 public class RoundedColorDrawable extends Drawable implements Rounded {
   private final float[] mRadii = new float[8];

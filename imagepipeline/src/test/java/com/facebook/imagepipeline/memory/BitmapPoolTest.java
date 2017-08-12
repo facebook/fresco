@@ -9,13 +9,14 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-
 import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imageutils.BitmapUtil;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -24,9 +25,6 @@ import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.powermock.core.classloader.annotations.*;
 import org.robolectric.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  Basic tests for BitmapPool */

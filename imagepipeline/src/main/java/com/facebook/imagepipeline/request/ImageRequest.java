@@ -9,13 +9,17 @@
 
 package com.facebook.imagepipeline.request;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-
-import java.io.File;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_DATA;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_ASSET;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_CONTENT;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWORK;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE;
+import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 import android.net.Uri;
-
 import com.facebook.common.internal.Objects;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.util.UriUtil;
@@ -27,16 +31,9 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.common.SourceUriType;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imageutils.BitmapUtil;
-
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_DATA;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_ASSET;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_CONTENT;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_RESOURCE;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWORK;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIFIED_RESOURCE;
-import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
+import java.io.File;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Immutable object encapsulating everything pipeline has to know about requested image to proceed.

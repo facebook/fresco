@@ -9,9 +9,8 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * Base class for {@link NetworkFetcher}.

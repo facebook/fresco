@@ -9,10 +9,9 @@
 
 package com.facebook.common.logging;
 
+import android.util.Log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import android.util.Log;
 
 /**
  * Default implementation of {@link LoggingDelegate}.

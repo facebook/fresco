@@ -16,6 +16,8 @@
 
 package com.facebook.common.internal;
 
+import static com.facebook.common.internal.Preconditions.checkNotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.EOFException;
@@ -23,8 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-
-import static com.facebook.common.internal.Preconditions.checkNotNull;
 
 /**
  * Provides utility methods for working with byte arrays and I/O streams.

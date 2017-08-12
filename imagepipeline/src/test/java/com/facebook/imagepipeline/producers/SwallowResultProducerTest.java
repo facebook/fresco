@@ -9,14 +9,15 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
+import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import com.facebook.common.references.CloseableReference;
-import com.facebook.imagepipeline.image.CloseableImage;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -24,9 +25,6 @@ import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 
 /**
  * Checks basic properties of swallow result producer, that is:

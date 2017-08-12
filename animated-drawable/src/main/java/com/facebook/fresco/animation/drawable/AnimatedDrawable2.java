@@ -8,8 +8,6 @@
  */
 package com.facebook.fresco.animation.drawable;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
@@ -17,7 +15,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.drawable.DrawableProperties;
@@ -25,6 +22,7 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.frame.DropFramesFrameScheduler;
 import com.facebook.fresco.animation.frame.FrameScheduler;
+import javax.annotation.Nullable;
 
 /**
  * Experimental new animated drawable that uses a supplied

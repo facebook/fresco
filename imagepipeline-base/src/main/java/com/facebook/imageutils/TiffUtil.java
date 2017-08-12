@@ -10,11 +10,9 @@
 package com.facebook.imageutils;
 
 import android.media.ExifInterface;
-
+import com.facebook.common.logging.FLog;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.facebook.common.logging.FLog;
 
 /**
  * Util for getting exif orientation from a jpeg stored as a byte array.

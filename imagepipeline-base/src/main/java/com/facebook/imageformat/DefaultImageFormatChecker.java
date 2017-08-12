@@ -8,13 +8,11 @@
  */
 package com.facebook.imageformat;
 
-import javax.annotation.Nullable;
-
-import java.io.InputStream;
-
 import com.facebook.common.internal.Ints;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.webp.WebpSupportStatus;
+import java.io.InputStream;
+import javax.annotation.Nullable;
 
 /**
  * Default image format checker that is able to determine all {@link DefaultImageFormats}.

@@ -8,28 +8,6 @@
  */
 package com.facebook.fresco.animation.bitmap;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-
-import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
-import com.facebook.fresco.animation.backend.AnimationBackend;
-import com.facebook.fresco.animation.backend.AnimationInformation;
-import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
-import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -40,6 +18,25 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.ResourceReleaser;
+import com.facebook.fresco.animation.backend.AnimationBackend;
+import com.facebook.fresco.animation.backend.AnimationInformation;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
+import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
 /**

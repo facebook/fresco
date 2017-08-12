@@ -9,15 +9,14 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import android.graphics.Bitmap;
 import android.os.Build;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.robolectric.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class BitmapCounterTest {

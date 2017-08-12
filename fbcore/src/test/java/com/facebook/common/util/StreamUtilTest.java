@@ -9,6 +9,10 @@
 
 package com.facebook.common.util;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import com.facebook.common.internal.Closeables;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,16 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-
-import com.facebook.common.internal.Closeables;
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for {@link StreamUtil}

@@ -9,6 +9,10 @@
 
 package com.facebook.imagepipeline.datasource;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -16,15 +20,10 @@ import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
-
-import com.facebook.common.executors.CallerThreadExecutor;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class ProducerToDataSourceAdapterTest {

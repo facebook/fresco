@@ -29,7 +29,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.facebook.fresco.samples.showcase.drawee.DraweeHierarchyFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeMediaPickerFragment;
 import com.facebook.fresco.samples.showcase.drawee.DraweeRecyclerViewFragment;
@@ -48,11 +47,11 @@ import com.facebook.fresco.samples.showcase.imageformat.pjpeg.ImageFormatProgres
 import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragment;
 import com.facebook.fresco.samples.showcase.imageformat.webp.ImageFormatWebpFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineBitmapFactoryFragment;
-import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineQualifiedResourceFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePostProcessorFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineQualifiedResourceFragment;
+import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineResizingFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.MediaVariationsFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.PartialRequestFragment;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
@@ -187,6 +186,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_imagepipeline_prefetch:
         fragment = new ImagePipelinePrefetchFragment();
+        break;
+      case R.id.nav_imagepipeline_resizing:
+        fragment = new ImagePipelineResizingFragment();
         break;
       case R.id.nav_imagepipeline_qualified_resource:
         fragment = new ImagePipelineQualifiedResourceFragment();

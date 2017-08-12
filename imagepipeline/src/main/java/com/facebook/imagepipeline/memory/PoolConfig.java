@@ -9,11 +9,10 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.Immutable;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Configuration class for pools.

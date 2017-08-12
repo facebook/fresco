@@ -14,7 +14,6 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;

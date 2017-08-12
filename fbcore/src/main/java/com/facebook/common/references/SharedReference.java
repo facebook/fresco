@@ -9,14 +9,12 @@
 
 package com.facebook.common.references;
 
-import javax.annotation.concurrent.GuardedBy;
-
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import java.util.IdentityHashMap;
 import java.util.Map;
-
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.logging.FLog;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * A shared-reference class somewhat similar to c++ shared_ptr. The underlying value is reference

@@ -9,20 +9,17 @@
 
 package com.facebook.imagepipeline.animated.impl;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-
 import android.net.Uri;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Facade to the image memory cache for frames of an animated image.

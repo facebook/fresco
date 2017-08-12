@@ -8,13 +8,11 @@
  */
 package com.facebook.fresco.animation.bitmap.cache;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapAnimationBackend;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
+import javax.annotation.Nullable;
 
 /**
  * No-op bitmap cache that doesn't do anything.

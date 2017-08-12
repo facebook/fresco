@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.drawable;
 
-import javax.annotation.Nullable;
-
 import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -20,8 +18,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
 import com.facebook.common.internal.Preconditions;
+import javax.annotation.Nullable;
 
 /**
  * A Drawable that contains an array of other Drawables (layers). These are drawn in array order,

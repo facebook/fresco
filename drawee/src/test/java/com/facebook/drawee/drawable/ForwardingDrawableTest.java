@@ -9,19 +9,17 @@
 
 package com.facebook.drawee.drawable;
 
+import static org.mockito.Mockito.*;
+
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for {@link ForwardingDrawable}

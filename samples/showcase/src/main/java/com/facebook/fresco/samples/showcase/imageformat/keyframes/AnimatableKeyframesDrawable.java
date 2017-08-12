@@ -12,7 +12,6 @@
 package com.facebook.fresco.samples.showcase.imageformat.keyframes;
 
 import android.graphics.drawable.Animatable;
-
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.keyframes.KeyframesDrawable;
 

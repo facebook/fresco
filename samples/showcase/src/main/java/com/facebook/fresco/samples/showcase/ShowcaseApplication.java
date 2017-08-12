@@ -11,17 +11,12 @@
  */
 package com.facebook.fresco.samples.showcase;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Application;
 import android.content.Context;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.fresco.samples.showcase.imagepipeline.ShowcaseMediaIdExtractor;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -33,9 +28,8 @@ import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-
-import okhttp3.OkHttpClient;
-
+import java.util.HashSet;
+import java.util.Set;
 import okhttp3.OkHttpClient;
 
 /**
@@ -65,8 +59,7 @@ public class ShowcaseApplication extends Application {
             return true;
           }
         })
-        .experiment().setMediaIdExtractor(new ShowcaseMediaIdExtractor())
-        .experiment().setBitmapPrepareToDraw(true)
+        .experiment().setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE)
         .build();
 
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);

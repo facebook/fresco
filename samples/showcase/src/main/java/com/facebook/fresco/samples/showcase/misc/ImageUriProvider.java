@@ -12,18 +12,16 @@
 
 package com.facebook.fresco.samples.showcase.misc;
 
-import java.util.Locale;
-import java.util.Random;
-import java.util.UUID;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
-
 import com.facebook.common.internal.Preconditions;
+import java.util.Locale;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Provider for sample URIs that are used by the samples in the showcase app
@@ -115,6 +113,21 @@ public class ImageUriProvider {
       "http://frescolib.org/static/sample-images/animal_d_%s.jpg",
   };
 
+  private static final String[] SAMPLE_URIS_LANDSCAPE_PNG =
+      new String[] {
+        "http://frescolib.org/static/sample-images/animal_a.png",
+        "http://frescolib.org/static/sample-images/animal_b.png",
+        "http://frescolib.org/static/sample-images/animal_c.png",
+        "http://frescolib.org/static/sample-images/animal_e.png",
+        "http://frescolib.org/static/sample-images/animal_f.png",
+        "http://frescolib.org/static/sample-images/animal_g.png",
+      };
+
+  private static final String[] SAMPLE_URIS_PORTRAIT_PNG =
+      new String[] {
+        "http://frescolib.org/static/sample-images/animal_d.png",
+      };
+
   private static final String NON_EXISTING_URI =
       "http://frescolib.org/static/sample-images/does_not_exist.jpg";
 
@@ -179,6 +192,22 @@ public class ImageUriProvider {
 
     final String fullUri = String.format((Locale) null, baseUri, imageSize.sizeSuffix);
     return applyOverrideSettings(fullUri, urlModification);
+  }
+
+  public Uri createPngUri() {
+    return createPngUri(null, UriModification.NONE);
+  }
+
+  public Uri createPngUri(@Nullable Orientation orientation, UriModification urlModification) {
+    final String baseUri;
+    if (orientation == Orientation.PORTRAIT) {
+      baseUri = chooseRandom(SAMPLE_URIS_PORTRAIT_PNG);
+    } else if (orientation == Orientation.LANDSCAPE) {
+      baseUri = chooseRandom(SAMPLE_URIS_LANDSCAPE_PNG);
+    } else {
+      baseUri = chooseRandom(SAMPLE_URIS_LANDSCAPE_PNG, SAMPLE_URIS_PORTRAIT_PNG);
+    }
+    return applyOverrideSettings(baseUri, urlModification);
   }
 
   public Uri createWebpStaticUri() {

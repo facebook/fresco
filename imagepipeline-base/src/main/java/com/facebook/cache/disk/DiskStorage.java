@@ -9,15 +9,14 @@
 
 package com.facebook.cache.disk;
 
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.cache.common.WriterCallback;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.facebook.binaryresource.BinaryResource;
-import com.facebook.cache.common.WriterCallback;
 
 /**
  * Storage for files in the cache.

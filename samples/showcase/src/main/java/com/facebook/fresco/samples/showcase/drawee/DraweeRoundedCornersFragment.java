@@ -11,9 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.drawee;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -29,7 +26,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -40,6 +36,8 @@ import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.common.SimpleScaleTypeAdapter;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A {@link Fragment} that illustrates using rounded corners with Fresco.

@@ -9,11 +9,9 @@
 
 package com.facebook.imagepipeline.animated.base;
 
-import java.util.List;
-
 import android.graphics.Bitmap;
-
 import com.facebook.common.references.CloseableReference;
+import java.util.List;
 
 /**
  * Builder for {@link AnimatedImageResult}.

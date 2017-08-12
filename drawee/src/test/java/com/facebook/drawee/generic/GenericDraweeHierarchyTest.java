@@ -9,36 +9,30 @@
 
 package com.facebook.drawee.generic;
 
-import java.util.Arrays;
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.DrawableTestUtils;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
-import com.facebook.drawee.drawable.MatrixDrawable;
 import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-
-import org.robolectric.RobolectricTestRunner;
-
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyTest {

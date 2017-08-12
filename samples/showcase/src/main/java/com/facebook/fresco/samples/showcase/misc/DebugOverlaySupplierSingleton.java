@@ -14,7 +14,6 @@ package com.facebook.fresco.samples.showcase.misc;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
-
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 

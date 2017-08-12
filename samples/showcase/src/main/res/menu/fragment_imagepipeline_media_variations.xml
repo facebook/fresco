@@ -28,9 +28,5 @@
         android:id="@+id/media_variations_mode_listed_variants"
         android:title="@string/imagepipeline_media_variations_mode_listed_variants"
         />
-    <item
-        android:id="@+id/media_variations_mode_media_id_extractor"
-        android:title="@string/imagepipeline_media_variations_mode_media_id_extractor"
-        />
   </group>
 </menu>

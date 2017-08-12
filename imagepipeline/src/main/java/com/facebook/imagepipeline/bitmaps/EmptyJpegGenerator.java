@@ -9,12 +9,11 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import java.io.IOException;
-
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
+import java.io.IOException;
 
 /**
  * Producer that emits a dummy, fixed-size JPEG bytearray.

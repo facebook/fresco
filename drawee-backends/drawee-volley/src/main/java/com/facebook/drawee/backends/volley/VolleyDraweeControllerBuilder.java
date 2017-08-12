@@ -12,14 +12,12 @@ package com.facebook.drawee.backends.volley;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
-
 import java.util.Set;
 
 /**

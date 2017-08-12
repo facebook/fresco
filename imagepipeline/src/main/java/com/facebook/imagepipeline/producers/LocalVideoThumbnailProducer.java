@@ -9,9 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.Map;
-import java.util.concurrent.Executor;
-
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,7 +16,6 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
@@ -29,6 +25,8 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * A producer that creates video thumbnails.

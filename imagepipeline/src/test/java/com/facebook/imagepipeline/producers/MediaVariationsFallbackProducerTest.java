@@ -9,40 +9,6 @@
 
 package com.facebook.imagepipeline.producers;
 
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import android.net.Uri;
-
-import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.common.util.TriState;
-import com.facebook.imagepipeline.cache.BufferedDiskCache;
-import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.MediaIdExtractor;
-import com.facebook.imagepipeline.cache.MediaVariationsIndex;
-import com.facebook.imagepipeline.common.Priority;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer.MediaVariationsConsumer;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
-import com.facebook.imagepipeline.request.MediaVariations;
-
-import bolts.Task;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
 import static junit.framework.Assert.assertEquals;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -59,6 +25,36 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
+import android.net.Uri;
+import bolts.Task;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.common.util.TriState;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
+import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
+import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer.MediaVariationsConsumer;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
+import com.facebook.imagepipeline.request.MediaVariations;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest= Config.NONE)
@@ -100,7 +96,6 @@ public class MediaVariationsFallbackProducerTest {
   @Mock public EncodedImage mImageL;
   @Mock public EncodedImage mImageXL;
   @Mock public MediaVariationsIndex mMediaVariationsIndex;
-  @Mock public MediaIdExtractor mMediaIdExtractor;
   @Mock public EncodedImage mIntermediateEncodedImage;
   @Mock public EncodedImage mFinalEncodedImage;
   @Captor public ArgumentCaptor<Consumer<EncodedImage>> mConsumerCaptor;
@@ -123,7 +118,6 @@ public class MediaVariationsFallbackProducerTest {
         mSmallImageBufferedDiskCache,
         mCacheKeyFactory,
         mMediaVariationsIndex,
-        mMediaIdExtractor,
         mInputProducer);
 
     mProducerContext = new SettableProducerContext(
@@ -161,8 +155,6 @@ public class MediaVariationsFallbackProducerTest {
 
     whenIndexDbContainsNoMatchingVariants();
 
-    when(mMediaIdExtractor.getMediaIdFrom(any(Uri.class))).thenReturn(null);
-
     when(mDefaultBufferedDiskCache.get(any(CacheKey.class), any(AtomicBoolean.class)))
         .thenReturn(Task.<EncodedImage>forResult(null));
     when(mSmallImageBufferedDiskCache.get(any(CacheKey.class), any(AtomicBoolean.class)))
@@ -185,7 +177,7 @@ public class MediaVariationsFallbackProducerTest {
   }
 
   @Test
-  public void testStartInputProducerIfNullMediaVariationsAndNoIdExtracted() {
+  public void testStartInputProducerIfNullMediaVariations() {
     when(mImageRequest.getMediaVariations()).thenReturn(null);
 
     mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
@@ -207,11 +199,7 @@ public class MediaVariationsFallbackProducerTest {
 
     verifyInputProducerProduceResultsWithNewConsumer(true);
     verifyNoMoreInteractions(
-        mConsumer,
-        mCacheKeyFactory,
-        mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache,
-        mMediaIdExtractor);
+        mConsumer, mCacheKeyFactory, mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -227,8 +215,7 @@ public class MediaVariationsFallbackProducerTest {
         mProducerListener,
         mCacheKeyFactory,
         mDefaultBufferedDiskCache,
-        mSmallImageBufferedDiskCache,
-        mMediaIdExtractor);
+        mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -244,23 +231,6 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST_FLAG_NOT_EXPECTED,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
-  }
-
-  @Test
-  public void testStartsInputProducerIfNoCachedVariantFoundForExtractedMediaId() {
-    when(mMediaIdExtractor.getMediaIdFrom(URI_ORIGINAL)).thenReturn(MEDIA_ID);
-
-    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
-
-    verify(mMediaIdExtractor).getMediaIdFrom(URI_ORIGINAL);
-    verifyInputProducerProduceResultsWithNewConsumer(true);
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(
-        NOT_FOUND,
-        USED_AS_LAST_FLAG_NOT_EXPECTED,
-        MediaVariations.SOURCE_ID_EXTRACTOR,
-        0);
     verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache);
   }
 
@@ -280,7 +250,7 @@ public class MediaVariationsFallbackProducerTest {
         NOT_USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mSmallImageBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -296,7 +266,7 @@ public class MediaVariationsFallbackProducerTest {
     verifyInputProducerProduceResultsWithNewConsumer(false);
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     verifySuccessSentToListener(FOUND, NOT_USED_AS_LAST, MediaVariations.SOURCE_INDEX_DB, 1);
-    verifyZeroInteractions(mDefaultBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mDefaultBufferedDiskCache);
   }
 
   @Test
@@ -316,7 +286,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -336,7 +306,7 @@ public class MediaVariationsFallbackProducerTest {
         NOT_USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mSmallImageBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -355,26 +325,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
-  }
-
-  @Test
-  public void testSendsSmallestLargerFinalImageToConsumerWhenLargerVariantsFromExtractor() {
-    when(mImageRequest.getMediaVariations()).thenReturn(mMediaVariationsWithVariants);
-    whenCacheContains(mDefaultBufferedDiskCache, CACHE_KEY_S, CACHE_KEY_M, CACHE_KEY_L);
-    when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(SIZE_M - 10, SIZE_M - 10));
-
-    mMediaVariationsFallbackProducer.produceResults(mConsumer, mProducerContext);
-
-    verify(mConsumer).onNewResult(mImageM, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
-    verify(mConsumer).onProgressUpdate(1L);
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verifySuccessSentToListener(
-        FOUND,
-        USED_AS_LAST,
-        MediaVariations.SOURCE_IMAGE_REQUEST,
-        VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -415,7 +366,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_IMAGE_REQUEST,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mDefaultBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mInputProducer, mDefaultBufferedDiskCache);
   }
 
   @Test
@@ -438,7 +389,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST_FLAG_NOT_EXPECTED,
         MediaVariations.SOURCE_INDEX_DB,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mConsumer, mSmallImageBufferedDiskCache);
   }
 
   @Test
@@ -463,7 +414,7 @@ public class MediaVariationsFallbackProducerTest {
         USED_AS_LAST,
         MediaVariations.SOURCE_INDEX_DB,
         VARIANTS_COUNT);
-    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache, mMediaIdExtractor);
+    verifyZeroInteractions(mInputProducer, mSmallImageBufferedDiskCache);
   }
 
   @Test

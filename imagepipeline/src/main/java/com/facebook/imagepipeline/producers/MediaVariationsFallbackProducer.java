@@ -9,29 +9,24 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
+import bolts.Continuation;
+import bolts.Task;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.ImmutableMap;
+import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
+import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.MediaVariations;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.facebook.cache.common.CacheKey;
-import com.facebook.common.internal.ImmutableMap;
-import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.imagepipeline.cache.BufferedDiskCache;
-import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.MediaIdExtractor;
-import com.facebook.imagepipeline.cache.MediaVariationsIndex;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.MediaVariations;
-
-import bolts.Continuation;
-import bolts.Task;
 
 /**
  * Disk cache read producer.
@@ -61,7 +56,6 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
   private final BufferedDiskCache mSmallImageBufferedDiskCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final MediaVariationsIndex mMediaVariationsIndex;
-  @Nullable private MediaIdExtractor mMediaIdExtractor;
   private final Producer<EncodedImage> mInputProducer;
 
   public MediaVariationsFallbackProducer(
@@ -69,13 +63,11 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       MediaVariationsIndex mediaVariationsIndex,
-      @Nullable MediaIdExtractor mediaIdExtractor,
       Producer<EncodedImage> inputProducer) {
     mDefaultBufferedDiskCache = defaultBufferedDiskCache;
     mSmallImageBufferedDiskCache = smallImageBufferedDiskCache;
     mCacheKeyFactory = cacheKeyFactory;
     mMediaVariationsIndex = mediaVariationsIndex;
-    mMediaIdExtractor = mediaIdExtractor;
     mInputProducer = inputProducer;
   }
 
@@ -95,22 +87,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
       return;
     }
 
-    final String mediaId;
-    final @MediaVariations.Source String source;
     if (mediaVariations == null) {
-      if (mMediaIdExtractor == null) {
-        mediaId = null;
-        source = null;
-      } else {
-        mediaId = mMediaIdExtractor.getMediaIdFrom(imageRequest.getSourceUri());
-        source = MediaVariations.SOURCE_ID_EXTRACTOR;
-      }
-    } else {
-      mediaId = mediaVariations.getMediaId();
-      source = MediaVariations.SOURCE_INDEX_DB;
-    }
-
-    if (mediaVariations == null && mediaId == null) {
       startInputProducerWithExistingConsumer(consumer, producerContext);
       return;
     }
@@ -119,7 +96,7 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
 
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
 
-    if (mediaVariations != null && mediaVariations.getVariantsCount() > 0) {
+    if (mediaVariations.getVariantsCount() > 0) {
       chooseFromVariants(
           consumer,
           producerContext,
@@ -129,38 +106,40 @@ public class MediaVariationsFallbackProducer implements Producer<EncodedImage> {
           isCancelled);
     } else {
       MediaVariations.Builder mediaVariationsBuilder =
-          MediaVariations.newBuilderForMediaId(mediaId)
-              .setForceRequestForSpecifiedUri(
-                  mediaVariations != null && mediaVariations.shouldForceRequestForSpecifiedUri())
-              .setSource(source);
-      Task<MediaVariations> indexedMediaVariationsTask = mMediaVariationsIndex
-          .getCachedVariants(mediaId, mediaVariationsBuilder);
-      indexedMediaVariationsTask.continueWith(new Continuation<MediaVariations, Object>() {
+          MediaVariations.newBuilderForMediaId(mediaVariations.getMediaId())
+              .setForceRequestForSpecifiedUri(mediaVariations.shouldForceRequestForSpecifiedUri())
+              .setSource(MediaVariations.SOURCE_INDEX_DB);
+      Task<MediaVariations> indexedMediaVariationsTask =
+          mMediaVariationsIndex.getCachedVariants(
+              mediaVariations.getMediaId(), mediaVariationsBuilder);
+      indexedMediaVariationsTask.continueWith(
+          new Continuation<MediaVariations, Object>() {
 
-        @Override
-        public Object then(Task<MediaVariations> task) throws Exception {
-          if (task.isCancelled() || task.isFaulted()) {
-            return task;
-          } else {
-            try {
-              if (task.getResult() == null) {
-                startInputProducerWithWrappedConsumer(consumer, producerContext, mediaId);
-                return null;
+            @Override
+            public Object then(Task<MediaVariations> task) throws Exception {
+              if (task.isCancelled() || task.isFaulted()) {
+                return task;
               } else {
-                return chooseFromVariants(
-                    consumer,
-                    producerContext,
-                    imageRequest,
-                    task.getResult(),
-                    resizeOptions,
-                    isCancelled);
+                try {
+                  if (task.getResult() == null) {
+                    startInputProducerWithWrappedConsumer(
+                        consumer, producerContext, mediaVariations.getMediaId());
+                    return null;
+                  } else {
+                    return chooseFromVariants(
+                        consumer,
+                        producerContext,
+                        imageRequest,
+                        task.getResult(),
+                        resizeOptions,
+                        isCancelled);
+                  }
+                } catch (Exception e) {
+                  return null;
+                }
               }
-            } catch (Exception e) {
-              return null;
             }
-          }
-        }
-      });
+          });
     }
 
     subscribeTaskForRequestCancellation(isCancelled, producerContext);

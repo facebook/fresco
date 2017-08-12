@@ -9,17 +9,9 @@
 
 package com.facebook.imagepipeline.core;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.util.Set;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.atomic.AtomicLong;
-
 import android.net.Uri;
-
 import bolts.Continuation;
 import bolts.Task;
-
 import com.android.internal.util.Predicate;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
@@ -45,6 +37,10 @@ import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * The entry point for the image pipeline.

@@ -11,13 +11,11 @@
  */
 package com.facebook.fresco.samples.showcase.postprocessor;
 
-import java.util.Random;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-
 import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
+import java.util.Random;
 
 /**
  * Adds a watermark at random positions to the bitmap using {@link Canvas}.

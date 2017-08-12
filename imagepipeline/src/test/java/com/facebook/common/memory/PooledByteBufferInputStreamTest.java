@@ -9,14 +9,13 @@
 
 package com.facebook.common.memory;
 
-import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
+import static junit.framework.Assert.*;
 
+import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import static junit.framework.Assert.*;
 
 /**
  * Tests for {@link PooledByteBufferInputStream}

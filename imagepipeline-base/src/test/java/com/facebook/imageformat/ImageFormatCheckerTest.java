@@ -9,19 +9,18 @@
 
 package com.facebook.imageformat;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
+import com.facebook.common.soloader.SoLoaderShim;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import com.facebook.common.soloader.SoLoaderShim;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 
 /**
  * Tests {@link ImageFormatChecker}

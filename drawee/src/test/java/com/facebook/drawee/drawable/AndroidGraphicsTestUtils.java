@@ -11,7 +11,6 @@ package com.facebook.drawee.drawable;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
-
 import org.junit.Assert;
 
 /**

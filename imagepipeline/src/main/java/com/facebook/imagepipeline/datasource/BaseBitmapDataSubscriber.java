@@ -9,16 +9,14 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
-
+import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.common.references.CloseableReference;
+import javax.annotation.Nullable;
 
 /**
  * Implementation of {@link DataSubscriber} for cases where the client wants access to a bitmap.

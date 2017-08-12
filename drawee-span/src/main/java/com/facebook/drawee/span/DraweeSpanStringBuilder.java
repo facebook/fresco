@@ -15,11 +15,9 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.lifecycle.AttachDetachListener;
-
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -27,7 +25,6 @@ import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.widget.text.span.BetterImageSpan;
-
 import java.util.HashSet;
 import java.util.Set;
 

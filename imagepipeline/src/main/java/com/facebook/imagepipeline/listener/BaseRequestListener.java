@@ -8,11 +8,9 @@
  */
 package com.facebook.imagepipeline.listener;
 
-import javax.annotation.Nullable;
-
-import java.util.Map;
-
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 public class BaseRequestListener implements RequestListener {
 

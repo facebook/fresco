@@ -14,7 +14,6 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.samples.comparison.R;
 import com.facebook.samples.comparison.configs.volley.SampleVolleyFactory;

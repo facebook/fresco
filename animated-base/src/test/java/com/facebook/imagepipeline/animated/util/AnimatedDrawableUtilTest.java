@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.animated.util;
 
-import org.robolectric.RobolectricTestRunner;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for {@link AnimatedDrawableUtil}.

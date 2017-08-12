@@ -8,7 +8,7 @@
  */
 package com.facebook.drawee.generic;
 
-import javax.annotation.Nullable;
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -18,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.ForwardingDrawable;
@@ -28,8 +27,7 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import javax.annotation.Nullable;
 
 /**
  * A class that contains helper methods for wrapping and rounding.

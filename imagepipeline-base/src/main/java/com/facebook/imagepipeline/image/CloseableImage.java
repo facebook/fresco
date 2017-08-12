@@ -9,9 +9,8 @@
 
 package com.facebook.imagepipeline.image;
 
-import java.io.Closeable;
-
 import com.facebook.common.logging.FLog;
+import java.io.Closeable;
 
 /**
  * A simple wrapper around an image that implements {@link Closeable}

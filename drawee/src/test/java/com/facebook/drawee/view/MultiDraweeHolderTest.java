@@ -9,18 +9,16 @@
 
 package com.facebook.drawee.view;
 
+import static junit.framework.Assert.*;
+import static org.mockito.Mockito.*;
+
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
-
-import org.robolectric.RobolectricTestRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static junit.framework.Assert.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for {@link MultiDraweeHolder}

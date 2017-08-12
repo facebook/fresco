@@ -8,11 +8,9 @@
  */
 package com.facebook.imagepipeline.drawable;
 
-import javax.annotation.Nullable;
-
 import android.graphics.drawable.Drawable;
-
 import com.facebook.imagepipeline.image.CloseableImage;
+import javax.annotation.Nullable;
 
 /**
  * Drawable factory to create Drawables for given images.

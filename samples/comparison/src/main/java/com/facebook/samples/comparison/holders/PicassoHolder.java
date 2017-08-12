@@ -14,11 +14,9 @@ package com.facebook.samples.comparison.holders;
 
 import android.content.Context;
 import android.view.View;
-
 import com.facebook.samples.comparison.Drawables;
 import com.facebook.samples.comparison.instrumentation.InstrumentedImageView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
-
 import com.squareup.picasso.Picasso;
 
 /**

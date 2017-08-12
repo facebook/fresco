@@ -9,15 +9,13 @@
 
 package com.facebook.imagepipeline.request;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
+import javax.annotation.Nullable;
 
 /**
  * Base implementation of {@link Postprocessor} interface.

@@ -9,10 +9,10 @@
 
 package com.facebook.imagepipeline.request;
 
-import javax.annotation.Nullable;
+import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
+import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
 
 import android.net.Uri;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.common.BytesRange;
@@ -23,9 +23,7 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.listener.RequestListener;
-
-import static com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
-import static com.facebook.imagepipeline.request.ImageRequest.RequestLevel;
+import javax.annotation.Nullable;
 
 /**
  * Builder class for {@link ImageRequest}s.

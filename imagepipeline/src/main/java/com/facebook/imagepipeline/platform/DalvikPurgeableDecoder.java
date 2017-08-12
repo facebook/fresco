@@ -12,7 +12,6 @@ package com.facebook.imagepipeline.platform;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -22,7 +21,9 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import java.util.Locale;
 
 /**
  * Base class for bitmap decodes for Dalvik VM (Gingerbread to KitKat).
@@ -158,8 +159,19 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
       throw Throwables.propagate(e);
     }
     if (!mUnpooledBitmapsCounter.increase(bitmap)) {
+      int bitmapSize = BitmapUtil.getSizeInBytes(bitmap);
       bitmap.recycle();
-      throw new TooManyBitmapsException();
+      String detailMessage = String.format(
+          Locale.US,
+          "Attempted to pin a bitmap of size %d bytes."
+              + " The current pool count is %d, the current pool size is %d bytes."
+              + " The current pool max count is %d, the current pool max size is %d bytes.",
+          bitmapSize,
+          mUnpooledBitmapsCounter.getCount(),
+          mUnpooledBitmapsCounter.getSize(),
+          mUnpooledBitmapsCounter.getMaxCount(),
+          mUnpooledBitmapsCounter.getMaxSize());
+      throw new TooManyBitmapsException(detailMessage);
     }
     return CloseableReference.of(bitmap, mUnpooledBitmapsCounter.getReleaser());
   }

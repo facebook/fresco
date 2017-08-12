@@ -9,17 +9,15 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import android.os.Build;
+import com.facebook.common.internal.DoNotStrip;
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.webp.WebpSupportStatus;
+import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imageformat.ImageFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import android.os.Build;
-
-import com.facebook.common.internal.DoNotStrip;
-import com.facebook.common.internal.Preconditions;
-import com.facebook.imageformat.DefaultImageFormats;
-import com.facebook.imageformat.ImageFormat;
-import com.facebook.common.webp.WebpSupportStatus;
 
 /**
  * Helper methods for modifying webp static images.

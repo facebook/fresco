@@ -9,11 +9,10 @@
 
 package com.facebook.cache.common;
 
+import com.facebook.common.internal.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.facebook.common.internal.ByteStreams;
 
 /**
  * Utility class to create typical {@link WriterCallback}s.

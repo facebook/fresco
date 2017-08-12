@@ -8,11 +8,9 @@
  */
 package com.facebook.imagepipeline.core;
 
-import javax.annotation.Nullable;
-
+import android.graphics.Bitmap;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.webp.WebpBitmapFactory;
-import com.facebook.imagepipeline.cache.MediaIdExtractor;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
@@ -26,16 +24,17 @@ public class ImagePipelineExperiments {
   private final boolean mWebpSupportEnabled;
   private final boolean mExternalCreatedBitmapLogEnabled;
   private final Supplier<Boolean> mMediaVariationsIndexEnabled;
-  private final MediaIdExtractor mMediaIdExtractor;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
   private final boolean mSuppressBitmapPrefetching;
   private final boolean mUseDownsamplingRatioForResizing;
   private final boolean mUseBitmapPrepareToDraw;
+  private final int mBitmapPrepareToDrawMinSizeBytes;
+  private final int mBitmapPrepareToDrawMaxSizeBytes;
   private final boolean mPartialImageCachingEnabled;
 
-  private ImagePipelineExperiments(Builder builder, ImagePipelineConfig.Builder configBuilder) {
+  private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
     mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     if (builder.mMediaVariationsIndexEnabled != null) {
@@ -48,13 +47,14 @@ public class ImagePipelineExperiments {
         }
       };
     }
-    mMediaIdExtractor = builder.mMediaIdExtractor;
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
     mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
     mUseDownsamplingRatioForResizing = builder.mUseDownsamplingRatioForResizing;
     mUseBitmapPrepareToDraw = builder.mUseBitmapPrepareToDraw;
+    mBitmapPrepareToDrawMinSizeBytes = builder.mBitmapPrepareToDrawMinSizeBytes;
+    mBitmapPrepareToDrawMaxSizeBytes = builder.mBitmapPrepareToDrawMaxSizeBytes;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
   }
 
@@ -64,10 +64,6 @@ public class ImagePipelineExperiments {
 
   public boolean getMediaVariationsIndexEnabled() {
     return mMediaVariationsIndexEnabled.get().booleanValue();
-  }
-
-  public @Nullable MediaIdExtractor getMediaIdExtractor() {
-    return mMediaIdExtractor;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -94,6 +90,14 @@ public class ImagePipelineExperiments {
     return mUseBitmapPrepareToDraw;
   }
 
+  public int getBitmapPrepareToDrawMinSizeBytes() {
+    return mBitmapPrepareToDrawMinSizeBytes;
+  }
+
+  public int getBitmapPrepareToDrawMaxSizeBytes() {
+    return mBitmapPrepareToDrawMaxSizeBytes;
+  }
+
   public boolean isPartialImageCachingEnabled() {
     return mPartialImageCachingEnabled;
   }
@@ -109,13 +113,14 @@ public class ImagePipelineExperiments {
     private boolean mWebpSupportEnabled = false;
     private boolean mExternalCreatedBitmapLogEnabled = false;
     private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
-    private MediaIdExtractor mMediaIdExtractor;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
     private boolean mSuppressBitmapPrefetching = false;
     private boolean mUseDownsamplingRatioForResizing = false;
     private boolean mUseBitmapPrepareToDraw = false;
+    private int mBitmapPrepareToDrawMinSizeBytes = 0;
+    private int mBitmapPrepareToDrawMaxSizeBytes = 0;
     private boolean mPartialImageCachingEnabled = false;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
@@ -137,16 +142,6 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setMediaVariationsIndexEnabled(
         Supplier<Boolean> mediaVariationsIndexEnabled) {
       mMediaVariationsIndexEnabled = mediaVariationsIndexEnabled;
-      return mConfigBuilder;
-    }
-
-    /**
-     * Sets experimental media ID extractor to pull IDs from URIs. This isn't currently recommended
-     * as a long-term collaborator but can be useful for identifying where media IDs would be most
-     * effective.
-     */
-    public ImagePipelineConfig.Builder setMediaIdExtractor(MediaIdExtractor mediaIdExtractor) {
-      mMediaIdExtractor = mediaIdExtractor;
       return mConfigBuilder;
     }
 
@@ -209,16 +204,23 @@ public class ImagePipelineExperiments {
      * decoding for non-prefetched images. This potentially reduces lag on Android N+ as this step
      * now happens async when the RendererThread is idle.
      *
-     * @param useBitmapPrepareToDraw
+     * @param useBitmapPrepareToDraw set true for enabling prepareToDraw
+     * @param minBitmapSizeBytes Bitmaps with a {@link Bitmap#getByteCount()} smaller than this
+     *     value are not uploaded
+     * @param maxBitmapSizeBytes Bitmaps with a {@link Bitmap#getByteCount()} larger than this value
+     *     are not uploaded
      * @return The Builder itself for chaining
      */
-    public ImagePipelineConfig.Builder setBitmapPrepareToDraw(boolean useBitmapPrepareToDraw) {
+    public ImagePipelineConfig.Builder setBitmapPrepareToDraw(
+        boolean useBitmapPrepareToDraw, int minBitmapSizeBytes, int maxBitmapSizeBytes) {
       mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
+      mBitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes;
+      mBitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes;
       return mConfigBuilder;
     }
 
     public ImagePipelineExperiments build() {
-      return new ImagePipelineExperiments(this, mConfigBuilder);
+      return new ImagePipelineExperiments(this);
     }
   }
 }

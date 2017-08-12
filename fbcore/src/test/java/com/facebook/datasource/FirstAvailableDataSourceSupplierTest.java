@@ -9,14 +9,13 @@
 
 package com.facebook.datasource;
 
-import org.robolectric.RobolectricTestRunner;
+import static com.facebook.datasource.DataSourceTestUtils.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static com.facebook.datasource.DataSourceTestUtils.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Tests for FirstAvailableDataSourceSupplier

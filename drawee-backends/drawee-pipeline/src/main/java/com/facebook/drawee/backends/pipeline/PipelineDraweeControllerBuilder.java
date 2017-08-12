@@ -9,13 +9,8 @@
 
 package com.facebook.drawee.backends.pipeline;
 
-import javax.annotation.Nullable;
-
-import java.util.Set;
-
 import android.content.Context;
 import android.net.Uri;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
@@ -32,6 +27,8 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Concrete implementation of ImagePipeline Drawee controller builder.

@@ -9,12 +9,10 @@
 
 package com.facebook.imagepipeline.memory;
 
-import java.util.Arrays;
-
+import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.testing.FakeNativeMemoryChunkPool;
-
-import com.facebook.common.internal.ImmutableMap;
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

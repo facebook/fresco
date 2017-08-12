@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.producers;
 
 import android.util.Pair;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;

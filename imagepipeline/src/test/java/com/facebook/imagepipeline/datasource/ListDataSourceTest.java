@@ -9,21 +9,19 @@
 
 package com.facebook.imagepipeline.datasource;
 
-import java.util.List;
-import java.util.concurrent.CancellationException;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.datasource.DataSubscriber;
-
-import com.facebook.common.executors.CallerThreadExecutor;
+import java.util.List;
+import java.util.concurrent.CancellationException;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class ListDataSourceTest {

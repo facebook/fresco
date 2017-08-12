@@ -9,14 +9,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
 import android.os.SystemClock;
-
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -25,6 +18,10 @@ import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * A producer to actually fetch images from the network.

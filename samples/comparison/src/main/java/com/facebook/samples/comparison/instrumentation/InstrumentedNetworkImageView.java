@@ -15,9 +15,7 @@ package com.facebook.samples.comparison.instrumentation;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-
 import com.android.volley.toolbox.NetworkImageView;
-
 import com.facebook.samples.comparison.R;
 
 /**

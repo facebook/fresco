@@ -9,18 +9,15 @@
 
 package com.facebook.drawee.view;
 
-import com.facebook.drawee.view.AspectRatioMeasure;
-import org.robolectric.RobolectricTestRunner;
+import static android.view.View.MeasureSpec.*;
+import static android.view.ViewGroup.LayoutParams;
+import static android.view.ViewGroup.LayoutParams.*;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-
-import static android.view.View.MeasureSpec.*;
-import static android.view.ViewGroup.LayoutParams;
-import static android.view.ViewGroup.LayoutParams.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class AspectRatioMeasureTest {

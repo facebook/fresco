@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.view;
 
-import javax.annotation.Nullable;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -22,10 +20,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.facebook.common.internal.Objects;
-import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.interfaces.DraweeHierarchy;
+import javax.annotation.Nullable;
 
 /**
  * View that displays a {@link DraweeHierarchy}.

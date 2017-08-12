@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
-
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.samples.animation2.utils.AnimationControlsManager;

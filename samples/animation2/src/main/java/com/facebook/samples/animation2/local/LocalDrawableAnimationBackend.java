@@ -12,9 +12,6 @@
 
 package com.facebook.samples.animation2.local;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -22,8 +19,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
-
 import com.facebook.fresco.animation.backend.AnimationBackend;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Local drawable animation backend that chains local drawables together.

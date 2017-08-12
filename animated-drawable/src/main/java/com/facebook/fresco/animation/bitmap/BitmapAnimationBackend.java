@@ -8,9 +8,7 @@
  */
 package com.facebook.fresco.animation.bitmap;
 
-import javax.annotation.Nullable;
-
-import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -20,7 +18,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
-
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
@@ -28,8 +25,8 @@ import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import java.lang.annotation.Retention;
+import javax.annotation.Nullable;
 
 /**
  * Bitmap animation backend that renders bitmap frames.

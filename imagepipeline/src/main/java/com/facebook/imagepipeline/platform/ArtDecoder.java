@@ -9,17 +9,11 @@
 
 package com.facebook.imagepipeline.platform;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.util.Pools.SynchronizedPool;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.references.CloseableReference;
@@ -29,6 +23,9 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Bitmap decoder for ART VM (Lollipop and up).

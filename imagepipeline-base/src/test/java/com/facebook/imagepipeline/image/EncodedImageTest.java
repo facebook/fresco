@@ -9,8 +9,11 @@
 
 package com.facebook.imagepipeline.image;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Supplier;
@@ -21,17 +24,12 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.imageutils.JfifUtil;
-
+import java.io.FileInputStream;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link EncodedImage}

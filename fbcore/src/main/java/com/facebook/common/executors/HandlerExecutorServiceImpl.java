@@ -9,15 +9,13 @@
 
 package com.facebook.common.executors;
 
-import javax.annotation.Nullable;
-
+import android.os.Handler;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import android.os.Handler;
+import javax.annotation.Nullable;
 
 /**
  * A {@link HandlerExecutorService} implementation.

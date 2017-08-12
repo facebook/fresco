@@ -580,7 +580,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setBitmapPrepareToDraw(boolean)">setBitmapPrepareToDraw</a></span>(boolean useBitmapPrepareToDraw)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setBitmapPrepareToDraw(boolean, int, int)">setBitmapPrepareToDraw</a></span>(boolean useBitmapPrepareToDraw, int minBitmapSizeBytes, int maxBitmapSizeBytes)
         
         <div class="jd-descrdiv">If enabled, the pipeline will call <code><a href="null#prepareToDraw()">prepareToDraw()</a></code> after
  decoding for non-prefetched images.</div>
@@ -633,24 +633,6 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)">setMediaIdExtractor</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor)
-        
-        <div class="jd-descrdiv">Sets experimental media ID extractor to pull IDs from URIs.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setMediaVariationsIndexEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)
         
         <div class="jd-descrdiv">If true, this will allow the image pipeline to keep an index of the ID in each request's
@@ -662,7 +644,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -681,7 +663,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -697,7 +679,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -713,7 +695,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -729,7 +711,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -745,7 +727,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1118,7 +1100,7 @@ From class
 </div>
 
 
-<a id="setBitmapPrepareToDraw(boolean)"></a>
+<a id="setBitmapPrepareToDraw(boolean, int, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1131,7 +1113,7 @@ From class
         <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
       </span>
       <span class="sympad">setBitmapPrepareToDraw</span>
-      <span class="normal">(boolean useBitmapPrepareToDraw)</span>
+      <span class="normal">(boolean useBitmapPrepareToDraw, int minBitmapSizeBytes, int maxBitmapSizeBytes)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1146,6 +1128,25 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>If enabled, the pipeline will call <code><a href="null#prepareToDraw()">prepareToDraw()</a></code> after
  decoding for non-prefetched images. This potentially reduces lag on Android N+ as this step
  now happens async when the RendererThread is idle.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>useBitmapPrepareToDraw</th>
+          <td>set true for enabling prepareToDraw</td>
+        </tr>
+        <tr>
+          <th>minBitmapSizeBytes</th>
+          <td>Bitmaps with a <code><a href="null#getByteCount()">getByteCount()</a></code> smaller than this
+     value are not uploaded</td>
+        </tr>
+        <tr>
+          <th>maxBitmapSizeBytes</th>
+          <td>Bitmaps with a <code><a href="null#getByteCount()">getByteCount()</a></code> larger than this value
+     are not uploaded</td>
+        </tr>
+      </table>
+  </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
       <ul class="nolist"><li>The Builder itself for chaining
@@ -1227,40 +1228,6 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setMediaIdExtractor(com.facebook.imagepipeline.cache.MediaIdExtractor)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setMediaIdExtractor</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/MediaIdExtractor.html">MediaIdExtractor</a> mediaIdExtractor)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets experimental media ID extractor to pull IDs from URIs. This isn't currently recommended
- as a long-term collaborator but can be useful for identifying where media IDs would be most
- effective.
-</p></div>
 
     </div>
 </div>

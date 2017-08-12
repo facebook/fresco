@@ -9,9 +9,8 @@
 
 package com.facebook.cache.common;
 
-import javax.annotation.Nullable;
-
 import java.io.IOException;
+import javax.annotation.Nullable;
 
 /**
  * Interface to provide details of an individual cache event.

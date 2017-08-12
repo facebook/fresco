@@ -9,16 +9,13 @@
 
 package com.facebook.common.memory;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
-import java.io.InputStream;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
-import com.facebook.common.memory.PooledByteBuffer;
+import java.io.InputStream;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * An InputStream implementation over a {@link PooledByteBuffer} instance
+ * An InputStream implementation over a {@link com.facebook.common.memory.PooledByteBuffer} instance
  */
 @NotThreadSafe
 public class PooledByteBufferInputStream extends InputStream {

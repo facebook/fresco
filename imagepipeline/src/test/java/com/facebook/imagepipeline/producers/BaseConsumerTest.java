@@ -9,13 +9,13 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class BaseConsumerTest {

@@ -9,11 +9,10 @@
 
 package com.facebook.common.webp;
 
-import java.io.UnsupportedEncodingException;
-
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Base64;
+import java.io.UnsupportedEncodingException;
 
 public class WebpSupportStatus {
   public static final boolean sIsWebpSupportRequired =

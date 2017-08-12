@@ -9,20 +9,17 @@
 
 package com.facebook.datasource;
 
-import javax.annotation.Nullable;
+import static com.facebook.datasource.DataSourceTestUtils.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.concurrent.Executor;
-
-import org.robolectric.RobolectricTestRunner;
-
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-
-import static com.facebook.datasource.DataSourceTestUtils.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class AbstractDataSourceTest {

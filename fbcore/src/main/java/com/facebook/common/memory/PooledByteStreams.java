@@ -9,12 +9,11 @@
 
 package com.facebook.common.memory;
 
+import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.VisibleForTesting;
 
 /**
  * Helper class for interacting with java streams, similar to guava's ByteSteams.

@@ -9,12 +9,11 @@
 
 package com.facebook.common.webp;
 
-import java.io.FileDescriptor;
-import java.io.InputStream;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import java.io.FileDescriptor;
+import java.io.InputStream;
 
 /**
  * Interface for a bitmap factory that can decode WebP images even on versions of Android that

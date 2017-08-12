@@ -9,20 +9,12 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.concurrent.Executor;
-
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.util.UriUtil;
@@ -30,6 +22,11 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.JfifUtil;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * Represents a local content Uri fetch producer.

@@ -9,13 +9,12 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.common.executors.SerialExecutorService;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
-
-import com.facebook.common.executors.SerialExecutorService;
 
 /**
  * Implementation of {@link java.util.concurrent.ExecutorService} for unit tests.

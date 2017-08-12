@@ -9,13 +9,10 @@
 
 package com.facebook.imagepipeline.core;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pools;
-
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.FileCache;
@@ -51,6 +48,7 @@ import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * Factory class for the image pipeline.
@@ -348,9 +346,10 @@ public class ImagePipelineFactory {
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               getMediaVariationsIndex(),
-              mConfig.getExperiments().getMediaIdExtractor(),
               mConfig.getCacheKeyFactory(),
-              getPlatformBitmapFactory());
+              getPlatformBitmapFactory(),
+              mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
+              mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes());
     }
     return mProducerFactory;
   }

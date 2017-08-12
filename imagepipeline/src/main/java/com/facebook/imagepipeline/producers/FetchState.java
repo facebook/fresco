@@ -9,12 +9,10 @@
 
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-
 import android.net.Uri;
-
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
+import javax.annotation.Nullable;
 
 /**
  * Used by {@link NetworkFetcher} to encapsulate the state of one network fetch.

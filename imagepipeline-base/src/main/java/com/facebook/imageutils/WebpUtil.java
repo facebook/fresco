@@ -8,12 +8,10 @@
  */
 package com.facebook.imageutils;
 
-import javax.annotation.Nullable;
-
+import android.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
-
-import android.util.Pair;
+import javax.annotation.Nullable;
 
 /**
  * This class contains utility method in order to manage the WebP format metadata

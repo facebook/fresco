@@ -9,20 +9,16 @@
 
 package com.facebook.imagepipeline.image;
 
-import android.graphics.Bitmap;
+import static org.fest.assertions.api.Assertions.assertThat;
 
+import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class CloseableStaticBitmapTest {

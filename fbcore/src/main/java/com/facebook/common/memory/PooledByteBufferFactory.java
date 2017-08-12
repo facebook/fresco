@@ -12,7 +12,6 @@ package com.facebook.common.memory;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.facebook.common.memory.PooledByteBuffer;
 
 /**
  * A factory to create instances of PooledByteBuffer and PooledByteBufferOutputStream

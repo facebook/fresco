@@ -9,20 +9,18 @@
 
 package com.facebook.common.streams;
 
+import static org.junit.Assert.*;
+
+import com.facebook.common.internal.ByteStreams;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
-
-import org.robolectric.RobolectricTestRunner;
-
-import com.facebook.common.internal.ByteStreams;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
+import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class TailAppendingInputStreamTest {

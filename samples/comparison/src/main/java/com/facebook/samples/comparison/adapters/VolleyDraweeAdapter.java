@@ -14,7 +14,6 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
 import com.facebook.drawee.backends.volley.VolleyDraweeControllerBuilderSupplier;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;

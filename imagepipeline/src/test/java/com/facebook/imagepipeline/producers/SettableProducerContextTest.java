@@ -9,17 +9,16 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
-
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Checks basic properties of NullProducer, that is that it always returns null.

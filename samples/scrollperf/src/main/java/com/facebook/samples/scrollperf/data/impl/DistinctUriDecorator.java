@@ -12,7 +12,6 @@
 package com.facebook.samples.scrollperf.data.impl;
 
 import android.net.Uri;
-
 import com.facebook.samples.scrollperf.data.Decorator;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 

@@ -9,18 +9,9 @@
 
 package com.facebook.imagepipeline.cache;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.TimeUnit;
-
 import android.graphics.Bitmap;
 import android.os.SystemClock;
-
+import com.android.internal.util.Predicate;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
@@ -29,8 +20,13 @@ import com.facebook.common.memory.MemoryTrimmable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-
-import com.android.internal.util.Predicate;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Layer of memory cache stack responsible for managing eviction of the the cached items.

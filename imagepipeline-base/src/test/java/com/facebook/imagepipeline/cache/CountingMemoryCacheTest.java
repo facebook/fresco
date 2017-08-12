@@ -9,31 +9,6 @@
 
 package com.facebook.imagepipeline.cache;
 
-import android.graphics.Bitmap;
-import android.os.SystemClock;
-
-import com.facebook.common.internal.Supplier;
-import com.facebook.common.memory.MemoryTrimType;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.common.references.ResourceReleaser;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
-
-import com.android.internal.util.Predicate;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -52,6 +27,29 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import android.graphics.Bitmap;
+import android.os.SystemClock;
+import com.android.internal.util.Predicate;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.memory.MemoryTrimType;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.common.references.ResourceReleaser;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @PrepareForTest({SystemClock.class})

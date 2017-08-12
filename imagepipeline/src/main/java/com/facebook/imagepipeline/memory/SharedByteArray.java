@@ -9,10 +9,6 @@
 
 package com.facebook.imagepipeline.memory;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-import java.util.concurrent.Semaphore;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.internal.VisibleForTesting;
@@ -22,6 +18,8 @@ import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.OOMSoftReference;
 import com.facebook.common.references.ResourceReleaser;
+import java.util.concurrent.Semaphore;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Maintains a shareable reference to a byte array.

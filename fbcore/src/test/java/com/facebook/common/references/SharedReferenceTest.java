@@ -9,17 +9,14 @@
 
 package com.facebook.common.references;
 
+import com.facebook.common.internal.Closeables;
 import java.io.Closeable;
 import java.io.IOException;
-
-import com.facebook.common.internal.Closeables;
-import org.robolectric.RobolectricTestRunner;
-
 import junit.framework.Assert;
-import org.robolectric.RobolectricTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.robolectric.RobolectricTestRunner;
 
 /**
  * Basic tests for shared references

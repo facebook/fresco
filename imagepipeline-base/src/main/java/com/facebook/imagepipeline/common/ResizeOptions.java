@@ -9,13 +9,11 @@
 
 package com.facebook.imagepipeline.common;
 
-import javax.annotation.Nullable;
-
-import java.util.Locale;
-
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.util.HashCodeUtil;
 import com.facebook.imageutils.BitmapUtil;
+import java.util.Locale;
+import javax.annotation.Nullable;
 
 /**
  * Options for resizing.

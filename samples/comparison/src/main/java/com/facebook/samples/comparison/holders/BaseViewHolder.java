@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-
 import com.facebook.samples.comparison.MainActivity;
 import com.facebook.samples.comparison.instrumentation.Instrumented;
 import com.facebook.samples.comparison.instrumentation.PerfListener;

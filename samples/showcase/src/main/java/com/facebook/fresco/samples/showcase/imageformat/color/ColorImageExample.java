@@ -11,24 +11,21 @@
  */
 package com.facebook.fresco.samples.showcase.imageformat.color;
 
-import javax.annotation.Nullable;
-
-import java.io.IOException;
-
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.v4.graphics.ColorUtils;
-
 import com.facebook.common.internal.ByteStreams;
-import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.QualityInfo;
+import java.io.IOException;
+import javax.annotation.Nullable;
 
 /**
  * Example for a simple decoder that can decode color images that have the following format:

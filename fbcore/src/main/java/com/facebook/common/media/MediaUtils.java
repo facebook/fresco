@@ -9,14 +9,11 @@
 
 package com.facebook.common.media;
 
-import javax.annotation.Nullable;
-
+import android.webkit.MimeTypeMap;
+import com.facebook.common.internal.ImmutableMap;
 import java.util.Locale;
 import java.util.Map;
-
-import android.webkit.MimeTypeMap;
-
-import com.facebook.common.internal.ImmutableMap;
+import javax.annotation.Nullable;
 
 /**
  * Utility class.

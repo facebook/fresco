@@ -14,9 +14,7 @@ import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-
 import java.util.Map;
-
 import javax.annotation.concurrent.ThreadSafe;
 
 /**

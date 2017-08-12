@@ -17527,6 +17527,17 @@
  visibility="public"
 >
 </field>
+<field name="FIT_BOTTOM_START"
+ type="com.facebook.drawee.drawable.ScalingUtils.ScaleType"
+ transient="false"
+ volatile="false"
+ value="null"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
 <field name="FIT_CENTER"
  type="com.facebook.drawee.drawable.ScalingUtils.ScaleType"
  transient="false"
@@ -24405,6 +24416,25 @@
 <parameter name="value" type="java.lang.String">
 </parameter>
 </method>
+<method name="indexOfPattern"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="byteArray" type="byte[]">
+</parameter>
+<parameter name="byteArrayLen" type="int">
+</parameter>
+<parameter name="pattern" type="byte[]">
+</parameter>
+<parameter name="patternLen" type="int">
+</parameter>
+</method>
 <method name="startsWithPattern"
  return="boolean"
  abstract="false"
@@ -28863,27 +28893,6 @@
 </parameter>
 </method>
 </class>
-<interface name="MediaIdExtractor"
- abstract="true"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="getMediaIdFrom"
- return="java.lang.String"
- abstract="true"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="uri" type="android.net.Uri">
-</parameter>
-</method>
-</interface>
 <interface name="MediaVariationsIndex"
  abstract="true"
  static="false"
@@ -30491,6 +30500,16 @@
  visibility="public"
 >
 </constructor>
+<constructor name="TooManyBitmapsException"
+ type="com.facebook.imagepipeline.common.TooManyBitmapsException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="detailMessage" type="java.lang.String">
+</parameter>
+</constructor>
 </class>
 </package>
 <package name="com.facebook.imagepipeline.core"
@@ -31827,8 +31846,19 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<method name="getMediaIdExtractor"
- return="com.facebook.imagepipeline.cache.MediaIdExtractor"
+<method name="getBitmapPrepareToDrawMaxSizeBytes"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getBitmapPrepareToDrawMinSizeBytes"
+ return="int"
  abstract="false"
  native="false"
  synchronized="false"
@@ -32003,6 +32033,10 @@
 >
 <parameter name="useBitmapPrepareToDraw" type="boolean">
 </parameter>
+<parameter name="minBitmapSizeBytes" type="int">
+</parameter>
+<parameter name="maxBitmapSizeBytes" type="int">
+</parameter>
 </method>
 <method name="setDecodeCancellationEnabled"
  return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
@@ -32028,19 +32062,6 @@
  visibility="public"
 >
 <parameter name="externalCreatedBitmapLogEnabled" type="boolean">
-</parameter>
-</method>
-<method name="setMediaIdExtractor"
- return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
- abstract="false"
- native="false"
- synchronized="false"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
 </parameter>
 </method>
 <method name="setMediaVariationsIndexEnabled"
@@ -32441,11 +32462,13 @@
 </parameter>
 <parameter name="mediaVariationsIndex" type="com.facebook.imagepipeline.cache.MediaVariationsIndex">
 </parameter>
-<parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
-</parameter>
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
 <parameter name="platformBitmapFactory" type="com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory">
+</parameter>
+<parameter name="bitmapPrepareToDrawMinSizeBytes" type="int">
+</parameter>
+<parameter name="bitmapPrepareToDrawMaxSizeBytes" type="int">
 </parameter>
 </constructor>
 <method name="newAddImageTransformMetaDataProducer"
@@ -32868,6 +32891,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<parameter name="contentResolver" type="android.content.ContentResolver">
+</parameter>
 <parameter name="producerFactory" type="com.facebook.imagepipeline.core.ProducerFactory">
 </parameter>
 <parameter name="networkFetcher" type="com.facebook.imagepipeline.producers.NetworkFetcher">
@@ -35729,6 +35754,28 @@
  visibility="public"
 >
 </method>
+<method name="getMaxCount"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getMaxSize"
+ return="int"
+ abstract="false"
+ native="false"
+ synchronized="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="getReleaser"
  return="com.facebook.common.references.ResourceReleaser&lt;android.graphics.Bitmap&gt;"
  abstract="false"
@@ -38061,7 +38108,7 @@
 </parameter>
 <parameter name="maxNumThreads" type="int">
 </parameter>
-<parameter name="decodeBuffers" type="android.support.v4.util.Pools.SynchronizedPool">
+<parameter name="decodeBuffers" type="SynchronizedPool">
 </parameter>
 </constructor>
 <method name="decodeFromEncodedImage"
@@ -39151,6 +39198,10 @@
  visibility="public"
 >
 <parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.common.references.CloseableReference&lt;com.facebook.imagepipeline.image.CloseableImage&gt;&gt;">
+</parameter>
+<parameter name="minBitmapSizeBytes" type="int">
+</parameter>
+<parameter name="maxBitmapSizeBytes" type="int">
 </parameter>
 </constructor>
 <method name="produceResults"
@@ -40647,6 +40698,8 @@
 >
 <parameter name="executor" type="java.util.concurrent.Executor">
 </parameter>
+<parameter name="contentResolver" type="android.content.ContentResolver">
+</parameter>
 </constructor>
 <method name="produceResults"
  return="void"
@@ -40699,8 +40752,6 @@
 <parameter name="cacheKeyFactory" type="com.facebook.imagepipeline.cache.CacheKeyFactory">
 </parameter>
 <parameter name="mediaVariationsIndex" type="com.facebook.imagepipeline.cache.MediaVariationsIndex">
-</parameter>
-<parameter name="mediaIdExtractor" type="com.facebook.imagepipeline.cache.MediaIdExtractor">
 </parameter>
 <parameter name="inputProducer" type="com.facebook.imagepipeline.producers.Producer&lt;com.facebook.imagepipeline.image.EncodedImage&gt;">
 </parameter>

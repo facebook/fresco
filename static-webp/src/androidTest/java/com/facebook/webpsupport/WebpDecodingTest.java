@@ -9,23 +9,20 @@
 
 package com.facebook.webpsupport;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.os.MemoryFile;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
-
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
-
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

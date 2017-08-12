@@ -9,11 +9,10 @@
 
 package com.facebook.common.file;
 
+import com.facebook.common.internal.Preconditions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import com.facebook.common.internal.Preconditions;
 
 /**
  * Static operations on {@link File}s

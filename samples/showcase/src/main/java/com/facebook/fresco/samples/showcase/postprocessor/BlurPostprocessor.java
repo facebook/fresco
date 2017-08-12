@@ -12,7 +12,6 @@
 package com.facebook.fresco.samples.showcase.postprocessor;
 
 import android.graphics.Bitmap;
-
 import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 

@@ -8,13 +8,12 @@
  */
 package com.facebook.fresco.animation.backend;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntRange;
+import javax.annotation.Nullable;
 
 /**
  * Animation backend interface that is used to draw frames.

@@ -9,8 +9,6 @@
 
 package com.facebook.imagepipeline.bitmaps;
 
-import javax.annotation.Nullable;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -19,10 +17,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.DisplayMetrics;
-
-import com.facebook.common.references.CloseableReference;
-
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.references.CloseableReference;
+import javax.annotation.Nullable;
 
 /**
  * Bitmap factory optimized for the platform.

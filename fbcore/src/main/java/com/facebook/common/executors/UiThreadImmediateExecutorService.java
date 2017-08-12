@@ -9,10 +9,9 @@
 
 package com.facebook.common.executors;
 
-import java.util.concurrent.ExecutorService;
-
 import android.os.Handler;
 import android.os.Looper;
+import java.util.concurrent.ExecutorService;
 
 /**
  * An {@link ExecutorService} that is backed by the application's main looper.

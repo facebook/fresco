@@ -9,10 +9,9 @@
 
 package com.facebook.common.references;
 
+import java.lang.ref.SoftReference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.lang.ref.SoftReference;
 
 /**
  * To eliminate the possibility of some of our objects causing an OutOfMemoryError when they are

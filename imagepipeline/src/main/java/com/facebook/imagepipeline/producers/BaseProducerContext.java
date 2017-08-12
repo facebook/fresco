@@ -8,14 +8,12 @@
  */
 package com.facebook.imagepipeline.producers;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
 /**
  * ProducerContext that can be cancelled. Exposes low level API to manipulate state of the

@@ -8,16 +8,14 @@
  */
 package com.facebook.drawee.backends.pipeline;
 
-import javax.annotation.Nullable;
-
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Drawee configuration.
