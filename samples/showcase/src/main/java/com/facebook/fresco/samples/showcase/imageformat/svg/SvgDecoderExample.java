@@ -64,7 +64,6 @@ public class SvgDecoderExample {
         }
       }
       return null;
-
     }
   }
 
