@@ -51,6 +51,8 @@
   <string name="imagepipeline_notification_content_title">Fresco Says Hello</string>
   <string name="imagepipeline_notification_content_text">This notification shows a bitmap that has been loaded by Fresco.</string>
   <string name="imagepipeline_notification_help">Clicking on the button will create a new notification using a BaseBitmapDataSubscriber.</string>
+  <string name="imagepipeline_notification_channel_name">Fresco showcase app notification channel</string>
+  <string name="imagepipeline_notification_channel_description">Notifications from the Fresco showcase app will be sent via this channel.</string>
 
   <string name="imagepipeline_postprocessor_title">Post-Processor</string>
   <string name="imagepipeline_postprocessor_help">Change the applied post-processor using the drop-down menu on top. Use the refresh button to re-run uncached post-processors.</string>
