@@ -11,9 +11,13 @@
  */
 package com.facebook.fresco.samples.showcase.imageformat.svg;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,7 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
       Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_half_transparent.svg");
 
   private SimpleDraweeView mSimpleDraweeView;
+  private ShowRestartMessageDialog mShowRestartMessageDialog;
 
   @Nullable
   @Override
@@ -63,6 +68,7 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         CustomImageFormatConfigurator.setSvgEnabled(getContext(), isChecked);
+        getShowRestartMessageDialog().show(getChildFragmentManager(), null);
       }
     });
   }
@@ -70,5 +76,30 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
   @Override
   public int getTitleId() {
     return R.string.format_svg_title;
+  }
+
+  private ShowRestartMessageDialog getShowRestartMessageDialog() {
+    if (mShowRestartMessageDialog == null) {
+      mShowRestartMessageDialog = new ShowRestartMessageDialog();
+    }
+    return mShowRestartMessageDialog;
+  }
+
+  public static class ShowRestartMessageDialog extends DialogFragment {
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      // Use the Builder class for convenient dialog construction
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      builder.setMessage(R.string.message_application_needs_restart)
+          .setPositiveButton(android.R.string.ok, null)
+          .setNeutralButton(R.string.message_restart_now, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              System.exit(0);
+            }
+          });
+      return builder.create();
+    }
   }
 }
