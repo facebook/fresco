@@ -210,19 +210,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       } else {
         imageFormatStr = "unknown";
       }
-      final String encodedImageSize;
-      final String sampleSize;
+      final String encodedImageSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
+      final String sampleSize = String.valueOf(encodedImage.getSampleSize());
       final boolean isLast = isLast(status);
       final boolean isLastAndComplete = isLast && !statusHasFlag(status, IS_PARTIAL_RESULT);
       final boolean isPlaceholder = statusHasFlag(status, IS_PLACEHOLDER);
-      if (encodedImage != null) {
-        encodedImageSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
-        sampleSize = String.valueOf(encodedImage.getSampleSize());
-      } else {
-        // We should never be here
-        encodedImageSize = "unknown";
-        sampleSize = "unknown";
-      }
       final String requestedSizeStr;
       final ResizeOptions resizeOptions = mProducerContext.getImageRequest().getResizeOptions();
       if (resizeOptions != null) {
