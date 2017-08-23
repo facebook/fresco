@@ -154,7 +154,7 @@ public class DraweeHolder<DH extends DraweeHierarchy>
 
     // something went wrong here; controller is not attached, yet the hierarchy has to be drawn
     // log error and attach the controller
-    FLog.wtf(
+    FLog.w(
         DraweeEventTracker.class,
         "%x: Draw requested for a non-attached controller %x. %s",
         System.identityHashCode(this),
