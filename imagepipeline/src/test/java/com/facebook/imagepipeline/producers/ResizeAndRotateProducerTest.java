@@ -185,7 +185,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestSpecificRotation(RotationOptions.ROTATE_270);
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughNotResized();
     verifyZeroJpegTranscoderInteractions();
   }
 
@@ -238,7 +238,7 @@ public class ResizeAndRotateProducerTest {
     verifyNoIntermediateResultPassedThrough();
 
     provideFinalResult(DefaultImageFormats.JPEG, sourceWidth, sourceHeight, rotationAngle);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughNotResized();
 
     assertEquals(2, mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertTrue(mPooledByteBuffer.isClosed());
@@ -283,7 +283,7 @@ public class ResizeAndRotateProducerTest {
     verifyNoIntermediateResultPassedThrough();
 
     provideFinalResult(DefaultImageFormats.JPEG, sourceWidth * 2, sourceHeight * 2, rotationAngle);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughResized();
 
     verifyJpegTranscoderInteractions(4, rotationAngle);
   }
@@ -300,7 +300,7 @@ public class ResizeAndRotateProducerTest {
     verifyNoIntermediateResultPassedThrough();
 
     provideFinalResult(DefaultImageFormats.JPEG, preferredWidth * 2, preferredHeight * 2, 0);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughResized();
 
     assertEquals(2, mFinalResult.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertTrue(mPooledByteBuffer.isClosed());
@@ -343,7 +343,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(DefaultImageFormats.JPEG, 100, 100, 90);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughNotResized();
     verifyJpegTranscoderInteractions(8, 90);
   }
 
@@ -354,7 +354,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 0);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughResized();
     verifyJpegTranscoderInteractions(4, 0);
   }
 
@@ -365,7 +365,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughResized();
     verifyJpegTranscoderInteractions(2, 90);
   }
 
@@ -376,7 +376,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 180);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughResized();
     verifyJpegTranscoderInteractions(4, 180);
   }
 
@@ -387,7 +387,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 270);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughResized();
     verifyJpegTranscoderInteractions(2, 270);
   }
 
@@ -398,7 +398,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestsRotationFromMetadataWithoutDeferring();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughNotResized();
     verifyJpegTranscoderInteractions(8, 90);
   }
 
@@ -420,7 +420,7 @@ public class ResizeAndRotateProducerTest {
     whenRequestSpecificRotation(RotationOptions.ROTATE_270);
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 0);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughNotResized();
     verifyJpegTranscoderInteractions(8, 270);
   }
 
@@ -431,7 +431,7 @@ public class ResizeAndRotateProducerTest {
     whenDisableRotation();
 
     provideFinalResult(DefaultImageFormats.JPEG, 400, 200, 90);
-    verifyAFinalResultPassedThrough();
+    verifyAFinalResultPassedThroughNotResized();
     verifyZeroJpegTranscoderInteractions();
   }
 
@@ -490,7 +490,12 @@ public class ResizeAndRotateProducerTest {
     verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
   }
 
-  private void verifyAFinalResultPassedThrough() {
+  private void verifyAFinalResultPassedThroughResized() {
+    verify(mConsumer)
+        .onNewResult(any(EncodedImage.class), eq(Consumer.IS_LAST | Consumer.IS_RESIZING_DONE));
+  }
+
+  private void verifyAFinalResultPassedThroughNotResized() {
     verify(mConsumer).onNewResult(any(EncodedImage.class), eq(Consumer.IS_LAST));
   }
 

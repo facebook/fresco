@@ -39,21 +39,19 @@ import java.lang.annotation.Retention;
  */
 public interface Consumer<T> {
 
-  /**
-   * Frame type that has been drawn. Can be used for logging.
-   */
+  /** Status flag used by producers and consumers to supply additional information. */
   @Retention(SOURCE)
   @IntDef(
-      flag = true,
-      value = {
-          IS_LAST,
-          DO_NOT_CACHE_ENCODED,
-          IS_PLACEHOLDER,
-          IS_PARTIAL_RESULT,
-      })
-  @interface Status {
-
-  }
+    flag = true,
+    value = {
+      IS_LAST,
+      DO_NOT_CACHE_ENCODED,
+      IS_PLACEHOLDER,
+      IS_PARTIAL_RESULT,
+      IS_RESIZING_DONE,
+    }
+  )
+  @interface Status {}
 
   /**
    * Convenience constant for a status with no flags set. The absence of {@link #IS_LAST} means this
@@ -81,6 +79,8 @@ public interface Consumer<T> {
    * the image was requested.
    */
   int IS_PARTIAL_RESULT = 1 << 3;
+  /** Status flag that indicates whether the given image has been resized. */
+  int IS_RESIZING_DONE = 1 << 4;
 
   /**
    * Called by a producer whenever new data is produced. This method should not throw an exception.

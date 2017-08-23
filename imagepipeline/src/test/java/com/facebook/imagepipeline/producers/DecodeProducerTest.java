@@ -13,12 +13,15 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
@@ -42,8 +45,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@Config(manifest= Config.NONE)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@Config(manifest = Config.NONE)
 @PrepareForTest({JobScheduler.class, ProgressiveJpegParser.class, DecodeProducer.class})
 public class DecodeProducerTest {
 
@@ -53,7 +56,10 @@ public class DecodeProducerTest {
   private static final int PREVIEW_SCAN = 2;
   private static final int IGNORED_SCAN = 3;
   private static final int GOOD_ENOUGH_SCAN = 5;
+  private static final int IMAGE_WIDTH = 200;
+  private static final int IMAGE_HEIGHT = 100;
   private static final int IMAGE_SIZE = 1000;
+  private static final int IMAGE_ROTATION_ANGLE = 0;
 
   @Mock public ByteArrayPool mByteArrayPool;
   @Mock public Executor mExecutor;
@@ -71,6 +77,7 @@ public class DecodeProducerTest {
 
   @Mock public ProgressiveJpegParser mProgressiveJpegParser;
   @Mock public JobScheduler mJobScheduler;
+  @Mock public Supplier<Boolean> mExperimentalResizingEnabledSupplier;
 
   private DecodeProducer mDecodeProducer;
 
@@ -97,21 +104,27 @@ public class DecodeProducerTest {
     PowerMockito.mockStatic(JobScheduler.class);
     PowerMockito.whenNew(JobScheduler.class).withAnyArguments()
         .thenReturn(mJobScheduler);
+    when(mExperimentalResizingEnabledSupplier.get()).thenReturn(false);
 
-    mDecodeProducer = new DecodeProducer(
-        mByteArrayPool,
-        mExecutor,
-        mImageDecoder,
-        mProgressiveJpegConfig,
-        false, /* Set downsampleEnabled to false */
-        false, /* Set resizeAndRotateForNetwork to false */
-        false, /* We don't cancel when the request is cancelled */
-        mInputProducer);
+    mDecodeProducer =
+        new DecodeProducer(
+            mByteArrayPool,
+            mExecutor,
+            mImageDecoder,
+            mProgressiveJpegConfig,
+            false, /* Set downsampleEnabled to false */
+            false, /* Set resizeAndRotateForNetwork to false */
+            false, /* We don't cancel when the request is cancelled */
+            mInputProducer,
+            mExperimentalResizingEnabledSupplier); /* No experimental resizing */
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);
     mEncodedImage = new EncodedImage(mByteBufferRef);
     mEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
+    mEncodedImage.setWidth(IMAGE_WIDTH);
+    mEncodedImage.setHeight(IMAGE_HEIGHT);
+    mEncodedImage.setRotationAngle(IMAGE_ROTATION_ANGLE);
   }
 
   private static EncodedImage mockEncodedJpeg(CloseableReference<PooledByteBuffer> ref) {
@@ -373,13 +386,43 @@ public class DecodeProducerTest {
         .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
 
-  private void setupNetworkUri() {
-    //Uri.parse("file://path/image")
-    mImageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://www.fb.com/image"))
-        .setProgressiveRenderingEnabled(true)
-        .setImageDecodeOptions(IMAGE_DECODE_OPTIONS)
-        .build();
-    mRequestId = "networkRequest1";
+  @Test
+  public void testDecode_WhenSmartResizingEnabledAndLocalUri_ThenPerformDownsampling()
+      throws Exception {
+    int resizedWidth = 10;
+    int resizedHeight = 10;
+    when(mExperimentalResizingEnabledSupplier.get()).thenReturn(true);
+    setupLocalUri(ResizeOptions.forDimensions(resizedWidth, resizedHeight));
+
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
+
+    // The sample size was modified, which means Downsampling has been performed
+    assertNotEquals(mEncodedImage.getSampleSize(), EncodedImage.DEFAULT_SAMPLE_SIZE);
+  }
+
+  @Test
+  public void testDecode_WhenSmartResizingEnabledAndNetworkUri_ThenPerformNoDownsampling()
+      throws Exception {
+    int resizedWidth = 10;
+    int resizedHeight = 10;
+    when(mExperimentalResizingEnabledSupplier.get()).thenReturn(true);
+    setupNetworkUri(ResizeOptions.forDimensions(resizedWidth, resizedHeight));
+
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
+
+    // The sample size was not modified, which means Downsampling has not been performed
+    assertEquals(mEncodedImage.getSampleSize(), EncodedImage.DEFAULT_SAMPLE_SIZE);
+  }
+
+  private void setupImageRequest(String requestId, ImageRequest imageRequest) {
+    mImageRequest = imageRequest;
+    mRequestId = requestId;
     mProducerContext = new SettableProducerContext(
         mImageRequest,
         mRequestId,
@@ -391,21 +434,32 @@ public class DecodeProducerTest {
         Priority.MEDIUM);
   }
 
+  private void setupNetworkUri() {
+    setupNetworkUri(null);
+  }
+
+  private void setupNetworkUri(@Nullable ResizeOptions resizeOptions) {
+    setupImageRequest(
+        "networkRequest1",
+        ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://www.fb.com/image"))
+            .setProgressiveRenderingEnabled(true)
+            .setImageDecodeOptions(IMAGE_DECODE_OPTIONS)
+            .setResizeOptions(resizeOptions)
+            .build());
+  }
+
   private void setupLocalUri() {
-    mImageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse("file://path/image"))
-        .setProgressiveRenderingEnabled(true) // this should be ignored
-        .setImageDecodeOptions(IMAGE_DECODE_OPTIONS)
-        .build();
-    mRequestId = "localRequest1";
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        /* isPrefetch */ false,
-        /* isIntermediateResultExpected */ true,
-        Priority.MEDIUM);
+    setupLocalUri(null);
+  }
+
+  private void setupLocalUri(@Nullable ResizeOptions resizeOptions) {
+    setupImageRequest(
+        "localRequest1",
+        ImageRequestBuilder.newBuilderWithSource(Uri.parse("file://path/image"))
+            .setProgressiveRenderingEnabled(true) // this should be ignored
+            .setImageDecodeOptions(IMAGE_DECODE_OPTIONS)
+            .setResizeOptions(resizeOptions)
+            .build());
   }
 
   private Consumer<EncodedImage> produceResults() {

@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -80,6 +81,7 @@ public class ProducerFactory {
   private final boolean mDownsampleEnabled;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final boolean mDecodeCancellationEnabled;
+  private final Supplier<Boolean> mExperimentalSmartResizingEnabled;
 
   // Dependencies used by multiple steps
   private final ExecutorSupplier mExecutorSupplier;
@@ -108,6 +110,7 @@ public class ProducerFactory {
       boolean downsampleEnabled,
       boolean resizeAndRotateEnabledForNetwork,
       boolean decodeCancellationEnabled,
+      Supplier<Boolean> experimentalSmartResizingEnabled,
       ExecutorSupplier executorSupplier,
       PooledByteBufferFactory pooledByteBufferFactory,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
@@ -129,6 +132,7 @@ public class ProducerFactory {
     mDownsampleEnabled = downsampleEnabled;
     mResizeAndRotateEnabledForNetwork = resizeAndRotateEnabledForNetwork;
     mDecodeCancellationEnabled = decodeCancellationEnabled;
+    mExperimentalSmartResizingEnabled = experimentalSmartResizingEnabled;
 
     mExecutorSupplier = executorSupplier;
     mPooledByteBufferFactory = pooledByteBufferFactory;
@@ -184,7 +188,8 @@ public class ProducerFactory {
         mDownsampleEnabled,
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
-        inputProducer);
+        inputProducer,
+        mExperimentalSmartResizingEnabled);
   }
 
   public DiskCacheReadProducer newDiskCacheReadProducer(

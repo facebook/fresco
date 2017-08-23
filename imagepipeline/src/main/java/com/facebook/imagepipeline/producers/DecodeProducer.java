@@ -14,6 +14,7 @@ import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.ExceptionWithNoStacktrace;
@@ -63,6 +64,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final boolean mDownsampleEnabled;
   private final boolean mDownsampleEnabledForNetwork;
   private final boolean mDecodeCancellationEnabled;
+  private final Supplier<Boolean> mExperimentalSmartResizingEnabled;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -72,7 +74,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final boolean downsampleEnabled,
       final boolean downsampleEnabledForNetwork,
       final boolean decodeCancellationEnabled,
-      final Producer<EncodedImage> inputProducer) {
+      final Producer<EncodedImage> inputProducer,
+      final Supplier<Boolean> experimentalSmartResizingEnabled) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -81,6 +84,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mDecodeCancellationEnabled = decodeCancellationEnabled;
+    mExperimentalSmartResizingEnabled = experimentalSmartResizingEnabled;
   }
 
   @Override
@@ -127,22 +131,25 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       mProducerListener = producerContext.getListener();
       mImageDecodeOptions = producerContext.getImageRequest().getImageDecodeOptions();
       mIsFinished = false;
-      JobRunnable job = new JobRunnable() {
-        @Override
-        public void run(EncodedImage encodedImage, @Status int status) {
-          if (encodedImage != null) {
-            if (mDownsampleEnabled) {
-              ImageRequest request = producerContext.getImageRequest();
-              if (mDownsampleEnabledForNetwork ||
-                  !UriUtil.isNetworkUri(request.getSourceUri())) {
-                encodedImage.setSampleSize(DownsampleUtil.determineSampleSize(
-                    request, encodedImage));
+      JobRunnable job =
+          new JobRunnable() {
+            @Override
+            public void run(EncodedImage encodedImage, @Status int status) {
+              if (encodedImage != null) {
+                if (mDownsampleEnabled
+                    || (mExperimentalSmartResizingEnabled.get()
+                        && !statusHasFlag(status, Consumer.IS_RESIZING_DONE))) {
+                  ImageRequest request = producerContext.getImageRequest();
+                  if (mDownsampleEnabledForNetwork
+                      || !UriUtil.isNetworkUri(request.getSourceUri())) {
+                    encodedImage.setSampleSize(
+                        DownsampleUtil.determineSampleSize(request, encodedImage));
+                  }
+                }
+                doDecode(encodedImage, status);
               }
             }
-            doDecode(encodedImage, status);
-          }
-        }
-      };
+          };
       mJobScheduler = new JobScheduler(mExecutor, job, mImageDecodeOptions.minDecodeIntervalMs);
       mProducerContext.addCallbacks(
           new BaseProducerContextCallbacks() {
@@ -235,6 +242,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         CloseableImage image = null;
         try {
           image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+          if (encodedImage.getSampleSize() != EncodedImage.DEFAULT_SAMPLE_SIZE) {
+            status |= Consumer.IS_RESIZING_DONE;
+          }
         } catch (Exception e) {
           Map<String, String> extraMap = getExtraMap(
               image,

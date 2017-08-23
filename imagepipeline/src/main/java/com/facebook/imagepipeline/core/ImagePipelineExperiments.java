@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.core;
 
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.webp.WebpBitmapFactory;
 
 /**
@@ -33,6 +34,7 @@ public class ImagePipelineExperiments {
   private final int mBitmapPrepareToDrawMinSizeBytes;
   private final int mBitmapPrepareToDrawMaxSizeBytes;
   private final boolean mPartialImageCachingEnabled;
+  private final Supplier<Boolean> mSmartResizingEnabled;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -56,6 +58,7 @@ public class ImagePipelineExperiments {
     mBitmapPrepareToDrawMinSizeBytes = builder.mBitmapPrepareToDrawMinSizeBytes;
     mBitmapPrepareToDrawMaxSizeBytes = builder.mBitmapPrepareToDrawMaxSizeBytes;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
+    mSmartResizingEnabled = builder.mSmartResizingEnabled;
   }
 
   public boolean isExternalCreatedBitmapLogEnabled() {
@@ -102,6 +105,10 @@ public class ImagePipelineExperiments {
     return mPartialImageCachingEnabled;
   }
 
+  public Supplier<Boolean> isSmartResizingEnabled() {
+    return mSmartResizingEnabled;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);
@@ -122,6 +129,7 @@ public class ImagePipelineExperiments {
     private int mBitmapPrepareToDrawMinSizeBytes = 0;
     private int mBitmapPrepareToDrawMaxSizeBytes = 0;
     private boolean mPartialImageCachingEnabled = false;
+    private Supplier<Boolean> mSmartResizingEnabled = Suppliers.BOOLEAN_FALSE;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -216,6 +224,18 @@ public class ImagePipelineExperiments {
       mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
       mBitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes;
       mBitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes;
+      return mConfigBuilder;
+    }
+
+    /**
+     * Smart resizing combines transcoding and downsampling depending on the image format.
+     *
+     * @param smartResizingEnabled true if smart resizing should be enabled
+     * @return The Builder itself for chaining
+     */
+    public ImagePipelineConfig.Builder setSmartResizingEnabled(
+        Supplier<Boolean> smartResizingEnabled) {
+      mSmartResizingEnabled = smartResizingEnabled;
       return mConfigBuilder;
     }
 

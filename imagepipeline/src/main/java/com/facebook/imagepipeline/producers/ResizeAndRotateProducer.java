@@ -208,6 +208,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             ret.parseMetaData();
             mProducerContext.getListener().
                 onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
+            if (downsampleRatio != DownsampleUtil.DEFAULT_SAMPLE_SIZE) {
+              status |= Consumer.IS_RESIZING_DONE;
+            }
             getConsumer().onNewResult(ret, status);
           } finally {
             EncodedImage.closeSafely(ret);
