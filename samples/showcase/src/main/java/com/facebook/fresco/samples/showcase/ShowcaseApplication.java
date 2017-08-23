@@ -48,19 +48,24 @@ public class ShowcaseApplication extends Application {
         .addNetworkInterceptor(new StethoInterceptor())
         .build();
 
-    ImagePipelineConfig imagePipelineConfig = OkHttpImagePipelineConfigFactory
-        .newBuilder(this, okHttpClient)
-        .setRequestListeners(listeners)
-        .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
-        .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
-        .experiment().setMediaVariationsIndexEnabled(new Supplier<Boolean>() {
-          @Override
-          public Boolean get() {
-            return true;
-          }
-        })
-        .experiment().setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE)
-        .build();
+    ImagePipelineConfig imagePipelineConfig =
+        OkHttpImagePipelineConfigFactory.newBuilder(this, okHttpClient)
+            .setRequestListeners(listeners)
+            .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
+            .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
+            .experiment()
+            .setMediaVariationsIndexEnabled(
+                new Supplier<Boolean>() {
+                  @Override
+                  public Boolean get() {
+                    return true;
+                  }
+                })
+            .experiment()
+            .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE)
+            .experiment()
+            .setSmartResizingEnabled(true)
+            .build();
 
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);
 
