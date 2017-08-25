@@ -14,6 +14,7 @@ package com.facebook.fresco.samples.showcase;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -64,7 +65,7 @@ public class ShowcaseApplication extends Application {
             .experiment()
             .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE)
             .experiment()
-            .setSmartResizingEnabled(true)
+            .setSmartResizingEnabled(Suppliers.BOOLEAN_TRUE)
             .build();
 
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);
