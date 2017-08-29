@@ -144,11 +144,6 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
         convertCacheLevelToRequestLevel(cacheLevel));
   }
 
-  @Override
-  protected PipelineDraweeControllerBuilder getThis() {
-    return this;
-  }
-
   public static ImageRequest.RequestLevel convertCacheLevelToRequestLevel(
       AbstractDraweeControllerBuilder.CacheLevel cacheLevel) {
     switch (cacheLevel) {
