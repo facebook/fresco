@@ -80,9 +80,4 @@ public class VolleyDraweeControllerBuilder extends AbstractDraweeControllerBuild
     Preconditions.checkNotNull(uriString);
     return setImageRequest(Uri.parse(uriString));
   }
-
-  @Override
-  protected VolleyDraweeControllerBuilder getThis() {
-    return this;
-  }
 }
