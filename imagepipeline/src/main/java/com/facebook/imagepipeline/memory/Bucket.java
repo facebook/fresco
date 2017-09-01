@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.memory;
 
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.annotation.Nullable;
@@ -41,6 +42,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 @VisibleForTesting
 class Bucket<V> {
+
+  private static final String TAG = "BUCKET";
+
   public final int mItemSize; // size in bytes of items in this bucket
   public final int mMaxLength; // 'max' length for this bucket
   final Queue mFreeList; // the free list for this bucket, subclasses can vary type
@@ -115,9 +119,12 @@ class Bucket<V> {
    */
   public void release(V value) {
     Preconditions.checkNotNull(value);
-    Preconditions.checkState(mInUseLength > 0);
-    mInUseLength--;
-    addToFreeList(value);
+    if (mInUseLength > 0) {
+      mInUseLength--;
+      addToFreeList(value);
+    } else {
+      FLog.e(TAG, "Tried to release value %s from an empty bucket!", value);
+    }
   }
 
   void addToFreeList(V value) {
