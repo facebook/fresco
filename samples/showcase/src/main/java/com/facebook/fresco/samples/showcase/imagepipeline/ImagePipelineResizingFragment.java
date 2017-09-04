@@ -12,12 +12,14 @@
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -74,7 +77,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   }
 
   @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
     final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
     setupImageFormatEntries(imageUriProvider);
 
@@ -122,6 +125,25 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
                 SPINNER_ENTRIES_SIZE[mSizeSpinner.getSelectedItemPosition()].resizeOptions);
           }
         });
+
+
+    view.getViewTreeObserver()
+        .addOnGlobalLayoutListener(
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+              @Override
+              public void onGlobalLayout() {
+                ResizableFrameLayout mainImageFrameLayout =
+                    (ResizableFrameLayout) view.findViewById(R.id.frame_main);
+                mainImageFrameLayout.init(view.findViewById(R.id.btn_resize));
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                  view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                  view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+              }
+            });
+
   }
 
   private void setupImageFormatEntries(ImageUriProvider imageUriProvider) {
