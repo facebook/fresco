@@ -64,6 +64,7 @@ class MyPagerAdapter extends PagerAdapter {
     zoomableDraweeView.setTapListener(new DoubleTapGestureListener(zoomableDraweeView));
     DraweeController controller = Fresco.newDraweeControllerBuilder()
       .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
+      .setCallerContext("ZoomableApp-MyPagerAdapter")
       .build();
     zoomableDraweeView.setController(controller);
     page.requestLayout();

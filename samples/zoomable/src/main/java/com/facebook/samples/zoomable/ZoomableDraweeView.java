@@ -265,7 +265,20 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   protected void onDraw(Canvas canvas) {
     int saveCount = canvas.save();
     canvas.concat(mZoomableController.getTransform());
-    super.onDraw(canvas);
+    try {
+      super.onDraw(canvas);
+    } catch (Exception e) {
+      DraweeController controller = getController();
+      if (controller != null && controller instanceof AbstractDraweeController) {
+        Object callerContext = ((AbstractDraweeController) controller).getCallerContext();
+        if (callerContext != null) {
+          throw new RuntimeException(
+              String.format("Exception in onDraw, callerContext=%s", callerContext.toString()),
+              e);
+        }
+      }
+      throw e;
+    }
     canvas.restoreToCount(saveCount);
   }
 
