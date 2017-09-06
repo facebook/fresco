@@ -20,6 +20,7 @@ import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.time.SystemClock;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -400,12 +401,14 @@ public class ImagePipelineFactory {
 
   public MediaVariationsIndex getMediaVariationsIndex() {
     if (mMediaVariationsIndex == null) {
-      mMediaVariationsIndex = mConfig.getExperiments().getMediaVariationsIndexEnabled()
-          ? new MediaVariationsIndexDatabase(
-              mConfig.getContext(),
-              mConfig.getExecutorSupplier().forLocalStorageRead(),
-              mConfig.getExecutorSupplier().forLocalStorageWrite())
-          : new NoOpMediaVariationsIndex();
+      mMediaVariationsIndex =
+          mConfig.getExperiments().getMediaVariationsIndexEnabled()
+              ? new MediaVariationsIndexDatabase(
+                  mConfig.getContext(),
+                  mConfig.getExecutorSupplier().forLocalStorageRead(),
+                  mConfig.getExecutorSupplier().forLocalStorageWrite(),
+                  SystemClock.get())
+              : new NoOpMediaVariationsIndex();
     }
 
     return mMediaVariationsIndex;

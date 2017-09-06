@@ -14,11 +14,13 @@ import static org.mockito.Mockito.when;
 
 import android.net.Uri;
 import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.common.time.Clock;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.MediaVariations;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,24 +48,36 @@ public class MediaVariationsIndexDatabaseTest {
   private static final int HEIGHT_2 = 100;
   private static final ImageRequest.CacheChoice CACHE_CHOICE_2 = ImageRequest.CacheChoice.SMALL;
 
+  private static final Uri URI_3 = Uri.parse("https://frescolib.org/variant3.jpg");
+  private static final SimpleCacheKey CACHE_KEY_3 = new SimpleCacheKey(URI_3.toString());
+  private static final int WIDTH_3 = 50;
+  private static final int HEIGHT_3 = 100;
+  private static final ImageRequest.CacheChoice CACHE_CHOICE_3 = ImageRequest.CacheChoice.SMALL;
+
   private static final String DIFFERENT_MEDIA_ID = "different";
 
   private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
   @Mock public EncodedImage mEncodedImage1;
   @Mock public EncodedImage mEncodedImage2;
+  @Mock public EncodedImage mEncodedImage3;
+  @Mock public Clock mClock;
   private MediaVariationsIndexDatabase mMediaVariationsIndexDatabase;
 
   @Before
   public void setup() {
-    mMediaVariationsIndexDatabase =
-        new MediaVariationsIndexDatabase(RuntimeEnvironment.application, EXECUTOR, EXECUTOR);
-
     MockitoAnnotations.initMocks(this);
+
+    mMediaVariationsIndexDatabase =
+        new MediaVariationsIndexDatabase(
+            RuntimeEnvironment.application, EXECUTOR, EXECUTOR, mClock);
+
     when(mEncodedImage1.getWidth()).thenReturn(WIDTH_1);
     when(mEncodedImage1.getHeight()).thenReturn(HEIGHT_1);
     when(mEncodedImage2.getWidth()).thenReturn(WIDTH_2);
     when(mEncodedImage2.getHeight()).thenReturn(HEIGHT_2);
+    when(mEncodedImage3.getWidth()).thenReturn(WIDTH_3);
+    when(mEncodedImage3.getHeight()).thenReturn(HEIGHT_3);
   }
 
   @Test
@@ -116,6 +130,67 @@ public class MediaVariationsIndexDatabaseTest {
 
     assertVariantIsEqualTo(mediaVariations.getVariant(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
     assertVariantIsEqualTo(mediaVariations.getVariant(1), URI_2, WIDTH_2, HEIGHT_2, CACHE_CHOICE_2);
+  }
+
+  @Test
+  public void testSavedVariantIsClearedAfterFiveDaysPass() {
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(10));
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        MEDIA_ID, CACHE_CHOICE_1, CACHE_KEY_1, mEncodedImage1);
+
+    // Move the clock forward 5 days and 1 millisecond and save a second item
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(15) + 1);
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        DIFFERENT_MEDIA_ID, CACHE_CHOICE_2, CACHE_KEY_2, mEncodedImage2);
+
+    MediaVariations mediaVariations =
+        mMediaVariationsIndexDatabase.getCachedVariantsSync(
+            MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
+
+    assertThat(mediaVariations.getVariantsCount()).isEqualTo(0);
+  }
+
+  @Test
+  public void testSavedVariantIsNotClearedBeforeFiveDaysPass() {
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(10));
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        MEDIA_ID, CACHE_CHOICE_1, CACHE_KEY_1, mEncodedImage1);
+
+    // Move the clock forward 5 days less 1 millisecond and save a second item
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(15) - 1);
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        DIFFERENT_MEDIA_ID, CACHE_CHOICE_2, CACHE_KEY_2, mEncodedImage2);
+
+    MediaVariations mediaVariations =
+        mMediaVariationsIndexDatabase.getCachedVariantsSync(
+            MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
+
+    assertThat(mediaVariations.getVariantsCount()).isEqualTo(1);
+    assertVariantIsEqualTo(mediaVariations.getVariant(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
+  }
+
+  @Test
+  public void testSavedVariantsNotClearedAfterEveryUpdate() {
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(10));
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        MEDIA_ID, CACHE_CHOICE_1, CACHE_KEY_1, mEncodedImage1);
+
+    // Move the clock forward 5 days less 1 millisecond and save a second item
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(15) - 1);
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        DIFFERENT_MEDIA_ID, CACHE_CHOICE_2, CACHE_KEY_2, mEncodedImage2);
+
+    // Move the clock forward another hour and save a third item
+    when(mClock.now()).thenReturn(TimeUnit.DAYS.toMillis(15) + TimeUnit.HOURS.toMillis(1));
+    mMediaVariationsIndexDatabase.saveCachedVariantSync(
+        DIFFERENT_MEDIA_ID, CACHE_CHOICE_3, CACHE_KEY_3, mEncodedImage3);
+
+    MediaVariations mediaVariations =
+        mMediaVariationsIndexDatabase.getCachedVariantsSync(
+            MEDIA_ID, MediaVariations.newBuilderForMediaId(MEDIA_ID));
+
+    assertThat(mediaVariations.getVariantsCount()).isEqualTo(1);
+    assertVariantIsEqualTo(mediaVariations.getVariant(0), URI_1, WIDTH_1, HEIGHT_1, CACHE_CHOICE_1);
   }
 
   @Test
