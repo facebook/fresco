@@ -41,6 +41,7 @@ public class ImageDecodeOptionsBuilder {
     mDecodeAllFrames = options.decodeAllFrames;
     mForceStaticImage = options.forceStaticImage;
     mBitmapConfig = options.bitmapConfig;
+    mCustomImageDecoder = options.customImageDecoder;
     return this;
   }
 
