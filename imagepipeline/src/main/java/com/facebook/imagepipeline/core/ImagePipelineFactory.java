@@ -351,7 +351,8 @@ public class ImagePipelineFactory {
               mConfig.getCacheKeyFactory(),
               getPlatformBitmapFactory(),
               mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
-              mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes());
+              mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes(),
+              mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch());
     }
     return mProducerFactory;
   }

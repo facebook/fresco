@@ -29,6 +29,7 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
   private final Producer<CloseableReference<CloseableImage>> mInputProducer;
   private final int mMinBitmapSizeBytes;
   private final int mMaxBitmapSizeBytes;
+  private final boolean mPreparePrefetch;
 
   /**
    * @param inputProducer The next producer in the pipeline
@@ -40,19 +41,21 @@ public class BitmapPrepareProducer implements Producer<CloseableReference<Closea
   public BitmapPrepareProducer(
       final Producer<CloseableReference<CloseableImage>> inputProducer,
       int minBitmapSizeBytes,
-      int maxBitmapSizeBytes) {
+      int maxBitmapSizeBytes,
+      boolean preparePrefetch) {
     Preconditions.checkArgument(minBitmapSizeBytes <= maxBitmapSizeBytes);
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mMinBitmapSizeBytes = minBitmapSizeBytes;
     mMaxBitmapSizeBytes = maxBitmapSizeBytes;
+    mPreparePrefetch = preparePrefetch;
   }
 
   @Override
   public void produceResults(
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final ProducerContext producerContext) {
-    if (producerContext.isPrefetch()) {
-      // do not prepare bitmaps that are pre-fetcheds
+    // only prepare pre-fetched bitmaps if enabled
+    if (producerContext.isPrefetch() && !mPreparePrefetch) {
       mInputProducer.produceResults(consumer, producerContext);
     } else {
       mInputProducer.produceResults(

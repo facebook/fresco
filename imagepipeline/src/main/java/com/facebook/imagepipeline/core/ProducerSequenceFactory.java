@@ -234,7 +234,14 @@ public class ProducerSequenceFactory {
    */
   public Producer<Void> getDecodedImagePrefetchProducerSequence(
       ImageRequest imageRequest) {
-    return getDecodedImagePrefetchSequence(getBasicDecodedImageSequence(imageRequest));
+    Producer<CloseableReference<CloseableImage>> inputProducer =
+        getBasicDecodedImageSequence(imageRequest);
+
+    if (mUseBitmapPrepareToDraw) {
+      inputProducer = getBitmapPrepareSequence(inputProducer);
+    }
+
+    return getDecodedImagePrefetchSequence(inputProducer);
   }
 
   private Producer<CloseableReference<CloseableImage>> getBasicDecodedImageSequence(

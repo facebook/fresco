@@ -49,10 +49,8 @@ public class BitmapPrepareProducerTest {
   private BitmapPrepareProducer mBitmapPrepareProducer;
 
   @Before
-  public void setUp() {
+  public void setup() {
     MockitoAnnotations.initMocks(this);
-    mBitmapPrepareProducer =
-        new BitmapPrepareProducer(mInputProducer, MIN_BITMAP_SIZE_BYTES, MAX_BITMAP_SIZE_BYTES);
 
     mImageReference = CloseableReference.of((CloseableImage) mCloseableStaticBitmap);
     when(mCloseableStaticBitmap.getUnderlyingBitmap()).thenReturn(mBitmap);
@@ -61,27 +59,34 @@ public class BitmapPrepareProducerTest {
     when(mBitmap.getRowBytes()).thenReturn(100);
     when(mBitmap.getHeight()).thenReturn(15);
 
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        Object[] args = invocation.getArguments();
-        Consumer<CloseableReference<CloseableImage>> consumer =
-            (Consumer<CloseableReference<CloseableImage>>) args[0];
-        consumer.onNewResult(mImageReference, 0);
-        return null;
-      }
-    }).when(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                Consumer<CloseableReference<CloseableImage>> consumer =
+                    (Consumer<CloseableReference<CloseableImage>>) args[0];
+                consumer.onNewResult(mImageReference, 0);
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), any(ProducerContext.class));
   }
 
   @Test
   public void testProduceResults_whenCalled_thenInputProducerCalled() {
+    createBitmapPrepareProducer(false);
+
     mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mInputProducer, times(1)).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   @Test
-  public void testProduceResults_whenPrefetch_thenPassThrough() {
+  public void testProduceResults_whenPrefetch_andPreparePrefetchNotEnabled_thenPassThrough() {
+    createBitmapPrepareProducer(false);
+
     when(mProducerContext.isPrefetch()).thenReturn(true);
 
     mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
@@ -91,7 +96,22 @@ public class BitmapPrepareProducerTest {
   }
 
   @Test
-  public void testProduceResults_whenPrefetch_thenBitmapPrepareToDrawNotCalled() {
+  public void testProduceResults_whenPrefetch_andPreparePrefetchEnabled_thenNotPassThrough() {
+    createBitmapPrepareProducer(true);
+
+    when(mProducerContext.isPrefetch()).thenReturn(true);
+
+    mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
+
+    // note: the given consumer is used and not the BitmapPrepareConsumer
+    verify(mInputProducer, never()).produceResults(eq(mConsumer), eq(mProducerContext));
+  }
+
+  @Test
+  public void
+      testProduceResults_whenPrefetch_andPreparePrefetchNotEnabled_thenBitmapPrepareToDrawNotCalled() {
+    createBitmapPrepareProducer(false);
+
     when(mProducerContext.isPrefetch()).thenReturn(true);
 
     mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
@@ -100,7 +120,21 @@ public class BitmapPrepareProducerTest {
   }
 
   @Test
+  public void
+      testProduceResults_whenPrefetch_andPreparePrefetchEnabled_thenBitmapPrepareToDrawCalled() {
+    createBitmapPrepareProducer(true);
+
+    when(mProducerContext.isPrefetch()).thenReturn(true);
+
+    mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
+
+    verify(mBitmap, times(1)).prepareToDraw();
+  }
+
+  @Test
   public void testProduceResults_whenNotPrefetch_thenBitmapPrepareToDrawCalled() {
+    createBitmapPrepareProducer(false);
+
     when(mProducerContext.isPrefetch()).thenReturn(false);
 
     mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
@@ -111,6 +145,8 @@ public class BitmapPrepareProducerTest {
   @Test
   public void
       testProduceResults_whenNotPrefetchButBitmapTooSmall_thenBitmapPrepareToDrawNotCalled() {
+    createBitmapPrepareProducer(false);
+
     when(mProducerContext.isPrefetch()).thenReturn(false);
 
     // 100 * 9 = 900 (< MIN_BITMAP_SIZE_BYTES)
@@ -125,6 +161,8 @@ public class BitmapPrepareProducerTest {
   @Test
   public void
       testProduceResults_whenNotPrefetchButBitmapTooLarge_thenBitmapPrepareToDrawNotCalled() {
+    createBitmapPrepareProducer(false);
+
     when(mProducerContext.isPrefetch()).thenReturn(false);
 
     // 100 * 21 = 2100 (> MAX_BITMAP_SIZE_BYTES)
@@ -135,5 +173,11 @@ public class BitmapPrepareProducerTest {
     mBitmapPrepareProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mBitmap, never()).prepareToDraw();
+  }
+
+  private void createBitmapPrepareProducer(boolean preparePrefetch) {
+    mBitmapPrepareProducer =
+        new BitmapPrepareProducer(
+            mInputProducer, MIN_BITMAP_SIZE_BYTES, MAX_BITMAP_SIZE_BYTES, preparePrefetch);
   }
 }

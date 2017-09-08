@@ -33,6 +33,7 @@ public class ImagePipelineExperiments {
   private final boolean mUseBitmapPrepareToDraw;
   private final int mBitmapPrepareToDrawMinSizeBytes;
   private final int mBitmapPrepareToDrawMaxSizeBytes;
+  private boolean mBitmapPrepareToDrawForPrefetch;
   private final boolean mPartialImageCachingEnabled;
   private final Supplier<Boolean> mSmartResizingEnabled;
 
@@ -57,6 +58,7 @@ public class ImagePipelineExperiments {
     mUseBitmapPrepareToDraw = builder.mUseBitmapPrepareToDraw;
     mBitmapPrepareToDrawMinSizeBytes = builder.mBitmapPrepareToDrawMinSizeBytes;
     mBitmapPrepareToDrawMaxSizeBytes = builder.mBitmapPrepareToDrawMaxSizeBytes;
+    mBitmapPrepareToDrawForPrefetch = builder.mBitmapPrepareToDrawForPrefetch;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
     mSmartResizingEnabled = builder.mSmartResizingEnabled;
   }
@@ -114,6 +116,10 @@ public class ImagePipelineExperiments {
     return new ImagePipelineExperiments.Builder(configBuilder);
   }
 
+  public boolean getBitmapPrepareToDrawForPrefetch() {
+    return mBitmapPrepareToDrawForPrefetch;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -128,6 +134,7 @@ public class ImagePipelineExperiments {
     private boolean mUseBitmapPrepareToDraw = false;
     private int mBitmapPrepareToDrawMinSizeBytes = 0;
     private int mBitmapPrepareToDrawMaxSizeBytes = 0;
+    public boolean mBitmapPrepareToDrawForPrefetch = false;
     private boolean mPartialImageCachingEnabled = false;
     private Supplier<Boolean> mSmartResizingEnabled = Suppliers.BOOLEAN_FALSE;
 
@@ -209,21 +216,27 @@ public class ImagePipelineExperiments {
 
     /**
      * If enabled, the pipeline will call {@link android.graphics.Bitmap#prepareToDraw()} after
-     * decoding for non-prefetched images. This potentially reduces lag on Android N+ as this step
-     * now happens async when the RendererThread is idle.
+     * decoding. This potentially reduces lag on Android N+ as this step now happens async when the
+     * RendererThread is idle.
      *
      * @param useBitmapPrepareToDraw set true for enabling prepareToDraw
      * @param minBitmapSizeBytes Bitmaps with a {@link Bitmap#getByteCount()} smaller than this
      *     value are not uploaded
      * @param maxBitmapSizeBytes Bitmaps with a {@link Bitmap#getByteCount()} larger than this value
      *     are not uploaded
+     * @param preparePrefetch If this is true, also pre-fetching image requests will trigger the
+     *     {@link android.graphics.Bitmap#prepareToDraw()} call.
      * @return The Builder itself for chaining
      */
     public ImagePipelineConfig.Builder setBitmapPrepareToDraw(
-        boolean useBitmapPrepareToDraw, int minBitmapSizeBytes, int maxBitmapSizeBytes) {
+        boolean useBitmapPrepareToDraw,
+        int minBitmapSizeBytes,
+        int maxBitmapSizeBytes,
+        boolean preparePrefetch) {
       mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
       mBitmapPrepareToDrawMinSizeBytes = minBitmapSizeBytes;
       mBitmapPrepareToDrawMaxSizeBytes = maxBitmapSizeBytes;
+      mBitmapPrepareToDrawForPrefetch = preparePrefetch;
       return mConfigBuilder;
     }
 
