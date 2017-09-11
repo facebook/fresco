@@ -63,7 +63,7 @@ public class ShowcaseApplication extends Application {
                   }
                 })
             .experiment()
-            .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE)
+            .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
             .experiment()
             .setSmartResizingEnabled(Suppliers.BOOLEAN_TRUE)
             .build();
