@@ -30,68 +30,65 @@ public class ScalingUtils {
   public interface ScaleType {
 
     /**
-     * Scales width and height independently, so that the child matches the parent exactly.
-     * This may change the aspect ratio of the child.
+     * Scales width and height independently, so that the child matches the parent exactly. This may
+     * change the aspect ratio of the child.
      */
-    static final ScaleType FIT_XY = ScaleTypeFitXY.INSTANCE;
+    ScaleType FIT_XY = ScaleTypeFitXY.INSTANCE;
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
-     * height) will fit exactly. Aspect ratio is preserved.
-     * Child is aligned to the top-left corner of the parent.
+     * height) will fit exactly. Aspect ratio is preserved. Child is aligned to the top-left corner
+     * of the parent.
      */
-    static final ScaleType FIT_START = ScaleTypeFitStart.INSTANCE;
+    ScaleType FIT_START = ScaleTypeFitStart.INSTANCE;
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
-     * height) will fit exactly. Aspect ratio is preserved.
-     * Child is centered within the parent's bounds.
+     * height) will fit exactly. Aspect ratio is preserved. Child is centered within the parent's
+     * bounds.
      */
-    static final ScaleType FIT_CENTER = ScaleTypeFitCenter.INSTANCE;
+    ScaleType FIT_CENTER = ScaleTypeFitCenter.INSTANCE;
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
-     * height) will fit exactly. Aspect ratio is preserved.
-     * Child is aligned to the bottom-right corner of the parent.
+     * height) will fit exactly. Aspect ratio is preserved. Child is aligned to the bottom-right
+     * corner of the parent.
      */
-    static final ScaleType FIT_END = ScaleTypeFitEnd.INSTANCE;
+    ScaleType FIT_END = ScaleTypeFitEnd.INSTANCE;
 
-    /**
-     * Performs no scaling.
-     * Child is centered within parent's bounds.
-     */
-    static final ScaleType CENTER = ScaleTypeCenter.INSTANCE;
+    /** Performs no scaling. Child is centered within parent's bounds. */
+    ScaleType CENTER = ScaleTypeCenter.INSTANCE;
 
     /**
      * Scales the child so that it fits entirely inside the parent. Unlike FIT_CENTER, if the child
-     * is smaller, no up-scaling will be performed. Aspect ratio is preserved.
-     * Child is centered within parent's bounds.
+     * is smaller, no up-scaling will be performed. Aspect ratio is preserved. Child is centered
+     * within parent's bounds.
      */
-    static final ScaleType CENTER_INSIDE = ScaleTypeCenterInside.INSTANCE;
+    ScaleType CENTER_INSIDE = ScaleTypeCenterInside.INSTANCE;
 
     /**
      * Scales the child so that both dimensions will be greater than or equal to the corresponding
-     * dimension of the parent. At least one dimension (width or height) will fit exactly.
-     * Child is centered within parent's bounds.
+     * dimension of the parent. At least one dimension (width or height) will fit exactly. Child is
+     * centered within parent's bounds.
      */
-    static final ScaleType CENTER_CROP = ScaleTypeCenterCrop.INSTANCE;
+    ScaleType CENTER_CROP = ScaleTypeCenterCrop.INSTANCE;
 
     /**
      * Scales the child so that both dimensions will be greater than or equal to the corresponding
-     * dimension of the parent. At least one dimension (width or height) will fit exactly.
-     * The child's focus point will be centered within the parent's bounds as much as possible
-     * without leaving empty space.
-     * It is guaranteed that the focus point will be visible and centered as much as possible.
-     * If the focus point is set to (0.5f, 0.5f), result will be equivalent to CENTER_CROP.
+     * dimension of the parent. At least one dimension (width or height) will fit exactly. The
+     * child's focus point will be centered within the parent's bounds as much as possible without
+     * leaving empty space. It is guaranteed that the focus point will be visible and centered as
+     * much as possible. If the focus point is set to (0.5f, 0.5f), result will be equivalent to
+     * CENTER_CROP.
      */
-    static final ScaleType FOCUS_CROP = ScaleTypeFocusCrop.INSTANCE;
+    ScaleType FOCUS_CROP = ScaleTypeFocusCrop.INSTANCE;
 
     /**
      * Scales the child so that it fits entirely inside the parent. At least one dimension (width or
      * height) will fit exactly. Aspect ratio is preserved. Child is aligned to the bottom-left
      * corner of the parent.
      */
-    static final ScaleType FIT_BOTTOM_START = ScaleTypeFitBottomStart.INSTANCE;
+    ScaleType FIT_BOTTOM_START = ScaleTypeFitBottomStart.INSTANCE;
 
     /**
      * Gets transformation matrix based on the scale type.
@@ -431,11 +428,11 @@ public class ScalingUtils {
     /**
      * Returns the internal state. The returned object must be immutable!
      *
-     * The returned state may be used for caching the result of {@code ScaleType.getTransform}.
-     * If null state is returned, the result will not be cached. If non-null state is returned,
-     * the old transformation may be used if produced with an equal state.
+     * <p>The returned state may be used for caching the result of {@code ScaleType.getTransform}.
+     * If null state is returned, the result will not be cached. If non-null state is returned, the
+     * old transformation may be used if produced with an equal state.
      */
-    public Object getState();
+    Object getState();
   }
 
   /**
