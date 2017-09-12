@@ -13,9 +13,8 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:orientation="horizontal"
+      android:gravity="center"
       >
     <Spinner
         android:id="@+id/spinner_format"
@@ -29,19 +28,11 @@
         />
   </LinearLayout>
 
-  <Button
-      android:id="@+id/button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
-      android:text="@string/imagepipeline_resizing_refresh"
-      />
-
   <TextView
       android:id="@+id/text_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginBottom="@dimen/margin_medium"
       android:textAppearance="?android:attr/textAppearanceSmall"
       android:text="@string/imagepipeline_resizing_help"
       />

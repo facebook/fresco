@@ -91,9 +91,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
         new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            reloadImage(
-                mImageFormatEntries[mFormatSpinner.getSelectedItemPosition()].uri,
-                SPINNER_ENTRIES_SIZE[position].resizeOptions);
+            reloadImage();
           }
 
           @Override
@@ -106,9 +104,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
         new AdapterView.OnItemSelectedListener() {
           @Override
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            reloadImage(
-                mImageFormatEntries[position].uri,
-                SPINNER_ENTRIES_SIZE[mSizeSpinner.getSelectedItemPosition()].resizeOptions);
+            reloadImage();
           }
 
           @Override
@@ -116,16 +112,13 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
         });
     mFormatSpinner.setSelection(0);
 
-    mButton.setOnClickListener(
+    mDraweeMain.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            reloadImage(
-                mImageFormatEntries[mFormatSpinner.getSelectedItemPosition()].uri,
-                SPINNER_ENTRIES_SIZE[mSizeSpinner.getSelectedItemPosition()].resizeOptions);
+            reloadImage();
           }
         });
-
 
     view.getViewTreeObserver()
         .addOnGlobalLayoutListener(
@@ -143,7 +136,6 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
                 }
               }
             });
-
   }
 
   private void setupImageFormatEntries(ImageUriProvider imageUriProvider) {
@@ -176,6 +168,12 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
   @Override
   public int getTitleId() {
     return R.string.imagepipeline_resizing_title;
+  }
+
+  private void reloadImage() {
+    reloadImage(
+        mImageFormatEntries[mFormatSpinner.getSelectedItemPosition()].uri,
+        SPINNER_ENTRIES_SIZE[mSizeSpinner.getSelectedItemPosition()].resizeOptions);
   }
 
   private void reloadImage(Uri imageUri, @Nullable ResizeOptions resizeOptions) {
