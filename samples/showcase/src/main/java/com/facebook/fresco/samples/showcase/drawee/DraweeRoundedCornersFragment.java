@@ -56,6 +56,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
   private SimpleDraweeView mDraweeRound;
   private SimpleDraweeView mDraweeRadius;
   private SimpleDraweeView mDraweeSome;
+  private SimpleDraweeView mDraweeSomeRtl;
   private SimpleDraweeView mDraweeFancy;
 
   public DraweeRoundedCornersFragment() {
@@ -86,6 +87,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     mDraweeRound.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
     mDraweeRadius.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
     mDraweeSome.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
+    mDraweeSomeRtl.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
     mDraweeFancy.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
 
     final Spinner scaleType = (Spinner) view.findViewById(R.id.scaleType);
@@ -101,6 +103,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
         changeDraweeViewScaleType(mDraweeRound, scaleType, spinnerEntry.focusPoint);
         changeDraweeViewScaleType(mDraweeRadius, scaleType, spinnerEntry.focusPoint);
         changeDraweeViewScaleType(mDraweeSome, scaleType, spinnerEntry.focusPoint);
+        changeDraweeViewScaleType(mDraweeSomeRtl, scaleType, spinnerEntry.focusPoint);
         changeDraweeViewScaleType(mDraweeFancy, scaleType, spinnerEntry.focusPoint);
 
         if (BITMAP_ONLY_SCALETYPES.contains(scaleType) &&
@@ -131,6 +134,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
         setShowBorder(mDraweeRound, isChecked);
         setShowBorder(mDraweeRadius, isChecked);
         setShowBorder(mDraweeSome, isChecked);
+        setShowBorder(mDraweeSomeRtl, isChecked);
         setShowBorder(mDraweeFancy, isChecked);
       }
     });
@@ -150,6 +154,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     mDraweeRound = (SimpleDraweeView) view.findViewById(R.id.drawee_round);
     mDraweeRadius = (SimpleDraweeView) view.findViewById(R.id.drawee_radius);
     mDraweeSome = (SimpleDraweeView) view.findViewById(R.id.drawee_some);
+    mDraweeSomeRtl = (SimpleDraweeView) view.findViewById(R.id.drawee_some_rtl);
     mDraweeFancy = (SimpleDraweeView) view.findViewById(R.id.drawee_fancy);
   }
 
