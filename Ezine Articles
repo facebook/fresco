@@ -1,0 +1,27 @@
+<!-- Place this tag where you want the widget to render -->
+<div id="ezinearticles-widget"></div>
+
+<!-- Place this script before the closing </body> tag -->
+<script type="text/javascript" src="//ezinearticles.com/js/widget.v2.js"></script>
+<script type="text/javascript">
+EzineArticlesWidget({
+    "id": "ezinearticles-widget",
+    "author": 2460234,
+    "bio": 1,
+    "category": 8,
+    "articles": 10,
+    "width": 250,
+    "height": 300,
+    "theme": {
+        "shell": {
+            "background": "#AB2224",
+            "text": "#ffffff"
+        },
+        "article": {
+            "background": "#ffffff",
+            "text": "#333333"
+        },
+        "links": "#9D0000"
+    }
+});
+</script>
