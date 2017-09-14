@@ -13,6 +13,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    *
    * <p>Returns null if the parameter is null.
    */
-  public static @Nullable <T extends Closeable> CloseableReference<T> of(@Nullable T t) {
+  public static <T extends Closeable> CloseableReference<T> of(@PropagatesNullable T t) {
     if (t == null) {
       return null;
     } else {
@@ -106,9 +107,8 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * Constructs a CloseableReference (wrapping a SharedReference) of T with provided
    * ResourceReleaser<T>. If t is null, this will just return null.
    */
-  public static @Nullable <T> CloseableReference<T> of(
-      @Nullable T t,
-      ResourceReleaser<T> resourceReleaser) {
+  public static <T> CloseableReference<T> of(
+      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
     if (t == null) {
       return null;
     } else {
@@ -134,7 +134,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     return new CloseableReference<T>(mSharedReference);
   }
 
-  public synchronized CloseableReference<T> cloneOrNull() {
+  public synchronized @Nullable CloseableReference<T> cloneOrNull() {
     if (isValid()) {
       return clone();
     }
@@ -206,15 +206,15 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   }
 
   /**
-   * Clones a collection of references and returns a list. Returns null if the list is null. If
-   * the list is non-null, clones each reference. If a reference cannot be cloned due to already
-   * being closed, the list will contain a null value in its place.
+   * Clones a collection of references and returns a list. Returns null if the list is null. If the
+   * list is non-null, clones each reference. If a reference cannot be cloned due to already being
+   * closed, the list will contain a null value in its place.
    *
    * @param refs the references to clone
    * @return the list of cloned references or null
    */
   public static <T> List<CloseableReference<T>> cloneOrNull(
-      Collection<CloseableReference<T>> refs) {
+      @PropagatesNullable Collection<CloseableReference<T>> refs) {
     if (refs == null) {
       return null;
     }
