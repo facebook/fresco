@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.platform;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.util.Pools.SynchronizedPool;
 import com.facebook.common.internal.Preconditions;
@@ -25,6 +26,7 @@ import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -62,23 +64,24 @@ public class ArtDecoder implements PlatformDecoder {
 
   /**
    * Creates a bitmap from encoded bytes.
+   *
    * @param encodedImage the encoded image with a reference to the encoded bytes
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   * used to create the decoded Bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   *     Bitmap
+   * @param regionToDecode optional image region to decode. currently not supported.
    * @return the bitmap
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
   public CloseableReference<Bitmap> decodeFromEncodedImage(
-      EncodedImage encodedImage,
-      Bitmap.Config bitmapConfig) {
+      EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
     boolean retryOnFail=options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
-      return decodeStaticImageFromStream(encodedImage.getInputStream(), options);
+      return decodeStaticImageFromStream(encodedImage.getInputStream(), options, regionToDecode);
     } catch (RuntimeException re) {
       if (retryOnFail) {
-        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888);
+        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888, regionToDecode);
       }
       throw re;
     }
@@ -86,9 +89,11 @@ public class ArtDecoder implements PlatformDecoder {
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image.
+   *
    * @param encodedImage the encoded image with reference to the encoded bytes
-   * @param bitmapConfig the {@link android.graphics.Bitmap.Config}
-   * used to create the decoded Bitmap
+   * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
+   *     Bitmap
+   * @param regionToDecode optional image region to decode. currently not supported.
    * @param length the number of encoded bytes in the buffer
    * @return the bitmap
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -97,6 +102,7 @@ public class ArtDecoder implements PlatformDecoder {
   public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
       EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
+      @Nullable Rect regionToDecode,
       int length) {
     boolean isJpegComplete = encodedImage.isCompleteAt(length);
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
@@ -114,18 +120,17 @@ public class ArtDecoder implements PlatformDecoder {
     }
     boolean retryOnFail=options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
-      return decodeStaticImageFromStream(jpegDataStream, options);
+      return decodeStaticImageFromStream(jpegDataStream, options, regionToDecode);
     } catch (RuntimeException re) {
       if (retryOnFail) {
-        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888);
+        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888, regionToDecode);
       }
       throw re;
     }
   }
 
   protected CloseableReference<Bitmap> decodeStaticImageFromStream(
-      InputStream inputStream,
-      BitmapFactory.Options options) {
+      InputStream inputStream, BitmapFactory.Options options, @Nullable Rect regionToDecode) {
     Preconditions.checkNotNull(inputStream);
     int sizeInBytes = BitmapUtil.getSizeInByteForBitmap(
         options.outWidth,

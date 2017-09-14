@@ -122,27 +122,27 @@ public class ArtDecoderTest {
 
   @Test
   public void testDecodeStaticDecodesFromStream() {
-    mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+    mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     verifyDecodedFromStream();
   }
 
   @Test
   public void testDecodeStaticDoesNotLeak() {
-    mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+    mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     verifyNoLeaks();
   }
 
   @Test
   public void testStaticImageUsesPooledByteBufferWithPixels() {
     CloseableReference<Bitmap> decodedImage =
-        mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+        mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     closeAndVerifyClosed(decodedImage);
   }
 
   @Test(expected = NullPointerException.class)
   public void testPoolsReturnsNull() {
     doReturn(null).when(mBitmapPool).get(anyInt());
-    mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+    mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
   }
 
   @Test(expected = IllegalStateException.class)
@@ -151,7 +151,7 @@ public class ArtDecoderTest {
         .thenAnswer(mBitmapFactoryDefaultAnswer)
         .thenReturn(MockBitmapFactory.create());
     try {
-      mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+      mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     } finally {
       verify(mBitmapPool).release(mBitmap);
     }
@@ -163,7 +163,7 @@ public class ArtDecoderTest {
         .thenAnswer(mBitmapFactoryDefaultAnswer)
         .thenThrow(new ConcurrentModificationException());
     try {
-      mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+      mArtDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     } finally {
       verify(mBitmapPool).release(mBitmap);
     }
@@ -196,9 +196,7 @@ public class ArtDecoderTest {
     }
     CloseableReference<Bitmap> result =
         mArtDecoder.decodeJPEGFromEncodedImage(
-            mEncodedImage,
-            DEFAULT_BITMAP_CONFIG,
-            dataLength);
+            mEncodedImage, DEFAULT_BITMAP_CONFIG, null, dataLength);
     verifyDecodedFromStream();
     verifyNoLeaks();
     verifyDecodedBytes(complete, dataLength);

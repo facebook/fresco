@@ -124,10 +124,9 @@ public class KitKatPurgeableDecoderTest {
   public void testDecode_Jpeg_Detailed() {
     assumeNotNull(mKitKatPurgeableDecoder);
     setUpJpegDecode();
-    CloseableReference<Bitmap> result = mKitKatPurgeableDecoder.decodeJPEGFromEncodedImage(
-        mEncodedImage,
-        DEFAULT_BITMAP_CONFIG,
-        IMAGE_SIZE);
+    CloseableReference<Bitmap> result =
+        mKitKatPurgeableDecoder.decodeJPEGFromEncodedImage(
+            mEncodedImage, DEFAULT_BITMAP_CONFIG, null, IMAGE_SIZE);
     verifyDecodesJpeg(result);
   }
 
@@ -137,9 +136,7 @@ public class KitKatPurgeableDecoderTest {
     when(mFlexByteArrayPool.get(IMAGE_SIZE + 2)).thenReturn(mDecodeBufRef);
     CloseableReference<Bitmap> result =
         mKitKatPurgeableDecoder.decodeJPEGFromEncodedImage(
-            mEncodedImage,
-            DEFAULT_BITMAP_CONFIG,
-            IMAGE_SIZE);
+            mEncodedImage, DEFAULT_BITMAP_CONFIG, null, IMAGE_SIZE);
     verify(mFlexByteArrayPool).get(IMAGE_SIZE + 2);
     verifyStatic();
     BitmapFactory.decodeByteArray(
@@ -163,7 +160,7 @@ public class KitKatPurgeableDecoderTest {
     mBitmapCounter.increase(
         MockBitmapFactory.createForSize(MAX_BITMAP_SIZE, DEFAULT_BITMAP_CONFIG));
     try {
-      mKitKatPurgeableDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+      mKitKatPurgeableDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     } finally {
       verify(mBitmap).recycle();
       assertEquals(1, mBitmapCounter.getCount());
@@ -177,7 +174,7 @@ public class KitKatPurgeableDecoderTest {
     PowerMockito.doThrow(new ConcurrentModificationException()).when(Bitmaps.class);
     Bitmaps.pinBitmap(any(Bitmap.class));
     try {
-      mKitKatPurgeableDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG);
+      mKitKatPurgeableDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
     } finally {
       verify(mBitmap).recycle();
       assertEquals(0, mBitmapCounter.getCount());
