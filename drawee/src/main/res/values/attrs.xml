@@ -121,6 +121,14 @@
     <attr name="roundBottomRight" format="boolean"/>
     <!-- Round the bottom-left corner. Ignored if roundAsCircle is used. -->
     <attr name="roundBottomLeft" format="boolean"/>
+    <!-- Round the top-start edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundTopStart" format="boolean"/>
+    <!-- Round the top-end edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundTopEnd" format="boolean"/>
+    <!-- Round the bottom-start edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundBottomStart" format="boolean"/>
+    <!-- Round the bottom-end edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundBottomEnd" format="boolean"/>
     <!-- Round by overlying color. -->
     <attr name="roundWithOverlayColor" format="color"/>
     <!-- Rounding border width-->
@@ -205,6 +213,14 @@
     <attr name="roundBottomRight" />
     <!-- Round the bottom-left corner. Ignored if roundAsCircle is used. -->
     <attr name="roundBottomLeft" />
+    <!-- Round the top-start edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundTopStart" />
+    <!-- Round the top-end edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundTopEnd" />
+    <!-- Round the bottom-start edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundBottomStart" />
+    <!-- Round the bottom-end edge. Ignored if roundAsCircle is used. -->
+    <attr name="roundBottomEnd" />
     <!-- Round by overlying color. -->
     <attr name="roundWithOverlayColor" />
     <!-- Rounding border width-->
