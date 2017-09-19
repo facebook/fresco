@@ -13,7 +13,6 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
-import com.facebook.infer.annotation.PropagatesNullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    *
    * <p>Returns null if the parameter is null.
    */
-  public static <T extends Closeable> CloseableReference<T> of(@PropagatesNullable T t) {
+  public static @Nullable <T extends Closeable> CloseableReference<T> of(@Nullable T t) {
     if (t == null) {
       return null;
     } else {
@@ -107,8 +106,8 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * Constructs a CloseableReference (wrapping a SharedReference) of T with provided
    * ResourceReleaser<T>. If t is null, this will just return null.
    */
-  public static <T> CloseableReference<T> of(
-      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
+  public static @Nullable <T> CloseableReference<T> of(
+      @Nullable T t, ResourceReleaser<T> resourceReleaser) {
     if (t == null) {
       return null;
     } else {
@@ -134,7 +133,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     return new CloseableReference<T>(mSharedReference);
   }
 
-  public synchronized @Nullable CloseableReference<T> cloneOrNull() {
+  public synchronized CloseableReference<T> cloneOrNull() {
     if (isValid()) {
       return clone();
     }
@@ -214,7 +213,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * @return the list of cloned references or null
    */
   public static <T> List<CloseableReference<T>> cloneOrNull(
-      @PropagatesNullable Collection<CloseableReference<T>> refs) {
+      Collection<CloseableReference<T>> refs) {
     if (refs == null) {
       return null;
     }
