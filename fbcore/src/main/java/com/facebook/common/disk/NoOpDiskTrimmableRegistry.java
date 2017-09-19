@@ -9,11 +9,12 @@
 
 package com.facebook.common.disk;
 
+import javax.annotation.Nullable;
 /**
  * Implementation of {@link DiskTrimmableRegistry} that does not do anything.
  */
 public class NoOpDiskTrimmableRegistry implements DiskTrimmableRegistry {
-  private static NoOpDiskTrimmableRegistry sInstance = null;
+  private static @Nullable NoOpDiskTrimmableRegistry sInstance = null;
 
   private NoOpDiskTrimmableRegistry() {
   }
