@@ -31,8 +31,8 @@ The `SimpleDraweeView` class will forward several attributes over to `RoundingPa
 <com.facebook.drawee.view.SimpleDraweeView
   ...
   fresco:roundedCornerRadius="5dp"
-  fresco:roundBottomLeft="false"
-  fresco:roundBottomRight="false"
+  fresco:roundBottomStart="false"
+  fresco:roundBottomEnd="false"
   fresco:roundWithOverlayColor="@color/blue"
   fresco:roundingBorderWidth="1dp"
   fresco:roundingBorderColor="@color/red"

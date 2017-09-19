@@ -202,6 +202,7 @@
   <string name="drawee_rounded_corners_as_circle">Using roundAsCircle</string>
   <string name="drawee_rounded_corners_radius">16dp corner radius</string>
   <string name="drawee_rounded_corners_some">Only rounding some corners</string>
+  <string name="drawee_rounded_corners_some_rtl">Only rounding some corners (RTL supported)</string>
   <string name="drawee_rounded_corners_fancy">Fancy (different radii)</string>
   <string name="drawee_rounded_corners_borders">Borders</string>
   <string name="drawee_rounded_corners_bitmap_only_toast">Switched to BITMAP_ONLY rounding method</string>
