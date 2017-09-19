@@ -420,8 +420,8 @@ public final class Objects {
     }
 
     private static final class ValueHolder {
-      String name;
-      Object value;
+      @Nullable String name;
+      @Nullable Object value;
       ValueHolder next;
     }
   }
