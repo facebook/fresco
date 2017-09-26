@@ -10,6 +10,7 @@
 package com.facebook.drawee.interfaces;
 
 import android.graphics.drawable.Drawable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Interface that represents a Drawee hierarchy.
@@ -30,6 +31,7 @@ import android.graphics.drawable.Drawable;
  *      +--o BitmapDrawable
  *
  */
+@ThreadSafe
 public interface DraweeHierarchy {
 
   /**

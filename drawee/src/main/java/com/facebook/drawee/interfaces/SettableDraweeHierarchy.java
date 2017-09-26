@@ -10,6 +10,7 @@
 package com.facebook.drawee.interfaces;
 
 import android.graphics.drawable.Drawable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Interface that represents a settable Drawee hierarchy. Hierarchy should display a placeholder
@@ -45,6 +46,7 @@ import android.graphics.drawable.Drawable;
  *   applied on each.
  *
  */
+@ThreadSafe
 public interface SettableDraweeHierarchy extends DraweeHierarchy {
 
   /**

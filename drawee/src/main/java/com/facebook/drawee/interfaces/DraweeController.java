@@ -12,12 +12,14 @@ package com.facebook.drawee.interfaces;
 import android.graphics.drawable.Animatable;
 import android.view.MotionEvent;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Interface that represents a Drawee controller used by a DraweeView.
  * <p> The view forwards events to the controller. The controller controls
  * its hierarchy based on those events.
  */
+@ThreadSafe
 public interface DraweeController {
 
   /** Gets the hierarchy. */
