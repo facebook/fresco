@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.util.Pair;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferInputStream;
@@ -135,6 +136,9 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
       }
     } catch (IOException e) {
       // If we cannot get the exif interface, return null as there is no thumbnail available
+    } catch (StackOverflowError e) {
+      // Device-specific issue when loading huge images
+      FLog.e(LocalExifThumbnailProducer.class, "StackOverflowError in ExifInterface constructor");
     }
     return null;
   }
