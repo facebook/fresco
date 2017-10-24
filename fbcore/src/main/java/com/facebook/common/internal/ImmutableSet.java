@@ -29,7 +29,7 @@ public class ImmutableSet<E> extends HashSet<E> {
   }
 
   public static <E> ImmutableSet<E> of(E... elements) {
-    HashSet<E> set = new HashSet<>();
+    HashSet<E> set = new HashSet<>(elements.length);
     Collections.addAll(set, elements);
     return new ImmutableSet<>(set);
   }

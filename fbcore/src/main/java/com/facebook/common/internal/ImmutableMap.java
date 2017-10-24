@@ -30,13 +30,13 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
   }
 
   public static <K, V> Map<K, V> of(K k1, V v1) {
-    Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>(1);
     map.put(k1, v1);
     return Collections.unmodifiableMap(map);
   }
 
   public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2) {
-    Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>(2);
     map.put(k1, v1);
     map.put(k2, v2);
     return Collections.unmodifiableMap(map);
@@ -44,7 +44,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3) {
-    Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>(3);
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);
@@ -53,7 +53,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
-    Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>(4);
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);
@@ -63,7 +63,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
-    Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>(5);
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);
@@ -74,7 +74,7 @@ public class ImmutableMap<K, V> extends HashMap<K, V> {
 
   public static <K, V> Map<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
-    Map<K, V> map = new HashMap<>();
+    Map<K, V> map = new HashMap<>(6);
     map.put(k1, v1);
     map.put(k2, v2);
     map.put(k3, v3);
