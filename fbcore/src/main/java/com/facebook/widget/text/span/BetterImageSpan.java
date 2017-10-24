@@ -108,7 +108,7 @@ public class BetterImageSpan extends ReplacementSpan {
     }
 
     if (offsetBelow > fontMetrics.bottom) {
-      fontMetrics.descent = offsetBelow;
+      fontMetrics.bottom = offsetBelow;
     }
 
     return mWidth;
