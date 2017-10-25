@@ -9,12 +9,23 @@
 
 package com.facebook.imagepipeline.decoder;
 
+import com.facebook.imagepipeline.image.EncodedImage;
+
 public class DecodeException extends RuntimeException {
-  public DecodeException(String message) {
+
+  private final EncodedImage mEncodedImage;
+
+  public DecodeException(String message, EncodedImage encodedImage) {
     super(message);
+    mEncodedImage = encodedImage;
   }
 
-  public DecodeException(String message, Throwable t) {
+  public DecodeException(String message, Throwable t, EncodedImage encodedImage) {
     super(message, t);
+    mEncodedImage = encodedImage;
+  }
+
+  public EncodedImage getEncodedImage() {
+    return mEncodedImage;
   }
 }

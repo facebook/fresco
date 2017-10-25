@@ -47,26 +47,27 @@ public class DefaultImageDecoder implements ImageDecoder {
   private final ImageDecoder mAnimatedWebPDecoder;
   private final PlatformDecoder mPlatformDecoder;
 
-  private final ImageDecoder mDefaultDecoder = new ImageDecoder() {
-    @Override
-    public CloseableImage decode(
-        EncodedImage encodedImage,
-        int length,
-        QualityInfo qualityInfo,
-        ImageDecodeOptions options) {
-      ImageFormat imageFormat = encodedImage.getImageFormat();
-      if (imageFormat == DefaultImageFormats.JPEG) {
-        return decodeJpeg(encodedImage, length, qualityInfo, options);
-      } else if (imageFormat == DefaultImageFormats.GIF) {
-        return decodeGif(encodedImage, length, qualityInfo, options);
-      } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
-        return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
-      } else if (imageFormat == ImageFormat.UNKNOWN) {
-        throw new IllegalArgumentException("unknown image format");
-      }
-      return decodeStaticImage(encodedImage, options);
-    }
-  };
+  private final ImageDecoder mDefaultDecoder =
+      new ImageDecoder() {
+        @Override
+        public CloseableImage decode(
+            EncodedImage encodedImage,
+            int length,
+            QualityInfo qualityInfo,
+            ImageDecodeOptions options) {
+          ImageFormat imageFormat = encodedImage.getImageFormat();
+          if (imageFormat == DefaultImageFormats.JPEG) {
+            return decodeJpeg(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == DefaultImageFormats.GIF) {
+            return decodeGif(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
+            return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
+          } else if (imageFormat == ImageFormat.UNKNOWN) {
+            throw new DecodeException("unknown image format", encodedImage);
+          }
+          return decodeStaticImage(encodedImage, options);
+        }
+      };
 
   @Nullable
   private final Map<ImageFormat, ImageDecoder> mCustomDecoders;
@@ -93,8 +94,8 @@ public class DefaultImageDecoder implements ImageDecoder {
    * Decodes image.
    *
    * @param encodedImage input image (encoded bytes plus meta data)
-   * @param length if image type supports decoding incomplete image then determines where
-   *   the image data should be cut for decoding.
+   * @param length if image type supports decoding incomplete image then determines where the image
+   *     data should be cut for decoding.
    * @param qualityInfo quality information for the image
    * @param options options that cange decode behavior
    */

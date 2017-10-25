@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.ExceptionWithNoStacktrace;
@@ -23,6 +24,7 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.decoder.DecodeException;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
@@ -112,6 +114,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
   private abstract class ProgressiveDecoder extends DelegatingConsumer<
       EncodedImage, CloseableReference<CloseableImage>> {
+
+    private final String TAG = "ProgressiveDecoder";
+    private static final int DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES = 10;
 
     private final ProducerContext mProducerContext;
     private final ProducerListener mProducerListener;
@@ -231,6 +236,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
       try {
         long queueTime = mJobScheduler.getQueuedTime();
+        String requestUri = String.valueOf(mProducerContext.getImageRequest().getSourceUri());
         int length = isLastAndComplete || isPlaceholder
             ? encodedImage.getSize()
             : getIntermediateImageEndOffset(encodedImage);
@@ -241,7 +247,20 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
         CloseableImage image = null;
         try {
-          image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+          try {
+            image = mImageDecoder.decode(encodedImage, length, quality, mImageDecodeOptions);
+          } catch (DecodeException e) {
+            EncodedImage failedEncodedImage = e.getEncodedImage();
+            FLog.w(
+                TAG,
+                "%s, {uri: %s, firstEncodedBytes: %s, length: %d}",
+                e.getMessage(),
+                requestUri,
+                failedEncodedImage.getFirstBytesAsHexString(
+                    DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES),
+                failedEncodedImage.getSize());
+            throw e;
+          }
           if (encodedImage.getSampleSize() != EncodedImage.DEFAULT_SAMPLE_SIZE) {
             status |= Consumer.IS_RESIZING_DONE;
           }

@@ -154,6 +154,15 @@ public class EncodedImageTest {
   }
 
   @Test
+  public void testGetFirstBytesAsHexString() throws IOException {
+    PooledByteBuffer buf = new TrivialPooledByteBuffer("12345abcd".getBytes());
+    EncodedImage encodedImage = new EncodedImage(CloseableReference.of(buf));
+    assertEquals("313233343561626364", encodedImage.getFirstBytesAsHexString(9));
+    assertEquals("313233343561626364", encodedImage.getFirstBytesAsHexString(10));
+    assertEquals("313233343561", encodedImage.getFirstBytesAsHexString(6));
+  }
+
+  @Test
   public void testParseMetaData_JPEG() throws IOException {
     PooledByteBuffer buf = new TrivialPooledByteBuffer(
         ByteStreams.toByteArray(EncodedImageTest.class.getResourceAsStream("images/image.jpg")));
