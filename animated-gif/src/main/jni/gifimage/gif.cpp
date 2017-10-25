@@ -70,8 +70,9 @@ public:
       std::unique_ptr<GifFileType, decltype(&DGifCloseFile2)>&& pGifFile,
       std::shared_ptr<DataWrapper>& pData) :
           m_spGifFile(std::move(pGifFile)),
-          m_spData(pData) {
-    m_rasterBits.reserve(m_spGifFile->SWidth * m_spGifFile->SHeight);
+          m_spData(pData),
+          m_reservedBufferSize(m_spGifFile->SWidth * m_spGifFile->SHeight) {
+    m_rasterBits.reserve(m_reservedBufferSize);
   }
 
   virtual ~GifWrapper() {
@@ -110,6 +111,13 @@ public:
     return m_rasterBits.size();
   }
 
+  void reserveRasterBuffer(size_t bufferSize) {
+    if (m_reservedBufferSize < bufferSize) {
+      m_rasterBits.reserve(bufferSize);
+      m_reservedBufferSize = bufferSize;
+    }
+  }
+
   std::mutex& getRasterMutex() {
     return m_rasterMutex;
   }
@@ -125,6 +133,7 @@ private:
   std::vector<int> m_vectorFrameByteOffsets;
   std::vector<uint8_t> m_rasterBits;
   std::mutex m_rasterMutex;
+  size_t m_reservedBufferSize;
 };
 
 /**
@@ -297,17 +306,20 @@ bool getGraphicsControlBlockForImage(SavedImage* pSavedImage, GraphicsControlBlo
  * written to the SavedImage structure. This is the key to how we avoid caching all the decoded
  * frame pixels in memory.
  *
- * @param pGifFile the gif data structure to read to and write to
- * @param pRasterBits the buffer to write the decoded frame pixels to. If null, the data is
- *    not actually decoded and instead just skipped.
- * @param doNotAddToSavedImages if set to true, will not add an additional SavedImage to
+ * @param pGifWrapper the gif wrapper containing the giflib struct and additional data
+ * @param decodeFrame if set to true, next frame will be decoded to pGifWrapper bits buffer,
+       otherwise it will only decode frame data and skip it
+ * @param addToSavedImages if set to true, will add an additional SavedImage to
  *     pGifFile->SavedImages
  * @return a gif error code
  */
 int readSingleFrame(
-    GifFileType* pGifFile,
-    uint8_t* pRasterBits,
-    bool doNotAddToSavedImages) {
+    GifWrapper* pGifWrapper,
+    bool decodeFramePixels,
+    bool addToSavedImages) {
+
+  GifFileType *pGifFile = pGifWrapper->get();
+
   if (DGifGetImageDesc(pGifFile) == GIF_ERROR) {
     return GIF_ERROR;
   }
@@ -322,16 +334,16 @@ int readSingleFrame(
   if (pSavedImage->ImageDesc.Width > 0 &&
       pSavedImage->ImageDesc.Height > 0 &&
       pSavedImage->ImageDesc.Width > (INT_MAX / pSavedImage->ImageDesc.Height)) {
-      return GIF_ERROR;
-  }
-
-  size_t imageSize = pSavedImage->ImageDesc.Width * pSavedImage->ImageDesc.Height;
-  if (imageSize > (unsigned)(pGifFile->SWidth * pGifFile->SHeight)) {
     return GIF_ERROR;
   }
 
-  if (pRasterBits != nullptr) {
-    // We're were asked to decode and write the results to pRasterBits.
+  if (decodeFramePixels) {
+    // Reserve larger raster bits buffer if needed
+    size_t imageSize = pSavedImage->ImageDesc.Width * pSavedImage->ImageDesc.Height;
+    pGifWrapper->reserveRasterBuffer(imageSize);
+
+    // Decode frame image and save it to temporary raster bits buffer
+    uint8_t* pRasterBits = pGifWrapper->getRasterBits();
     if (pSavedImage->ImageDesc.Interlace) {
       // The way an interlaced image should be read - offsets and jumps...
       int interlacedOffset[] = { 0, 4, 2, 1 };
@@ -375,7 +387,7 @@ int readSingleFrame(
     pGifFile->ExtensionBlockCount = 0;
   }
 
-  if (doNotAddToSavedImages) {
+  if (!addToSavedImages) {
     // giflib wasn't designed to work with decoding arbitrary frames on the fly. By default, it will
     // keep adding more images to the SavedImages array. To avoid that, we just decrement the image
     // count. It basically means the array remains larger by one GifFileType. We decrement it so
@@ -502,9 +514,10 @@ int modifiedDGifSlurp(GifWrapper* pGifWrapper) {
         pGifWrapper->addFrameByteOffset(pGifWrapper->getData()->getPosition());
 
         if (readSingleFrame(
-              pGifWrapper->get(),
-              nullptr,
-              false) == GIF_ERROR) {
+              pGifWrapper,
+              false, // Don't decode frame pixels
+              true  // Add to saved images
+              ) == GIF_ERROR) {
           isStop = true;
         }
         break;
@@ -1109,7 +1122,14 @@ void GifFrame_nativeRenderFrame(
   pGifWrapper->getData()->setPosition(byteOffset);
 
   // Now we kick off the decoding process.
-  readSingleFrame(pGifWrapper->get(), pGifWrapper->getRasterBits(), true);
+  int readRes = readSingleFrame(pGifWrapper,
+                                true, // Decode frame pixels
+                                false // Don't add frame to saved images
+                                );
+  if (readRes != GIF_OK) {
+    // Probably, broken canvas, and we can ignore it
+    return;
+  }
 
   // Get the right color table to use.
   ColorMapObject* pColorMap = spNativeContext->spGifWrapper->get()->SColorMap;
