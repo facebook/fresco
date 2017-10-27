@@ -58,6 +58,7 @@ public class DebugControllerOverlayDrawable extends Drawable {
 
   // General information
   private String mControllerId;
+  private String mImageId;
   private int mWidthPx;
   private int mHeightPx;
   private int mImageSizeBytes;
@@ -112,6 +113,11 @@ public class DebugControllerOverlayDrawable extends Drawable {
 
   public void setControllerId(@Nullable String controllerId) {
     mControllerId = controllerId != null ? controllerId : NO_CONTROLLER_ID;
+    invalidateSelf();
+  }
+
+  public void setImageId(@Nullable String imageId) {
+    mImageId = imageId;
     invalidateSelf();
   }
 
@@ -176,7 +182,11 @@ public class DebugControllerOverlayDrawable extends Drawable {
     mCurrentTextXPx = mStartTextXPx;
     mCurrentTextYPx = mStartTextYPx;
 
-    addDebugText(canvas, "ID: %s", mControllerId);
+    if (mImageId != null) {
+      addDebugText(canvas, "IDs: %s, %s", mControllerId, mImageId);
+    } else {
+      addDebugText(canvas, "ID: %s", mControllerId);
+    }
     addDebugText(canvas, "D: %dx%d", bounds.width(), bounds.height());
     addDebugText(canvas, "I: %dx%d", mWidthPx, mHeightPx);
     addDebugText(canvas, "I: %d KiB", (mImageSizeBytes / 1024));

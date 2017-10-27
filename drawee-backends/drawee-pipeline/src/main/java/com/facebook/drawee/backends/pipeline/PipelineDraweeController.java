@@ -179,6 +179,10 @@ public class PipelineDraweeController
     return mResources;
   }
 
+  protected CacheKey getCacheKey() {
+    return mCacheKey;
+  }
+
   @Override
   protected DataSource<CloseableReference<CloseableImage>> getDataSource() {
     if (FLog.isLoggable(FLog.VERBOSE)) {
