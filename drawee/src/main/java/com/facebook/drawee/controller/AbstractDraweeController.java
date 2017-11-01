@@ -53,8 +53,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
    */
   private static class InternalForwardingListener<INFO> extends ForwardingControllerListener<INFO> {
     public static <INFO> InternalForwardingListener<INFO> createInternal(
-        ControllerListener<? super INFO> listener1,
-        ControllerListener<? super INFO> listener2) {
+        ControllerListener<INFO> listener1, ControllerListener<INFO> listener2) {
       InternalForwardingListener<INFO> forwarder = new InternalForwardingListener<INFO>();
       forwarder.addListener(listener1);
       forwarder.addListener(listener2);
@@ -244,7 +243,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   }
 
   /** Adds controller listener. */
-  public void addControllerListener(ControllerListener<? super INFO> controllerListener) {
+  public void addControllerListener(ControllerListener<INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener);
     if (mControllerListener instanceof InternalForwardingListener) {
       ((InternalForwardingListener<INFO>) mControllerListener).addListener(controllerListener);
@@ -256,13 +255,11 @@ public abstract class AbstractDraweeController<T, INFO> implements
           controllerListener);
       return;
     }
-    // Listener only receives <INFO>, it never produces one.
-    // That means if it can accept <? super INFO>, it can very well accept <INFO>.
-    mControllerListener = (ControllerListener<INFO>) controllerListener;
+    mControllerListener = controllerListener;
   }
 
   /** Removes controller listener. */
-  public void removeControllerListener(ControllerListener<? super INFO> controllerListener) {
+  public void removeControllerListener(ControllerListener<INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener);
     if (mControllerListener instanceof InternalForwardingListener) {
       ((InternalForwardingListener<INFO>) mControllerListener).removeListener(controllerListener);

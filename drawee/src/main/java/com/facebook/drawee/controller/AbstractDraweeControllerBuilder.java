@@ -62,7 +62,7 @@ public abstract class AbstractDraweeControllerBuilder <
   private @Nullable REQUEST[] mMultiImageRequests;
   private boolean mTryCacheOnlyFirst;
   private @Nullable Supplier<DataSource<IMAGE>> mDataSourceSupplier;
-  private @Nullable ControllerListener<? super INFO> mControllerListener;
+  private @Nullable ControllerListener<INFO> mControllerListener;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
@@ -228,14 +228,14 @@ public abstract class AbstractDraweeControllerBuilder <
   }
 
   /** Sets the controller listener. */
-  public BUILDER setControllerListener(ControllerListener<? super INFO> controllerListener) {
+  public BUILDER setControllerListener(ControllerListener<INFO> controllerListener) {
     mControllerListener = controllerListener;
     return getThis();
   }
 
   /** Gets the controller listener */
   @Nullable
-  public ControllerListener<? super INFO> getControllerListener() {
+  public ControllerListener<INFO> getControllerListener() {
     return mControllerListener;
   }
 
@@ -393,7 +393,7 @@ public abstract class AbstractDraweeControllerBuilder <
   /** Attaches listeners (if specified) to the given controller. */
   protected void maybeAttachListeners(AbstractDraweeController controller) {
     if (mBoundControllerListeners != null) {
-      for (ControllerListener<? super INFO> listener : mBoundControllerListeners) {
+      for (ControllerListener<INFO> listener : mBoundControllerListeners) {
         controller.addControllerListener(listener);
       }
     }
