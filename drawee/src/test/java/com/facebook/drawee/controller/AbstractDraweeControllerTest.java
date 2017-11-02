@@ -288,7 +288,7 @@ public class AbstractDraweeControllerTest {
   @Test
   public void testListeners() {
     ControllerListener<FakeImageInfo> listener1 = mock(ControllerListener.class);
-    ControllerListener<FakeImageInfo> listener2 = mock(ControllerListener.class);
+    ControllerListener<Object> listener2 = mock(ControllerListener.class);
     InOrder inOrder = inOrder(listener1, listener2);
 
     mController.getControllerListener().onRelease("id");

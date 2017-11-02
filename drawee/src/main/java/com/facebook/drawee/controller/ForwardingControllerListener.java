@@ -24,7 +24,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
   // lint only allows 23 characters in a tag
   private static final String TAG = "FdingControllerListener";
 
-  private final List<ControllerListener<INFO>> mListeners = new ArrayList<>(2);
+  private final List<ControllerListener<? super INFO>> mListeners = new ArrayList<>(2);
 
   public ForwardingControllerListener() {
   }
@@ -33,25 +33,26 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
     return new ForwardingControllerListener<INFO>();
   }
 
-  public static <INFO> ForwardingControllerListener<INFO> of(ControllerListener<INFO> listener) {
+  public static <INFO> ForwardingControllerListener<INFO> of(
+      ControllerListener<? super INFO> listener) {
     ForwardingControllerListener<INFO> forwarder = create();
     forwarder.addListener(listener);
     return forwarder;
   }
 
   public static <INFO> ForwardingControllerListener<INFO> of(
-      ControllerListener<INFO> listener1, ControllerListener<INFO> listener2) {
+      ControllerListener<? super INFO> listener1, ControllerListener<? super INFO> listener2) {
     ForwardingControllerListener<INFO> forwarder = create();
     forwarder.addListener(listener1);
     forwarder.addListener(listener2);
     return forwarder;
   }
 
-  public synchronized void addListener(ControllerListener<INFO> listener) {
+  public synchronized void addListener(ControllerListener<? super INFO> listener) {
     mListeners.add(listener);
   }
 
-  public synchronized void removeListener(ControllerListener<INFO> listener) {
+  public synchronized void removeListener(ControllerListener<? super INFO> listener) {
     int index = mListeners.indexOf(listener);
     if (index != -1) {
       mListeners.set(index, null);
@@ -71,7 +72,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
-        ControllerListener<INFO> listener = mListeners.get(i);
+        ControllerListener<? super INFO> listener = mListeners.get(i);
         if (listener != null) {
           listener.onSubmit(id, callerContext);
         }
@@ -106,7 +107,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
-        ControllerListener<INFO> listener = mListeners.get(i);
+        ControllerListener<? super INFO> listener = mListeners.get(i);
         if (listener != null) {
           listener.onIntermediateImageSet(id, imageInfo);
         }
@@ -122,7 +123,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
-        ControllerListener<INFO> listener = mListeners.get(i);
+        ControllerListener<? super INFO> listener = mListeners.get(i);
         if (listener != null) {
           listener.onIntermediateImageFailed(id, throwable);
         }
@@ -138,7 +139,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
-        ControllerListener<INFO> listener = mListeners.get(i);
+        ControllerListener<? super INFO> listener = mListeners.get(i);
         if (listener != null) {
           listener.onFailure(id, throwable);
         }
@@ -154,7 +155,7 @@ public class ForwardingControllerListener<INFO> implements ControllerListener<IN
     final int numberOfListeners = mListeners.size();
     for (int i = 0; i < numberOfListeners; ++i) {
       try {
-        ControllerListener<INFO> listener = mListeners.get(i);
+        ControllerListener<? super INFO> listener = mListeners.get(i);
         if (listener != null) {
           listener.onRelease(id);
         }
