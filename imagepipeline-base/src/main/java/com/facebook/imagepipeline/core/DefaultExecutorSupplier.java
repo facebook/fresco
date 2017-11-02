@@ -12,7 +12,6 @@ package com.facebook.imagepipeline.core;
 import android.os.Process;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Basic implementation of {@link ExecutorSupplier}.
@@ -31,19 +30,26 @@ public class DefaultExecutorSupplier implements ExecutorSupplier {
   private final Executor mLightWeightBackgroundExecutor;
 
   public DefaultExecutorSupplier(int numCpuBoundThreads) {
-    ThreadFactory backgroundPriorityThreadFactory =
-        new PriorityThreadFactory(Process.THREAD_PRIORITY_BACKGROUND);
-
-    mIoBoundExecutor = Executors.newFixedThreadPool(NUM_IO_BOUND_THREADS);
-    mDecodeExecutor = Executors.newFixedThreadPool(
-        numCpuBoundThreads,
-        backgroundPriorityThreadFactory);
-    mBackgroundExecutor = Executors.newFixedThreadPool(
-        numCpuBoundThreads,
-        backgroundPriorityThreadFactory);
-    mLightWeightBackgroundExecutor = Executors.newFixedThreadPool(
-        NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
-        backgroundPriorityThreadFactory);
+    mIoBoundExecutor =
+        Executors.newFixedThreadPool(
+            NUM_IO_BOUND_THREADS,
+            new PriorityThreadFactory(
+                Process.THREAD_PRIORITY_BACKGROUND, "FrescoIoBoundExecutor", true));
+    mDecodeExecutor =
+        Executors.newFixedThreadPool(
+            numCpuBoundThreads,
+            new PriorityThreadFactory(
+                Process.THREAD_PRIORITY_BACKGROUND, "FrescoDecodeExecutor", true));
+    mBackgroundExecutor =
+        Executors.newFixedThreadPool(
+            numCpuBoundThreads,
+            new PriorityThreadFactory(
+                Process.THREAD_PRIORITY_BACKGROUND, "FrescoBackgroundExecutor", true));
+    mLightWeightBackgroundExecutor =
+        Executors.newFixedThreadPool(
+            NUM_LIGHTWEIGHT_BACKGROUND_THREADS,
+            new PriorityThreadFactory(
+                Process.THREAD_PRIORITY_BACKGROUND, "FrescoLightWeightBackgroundExecutor", true));
 
   }
 
