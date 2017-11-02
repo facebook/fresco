@@ -79,15 +79,18 @@ public class ShowcaseApplication extends Application {
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build());
 
     final Context context = this;
-    Stetho.initialize(Stetho.newInitializerBuilder(context)
-        .enableDumpapp(new DumperPluginsProvider() {
-          @Override
-          public Iterable<DumperPlugin> get() {
-            return new Stetho.DefaultDumperPluginsBuilder(context)
-                .provide(new FrescoStethoPlugin())
-                .finish();
-          }
-        })
-        .build());
+    Stetho.initialize(
+        Stetho.newInitializerBuilder(context)
+            .enableDumpapp(
+                new DumperPluginsProvider() {
+                  @Override
+                  public Iterable<DumperPlugin> get() {
+                    return new Stetho.DefaultDumperPluginsBuilder(context)
+                        .provide(new FrescoStethoPlugin())
+                        .finish();
+                  }
+                })
+            .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
+            .build());
   }
 }
