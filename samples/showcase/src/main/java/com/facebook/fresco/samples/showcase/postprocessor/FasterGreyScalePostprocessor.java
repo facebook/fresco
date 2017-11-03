@@ -12,22 +12,16 @@
 package com.facebook.fresco.samples.showcase.postprocessor;
 
 import android.graphics.Bitmap;
-import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
+import com.facebook.imagepipeline.request.BasePostprocessor;
 
 /**
  * Applies a grey-scale effect on the bitmap using the more efficient {@link Bitmap#setPixels(int[],
  * int, int, int, int, int, int)} method.
  */
-public class FasterGreyScalePostprocessor extends BasePostprocessorWithDurationCallback {
-
-  public FasterGreyScalePostprocessor(DurationCallback durationCallback) {
-    super(durationCallback);
-  }
+public class FasterGreyScalePostprocessor extends BasePostprocessor {
 
   @Override
   public void process(Bitmap bitmap) {
-    final long startNs = System.nanoTime();
-
     final int w = bitmap.getWidth();
     final int h = bitmap.getHeight();
     final int[] pixels = new int[w * h];
@@ -47,7 +41,5 @@ public class FasterGreyScalePostprocessor extends BasePostprocessorWithDurationC
     }
 
     bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
-
-    showDuration(System.nanoTime() - startNs);
   }
 }

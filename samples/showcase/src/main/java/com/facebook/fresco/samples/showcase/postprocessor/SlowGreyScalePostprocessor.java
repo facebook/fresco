@@ -12,17 +12,13 @@
 package com.facebook.fresco.samples.showcase.postprocessor;
 
 import android.graphics.Bitmap;
-import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
+import com.facebook.imagepipeline.request.BasePostprocessor;
 
 /**
  * Applies a grey-scale effect on the bitmap using the slow {@link Bitmap#setPixel(int, int, int)}
  * method.
  */
-public class SlowGreyScalePostprocessor extends BasePostprocessorWithDurationCallback {
-
-  public SlowGreyScalePostprocessor(DurationCallback durationCallback) {
-    super(durationCallback);
-  }
+public class SlowGreyScalePostprocessor extends BasePostprocessor {
 
   static int getGreyColor(int color) {
     final int r = (color >> 16) & 0xFF;
@@ -37,8 +33,6 @@ public class SlowGreyScalePostprocessor extends BasePostprocessorWithDurationCal
 
   @Override
   public void process(Bitmap bitmap) {
-    final long startNs = System.nanoTime();
-
     final int w = bitmap.getWidth();
     final int h = bitmap.getHeight();
 
@@ -53,6 +47,5 @@ public class SlowGreyScalePostprocessor extends BasePostprocessorWithDurationCal
         bitmap.setPixel(x, y, SlowGreyScalePostprocessor.getGreyColor(color));
       }
     }
-    showDuration(System.nanoTime() - startNs);
   }
 }

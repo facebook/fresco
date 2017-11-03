@@ -13,7 +13,6 @@ package com.facebook.fresco.samples.showcase.postprocessor;
 
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.fresco.samples.showcase.imagepipeline.DurationCallback;
 import java.util.Locale;
 
 /**
@@ -24,10 +23,9 @@ import java.util.Locale;
 public class CachedWatermarkPostprocessor extends WatermarkPostprocessor {
 
   public CachedWatermarkPostprocessor(
-      DurationCallback durationCallback,
       int count,
       String watermarkText) {
-    super(durationCallback, count, watermarkText);
+    super(count, watermarkText);
   }
 
   @Override
