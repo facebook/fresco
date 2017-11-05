@@ -10,6 +10,8 @@
 package com.facebook.common.util;
 
 import android.util.Base64;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -58,6 +60,10 @@ public class SecureHashUtil {
     return makeHash(bytes, "MD5");
   }
 
+  public static String makeMD5Hash(InputStream stream) throws IOException {
+    return makeHash(stream, "MD5");
+  }
+
   static final byte[] HEX_CHAR_TABLE = {
       (byte) '0', (byte) '1', (byte) '2', (byte) '3',
       (byte) '4', (byte) '5', (byte) '6', (byte) '7',
@@ -79,6 +85,25 @@ public class SecureHashUtil {
     try {
       MessageDigest md = MessageDigest.getInstance(algorithm);
       md.update(bytes, 0, bytes.length);
+      byte[] hash = md.digest();
+      return convertToHex(hash);
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static final int BUFFER_SIZE = 4096;
+
+  private static String makeHash(InputStream stream, String algorithm) throws IOException {
+    try {
+      MessageDigest md = MessageDigest.getInstance(algorithm);
+      byte[] buffer = new byte[BUFFER_SIZE];
+      int read;
+      while ((read = stream.read(buffer)) > 0) {
+        md.update(buffer, 0, read);
+      }
       byte[] hash = md.digest();
       return convertToHex(hash);
     } catch (NoSuchAlgorithmException e) {
