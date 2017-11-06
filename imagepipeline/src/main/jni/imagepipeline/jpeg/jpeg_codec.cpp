@@ -152,6 +152,14 @@ JXFORM_CODE getTransformForRotationType(RotationType rotation_type) {
     return JXFORM_ROT_180;
   case RotationType::ROTATE_270:
     return JXFORM_ROT_270;
+  case RotationType::FLIP_HORIZONTAL:
+    return JXFORM_FLIP_H;
+  case RotationType::FLIP_VERTICAL:
+    return JXFORM_FLIP_V;
+  case RotationType::TRANSPOSE:
+    return JXFORM_TRANSPOSE;
+  case RotationType::TRANSVERSE:
+    return JXFORM_TRANSVERSE;
   case RotationType::ROTATE_0:
   default:
     return JXFORM_NONE;

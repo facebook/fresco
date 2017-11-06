@@ -19,7 +19,16 @@ namespace imagepipeline {
 /**
  * Rotation types.
  */
-enum class RotationType { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270 };
+enum class RotationType {
+  ROTATE_0,
+  ROTATE_90,
+  ROTATE_180,
+  ROTATE_270,
+  FLIP_HORIZONTAL,
+  FLIP_VERTICAL,
+  TRANSPOSE,
+  TRANSVERSE
+};
 
 /**
  * Transforms degrees into RotationType
