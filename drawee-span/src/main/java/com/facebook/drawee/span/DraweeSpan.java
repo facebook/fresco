@@ -9,8 +9,6 @@
 
 package com.facebook.drawee.span;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.view.View;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.widget.text.span.BetterImageSpan;
@@ -36,22 +34,6 @@ public class DraweeSpan extends BetterImageSpan {
       @BetterImageSpan.BetterImageSpanAlignment int verticalAlignment) {
     super(draweeHolder.getTopLevelDrawable(), verticalAlignment);
     mDraweeHolder = draweeHolder;
-  }
-
-  @Override
-  public void draw(
-      Canvas canvas,
-      CharSequence text,
-      int start,
-      int end,
-      float x,
-      int top,
-      int y,
-      int bottom,
-      Paint paint) {
-    if (mDraweeHolder.isAttached()) {
-      super.draw(canvas, text, start, end, x, top, y, bottom, paint);
-    }
   }
 
   /**
