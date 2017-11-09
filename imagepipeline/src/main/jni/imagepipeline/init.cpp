@@ -105,7 +105,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
 
   THROW_AND_RETURNVAL_IF(
       registerRoundingFilterMethods(env) == JNI_ERR,
-      "Could not register NativeCircleFilter methods",
+      "Could not register NativeRoundingFilter methods",
       -1);
 
   return JNI_VERSION_1_6;
