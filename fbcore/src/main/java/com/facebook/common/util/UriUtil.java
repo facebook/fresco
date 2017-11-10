@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import java.io.File;
+import java.net.URL;
 import javax.annotation.Nullable;
 
 public class UriUtil {
@@ -61,6 +62,26 @@ public class UriUtil {
    * Data scheme for URIs
    */
   public static final String DATA_SCHEME = "data";
+
+  /**
+   * Convert android.net.Uri to java.net.URL as necessary for some networking APIs.
+   *
+   * @param uri uri to convert
+   * @return url pointing to the same resource as uri
+   */
+  @Nullable
+  public static URL uriToUrl(@Nullable Uri uri) {
+    if (uri == null) {
+      return null;
+    }
+
+    try {
+      return new URL(uri.toString());
+    } catch (java.net.MalformedURLException e) {
+      // This should never happen since we got a valid uri
+      throw new RuntimeException(e);
+    }
+  }
 
   /**
    * Check if uri represents network resource

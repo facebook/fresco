@@ -19,6 +19,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
+import com.facebook.common.util.UriUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -39,7 +40,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ HttpUrlConnectionNetworkFetcher.class, Uri.class })
+@PrepareForTest({HttpUrlConnectionNetworkFetcher.class, Uri.class, UriUtil.class})
 public class HttpUrlConnectionNetworkFetcherTest {
 
   public static final String INITIAL_TEST_URL = "http://localhost/";
@@ -60,6 +61,7 @@ public class HttpUrlConnectionNetworkFetcherTest {
     mConnectionsQueue = new LinkedList<>();
     mockUrlConnections();
     mockUriParse();
+    mockUriWithAppendedPath();
     mockFetchState();
   }
 
@@ -83,6 +85,17 @@ public class HttpUrlConnectionNetworkFetcherTest {
         return mockUri((String) invocation.getArguments()[0]);
       }
     });
+  }
+
+  private void mockUriWithAppendedPath() {
+    PowerMockito.when(Uri.withAppendedPath(any(Uri.class), anyString()))
+        .then(
+            new Answer<Uri>() {
+              @Override
+              public Uri answer(InvocationOnMock invocation) throws Throwable {
+                return (Uri) invocation.getArguments()[0];
+              }
+            });
   }
 
   private Uri mockUri(final String url) {

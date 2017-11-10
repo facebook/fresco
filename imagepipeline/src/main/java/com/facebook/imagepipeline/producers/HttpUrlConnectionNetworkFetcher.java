@@ -11,6 +11,7 @@ package com.facebook.imagepipeline.producers;
 
 import android.net.Uri;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -131,7 +132,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
 
   @VisibleForTesting
   static HttpURLConnection openConnectionTo(Uri uri) throws IOException {
-    URL url = new URL(uri.toString());
+    URL url = UriUtil.uriToUrl(uri);
     return (HttpURLConnection) url.openConnection();
   }
 
