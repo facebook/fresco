@@ -10,6 +10,7 @@
 package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
@@ -33,6 +34,7 @@ public class CloseableStaticBitmap extends CloseableBitmap {
   private final QualityInfo mQualityInfo;
 
   private final int mRotationAngle;
+  private final int mExifOrientation;
 
   /**
    * Creates a new instance of a CloseableStaticBitmap.
@@ -45,12 +47,28 @@ public class CloseableStaticBitmap extends CloseableBitmap {
       ResourceReleaser<Bitmap> resourceReleaser,
       QualityInfo qualityInfo,
       int rotationAngle) {
+    this(bitmap, resourceReleaser, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap.
+   *
+   * @param bitmap the bitmap to wrap
+   * @param resourceReleaser ResourceReleaser to release the bitmap to
+   */
+  public CloseableStaticBitmap(
+      Bitmap bitmap,
+      ResourceReleaser<Bitmap> resourceReleaser,
+      QualityInfo qualityInfo,
+      int rotationAngle,
+      int exifOrientation) {
     mBitmap = Preconditions.checkNotNull(bitmap);
     mBitmapReference = CloseableReference.of(
         mBitmap,
         Preconditions.checkNotNull(resourceReleaser));
     mQualityInfo = qualityInfo;
     mRotationAngle = rotationAngle;
+    mExifOrientation = exifOrientation;
   }
 
   /**
@@ -63,10 +81,25 @@ public class CloseableStaticBitmap extends CloseableBitmap {
       CloseableReference<Bitmap> bitmapReference,
       QualityInfo qualityInfo,
       int rotationAngle) {
+    this(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
+  }
+
+  /**
+   * Creates a new instance of a CloseableStaticBitmap from an existing CloseableReference. The
+   * CloseableStaticBitmap will hold a reference to the Bitmap until it's closed.
+   *
+   * @param bitmapReference the bitmap reference.
+   */
+  public CloseableStaticBitmap(
+      CloseableReference<Bitmap> bitmapReference,
+      QualityInfo qualityInfo,
+      int rotationAngle,
+      int exifOrientation) {
     mBitmapReference = Preconditions.checkNotNull(bitmapReference.cloneOrNull());
     mBitmap = mBitmapReference.get();
     mQualityInfo = qualityInfo;
     mRotationAngle = rotationAngle;
+    mExifOrientation = exifOrientation;
   }
 
   /**
@@ -179,9 +212,12 @@ public class CloseableStaticBitmap extends CloseableBitmap {
     return mRotationAngle;
   }
 
-  /**
-   * Returns quality information for the image.
-   */
+  /** @return the EXIF orientation of the image */
+  public int getExifOrientation() {
+    return mExifOrientation;
+  }
+
+  /** Returns quality information for the image. */
   @Override
   public QualityInfo getQualityInfo() {
     return mQualityInfo;

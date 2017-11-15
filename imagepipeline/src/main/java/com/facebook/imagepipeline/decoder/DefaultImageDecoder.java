@@ -162,7 +162,8 @@ public class DefaultImageDecoder implements ImageDecoder {
       return new CloseableStaticBitmap(
           bitmapReference,
           ImmutableQualityInfo.FULL_QUALITY,
-          encodedImage.getRotationAngle());
+          encodedImage.getRotationAngle(),
+          encodedImage.getExifOrientation());
     } finally {
       bitmapReference.close();
     }
@@ -188,7 +189,8 @@ public class DefaultImageDecoder implements ImageDecoder {
       return new CloseableStaticBitmap(
           bitmapReference,
           qualityInfo,
-          encodedImage.getRotationAngle());
+          encodedImage.getRotationAngle(),
+          encodedImage.getExifOrientation());
     } finally {
       bitmapReference.close();
     }

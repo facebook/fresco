@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.image;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
@@ -33,8 +34,13 @@ public class CloseableStaticBitmapTest {
   public void setUp() {
     mBitmap = Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888);
     ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
-    mCloseableStaticBitmap = new CloseableStaticBitmap(
-        mBitmap, releaser, ImmutableQualityInfo.FULL_QUALITY, 0);
+    mCloseableStaticBitmap =
+        new CloseableStaticBitmap(
+            mBitmap,
+            releaser,
+            ImmutableQualityInfo.FULL_QUALITY,
+            0,
+            ExifInterface.ORIENTATION_NORMAL);
   }
 
   @Test
@@ -48,8 +54,13 @@ public class CloseableStaticBitmapTest {
     // Reverse width and height as the rotation angle should put them back again
     mBitmap = Bitmap.createBitmap(HEIGHT, WIDTH, Bitmap.Config.ARGB_8888);
     ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
-    mCloseableStaticBitmap = new CloseableStaticBitmap(
-        mBitmap, releaser, ImmutableQualityInfo.FULL_QUALITY, 90);
+    mCloseableStaticBitmap =
+        new CloseableStaticBitmap(
+            mBitmap,
+            releaser,
+            ImmutableQualityInfo.FULL_QUALITY,
+            90,
+            ExifInterface.ORIENTATION_ROTATE_90);
 
     assertThat(mCloseableStaticBitmap.getWidth()).isEqualTo(WIDTH);
     assertThat(mCloseableStaticBitmap.getHeight()).isEqualTo(HEIGHT);

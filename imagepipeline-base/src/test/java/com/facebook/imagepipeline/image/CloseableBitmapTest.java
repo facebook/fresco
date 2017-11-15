@@ -12,12 +12,14 @@ package com.facebook.imagepipeline.image;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import com.facebook.common.references.ResourceReleaser;
 import junit.framework.Assert;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
+
 /**
  * Basic tests for closeable bitmap
  */
@@ -32,7 +34,12 @@ public class CloseableBitmapTest  {
   public void setup() {
     MockitoAnnotations.initMocks(this);
     mCloseableStaticBitmap =
-        new CloseableStaticBitmap(mBitmap, mResourceReleaser, ImmutableQualityInfo.FULL_QUALITY, 0);
+        new CloseableStaticBitmap(
+            mBitmap,
+            mResourceReleaser,
+            ImmutableQualityInfo.FULL_QUALITY,
+            0,
+            ExifInterface.ORIENTATION_UNDEFINED);
   }
 
   @Test
