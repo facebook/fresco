@@ -9,7 +9,9 @@
 
 package com.facebook.imagepipeline.producers;
 
+import android.media.ExifInterface;
 import com.facebook.common.internal.Closeables;
+import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -53,6 +55,17 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MAX_JPEG_SCALE_NUMERATOR = JpegTranscoder.SCALE_DENOMINATOR;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
+
+  /*
+   * Inverted EXIF orientations in clockwise rotation order. Rotating 90 degrees clockwise gets you
+   * the next item in the list
+   */
+  private static final ImmutableList<Integer> INVERTED_EXIF_ORIENTATIONS =
+      ImmutableList.of(
+          ExifInterface.ORIENTATION_FLIP_HORIZONTAL,
+          ExifInterface.ORIENTATION_TRANSVERSE,
+          ExifInterface.ORIENTATION_FLIP_VERTICAL,
+          ExifInterface.ORIENTATION_TRANSPOSE);
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
@@ -184,21 +197,33 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         } else {
           numerator = softwareNumerator;
         }
-        final int rotationAngle = getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
-        extraMap = getExtraMap(
-            encodedImage,
-            imageRequest,
-            numerator,
-            downsampleNumerator,
-            softwareNumerator,
-            rotationAngle);
         is = encodedImage.getInputStream();
-        JpegTranscoder.transcodeJpeg(
-            is,
-            outputStream,
-            rotationAngle,
-            numerator,
-            DEFAULT_JPEG_QUALITY);
+        if (INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation())) {
+          // Use exif orientation to rotate since we can't use the rotation angle for
+          // inverted exif orientations
+          final int exifOrientation =
+              getForceRotatedInvertedExifOrientation(
+                  imageRequest.getRotationOptions(), encodedImage);
+          extraMap =
+              getExtraMap(
+                  encodedImage, imageRequest, numerator, downsampleNumerator, softwareNumerator, 0);
+          JpegTranscoder.transcodeJpegWithExifOrientation(
+              is, outputStream, exifOrientation, numerator, DEFAULT_JPEG_QUALITY);
+        } else {
+          // Use actual rotation angle in degrees to rotate
+          final int rotationAngle =
+              getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
+          extraMap =
+              getExtraMap(
+                  encodedImage,
+                  imageRequest,
+                  numerator,
+                  downsampleNumerator,
+                  softwareNumerator,
+                  rotationAngle);
+          JpegTranscoder.transcodeJpeg(
+              is, outputStream, rotationAngle, numerator, DEFAULT_JPEG_QUALITY);
+        }
         CloseableReference<PooledByteBuffer> ref =
             CloseableReference.of(outputStream.toByteBuffer());
         try {
@@ -318,7 +343,17 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     }
 
     final int rotationAngle = getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
-    final boolean swapDimensions = rotationAngle == 90 || rotationAngle == 270;
+    int exifOrientation = ExifInterface.ORIENTATION_UNDEFINED;
+    if (INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation())) {
+      exifOrientation =
+          getForceRotatedInvertedExifOrientation(imageRequest.getRotationOptions(), encodedImage);
+    }
+
+    final boolean swapDimensions =
+        rotationAngle == 90
+            || rotationAngle == 270
+            || exifOrientation == ExifInterface.ORIENTATION_TRANSPOSE
+            || exifOrientation == ExifInterface.ORIENTATION_TRANSVERSE;
     final int widthAfterRotation = swapDimensions ? encodedImage.getHeight() :
             encodedImage.getWidth();
     final int heightAfterRotation = swapDimensions ? encodedImage.getWidth() :
@@ -343,6 +378,29 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return (rotationFromMetadata + rotationOptions.getForcedAngle()) % FULL_ROUND;
   }
 
+  /**
+   * Get an inverted exif orientation (2, 4, 5, 7) but adjusted to take the force rotation angle
+   * into consideration
+   *
+   * @throws IllegalArgumentException if encoded image passed doesn't have an inverted EXIF
+   *     orientation
+   */
+  private static int getForceRotatedInvertedExifOrientation(
+      RotationOptions rotationOptions, EncodedImage encodedImage) {
+    int exifOrientation = encodedImage.getExifOrientation();
+    int index = INVERTED_EXIF_ORIENTATIONS.indexOf(exifOrientation);
+    if (index < 0) {
+      throw new IllegalArgumentException("Only accepts inverted exif orientations");
+    }
+    int forcedAngle = RotationOptions.NO_ROTATION;
+    if (!rotationOptions.useImageMetadata()) {
+      forcedAngle = rotationOptions.getForcedAngle();
+    }
+    int timesToRotate = forcedAngle / 90;
+    return INVERTED_EXIF_ORIENTATIONS.get(
+        (index + timesToRotate) % INVERTED_EXIF_ORIENTATIONS.size());
+  }
+
   private static int extractOrientationFromMetadata(EncodedImage encodedImage) {
     switch (encodedImage.getRotationAngle()) {
       case RotationOptions.ROTATE_90:
@@ -359,8 +417,17 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {
-    return !rotationOptions.canDeferUntilRendered() &&
-        getRotationAngle(rotationOptions, encodedImage) != 0;
+    return !rotationOptions.canDeferUntilRendered()
+        && (getRotationAngle(rotationOptions, encodedImage) != 0
+            || shouldRotateUsingExifOrientation(rotationOptions, encodedImage));
+  }
+
+  private static boolean shouldRotateUsingExifOrientation(
+      RotationOptions rotationOptions, EncodedImage encodedImage) {
+    if (!rotationOptions.rotationEnabled() || rotationOptions.canDeferUntilRendered()) {
+      return false;
+    }
+    return INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation());
   }
 
   /**

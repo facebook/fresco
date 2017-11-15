@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import android.media.ExifInterface;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import java.io.IOException;
@@ -40,6 +41,25 @@ public class JpegTranscoder {
   }
 
   /**
+   * @return true if and only if given value is a valid EXIF orientation
+   */
+  public static boolean isExifOrientationAllowed(int exifOrientation) {
+    switch (exifOrientation) {
+      case ExifInterface.ORIENTATION_NORMAL:
+      case ExifInterface.ORIENTATION_ROTATE_90:
+      case ExifInterface.ORIENTATION_ROTATE_180:
+      case ExifInterface.ORIENTATION_ROTATE_270:
+      case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+      case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+      case ExifInterface.ORIENTATION_TRANSPOSE:
+      case ExifInterface.ORIENTATION_TRANSVERSE:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /**
    * Downscales and rotates jpeg image
    *
    * @param inputStream
@@ -53,7 +73,8 @@ public class JpegTranscoder {
       final OutputStream outputStream,
       final int rotationAngle,
       final int scaleNumerator,
-      final int quality) throws IOException {
+      final int quality)
+      throws IOException {
     Preconditions.checkArgument(scaleNumerator >= MIN_SCALE_NUMERATOR);
     Preconditions.checkArgument(scaleNumerator <= MAX_SCALE_NUMERATOR);
     Preconditions.checkArgument(quality >= MIN_QUALITY);
@@ -77,4 +98,45 @@ public class JpegTranscoder {
       int rotationAngle,
       int scaleNominator,
       int quality) throws IOException;
+
+  /**
+   * Downscales and rotates jpeg image
+   *
+   * @param inputStream
+   * @param outputStream
+   * @param exifOrientation 0, 90, 180 or 270
+   * @param scaleNumerator 1 - 16, image will be scaled using scaleNumerator/8 factor
+   * @param quality 1 - 100
+   */
+  public static void transcodeJpegWithExifOrientation(
+      final InputStream inputStream,
+      final OutputStream outputStream,
+      final int exifOrientation,
+      final int scaleNumerator,
+      final int quality)
+      throws IOException {
+    Preconditions.checkArgument(scaleNumerator >= MIN_SCALE_NUMERATOR);
+    Preconditions.checkArgument(scaleNumerator <= MAX_SCALE_NUMERATOR);
+    Preconditions.checkArgument(quality >= MIN_QUALITY);
+    Preconditions.checkArgument(quality <= MAX_QUALITY);
+    Preconditions.checkArgument(isExifOrientationAllowed(exifOrientation));
+    Preconditions.checkArgument(
+        scaleNumerator != SCALE_DENOMINATOR || exifOrientation != ExifInterface.ORIENTATION_NORMAL,
+        "no transformation requested");
+    nativeTranscodeJpegWithExifOrientation(
+        Preconditions.checkNotNull(inputStream),
+        Preconditions.checkNotNull(outputStream),
+        exifOrientation,
+        scaleNumerator,
+        quality);
+  }
+
+  @DoNotStrip
+  private static native void nativeTranscodeJpegWithExifOrientation(
+      InputStream inputStream,
+      OutputStream outputStream,
+      int exifOrientation,
+      int scaleNominator,
+      int quality)
+      throws IOException;
 }

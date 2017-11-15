@@ -28,8 +28,9 @@ class TiffUtil {
 
   /**
    * Determines auto-rotate angle based on orientation information.
+   *
    * @param orientation orientation information read from APP1 EXIF (TIFF) block.
-   * @return orientation: 1/3/6/8 -> 0/180/90/270.
+   * @return orientation: 1/3/6/8 -> 0/180/90/270. Returns 0 for inverted orientations (2/4/5/7).
    */
   public static int getAutoRotateAngleFromOrientation(int orientation) {
     switch (orientation) {
@@ -43,7 +44,6 @@ class TiffUtil {
       case ExifInterface.ORIENTATION_ROTATE_270:
         return 270;
     }
-    FLog.i(TAG, "Unsupported orientation");
     return 0;
   }
 

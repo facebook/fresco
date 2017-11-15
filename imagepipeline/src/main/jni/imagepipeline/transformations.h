@@ -36,6 +36,11 @@ enum class RotationType {
 RotationType getRotationTypeFromDegrees(JNIEnv* env, uint16_t degrees);
 
 /**
+ * Transforms raw EXIF orientation values into RotationType
+ */
+RotationType getRotationTypeFromRawExifOrientation(JNIEnv* env, uint16_t exif_orientation);
+
+/**
  * Scale factor to be used for resizing.
  */
 class ScaleFactor {

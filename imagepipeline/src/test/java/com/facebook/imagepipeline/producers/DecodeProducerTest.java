@@ -12,6 +12,7 @@ package com.facebook.imagepipeline.producers;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import com.facebook.common.internal.Supplier;
@@ -60,6 +61,7 @@ public class DecodeProducerTest {
   private static final int IMAGE_HEIGHT = 100;
   private static final int IMAGE_SIZE = 1000;
   private static final int IMAGE_ROTATION_ANGLE = 0;
+  private static final int IMAGE_EXIF_ORIENTATION = ExifInterface.ORIENTATION_NORMAL;
 
   @Mock public ByteArrayPool mByteArrayPool;
   @Mock public Executor mExecutor;
@@ -125,6 +127,7 @@ public class DecodeProducerTest {
     mEncodedImage.setWidth(IMAGE_WIDTH);
     mEncodedImage.setHeight(IMAGE_HEIGHT);
     mEncodedImage.setRotationAngle(IMAGE_ROTATION_ANGLE);
+    mEncodedImage.setExifOrientation(IMAGE_EXIF_ORIENTATION);
   }
 
   private static EncodedImage mockEncodedJpeg(CloseableReference<PooledByteBuffer> ref) {
