@@ -19,12 +19,26 @@ namespace imagepipeline {
 /**
  * Rotation types.
  */
-enum class RotationType { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270 };
+enum class RotationType {
+  ROTATE_0,
+  ROTATE_90,
+  ROTATE_180,
+  ROTATE_270,
+  FLIP_HORIZONTAL,
+  FLIP_VERTICAL,
+  TRANSPOSE,
+  TRANSVERSE
+};
 
 /**
  * Transforms degrees into RotationType
  */
 RotationType getRotationTypeFromDegrees(JNIEnv* env, uint16_t degrees);
+
+/**
+ * Transforms raw EXIF orientation values into RotationType
+ */
+RotationType getRotationTypeFromRawExifOrientation(JNIEnv* env, uint16_t exif_orientation);
 
 /**
  * Scale factor to be used for resizing.
