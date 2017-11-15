@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -185,6 +186,7 @@ public class DownsampleUtilTest {
     mEncodedImage.setWidth(width);
     mEncodedImage.setHeight(height);
     mEncodedImage.setRotationAngle(rotationAngle);
+    mEncodedImage.setExifOrientation(ExifInterface.ORIENTATION_NORMAL);
   }
 
   private void whenRequestResizeWidthAndHeightWithExifRotation(int width, int height) {

@@ -9,6 +9,7 @@
 
 package com.facebook.imagepipeline.image;
 
+import android.media.ExifInterface;
 import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -59,6 +60,7 @@ public class EncodedImage implements Closeable {
 
   private ImageFormat mImageFormat = ImageFormat.UNKNOWN;
   private int mRotationAngle = UNKNOWN_ROTATION_ANGLE;
+  private int mExifOrientation = ExifInterface.ORIENTATION_UNDEFINED;
   private int mWidth = UNKNOWN_WIDTH;
   private int mHeight = UNKNOWN_HEIGHT;
   private int mSampleSize = DEFAULT_SAMPLE_SIZE;
@@ -186,9 +188,12 @@ public class EncodedImage implements Closeable {
     this.mRotationAngle = rotationAngle;
   }
 
-  /**
-   * Sets the image sample size
-   */
+  /** Sets the exif orientation */
+  public void setExifOrientation(int exifOrientation) {
+    this.mExifOrientation = exifOrientation;
+  }
+
+  /** Sets the image sample size */
   public void setSampleSize(int sampleSize) {
     this.mSampleSize = sampleSize;
   }
@@ -223,8 +228,13 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Returns the image width if known, else -1.
+   * Only valid if the image format is JPEG. Returns the exif orientation if known (1 - 8), else 0.
    */
+  public int getExifOrientation() {
+    return mExifOrientation;
+  }
+
+  /** Returns the image width if known, else -1. */
   public int getWidth() {
     return mWidth;
   }
@@ -326,8 +336,8 @@ public class EncodedImage implements Closeable {
     if (imageFormat == DefaultImageFormats.JPEG && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       // Load the JPEG rotation angle only if we have the dimensions
       if (dimensions != null) {
-        mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(
-            JfifUtil.getOrientation(getInputStream()));
+        mExifOrientation = JfifUtil.getOrientation(getInputStream());
+        mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(mExifOrientation);
       }
     } else {
       mRotationAngle = 0;
@@ -381,6 +391,7 @@ public class EncodedImage implements Closeable {
     mWidth = encodedImage.getWidth();
     mHeight = encodedImage.getHeight();
     mRotationAngle = encodedImage.getRotationAngle();
+    mExifOrientation = encodedImage.getExifOrientation();
     mSampleSize = encodedImage.getSampleSize();
     mStreamSize = encodedImage.getSize();
     mBytesRange = encodedImage.getBytesRange();
@@ -391,6 +402,7 @@ public class EncodedImage implements Closeable {
    */
   public static boolean isMetaDataAvailable(EncodedImage encodedImage) {
     return encodedImage.mRotationAngle >= 0
+        && encodedImage.mExifOrientation > 0
         && encodedImage.mWidth >= 0
         && encodedImage.mHeight >= 0;
   }

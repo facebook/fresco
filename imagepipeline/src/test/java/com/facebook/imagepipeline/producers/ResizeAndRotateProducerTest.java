@@ -13,6 +13,7 @@ import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calcu
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.SystemClock;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
@@ -568,6 +569,7 @@ public class ResizeAndRotateProducerTest {
     encodedImage.setRotationAngle(rotationAngle);
     encodedImage.setWidth(width);
     encodedImage.setHeight(height);
+    encodedImage.setExifOrientation(ExifInterface.ORIENTATION_NORMAL);
     return encodedImage;
   }
 

@@ -75,6 +75,7 @@ public class EncodedImageTest {
     EncodedImage encodedImage = new EncodedImage(mByteBufferRef);
     encodedImage.setImageFormat(DefaultImageFormats.JPEG);
     encodedImage.setRotationAngle(0);
+    encodedImage.setExifOrientation(5);
     encodedImage.setWidth(1);
     encodedImage.setHeight(2);
     encodedImage.setSampleSize(4);
@@ -86,6 +87,7 @@ public class EncodedImageTest {
         encodedImage2.getByteBufferRef().getUnderlyingReferenceTestOnly());
     assertEquals(encodedImage.getImageFormat(), encodedImage2.getImageFormat());
     assertEquals(encodedImage.getRotationAngle(), encodedImage2.getRotationAngle());
+    assertEquals(encodedImage.getExifOrientation(), encodedImage2.getExifOrientation());
     assertEquals(encodedImage.getHeight(), encodedImage2.getHeight());
     assertEquals(encodedImage.getWidth(), encodedImage2.getWidth());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
@@ -94,6 +96,7 @@ public class EncodedImageTest {
     encodedImage = new EncodedImage(mInputStreamSupplier, 100);
     encodedImage.setImageFormat(DefaultImageFormats.JPEG);
     encodedImage.setRotationAngle(0);
+    encodedImage.setExifOrientation(5);
     encodedImage.setWidth(1);
     encodedImage.setHeight(2);
     encodedImage2 = EncodedImage.cloneOrNull(encodedImage);
@@ -134,6 +137,7 @@ public class EncodedImageTest {
     EncodedImage encodedImage1 = new EncodedImage(mByteBufferRef);
     EncodedImage encodedImage2 = new EncodedImage(mByteBufferRef);
     encodedImage2.setRotationAngle(1);
+    encodedImage2.setExifOrientation(1);
     encodedImage2.setWidth(1);
     encodedImage2.setHeight(1);
     assertFalse(EncodedImage.isMetaDataAvailable(encodedImage1));
@@ -172,6 +176,7 @@ public class EncodedImageTest {
     assertEquals(550, encodedImage.getWidth());
     assertEquals(468, encodedImage.getHeight());
     assertEquals(0, encodedImage.getRotationAngle());
+    assertEquals(0, encodedImage.getExifOrientation());
   }
 
   @Test
@@ -184,6 +189,7 @@ public class EncodedImageTest {
     assertEquals(800, encodedImage.getWidth());
     assertEquals(600, encodedImage.getHeight());
     assertEquals(0, encodedImage.getRotationAngle());
+    assertEquals(0, encodedImage.getExifOrientation());
   }
 
   private void checkWebpImage(final String imagePath,
@@ -252,6 +258,7 @@ public class EncodedImageTest {
     EncodedImage encodedImage = new EncodedImage(mByteBufferRef);
     encodedImage.setImageFormat(DefaultImageFormats.JPEG);
     encodedImage.setRotationAngle(0);
+    encodedImage.setExifOrientation(1);
     encodedImage.setWidth(1);
     encodedImage.setHeight(2);
     encodedImage.setSampleSize(3);
@@ -262,10 +269,12 @@ public class EncodedImageTest {
     assertEquals(encodedImage.getHeight(), encodedImage2.getHeight());
     assertEquals(encodedImage.getSampleSize(), encodedImage2.getSampleSize());
     assertEquals(encodedImage.getSize(), encodedImage2.getSize());
+    assertEquals(encodedImage.getExifOrientation(), encodedImage2.getExifOrientation());
 
     EncodedImage encodedImage3 = new EncodedImage(mInputStreamSupplier);
     encodedImage3.setImageFormat(DefaultImageFormats.JPEG);
     encodedImage3.setRotationAngle(0);
+    encodedImage3.setExifOrientation(1);
     encodedImage3.setWidth(1);
     encodedImage3.setHeight(2);
     encodedImage3.setSampleSize(3);
@@ -277,5 +286,6 @@ public class EncodedImageTest {
     assertEquals(encodedImage3.getHeight(), encodedImage4.getHeight());
     assertEquals(encodedImage3.getSampleSize(), encodedImage4.getSampleSize());
     assertEquals(encodedImage3.getSize(), encodedImage4.getSize());
+    assertEquals(encodedImage3.getExifOrientation(), encodedImage4.getExifOrientation());
   }
 }
