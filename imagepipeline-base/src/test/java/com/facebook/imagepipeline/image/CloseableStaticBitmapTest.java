@@ -67,6 +67,23 @@ public class CloseableStaticBitmapTest {
   }
 
   @Test
+  public void testWidthAndHeightWithInvertedOrientationImage() {
+    // Reverse width and height as the inverted orienvation should put them back again
+    mBitmap = Bitmap.createBitmap(HEIGHT, WIDTH, Bitmap.Config.ARGB_8888);
+    ResourceReleaser<Bitmap> releaser = SimpleBitmapReleaser.getInstance();
+    mCloseableStaticBitmap =
+        new CloseableStaticBitmap(
+            mBitmap,
+            releaser,
+            ImmutableQualityInfo.FULL_QUALITY,
+            0,
+            ExifInterface.ORIENTATION_TRANSPOSE);
+
+    assertThat(mCloseableStaticBitmap.getWidth()).isEqualTo(WIDTH);
+    assertThat(mCloseableStaticBitmap.getHeight()).isEqualTo(HEIGHT);
+  }
+
+  @Test
   public void testClose() {
     mCloseableStaticBitmap.close();
     assertThat(mCloseableStaticBitmap.isClosed()).isTrue();

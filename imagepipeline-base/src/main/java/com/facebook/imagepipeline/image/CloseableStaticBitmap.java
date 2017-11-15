@@ -180,7 +180,9 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   @Override
   public int getWidth() {
-    if (mRotationAngle == 90 || mRotationAngle == 270) {
+    if (mRotationAngle % 180 != 0
+        || mExifOrientation == ExifInterface.ORIENTATION_TRANSPOSE
+        || mExifOrientation == ExifInterface.ORIENTATION_TRANSVERSE) {
       return getBitmapHeight(mBitmap);
     }
     return getBitmapWidth(mBitmap);
@@ -191,7 +193,9 @@ public class CloseableStaticBitmap extends CloseableBitmap {
    */
   @Override
   public int getHeight() {
-    if (mRotationAngle == 90 || mRotationAngle == 270) {
+    if (mRotationAngle % 180 != 0
+        || mExifOrientation == ExifInterface.ORIENTATION_TRANSPOSE
+        || mExifOrientation == ExifInterface.ORIENTATION_TRANSVERSE) {
       return getBitmapWidth(mBitmap);
     }
     return getBitmapHeight(mBitmap);

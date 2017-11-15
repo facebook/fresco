@@ -425,6 +425,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static boolean shouldRotateUsingExifOrientation(
       RotationOptions rotationOptions, EncodedImage encodedImage) {
     if (!rotationOptions.rotationEnabled() || rotationOptions.canDeferUntilRendered()) {
+      encodedImage.setExifOrientation(ExifInterface.ORIENTATION_UNDEFINED);
       return false;
     }
     return INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation());
