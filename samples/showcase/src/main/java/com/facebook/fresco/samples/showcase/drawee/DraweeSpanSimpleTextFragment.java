@@ -42,6 +42,7 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
   private SimpleDraweeSpanTextView mDraweeSpanTextView;
   private ScalingUtils.ScaleType mScaleType;
   private Uri mInlineImageUri;
+  private Uri mInlineAnimatedImageUri;
 
   @Nullable
   @Override
@@ -54,6 +55,9 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
     mInlineImageUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
+    mInlineAnimatedImageUri = Uri.parse(
+        "http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_m.gif"
+    );
 
     mDraweeSpanTextView = (SimpleDraweeSpanTextView) view.findViewById(R.id.drawee_text_view);
     final Spinner scaleType = (Spinner) view.findViewById(R.id.scaleType);
@@ -97,6 +101,27 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
         draweeHierarchy, /* hierarchy to be used */
         controller, /* controller to be used to update the hierarchy */
         imagePosition, /* image index within the text */
+        200, /* image width */
+        200, /* image height */
+        false, /* auto resize */
+        DraweeSpan.ALIGN_CENTER); /* alignment */
+
+    int imagePosition2 = text.indexOf('%');
+
+    DraweeHierarchy draweeAnimatedHierarchy = GenericDraweeHierarchyBuilder.newInstance(getResources())
+        .setPlaceholderImage(new ColorDrawable(Color.RED))
+        .setActualImageScaleType(mScaleType)
+        .build();
+    DraweeController animatedController = Fresco.newDraweeControllerBuilder()
+        .setUri(mInlineAnimatedImageUri)
+        .setAutoPlayAnimations(true)
+        .build();
+
+    draweeSpanStringBuilder.setImageSpan(
+        getContext(), /* Context */
+        draweeAnimatedHierarchy, /* hierarchy to be used */
+        animatedController, /* controller to be used to update the hierarchy */
+        imagePosition2, /* image index within the text */
         200, /* image width */
         200, /* image height */
         false, /* auto resize */
