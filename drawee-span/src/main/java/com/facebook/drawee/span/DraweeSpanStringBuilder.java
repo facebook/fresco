@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 import com.facebook.common.internal.Preconditions;
@@ -250,7 +251,11 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     @Override
     public void scheduleDrawable(Drawable who, Runnable what, long when) {
       if (mBoundView != null) {
-        mBoundView.scheduleDrawable(who, what, when);
+        // 'mBoundView.scheduleDrawable(who, what, when)' wouldn't work because
+        // it cannot determine the 'who' drawable with 'verifyDrawable(who)'.
+        // So we're re-implementing 'scheduleDrawable' manually.
+        final long delay = when - SystemClock.uptimeMillis();
+        mBoundView.postDelayed(what, delay);
       } else if (mBoundDrawable != null) {
         mBoundDrawable.scheduleSelf(what, when);
       }
@@ -259,7 +264,7 @@ public class DraweeSpanStringBuilder extends SpannableStringBuilder
     @Override
     public void unscheduleDrawable(Drawable who, Runnable what) {
       if (mBoundView != null) {
-        unscheduleDrawable(who, what);
+        mBoundView.removeCallbacks(what);
       } else if (mBoundDrawable != null) {
         mBoundDrawable.unscheduleSelf(what);
       }
