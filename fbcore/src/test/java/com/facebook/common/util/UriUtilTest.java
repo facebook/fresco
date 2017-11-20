@@ -12,16 +12,17 @@ package com.facebook.common.util;
 import android.net.Uri;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.robolectric.ParameterizedRobolectricTestRunner;
+import org.robolectric.ParameterizedRobolectricTestRunner.Parameters;
 
 /** Unit test for {@link UriUtilTest}. */
-@RunWith(Parameterized.class)
+@RunWith(ParameterizedRobolectricTestRunner.class)
 public class UriUtilTest {
 
   private static final String FB_COM = "www.facebook.com";
@@ -42,8 +43,9 @@ public class UriUtilTest {
   }
 
   @Parameters
-  public static Iterable<? extends Object> data() {
-    return Arrays.asList("http", "https", "ftp", "file");
+  public static Collection<Object[]> data() {
+    return Arrays.asList(
+        new Object[] {"http"}, new Object[] {"https"}, new Object[] {"ftp"}, new Object[] {"file"});
   }
 
   @Test
