@@ -36,11 +36,9 @@ public class UriUtil {
    */
   public static final String LOCAL_CONTENT_SCHEME = "content";
 
-  /**
-   * URI prefix (including scheme) for contact photos
-   */
-  private static final String LOCAL_CONTACT_IMAGE_PREFIX =
-      Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo").getPath();
+  /** URI prefix (including scheme) for contact photos */
+  private static final Uri LOCAL_CONTACT_IMAGE_URI =
+      Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo");
 
   /**
    * Asset scheme for URIs
@@ -125,7 +123,7 @@ public class UriUtil {
   public static boolean isLocalContactUri(Uri uri) {
     return isLocalContentUri(uri)
         && ContactsContract.AUTHORITY.equals(uri.getAuthority())
-        && !uri.getPath().startsWith(LOCAL_CONTACT_IMAGE_PREFIX);
+        && !uri.getPath().startsWith(LOCAL_CONTACT_IMAGE_URI.getPath());
   }
 
   /**
