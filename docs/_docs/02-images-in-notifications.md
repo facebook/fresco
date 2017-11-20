@@ -5,7 +5,7 @@ layout: docs
 permalink: /docs/images-in-notifications.html
 ---
 
-If you need to display an image in a notification, you can use the `BaseBitmapDataSubscriber` for requesting a bitmap from the `ImagePipeline`. This is save to be passed to a notification as the system will parcel it after the `NotificationManager#notify` method. This page explains a full sample on how to do this.
+If you need to display an image in a notification, you can use the `BaseBitmapDataSubscriber` for requesting a bitmap from the `ImagePipeline`. This is safe to be passed to a notification as the system will parcel it after the `NotificationManager#notify` method. This page explains a full sample on how to do this.
 
 ### Step by step
 
