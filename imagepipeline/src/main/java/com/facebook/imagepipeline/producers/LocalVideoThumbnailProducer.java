@@ -14,6 +14,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import com.facebook.common.internal.ImmutableMap;
@@ -128,14 +130,18 @@ public class LocalVideoThumbnailProducer implements
     if (UriUtil.isLocalFileUri(uri)) {
       return imageRequest.getSourceFile().getPath();
     } else if (UriUtil.isLocalContentUri(uri)) {
-      Cursor cursor = mContentResolver.query(
-          uri,
-          new String[]{
-              MediaStore.Video.Media.DATA
-          },
-          null,
-          null,
-          null);
+      String selection = null;
+      String[] selectionArgs = null;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+          && "com.android.providers.media.documents".equals(uri.getAuthority())) {
+        String documentId = DocumentsContract.getDocumentId(uri);
+        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        selection = MediaStore.Video.Media._ID + "=?";
+        selectionArgs = new String[] {documentId.split(":")[1]};
+      }
+      Cursor cursor =
+          mContentResolver.query(
+              uri, new String[] {MediaStore.Video.Media.DATA}, selection, selectionArgs, null);
       try {
         if (cursor != null && cursor.moveToFirst()) {
           return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
