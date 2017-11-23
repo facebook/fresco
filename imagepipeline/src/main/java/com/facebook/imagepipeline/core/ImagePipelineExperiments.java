@@ -8,10 +8,23 @@
  */
 package com.facebook.imagepipeline.core;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
+import com.facebook.common.memory.ByteArrayPool;
+import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.webp.WebpBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.cache.BufferedDiskCache;
+import com.facebook.imagepipeline.cache.CacheKeyFactory;
+import com.facebook.imagepipeline.cache.MediaVariationsIndex;
+import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
+import com.facebook.imagepipeline.image.CloseableImage;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
@@ -36,6 +49,7 @@ public class ImagePipelineExperiments {
   private boolean mBitmapPrepareToDrawForPrefetch;
   private final boolean mPartialImageCachingEnabled;
   private final Supplier<Boolean> mSmartResizingEnabled;
+  private final ProducerFactoryMethod mProducerFactoryMethod;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -61,6 +75,11 @@ public class ImagePipelineExperiments {
     mBitmapPrepareToDrawForPrefetch = builder.mBitmapPrepareToDrawForPrefetch;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
     mSmartResizingEnabled = builder.mSmartResizingEnabled;
+    if (builder.mProducerFactoryMethod == null) {
+      mProducerFactoryMethod = new DefaultProducerFactoryMethod();
+    } else {
+      mProducerFactoryMethod = builder.mProducerFactoryMethod;
+    }
   }
 
   public boolean isExternalCreatedBitmapLogEnabled() {
@@ -111,6 +130,10 @@ public class ImagePipelineExperiments {
     return mSmartResizingEnabled;
   }
 
+  public ProducerFactoryMethod getProducerFactoryMethod() {
+    return mProducerFactoryMethod;
+  }
+
   public static ImagePipelineExperiments.Builder newBuilder(
       ImagePipelineConfig.Builder configBuilder) {
     return new ImagePipelineExperiments.Builder(configBuilder);
@@ -137,6 +160,7 @@ public class ImagePipelineExperiments {
     public boolean mBitmapPrepareToDrawForPrefetch = false;
     private boolean mPartialImageCachingEnabled = false;
     private Supplier<Boolean> mSmartResizingEnabled = Suppliers.BOOLEAN_FALSE;
+    private ProducerFactoryMethod mProducerFactoryMethod;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -252,8 +276,91 @@ public class ImagePipelineExperiments {
       return mConfigBuilder;
     }
 
+    /**
+     * Stores an alternative method to instantiate the {@link ProducerFactory}. This allows
+     * experimenting with overridden producers.
+     */
+    public ImagePipelineConfig.Builder setProducerFactoryMethod(
+        ProducerFactoryMethod producerFactoryMethod) {
+      mProducerFactoryMethod = producerFactoryMethod;
+      return mConfigBuilder;
+    }
+
     public ImagePipelineExperiments build() {
       return new ImagePipelineExperiments(this);
+    }
+  }
+
+  public interface ProducerFactoryMethod {
+
+    ProducerFactory createProducerFactory(
+        Context context,
+        ByteArrayPool byteArrayPool,
+        ImageDecoder imageDecoder,
+        ProgressiveJpegConfig progressiveJpegConfig,
+        boolean downsampleEnabled,
+        boolean resizeAndRotateEnabledForNetwork,
+        boolean decodeCancellationEnabled,
+        Supplier<Boolean> experimentalSmartResizingEnabled,
+        ExecutorSupplier executorSupplier,
+        PooledByteBufferFactory pooledByteBufferFactory,
+        MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
+        MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
+        BufferedDiskCache defaultBufferedDiskCache,
+        BufferedDiskCache smallImageBufferedDiskCache,
+        MediaVariationsIndex mediaVariationsIndex,
+        CacheKeyFactory cacheKeyFactory,
+        PlatformBitmapFactory platformBitmapFactory,
+        int bitmapPrepareToDrawMinSizeBytes,
+        int bitmapPrepareToDrawMaxSizeBytes,
+        boolean bitmapPrepareToDrawForPrefetch);
+  }
+
+  public static class DefaultProducerFactoryMethod implements ProducerFactoryMethod {
+
+    @Override
+    public ProducerFactory createProducerFactory(
+        Context context,
+        ByteArrayPool byteArrayPool,
+        ImageDecoder imageDecoder,
+        ProgressiveJpegConfig progressiveJpegConfig,
+        boolean downsampleEnabled,
+        boolean resizeAndRotateEnabledForNetwork,
+        boolean decodeCancellationEnabled,
+        Supplier<Boolean> experimentalSmartResizingEnabled,
+        ExecutorSupplier executorSupplier,
+        PooledByteBufferFactory pooledByteBufferFactory,
+        MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
+        MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
+        BufferedDiskCache defaultBufferedDiskCache,
+        BufferedDiskCache smallImageBufferedDiskCache,
+        MediaVariationsIndex mediaVariationsIndex,
+        CacheKeyFactory cacheKeyFactory,
+        PlatformBitmapFactory platformBitmapFactory,
+        int bitmapPrepareToDrawMinSizeBytes,
+        int bitmapPrepareToDrawMaxSizeBytes,
+        boolean bitmapPrepareToDrawForPrefetch) {
+      return new ProducerFactory(
+          context,
+          byteArrayPool,
+          imageDecoder,
+          progressiveJpegConfig,
+          downsampleEnabled,
+          resizeAndRotateEnabledForNetwork,
+          decodeCancellationEnabled,
+          experimentalSmartResizingEnabled,
+          executorSupplier,
+          pooledByteBufferFactory,
+          bitmapMemoryCache,
+          encodedMemoryCache,
+          defaultBufferedDiskCache,
+          smallImageBufferedDiskCache,
+          mediaVariationsIndex,
+          cacheKeyFactory,
+          platformBitmapFactory,
+          bitmapPrepareToDrawMinSizeBytes,
+          bitmapPrepareToDrawMaxSizeBytes,
+          bitmapPrepareToDrawForPrefetch);
     }
   }
 }

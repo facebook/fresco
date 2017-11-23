@@ -332,27 +332,30 @@ public class ImagePipelineFactory {
   private ProducerFactory getProducerFactory() {
     if (mProducerFactory == null) {
       mProducerFactory =
-          new ProducerFactory(
-              mConfig.getContext(),
-              mConfig.getPoolFactory().getSmallByteArrayPool(),
-              getImageDecoder(),
-              mConfig.getProgressiveJpegConfig(),
-              mConfig.isDownsampleEnabled(),
-              mConfig.isResizeAndRotateEnabledForNetwork(),
-              mConfig.getExperiments().isDecodeCancellationEnabled(),
-              mConfig.getExperiments().isSmartResizingEnabled(),
-              mConfig.getExecutorSupplier(),
-              mConfig.getPoolFactory().getPooledByteBufferFactory(),
-              getBitmapMemoryCache(),
-              getEncodedMemoryCache(),
-              getMainBufferedDiskCache(),
-              getSmallImageBufferedDiskCache(),
-              getMediaVariationsIndex(),
-              mConfig.getCacheKeyFactory(),
-              getPlatformBitmapFactory(),
-              mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
-              mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes(),
-              mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch());
+          mConfig
+              .getExperiments()
+              .getProducerFactoryMethod()
+              .createProducerFactory(
+                  mConfig.getContext(),
+                  mConfig.getPoolFactory().getSmallByteArrayPool(),
+                  getImageDecoder(),
+                  mConfig.getProgressiveJpegConfig(),
+                  mConfig.isDownsampleEnabled(),
+                  mConfig.isResizeAndRotateEnabledForNetwork(),
+                  mConfig.getExperiments().isDecodeCancellationEnabled(),
+                  mConfig.getExperiments().isSmartResizingEnabled(),
+                  mConfig.getExecutorSupplier(),
+                  mConfig.getPoolFactory().getPooledByteBufferFactory(),
+                  getBitmapMemoryCache(),
+                  getEncodedMemoryCache(),
+                  getMainBufferedDiskCache(),
+                  getSmallImageBufferedDiskCache(),
+                  getMediaVariationsIndex(),
+                  mConfig.getCacheKeyFactory(),
+                  getPlatformBitmapFactory(),
+                  mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
+                  mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes(),
+                  mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch());
     }
     return mProducerFactory;
   }
