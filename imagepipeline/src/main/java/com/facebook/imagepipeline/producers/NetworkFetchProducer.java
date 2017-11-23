@@ -82,10 +82,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         });
   }
 
-  private void onResponse(
-      FetchState fetchState,
-      InputStream responseData,
-      int responseContentLength)
+  protected void onResponse(
+      FetchState fetchState, InputStream responseData, int responseContentLength)
       throws IOException {
     final PooledByteBufferOutputStream pooledOutputStream;
     if (responseContentLength > 0) {
@@ -112,7 +110,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  private static float calculateProgress(int downloaded, int total) {
+  protected static float calculateProgress(int downloaded, int total) {
     if (total > 0) {
       return (float) downloaded / total;
     } else {
@@ -131,9 +129,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  private void maybeHandleIntermediateResult(
-      PooledByteBufferOutputStream pooledOutputStream,
-      FetchState fetchState) {
+  protected void maybeHandleIntermediateResult(
+      PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
     final long nowMs = SystemClock.uptimeMillis();
     if (shouldPropagateIntermediateResults(fetchState) &&
         nowMs - fetchState.getLastIntermediateResultTimeMs() >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
@@ -148,9 +145,8 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     }
   }
 
-  private void handleFinalResult(
-      PooledByteBufferOutputStream pooledOutputStream,
-      FetchState fetchState) {
+  protected void handleFinalResult(
+      PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
     Map<String, String> extraMap = getExtraMap(fetchState, pooledOutputStream.size());
     ProducerListener listener = fetchState.getListener();
     listener.onProducerFinishWithSuccess(fetchState.getId(), PRODUCER_NAME, extraMap);
