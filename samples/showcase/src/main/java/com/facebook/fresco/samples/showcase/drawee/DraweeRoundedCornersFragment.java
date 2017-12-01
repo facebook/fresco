@@ -59,6 +59,9 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
   private SimpleDraweeView mDraweeSomeRtl;
   private SimpleDraweeView mDraweeFancy;
 
+  private CheckBox mShowBordersCheck;
+  private CheckBox mScaleInsideBordersCheck;
+
   public DraweeRoundedCornersFragment() {
     // Required empty public constructor
   }
@@ -127,17 +130,23 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
       }
     });
 
-    final CheckBox borders = (CheckBox) view.findViewById(R.id.borders);
-    borders.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        setShowBorder(mDraweeRound, isChecked);
-        setShowBorder(mDraweeRadius, isChecked);
-        setShowBorder(mDraweeSome, isChecked);
-        setShowBorder(mDraweeSomeRtl, isChecked);
-        setShowBorder(mDraweeFancy, isChecked);
-      }
-    });
+    mShowBordersCheck = view.findViewById(R.id.borders);
+    mShowBordersCheck.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateRounding();
+          }
+        });
+
+    mScaleInsideBordersCheck = view.findViewById(R.id.scaleInside);
+    mScaleInsideBordersCheck.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            updateRounding();
+          }
+        });
 
     final Resources res = getResources();
     final RoundingParams fancyRoundingParams =
@@ -189,13 +198,24 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     hierarchy.setRoundingParams(roundingParams);
   }
 
-  private void setShowBorder(SimpleDraweeView draweeView, boolean show) {
+  private void updateRounding() {
+    boolean showBorder = mShowBordersCheck.isChecked();
+    boolean scaleInsideBorder = showBorder && mScaleInsideBordersCheck.isChecked();
+    setShowBorder(mDraweeRound, showBorder, scaleInsideBorder);
+    setShowBorder(mDraweeRadius, showBorder, scaleInsideBorder);
+    setShowBorder(mDraweeSome, showBorder, scaleInsideBorder);
+    setShowBorder(mDraweeSomeRtl, showBorder, scaleInsideBorder);
+    setShowBorder(mDraweeFancy, showBorder, scaleInsideBorder);
+  }
+
+  private void setShowBorder(SimpleDraweeView draweeView, boolean show, boolean scaleInside) {
     final RoundingParams roundingParams =
         Preconditions.checkNotNull(draweeView.getHierarchy().getRoundingParams());
     if (show) {
       roundingParams.setBorder(
           mColorPrimary,
           getResources().getDimensionPixelSize(R.dimen.drawee_rounded_corners_border_width));
+      roundingParams.setScaleDownInsideBorders(scaleInside);
     } else {
       roundingParams.setBorder(Color.TRANSPARENT, 0);
     }

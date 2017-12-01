@@ -294,6 +294,7 @@ public class WrappingUtils {
     rounded.setRadii(roundingParams.getCornersRadii());
     rounded.setBorder(roundingParams.getBorderColor(), roundingParams.getBorderWidth());
     rounded.setPadding(roundingParams.getPadding());
+    rounded.setScaleDownInsideBorders(roundingParams.getScaleDownInsideBorders());
   }
 
   /**
@@ -304,6 +305,7 @@ public class WrappingUtils {
     rounded.setRadius(0);
     rounded.setBorder(Color.TRANSPARENT, 0);
     rounded.setPadding(0);
+    rounded.setScaleDownInsideBorders(false);
   }
 
   /**

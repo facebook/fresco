@@ -26,4 +26,7 @@ public interface Rounded {
 
   void setPadding(float padding);
   float getPadding();
+
+  void setScaleDownInsideBorders(boolean scaleDownInsideBorders);
+  boolean getScaleDownInsideBorders();
 }

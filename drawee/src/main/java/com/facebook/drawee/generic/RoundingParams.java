@@ -48,6 +48,7 @@ public class RoundingParams {
   private float mBorderWidth = 0;
   private int mBorderColor = Color.TRANSPARENT;
   private float mPadding = 0;
+  private boolean mScaleDownInsideBorders = false;
 
   /**
    *  Sets whether to round as circle.
@@ -242,6 +243,23 @@ public class RoundingParams {
     return mPadding;
   }
 
+  /**
+   * Sets whether image should be scaled down inside borders.
+   *
+   * @param scaleDownInsideBorders whether image should be scaled down inside borders or borders
+   *     will be drawn over image
+   * @return modified instance
+   */
+  public RoundingParams setScaleDownInsideBorders(boolean scaleDownInsideBorders) {
+    mScaleDownInsideBorders = scaleDownInsideBorders;
+    return this;
+  }
+
+  /** Gets whether image should be scaled down inside borders. */
+  public boolean getScaleDownInsideBorders() {
+    return mScaleDownInsideBorders;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -277,8 +295,11 @@ public class RoundingParams {
       return false;
     }
 
-    return Arrays.equals(mCornersRadii, that.mCornersRadii);
+    if (mScaleDownInsideBorders != that.mScaleDownInsideBorders) {
+      return false;
+    }
 
+    return Arrays.equals(mCornersRadii, that.mCornersRadii);
   }
 
   @Override
@@ -290,6 +311,7 @@ public class RoundingParams {
     result = 31 * result + (mBorderWidth != +0.0f ? Float.floatToIntBits(mBorderWidth) : 0);
     result = 31 * result + mBorderColor;
     result = 31 * result + (mPadding != +0.0f ? Float.floatToIntBits(mPadding) : 0);
+    result = 31 * result + (mScaleDownInsideBorders ? 1 : 0);
 
     return result;
   }

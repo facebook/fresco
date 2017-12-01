@@ -96,4 +96,11 @@ public class RoundedCornersDrawableTest {
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
     assertEquals(padding, mRoundedCornersDrawable.getPadding(), 0);
   }
+
+  @Test
+  public void testSetScaleDownInsideBorders() {
+    mRoundedCornersDrawable.setScaleDownInsideBorders(true);
+    verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
+    assertTrue(mRoundedCornersDrawable.getScaleDownInsideBorders());
+  }
 }

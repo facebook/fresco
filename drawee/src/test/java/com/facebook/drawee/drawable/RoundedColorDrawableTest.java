@@ -108,6 +108,13 @@ public class RoundedColorDrawableTest {
   }
 
   @Test
+  public void testSetScaleDownInsideBorders() {
+    mRoundedColorDrawable.setScaleDownInsideBorders(true);
+    verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
+    assertTrue(mRoundedColorDrawable.getScaleDownInsideBorders());
+  }
+
+  @Test
   public void testDrawWithoutBorder() {
     int internalColor = 0xC0223456;
     int alpha = 10;

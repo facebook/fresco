@@ -33,6 +33,7 @@ public class RoundingParamsTest {
     assertFalse(mRoundingParams.getRoundAsCircle());
     assertNull(mRoundingParams.getCornersRadii());
     assertEquals(0, mRoundingParams.getOverlayColor());
+    assertFalse(mRoundingParams.getScaleDownInsideBorders());
   }
 
   @Test
@@ -78,6 +79,14 @@ public class RoundingParamsTest {
     mRoundingParams.setBorder(borderColor, borderWidth);
     assertEquals(borderColor, mRoundingParams.getBorderColor());
     assertEquals(borderWidth, mRoundingParams.getBorderWidth(), 0);
+  }
+
+  @Test
+  public void testSetScaleDownInsideBorders() {
+    assertSame(mRoundingParams, mRoundingParams.setScaleDownInsideBorders(true));
+    assertTrue(mRoundingParams.getScaleDownInsideBorders());
+    assertSame(mRoundingParams, mRoundingParams.setScaleDownInsideBorders(false));
+    assertFalse(mRoundingParams.getScaleDownInsideBorders());
   }
 
   @Test

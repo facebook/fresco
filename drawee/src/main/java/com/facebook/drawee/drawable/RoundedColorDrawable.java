@@ -23,15 +23,18 @@ import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import java.util.Arrays;
+import javax.annotation.Nullable;
 
 public class RoundedColorDrawable extends Drawable implements Rounded {
   private final float[] mRadii = new float[8];
   @VisibleForTesting final float[] mBorderRadii = new float[8];
+  @VisibleForTesting @Nullable float[] mInsideBorderRadii;
   @VisibleForTesting final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean mIsCircle = false;
   private float mBorderWidth = 0;
   private float mPadding = 0;
   private int mBorderColor = Color.TRANSPARENT;
+  private boolean mScaleDownInsideBorders = false;
   @VisibleForTesting final Path mPath = new Path();
   @VisibleForTesting final Path mBorderPath = new Path();
   private int mColor = Color.TRANSPARENT;
@@ -220,6 +223,26 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
   }
 
   /**
+   * Sets whether image should be scaled down inside borders.
+   *
+   * @param scaleDownInsideBorders
+   */
+  @Override
+  public void setScaleDownInsideBorders(boolean scaleDownInsideBorders) {
+    if (mScaleDownInsideBorders != scaleDownInsideBorders) {
+      mScaleDownInsideBorders = scaleDownInsideBorders;
+      updatePath();
+      invalidateSelf();
+    }
+  }
+
+  /** Gets whether image should be scaled down inside borders. */
+  @Override
+  public boolean getScaleDownInsideBorders() {
+    return mScaleDownInsideBorders;
+  }
+
+  /**
    * Sets the drawable's alpha value.
    *
    * @param alpha The alpha value to set, between 0 and 255.
@@ -280,13 +303,22 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
     }
     mTempRect.inset(-mBorderWidth/2, -mBorderWidth/2);
 
-    mTempRect.inset(mPadding, mPadding);
+    float totalPadding = mPadding + (mScaleDownInsideBorders ? mBorderWidth : 0);
+    mTempRect.inset(totalPadding, totalPadding);
     if (mIsCircle) {
       float radius = Math.min(mTempRect.width(), mTempRect.height())/2;
       mPath.addCircle(mTempRect.centerX(), mTempRect.centerY(), radius, Path.Direction.CW);
+    } else if (mScaleDownInsideBorders) {
+      if (mInsideBorderRadii == null) {
+        mInsideBorderRadii = new float[8];
+      }
+      for (int i = 0; i < mInsideBorderRadii.length; i++) {
+        mInsideBorderRadii[i] = mRadii[i] - mBorderWidth;
+      }
+      mPath.addRoundRect(mTempRect, mInsideBorderRadii, Path.Direction.CW);
     } else {
       mPath.addRoundRect(mTempRect, mRadii, Path.Direction.CW);
     }
-    mTempRect.inset(-mPadding, -mPadding);
+    mTempRect.inset(-totalPadding, -totalPadding);
   }
 }

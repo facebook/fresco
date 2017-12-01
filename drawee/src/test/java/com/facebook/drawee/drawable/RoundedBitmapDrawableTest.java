@@ -88,6 +88,13 @@ public class RoundedBitmapDrawableTest {
   }
 
   @Test
+  public void testSetScaleDownInsideBorders() {
+    mRoundedBitmapDrawable.setScaleDownInsideBorders(true);
+    verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
+    assertTrue(mRoundedBitmapDrawable.getScaleDownInsideBorders());
+  }
+
+  @Test
   public void testShouldRoundDefault() {
     assertFalse(mRoundedBitmapDrawable.shouldRound());
     assertFalse(mRoundedBitmapDrawableWithNullBitmap.shouldRound());
