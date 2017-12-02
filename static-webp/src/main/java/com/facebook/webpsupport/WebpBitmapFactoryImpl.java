@@ -98,7 +98,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @Override
-  public void setWebpErrorLogger(WebpErrorLogger webpErrorLogger) {
+  public void setWebpErrorLogger(WebpBitmapFactory.WebpErrorLogger webpErrorLogger) {
     this.mWebpErrorLogger = webpErrorLogger;
   }
 

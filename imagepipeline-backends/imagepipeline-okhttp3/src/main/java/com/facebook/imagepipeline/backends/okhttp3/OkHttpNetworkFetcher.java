@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.producers.BaseNetworkFetcher;
 import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.FetchState;
+import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.ProducerContext;
 import java.io.IOException;
 import java.util.HashMap;
@@ -84,7 +85,8 @@ public class OkHttpNetworkFetcher extends
   }
 
   @Override
-  public void fetch(final OkHttpNetworkFetchState fetchState, final Callback callback) {
+  public void fetch(
+      final OkHttpNetworkFetchState fetchState, final NetworkFetcher.Callback callback) {
     fetchState.submitTime = SystemClock.elapsedRealtime();
     final Uri uri = fetchState.getUri();
 
@@ -123,7 +125,7 @@ public class OkHttpNetworkFetcher extends
 
   protected void fetchWithRequest(
       final OkHttpNetworkFetchState fetchState,
-      final Callback callback,
+      final NetworkFetcher.Callback callback,
       final Request request) {
     final Call call = mCallFactory.newCall(request);
 

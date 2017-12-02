@@ -123,7 +123,7 @@ public class ForwardingDrawable extends Drawable
   }
 
   @Override
-  public ConstantState getConstantState() {
+  public Drawable.ConstantState getConstantState() {
     return mCurrentDelegate.getConstantState();
   }
 

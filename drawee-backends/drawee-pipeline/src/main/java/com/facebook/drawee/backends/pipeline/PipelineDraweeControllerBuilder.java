@@ -137,7 +137,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   protected DataSource<CloseableReference<CloseableImage>> getDataSourceForRequest(
       ImageRequest imageRequest,
       Object callerContext,
-      CacheLevel cacheLevel) {
+      AbstractDraweeControllerBuilder.CacheLevel cacheLevel) {
     return mImagePipeline.fetchDecodedImage(
         imageRequest,
         callerContext,
