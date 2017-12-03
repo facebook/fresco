@@ -358,8 +358,8 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private void onFinalImageSet() {
     FLog.v(getLogTag(), "onFinalImageSet: view %x", this.hashCode());
     if (!mZoomableController.isEnabled()) {
-      updateZoomableControllerBounds();
       mZoomableController.setEnabled(true);
+      updateZoomableControllerBounds();
     }
   }
 
