@@ -22,9 +22,12 @@ public class RoundingParams {
 
   public enum RoundingMethod {
     /**
-     * Draws rounded corners on top of the underlying drawable by overlaying a solid color which
-     * is specified by {@code setOverlayColor}. This option should only be used when the
-     * background beneath the underlying drawable is static and of the same solid color.
+     * Draws rounded corners on top of the underlying drawable by overlaying a solid color which is
+     * specified by {@code setOverlayColor}. This option should only be used when the background
+     * beneath the underlying drawable is static and of the same solid color.
+     *
+     * <p>Adding borders with this method will cause image edges to be trimmed off. Not noticeable
+     * if the color is opaque, but very noticeable with low opacity.
      */
     OVERLAY_COLOR,
 
