@@ -4,11 +4,11 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile project(':drawee')
-    compile project(':fbcore')
-    compile project(':imagepipeline')
+    compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    api project(':fbcore')
+    api project(':drawee')
+    api project(':imagepipeline')
 }
 apply from: rootProject.file('release.gradle')
 
