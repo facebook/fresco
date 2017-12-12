@@ -8,7 +8,7 @@
  */
 package com.facebook.imagepipeline.memory;
 
-import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.soloader.SoLoader;
 import org.junit.BeforeClass;
 
 /**
@@ -20,12 +20,6 @@ public class TestUsingNativeMemoryChunk {
 
   @BeforeClass
   public static void allowNativeStaticInitializers() {
-    SoLoaderShim.setHandler(
-        new SoLoaderShim.Handler() {
-          @Override
-          public void loadLibrary(String libraryName) {
-            // ignore it
-          }
-        });
+    SoLoader.setInTestMode();
   }
 }

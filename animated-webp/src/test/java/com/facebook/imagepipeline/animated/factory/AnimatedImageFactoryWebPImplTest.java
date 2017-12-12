@@ -10,8 +10,18 @@
 
 package com.facebook.imagepipeline.animated.factory;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -19,7 +29,6 @@ import com.facebook.animated.webp.WebPImage;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
@@ -56,10 +65,6 @@ public class AnimatedImageFactoryWebPImplTest {
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
-
-  static {
-    SoLoaderShim.setInTestMode();
-  }
 
   private static ResourceReleaser<PooledByteBuffer> FAKE_RESOURCE_RELEASER =
       new ResourceReleaser<PooledByteBuffer>() {
