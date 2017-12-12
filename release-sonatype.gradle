@@ -16,15 +16,15 @@ def isReleaseBuild() {
 }
 
 def getRepositoryUrl() {
-    return hasProperty('repositoryUrl') ? property('repositoryUrl') : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    return properties.get('repositoryUrl', "https://oss.sonatype.org/service/local/staging/deploy/maven2/")
 }
 
 def getRepositoryUsername() {
-    return hasProperty('repositoryUsername') ? property('repositoryUsername') : ""
+    return properties.get('repositoryUsername',  "")
 }
 
 def getRepositoryPassword() {
-    return hasProperty('repositoryPassword') ? property('repositoryPassword') : ""
+    return properties.get('repositoryPassword',  "")
 }
 
 def getPassword(String passwordName) {

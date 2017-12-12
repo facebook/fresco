@@ -5,6 +5,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
@@ -24,18 +25,17 @@ plugins {
 project.ext {
     buildToolsVersion = "${BUILD_TOOLS_VERSION}"
     compileSdkVersion = COMPILE_SDK_VERSION.toInteger()
-    minSdkVersion = MIN_SDK_VERSION;
-    targetSdkVersion = TARGET_SDK_VERSION;
-    preDexLibs = !project.hasProperty('disablePreDex');
+    minSdkVersion = MIN_SDK_VERSION
+    samplesMinSdkVersion = SAMPLES_MIN_SDK_VERSION
+    targetSdkVersion = TARGET_SDK_VERSION
+    preDexLibs = !project.hasProperty('disablePreDex')
 }
 
 subprojects {
 
     repositories {
+        google()
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
     }
 
     task allclean {
@@ -224,7 +224,4 @@ subprojects {
             ['src/**/*.c', 'src/**/*.h', '*.mk'], // Files to compile
             "libwebp-${LIBWEBP_VERSION}" // Final destination dir
     )
-}
-
-repositories {
 }

@@ -5,16 +5,17 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    provided "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
-    compile project(':fbcore')
+    implementation project(':fbcore')
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

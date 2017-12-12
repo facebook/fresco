@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.facebook.fresco.samples.showcase"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.samplesMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "${VERSION_NAME}"
@@ -27,8 +27,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../../proguard-fresco.pro', 'proguard-showcase.pro'
         }
     }
+    flavorDimensions "main"
     productFlavors {
+        main
         instantRunConfig {
+            dimension "main"
             minSdkVersion 21
         }
     }
@@ -49,29 +52,29 @@ android {
 }
 
 dependencies {
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-    compile "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+    implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 
-    compile project(':animated-base')
-    compile project(':animated-gif')
-    compile project(':animated-webp')
-    compile project(':static-webp')
+    implementation project(':animated-base')
+    implementation project(':animated-gif')
+    implementation project(':animated-webp')
+    implementation project(':static-webp')
 
-    compile project(':drawee-backends:drawee-pipeline')
-    compile project(':drawee-span')
-    compile project(':imagepipeline-backends:imagepipeline-okhttp3')
-    compile project(':tools:stetho')
-    compile project(path: ':imagepipeline-backends:imagepipeline-okhttp3')
+    implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':drawee-span')
+    implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
+    implementation project(':tools:stetho')
+    implementation project(path: ':imagepipeline-backends:imagepipeline-okhttp3')
 
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.facebook.keyframes:keyframes:1.0'
+    implementation 'com.facebook.keyframes:keyframes:1.0'
 
     // Only used for the custom SVG decoder
-    compile 'com.caverock:androidsvg:1.2.1'
+    implementation 'com.caverock:androidsvg:1.2.1'
 }
