@@ -5,14 +5,14 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compile "com.facebook.stetho:stetho:${STETHO_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    implementation "com.facebook.stetho:stetho:${STETHO_VERSION}"
 
-    compile project(':drawee-backends:drawee-pipeline')
-    compile project(':fbcore')
-    compile project(':imagepipeline')
-    compile project(':imagepipeline-base')
+    implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
+    implementation project(':imagepipeline-base')
 }
 
 apply from: rootProject.file('release.gradle')

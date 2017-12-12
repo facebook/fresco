@@ -4,11 +4,11 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-  compile "com.android.volley:volley:${VOLLEY_VERSION}"
+  implementation "com.android.volley:volley:${VOLLEY_VERSION}"
 
-  compile project(':fbcore')
-  compile project(':imagepipeline')
-  compile project(':imagepipeline-base')
+  implementation project(':fbcore')
+  implementation project(':imagepipeline')
+  implementation project(':imagepipeline-base')
 }
 apply from: rootProject.file('release.gradle')
 

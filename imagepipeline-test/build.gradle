@@ -5,21 +5,21 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compile project(':fbcore')
-    compile project(':imagepipeline-base')
-    compile project(':imagepipeline-base-test')
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
-    compile "junit:junit:${JUNIT_VERSION}"
-    compile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    compile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+    api project(':imagepipeline-base-test')
+    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation project(':fbcore')
+    implementation project(':imagepipeline-base')
+    implementation "junit:junit:${JUNIT_VERSION}"
+    implementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    implementation("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    compile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    compile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    compile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    implementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    implementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    implementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

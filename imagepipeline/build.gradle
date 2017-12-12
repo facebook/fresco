@@ -16,6 +16,7 @@ dependencies {
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
 
+    testImplementation "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')

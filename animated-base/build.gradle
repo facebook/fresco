@@ -6,27 +6,27 @@ version = VERSION_NAME
 
 
 dependencies {
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    compile project(':fbcore')
-    compile project(':imagepipeline-base')
-    compile project(':imagepipeline')
-    compile project(':animated-drawable')
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    api project(':fbcore')
+    api project(':imagepipeline-base')
+    api project(':imagepipeline')
+    api project(':animated-drawable')
+    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
 
-    testCompile project(':animated-base-test')
-    testCompile project(':imagepipeline-test')
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
-    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testCompile("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
+    testImplementation project(':animated-base-test')
+    testImplementation project(':imagepipeline-test')
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation("org.powermock:powermock-api-mockito:${POWERMOCK_VERSION}") {
         exclude group: 'org.mockito', module: 'mockito-all'
     }
-    testCompile "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
-    testCompile "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
-    testCompile "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
-    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation "org.powermock:powermock-module-junit4:${POWERMOCK_VERSION}"
+    testImplementation "org.powermock:powermock-module-junit4-rule:${POWERMOCK_VERSION}"
+    testImplementation "org.powermock:powermock-classloading-xstream:${POWERMOCK_VERSION}"
+    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
