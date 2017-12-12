@@ -46,6 +46,10 @@
             android:id="@+id/nav_drawee_transition"
             android:title="@string/drawee_transition_title"
             />
+        <item
+            android:id="@+id/nav_drawee_retaining_supplier"
+            android:title="@string/drawee_retaining_supplier_title"
+            />
       </group>
     </menu>
   </item>

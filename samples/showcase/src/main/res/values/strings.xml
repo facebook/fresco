@@ -44,6 +44,9 @@
   <string name="drawee_transition_details_title">Image Detail Activity</string>
   <string name="drawee_transition_details_help">This is the second activity. Press back to reverse the transition.</string>
 
+  <string name="drawee_retaining_supplier_title">Retaining Data Source Supplier</string>
+  <string name="drawee_retaining_supplier_help">Click on the image to show the next one. The previous one will be retained until the new image is ready.</string>
+
   <string name="category_pipeline">Image Pipeline</string>
 
   <string name="imagepipeline_notification_title">Notifications</string>

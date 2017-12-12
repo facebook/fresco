@@ -19,6 +19,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import com.facebook.common.internal.Preconditions;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
@@ -242,6 +244,14 @@ public class ImageUriProvider {
     return !TextUtils.isEmpty(uriOverride)
         ? uriOverride
         : null;
+  }
+
+  public static List<String> getSampleUris(ImageSize imageSize) {
+    ArrayList<String> uris = new ArrayList<>();
+    for (String uri : SAMPLE_URIS_LANDSCAPE) {
+      uris.add(String.format((Locale) null, uri, imageSize.sizeSuffix));
+    }
+    return uris;
   }
 
   private Uri applyOverrideSettings(
