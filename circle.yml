@@ -9,7 +9,7 @@ dependencies:
   pre:
     # if necessary SDK / build tools / support library folders do not exist, update the circle ci instance accordingly
     - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-26" ]; then echo y | android update sdk --no-ui --all --filter "android-26"; fi
-    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/26.0.0" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-26.0.0"; fi
+    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/26.0.0" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-27.0.2"; fi
     - if [ ! -d "/usr/local/android_sdk/extras/android/m2repository/com/android/support/support-core-utils/25.1.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
     # setup NDK r15b
     - if [ ! -d "/home/ubuntu/android-ndk-r15b" ]; then wget https://dl.google.com/android/repository/android-ndk-r15b-linux-x86_64.zip; unzip android-ndk-r15b-linux-x86_64.zip -d "/home/ubuntu"; fi

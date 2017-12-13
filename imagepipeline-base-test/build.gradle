@@ -18,6 +18,10 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    defaultConfig {
+        minSdkVersion rootProject.ext.samplesMinSdkVersion
+    }
+
 }
 
 task sourcesJar(type: Jar) {

@@ -31,6 +31,10 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    defaultConfig {
+        minSdkVersion rootProject.ext.samplesMinSdkVersion
+    }
+
     lintOptions {
         abortOnError false
     }
