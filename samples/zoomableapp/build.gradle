@@ -51,6 +51,6 @@ dependencies {
     compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     implementation "com.android.support:support-core-ui:${SUPPORT_LIB_VERSION}"
 
-    internalCompile project(':drawee-backends:drawee-pipeline')
+    internalImplementation project(':drawee-backends:drawee-pipeline')
     implementation project(path: ':samples:zoomable')
 }

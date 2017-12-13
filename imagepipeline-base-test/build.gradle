@@ -5,11 +5,12 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    compile "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compile project(':fbcore')
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+
+    implementation "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation project(':fbcore')
 }
 apply from: rootProject.file('release.gradle')
 
@@ -36,7 +37,7 @@ task jarTest (type: Jar) {
 }
 
 configurations {
-    testOutput.extendsFrom (testCompile)
+    testOutput.extendsFrom (testImplementation)
 }
 
 artifacts.add('archives', sourcesJar)

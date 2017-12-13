@@ -5,15 +5,18 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    androidTestCompile "junit:junit:${JUNIT_VERSION}"
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    compile project(':fbcore')
-    compile project(':imagepipeline-base')
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+
+    implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
+    implementation project(':fbcore')
+    implementation project(':imagepipeline-base')
+
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+
+    androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+    androidTestImplementation 'com.android.support.test:runner:0.4'
+    androidTestImplementation 'com.android.support.test:rules:0.4'
 }
 apply from: rootProject.file('release.gradle')
 
