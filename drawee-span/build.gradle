@@ -5,16 +5,16 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 
-    compile project(path: ':drawee')
-    compile project(path: ':fbcore')
-    compile project(path: ':imagepipeline-base')
+    implementation project(path: ':drawee')
+    implementation project(path: ':fbcore')
+    implementation project(path: ':imagepipeline-base')
 
-    testCompile "junit:junit:${JUNIT_VERSION}"
-    testCompile "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
-    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }

@@ -4,12 +4,12 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile "com.android.volley:volley:${VOLLEY_VERSION}"
+    compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    implementation "com.android.volley:volley:${VOLLEY_VERSION}"
 
-    compile project(':drawee')
-    compile project(':fbcore')
+    implementation project(':drawee')
+    implementation project(':fbcore')
 }
 apply from: rootProject.file('release.gradle')
 
