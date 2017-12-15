@@ -10,7 +10,6 @@
 package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
-import com.facebook.common.internal.Closeables;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
@@ -22,7 +21,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
-import java.io.InputStream;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -134,19 +132,10 @@ public class DefaultImageDecoder implements ImageDecoder {
       final int length,
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
-    InputStream is = encodedImage.getInputStream();
-    if (is == null) {
-      return null;
+    if (!options.forceStaticImage && mAnimatedGifDecoder != null) {
+      return mAnimatedGifDecoder.decode(encodedImage, length, qualityInfo, options);
     }
-    try {
-      if (!options.forceStaticImage
-          && mAnimatedGifDecoder != null) {
-        return mAnimatedGifDecoder.decode(encodedImage, length, qualityInfo, options);
-      }
-      return decodeStaticImage(encodedImage, options);
-    } finally {
-      Closeables.closeQuietly(is);
-    }
+    return decodeStaticImage(encodedImage, options);
   }
 
   /**
