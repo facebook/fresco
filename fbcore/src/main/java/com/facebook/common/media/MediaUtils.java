@@ -22,7 +22,7 @@ public class MediaUtils {
   // Additional mime types that we know to be a particular media type but which may not be
   // supported natively on the device.
   public static final Map<String, String> ADDITIONAL_ALLOWED_MIME_TYPES =
-      ImmutableMap.of("mkv", "video/x-matroska");
+      ImmutableMap.of("mkv", "video/x-matroska", "glb", "model/gltf-binary");
 
   public static boolean isPhoto(@Nullable String mimeType) {
     return mimeType != null && mimeType.startsWith("image/");
@@ -30,6 +30,10 @@ public class MediaUtils {
 
   public static boolean isVideo(@Nullable String mimeType) {
     return mimeType != null && mimeType.startsWith("video/");
+  }
+
+  public static boolean isThreeD(@Nullable String mimeType) {
+    return mimeType != null && mimeType.equals("model/gltf-binary");
   }
 
   public @Nullable static String extractMime(String path) {
