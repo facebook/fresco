@@ -298,6 +298,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/ImagePipelineNativeLoader.html">ImagePipelineNativeLoader</a></li>
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html">JpegTranscoder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeBlurFilter.html">NativeBlurFilter</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeRoundingFilter.html">NativeRoundingFilter</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/StaticWebpNativeLoader.html">StaticWebpNativeLoader</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/WebpTranscoderFactory.html">WebpTranscoderFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/WebpTranscoderImpl.html">WebpTranscoderImpl</a></li>
@@ -591,8 +592,42 @@ Summary:
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#isExifOrientationAllowed(int)">isExifOrientationAllowed</a></span>(int exifOrientation)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#isRotationAngleAllowed(int)">isRotationAngleAllowed</a></span>(int degrees)
         
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#transcodeJpeg(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpeg</a></span>(InputStream inputStream, OutputStream outputStream, int rotationAngle, int scaleNumerator, int quality)
+        
+        <div class="jd-descrdiv">Downscales and rotates jpeg image</div>
+  
   </td></tr>
 
 
@@ -607,7 +642,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#transcodeJpeg(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpeg</a></span>(InputStream inputStream, OutputStream outputStream, int rotationAngle, int scaleNumerator, int quality)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#transcodeJpegWithExifOrientation(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpegWithExifOrientation</a></span>(InputStream inputStream, OutputStream outputStream, int exifOrientation, int scaleNumerator, int quality)
         
         <div class="jd-descrdiv">Downscales and rotates jpeg image</div>
   
@@ -1117,6 +1152,42 @@ From class
 
 
 
+<a id="isExifOrientationAllowed(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isExifOrientationAllowed</span>
+      <span class="normal">(int exifOrientation)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>true if and only if given value is a valid EXIF orientation
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="isRotationAngleAllowed(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1185,6 +1256,64 @@ From class
       <table class="jd-tagtable">
         <tr>
           <th>rotationAngle</th>
+          <td>0, 90, 180 or 270</td>
+        </tr>
+        <tr>
+          <th>scaleNumerator</th>
+          <td>1 - 16, image will be scaled using scaleNumerator/8 factor</td>
+        </tr>
+        <tr>
+          <th>quality</th>
+          <td>1 - 100
+</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IOException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="transcodeJpegWithExifOrientation(java.io.InputStream, java.io.OutputStream, int, int, int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">transcodeJpegWithExifOrientation</span>
+      <span class="normal">(InputStream inputStream, OutputStream outputStream, int exifOrientation, int scaleNumerator, int quality)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Downscales and rotates jpeg image</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>exifOrientation</th>
           <td>0, 90, 180 or 270</td>
         </tr>
         <tr>

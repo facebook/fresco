@@ -773,6 +773,42 @@ Summary:
             int
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getExifOrientation()">getExifOrientation</a></span>()
+        
+        <div class="jd-descrdiv">Only valid if the image format is JPEG.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getFirstBytesAsHexString(int)">getFirstBytesAsHexString</a></span>(int length)
+        
+        <div class="jd-descrdiv">Returns first n bytes of encoded image as hexbytes</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#getHeight()">getHeight</a></span>()
         
         <div class="jd-descrdiv">Returns the image height if known, else -1.</div>
@@ -1025,6 +1061,24 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#setExifOrientation(int)">setExifOrientation</a></span>(int exifOrientation)
+        
+        <div class="jd-descrdiv">Sets the exif orientation </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#setHeight(int)">setHeight</a></span>(int height)
         
         <div class="jd-descrdiv">Sets the image height
@@ -1034,7 +1088,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1053,7 +1107,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1072,7 +1126,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1084,14 +1138,13 @@ Summary:
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html#setSampleSize(int)">setSampleSize</a></span>(int sampleSize)
         
-        <div class="jd-descrdiv">Sets the image sample size
-</div>
+        <div class="jd-descrdiv">Sets the image sample size </div>
   
   </td></tr>
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1112,7 +1165,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -2030,6 +2083,79 @@ From interface
 </div>
 
 
+<a id="getExifOrientation()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        int
+      </span>
+      <span class="sympad">getExifOrientation</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Only valid if the image format is JPEG. Returns the exif orientation if known (1 - 8), else 0.
+</p></div>
+
+    </div>
+</div>
+
+
+<a id="getFirstBytesAsHexString(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getFirstBytesAsHexString</span>
+      <span class="normal">(int length)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Returns first n bytes of encoded image as hexbytes</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>length</th>
+          <td>the number of bytes to return
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="getHeight()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -2296,8 +2422,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Returns the image width if known, else -1.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Returns the image width if known, else -1. </p></div>
 
     </div>
 </div>
@@ -2462,8 +2587,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the encoded image meta data.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the encoded image meta data. </p></div>
 
     </div>
 </div>
@@ -2495,6 +2619,37 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<a id="setExifOrientation(int)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setExifOrientation</span>
+      <span class="normal">(int exifOrientation)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the exif orientation </p></div>
 
     </div>
 </div>
@@ -2621,8 +2776,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the image sample size
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the image sample size </p></div>
 
     </div>
 </div>

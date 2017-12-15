@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  DownsampleUtil - Fresco API
+  ImagePipelineExperiments.DefaultProducerFactoryMethod - Fresco API
 
 
 | Fresco
@@ -250,7 +250,7 @@
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
-    <li class="api apilevel-">
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/core/package-summary.html">com.facebook.imagepipeline.core</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
@@ -270,7 +270,7 @@
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/postprocessors/package-summary.html">com.facebook.imagepipeline.postprocessors</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
@@ -288,77 +288,32 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/JobScheduler.JobRunnable.html">JobScheduler.JobRunnable</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerListener.html">ProducerListener</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThumbnailProducer.html">ThumbnailProducer</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DiskStorageFactory.html">DiskStorageFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ExecutorSupplier.html">ExecutorSupplier</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/FileCacheFactory.html">FileCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.ProducerFactoryMethod.html">ImagePipelineExperiments.ProducerFactoryMethod</a></li>
       </ul>
     </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/AddImageTransformMetaDataProducer.html">AddImageTransformMetaDataProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContext.html">BaseProducerContext</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContextCallbacks.html">BaseProducerContextCallbacks</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheGetProducer.html">BitmapMemoryCacheGetProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheKeyMultiplexProducer.html">BitmapMemoryCacheKeyMultiplexProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.html">BitmapMemoryCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapPrepareProducer.html">BitmapPrepareProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BranchOnSeparateImagesProducer.html">BranchOnSeparateImagesProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DecodeProducer.html">DecodeProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DelegatingConsumer.html">DelegatingConsumer</a>&lt;I,&nbsp;O&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheReadProducer.html">DiskCacheReadProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheWriteProducer.html">DiskCacheWriteProducer</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DownsampleUtil.html">DownsampleUtil</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/EncodedCacheKeyMultiplexProducer.html">EncodedCacheKeyMultiplexProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/EncodedMemoryCacheProducer.html">EncodedMemoryCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/HttpUrlConnectionNetworkFetcher.html">HttpUrlConnectionNetworkFetcher</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/JobScheduler.html">JobScheduler</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalAssetFetchProducer.html">LocalAssetFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalContentUriFetchProducer.html">LocalContentUriFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalContentUriThumbnailFetchProducer.html">LocalContentUriThumbnailFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalExifThumbnailProducer.html">LocalExifThumbnailProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFetchProducer.html">LocalFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFileFetchProducer.html">LocalFileFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalResourceFetchProducer.html">LocalResourceFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalVideoThumbnailProducer.html">LocalVideoThumbnailProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html">MediaVariationsFallbackProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PartialDiskCacheProducer.html">PartialDiskCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.html">PostprocessedBitmapMemoryCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html">PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessorProducer.html">PostprocessorProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/QualifiedResourceFetchProducer.html">QualifiedResourceFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/RemoveImageTransformMetaDataProducer.html">RemoveImageTransformMetaDataProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ResizeAndRotateProducer.html">ResizeAndRotateProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/SettableProducerContext.html">SettableProducerContext</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/StatefulProducerRunnable.html">StatefulProducerRunnable</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/SwallowResultProducer.html">SwallowResultProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducer.html">ThreadHandoffProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThrottlingProducer.html">ThrottlingProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThumbnailBranchProducer.html">ThumbnailBranchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThumbnailSizeChecker.html">ThumbnailSizeChecker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/WebpTranscodeProducer.html">WebpTranscodeProducer</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DefaultExecutorSupplier.html">DefaultExecutorSupplier</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DiskStorageCacheFactory.html">DiskStorageCacheFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/DynamicDefaultDiskStorageFactory.html">DynamicDefaultDiskStorageFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipeline.html">ImagePipeline</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.html">ImagePipelineConfig</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.DefaultImageRequestConfig.html">ImagePipelineConfig.DefaultImageRequestConfig</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.html">ImagePipelineExperiments</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html">ImagePipelineExperiments.Builder</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.DefaultProducerFactoryMethod.html">ImagePipelineExperiments.DefaultProducerFactoryMethod</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineFactory.html">ImagePipelineFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/PriorityThreadFactory.html">PriorityThreadFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/core/ProducerSequenceFactory.html">ProducerSequenceFactory</a></li>
       </ul>
     </li>
               
-    <li><h2>Annotations</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.Status.html">Consumer.Status</a></li>
-      </ul>
-    </li>
               
               
               
@@ -406,6 +361,13 @@
   
   
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -416,12 +378,12 @@ Summary:
 
 
 
-  <a href="#constants">Constants</a>
+
+
+
+
+  <a href="#pubctors">Ctors</a>
   
-
-
-
-
 
 
 
@@ -450,11 +412,11 @@ Summary:
 
 <div id="jd-header">
     public
-     
+    static 
      
     
     class
-<h1>DownsampleUtil</h1>
+<h1>ImagePipelineExperiments.DefaultProducerFactoryMethod</h1>
 
 
 
@@ -465,6 +427,11 @@ Summary:
   
 
   
+  
+      implements 
+      
+        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.ProducerFactoryMethod.html">ImagePipelineExperiments.ProducerFactoryMethod</a> 
+      
   
   
 
@@ -487,7 +454,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.producers.DownsampleUtil</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.core.ImagePipelineExperiments.DefaultProducerFactoryMethod</td>
     </tr>
     
 
@@ -540,30 +507,39 @@ Summary:
 
 
 
-<!-- =========== ENUM CONSTANT SUMMARY =========== -->
-<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
 
 
-    
+
+
+
+
+
+
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<table id="pubctors" class="jd-sumtable"><tr><th colspan="12">Public Constructors</th></tr>
+
+
+
+	 
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/DownsampleUtil.html#DEFAULT_SAMPLE_SIZE">DEFAULT_SAMPLE_SIZE</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.DefaultProducerFactoryMethod.html#DefaultProducerFactoryMethod()">DefaultProducerFactoryMethod</a></span>()
+        
+  </td></tr>
+
+
 
 </table>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -581,16 +557,13 @@ Summary:
             
             
             
-            static
             
-            int
+            
+            <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/DownsampleUtil.html#determineSampleSize(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)">determineSampleSize</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.DefaultProducerFactoryMethod.html#createProducerFactory(android.content.Context, com.facebook.common.memory.ByteArrayPool, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ProgressiveJpegConfig, boolean, boolean, boolean, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.core.ExecutorSupplier, com.facebook.common.memory.PooledByteBufferFactory, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer>, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, int, int, boolean)">createProducerFactory</a></span>(Context context, <a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a> byteArrayPool, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> imageDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html">ProgressiveJpegConfig</a> progressiveJpegConfig, boolean downsampleEnabled, boolean resizeAndRotateEnabledForNetwork, boolean decodeCancellationEnabled, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; experimentalSmartResizingEnabled, <a href="../../../../com/facebook/imagepipeline/core/ExecutorSupplier.html">ExecutorSupplier</a> executorSupplier, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, int bitmapPrepareToDrawMinSizeBytes, int bitmapPrepareToDrawMaxSizeBytes, boolean bitmapPrepareToDrawForPrefetch)
         
-        <div class="jd-descrdiv">Get the factor between the dimensions of the encodedImage (actual image) and the ones of the
- imageRequest (requested size).</div>
-  
   </td></tr>
 
 
@@ -810,6 +783,48 @@ From class
 </td></tr>
 
 
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.ProducerFactoryMethod.html">com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod</a>
+
+<div id="inherited-methods-com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod">
+  <div id="inherited-methods-com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.ProducerFactoryMethod.html#createProducerFactory(android.content.Context, com.facebook.common.memory.ByteArrayPool, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ProgressiveJpegConfig, boolean, boolean, boolean, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.core.ExecutorSupplier, com.facebook.common.memory.PooledByteBufferFactory, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer>, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, int, int, boolean)">createProducerFactory</a></span>(Context context, <a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a> byteArrayPool, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> imageDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html">ProgressiveJpegConfig</a> progressiveJpegConfig, boolean downsampleEnabled, boolean resizeAndRotateEnabledForNetwork, boolean decodeCancellationEnabled, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; experimentalSmartResizingEnabled, <a href="../../../../com/facebook/imagepipeline/core/ExecutorSupplier.html">ExecutorSupplier</a> executorSupplier, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, int bitmapPrepareToDrawMinSizeBytes, int bitmapPrepareToDrawMaxSizeBytes, boolean bitmapPrepareToDrawForPrefetch)
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
 </table>
 
 
@@ -833,28 +848,36 @@ From class
 <!-- Constants -->
 
 
-<!-- ========= ENUM CONSTANTS DETAIL ======== -->
-<h2>Constants</h2>
+<!-- Fields -->
+
+
+<!-- Public ctors -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<h2>Public Constructors</h2>
 
 
 
-
-<a id="DEFAULT_SAMPLE_SIZE"></a>
+<a id="DefaultProducerFactoryMethod()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
-        final 
-        int
+         
+         
+         
+         
+        
       </span>
-        DEFAULT_SAMPLE_SIZE
+      <span class="sympad">DefaultProducerFactoryMethod</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
-        
+        <div>
 
-
+</div>
         
   
 
@@ -863,27 +886,10 @@ From class
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                1
-                (0x00000001)
-            
-        </span>
-        </div>
-    
     </div>
 </div>
 
 
-
-
-<!-- Fields -->
-
-
-<!-- Public ctors -->
 
 
 
@@ -899,20 +905,20 @@ From class
 
 
 
-<a id="determineSampleSize(com.facebook.imagepipeline.request.ImageRequest, com.facebook.imagepipeline.image.EncodedImage)"></a>
+<a id="createProducerFactory(android.content.Context, com.facebook.common.memory.ByteArrayPool, com.facebook.imagepipeline.decoder.ImageDecoder, com.facebook.imagepipeline.decoder.ProgressiveJpegConfig, boolean, boolean, boolean, com.facebook.common.internal.Supplier<java.lang.Boolean>, com.facebook.imagepipeline.core.ExecutorSupplier, com.facebook.common.memory.PooledByteBufferFactory, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.common.memory.PooledByteBuffer>, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory, int, int, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
          
          
          
-        int
+         
+        <a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a>
       </span>
-      <span class="sympad">determineSampleSize</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> imageRequest, <a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage)</span>
+      <span class="sympad">createProducerFactory</span>
+      <span class="normal">(Context context, <a href="../../../../com/facebook/common/memory/ByteArrayPool.html">ByteArrayPool</a> byteArrayPool, <a href="../../../../com/facebook/imagepipeline/decoder/ImageDecoder.html">ImageDecoder</a> imageDecoder, <a href="../../../../com/facebook/imagepipeline/decoder/ProgressiveJpegConfig.html">ProgressiveJpegConfig</a> progressiveJpegConfig, boolean downsampleEnabled, boolean resizeAndRotateEnabledForNetwork, boolean decodeCancellationEnabled, <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; experimentalSmartResizingEnabled, <a href="../../../../com/facebook/imagepipeline/core/ExecutorSupplier.html">ExecutorSupplier</a> executorSupplier, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; bitmapMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/common/memory/PooledByteBuffer.html">PooledByteBuffer</a>&gt; encodedMemoryCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a> platformBitmapFactory, int bitmapPrepareToDrawMinSizeBytes, int bitmapPrepareToDrawMaxSizeBytes, boolean bitmapPrepareToDrawForPrefetch)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -924,21 +930,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Get the factor between the dimensions of the encodedImage (actual image) and the ones of the
- imageRequest (requested size).</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>imageRequest</th>
-          <td>the request containing the requested dimensions</td>
-        </tr>
-        <tr>
-          <th>encodedImage</th>
-          <td>the encoded image with the actual dimensions</td>
-        </tr>
-      </table>
-  </div>
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

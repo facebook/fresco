@@ -555,7 +555,7 @@ Summary:
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/ArtDecoder.html#decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config)">decodeFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/ArtDecoder.html#decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, android.graphics.Rect)">decodeFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, Rect regionToDecode)
         
         <div class="jd-descrdiv">Creates a bitmap from encoded bytes.</div>
   
@@ -573,7 +573,7 @@ Summary:
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/ArtDecoder.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, int)">decodeJPEGFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, int length)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/ArtDecoder.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, android.graphics.Rect, int)">decodeJPEGFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, Rect regionToDecode, int length)
         
         <div class="jd-descrdiv">Creates a bitmap from encoded JPEG bytes.</div>
   
@@ -602,7 +602,7 @@ Summary:
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/ArtDecoder.html#decodeStaticImageFromStream(java.io.InputStream, android.graphics.BitmapFactory.Options)">decodeStaticImageFromStream</a></span>(InputStream inputStream, BitmapFactory.Options options)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/ArtDecoder.html#decodeStaticImageFromStream(java.io.InputStream, android.graphics.BitmapFactory.Options, android.graphics.Rect)">decodeStaticImageFromStream</a></span>(InputStream inputStream, BitmapFactory.Options options, Rect regionToDecode)
         
   </td></tr>
 
@@ -852,7 +852,7 @@ From interface
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html#decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config)">decodeFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html#decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, android.graphics.Rect)">decodeFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, Rect regionToDecode)
         
         <div class="jd-descrdiv">Creates a bitmap from encoded bytes.</div>
   
@@ -870,7 +870,7 @@ From interface
             <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, int)">decodeJPEGFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, int length)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/platform/PlatformDecoder.html#decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, android.graphics.Rect, int)">decodeJPEGFromEncodedImage</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, Rect regionToDecode, int length)
         
         <div class="jd-descrdiv">Creates a bitmap from encoded JPEG bytes.</div>
   
@@ -963,7 +963,7 @@ From interface
 
 
 
-<a id="decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config)"></a>
+<a id="decodeFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, android.graphics.Rect)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -976,7 +976,7 @@ From interface
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
       <span class="sympad">decodeFromEncodedImage</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, Rect regionToDecode)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -998,8 +998,12 @@ From interface
         </tr>
         <tr>
           <th>bitmapConfig</th>
-          <td>the android.graphics.Bitmap.Config
- used to create the decoded Bitmap</td>
+          <td>the android.graphics.Bitmap.Config used to create the decoded
+     Bitmap</td>
+        </tr>
+        <tr>
+          <th>regionToDecode</th>
+          <td>optional image region to decode or null to decode the whole image</td>
         </tr>
       </table>
   </div>
@@ -1022,7 +1026,7 @@ From interface
 </div>
 
 
-<a id="decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, int)"></a>
+<a id="decodeJPEGFromEncodedImage(com.facebook.imagepipeline.image.EncodedImage, android.graphics.Bitmap.Config, android.graphics.Rect, int)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1035,7 +1039,7 @@ From interface
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
       <span class="sympad">decodeJPEGFromEncodedImage</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, int length)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, Bitmap.Config bitmapConfig, Rect regionToDecode, int length)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1057,8 +1061,12 @@ From interface
         </tr>
         <tr>
           <th>bitmapConfig</th>
-          <td>the android.graphics.Bitmap.Config
- used to create the decoded Bitmap</td>
+          <td>the android.graphics.Bitmap.Config used to create the decoded
+     Bitmap</td>
+        </tr>
+        <tr>
+          <th>regionToDecode</th>
+          <td>optional image region to decode or null to decode the whole image</td>
         </tr>
         <tr>
           <th>length</th>
@@ -1094,7 +1102,7 @@ From interface
 
 
 
-<a id="decodeStaticImageFromStream(java.io.InputStream, android.graphics.BitmapFactory.Options)"></a>
+<a id="decodeStaticImageFromStream(java.io.InputStream, android.graphics.BitmapFactory.Options, android.graphics.Rect)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1107,7 +1115,7 @@ From interface
         <a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt;
       </span>
       <span class="sympad">decodeStaticImageFromStream</span>
-      <span class="normal">(InputStream inputStream, BitmapFactory.Options options)</span>
+      <span class="normal">(InputStream inputStream, BitmapFactory.Options options, Rect regionToDecode)</span>
     </h4>
       <div class="api-level">
         <div>

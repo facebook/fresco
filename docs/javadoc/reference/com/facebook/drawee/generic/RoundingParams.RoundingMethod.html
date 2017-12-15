@@ -529,8 +529,8 @@ Summary:
     <tr class=" api apilevel-" >
         <td class="jd-descrcol"><a href="../../../../com/facebook/drawee/generic/RoundingParams.RoundingMethod.html">RoundingParams.RoundingMethod</a>&nbsp;</td>
         <td class="jd-linkcol">OVERLAY_COLOR&nbsp;</td>
-        <td class="jd-descrcol" width="100%">Draws rounded corners on top of the underlying drawable by overlaying a solid color which
- is specified by <code>setOverlayColor</code>.&nbsp;</td>
+        <td class="jd-descrcol" width="100%">Draws rounded corners on top of the underlying drawable by overlaying a solid color which is
+ specified by <code>setOverlayColor</code>.&nbsp;</td>
     </tr>
     
     
@@ -1138,9 +1138,12 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Draws rounded corners on top of the underlying drawable by overlaying a solid color which
- is specified by <code>setOverlayColor</code>. This option should only be used when the
- background beneath the underlying drawable is static and of the same solid color.
+  <div class="jd-tagdata jd-tagdescr"><p>Draws rounded corners on top of the underlying drawable by overlaying a solid color which is
+ specified by <code>setOverlayColor</code>. This option should only be used when the background
+ beneath the underlying drawable is static and of the same solid color.
+
+ <p>Adding borders with this method will cause image edges to be trimmed off. Not noticeable
+ if the color is opaque, but very noticeable with low opacity.
 </p></div>
 
     
