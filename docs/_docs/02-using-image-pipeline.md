@@ -70,7 +70,7 @@ In a similar way to how you can immediately retrieve images from the bitmap cach
 DataSource<CloseableReference<CloseableImage>> dataSource =
     imagePipeline.fetchImageFromBitmapCache(imageRequest, callerContext);
 try {
-  CloseableReference<CloseableImage> result = DataSource.waitForFinalResult(dataSource);
+  CloseableReference<CloseableImage> result = DataSources.waitForFinalResult(dataSource);
   if (result != null) {
     // Do something with the image, but do not keep the reference to it!
     // The image may get recycled as soon as the reference gets closed below.
