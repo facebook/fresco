@@ -8556,6 +8556,19 @@
 <parameter name="mimeType" type="java.lang.String">
 </parameter>
 </method>
+<method name="isThreeD"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mimeType" type="java.lang.String">
+</parameter>
+</method>
 <method name="isVideo"
  return="boolean"
  abstract="false"
