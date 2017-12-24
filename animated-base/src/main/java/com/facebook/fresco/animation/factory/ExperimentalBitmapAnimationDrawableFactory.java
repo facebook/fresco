@@ -106,7 +106,8 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     BitmapFramePreparationStrategy bitmapFramePreparationStrategy = null;
     BitmapFramePreparer bitmapFramePreparer = null;
     if (numberOfFramesToPrefetch > 0) {
-      bitmapFramePreparationStrategy = new FixedNumberBitmapFramePreparationStrategy();
+      bitmapFramePreparationStrategy =
+          new FixedNumberBitmapFramePreparationStrategy(numberOfFramesToPrefetch);
       bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer);
     }
 
