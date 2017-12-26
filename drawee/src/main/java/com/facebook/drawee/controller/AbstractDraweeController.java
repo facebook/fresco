@@ -450,7 +450,6 @@ public abstract class AbstractDraweeController<T, INFO> implements
           System.identityHashCode(mDataSource));
     }
     final String id = mId;
-    final boolean wasImmediate = mDataSource.hasResult();
     final DataSubscriber<T> dataSubscriber =
         new BaseDataSubscriber<T>() {
           @Override
@@ -458,6 +457,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
             // isFinished must be obtained before image, otherwise we might set intermediate result
             // as final image.
             boolean isFinished = dataSource.isFinished();
+            boolean wasImmediate = dataSource.hasResult();
             float progress = dataSource.getProgress();
             T image = dataSource.getResult();
             if (image != null) {
