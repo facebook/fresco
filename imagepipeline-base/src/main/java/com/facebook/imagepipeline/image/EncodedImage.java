@@ -402,7 +402,6 @@ public class EncodedImage implements Closeable {
    */
   public static boolean isMetaDataAvailable(EncodedImage encodedImage) {
     return encodedImage.mRotationAngle >= 0
-        && encodedImage.mExifOrientation > 0
         && encodedImage.mWidth >= 0
         && encodedImage.mHeight >= 0;
   }
