@@ -145,7 +145,7 @@ jobject doDecode(
     return JNI_FALSE;
   }
 
-  config.output.colorspace = MODE_RGBA;
+  config.output.colorspace = MODE_rgbA;
   config.output.u.RGBA.rgba = (uint8_t*) raw_pixels;
   config.output.u.RGBA.stride = image_width * 4;
   config.output.u.RGBA.size = image_width * image_height * 4;
