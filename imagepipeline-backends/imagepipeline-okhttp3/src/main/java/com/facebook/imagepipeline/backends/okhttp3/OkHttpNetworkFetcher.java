@@ -39,6 +39,7 @@ public class OkHttpNetworkFetcher extends
     BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
 
   public static class OkHttpNetworkFetchState extends FetchState {
+
     public long submitTime;
     public long responseTime;
     public long fetchCompleteTime;
@@ -137,7 +138,8 @@ public class OkHttpNetworkFetcher extends
               call.cancel();
             } else {
               mCancellationExecutor.execute(new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                   call.cancel();
                 }
               });
@@ -162,7 +164,9 @@ public class OkHttpNetworkFetcher extends
 
               BytesRange responseRange =
                   BytesRange.fromContentRangeHeader(response.header("Content-Range"));
-              if (responseRange != null) {
+              if (responseRange != null &&
+                  !(responseRange.from == 0 && responseRange.to == BytesRange.TO_END_OF_CONTENT)) {
+                // Only treat as a partial image if the range is not all of the content
                 fetchState.setResponseBytesRange(responseRange);
                 fetchState.setOnNewResultStatusFlags(Consumer.IS_PARTIAL_RESULT);
               }
