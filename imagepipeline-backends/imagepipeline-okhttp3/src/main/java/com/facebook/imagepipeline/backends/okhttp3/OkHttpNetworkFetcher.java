@@ -39,6 +39,7 @@ public class OkHttpNetworkFetcher extends
     BaseNetworkFetcher<OkHttpNetworkFetcher.OkHttpNetworkFetchState> {
 
   public static class OkHttpNetworkFetchState extends FetchState {
+
     public long submitTime;
     public long responseTime;
     public long fetchCompleteTime;
@@ -129,21 +130,25 @@ public class OkHttpNetworkFetcher extends
       final Request request) {
     final Call call = mCallFactory.newCall(request);
 
-    fetchState.getContext().addCallbacks(
-        new BaseProducerContextCallbacks() {
-          @Override
-          public void onCancellationRequested() {
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-              call.cancel();
-            } else {
-              mCancellationExecutor.execute(new Runnable() {
-                @Override public void run() {
+    fetchState
+        .getContext()
+        .addCallbacks(
+            new BaseProducerContextCallbacks() {
+              @Override
+              public void onCancellationRequested() {
+                if (Looper.myLooper() != Looper.getMainLooper()) {
                   call.cancel();
+                } else {
+                  mCancellationExecutor.execute(
+                      new Runnable() {
+                        @Override
+                        public void run() {
+                          call.cancel();
+                        }
+                      });
                 }
-              });
-            }
-          }
-        });
+              }
+            });
 
     call.enqueue(
         new okhttp3.Callback() {
@@ -154,15 +159,16 @@ public class OkHttpNetworkFetcher extends
             try {
               if (!response.isSuccessful()) {
                 handleException(
-                    call,
-                    new IOException("Unexpected HTTP code " + response),
-                    callback);
+                    call, new IOException("Unexpected HTTP code " + response), callback);
                 return;
               }
 
               BytesRange responseRange =
                   BytesRange.fromContentRangeHeader(response.header("Content-Range"));
-              if (responseRange != null) {
+              if (responseRange != null
+                  && !(responseRange.from == 0
+                      && responseRange.to == BytesRange.TO_END_OF_CONTENT)) {
+                // Only treat as a partial image if the range is not all of the content
                 fetchState.setResponseBytesRange(responseRange);
                 fetchState.setOnNewResultStatusFlags(Consumer.IS_PARTIAL_RESULT);
               }
