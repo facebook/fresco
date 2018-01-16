@@ -9,7 +9,7 @@
 
 package com.facebook.imagepipeline.nativecode;
 
-import com.facebook.common.soloader.SoLoaderShim;
+import com.facebook.soloader.SoLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +39,6 @@ public class ImagePipelineNativeLoader {
   }
 
   public static void load() {
-    SoLoaderShim.loadLibrary("imagepipeline");
+    SoLoader.loadLibrary("imagepipeline");
   }
 }

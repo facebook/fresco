@@ -29,7 +29,6 @@ import android.os.Build;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.common.TooManyBitmapsException;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
@@ -38,6 +37,7 @@ import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
+import com.facebook.soloader.SoLoader;
 import java.util.ConcurrentModificationException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -70,7 +70,7 @@ public class KitKatPurgeableDecoderTest {
   public PowerMockRule rule = new PowerMockRule();
 
   static {
-    SoLoaderShim.setInTestMode();
+    SoLoader.setInTestMode();
   }
 
   protected static final int IMAGE_SIZE = 5;

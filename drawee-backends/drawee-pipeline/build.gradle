@@ -6,6 +6,9 @@ version = VERSION_NAME
 dependencies {
     compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+
+    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
+
     api project(':fbcore')
     api project(':drawee')
     api project(':imagepipeline')

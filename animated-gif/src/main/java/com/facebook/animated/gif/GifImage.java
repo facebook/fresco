@@ -11,11 +11,11 @@ package com.facebook.animated.gif;
 
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.soloader.SoLoaderShim;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo.BlendOperation;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.factory.AnimatedImageDecoder;
+import com.facebook.soloader.SoLoader;
 import java.nio.ByteBuffer;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -41,7 +41,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   private static synchronized void ensure() {
     if (!sInitialized) {
       sInitialized = true;
-      SoLoaderShim.loadLibrary("gifimage");
+      SoLoader.loadLibrary("gifimage");
     }
   }
 

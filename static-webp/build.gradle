@@ -8,6 +8,7 @@ dependencies {
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 
+    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
     implementation project(':imagepipeline-base')
