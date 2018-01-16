@@ -140,11 +140,18 @@ public class DefaultBitmapFramePreparer
             break;
 
           case BitmapAnimationBackend.FRAME_TYPE_CREATED:
-            bitmapReference =
-                mPlatformBitmapFactory.createBitmap(
-                    mAnimationBackend.getIntrinsicWidth(),
-                    mAnimationBackend.getIntrinsicHeight(),
-                    mBitmapConfig);
+            try {
+              bitmapReference =
+                  mPlatformBitmapFactory.createBitmap(
+                      mAnimationBackend.getIntrinsicWidth(),
+                      mAnimationBackend.getIntrinsicHeight(),
+                      mBitmapConfig);
+            } catch (RuntimeException e) {
+              // Failed to create the bitmap for the frame, return and report that we could not
+              // prepare the frame.
+              FLog.w(TAG, "Failed to create frame bitmap", e);
+              return false;
+            }
             nextFrameType = BitmapAnimationBackend.FRAME_TYPE_UNKNOWN;
             break;
           default:
