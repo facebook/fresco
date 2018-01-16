@@ -18,6 +18,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
@@ -87,6 +88,8 @@ public class BitmapAnimationBackend implements AnimationBackend,
   public static final int FRAME_TYPE_REUSED = 1;
   public static final int FRAME_TYPE_CREATED = 2;
   public static final int FRAME_TYPE_FALLBACK = 3;
+
+  private static final Class<?> TAG = BitmapAnimationBackend.class;
 
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final BitmapFrameCache mBitmapFrameCache;
@@ -203,8 +206,15 @@ public class BitmapAnimationBackend implements AnimationBackend,
           break;
 
         case FRAME_TYPE_CREATED:
-          bitmapReference =
-              mPlatformBitmapFactory.createBitmap(mBitmapWidth, mBitmapHeight, mBitmapConfig);
+          try {
+            bitmapReference =
+                mPlatformBitmapFactory.createBitmap(mBitmapWidth, mBitmapHeight, mBitmapConfig);
+          } catch (RuntimeException e) {
+            // Failed to create the bitmap for the frame, return and report that we could not
+            // draw the frame.
+            FLog.w(TAG, "Failed to create frame bitmap", e);
+            return false;
+          }
           // Try to render the frame and draw on the canvas immediately after
           drawn = renderFrameInBitmap(frameNumber, bitmapReference) &&
               drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_CREATED);
