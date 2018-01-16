@@ -38,7 +38,7 @@ public class BenchmarkPostprocessorForManualBitmapHandling
   public CloseableReference<Bitmap> process(
       Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
     long startTime = System.nanoTime();
-    CloseableReference<Bitmap> result = super.process(sourceBitmap, bitmapFactory);
+    CloseableReference<Bitmap> result = mPostprocessor.process(sourceBitmap, bitmapFactory);
     showDuration(System.nanoTime() - startTime);
     return result;
   }
