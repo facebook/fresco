@@ -22,6 +22,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.streams.TailAppendingInputStream;
+import com.facebook.imagepipeline.bitmaps.SimpleBitmapReleaser;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
@@ -174,6 +175,24 @@ public class ArtDecoder implements PlatformDecoder {
       }
       if (decodedBitmap == null) {
         decodedBitmap = BitmapFactory.decodeStream(inputStream, null, options);
+      }
+    } catch (IllegalArgumentException e) {
+      mBitmapPool.release(bitmapToReuse);
+      // This is thrown if the Bitmap options are invalid, so let's just try to decode the bitmap
+      // as-is, which might be inefficient - but it works.
+      try {
+        // We need to reset the stream first
+        inputStream.reset();
+
+        Bitmap naiveDecodedBitmap = BitmapFactory.decodeStream(inputStream);
+        if (naiveDecodedBitmap == null) {
+          throw e;
+        }
+        return CloseableReference.of(naiveDecodedBitmap, SimpleBitmapReleaser.getInstance());
+      } catch (IOException re) {
+        // We throw the original exception instead since it's the one causing this workaround in the
+        // first place.
+        throw e;
       }
     } catch (RuntimeException re) {
       mBitmapPool.release(bitmapToReuse);
