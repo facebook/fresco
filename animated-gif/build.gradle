@@ -8,6 +8,7 @@ dependencies {
     provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compile "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     provided "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
     compile project(':fbcore')
     compile project(':animated-base')
 
