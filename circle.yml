@@ -1,7 +1,10 @@
 machine:
   environment:
     PATH: $ANDROID_NDK:$PATH
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+    GRADLE_OPTS: '-Xmx512m -Dorg.gradle.jvmargs="-Xmx512m -XX:+HeapDumpOnOutOfMemoryError -XX:MaxPermSize=512m"'
+    ANDROID_BUILD_PATH: build/app-debug.apk
+    QEMU_AUDIO_DRV: none
+    _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
   java:
     version: oraclejdk8
 
@@ -17,18 +20,19 @@ dependencies:
 
 test:
   override:
-    - ./gradlew test assembleDebug -PdisablePreDex
     # start the emulator
-    - emulator -avd circleci-android24 -no-window:
-        background: true
-        parallel: true
+    - emulator -avd circleci-android21 -memory 512 -verbose -no-window -gpu swiftshader:
+         background: true
+         parallel: true
+    - android list avd
     # wait for it to have booted
     - circle-android wait-for-boot
     # unlock the emulator screen
     - sleep 30
     - adb shell input keyevent 82
     # run tests  against the emulator.
-    - ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
+    - ./gradlew --stop
+    - ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex --no-daemon
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
