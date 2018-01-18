@@ -20,7 +20,7 @@ For OkHttp2:
 ```groovy
 dependencies {
   // your project's other dependencies
-  compile "com.facebook.fresco:imagepipeline-okhttp:{{site.current_version}}"
+  implementation "com.facebook.fresco:imagepipeline-okhttp:{{site.current_version}}"
 }
 ```
 
@@ -29,7 +29,7 @@ For OkHttp3:
 ```groovy
 dependencies {
   // your project's other dependencies
-  compile "com.facebook.fresco:imagepipeline-okhttp3:{{site.current_version}}"
+  implementation "com.facebook.fresco:imagepipeline-okhttp3:{{site.current_version}}"
 }
 ```
 

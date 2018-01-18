@@ -14,7 +14,7 @@ Edit your `build.gradle` file. You must add the following line to the `dependenc
 ```groovy
 dependencies {
   // your app's other dependencies
-  compile 'com.facebook.fresco:fresco:{{site.current_version}}'
+  implementation 'com.facebook.fresco:fresco:{{site.current_version}}'
 }
 ```
 
@@ -24,17 +24,17 @@ The following optional modules may also be added, depending on the needs of your
 dependencies {
 
   // For animated GIF support
-  compile 'com.facebook.fresco:animated-gif:{{site.current_version}}'
+  implementation 'com.facebook.fresco:animated-gif:{{site.current_version}}'
 
   // For WebP support, including animated WebP
-  compile 'com.facebook.fresco:animated-webp:{{site.current_version}}'
-  compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
+  implementation 'com.facebook.fresco:animated-webp:{{site.current_version}}'
+  implementation 'com.facebook.fresco:webpsupport:{{site.current_version}}'
 
   // For WebP support, without animations
-  compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
+  implementation 'com.facebook.fresco:webpsupport:{{site.current_version}}'
 
   // Provide the Android support library (you might already have this or a similar dependency)
-  compile 'com.android.support:support-core-utils:{{site.support_library_version}}'
+  implementation 'com.android.support:support-core-utils:{{site.support_library_version}}'
 }
 ```
 

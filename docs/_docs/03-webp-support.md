@@ -31,7 +31,7 @@ The only thing you need to do is add the `webpsupport` library to your dependenc
 ```groovy
 dependencies {
   // ... your app's other dependencies
-  compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
+  implementation 'com.facebook.fresco:webpsupport:{{site.current_version}}'
 }
 ```
 
@@ -42,8 +42,8 @@ In order to display animated WebP images, you have to add the following dependen
 ```groovy
 dependencies {
   // ... your app's other dependencies
-  compile 'com.facebook.fresco:animated-webp:{{site.current_version}}'
-  compile 'com.facebook.fresco:webpsupport:{{site.current_version}}'
+  implementation 'com.facebook.fresco:animated-webp:{{site.current_version}}'
+  implementation 'com.facebook.fresco:webpsupport:{{site.current_version}}'
 }
 ```
 
