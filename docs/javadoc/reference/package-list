@@ -13,7 +13,6 @@ com.facebook.common.logging
 com.facebook.common.media
 com.facebook.common.memory
 com.facebook.common.references
-com.facebook.common.soloader
 com.facebook.common.statfs
 com.facebook.common.streams
 com.facebook.common.time
