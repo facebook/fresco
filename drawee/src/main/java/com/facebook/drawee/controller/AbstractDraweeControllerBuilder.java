@@ -159,6 +159,9 @@ public abstract class AbstractDraweeControllerBuilder <
   public BUILDER setFirstAvailableImageRequests(
       REQUEST[] firstAvailableImageRequests,
       boolean tryCacheOnlyFirst) {
+    Preconditions.checkArgument(
+        firstAvailableImageRequests == null || firstAvailableImageRequests.length > 0,
+        "No requests specified!");
     mMultiImageRequests = firstAvailableImageRequests;
     mTryCacheOnlyFirst = tryCacheOnlyFirst;
     return getThis();
