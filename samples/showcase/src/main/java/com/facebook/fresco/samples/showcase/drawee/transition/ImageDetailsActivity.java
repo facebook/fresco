@@ -13,6 +13,7 @@ package com.facebook.fresco.samples.showcase.drawee.transition;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,11 +49,24 @@ public class ImageDetailsActivity extends AppCompatActivity {
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.image);
     simpleDraweeView.setImageURI(getIntent().getData());
 
+    ScalingUtils.ScaleType toScaleType = ScalingUtils.ScaleType.FOCUS_CROP;
+    PointF toFocusPoint = new PointF(0.5f, 0);
+
+    simpleDraweeView.getHierarchy().setActualImageScaleType(toScaleType);
+    simpleDraweeView.getHierarchy().setActualImageFocusPoint(toFocusPoint);
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().setSharedElementEnterTransition(DraweeTransition.createTransitionSet(
-          ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.FIT_CENTER));
-      getWindow().setSharedElementReturnTransition(DraweeTransition.createTransitionSet(
-          ScalingUtils.ScaleType.FIT_CENTER, ScalingUtils.ScaleType.CENTER_CROP));
+      ScalingUtils.ScaleType fromScaleType = ScalingUtils.ScaleType.FOCUS_CROP;
+      PointF fromFocusPoint = DraweeTransitionFragment.FOCUS_POINT;
+
+      getWindow()
+          .setSharedElementEnterTransition(
+              DraweeTransition.createTransitionSet(
+                  fromScaleType, toScaleType, fromFocusPoint, toFocusPoint));
+      getWindow()
+          .setSharedElementReturnTransition(
+              DraweeTransition.createTransitionSet(
+                  toScaleType, fromScaleType, toFocusPoint, fromFocusPoint));
     }
   }
 

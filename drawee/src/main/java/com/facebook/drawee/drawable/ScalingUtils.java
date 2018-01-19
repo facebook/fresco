@@ -10,6 +10,7 @@
 package com.facebook.drawee.drawable;
 
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import javax.annotation.Nullable;
@@ -444,6 +445,8 @@ public class ScalingUtils {
     private final ScaleType mScaleTypeTo;
     private final @Nullable Rect mBoundsFrom;
     private final @Nullable Rect mBoundsTo;
+    private final @Nullable PointF mFocusPointFrom;
+    private final @Nullable PointF mFocusPointTo;
     private final float[] mMatrixValuesFrom = new float[9];
     private final float[] mMatrixValuesTo = new float[9];
     private final float[] mMatrixValuesInterpolated = new float[9];
@@ -454,11 +457,23 @@ public class ScalingUtils {
         ScaleType scaleTypeFrom,
         ScaleType scaleTypeTo,
         @Nullable Rect boundsFrom,
-        @Nullable Rect boundsTo) {
+        @Nullable Rect boundsTo,
+        @Nullable PointF focusPointFrom,
+        @Nullable PointF focusPointTo) {
       mScaleTypeFrom = scaleTypeFrom;
       mScaleTypeTo = scaleTypeTo;
       mBoundsFrom = boundsFrom;
       mBoundsTo = boundsTo;
+      mFocusPointFrom = focusPointFrom;
+      mFocusPointTo = focusPointTo;
+    }
+
+    public InterpolatingScaleType(
+        ScaleType scaleTypeFrom,
+        ScaleType scaleTypeTo,
+        @Nullable Rect boundsFrom,
+        @Nullable Rect boundsTo) {
+      this(scaleTypeFrom, scaleTypeTo, boundsFrom, boundsTo, null, null);
     }
 
     public InterpolatingScaleType(ScaleType scaleTypeFrom, ScaleType scaleTypeTo) {
@@ -479,6 +494,14 @@ public class ScalingUtils {
 
     public @Nullable Rect getBoundsTo() {
       return mBoundsTo;
+    }
+
+    public @Nullable PointF getFocusPointFrom() {
+      return mFocusPointFrom;
+    }
+
+    public @Nullable PointF getFocusPointTo() {
+      return mFocusPointTo;
     }
 
     /**
@@ -515,9 +538,21 @@ public class ScalingUtils {
       Rect boundsFrom = (mBoundsFrom != null) ? mBoundsFrom : parentBounds;
       Rect boundsTo = (mBoundsTo != null) ? mBoundsTo : parentBounds;
 
-      mScaleTypeFrom.getTransform(transform, boundsFrom, childWidth, childHeight, focusX, focusY);
+      mScaleTypeFrom.getTransform(
+          transform,
+          boundsFrom,
+          childWidth,
+          childHeight,
+          mFocusPointFrom == null ? focusX : mFocusPointFrom.x,
+          mFocusPointFrom == null ? focusY : mFocusPointFrom.y);
       transform.getValues(mMatrixValuesFrom);
-      mScaleTypeTo.getTransform(transform, boundsTo, childWidth, childHeight, focusX, focusY);
+      mScaleTypeTo.getTransform(
+          transform,
+          boundsTo,
+          childWidth,
+          childHeight,
+          mFocusPointTo == null ? focusX : mFocusPointTo.x,
+          mFocusPointTo == null ? focusY : mFocusPointTo.y);
       transform.getValues(mMatrixValuesTo);
 
       for (int i = 0; i < 9; i++) {
@@ -531,9 +566,11 @@ public class ScalingUtils {
     @Override
     public String toString() {
       return String.format(
-          "InterpolatingScaleType(%s -> %s)",
+          "InterpolatingScaleType(%s (%s) -> %s (%s))",
           String.valueOf(mScaleTypeFrom),
-          String.valueOf(mScaleTypeTo));
+          String.valueOf(mFocusPointFrom),
+          String.valueOf(mScaleTypeTo),
+          String.valueOf(mFocusPointTo));
     }
   }
 }

@@ -13,12 +13,14 @@ package com.facebook.fresco.samples.showcase.drawee.transition;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
@@ -28,6 +30,8 @@ import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
  * Simple drawee fragment that just displays an image.
  */
 public class DraweeTransitionFragment extends BaseShowcaseFragment {
+
+  public static final PointF FOCUS_POINT = new PointF(1, 0.5f);
 
   @Nullable
   @Override
@@ -46,6 +50,8 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
     // You have to enable legacy visibility handling for the start view in order for this to work
     simpleDraweeView.setLegacyVisibilityHandlingEnabled(true);
     simpleDraweeView.setImageURI(imageUri);
+    simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FOCUS_CROP);
+    simpleDraweeView.getHierarchy().setActualImageFocusPoint(FOCUS_POINT);
     simpleDraweeView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

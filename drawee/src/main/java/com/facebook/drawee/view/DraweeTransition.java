@@ -12,6 +12,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Build;
 import android.transition.ChangeBounds;
@@ -20,6 +21,7 @@ import android.transition.TransitionSet;
 import android.transition.TransitionValues;
 import android.view.ViewGroup;
 import com.facebook.drawee.drawable.ScalingUtils;
+import javax.annotation.Nullable;
 
 /**
  * This Transition animates changes of {@link GenericDraweeView} between two ScaleTypes
@@ -35,19 +37,40 @@ public class DraweeTransition extends Transition {
 
   private final ScalingUtils.ScaleType mFromScale;
   private final ScalingUtils.ScaleType mToScale;
+  private final @Nullable PointF mFromFocusPoint;
+  private final @Nullable PointF mToFocusPoint;
 
   public static TransitionSet createTransitionSet(
       ScalingUtils.ScaleType fromScale,
       ScalingUtils.ScaleType toScale) {
+    return createTransitionSet(fromScale, toScale, null, null);
+  }
+
+  public static TransitionSet createTransitionSet(
+      ScalingUtils.ScaleType fromScale,
+      ScalingUtils.ScaleType toScale,
+      @Nullable PointF fromFocusPoint,
+      @Nullable PointF toFocusPoint) {
     TransitionSet transitionSet = new TransitionSet();
     transitionSet.addTransition(new ChangeBounds());
-    transitionSet.addTransition(new DraweeTransition(fromScale, toScale));
+    transitionSet.addTransition(
+        new DraweeTransition(fromScale, toScale, fromFocusPoint, toFocusPoint));
     return transitionSet;
   }
 
+  public DraweeTransition(
+      ScalingUtils.ScaleType fromScale,
+      ScalingUtils.ScaleType toScale,
+      @Nullable PointF fromFocusPoint,
+      @Nullable PointF toFocusPoint) {
+    mFromScale = fromScale;
+    mToScale = toScale;
+    mFromFocusPoint = fromFocusPoint;
+    mToFocusPoint = toFocusPoint;
+  }
+
   public DraweeTransition(ScalingUtils.ScaleType fromScale, ScalingUtils.ScaleType toScale) {
-    this.mFromScale = fromScale;
-    this.mToScale = toScale;
+    this(fromScale, toScale, null, null);
   }
 
   @Override
@@ -73,12 +96,13 @@ public class DraweeTransition extends Transition {
     if (startBounds == null || endBounds == null) {
       return null;
     }
-    if (mFromScale == mToScale) {
+    if (mFromScale == mToScale && mFromFocusPoint == mToFocusPoint) {
       return null;
     }
     final GenericDraweeView draweeView = (GenericDraweeView) startValues.view;
     final ScalingUtils.InterpolatingScaleType scaleType =
-        new ScalingUtils.InterpolatingScaleType(mFromScale, mToScale, startBounds, endBounds);
+        new ScalingUtils.InterpolatingScaleType(
+            mFromScale, mToScale, startBounds, endBounds, mFromFocusPoint, mToFocusPoint);
     draweeView.getHierarchy().setActualImageScaleType(scaleType);
 
     ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
@@ -89,12 +113,16 @@ public class DraweeTransition extends Transition {
         scaleType.setValue(fraction);
       }
     });
-    animator.addListener(new AnimatorListenerAdapter() {
-      @Override
-      public void onAnimationEnd(Animator animation) {
-        draweeView.getHierarchy().setActualImageScaleType(mToScale);
-      }
-    });
+    animator.addListener(
+        new AnimatorListenerAdapter() {
+          @Override
+          public void onAnimationEnd(Animator animation) {
+            draweeView.getHierarchy().setActualImageScaleType(mToScale);
+            if (mToFocusPoint != null) {
+              draweeView.getHierarchy().setActualImageFocusPoint(mToFocusPoint);
+            }
+          }
+        });
 
     return animator;
   }
