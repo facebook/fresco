@@ -32,8 +32,8 @@ import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
  *
  * For being able to do this in your applications, you need to add the following dependencies
  * to your build.gradle file (where X.X.X matches the used Fresco version):
- * - compile 'com.facebook.fresco:animated-webp:X.X.X'
- * - compile 'com.facebook.fresco:webpsupport:X.X.X'
+ * - implementation 'com.facebook.fresco:animated-webp:X.X.X'
+ * - implementation 'com.facebook.fresco:webpsupport:X.X.X'
  */
 public class ImageFormatWebpFragment extends BaseShowcaseFragment {
 
