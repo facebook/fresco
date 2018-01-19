@@ -90,6 +90,10 @@
             android:id="@+id/nav_imagepipeline_bitmap_factory"
             android:title="@string/imagepipeline_bitmap_factory_title"
             />
+        <item
+            android:id="@+id/nav_imagepipeline_region_decoding"
+            android:title="@string/imagepipeline_region_decoding_title"
+            />
       </group>
     </menu>
   </item>

@@ -102,6 +102,9 @@
   <string name="imagepipeline_bitmap_factory_case_create_scaled">Create Scaled</string>
   <string name="imagepipeline_bitmap_factory_case_create_transformed">Create Transformed</string>
 
+  <string name="imagepipeline_region_decoding_title">Region Decoding</string>
+  <string name="imagepipeline_region_decoding_help">Select a region for the full image above. The selected region will be rendered below. NOTE: This currently only works for JPEG images that are not resized / downsampled.</string>
+
   <string name="category_format">Image Format</string>
 
   <string name="format_switch_checker_board">Checker board background</string>

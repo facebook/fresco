@@ -19,8 +19,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import javax.annotation.Nullable;
 
 public class ResizableFrameLayout extends FrameLayout {
+
+  public interface SizeChangedListener {
+
+    void onSizeChanged(int widthPx, int heightPx);
+  }
 
   private View mCornerIndicator;
   private boolean mResizing;
@@ -28,6 +34,9 @@ public class ResizableFrameLayout extends FrameLayout {
   private float mLastY;
   private int mMaximumWidth;
   private int mMaximumHeight;
+  private boolean mUpdateMaximumDimensionOnNextSizeChange;
+
+  private @Nullable SizeChangedListener mSizeChangedListener;
 
   public ResizableFrameLayout(Context context) {
     super(context);
@@ -46,6 +55,15 @@ public class ResizableFrameLayout extends FrameLayout {
 
     mMaximumWidth = getWidth();
     mMaximumHeight = getHeight();
+  }
+
+  public void setUpdateMaximumDimensionOnNextSizeChange(
+      boolean updateMaximumDimensionOnNextSizeChange) {
+    mUpdateMaximumDimensionOnNextSizeChange = updateMaximumDimensionOnNextSizeChange;
+  }
+
+  public void setSizeChangedListener(@Nullable SizeChangedListener sizeChangedListener) {
+    mSizeChangedListener = sizeChangedListener;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
@@ -93,5 +111,18 @@ public class ResizableFrameLayout extends FrameLayout {
         Math.min(event.getY(), mMaximumHeight),
         getMinimumHeight() - mCornerIndicator.getHeight());
     return true;
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    if (mUpdateMaximumDimensionOnNextSizeChange) {
+      mMaximumWidth = w;
+      mMaximumHeight = h;
+      mUpdateMaximumDimensionOnNextSizeChange = false;
+    }
+    if (mSizeChangedListener != null) {
+      mSizeChangedListener.onSizeChanged(w, h);
+    }
   }
 }
