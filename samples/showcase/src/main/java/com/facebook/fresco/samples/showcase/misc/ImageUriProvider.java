@@ -102,6 +102,25 @@ public class ImageUriProvider {
   private static final String PREF_KEY_CACHE_BREAKING_BY_DEFAULT = "uri_cache_breaking";
   private static final String PREF_KEY_URI_OVERRIDE = "uri_override";
 
+  /** lorempixel.com image categories. */
+  private static final String[] CATEGORIES = {
+    "animals",
+    "sports",
+    "nature",
+    "city",
+    "food",
+    "people",
+    "nightlife",
+    "fashion",
+    "transport",
+    "cats",
+    "business",
+    "technics",
+  };
+
+  private static final String RANDOM_URI_PATTERN_S = "http://lorempixel.com/400/400/%s/%d";
+  private static final String RANDOM_URI_PATTERN_M = "http://lorempixel.com/800/800/%s/%d";
+
   private static final String[] SAMPLE_URIS_LANDSCAPE = new String[]{
       "http://frescolib.org/static/sample-images/animal_a_%s.jpg",
       "http://frescolib.org/static/sample-images/animal_b_%s.jpg",
@@ -246,12 +265,32 @@ public class ImageUriProvider {
         : null;
   }
 
-  public static List<String> getSampleUris(ImageSize imageSize) {
-    ArrayList<String> uris = new ArrayList<>();
+  public List<Uri> getSampleUris(ImageSize imageSize) {
+    ArrayList<Uri> uris = new ArrayList<>();
     for (String uri : SAMPLE_URIS_LANDSCAPE) {
-      uris.add(String.format((Locale) null, uri, imageSize.sizeSuffix));
+      uris.add(Uri.parse(String.format((Locale) null, uri, imageSize.sizeSuffix)));
     }
     return uris;
+  }
+
+  public List<Uri> getRandomSampleUris(final ImageSize imageSize, final int urisPerCategory) {
+    final String uriFormat;
+    if (imageSize == ImageSize.S) {
+      uriFormat = RANDOM_URI_PATTERN_S;
+    } else if (imageSize == ImageSize.M) {
+      uriFormat = RANDOM_URI_PATTERN_M;
+    } else {
+      throw new IllegalArgumentException(
+          "Don't have random sample URIs for image size: " + imageSize);
+    }
+
+    List<Uri> data = new ArrayList<>();
+    for (int i = 0; i < urisPerCategory; i++) {
+      for (int j = 0; j < CATEGORIES.length; j++) {
+        data.add(Uri.parse(String.format((Locale) null, uriFormat, CATEGORIES[j], i + 1)));
+      }
+    }
+    return data;
   }
 
   private Uri applyOverrideSettings(

@@ -230,4 +230,5 @@
 
   <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
   <string translatable="false" name="message_restart_now">Kill Now</string>
+  <string name="switch_big_images">Big Images</string>
 </resources>

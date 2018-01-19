@@ -11,42 +11,35 @@
  */
 package com.facebook.fresco.samples.showcase.drawee;
 
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import java.util.ArrayList;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Simple drawee recycler view fragment that displays a grid of images.
  */
 public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
-
-  /**
-   * lorempixel.com image categories.
-   */
-  private static final String[] CATEGORIES = {
-     "animals",
-     "sports",
-     "nature",
-     "city",
-     "food",
-     "people",
-     "nightlife",
-     "fashion",
-     "transport",
-     "cats",
-     "business",
-     "technics",
-  };
 
   /**
    * How many images per each category.
@@ -58,6 +51,8 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
    */
   private static final int SPAN_COUNT = 3;
 
+  private @Nullable ResizeOptions mResizeOptions;
+
   @Nullable
   @Override
   public View onCreateView(
@@ -68,11 +63,46 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
   }
 
   @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    final RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+    recyclerView.addOnLayoutChangeListener(
+        new View.OnLayoutChangeListener() {
+          @Override
+          public void onLayoutChange(
+              View view,
+              int left,
+              int top,
+              int right,
+              int bottom,
+              int oldLeft,
+              int oldTop,
+              int oldRight,
+              int oldBottom) {
+            final int imageSize = (right - left) / SPAN_COUNT;
+            mResizeOptions = new ResizeOptions(imageSize, imageSize);
+          }
+        });
+
     GridLayoutManager layoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
     recyclerView.setLayoutManager(layoutManager);
-    recyclerView.setAdapter(new SimpleAdapter(createDummyData()));
+    recyclerView.setHasFixedSize(true);
+
+    final ImageUriProvider uriProvider = ImageUriProvider.getInstance(getContext());
+    final List<Uri> smallDummyData =
+        uriProvider.getRandomSampleUris(ImageSize.S, NUM_ENTRIES_PER_CATEGORY);
+    final List<Uri> bigDummyData =
+        uriProvider.getRandomSampleUris(ImageSize.M, NUM_ENTRIES_PER_CATEGORY);
+    final SimpleAdapter adapter = new SimpleAdapter(smallDummyData);
+    recyclerView.setAdapter(adapter);
+
+    final Switch bigImagesSwitch = view.findViewById(R.id.switch_big_images);
+    bigImagesSwitch.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
+            adapter.setData(enabled ? bigDummyData : smallDummyData);
+          }
+        });
   }
 
   @Override
@@ -80,23 +110,15 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
     return R.string.drawee_recycler_title;
   }
 
-  private List<Uri> createDummyData() {
-    List<Uri> data = new ArrayList<>();
-    for (int i = 0; i < NUM_ENTRIES_PER_CATEGORY; i++) {
-      for (int j = 0; j < CATEGORIES.length; j++) {
-        data.add(Uri.parse(String.format(
-            "http://lorempixel.com/400/400/%s/%d", CATEGORIES[j], i + 1)));
-      }
-    }
-    return data;
-  }
+  public class SimpleAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
 
-  public static class SimpleAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
+    private final PipelineDraweeControllerBuilder mControllerBuilder =
+        Fresco.newDraweeControllerBuilder();
+    private List<Uri> mUris;
 
-    private final List<Uri> mUris;
-
-    public SimpleAdapter(List<Uri> uris) {
+    SimpleAdapter(List<Uri> uris) {
       mUris = uris;
+      setHasStableIds(true);
     }
 
     @Override
@@ -110,22 +132,44 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
 
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
-      holder.mSimpleDraweeView.setImageURI(mUris.get(position));
+      final ImageRequest imageRequest =
+          ImageRequestBuilder.newBuilderWithSource(mUris.get(position))
+              .setResizeOptions(mResizeOptions)
+              .build();
+      holder.mSimpleDraweeView.setController(
+          mControllerBuilder
+              .reset()
+              .setOldController(holder.mSimpleDraweeView.getController())
+              .setImageRequest(imageRequest)
+              .build());
     }
 
     @Override
     public int getItemCount() {
       return mUris.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+      return mUris.get(position).hashCode();
+    }
+
+    public void setData(List<Uri> uris) {
+      mUris = uris;
+      notifyDataSetChanged();
+    }
   }
 
-  public static class SimpleViewHolder extends RecyclerView.ViewHolder {
+  static class SimpleViewHolder extends RecyclerView.ViewHolder {
+
+    private static final Random sRandom = new Random();
 
     private final SimpleDraweeView mSimpleDraweeView;
 
-    public SimpleViewHolder(View itemView) {
+    SimpleViewHolder(View itemView) {
       super(itemView);
-      mSimpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.drawee_view);
+      mSimpleDraweeView = itemView.findViewById(R.id.drawee_view);
+      mSimpleDraweeView.getHierarchy().setPlaceholderImage(new ColorDrawable(sRandom.nextInt()));
     }
   }
 }

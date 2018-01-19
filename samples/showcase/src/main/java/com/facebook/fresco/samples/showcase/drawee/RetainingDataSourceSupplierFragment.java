@@ -11,6 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase.drawee;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -29,10 +30,16 @@ import java.util.List;
 
 public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
 
-  private static final List<String> SAMPLE_URIS =
-      ImageUriProvider.getSampleUris(ImageUriProvider.ImageSize.M);
-
+  private List<Uri> mSampleUris;
   private int mUriIndex = 0;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    mSampleUris =
+        ImageUriProvider.getInstance(getContext()).getSampleUris(ImageUriProvider.ImageSize.M);
+  }
 
   @Nullable
   @Override
@@ -69,14 +76,12 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
     retainingSupplier.replaceSupplier(
         Fresco.getImagePipeline()
             .getDataSourceSupplier(
-                ImageRequest.fromUri(getNextUriString()),
-                null,
-                ImageRequest.RequestLevel.FULL_FETCH));
+                ImageRequest.fromUri(getNextUri()), null, ImageRequest.RequestLevel.FULL_FETCH));
   }
 
-  private synchronized String getNextUriString() {
+  private synchronized Uri getNextUri() {
     int previousIndex = mUriIndex;
-    mUriIndex = (mUriIndex + 1) % SAMPLE_URIS.size();
-    return SAMPLE_URIS.get(previousIndex);
+    mUriIndex = (mUriIndex + 1) % mSampleUris.size();
+    return mSampleUris.get(previousIndex);
   }
 }
