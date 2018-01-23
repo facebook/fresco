@@ -17,6 +17,7 @@
   - id: caching
   - id: closeable-references
   - id: configure-image-pipeline
+  - id: customizing-image-formats
   - id: datasources-datasubscribers
   - id: image-requests
   - id: images-in-notifications
