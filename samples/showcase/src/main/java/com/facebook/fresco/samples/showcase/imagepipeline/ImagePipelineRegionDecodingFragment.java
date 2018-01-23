@@ -11,6 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -160,11 +162,14 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
         int length,
         QualityInfo qualityInfo,
         ImageDecodeOptions options) {
-      return new CloseableStaticBitmap(
+      CloseableReference<Bitmap> decodedBitmapReference =
           mPlatformDecoder.decodeJPEGFromEncodedImage(
-              encodedImage, options.bitmapConfig, mRegion, length),
-          qualityInfo,
-          0);
+              encodedImage, options.bitmapConfig, mRegion, length);
+      try {
+        return new CloseableStaticBitmap(decodedBitmapReference, qualityInfo, 0);
+      } finally {
+        CloseableReference.closeSafely(decodedBitmapReference);
+      }
     }
   }
 }
