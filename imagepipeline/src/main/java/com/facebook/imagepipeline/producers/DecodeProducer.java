@@ -212,6 +212,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     /** Performs the decode synchronously. */
     private void doDecode(EncodedImage encodedImage, @Status int status) {
+      // do not run for partial results of anything except JPEG
+      if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG && isNotLast(status)) {
+        return;
+      }
+
       if (isFinished() || !EncodedImage.isValid(encodedImage)) {
         return;
       }
