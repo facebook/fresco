@@ -4,7 +4,7 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-  implementation "com.squareup.okhttp:okhttp:${OKHTTP_VERSION}"
+  api "com.squareup.okhttp:okhttp:${OKHTTP_VERSION}"
 
   implementation project(':fbcore')
   implementation project(':imagepipeline')
