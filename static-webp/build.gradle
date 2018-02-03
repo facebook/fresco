@@ -16,8 +16,8 @@ dependencies {
     testImplementation "junit:junit:${JUNIT_VERSION}"
 
     androidTestImplementation "junit:junit:${JUNIT_VERSION}"
-    androidTestImplementation 'com.android.support.test:runner:0.4'
-    androidTestImplementation 'com.android.support.test:rules:0.4'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
 }
 apply from: rootProject.file('release.gradle')
 
