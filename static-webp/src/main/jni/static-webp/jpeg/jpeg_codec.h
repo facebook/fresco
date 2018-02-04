@@ -12,6 +12,8 @@
 
 #include <jni.h>
 
+#include <string.h>
+
 #include "decoded_image.h"
 #include "transformations.h"
 
