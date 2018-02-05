@@ -11,6 +11,8 @@
 
 #include <jni.h>
 
+#include <string.h>
+
 namespace facebook {
 
 /**
