@@ -17454,6 +17454,26 @@
 </parameter>
 <parameter name="boundsTo" type="android.graphics.Rect">
 </parameter>
+<parameter name="focusPointFrom" type="android.graphics.PointF">
+</parameter>
+<parameter name="focusPointTo" type="android.graphics.PointF">
+</parameter>
+</constructor>
+<constructor name="InterpolatingScaleType"
+ type="com.facebook.drawee.drawable.ScalingUtils.InterpolatingScaleType"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="scaleTypeFrom" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
+<parameter name="scaleTypeTo" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
+<parameter name="boundsFrom" type="android.graphics.Rect">
+</parameter>
+<parameter name="boundsTo" type="android.graphics.Rect">
+</parameter>
 </constructor>
 <constructor name="InterpolatingScaleType"
  type="com.facebook.drawee.drawable.ScalingUtils.InterpolatingScaleType"
@@ -17480,6 +17500,28 @@
 </method>
 <method name="getBoundsTo"
  return="android.graphics.Rect"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getFocusPointFrom"
+ return="android.graphics.PointF"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getFocusPointTo"
+ return="android.graphics.PointF"
  abstract="false"
  native="false"
  synchronized="false"
@@ -20665,6 +20707,22 @@
 </parameter>
 <parameter name="toScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
 </parameter>
+<parameter name="fromFocusPoint" type="android.graphics.PointF">
+</parameter>
+<parameter name="toFocusPoint" type="android.graphics.PointF">
+</parameter>
+</constructor>
+<constructor name="DraweeTransition"
+ type="com.facebook.drawee.view.DraweeTransition"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="fromScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
+<parameter name="toScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
 </constructor>
 <method name="captureEndValues"
  return="void"
@@ -20705,6 +20763,25 @@
 <parameter name="fromScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
 </parameter>
 <parameter name="toScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
+</method>
+<method name="createTransitionSet"
+ return="android.transition.TransitionSet"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="fromScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
+<parameter name="toScale" type="com.facebook.drawee.drawable.ScalingUtils.ScaleType">
+</parameter>
+<parameter name="fromFocusPoint" type="android.graphics.PointF">
+</parameter>
+<parameter name="toFocusPoint" type="android.graphics.PointF">
 </parameter>
 </method>
 </class>
@@ -33331,6 +33408,8 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<implements name="com.facebook.imagepipeline.request.DataSourceWithImageRequest">
+</implements>
 <constructor name="AbstractProducerToDataSourceAdapter"
  type="com.facebook.imagepipeline.datasource.AbstractProducerToDataSourceAdapter"
  static="false"
@@ -33345,6 +33424,17 @@
 <parameter name="requestListener" type="com.facebook.imagepipeline.listener.RequestListener">
 </parameter>
 </constructor>
+<method name="getImageRequest"
+ return="com.facebook.imagepipeline.request.ImageRequest"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 <method name="onNewResultImpl"
  return="void"
  abstract="false"
@@ -43124,6 +43214,27 @@
 >
 </method>
 </class>
+<interface name="DataSourceWithImageRequest"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.facebook.datasource.DataSource">
+</implements>
+<method name="getImageRequest"
+ return="com.facebook.imagepipeline.request.ImageRequest"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</interface>
 <class name="ImageRequest"
  extends="java.lang.Object"
  abstract="false"
