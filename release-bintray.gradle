@@ -21,7 +21,7 @@ ext {
 
     projectLicenses = {
         license {
-            name 'BSD License'
+            name 'MIT License'
             url 'https://github.com/facebook/fresco/blob/master/LICENSE'
             distribution 'repo'
         }

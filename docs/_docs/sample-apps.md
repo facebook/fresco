@@ -5,7 +5,7 @@ layout: docs
 permalink: /docs/sample-code.html
 ---
 
-*Note: the samples are licensed for non-commercial or evaluation purposes only, not the BSD license used for Fresco itself.*
+*Note: the samples are licensed for non-commercial or evaluation purposes only, not the MIT license used for Fresco itself.*
 
 Fresco's GitHub repository contains several samples to demonstrate how to use Fresco in your apps.
 

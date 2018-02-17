@@ -84,4 +84,4 @@ to do this as soon as possible for all commits.
 ## License
 
 By contributing to Fresco, you agree that your contributions will be licensed
-under its BSD license.
+under its MIT license.
