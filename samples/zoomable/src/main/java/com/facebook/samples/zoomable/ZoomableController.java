@@ -28,11 +28,25 @@ public interface ZoomableController {
   interface Listener {
 
     /**
+     * Notifies the view that the transform began.
+     *
+     * @param transform the current transform matrix
+     */
+    void onTransformBegin(Matrix transform);
+
+    /**
      * Notifies the view that the transform changed.
      *
      * @param transform the new matrix
      */
     void onTransformChanged(Matrix transform);
+
+    /**
+     * Notifies the view that the transform ended.
+     *
+     * @param transform the current transform matrix
+     */
+    void onTransformEnd(Matrix transform);
   }
 
   /**

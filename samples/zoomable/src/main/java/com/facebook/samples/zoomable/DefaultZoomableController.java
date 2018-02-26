@@ -16,6 +16,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.gestures.TransformGestureDetector;
@@ -52,7 +53,7 @@ public class DefaultZoomableController
 
   private TransformGestureDetector mGestureDetector;
 
-  private Listener mListener = null;
+  private @Nullable Listener mListener = null;
 
   private boolean mIsEnabled = false;
   private boolean mIsRotationEnabled = false;
@@ -377,6 +378,7 @@ public class DefaultZoomableController
   public void onGestureBegin(TransformGestureDetector detector) {
     FLog.v(TAG, "onGestureBegin");
     mPreviousTransform.set(mActiveTransform);
+    onTransformBegin();
     // We only received a touch down event so far, and so we don't know yet in which direction a
     // future move event will follow. Therefore, if we can't scroll in all directions, we have to
     // assume the worst case where the user tries to scroll out of edge, which would cause
@@ -399,6 +401,7 @@ public class DefaultZoomableController
   @Override
   public void onGestureEnd(TransformGestureDetector detector) {
     FLog.v(TAG, "onGestureEnd");
+    onTransformEnd();
   }
 
   /**
@@ -431,10 +434,22 @@ public class DefaultZoomableController
     return transformCorrected;
   }
 
+  private void onTransformBegin() {
+    if (mListener != null && isEnabled()) {
+      mListener.onTransformBegin(mActiveTransform);
+    }
+  }
+
   private void onTransformChanged() {
     mActiveTransform.mapRect(mTransformedImageBounds, mImageBounds);
     if (mListener != null && isEnabled()) {
       mListener.onTransformChanged(mActiveTransform);
+    }
+  }
+
+  private void onTransformEnd() {
+    if (mListener != null && isEnabled()) {
+      mListener.onTransformEnd(mActiveTransform);
     }
   }
 

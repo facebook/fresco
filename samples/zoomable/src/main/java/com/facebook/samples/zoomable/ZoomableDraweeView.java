@@ -70,12 +70,19 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     }
   };
 
-  private final ZoomableController.Listener mZoomableListener = new ZoomableController.Listener() {
-    @Override
-    public void onTransformChanged(Matrix transform) {
-      ZoomableDraweeView.this.onTransformChanged(transform);
-    }
-  };
+  private final ZoomableController.Listener mZoomableListener =
+      new ZoomableController.Listener() {
+        @Override
+        public void onTransformBegin(Matrix transform) {}
+
+        @Override
+        public void onTransformChanged(Matrix transform) {
+          ZoomableDraweeView.this.onTransformChanged(transform);
+        }
+
+        @Override
+        public void onTransformEnd(Matrix transform) {}
+      };
 
   private final GestureListenerWrapper mTapListenerWrapper = new GestureListenerWrapper();
 
