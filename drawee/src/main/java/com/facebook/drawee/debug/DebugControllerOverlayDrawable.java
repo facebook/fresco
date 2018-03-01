@@ -16,13 +16,12 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import javax.annotation.Nullable;
 
-/**
- * Drawee Controller overlay that displays debug information.
- */
-public class DebugControllerOverlayDrawable extends Drawable {
+/** Drawee Controller overlay that displays debug information. */
+public class DebugControllerOverlayDrawable extends Drawable implements ImageLoadingTimeListener {
 
   private static final String NO_CONTROLLER_ID = "none";
 
@@ -82,6 +81,8 @@ public class DebugControllerOverlayDrawable extends Drawable {
   private int mCurrentTextXPx;
   private int mCurrentTextYPx;
 
+  private long mFinalImageTimeMs;
+
   public DebugControllerOverlayDrawable() {
     reset();
   }
@@ -94,6 +95,7 @@ public class DebugControllerOverlayDrawable extends Drawable {
     mLoopCount = -1;
     mImageFormat = null;
     setControllerId(null);
+    mFinalImageTimeMs = -1;
     invalidateSelf();
   }
 
@@ -197,6 +199,9 @@ public class DebugControllerOverlayDrawable extends Drawable {
     if (mScaleType != null) {
       addDebugText(canvas, "scale: %s", mScaleType);
     }
+    if (mFinalImageTimeMs >= 0) {
+      addDebugText(canvas, "t: %d ms", mFinalImageTimeMs);
+    }
   }
 
   @Override
@@ -297,5 +302,15 @@ public class DebugControllerOverlayDrawable extends Drawable {
       return OVERLAY_COLOR_IMAGE_ALMOST_OK;
     }
     return OVERLAY_COLOR_IMAGE_NOT_OK;
+  }
+
+  public void setFinalImageTimeMs(int finalImageTimeMs) {
+    mFinalImageTimeMs = finalImageTimeMs;
+  }
+
+  @Override
+  public void onFinalImageSet(long finalImageTimeMs) {
+    mFinalImageTimeMs = finalImageTimeMs;
+    invalidateSelf();
   }
 }

@@ -23,6 +23,8 @@ import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
+import com.facebook.drawee.debug.listener.ImageLoadingTimeControllerListener;
+import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -259,16 +261,18 @@ public class PipelineDraweeController
     if (!mDrawDebugOverlay) {
       return;
     }
-    Drawable controllerOverlay = getControllerOverlay();
 
-    if (controllerOverlay == null) {
-      controllerOverlay = new DebugControllerOverlayDrawable();
+    if (getControllerOverlay() == null) {
+      DebugControllerOverlayDrawable controllerOverlay = new DebugControllerOverlayDrawable();
+      ImageLoadingTimeControllerListener overlayImageLoadListener =
+          new ImageLoadingTimeControllerListener(controllerOverlay);
+      addControllerListener(overlayImageLoadListener);
       setControllerOverlay(controllerOverlay);
     }
 
-    if (controllerOverlay instanceof DebugControllerOverlayDrawable) {
+    if (getControllerOverlay() instanceof DebugControllerOverlayDrawable) {
       DebugControllerOverlayDrawable debugOverlay =
-          (DebugControllerOverlayDrawable) controllerOverlay;
+          (DebugControllerOverlayDrawable) getControllerOverlay();
       debugOverlay.setControllerId(getId());
 
       final DraweeHierarchy draweeHierarchy = getHierarchy();
@@ -279,7 +283,6 @@ public class PipelineDraweeController
         scaleType = scaleTypeDrawable != null ? scaleTypeDrawable.getScaleType() : null;
       }
       debugOverlay.setScaleType(scaleType);
-
       if (image != null) {
         debugOverlay.setDimensions(image.getWidth(), image.getHeight());
         debugOverlay.setImageSize(image.getSizeInBytes());
