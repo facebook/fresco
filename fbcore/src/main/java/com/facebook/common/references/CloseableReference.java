@@ -263,7 +263,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
           "Finalized without closing: %x %x (type = %s)",
           System.identityHashCode(this),
           System.identityHashCode(mSharedReference),
-          mSharedReference.get().getClass().getSimpleName());
+          mSharedReference.get().getClass().getName());
 
       close();
     } finally {
