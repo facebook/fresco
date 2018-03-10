@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.common;
 
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.util.HashCodeUtil;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -81,6 +82,23 @@ public class BytesRange {
       return "";
     }
     return Integer.toString(n);
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other == this) {
+      return true;
+    }
+    if (!(other instanceof BytesRange)) {
+      return false;
+    }
+    final BytesRange that = (BytesRange) other;
+    return this.from == that.from && this.to == that.to;
+  }
+
+  @Override
+  public int hashCode() {
+    return HashCodeUtil.hashCode(from, to);
   }
 
   /**

@@ -18,6 +18,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 
 import android.net.Uri;
+import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.util.UriUtil;
@@ -80,7 +81,7 @@ public class ImageRequest {
   private final boolean mIsDiskCacheEnabled;
 
   /** Postprocessor to run on the output bitmap. */
-  private final Postprocessor mPostprocessor;
+  private final @Nullable Postprocessor mPostprocessor;
 
   /** Request listener to use for this image request */
   private final @Nullable RequestListener mRequestListener;
@@ -212,15 +213,37 @@ public class ImageRequest {
       return false;
     }
     ImageRequest request = (ImageRequest) o;
-    return Objects.equal(mSourceUri, request.mSourceUri) &&
-        Objects.equal(mCacheChoice, request.mCacheChoice) &&
-        Objects.equal(mMediaVariations, request.mMediaVariations) &&
-        Objects.equal(mSourceFile, request.mSourceFile);
+    if (!Objects.equal(mSourceUri, request.mSourceUri)
+        || !Objects.equal(mCacheChoice, request.mCacheChoice)
+        || !Objects.equal(mMediaVariations, request.mMediaVariations)
+        || !Objects.equal(mSourceFile, request.mSourceFile)
+        || !Objects.equal(mBytesRange, request.mBytesRange)
+        || !Objects.equal(mImageDecodeOptions, request.mImageDecodeOptions)
+        || !Objects.equal(mResizeOptions, request.mResizeOptions)
+        || !Objects.equal(mRotationOptions, request.mRotationOptions)) {
+      return false;
+    }
+    final CacheKey thisPostprocessorKey =
+        mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
+    final CacheKey thatPostprocessorKey =
+        request.mPostprocessor != null ? request.mPostprocessor.getPostprocessorCacheKey() : null;
+    return Objects.equal(thisPostprocessorKey, thatPostprocessorKey);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(mCacheChoice, mSourceUri, mMediaVariations, mSourceFile);
+    final CacheKey postprocessorCacheKey =
+        mPostprocessor != null ? mPostprocessor.getPostprocessorCacheKey() : null;
+    return Objects.hashCode(
+        mCacheChoice,
+        mSourceUri,
+        mMediaVariations,
+        mSourceFile,
+        mBytesRange,
+        mImageDecodeOptions,
+        mResizeOptions,
+        mRotationOptions,
+        postprocessorCacheKey);
   }
 
   @Override
