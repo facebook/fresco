@@ -6,9 +6,10 @@
  */
 package com.facebook.imagepipeline.request;
 
-import com.facebook.datasource.DataSource;
+import javax.annotation.Nullable;
 
-public interface DataSourceWithImageRequest<T> extends DataSource<T> {
+public interface HasImageRequest {
 
+  @Nullable
   ImageRequest getImageRequest();
 }

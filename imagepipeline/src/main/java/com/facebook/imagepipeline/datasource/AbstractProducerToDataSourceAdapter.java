@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.producers.BaseConsumer;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
-import com.facebook.imagepipeline.request.DataSourceWithImageRequest;
+import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -26,7 +26,7 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDataSource<T>
-    implements DataSourceWithImageRequest<T> {
+    implements HasImageRequest {
 
   private final SettableProducerContext mSettableProducerContext;
   private final RequestListener mRequestListener;
