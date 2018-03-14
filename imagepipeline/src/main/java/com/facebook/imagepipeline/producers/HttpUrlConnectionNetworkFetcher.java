@@ -134,7 +134,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
   @VisibleForTesting
   static HttpURLConnection openConnectionTo(Uri uri) throws IOException {
     URL url = UriUtil.uriToUrl(uri);
-    return (HttpURLConnection) url.openConnection().setConnectTimeout();
+    return (HttpURLConnection) url.openConnection();
   }
 
   private static boolean isHttpSuccess(int responseCode) {

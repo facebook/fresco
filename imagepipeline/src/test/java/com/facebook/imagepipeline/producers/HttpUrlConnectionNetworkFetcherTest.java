@@ -195,6 +195,12 @@ public class HttpUrlConnectionNetworkFetcherTest {
     verifyNoMoreInteractions(mMockCallback);
   }
 
+  @Test
+  public void testHttpUrlConnectionTimeout() throws IOException {
+      HttpURLConnection mockRequest = mock(HttpURLConnection.class);
+      assert(mockRequest.getConnectTimeout() == HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT);
+  }
+
   private HttpURLConnection mockSuccess() throws IOException {
     return mockSuccessWithStream(mock(InputStream.class));
   }
@@ -206,6 +212,14 @@ public class HttpUrlConnectionNetworkFetcherTest {
 
     queueConnection(mockResponse);
 
+    return mockResponse;
+  }
+
+  private HttpURLConnection mockTimeout() throws IOException {
+    HttpURLConnection mockResponse = mock(HttpURLConnection.class);
+    when(mockResponse.getResponseCode()).thenReturn(408);
+
+    queueConnection(mockResponse);
     return mockResponse;
   }
 
