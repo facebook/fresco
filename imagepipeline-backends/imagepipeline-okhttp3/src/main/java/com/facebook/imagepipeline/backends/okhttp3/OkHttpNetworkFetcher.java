@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.backends.okhttp3;
 import android.net.Uri;
 import android.os.Looper;
 import android.os.SystemClock;
-import com.facebook.common.logging.FLog;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.producers.BaseNetworkFetcher;
@@ -179,11 +178,7 @@ public class OkHttpNetworkFetcher extends
             } catch (Exception e) {
               handleException(call, e, callback);
             } finally {
-              try {
-                body.close();
-              } catch (Exception e) {
-                FLog.w(TAG, "Exception when closing response body", e);
-              }
+              body.close();
             }
           }
 
