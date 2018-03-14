@@ -202,14 +202,14 @@ public class HttpUrlConnectionNetworkFetcherTest {
 
     URL mockURL = PowerMockito.mock(URL.class);
     HttpURLConnection mockConnection = PowerMockito.mock(HttpURLConnection.class);
-    mockConnection.setConnectTimeout(HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT);
+    mockConnection.setConnectTimeout(30000);
 
     PowerMockito.when(mockURL.openConnection()).thenReturn(mockConnection);
 
     SocketTimeoutException expectedException = new SocketTimeoutException();
     PowerMockito.when(mockConnection.getResponseCode()).thenThrow(expectedException);
 
-    verify(mockConnection).setConnectTimeout(HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT);
+    verify(mockConnection).setConnectTimeout(30000);
 
   }
 

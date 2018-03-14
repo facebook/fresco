@@ -80,6 +80,7 @@ public class ImagePipelineConfig {
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
   private final NetworkFetcher mNetworkFetcher;
+  private int mHttpNetworkTimeout = -1;
   @Nullable private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final PoolFactory mPoolFactory;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
@@ -143,9 +144,13 @@ public class ImagePipelineConfig {
         builder.mMemoryTrimmableRegistry == null ?
             NoOpMemoryTrimmableRegistry.getInstance() :
             builder.mMemoryTrimmableRegistry;
+    mHttpNetworkTimeout =
+        builder.mHttpConnectionTimeout == -1 ?
+            HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT :
+            builder.mHttpConnectionTimeout;
     mNetworkFetcher =
         builder.mNetworkFetcher == null ?
-            new HttpUrlConnectionNetworkFetcher() :
+            new HttpUrlConnectionNetworkFetcher(mHttpNetworkTimeout) :
             builder.mNetworkFetcher;
     mPlatformBitmapFactory = builder.mPlatformBitmapFactory;
     mPoolFactory =
@@ -359,6 +364,7 @@ public class ImagePipelineConfig {
     private DiskCacheConfig mSmallImageDiskCacheConfig;
     private FileCacheFactory mFileCacheFactory;
     private ImageDecoderConfig mImageDecoderConfig;
+    private int mHttpConnectionTimeout = -1;
     private final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
 
@@ -387,6 +393,11 @@ public class ImagePipelineConfig {
 
     public Builder setCacheKeyFactory(CacheKeyFactory cacheKeyFactory) {
       mCacheKeyFactory = cacheKeyFactory;
+      return this;
+    }
+
+    public Builder setHttpConnectionTimeout(int httpConnectionTimeout) {
+      mHttpConnectionTimeout = httpConnectionTimeout;
       return this;
     }
 
