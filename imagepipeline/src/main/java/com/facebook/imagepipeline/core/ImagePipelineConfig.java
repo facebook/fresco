@@ -80,7 +80,7 @@ public class ImagePipelineConfig {
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
   private final NetworkFetcher mNetworkFetcher;
-  private int mHttpNetworkTimeout = -1;
+  private final int mHttpNetworkTimeout;
   @Nullable private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final PoolFactory mPoolFactory;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
@@ -145,7 +145,7 @@ public class ImagePipelineConfig {
             NoOpMemoryTrimmableRegistry.getInstance() :
             builder.mMemoryTrimmableRegistry;
     mHttpNetworkTimeout =
-        builder.mHttpConnectionTimeout == -1 ?
+        builder.mHttpConnectionTimeout < 0 ?
             HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT :
             builder.mHttpConnectionTimeout;
     mNetworkFetcher =
@@ -396,8 +396,8 @@ public class ImagePipelineConfig {
       return this;
     }
 
-    public Builder setHttpConnectionTimeout(int httpConnectionTimeout) {
-      mHttpConnectionTimeout = httpConnectionTimeout;
+    public Builder setHttpConnectionTimeout(int httpConnectionTimeoutMs) {
+      mHttpConnectionTimeout = httpConnectionTimeoutMs;
       return this;
     }
 
