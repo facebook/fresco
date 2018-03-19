@@ -11,6 +11,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -25,11 +26,13 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public class HoneycombBitmapFactory extends PlatformBitmapFactory {
 
+  private static final String TAG = HoneycombBitmapFactory.class.getSimpleName();
   private final EmptyJpegGenerator mJpegGenerator;
   private final PlatformDecoder mPurgeableDecoder;
+  private boolean mImmutableBitmapFallback;
 
-  public HoneycombBitmapFactory(EmptyJpegGenerator jpegGenerator,
-                         PlatformDecoder purgeableDecoder) {
+  public HoneycombBitmapFactory(
+      EmptyJpegGenerator jpegGenerator, PlatformDecoder purgeableDecoder) {
     mJpegGenerator = jpegGenerator;
     mPurgeableDecoder = purgeableDecoder;
   }
@@ -51,6 +54,9 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
       int width,
       int height,
       Bitmap.Config bitmapConfig) {
+    if (mImmutableBitmapFallback) {
+      return createFallbackBitmap(width, height, bitmapConfig);
+    }
     CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
         (short) width,
         (short) height);
@@ -61,6 +67,14 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
         CloseableReference<Bitmap> bitmapRef =
             mPurgeableDecoder.decodeJPEGFromEncodedImage(
                 encodedImage, bitmapConfig, null, jpgRef.get().size());
+        if (!bitmapRef.get().isMutable()) {
+          CloseableReference.closeSafely(bitmapRef);
+          mImmutableBitmapFallback = true;
+          FLog.wtf(TAG, "Immutable bitmap returned by decoder");
+          // On some devices (Samsung GT-S7580) the returned bitmap can be immutable, in that case
+          // let's jut use Bitmap.createBitmap() to hopefully create a mutable one.
+          return createFallbackBitmap(width, height, bitmapConfig);
+        }
         bitmapRef.get().setHasAlpha(true);
         bitmapRef.get().eraseColor(Color.TRANSPARENT);
         return bitmapRef;
@@ -70,5 +84,11 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
     } finally {
       jpgRef.close();
     }
+  }
+
+  private static CloseableReference<Bitmap> createFallbackBitmap(
+      int width, int height, Bitmap.Config bitmapConfig) {
+    return CloseableReference.of(
+        Bitmap.createBitmap(width, height, bitmapConfig), SimpleBitmapReleaser.getInstance());
   }
 }
