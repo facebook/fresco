@@ -21,6 +21,7 @@ import com.facebook.common.util.UriUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
@@ -33,6 +34,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.mockito.verification.VerificationWithTimeout;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -193,6 +195,22 @@ public class HttpUrlConnectionNetworkFetcherTest {
     verifyZeroInteractions(mockResponseAfterSixRedirects);
 
     verifyNoMoreInteractions(mMockCallback);
+  }
+
+  @Test
+  public void testHttpUrlConnectionTimeout() throws Exception {
+
+    URL mockURL = PowerMockito.mock(URL.class);
+    HttpURLConnection mockConnection = PowerMockito.mock(HttpURLConnection.class);
+    mockConnection.setConnectTimeout(30000);
+
+    PowerMockito.when(mockURL.openConnection()).thenReturn(mockConnection);
+
+    SocketTimeoutException expectedException = new SocketTimeoutException();
+    PowerMockito.when(mockConnection.getResponseCode()).thenThrow(expectedException);
+
+    verify(mockConnection).setConnectTimeout(30000);
+
   }
 
   private HttpURLConnection mockSuccess() throws IOException {
