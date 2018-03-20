@@ -34,10 +34,19 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
   public static final int HTTP_TEMPORARY_REDIRECT = 307;
   public static final int HTTP_PERMANENT_REDIRECT = 308;
 
+  public static final int HTTP_DEFAULT_TIMEOUT = 30000;
+
+  private int mHttpConnectionTimeout;
+
   private final ExecutorService mExecutorService;
 
   public HttpUrlConnectionNetworkFetcher() {
     this(Executors.newFixedThreadPool(NUM_NETWORK_THREADS));
+  }
+
+  public HttpUrlConnectionNetworkFetcher(int httpConnectionTimeout) {
+    this(Executors.newFixedThreadPool(NUM_NETWORK_THREADS));
+    mHttpConnectionTimeout = httpConnectionTimeout;
   }
 
   @VisibleForTesting
@@ -100,6 +109,7 @@ public class HttpUrlConnectionNetworkFetcher extends BaseNetworkFetcher<FetchSta
 
   private HttpURLConnection downloadFrom(Uri uri, int maxRedirects) throws IOException {
     HttpURLConnection connection = openConnectionTo(uri);
+    connection.setConnectTimeout(mHttpConnectionTimeout);
     int responseCode = connection.getResponseCode();
 
     if (isHttpSuccess(responseCode)) {
