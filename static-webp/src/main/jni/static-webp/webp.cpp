@@ -438,15 +438,12 @@ jobject WebPImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
     return nullptr;
   }
 
-
-  auto spIter = std::unique_ptr<WebPIterator, decltype(&WebPDemuxReleaseIterator)> {
-    new WebPIterator(),
-    WebPDemuxReleaseIterator
-  };
+  WebPIterator iter;
 
   // Note, in WebP, frame numbers are one-based.
-  if (!WebPDemuxGetFrame(spNativeContext->spDemuxer->get(), index + 1, spIter.get())) {
+  if (!WebPDemuxGetFrame(spNativeContext->spDemuxer->get(), index + 1, &iter)) {
     throwIllegalStateException(pEnv, "unable to get frame");
+    WebPDemuxReleaseIterator(&iter);
     return nullptr;
   }
 
@@ -457,18 +454,19 @@ jobject WebPImage_nativeGetFrame(JNIEnv* pEnv, jobject thiz, jint index) {
   }
 
   spFrameNativeContext->spDemuxer = spNativeContext->spDemuxer;
-  spFrameNativeContext->frameNum = spIter->frame_num;
-  spFrameNativeContext->xOffset = spIter->x_offset;
-  spFrameNativeContext->yOffset = spIter->y_offset;
-  spFrameNativeContext->durationMs = spIter->duration;
-  spFrameNativeContext->width = spIter->width;
-  spFrameNativeContext->height = spIter->height;
+  spFrameNativeContext->frameNum = iter.frame_num;
+  spFrameNativeContext->xOffset = iter.x_offset;
+  spFrameNativeContext->yOffset = iter.y_offset;
+  spFrameNativeContext->durationMs = iter.duration;
+  spFrameNativeContext->width = iter.width;
+  spFrameNativeContext->height = iter.height;
   spFrameNativeContext->disposeToBackgroundColor =
-      spIter->dispose_method == WEBP_MUX_DISPOSE_BACKGROUND;
-  spFrameNativeContext->blendWithPreviousFrame = spIter->blend_method == WEBP_MUX_BLEND;
-  spFrameNativeContext->pPayload = spIter->fragment.bytes;
-  spFrameNativeContext->payloadSize = spIter->fragment.size;
+      iter.dispose_method == WEBP_MUX_DISPOSE_BACKGROUND;
+  spFrameNativeContext->blendWithPreviousFrame = iter.blend_method == WEBP_MUX_BLEND;
+  spFrameNativeContext->pPayload = iter.fragment.bytes;
+  spFrameNativeContext->payloadSize = iter.fragment.size;
 
+  WebPDemuxReleaseIterator(&iter);
   jobject ret = pEnv->NewObject(
       sClazzWebPFrame,
       sWebPFrameConstructor,
