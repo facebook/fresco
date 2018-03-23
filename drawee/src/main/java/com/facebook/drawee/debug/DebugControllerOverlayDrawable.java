@@ -304,7 +304,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     return OVERLAY_COLOR_IMAGE_NOT_OK;
   }
 
-  public void setFinalImageTimeMs(int finalImageTimeMs) {
+  public void setFinalImageTimeMs(long finalImageTimeMs) {
     mFinalImageTimeMs = finalImageTimeMs;
   }
 
