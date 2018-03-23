@@ -33,6 +33,10 @@ android {
 
     useLibrary 'org.apache.http.legacy'
 
+    defaultConfig {
+        consumerProguardFiles 'proguard-fresco.pro'
+    }
+
     packagingOptions {
       exclude 'LICENSE'
       exclude 'LICENSE.txt'
