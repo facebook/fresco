@@ -14,7 +14,6 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
@@ -59,7 +58,7 @@ public class PipelineDraweeControllerFactory {
       String id,
       CacheKey cacheKey,
       Object callerContext) {
-    return newController(dataSourceSupplier, id, cacheKey, callerContext, null, null);
+    return newController(dataSourceSupplier, id, cacheKey, callerContext, null);
   }
 
   public PipelineDraweeController newController(
@@ -67,28 +66,25 @@ public class PipelineDraweeControllerFactory {
       String id,
       CacheKey cacheKey,
       Object callerContext,
-      @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
-      @Nullable ImageOriginListener imageOriginListener) {
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
     Preconditions.checkState(mResources != null, "init() not called");
     // Field values passed as arguments so that any subclass of PipelineDraweeControllerFactory
     // can simply override internalCreateController() and return a custom Drawee controller
-    PipelineDraweeController controller =
-        internalCreateController(
-            mResources,
-            mDeferredReleaser,
-            mAnimatedDrawableFactory,
-            mUiThreadExecutor,
-            mMemoryCache,
-            mDrawableFactories,
-            customDrawableFactories,
-            dataSourceSupplier,
-            id,
-            cacheKey,
-            callerContext);
+    PipelineDraweeController controller = internalCreateController(
+        mResources,
+        mDeferredReleaser,
+        mAnimatedDrawableFactory,
+        mUiThreadExecutor,
+        mMemoryCache,
+        mDrawableFactories,
+        customDrawableFactories,
+        dataSourceSupplier,
+        id,
+        cacheKey,
+        callerContext);
     if (mDebugOverlayEnabledSupplier != null) {
       controller.setDrawDebugOverlay(mDebugOverlayEnabledSupplier.get());
     }
-    controller.setImageOriginListener(imageOriginListener);
     return controller;
   }
 
@@ -104,18 +100,17 @@ public class PipelineDraweeControllerFactory {
       String id,
       CacheKey cacheKey,
       Object callerContext) {
-    PipelineDraweeController controller =
-        new PipelineDraweeController(
-            resources,
-            deferredReleaser,
-            animatedDrawableFactory,
-            uiThreadExecutor,
-            memoryCache,
-            dataSourceSupplier,
-            id,
-            cacheKey,
-            callerContext,
-            globalDrawableFactories);
+    PipelineDraweeController controller = new PipelineDraweeController(
+        resources,
+        deferredReleaser,
+        animatedDrawableFactory,
+        uiThreadExecutor,
+        memoryCache,
+        dataSourceSupplier,
+        id,
+        cacheKey,
+        callerContext,
+        globalDrawableFactories);
     controller.setCustomDrawableFactories(customDrawableFactories);
     return controller;
   }

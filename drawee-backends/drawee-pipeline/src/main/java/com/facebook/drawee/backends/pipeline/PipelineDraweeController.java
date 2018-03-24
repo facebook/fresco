@@ -20,12 +20,11 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
-import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeControllerListener;
+import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -40,7 +39,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Drawee controller that bridges the image pipeline with {@link SettableDraweeHierarchy}. <p> The
@@ -70,10 +68,6 @@ public class PipelineDraweeController
 
   // Drawable factories that are unique for a given image request
   private @Nullable ImmutableList<DrawableFactory> mCustomDrawableFactories;
-
-  @GuardedBy("this")
-  @Nullable
-  private ImageOriginListener mImageOriginListener;
 
   private final DrawableFactory mDefaultDrawableFactory =
       new DrawableFactory() {
@@ -178,13 +172,11 @@ public class PipelineDraweeController
       String id,
       CacheKey cacheKey,
       Object callerContext,
-      @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
-      ImageOriginListener imageOriginListener) {
+      @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
     setCustomDrawableFactories(customDrawableFactories);
-    setImageOriginListener(imageOriginListener);
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
@@ -194,12 +186,6 @@ public class PipelineDraweeController
   public void setCustomDrawableFactories(
       @Nullable ImmutableList<DrawableFactory> customDrawableFactories) {
     mCustomDrawableFactories = customDrawableFactories;
-  }
-
-  public void setImageOriginListener(@Nullable ImageOriginListener imageOriginListener) {
-    synchronized (this) {
-      mImageOriginListener = imageOriginListener;
-    }
   }
 
   private void init(Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier) {
@@ -341,17 +327,6 @@ public class PipelineDraweeController
       return null;
     }
     return closeableImage;
-  }
-
-  @Override
-  protected void onImageLoadedFromCacheImmediately(
-      String id, CloseableReference<CloseableImage> cachedImage) {
-    super.onImageLoadedFromCacheImmediately(id, cachedImage);
-    synchronized (this) {
-      if (mImageOriginListener != null) {
-        mImageOriginListener.onImageLoaded(id, ImageOrigin.MEMORY_BITMAP, true);
-      }
-    }
   }
 
   @Override

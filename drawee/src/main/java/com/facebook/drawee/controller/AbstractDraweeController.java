@@ -430,7 +430,6 @@ public abstract class AbstractDraweeController<T, INFO> implements
       mHasFetchFailed = false;
       mEventTracker.recordEvent(Event.ON_SUBMIT_CACHE_HIT);
       getControllerListener().onSubmit(mId, mCallerContext);
-      onImageLoadedFromCacheImmediately(mId, closeableImage);
       onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true);
       return;
     }
@@ -658,6 +657,4 @@ public abstract class AbstractDraweeController<T, INFO> implements
   protected T getCachedImage() {
     return null;
   }
-
-  protected void onImageLoadedFromCacheImmediately(String id, T cachedImage) {}
 }
