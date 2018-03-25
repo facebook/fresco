@@ -21,10 +21,15 @@ jobs:
           name: Run Tests
           command: ./gradlew test assembleDebug -PdisablePreDex
       - run:
+          name: Setup emulator
+          command: sdkmanager "system-images;android-27;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-27;default;armeabi-v7a"
+      - run:
+          name: Launch emulator
+          command: emulator -avd test -noaudio -no-boot-anim -no-window -accel on
+          background: true
+      - run:
           name: Run Instrmentation Tests
           command: |
-            emulator -avd circleci-android27 -no-window
-            circle-android wait-for-boot
             ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
       - run:
           name: Copy Results
