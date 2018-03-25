@@ -22,7 +22,7 @@ jobs:
           command: ./gradlew test assembleDebug -PdisablePreDex
       - run:
           name: Setup emulator
-          command: sdkmanager "system-images;android-27;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-27;default;armeabi-v7a"
+          command: sdkmanager "system-images;android-25;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-25;default;armeabi-v7a"
       - run:
           name: Launch emulator
           command: emulator -avd test -noaudio -no-boot-anim -no-window -accel on
