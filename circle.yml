@@ -21,9 +21,16 @@ jobs:
           name: Run Tests
           command: ./gradlew test assembleDebug -PdisablePreDex
       - run:
+          name: Run Instrmentation Tests
+          command: |
+            emulator -avd circleci-android27 -no-window
+            circle-android wait-for-boot
+            ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
+      - run:
           name: Copy Results
           command: |
             mkdir -p /home/circleci/test-results/junit
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/circleci/test-results/junit \;
+            cp samples/showcase/build/reports/androidTests /home/circleci/test-results
       - test-results-store:
           path: /home/circleci/test-results
