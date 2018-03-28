@@ -37,6 +37,6 @@ jobs:
           command: |
             mkdir -p /home/circleci/test-results/junit
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /home/circleci/test-results/junit \;
-            cp samples/showcase/build/reports/androidTests /home/circleci/test-results
+            cp -r samples/showcase/build/reports/androidTests /home/circleci/test-results
       - test-results-store:
           path: /home/circleci/test-results
