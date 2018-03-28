@@ -1,3 +1,17 @@
+aliases:
+# Cache Management
+  - &restore-cache-gradle
+    keys:
+      - v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+      # Fallback in case checksum fails
+      - v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-
+      - v1-gradle-{{ arch }}-{{ .Branch }}-
+      # Fallback in case this is a first-time run on a fork
+      - v1-gradle-{{ arch }}-master-
+  - &save-cache-gradle
+    paths:
+      - ~/.gradle
+    key: v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
 version: 2
 jobs:
   build:
@@ -17,9 +31,11 @@ jobs:
       - run:
           name: "NDK Fix: https://github.com/android-ndk/ndk/issues/188"
           command: sudo apt-get install file
+      - restore-cache: *restore-cache-gradle
       - run:
           name: Run Tests
           command: ./gradlew test assembleDebug -PdisablePreDex
+      - save-cache: *save-cache-gradle
       - run:
           name: Setup emulator
           command: sdkmanager "system-images;android-19;google_apis;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-19;google_apis;armeabi-v7a"
