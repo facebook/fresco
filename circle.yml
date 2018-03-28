@@ -12,6 +12,7 @@ aliases:
     paths:
       - ~/.gradle
     key: v1-gradle-{{ arch }}-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "gradle.properties" }}
+
 version: 2
 jobs:
   build:
@@ -19,7 +20,7 @@ jobs:
     docker:
       - image: circleci/android:api-27-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      JVM_OPTS: -Xmx4096m
     steps:
       - checkout
       - run:
