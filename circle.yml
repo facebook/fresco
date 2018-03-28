@@ -30,10 +30,7 @@ jobs:
       - run:
           name: Run Instrmentation Tests
           command: |
-            wget --quiet --output-document=android-wait-for-emulator https://raw.githubusercontent.com/travis-ci/travis-cookbooks/0f497eb71291b52a703143c5cd63a217c8766dc9/community-cookbooks/android-sdk/files/default/android-wait-for-emulator
-            chmod +x android-wait-for-emulator
-            ./android-wait-for-emulator
-            adb shell input keyevent 82
+            circle-android wait-for-boot
             ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
       - run:
           name: Copy Results
