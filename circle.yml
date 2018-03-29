@@ -48,6 +48,7 @@ jobs:
           name: Run Instrmentation Tests
           command: |
             circle-android wait-for-boot
+            adb shell input keyevent 82
             ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
       - run:
           name: Copy Results
