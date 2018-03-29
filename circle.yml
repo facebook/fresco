@@ -51,9 +51,11 @@ jobs:
             chmod +x android-wait-for-emulator
             ./android-wait-for-emulator
       - run:
+          name: Remove lock screen
+          command: adb shell input keyevent 82
+      - run:
           name: Run Instrmentation Tests
           command: |
-            adb shell input keyevent 82
             ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
       - run:
           name: Copy Results
