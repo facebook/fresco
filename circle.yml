@@ -33,8 +33,8 @@ jobs:
       - run:
           name: Setup emulator
           command: |
-            sdkmanager "system-images;android-24;default;armeabi-v7a"
-            echo "no" | avdmanager create avd -n test -k "system-images;android-24;default;armeabi-v7a"
+            sdkmanager "system-images;android-19;default;armeabi-v7a"
+            echo "no" | avdmanager create avd -n test -k "system-images;android-19;default;armeabi-v7a"
       - run:
           name: Launch emulator
           command: emulator -avd test -no-audio -no-window
