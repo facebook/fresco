@@ -19,8 +19,6 @@ jobs:
     working_directory: ~/fresco
     docker:
       - image: circleci/android:api-27-alpha
-    environment:
-      JVM_OPTS: -Xmx4096m
     steps:
       - checkout
       - run:
