@@ -39,7 +39,7 @@ jobs:
       - save-cache: *save-cache-gradle
       - run:
           name: Setup emulator
-          command: sdkmanager "system-images;android-19;google_apis;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-19;google_apis;armeabi-v7a"
+          command: sdkmanager "system-images;android-24;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-24;default;armeabi-v7a"
       - run:
           name: Launch emulator
           command: emulator -avd test -noaudio -no-boot-anim -no-window -accel on
