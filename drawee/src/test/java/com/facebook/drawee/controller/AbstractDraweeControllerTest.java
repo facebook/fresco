@@ -35,6 +35,7 @@ import com.facebook.common.internal.Throwables;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.SimpleDataSource;
 import com.facebook.drawee.components.DeferredReleaser;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +162,11 @@ public class AbstractDraweeControllerTest {
 
     @Override
     protected void releaseDrawable(@Nullable Drawable drawable) {
+    }
+
+    @Override
+    public boolean isSameImageRequest(DraweeController other) {
+      return false;
     }
   }
 

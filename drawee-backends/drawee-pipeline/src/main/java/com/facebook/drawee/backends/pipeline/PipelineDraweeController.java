@@ -30,6 +30,7 @@ import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.imagepipeline.cache.MemoryCache;
@@ -269,6 +270,14 @@ public class PipelineDraweeController
   public void setHierarchy(@Nullable DraweeHierarchy hierarchy) {
     super.setHierarchy(hierarchy);
     maybeUpdateDebugOverlay(null);
+  }
+
+  @Override
+  public boolean isSameImageRequest(@Nullable DraweeController other) {
+    if (other instanceof PipelineDraweeController) {
+      return Objects.equal(mCacheKey, ((PipelineDraweeController) other).getCacheKey());
+    }
+    return false;
   }
 
   private void maybeUpdateDebugOverlay(@Nullable CloseableImage image) {

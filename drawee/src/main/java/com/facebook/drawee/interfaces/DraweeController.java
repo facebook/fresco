@@ -65,4 +65,7 @@ public interface DraweeController {
    * @return content description, or null if the image has no content description
    */
   String getContentDescription();
+
+  /** Returns whether {@code other} would fetch the same image as {@code this}. */
+  boolean isSameImageRequest(DraweeController other);
 }
