@@ -42,7 +42,7 @@ jobs:
             echo "no" | avdmanager create avd -n test -k "system-images;android-24;default;armeabi-v7a"
       - run:
           name: Launch emulator
-          command: emulator -avd test -noaudio -no-boot-anim -no-window -accel on
+          command: emulator -avd test -no-audio -no-window
           background: true
       - run:
           name: Wait for emulator
