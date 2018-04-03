@@ -17,6 +17,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.interfaces.DraweeController;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
@@ -107,5 +108,10 @@ public class VolleyDraweeController
         .add("super", super.toString())
         .add("dataSourceSupplier", mDataSourceSupplier)
         .toString();
+  }
+
+  @Override
+  public boolean isSameImageRequest(DraweeController other) {
+    return false;
   }
 }
