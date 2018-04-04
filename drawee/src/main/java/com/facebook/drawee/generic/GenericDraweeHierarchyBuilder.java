@@ -7,8 +7,6 @@
 
 package com.facebook.drawee.generic;
 
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -16,6 +14,7 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.drawee.drawable.ScalingUtils;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -32,8 +31,10 @@ import javax.annotation.Nullable;
 public class GenericDraweeHierarchyBuilder {
 
   public static final int DEFAULT_FADE_DURATION = 300;
-  public static final ScaleType DEFAULT_SCALE_TYPE = ScaleType.CENTER_INSIDE;
-  public static final ScaleType DEFAULT_ACTUAL_IMAGE_SCALE_TYPE = ScaleType.CENTER_CROP;
+  public static final ScalingUtils.ScaleType DEFAULT_SCALE_TYPE =
+      ScalingUtils.ScaleType.CENTER_INSIDE;
+  public static final ScalingUtils.ScaleType DEFAULT_ACTUAL_IMAGE_SCALE_TYPE =
+      ScalingUtils.ScaleType.CENTER_CROP;
 
   private Resources mResources;
 
@@ -42,18 +43,18 @@ public class GenericDraweeHierarchyBuilder {
   private float mDesiredAspectRatio;
 
   private Drawable mPlaceholderImage;
-  private @Nullable ScaleType mPlaceholderImageScaleType;
+  private @Nullable ScalingUtils.ScaleType mPlaceholderImageScaleType;
 
   private Drawable mRetryImage;
-  private ScaleType mRetryImageScaleType;
+  private ScalingUtils.ScaleType mRetryImageScaleType;
 
   private Drawable mFailureImage;
-  private ScaleType mFailureImageScaleType;
+  private ScalingUtils.ScaleType mFailureImageScaleType;
 
   private Drawable mProgressBarImage;
-  private ScaleType mProgressBarImageScaleType;
+  private ScalingUtils.ScaleType mProgressBarImageScaleType;
 
-  private ScaleType mActualImageScaleType;
+  private ScalingUtils.ScaleType mActualImageScaleType;
   private Matrix mActualImageMatrix;
   private PointF mActualImageFocusPoint;
   private ColorFilter mActualImageColorFilter;
@@ -197,21 +198,19 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the placeholder image scale type.
    *
-   * If not set, the default value CENTER_INSIDE will be used.
+   * <p>If not set, the default value CENTER_INSIDE will be used.
    *
    * @param placeholderImageScaleType scale type for the placeholder image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setPlaceholderImageScaleType(
-      @Nullable ScaleType placeholderImageScaleType) {
+      @Nullable ScalingUtils.ScaleType placeholderImageScaleType) {
     mPlaceholderImageScaleType = placeholderImageScaleType;
     return this;
   }
 
-  /**
-   * Gets the placeholder image scale type.
-   */
-  public @Nullable ScaleType getPlaceholderImageScaleType() {
+  /** Gets the placeholder image scale type. */
+  public @Nullable ScalingUtils.ScaleType getPlaceholderImageScaleType() {
     return mPlaceholderImageScaleType;
   }
 
@@ -223,8 +222,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setPlaceholderImage(
-      Drawable placeholderDrawable,
-      @Nullable ScaleType placeholderImageScaleType) {
+      Drawable placeholderDrawable, @Nullable ScalingUtils.ScaleType placeholderImageScaleType) {
     mPlaceholderImage = placeholderDrawable;
     mPlaceholderImageScaleType = placeholderImageScaleType;
     return this;
@@ -238,8 +236,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setPlaceholderImage(
-      int resourceId,
-      @Nullable ScaleType placeholderImageScaleType) {
+      int resourceId, @Nullable ScalingUtils.ScaleType placeholderImageScaleType) {
     mPlaceholderImage = mResources.getDrawable(resourceId);
     mPlaceholderImageScaleType = placeholderImageScaleType;
     return this;
@@ -277,21 +274,19 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the retry image scale type.
    *
-   * If not set, the default value CENTER_INSIDE will be used.
+   * <p>If not set, the default value CENTER_INSIDE will be used.
    *
    * @param retryImageScaleType scale type for the retry image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setRetryImageScaleType(
-      @Nullable ScaleType retryImageScaleType) {
+      @Nullable ScalingUtils.ScaleType retryImageScaleType) {
     mRetryImageScaleType = retryImageScaleType;
     return this;
   }
 
-  /**
-   * Gets the retry image scale type.
-   */
-  public @Nullable ScaleType getRetryImageScaleType() {
+  /** Gets the retry image scale type. */
+  public @Nullable ScalingUtils.ScaleType getRetryImageScaleType() {
     return mRetryImageScaleType;
   }
 
@@ -303,8 +298,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setRetryImage(
-      Drawable retryDrawable,
-      @Nullable ScaleType retryImageScaleType) {
+      Drawable retryDrawable, @Nullable ScalingUtils.ScaleType retryImageScaleType) {
     mRetryImage = retryDrawable;
     mRetryImageScaleType = retryImageScaleType;
     return this;
@@ -318,8 +312,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setRetryImage(
-      int resourceId,
-      @Nullable ScaleType retryImageScaleType) {
+      int resourceId, @Nullable ScalingUtils.ScaleType retryImageScaleType) {
     mRetryImage = mResources.getDrawable(resourceId);
     mRetryImageScaleType = retryImageScaleType;
     return this;
@@ -357,21 +350,19 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the failure image scale type.
    *
-   * If not set, the default value CENTER_INSIDE will be used.
+   * <p>If not set, the default value CENTER_INSIDE will be used.
    *
    * @param failureImageScaleType scale type for the failure image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setFailureImageScaleType(
-      @Nullable ScaleType failureImageScaleType) {
+      @Nullable ScalingUtils.ScaleType failureImageScaleType) {
     mFailureImageScaleType = failureImageScaleType;
     return this;
   }
 
-  /**
-   * Gets the failure image scale type.
-   */
-  public @Nullable ScaleType getFailureImageScaleType() {
+  /** Gets the failure image scale type. */
+  public @Nullable ScalingUtils.ScaleType getFailureImageScaleType() {
     return mFailureImageScaleType;
   }
 
@@ -383,8 +374,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setFailureImage(
-      Drawable failureDrawable,
-      @Nullable ScaleType failureImageScaleType) {
+      Drawable failureDrawable, @Nullable ScalingUtils.ScaleType failureImageScaleType) {
     mFailureImage = failureDrawable;
     mFailureImageScaleType = failureImageScaleType;
     return this;
@@ -398,8 +388,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setFailureImage(
-      int resourceId,
-      @Nullable ScaleType failureImageScaleType) {
+      int resourceId, @Nullable ScalingUtils.ScaleType failureImageScaleType) {
     mFailureImage = mResources.getDrawable(resourceId);
     mFailureImageScaleType = failureImageScaleType;
     return this;
@@ -437,21 +426,19 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the progress bar image scale type.
    *
-   * If not set, the default value CENTER_INSIDE will be used.
+   * <p>If not set, the default value CENTER_INSIDE will be used.
    *
    * @param progressBarImageScaleType scale type for the progress bar image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setProgressBarImageScaleType(
-      @Nullable ScaleType progressBarImageScaleType) {
+      @Nullable ScalingUtils.ScaleType progressBarImageScaleType) {
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
   }
 
-  /**
-   * Gets the progress bar image scale type.
-   */
-  public @Nullable ScaleType getProgressBarImageScaleType() {
+  /** Gets the progress bar image scale type. */
+  public @Nullable ScalingUtils.ScaleType getProgressBarImageScaleType() {
     return mProgressBarImageScaleType;
   }
 
@@ -463,8 +450,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setProgressBarImage(
-      Drawable progressBarDrawable,
-      @Nullable ScaleType progressBarImageScaleType) {
+      Drawable progressBarDrawable, @Nullable ScalingUtils.ScaleType progressBarImageScaleType) {
     mProgressBarImage = progressBarDrawable;
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
@@ -478,8 +464,7 @@ public class GenericDraweeHierarchyBuilder {
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setProgressBarImage(
-      int resourceId,
-      @Nullable ScaleType progressBarImageScaleType) {
+      int resourceId, @Nullable ScalingUtils.ScaleType progressBarImageScaleType) {
     mProgressBarImage = mResources.getDrawable(resourceId);
     mProgressBarImageScaleType = progressBarImageScaleType;
     return this;
@@ -488,22 +473,20 @@ public class GenericDraweeHierarchyBuilder {
   /**
    * Sets the scale type for the actual image.
    *
-   * If not set, the default value CENTER_CROP will be used.
+   * <p>If not set, the default value CENTER_CROP will be used.
    *
    * @param actualImageScaleType scale type for the actual image
    * @return modified instance of this builder
    */
   public GenericDraweeHierarchyBuilder setActualImageScaleType(
-      @Nullable ScaleType actualImageScaleType) {
+      @Nullable ScalingUtils.ScaleType actualImageScaleType) {
     mActualImageScaleType = actualImageScaleType;
     mActualImageMatrix = null;
     return this;
   }
 
-  /**
-   * Gets the scale type for the actual image.
-   */
-  public @Nullable ScaleType getActualImageScaleType() {
+  /** Gets the scale type for the actual image. */
+  public @Nullable ScalingUtils.ScaleType getActualImageScaleType() {
     return mActualImageScaleType;
   }
 

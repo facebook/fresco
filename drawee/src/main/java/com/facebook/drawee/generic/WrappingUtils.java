@@ -6,8 +6,6 @@
  */
 package com.facebook.drawee.generic;
 
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -25,6 +23,7 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import javax.annotation.Nullable;
 
 /**
@@ -51,32 +50,31 @@ public class WrappingUtils {
   /**
    * Wraps the given drawable with a new {@link ScaleTypeDrawable}.
    *
-   * <p> If the provided drawable or scale type is null, the given drawable is returned without
-   * being wrapped.
+   * <p>If the provided drawable or scale type is null, the given drawable is returned without being
+   * wrapped.
    *
-   * @return the wrapping scale type drawable, or the original drawable if the wrapping didn't
-   * take place
+   * @return the wrapping scale type drawable, or the original drawable if the wrapping didn't take
+   *     place
    */
   @Nullable
   static Drawable maybeWrapWithScaleType(
-      @Nullable Drawable drawable,
-      @Nullable ScaleType scaleType) {
+      @Nullable Drawable drawable, @Nullable ScalingUtils.ScaleType scaleType) {
     return maybeWrapWithScaleType(drawable, scaleType, null);
   }
 
   /**
    * Wraps the given drawable with a new {@link ScaleTypeDrawable}.
    *
-   * <p> If the provided drawable or scale type is null, the given drawable is returned without
-   * being wrapped.
+   * <p>If the provided drawable or scale type is null, the given drawable is returned without being
+   * wrapped.
    *
-   * @return the wrapping scale type drawable, or the original drawable if the wrapping didn't
-   * take place
+   * @return the wrapping scale type drawable, or the original drawable if the wrapping didn't take
+   *     place
    */
   @Nullable
   static Drawable maybeWrapWithScaleType(
       @Nullable Drawable drawable,
-      @Nullable ScaleType scaleType,
+      @Nullable ScalingUtils.ScaleType scaleType,
       @Nullable PointF focusPoint) {
     if (drawable == null || scaleType == null) {
       return drawable;
@@ -107,10 +105,9 @@ public class WrappingUtils {
     return new MatrixDrawable(drawable, matrix);
   }
 
-  /**
-   * Wraps the parent's child with a ScaleTypeDrawable.
-   */
-  static ScaleTypeDrawable wrapChildWithScaleType(DrawableParent parent, ScaleType scaleType) {
+  /** Wraps the parent's child with a ScaleTypeDrawable. */
+  static ScaleTypeDrawable wrapChildWithScaleType(
+      DrawableParent parent, ScalingUtils.ScaleType scaleType) {
     Drawable child = parent.setDrawable(sEmptyDrawable);
     child = maybeWrapWithScaleType(child, scaleType);
     parent.setDrawable(child);
