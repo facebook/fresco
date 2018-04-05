@@ -165,7 +165,16 @@ subprojects {
         }
         // The unpack task
         tasks.create("unpack${name}", Copy) {
-            from tarTree(resources.gzip("${downloadLibjpeg.dest}/${libraryFileName}"))
+            String filePath = "${downloadLibjpeg.dest}/${libraryFileName}"
+            ReadableResource resource
+            if (filePath.endsWith("gz")) {
+                resource = resources.gzip(filePath)
+            } else if (filePath.endsWith("bz2")) {
+                resource = resources.bzip2(filePath)
+            } else {
+                throw new GradleException("Could not unpack library " + filePath)
+            }
+            from tarTree(resource)
             into "${downloadsDir}/${libraryDestinationDir}"
             dependsOn "download${name}"
         }
@@ -206,8 +215,8 @@ subprojects {
     // Gif
     createNativeLibrariesTasks(
             'Giflib',      // Name for the tasks
-            "https://launchpad.net/ubuntu/+archive/primary/+files/giflib_${GIFLIB_VERSION}.orig.tar.gz", // The Url for download
-            "giflib_${GIFLIB_VERSION}.orig.tar.gz", // The downloaded file
+            "https://launchpad.net/ubuntu/+archive/primary/+files/giflib_${GIFLIB_VERSION}.orig.tar.bz2", // The Url for download
+            "giflib_${GIFLIB_VERSION}.orig.tar.bz2", // The downloaded file
             'giflib', // The folder where the file is downloaded
             "giflib-${GIFLIB_VERSION}/lib", // The first dir where we have put our customisation
             ['*.c', '*.h', '*.mk'], // Files to compile
