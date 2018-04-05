@@ -21,18 +21,31 @@ android {
 
         vectorDrawables.useSupportLibrary = true // needed for tinting
     }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro'
         }
     }
+
     flavorDimensions "main"
     productFlavors {
-        main
+        main {
+        }
         instantRunConfig {
             dimension "main"
             minSdkVersion 21
+        }
+
+        internal {
+            buildTypes {
+                debug {
+                    minifyEnabled true
+                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro'
+                    testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro', 'proguard-test.pro'
+                }
+            }
         }
     }
 
