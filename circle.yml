@@ -33,8 +33,8 @@ jobs:
       - run:
           name: Setup emulator
           command: |
-            sdkmanager "system-images;android-22;default;armeabi-v7a"
-            echo "no" | avdmanager create avd -n test -k "system-images;android-22;default;armeabi-v7a"
+            sdkmanager "system-images;android-19;default;armeabi-v7a"
+            echo "no" | avdmanager create avd -n test -k "system-images;android-19;default;armeabi-v7a"
       - run:
           name: Launch emulator
           command: emulator -avd test -no-audio -no-window
@@ -42,7 +42,6 @@ jobs:
       - run:
           name: Wait for emulator
           command: |
-            wget --quiet --output-document=android-wait-for-emulator https://raw.githubusercontent.com/travis-ci/travis-cookbooks/master/community-cookbooks/android-sdk/files/default/android-wait-for-emulator
             chmod +x android-wait-for-emulator
             ./android-wait-for-emulator
       - run:
@@ -56,7 +55,7 @@ jobs:
       - run:
           name: Run Instrmentation Tests
           command: |
-            ./gradlew :samples:showcase:connectedMainDebugAndroidTest -PdisablePreDex
+            ./gradlew :samples:showcase:connectedInternalDebugAndroidTest -PdisablePreDex
       - run:
           name: Copy Results
           command: |

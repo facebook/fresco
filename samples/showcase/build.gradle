@@ -32,6 +32,13 @@ android {
     flavorDimensions "main"
     productFlavors {
         main {
+        }
+        instantRunConfig {
+            dimension "main"
+            minSdkVersion 21
+        }
+
+        internal {
             buildTypes {
                 debug {
                     minifyEnabled true
@@ -39,10 +46,6 @@ android {
                     testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-showcase.pro', 'proguard-test.pro'
                 }
             }
-        }
-        instantRunConfig {
-            dimension "main"
-            minSdkVersion 21
         }
     }
 
