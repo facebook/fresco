@@ -136,12 +136,7 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
           ImageRequestBuilder.newBuilderWithSource(mUris.get(position))
               .setResizeOptions(mResizeOptions)
               .build();
-      holder.mSimpleDraweeView.setController(
-          mControllerBuilder
-              .reset()
-              .setOldController(holder.mSimpleDraweeView.getController())
-              .setImageRequest(imageRequest)
-              .build());
+      holder.mSimpleDraweeView.setImageRequest(imageRequest);
     }
 
     @Override

@@ -18,9 +18,10 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.R;
+import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
+import com.facebook.imagepipeline.request.ImageRequest;
 import javax.annotation.Nullable;
 
 /**
@@ -31,20 +32,21 @@ import javax.annotation.Nullable;
  */
 public class SimpleDraweeView extends GenericDraweeView {
 
-  private static Supplier<? extends SimpleDraweeControllerBuilder> sDraweeControllerBuilderSupplier;
+  private static Supplier<? extends AbstractDraweeControllerBuilder>
+      sDraweecontrollerbuildersupplier;
 
   /** Initializes {@link SimpleDraweeView} with supplier of Drawee controller builders. */
   public static void initialize(
-      Supplier<? extends SimpleDraweeControllerBuilder> draweeControllerBuilderSupplier) {
-    sDraweeControllerBuilderSupplier = draweeControllerBuilderSupplier;
+      Supplier<? extends AbstractDraweeControllerBuilder> draweeControllerBuilderSupplier) {
+    sDraweecontrollerbuildersupplier = draweeControllerBuilderSupplier;
   }
 
   /** Shuts {@link SimpleDraweeView} down. */
   public static void shutDown() {
-    sDraweeControllerBuilderSupplier = null;
+    sDraweecontrollerbuildersupplier = null;
   }
 
-  private SimpleDraweeControllerBuilder mSimpleDraweeControllerBuilder;
+  private AbstractDraweeControllerBuilder mControllerBuilder;
 
   public SimpleDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context, hierarchy);
@@ -77,9 +79,8 @@ public class SimpleDraweeView extends GenericDraweeView {
       return;
     }
     Preconditions.checkNotNull(
-        sDraweeControllerBuilderSupplier,
-        "SimpleDraweeView was not initialized!");
-    mSimpleDraweeControllerBuilder = sDraweeControllerBuilderSupplier.get();
+        sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
+    mControllerBuilder = sDraweecontrollerbuildersupplier.get();
 
     if (attrs != null) {
       TypedArray gdhAttrs = context.obtainStyledAttributes(
@@ -104,8 +105,20 @@ public class SimpleDraweeView extends GenericDraweeView {
     }
   }
 
-  protected SimpleDraweeControllerBuilder getControllerBuilder() {
-    return mSimpleDraweeControllerBuilder;
+  protected AbstractDraweeControllerBuilder getControllerBuilder() {
+    return mControllerBuilder;
+  }
+
+  /**
+   * Sets the image request
+   *
+   * @param request Image Request
+   */
+  public void setImageRequest(ImageRequest request) {
+    AbstractDraweeControllerBuilder controllerBuilder = mControllerBuilder;
+    DraweeController controller =
+        controllerBuilder.setImageRequest(request).setOldController(getController()).build();
+    setController(controller);
   }
 
   /**
@@ -135,11 +148,12 @@ public class SimpleDraweeView extends GenericDraweeView {
    * @param callerContext caller context
    */
   public void setImageURI(Uri uri, @Nullable Object callerContext) {
-    DraweeController controller = mSimpleDraweeControllerBuilder
-        .setCallerContext(callerContext)
-        .setUri(uri)
-        .setOldController(getController())
-        .build();
+    DraweeController controller =
+        mControllerBuilder
+            .setCallerContext(callerContext)
+            .setUri(uri)
+            .setOldController(getController())
+            .build();
     setController(controller);
   }
 
@@ -157,9 +171,9 @@ public class SimpleDraweeView extends GenericDraweeView {
   /**
    * Sets the actual image resource to the given resource ID.
    *
-   * Similar to {@link #setImageResource(int)}, this sets the displayed image to the given resource.
-   * However, {@link #setImageResource(int)} bypasses all Drawee functionality and makes the view
-   * act as a normal {@link android.widget.ImageView}, whereas this method keeps all of the
+   * <p>Similar to {@link #setImageResource(int)}, this sets the displayed image to the given
+   * resource. However, {@link #setImageResource(int)} bypasses all Drawee functionality and makes
+   * the view act as a normal {@link android.widget.ImageView}, whereas this method keeps all of the
    * Drawee functionality, including the {@link com.facebook.drawee.interfaces.DraweeHierarchy}.
    *
    * @param resourceId the resource ID to use.
