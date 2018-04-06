@@ -996,6 +996,9 @@ static PixelType32 packARGB32(
  * @return a 32-bit pixel
  */
 static PixelType32 getColorFromTable(int idx, const ColorMapObject* pColorMap) {
+  if (pColorMap == NULL) {
+      return TRANSPARENT;
+  }
   int colIdx = (idx >= pColorMap->ColorCount) ? 0 : idx;
   GifColorType* pColor = &pColorMap->Colors[colIdx];
   return packARGB32(0xFF, pColor->Red, pColor->Green, pColor->Blue);
