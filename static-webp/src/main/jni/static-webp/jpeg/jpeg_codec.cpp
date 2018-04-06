@@ -31,11 +31,6 @@ namespace imagepipeline {
 namespace jpeg {
 
 /**
- * Memory bound for jpeg decoder, 30 MB
- */
-static const int kMaxMemoryForDecode = 30 * 1024 * 1024;
-
-/**
  * The xmp segment header needs a trailing 0 character, so we need 29
  * characters instead of 28
  */
@@ -179,8 +174,6 @@ static void initDecompressStruct(
   error_handler.setDecompressStruct(dinfo);
   jpeg_create_decompress(&dinfo);
 
-   // 30 MB
-  dinfo.mem->max_memory_to_use = kMaxMemoryForDecode;
   // DCT method, one of JDCT_FASTEST, JDCT_IFAST, JDCT_ISLOW or JDCT_FLOAT
   dinfo.dct_method = JDCT_IFAST;
   // To perform 2-pass color quantization, the decompressor would need a
