@@ -21,10 +21,12 @@ com.facebook.common.webp
 com.facebook.datasource
 com.facebook.drawable.base
 com.facebook.drawee.backends.pipeline
+com.facebook.drawee.backends.pipeline.info
 com.facebook.drawee.backends.volley
 com.facebook.drawee.components
 com.facebook.drawee.controller
 com.facebook.drawee.debug
+com.facebook.drawee.debug.listener
 com.facebook.drawee.drawable
 com.facebook.drawee.generic
 com.facebook.drawee.gestures

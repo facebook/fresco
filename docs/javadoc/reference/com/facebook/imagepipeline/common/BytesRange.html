@@ -191,6 +191,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -198,6 +200,8 @@
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/debug/package-summary.html">com.facebook.drawee.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/debug/listener/package-summary.html">com.facebook.drawee.debug.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
     <li class="api apilevel-">
@@ -632,16 +636,13 @@ Summary:
             
             
             
-            static
             
-            <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
+            
+            boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#from(int)">from</a></span>(int from)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#equals(java.lang.Object)">equals</a></span>(Object other)
         
-        <div class="jd-descrdiv">Specifies a bytes range to request only the bytes from a specified index up to the end of the
- data.</div>
-  
   </td></tr>
 
 
@@ -656,11 +657,46 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#from(int)">from</a></span>(int from)
+        
+        <div class="jd-descrdiv">Specifies a bytes range to request only the bytes from a specified index up to the end of the
+ data.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            static
+            
+            <a href="../../../../com/facebook/imagepipeline/common/BytesRange.html">BytesRange</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#fromContentRangeHeader(java.lang.String)">fromContentRangeHeader</a></span>(String header)
         
         <div class="jd-descrdiv">Creates an instance of BytesRange by parsing the value of a returned HTTP "Content-Range"
  header.</div>
   
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/common/BytesRange.html#hashCode()">hashCode</a></span>()
+        
   </td></tr>
 
 
@@ -1164,6 +1200,37 @@ From class
 </div>
 
 
+<a id="equals(java.lang.Object)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">equals</span>
+      <span class="normal">(Object other)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
 <a id="from(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1253,6 +1320,37 @@ From class
         </tr>
       </table>
   </div>
+
+    </div>
+</div>
+
+
+<a id="hashCode()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        int
+      </span>
+      <span class="sympad">hashCode</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>

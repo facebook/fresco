@@ -191,6 +191,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -198,6 +200,8 @@
   <a href="../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/debug/package-summary.html">com.facebook.drawee.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/debug/listener/package-summary.html">com.facebook.drawee.debug.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
     <li class="api apilevel-">
@@ -1969,7 +1973,7 @@ android.view.View
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#initialize(com.facebook.common.internal.Supplier<? extends com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder>)">initialize</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/drawee/interfaces/SimpleDraweeControllerBuilder.html">SimpleDraweeControllerBuilder</a>&gt; draweeControllerBuilderSupplier)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#initialize(com.facebook.common.internal.Supplier<? extends com.facebook.drawee.controller.AbstractDraweeControllerBuilder>)">initialize</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html">AbstractDraweeControllerBuilder</a>&gt; draweeControllerBuilderSupplier)
         
         <div class="jd-descrdiv">Initializes <code><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html">SimpleDraweeView</a></code> with supplier of Drawee controller builders.</div>
   
@@ -2023,6 +2027,24 @@ android.view.View
             void
         </td>
         <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#setImageRequest(com.facebook.imagepipeline.request.ImageRequest)">setImageRequest</a></span>(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)
+        
+        <div class="jd-descrdiv">Sets the image request</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#setImageResource(int)">setImageResource</a></span>(int resId)
         
         <div class="jd-descrdiv">
@@ -2035,7 +2057,7 @@ android.view.View
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -2053,7 +2075,7 @@ android.view.View
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -2071,7 +2093,7 @@ android.view.View
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -2089,7 +2111,7 @@ android.view.View
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -2107,7 +2129,7 @@ android.view.View
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -2143,7 +2165,7 @@ android.view.View
             
             
             
-            <a href="../../../../com/facebook/drawee/interfaces/SimpleDraweeControllerBuilder.html">SimpleDraweeControllerBuilder</a>
+            <a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html">AbstractDraweeControllerBuilder</a>
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#getControllerBuilder()">getControllerBuilder</a></span>()
@@ -12625,7 +12647,7 @@ From interface
 
 
 
-<a id="initialize(com.facebook.common.internal.Supplier<? extends com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder>)"></a>
+<a id="initialize(com.facebook.common.internal.Supplier<? extends com.facebook.drawee.controller.AbstractDraweeControllerBuilder>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -12638,7 +12660,7 @@ From interface
         void
       </span>
       <span class="sympad">initialize</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/drawee/interfaces/SimpleDraweeControllerBuilder.html">SimpleDraweeControllerBuilder</a>&gt; draweeControllerBuilderSupplier)</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;?&nbsp;extends&nbsp;<a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html">AbstractDraweeControllerBuilder</a>&gt; draweeControllerBuilderSupplier)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -12733,9 +12755,9 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Sets the actual image resource to the given resource ID.
 
- Similar to <code><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#setImageResource(int)">setImageResource(int)</a></code>, this sets the displayed image to the given resource.
- However, <code><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#setImageResource(int)">setImageResource(int)</a></code> bypasses all Drawee functionality and makes the view
- act as a normal android.widget.ImageView, whereas this method keeps all of the
+ <p>Similar to <code><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#setImageResource(int)">setImageResource(int)</a></code>, this sets the displayed image to the given
+ resource. However, <code><a href="../../../../com/facebook/drawee/view/SimpleDraweeView.html#setImageResource(int)">setImageResource(int)</a></code> bypasses all Drawee functionality and makes
+ the view act as a normal android.widget.ImageView, whereas this method keeps all of the
  Drawee functionality, including the <code><a href="../../../../com/facebook/drawee/interfaces/DraweeHierarchy.html">DraweeHierarchy</a></code>.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -12743,6 +12765,47 @@ From interface
         <tr>
           <th>resourceId</th>
           <td>the resource ID to use.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="setImageRequest(com.facebook.imagepipeline.request.ImageRequest)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setImageRequest</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a> request)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the image request</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>request</th>
+          <td>Image Request
 </td>
         </tr>
       </table>
@@ -13021,7 +13084,7 @@ From interface
          
          
          
-        <a href="../../../../com/facebook/drawee/interfaces/SimpleDraweeControllerBuilder.html">SimpleDraweeControllerBuilder</a>
+        <a href="../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html">AbstractDraweeControllerBuilder</a>
       </span>
       <span class="sympad">getControllerBuilder</span>
       <span class="normal">()</span>

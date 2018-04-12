@@ -191,6 +191,8 @@
     <li class="selected api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -198,6 +200,8 @@
   <a href="../../../../../com/facebook/drawee/controller/package-summary.html">com.facebook.drawee.controller</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/debug/package-summary.html">com.facebook.drawee.debug</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/drawee/debug/listener/package-summary.html">com.facebook.drawee.debug.listener</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/drawable/package-summary.html">com.facebook.drawee.drawable</a></li>
     <li class="api apilevel-">
@@ -556,7 +560,7 @@ Summary:
             <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)">newController</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.drawee.backends.pipeline.info.ImageOriginListener)">newController</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories, <a href="../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html">ImageOriginListener</a> imageOriginListener)
         
   </td></tr>
 
@@ -572,7 +576,7 @@ Summary:
             <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>)">newController</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeControllerFactory.html#newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)">newController</a></span>(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)
         
   </td></tr>
 
@@ -929,7 +933,7 @@ From class
 </div>
 
 
-<a id="newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)"></a>
+<a id="newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>, com.facebook.drawee.backends.pipeline.info.ImageOriginListener)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -942,7 +946,7 @@ From class
         <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
       </span>
       <span class="sympad">newController</span>
-      <span class="normal">(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)</span>
+      <span class="normal">(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories, <a href="../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html">ImageOriginListener</a> imageOriginListener)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -960,7 +964,7 @@ From class
 </div>
 
 
-<a id="newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object, com.facebook.common.internal.ImmutableList<com.facebook.imagepipeline.drawable.DrawableFactory>)"></a>
+<a id="newController(com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>>, java.lang.String, com.facebook.cache.common.CacheKey, java.lang.Object)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -973,7 +977,7 @@ From class
         <a href="../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a>
       </span>
       <span class="sympad">newController</span>
-      <span class="normal">(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext, <a href="../../../../../com/facebook/common/internal/ImmutableList.html">ImmutableList</a>&lt;<a href="../../../../../com/facebook/imagepipeline/drawable/DrawableFactory.html">DrawableFactory</a>&gt; customDrawableFactories)</span>
+      <span class="normal">(<a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;&gt; dataSourceSupplier, String id, <a href="../../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, Object callerContext)</span>
     </h4>
       <div class="api-level">
         <div>
