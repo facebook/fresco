@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -52,6 +53,13 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       final InputStream inputStream;
       if (uri.toString().endsWith("/photo")) {
         inputStream =  mContentResolver.openInputStream(uri);
+      } else if (uri.toString().endsWith("/display_photo")) {
+        try {
+          AssetFileDescriptor fd = mContentResolver.openAssetFileDescriptor(uri, "r");
+          inputStream = fd.createInputStream();
+        } catch (IOException e) {
+          throw new IOException("Contact photo does not exist: " + uri);
+        }
       } else {
         inputStream = ContactsContract.Contacts.openContactPhotoInputStream(mContentResolver, uri);
         if (inputStream == null) {
