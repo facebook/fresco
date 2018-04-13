@@ -9,8 +9,8 @@ dependencies {
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
     implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
-    compile project(':fbcore')
-    compile project(':animated-base')
+    implementation project(':fbcore')
+    implementation project(':animated-base')
 
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':imagepipeline-test')
