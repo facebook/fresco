@@ -15,6 +15,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
+import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -24,6 +25,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import java.util.Set;
@@ -102,11 +104,12 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   protected PipelineDraweeController obtainController() {
     DraweeController oldController = getOldController();
     PipelineDraweeController controller;
+    final String controllerId = generateUniqueControllerId();
     if (oldController instanceof PipelineDraweeController) {
       controller = (PipelineDraweeController) oldController;
       controller.initialize(
-          obtainDataSourceSupplier(),
-          generateUniqueControllerId(),
+          obtainDataSourceSupplier(controllerId),
+          controllerId,
           getCacheKey(),
           getCallerContext(),
           mCustomDrawableFactories,
@@ -114,8 +117,8 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     } else {
       controller =
           mPipelineDraweeControllerFactory.newController(
-              obtainDataSourceSupplier(),
-              generateUniqueControllerId(),
+              obtainDataSourceSupplier(controllerId),
+              controllerId,
               getCacheKey(),
               getCallerContext(),
               mCustomDrawableFactories,
@@ -144,13 +147,23 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   @Override
   protected DataSource<CloseableReference<CloseableImage>> getDataSourceForRequest(
+      String controllerId,
       ImageRequest imageRequest,
       Object callerContext,
       AbstractDraweeControllerBuilder.CacheLevel cacheLevel) {
     return mImagePipeline.fetchDecodedImage(
         imageRequest,
         callerContext,
-        convertCacheLevelToRequestLevel(cacheLevel));
+        convertCacheLevelToRequestLevel(cacheLevel),
+        createRequestListener(controllerId));
+  }
+
+  @Nullable
+  protected RequestListener createRequestListener(String controllerId) {
+    if (mImageOriginListener == null) {
+      return null;
+    }
+    return new ImageOriginRequestListener(controllerId, mImageOriginListener);
   }
 
   public static ImageRequest.RequestLevel convertCacheLevelToRequestLevel(

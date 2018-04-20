@@ -13,6 +13,7 @@ package com.facebook.fresco.samples.showcase.imagepipeline;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
+import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
@@ -46,22 +48,31 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
   private Button mPrefetchButton;
   private TextView mPrefetchStatus;
   private ViewGroup mDraweesHolder;
+  private final Handler mHandler = new Handler();
 
   private final ImageOriginListener mImageOriginListener =
       new ImageOriginListener() {
         @Override
         public void onImageLoaded(
-            String controllerId, @ImageOrigin int imageOrigin, boolean successful) {
-          Toast.makeText(
-                  getContext(),
-                  String.format(
-                      (Locale) null,
-                      "Image loaded: controllerId=%s, origin=%s, successful=%b",
-                      controllerId,
-                      imageOrigin,
-                      successful),
-                  Toast.LENGTH_SHORT)
-              .show();
+            final String controllerId,
+            final @ImageOrigin int imageOrigin,
+            final boolean successful) {
+          mHandler.post(
+              new Runnable() {
+                @Override
+                public void run() {
+                  Toast.makeText(
+                          getContext(),
+                          String.format(
+                              (Locale) null,
+                              "Image loaded: controllerId=%s, origin=%s, successful=%b",
+                              controllerId,
+                              ImageOriginUtils.toString(imageOrigin),
+                              successful),
+                          Toast.LENGTH_SHORT)
+                      .show();
+                }
+              });
         }
       };
 
