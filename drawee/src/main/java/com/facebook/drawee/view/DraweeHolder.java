@@ -54,8 +54,6 @@ public class DraweeHolder<DH extends DraweeHierarchy>
   /**
    * Creates a new instance of DraweeHolder that detaches / attaches controller whenever context
    * notifies it about activity's onStop and onStart callbacks.
-   *
-   * <p>It is recommended to pass a {@link ListenableActivity} as context. This will help in a future release.
    */
   public static <DH extends DraweeHierarchy> DraweeHolder<DH> create(
       @Nullable DH hierarchy,
