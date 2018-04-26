@@ -90,6 +90,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
   private @Nullable Drawable mDrawable;
+  private boolean mJustConstructed = true;
 
   public AbstractDraweeController(
       DeferredReleaser deferredReleaser,
@@ -98,7 +99,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
       Object callerContext) {
     mDeferredReleaser = deferredReleaser;
     mUiThreadImmediateExecutor = uiThreadImmediateExecutor;
-    init(id, callerContext, true);
+    init(id, callerContext);
   }
 
   /**
@@ -109,13 +110,14 @@ public abstract class AbstractDraweeController<T, INFO> implements
    * @param callerContext tag and context for this controller
    */
   protected void initialize(String id, Object callerContext) {
-    init(id, callerContext, false);
+    init(id, callerContext);
+    mJustConstructed = false;
   }
 
-  private void init(String id, Object callerContext, boolean justConstructed) {
+  private void init(String id, Object callerContext) {
     mEventTracker.recordEvent(Event.ON_INIT_CONTROLLER);
     // cancel deferred release
-    if (!justConstructed && mDeferredReleaser != null) {
+    if (!mJustConstructed && mDeferredReleaser != null) {
       mDeferredReleaser.cancelDeferredRelease(this);
     }
     // reinitialize mutable state (fetch state)

@@ -60,7 +60,7 @@ public class PipelineDraweeController
   @Nullable
   private final ImmutableList<DrawableFactory> mGlobalDrawableFactories;
 
-  private @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
+  private final @Nullable MemoryCache<CacheKey, CloseableImage> mMemoryCache;
 
   private CacheKey mCacheKey;
 
@@ -123,46 +123,17 @@ public class PipelineDraweeController
   }
 
   public PipelineDraweeController(
-          Resources resources,
-          DeferredReleaser deferredReleaser,
-          DrawableFactory animatedDrawableFactory,
-          Executor uiThreadExecutor,
-          MemoryCache<CacheKey, CloseableImage> memoryCache,
-          Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
-          String id,
-          CacheKey cacheKey,
-          Object callerContext) {
-    this(
-        resources,
-        deferredReleaser,
-        animatedDrawableFactory,
-        uiThreadExecutor,
-        memoryCache,
-        dataSourceSupplier,
-        id,
-        cacheKey,
-        callerContext,
-        null);
-  }
-
-  public PipelineDraweeController(
       Resources resources,
       DeferredReleaser deferredReleaser,
       DrawableFactory animatedDrawableFactory,
       Executor uiThreadExecutor,
-      MemoryCache<CacheKey, CloseableImage> memoryCache,
-      Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier,
-      String id,
-      CacheKey cacheKey,
-      Object callerContext,
+      @Nullable MemoryCache<CacheKey, CloseableImage> memoryCache,
       @Nullable ImmutableList<DrawableFactory> globalDrawableFactories) {
-    super(deferredReleaser, uiThreadExecutor, id, callerContext);
+    super(deferredReleaser, uiThreadExecutor, null, null);
     mResources = resources;
     mAnimatedDrawableFactory = animatedDrawableFactory;
-    mMemoryCache = memoryCache;
-    mCacheKey = cacheKey;
     mGlobalDrawableFactories = globalDrawableFactories;
-    init(dataSourceSupplier);
+    mMemoryCache = memoryCache;
   }
 
   /**
@@ -180,7 +151,7 @@ public class PipelineDraweeController
       CacheKey cacheKey,
       Object callerContext,
       @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
-      ImageOriginListener imageOriginListener) {
+      @Nullable ImageOriginListener imageOriginListener) {
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
@@ -361,6 +332,10 @@ public class PipelineDraweeController
         mImageOriginListener.onImageLoaded(id, ImageOrigin.MEMORY_BITMAP, true);
       }
     }
+  }
+
+  protected Supplier<DataSource<CloseableReference<CloseableImage>>> getDataSourceSupplier() {
+    return mDataSourceSupplier;
   }
 
   @Override

@@ -107,23 +107,16 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     final String controllerId = generateUniqueControllerId();
     if (oldController instanceof PipelineDraweeController) {
       controller = (PipelineDraweeController) oldController;
-      controller.initialize(
-          obtainDataSourceSupplier(controllerId),
-          controllerId,
-          getCacheKey(),
-          getCallerContext(),
-          mCustomDrawableFactories,
-          mImageOriginListener);
     } else {
-      controller =
-          mPipelineDraweeControllerFactory.newController(
-              obtainDataSourceSupplier(controllerId),
-              controllerId,
-              getCacheKey(),
-              getCallerContext(),
-              mCustomDrawableFactories,
-              mImageOriginListener);
+      controller = mPipelineDraweeControllerFactory.newController();
     }
+    controller.initialize(
+        obtainDataSourceSupplier(controllerId),
+        controllerId,
+        getCacheKey(),
+        getCallerContext(),
+        mCustomDrawableFactories,
+        mImageOriginListener);
     return controller;
   }
 
