@@ -41,10 +41,8 @@ import java.util.Random;
  */
 public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
 
-  /**
-   * How many images per each category.
-   */
-  private static final int NUM_ENTRIES_PER_CATEGORY = 10;
+  /** How many images to display */
+  private static final int NUM_ENTRIES = 256;
 
   /**
    * Number of recycler view spans
@@ -88,10 +86,8 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
     recyclerView.setHasFixedSize(true);
 
     final ImageUriProvider uriProvider = ImageUriProvider.getInstance(getContext());
-    final List<Uri> smallDummyData =
-        uriProvider.getRandomSampleUris(ImageSize.S, NUM_ENTRIES_PER_CATEGORY);
-    final List<Uri> bigDummyData =
-        uriProvider.getRandomSampleUris(ImageSize.M, NUM_ENTRIES_PER_CATEGORY);
+    final List<Uri> smallDummyData = uriProvider.getRandomSampleUris(ImageSize.S, NUM_ENTRIES);
+    final List<Uri> bigDummyData = uriProvider.getRandomSampleUris(ImageSize.M, NUM_ENTRIES);
     final SimpleAdapter adapter = new SimpleAdapter(smallDummyData);
     recyclerView.setAdapter(adapter);
 

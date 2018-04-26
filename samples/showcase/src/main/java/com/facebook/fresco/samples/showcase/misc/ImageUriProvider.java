@@ -102,24 +102,9 @@ public class ImageUriProvider {
   private static final String PREF_KEY_CACHE_BREAKING_BY_DEFAULT = "uri_cache_breaking";
   private static final String PREF_KEY_URI_OVERRIDE = "uri_override";
 
-  /** lorempixel.com image categories. */
-  private static final String[] CATEGORIES = {
-    "animals",
-    "sports",
-    "nature",
-    "city",
-    "food",
-    "people",
-    "nightlife",
-    "fashion",
-    "transport",
-    "cats",
-    "business",
-    "technics",
-  };
-
-  private static final String RANDOM_URI_PATTERN_S = "http://lorempixel.com/400/400/%s/%d";
-  private static final String RANDOM_URI_PATTERN_M = "http://lorempixel.com/800/800/%s/%d";
+  private static final int RANDOM_URI_MAX_IMAGE_ID = 1000;
+  private static final String RANDOM_URI_PATTERN_S = "http://picsum.photos/400/400?image=%d";
+  private static final String RANDOM_URI_PATTERN_M = "http://picsum.photos/800/800?image=%d";
 
   private static final String[] SAMPLE_URIS_LANDSCAPE = new String[]{
       "http://frescolib.org/static/sample-images/animal_a_%s.jpg",
@@ -273,7 +258,7 @@ public class ImageUriProvider {
     return uris;
   }
 
-  public List<Uri> getRandomSampleUris(final ImageSize imageSize, final int urisPerCategory) {
+  public List<Uri> getRandomSampleUris(final ImageSize imageSize, final int numImages) {
     final String uriFormat;
     if (imageSize == ImageSize.S) {
       uriFormat = RANDOM_URI_PATTERN_S;
@@ -284,11 +269,12 @@ public class ImageUriProvider {
           "Don't have random sample URIs for image size: " + imageSize);
     }
 
-    List<Uri> data = new ArrayList<>();
-    for (int i = 0; i < urisPerCategory; i++) {
-      for (int j = 0; j < CATEGORIES.length; j++) {
-        data.add(Uri.parse(String.format((Locale) null, uriFormat, CATEGORIES[j], i + 1)));
-      }
+    Random random = new Random(0); // fix seed for reproducible order
+    List<Uri> data = new ArrayList<>(numImages);
+
+    for (int i = 0; i < numImages; i++) {
+      final int imageId = random.nextInt(RANDOM_URI_MAX_IMAGE_ID);
+      data.add(Uri.parse(String.format((Locale) null, uriFormat, imageId)));
     }
     return data;
   }
