@@ -184,16 +184,39 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     }
   }
 
+  @DoNotStrip
   private static native GifImage nativeCreateFromDirectByteBuffer(ByteBuffer buffer);
+
+  @DoNotStrip
   private static native GifImage nativeCreateFromNativeMemory(long nativePtr, int sizeInBytes);
+
+  @DoNotStrip
   private native int nativeGetWidth();
+
+  @DoNotStrip
   private native int nativeGetHeight();
+
+  @DoNotStrip
   private native int nativeGetDuration();
+
+  @DoNotStrip
   private native int nativeGetFrameCount();
+
+  @DoNotStrip
   private native int[] nativeGetFrameDurations();
+
+  @DoNotStrip
   private native int nativeGetLoopCount();
+
+  @DoNotStrip
   private native GifFrame nativeGetFrame(int frameNumber);
+
+  @DoNotStrip
   private native int nativeGetSizeInBytes();
+
+  @DoNotStrip
   private native void nativeDispose();
+
+  @DoNotStrip
   private native void nativeFinalize();
 }

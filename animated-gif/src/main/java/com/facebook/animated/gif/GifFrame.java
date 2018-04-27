@@ -85,15 +85,36 @@ public class GifFrame implements AnimatedImageFrame {
     return nativeGetDisposalMode();
   }
 
+  @DoNotStrip
   private native void nativeRenderFrame(int width, int height, Bitmap bitmap);
+
+  @DoNotStrip
   private native int nativeGetDurationMs();
+
+  @DoNotStrip
   private native int nativeGetWidth();
+
+  @DoNotStrip
   private native int nativeGetHeight();
+
+  @DoNotStrip
   private native int nativeGetXOffset();
+
+  @DoNotStrip
   private native int nativeGetYOffset();
+
+  @DoNotStrip
   private native int nativeGetDisposalMode();
+
+  @DoNotStrip
   private native int nativeGetTransparentPixelColor();
+
+  @DoNotStrip
   private native boolean nativeHasTransparency();
+
+  @DoNotStrip
   private native void nativeDispose();
+
+  @DoNotStrip
   private native void nativeFinalize();
 }
