@@ -321,7 +321,8 @@ public abstract class AbstractDraweeControllerBuilder <
   }
 
   /** Gets the top-level data source supplier to be used by a controller. */
-  protected Supplier<DataSource<IMAGE>> obtainDataSourceSupplier(String controllerId) {
+  protected Supplier<DataSource<IMAGE>> obtainDataSourceSupplier(
+      final DraweeController controller, final String controllerId) {
     if (mDataSourceSupplier != null) {
       return mDataSourceSupplier;
     }
@@ -330,18 +331,18 @@ public abstract class AbstractDraweeControllerBuilder <
 
     // final image supplier;
     if (mImageRequest != null) {
-      supplier = getDataSourceSupplierForRequest(controllerId, mImageRequest);
+      supplier = getDataSourceSupplierForRequest(controller, controllerId, mImageRequest);
     } else if (mMultiImageRequests != null) {
       supplier =
           getFirstAvailableDataSourceSupplier(
-              controllerId, mMultiImageRequests, mTryCacheOnlyFirst);
+              controller, controllerId, mMultiImageRequests, mTryCacheOnlyFirst);
     }
 
     // increasing-quality supplier; highest-quality supplier goes first
     if (supplier != null && mLowResImageRequest != null) {
       List<Supplier<DataSource<IMAGE>>> suppliers = new ArrayList<>(2);
       suppliers.add(supplier);
-      suppliers.add(getDataSourceSupplierForRequest(controllerId, mLowResImageRequest));
+      suppliers.add(getDataSourceSupplierForRequest(controller, controllerId, mLowResImageRequest));
       supplier = IncreasingQualityDataSourceSupplier.create(suppliers);
     }
 
@@ -354,36 +355,44 @@ public abstract class AbstractDraweeControllerBuilder <
   }
 
   protected Supplier<DataSource<IMAGE>> getFirstAvailableDataSourceSupplier(
-      String controllerId, REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst) {
+      final DraweeController controller,
+      String controllerId,
+      REQUEST[] imageRequests,
+      boolean tryBitmapCacheOnlyFirst) {
     List<Supplier<DataSource<IMAGE>>> suppliers = new ArrayList<>(imageRequests.length * 2);
     if (tryBitmapCacheOnlyFirst) {
       // we first add bitmap-cache-only suppliers, then the full-fetch ones
       for (int i = 0; i < imageRequests.length; i++) {
         suppliers.add(
             getDataSourceSupplierForRequest(
-                controllerId, imageRequests[i], CacheLevel.BITMAP_MEMORY_CACHE));
+                controller, controllerId, imageRequests[i], CacheLevel.BITMAP_MEMORY_CACHE));
       }
     }
     for (int i = 0; i < imageRequests.length; i++) {
-      suppliers.add(getDataSourceSupplierForRequest(controllerId, imageRequests[i]));
+      suppliers.add(getDataSourceSupplierForRequest(controller, controllerId, imageRequests[i]));
     }
     return FirstAvailableDataSourceSupplier.create(suppliers);
   }
 
   /** Creates a data source supplier for the given image request. */
   protected Supplier<DataSource<IMAGE>> getDataSourceSupplierForRequest(
-      String controllerId, REQUEST imageRequest) {
-    return getDataSourceSupplierForRequest(controllerId, imageRequest, CacheLevel.FULL_FETCH);
+      final DraweeController controller, String controllerId, REQUEST imageRequest) {
+    return getDataSourceSupplierForRequest(
+        controller, controllerId, imageRequest, CacheLevel.FULL_FETCH);
   }
 
   /** Creates a data source supplier for the given image request. */
   protected Supplier<DataSource<IMAGE>> getDataSourceSupplierForRequest(
-      final String controllerId, final REQUEST imageRequest, final CacheLevel cacheLevel) {
+      final DraweeController controller,
+      final String controllerId,
+      final REQUEST imageRequest,
+      final CacheLevel cacheLevel) {
     final Object callerContext = getCallerContext();
     return new Supplier<DataSource<IMAGE>>() {
       @Override
       public DataSource<IMAGE> get() {
-        return getDataSourceForRequest(controllerId, imageRequest, callerContext, cacheLevel);
+        return getDataSourceForRequest(
+            controller, controllerId, imageRequest, callerContext, cacheLevel);
       }
 
       @Override
@@ -446,6 +455,7 @@ public abstract class AbstractDraweeControllerBuilder <
    * variable (same as it is done for callerContext).
    */
   protected abstract DataSource<IMAGE> getDataSourceForRequest(
+      final DraweeController controller,
       final String controllerId,
       final REQUEST imageRequest,
       final Object callerContext,

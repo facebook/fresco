@@ -111,7 +111,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
       controller = mPipelineDraweeControllerFactory.newController();
     }
     controller.initialize(
-        obtainDataSourceSupplier(controllerId),
+        obtainDataSourceSupplier(controller, controllerId),
         controllerId,
         getCacheKey(),
         getCallerContext(),
@@ -140,6 +140,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   @Override
   protected DataSource<CloseableReference<CloseableImage>> getDataSourceForRequest(
+      DraweeController controller,
       String controllerId,
       ImageRequest imageRequest,
       Object callerContext,
