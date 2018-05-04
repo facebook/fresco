@@ -8,9 +8,6 @@
 package com.facebook.drawee.backends.volley;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import com.facebook.common.internal.Supplier;
-import com.facebook.datasource.DataSource;
 import com.facebook.drawee.components.DeferredReleaser;
 import java.util.concurrent.Executor;
 
@@ -32,16 +29,7 @@ public class VolleyDraweeControllerFactory {
     mUiThreadExecutor = uiThreadExecutor;
   }
 
-  public VolleyDraweeController newController(
-      Supplier<DataSource<Bitmap>> dataSourceSupplier,
-      String id,
-      Object callerContext) {
-    return new VolleyDraweeController(
-        mResources,
-        mDeferredReleaser,
-        mUiThreadExecutor,
-        dataSourceSupplier,
-        id,
-        callerContext);
+  public VolleyDraweeController newController() {
+    return new VolleyDraweeController(mResources, mDeferredReleaser, mUiThreadExecutor);
   }
 }

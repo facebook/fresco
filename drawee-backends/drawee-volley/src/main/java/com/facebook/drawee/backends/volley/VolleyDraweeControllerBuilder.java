@@ -48,18 +48,17 @@ public class VolleyDraweeControllerBuilder extends AbstractDraweeControllerBuild
     String controllerId = generateUniqueControllerId();
     if (oldController instanceof VolleyDraweeController) {
       controller = (VolleyDraweeController) oldController;
-      controller.initialize(
-          obtainDataSourceSupplier(controllerId), controllerId, getCallerContext());
     } else {
-      controller =
-          mVolleyDraweeControllerFactory.newController(
-              obtainDataSourceSupplier(controllerId), controllerId, getCallerContext());
+      controller = mVolleyDraweeControllerFactory.newController();
     }
+    controller.initialize(
+        obtainDataSourceSupplier(controller, controllerId), controllerId, getCallerContext());
     return controller;
   }
 
   @Override
   protected DataSource<Bitmap> getDataSourceForRequest(
+      final DraweeController controller,
       final String controllerId,
       final Uri imageRequest,
       final Object callerContext,

@@ -37,15 +37,9 @@ public class VolleyDraweeController
   private Supplier<DataSource<Bitmap>> mDataSourceSupplier;
 
   public VolleyDraweeController(
-      Resources resources,
-      DeferredReleaser deferredReleaser,
-      Executor uiThreadExecutor,
-      Supplier<DataSource<Bitmap>> dataSourceSupplier,
-      String id,
-      Object callerContext) {
-    super(deferredReleaser, uiThreadExecutor, id, callerContext);
+      Resources resources, DeferredReleaser deferredReleaser, Executor uiThreadExecutor) {
+    super(deferredReleaser, uiThreadExecutor, null, null);
     mResources = resources;
-    init(dataSourceSupplier);
   }
 
   /**
