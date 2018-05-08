@@ -20,6 +20,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
+import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.components.DeferredReleaser;
@@ -156,7 +157,8 @@ public class PipelineDraweeController
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
     setCustomDrawableFactories(customDrawableFactories);
-    setImageOriginListener(imageOriginListener);
+    clearImageOriginListeners();
+    addImageOriginListener(imageOriginListener);
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
@@ -168,9 +170,20 @@ public class PipelineDraweeController
     mCustomDrawableFactories = customDrawableFactories;
   }
 
-  public void setImageOriginListener(@Nullable ImageOriginListener imageOriginListener) {
+  public void addImageOriginListener(@Nullable ImageOriginListener imageOriginListener) {
     synchronized (this) {
-      mImageOriginListener = imageOriginListener;
+      if (mImageOriginListener != null) {
+        mImageOriginListener =
+            new ForwardingImageOriginListener(mImageOriginListener, imageOriginListener);
+      } else {
+        mImageOriginListener = imageOriginListener;
+      }
+    }
+  }
+
+  protected void clearImageOriginListeners() {
+    synchronized (this) {
+      mImageOriginListener = null;
     }
   }
 
