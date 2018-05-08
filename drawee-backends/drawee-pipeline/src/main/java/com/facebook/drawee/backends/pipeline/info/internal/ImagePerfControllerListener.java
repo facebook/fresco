@@ -47,7 +47,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
     mImagePerfState.setImageInfo(imageInfo);
     mImagePerfState.setSuccessful(true);
 
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.AVAILABLE);
+    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.SUCCESS);
   }
 
   @Override

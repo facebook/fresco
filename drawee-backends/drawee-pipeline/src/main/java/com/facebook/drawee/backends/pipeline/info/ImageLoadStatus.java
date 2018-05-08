@@ -6,11 +6,11 @@
  */
 package com.facebook.drawee.backends.pipeline.info;
 
-import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.AVAILABLE;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.CANCELED;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.ERROR;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.ORIGIN_AVAILABLE;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.REQUESTED;
+import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.SUCCESS;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.support.annotation.IntDef;
@@ -20,7 +20,7 @@ import java.lang.annotation.Retention;
 @IntDef({
   REQUESTED,
   ORIGIN_AVAILABLE,
-  AVAILABLE,
+  SUCCESS,
   CANCELED,
   ERROR,
 })
@@ -28,7 +28,7 @@ public @interface ImageLoadStatus {
 
   int REQUESTED = 0;
   int ORIGIN_AVAILABLE = 1;
-  int AVAILABLE = 2;
+  int SUCCESS = 2;
   int CANCELED = 3;
   int ERROR = 4;
 }

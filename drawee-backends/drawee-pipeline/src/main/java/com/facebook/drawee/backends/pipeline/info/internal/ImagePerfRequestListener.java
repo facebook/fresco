@@ -50,7 +50,7 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setPrefetch(isPrefetch);
     mImagePerfState.setSuccessful(true);
 
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.AVAILABLE);
+    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.SUCCESS);
   }
 
   @Override

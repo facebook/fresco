@@ -14,8 +14,8 @@ public class ImagePerfUtils {
         return "requested";
       case ImageLoadStatus.ORIGIN_AVAILABLE:
         return "origin_available";
-      case ImageLoadStatus.AVAILABLE:
-        return "available";
+      case ImageLoadStatus.SUCCESS:
+        return "success";
       case ImageLoadStatus.CANCELED:
         return "canceled";
       case ImageLoadStatus.ERROR:
