@@ -229,8 +229,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
         scheduleNextFrame(scheduledRenderTimeForNextFrameMs);
       }
     }
-    if (mDrawListener != null) {
-      mDrawListener.onDraw(
+
+    DrawListener listener = mDrawListener;
+    if (listener != null) {
+      listener.onDraw(
           this,
           mFrameScheduler,
           frameNumberToDraw,
