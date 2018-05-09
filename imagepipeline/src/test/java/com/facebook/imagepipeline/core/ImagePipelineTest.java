@@ -63,6 +63,7 @@ public class ImagePipelineTest {
 
   private Supplier<Boolean> mPrefetchEnabledSupplier;
   private Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
+  private Supplier<Boolean> mLazyDataSourceSupplier;
   private ImagePipeline mImagePipeline;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
@@ -77,8 +78,10 @@ public class ImagePipelineTest {
     MockitoAnnotations.initMocks(this);
     mPrefetchEnabledSupplier = mock(Supplier.class);
     mSuppressBitmapPrefetchingSupplier = mock(Supplier.class);
+    mLazyDataSourceSupplier = mock(Supplier.class);
     when(mPrefetchEnabledSupplier.get()).thenReturn(true);
     when(mSuppressBitmapPrefetchingSupplier.get()).thenReturn(false);
+    when(mLazyDataSourceSupplier.get()).thenReturn(false);
     mRequestListener1 = mock(RequestListener.class);
     mRequestListener2 = mock(RequestListener.class);
     mBitmapMemoryCache = mock(MemoryCache.class);
@@ -86,17 +89,19 @@ public class ImagePipelineTest {
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
     mThreadHandoffProducerQueue= mock(ThreadHandoffProducerQueue.class);
-    mImagePipeline = new ImagePipeline(
-        mProducerSequenceFactory,
-        Sets.newHashSet(mRequestListener1, mRequestListener2),
-        mPrefetchEnabledSupplier,
-        mBitmapMemoryCache,
-        mEncodedMemoryCache,
-        mMainDiskStorageCache,
-        mSmallImageDiskStorageCache,
-        mCacheKeyFactory,
-        mThreadHandoffProducerQueue,
-        mSuppressBitmapPrefetchingSupplier);
+    mImagePipeline =
+        new ImagePipeline(
+            mProducerSequenceFactory,
+            Sets.newHashSet(mRequestListener1, mRequestListener2),
+            mPrefetchEnabledSupplier,
+            mBitmapMemoryCache,
+            mEncodedMemoryCache,
+            mMainDiskStorageCache,
+            mSmallImageDiskStorageCache,
+            mCacheKeyFactory,
+            mThreadHandoffProducerQueue,
+            mSuppressBitmapPrefetchingSupplier,
+            mLazyDataSourceSupplier);
 
     when(mImageRequest.getProgressiveRenderingEnabled()).thenReturn(true);
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);

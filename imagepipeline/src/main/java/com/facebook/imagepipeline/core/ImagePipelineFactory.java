@@ -256,7 +256,8 @@ public class ImagePipelineFactory {
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
               mThreadHandoffProducerQueue,
-              Suppliers.of(false));
+              Suppliers.of(false),
+              mConfig.getExperiments().isLazyDataSource());
     }
     return mImagePipeline;
   }

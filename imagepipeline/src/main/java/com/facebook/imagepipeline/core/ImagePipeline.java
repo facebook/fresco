@@ -61,6 +61,7 @@ public class ImagePipeline {
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
   private AtomicLong mIdCounter;
+  private final Supplier<Boolean> mLazyDataSource;
 
   public ImagePipeline(
       ProducerSequenceFactory producerSequenceFactory,
@@ -72,7 +73,8 @@ public class ImagePipeline {
       BufferedDiskCache smallImageBufferedDiskCache,
       CacheKeyFactory cacheKeyFactory,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
-      Supplier<Boolean> suppressBitmapPrefetchingSupplier) {
+      Supplier<Boolean> suppressBitmapPrefetchingSupplier,
+      Supplier<Boolean> lazyDataSource) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
@@ -84,6 +86,7 @@ public class ImagePipeline {
     mCacheKeyFactory = cacheKeyFactory;
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
     mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
+    mLazyDataSource = lazyDataSource;
   }
 
   /**
@@ -660,6 +663,10 @@ public class ImagePipeline {
 
   public boolean isPaused() {
     return mThreadHandoffProducerQueue.isQueueing();
+  }
+
+  public Supplier<Boolean> isLazyDataSource() {
+    return mLazyDataSource;
   }
 
   /**

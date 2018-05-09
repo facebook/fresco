@@ -48,6 +48,7 @@ public class ImagePipelineExperiments {
   private final boolean mPartialImageCachingEnabled;
   private final Supplier<Boolean> mSmartResizingEnabled;
   private final ProducerFactoryMethod mProducerFactoryMethod;
+  private final Supplier<Boolean> mLazyDataSource;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -78,6 +79,7 @@ public class ImagePipelineExperiments {
     } else {
       mProducerFactoryMethod = builder.mProducerFactoryMethod;
     }
+    mLazyDataSource = builder.mLazyDataSource;
   }
 
   public boolean isExternalCreatedBitmapLogEnabled() {
@@ -141,6 +143,10 @@ public class ImagePipelineExperiments {
     return mBitmapPrepareToDrawForPrefetch;
   }
 
+  public Supplier<Boolean> isLazyDataSource() {
+    return mLazyDataSource;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -159,6 +165,7 @@ public class ImagePipelineExperiments {
     private boolean mPartialImageCachingEnabled = false;
     private Supplier<Boolean> mSmartResizingEnabled = Suppliers.BOOLEAN_FALSE;
     private ProducerFactoryMethod mProducerFactoryMethod;
+    public Supplier<Boolean> mLazyDataSource;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -281,6 +288,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setProducerFactoryMethod(
         ProducerFactoryMethod producerFactoryMethod) {
       mProducerFactoryMethod = producerFactoryMethod;
+      return mConfigBuilder;
+    }
+
+    /** Stores an alternative lazy method to instantiate the data souce. */
+    public ImagePipelineConfig.Builder setLazyDataSource(Supplier<Boolean> lazyDataSource) {
+      mLazyDataSource = lazyDataSource;
       return mConfigBuilder;
     }
 

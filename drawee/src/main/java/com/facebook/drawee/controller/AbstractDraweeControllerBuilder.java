@@ -343,7 +343,7 @@ public abstract class AbstractDraweeControllerBuilder <
       List<Supplier<DataSource<IMAGE>>> suppliers = new ArrayList<>(2);
       suppliers.add(supplier);
       suppliers.add(getDataSourceSupplierForRequest(controller, controllerId, mLowResImageRequest));
-      supplier = IncreasingQualityDataSourceSupplier.create(suppliers);
+      supplier = IncreasingQualityDataSourceSupplier.create(suppliers, false);
     }
 
     // no image requests; use null data source supplier
