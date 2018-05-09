@@ -193,14 +193,27 @@ public class PipelineDraweeController
     mRequestListeners.remove(requestListener);
   }
 
-  public void addImageOriginListener(@Nullable ImageOriginListener imageOriginListener) {
-    synchronized (this) {
-      if (mImageOriginListener != null) {
-        mImageOriginListener =
-            new ForwardingImageOriginListener(mImageOriginListener, imageOriginListener);
-      } else {
-        mImageOriginListener = imageOriginListener;
-      }
+  public synchronized void addImageOriginListener(ImageOriginListener imageOriginListener) {
+    if (mImageOriginListener instanceof ForwardingImageOriginListener) {
+      ((ForwardingImageOriginListener) mImageOriginListener)
+          .addImageOriginListener(imageOriginListener);
+    } else if (mImageOriginListener != null) {
+      mImageOriginListener =
+          new ForwardingImageOriginListener(mImageOriginListener, imageOriginListener);
+    } else {
+      mImageOriginListener = imageOriginListener;
+    }
+  }
+
+  public synchronized void removeImageOriginListener(ImageOriginListener imageOriginListener) {
+    if (mImageOriginListener instanceof ForwardingImageOriginListener) {
+      ((ForwardingImageOriginListener) mImageOriginListener)
+          .removeImageOriginListener(imageOriginListener);
+    } else if (mImageOriginListener != null) {
+      mImageOriginListener =
+          new ForwardingImageOriginListener(mImageOriginListener, imageOriginListener);
+    } else {
+      mImageOriginListener = imageOriginListener;
     }
   }
 
