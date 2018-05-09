@@ -38,6 +38,10 @@ public class ForwardingRequestListener implements RequestListener {
     }
   }
 
+  public void addRequestListener(RequestListener requestListener) {
+    mRequestListeners.add(requestListener);
+  }
+
   @Override
   public void onRequestStart(
       ImageRequest request, Object callerContext, String requestId, boolean isPrefetch) {

@@ -23,6 +23,7 @@ import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
+import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
@@ -40,6 +41,10 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.listener.ForwardingRequestListener;
+import com.facebook.imagepipeline.listener.RequestListener;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
@@ -72,6 +77,10 @@ public class PipelineDraweeController
 
   // Drawable factories that are unique for a given image request
   private @Nullable ImmutableList<DrawableFactory> mCustomDrawableFactories;
+
+  @GuardedBy("this")
+  @Nullable
+  private Set<RequestListener> mRequestListeners;
 
   @GuardedBy("this")
   @Nullable
@@ -170,6 +179,20 @@ public class PipelineDraweeController
     mCustomDrawableFactories = customDrawableFactories;
   }
 
+  public synchronized void addRequestListener(RequestListener requestListener) {
+    if (mRequestListeners == null) {
+      mRequestListeners = new HashSet<>();
+    }
+    mRequestListeners.add(requestListener);
+  }
+
+  public synchronized void removeRequestListener(RequestListener requestListener) {
+    if (mRequestListeners == null) {
+      return;
+    }
+    mRequestListeners.remove(requestListener);
+  }
+
   public void addImageOriginListener(@Nullable ImageOriginListener imageOriginListener) {
     synchronized (this) {
       if (mImageOriginListener != null) {
@@ -199,6 +222,22 @@ public class PipelineDraweeController
 
   protected CacheKey getCacheKey() {
     return mCacheKey;
+  }
+
+  @Nullable
+  public synchronized RequestListener getRequestListener() {
+    RequestListener imageOriginRequestListener = null;
+    if (mImageOriginListener != null) {
+      imageOriginRequestListener = new ImageOriginRequestListener(getId(), mImageOriginListener);
+    }
+    if (mRequestListeners != null) {
+      ForwardingRequestListener requestListener = new ForwardingRequestListener(mRequestListeners);
+      if (imageOriginRequestListener != null) {
+        requestListener.addRequestListener(imageOriginRequestListener);
+      }
+      return requestListener;
+    }
+    return imageOriginRequestListener;
   }
 
   @Override

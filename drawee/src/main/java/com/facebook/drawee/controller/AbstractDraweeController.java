@@ -114,7 +114,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     mJustConstructed = false;
   }
 
-  private void init(String id, Object callerContext) {
+  private synchronized void init(String id, Object callerContext) {
     mEventTracker.recordEvent(Event.ON_INIT_CONTROLLER);
     // cancel deferred release
     if (!mJustConstructed && mDeferredReleaser != null) {

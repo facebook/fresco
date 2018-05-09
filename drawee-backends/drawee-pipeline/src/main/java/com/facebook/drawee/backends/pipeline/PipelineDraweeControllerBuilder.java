@@ -15,7 +15,6 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
-import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -149,15 +148,15 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
         imageRequest,
         callerContext,
         convertCacheLevelToRequestLevel(cacheLevel),
-        createRequestListener(controllerId));
+        getRequestListener(controller));
   }
 
   @Nullable
-  protected RequestListener createRequestListener(String controllerId) {
-    if (mImageOriginListener == null) {
-      return null;
+  protected RequestListener getRequestListener(final DraweeController controller) {
+    if (controller instanceof PipelineDraweeController) {
+      return ((PipelineDraweeController) controller).getRequestListener();
     }
-    return new ImageOriginRequestListener(controllerId, mImageOriginListener);
+    return null;
   }
 
   public static ImageRequest.RequestLevel convertCacheLevelToRequestLevel(
