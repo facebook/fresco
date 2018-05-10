@@ -35,6 +35,25 @@ public class ImagePerfState {
   private boolean mIsSuccessful;
   private boolean mIsPrefetch;
 
+  public void reset() {
+    mRequestId = null;
+    mImageRequest = null;
+    mCallerContext = null;
+    mImageInfo = null;
+
+    mControllerSubmitTimeMs = UNSET;
+    mControllerFinalImageSetTimeMs = UNSET;
+    mControllerFailureTimeMs = UNSET;
+
+    mImageRequestStartTimeMs = UNSET;
+    mImageRequestEndTimeMs = UNSET;
+
+    mImageOrigin = ImageOrigin.UNKNOWN;
+    mIsCanceled = false;
+    mIsSuccessful = false;
+    mIsPrefetch = false;
+  }
+
   public void setRequestId(@Nullable String requestId) {
     mRequestId = requestId;
   }

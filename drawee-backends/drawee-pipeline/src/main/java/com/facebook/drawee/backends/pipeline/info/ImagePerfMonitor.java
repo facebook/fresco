@@ -31,15 +31,42 @@ public class ImagePerfMonitor extends BaseRequestListener {
 
   private @Nullable List<ImagePerfDataListener> mImagePerfDataListeners;
 
+  private boolean mEnabled;
+
   public ImagePerfMonitor(
       MonotonicClock monotonicClock, PipelineDraweeController pipelineDraweeController) {
     mMonotonicClock = monotonicClock;
     mPipelineDraweeController = pipelineDraweeController;
     mImagePerfState = new ImagePerfState();
-    setupListeners();
   }
 
-  public void addImagePerfDataListener(ImagePerfDataListener imagePerfDataListener) {
+  public void setEnabled(boolean enabled) {
+    mEnabled = enabled;
+    if (enabled) {
+      setupListeners();
+      if (mImageOriginListener != null) {
+        mPipelineDraweeController.addImageOriginListener(mImageOriginListener);
+      }
+      if (mImagePerfControllerListener != null) {
+        mPipelineDraweeController.addControllerListener(mImagePerfControllerListener);
+      }
+      if (mForwardingRequestListener != null) {
+        mPipelineDraweeController.addRequestListener(mForwardingRequestListener);
+      }
+    } else {
+      if (mImageOriginListener != null) {
+        mPipelineDraweeController.removeImageOriginListener(mImageOriginListener);
+      }
+      if (mImagePerfControllerListener != null) {
+        mPipelineDraweeController.removeControllerListener(mImagePerfControllerListener);
+      }
+      if (mForwardingRequestListener != null) {
+        mPipelineDraweeController.removeRequestListener(mForwardingRequestListener);
+      }
+    }
+  }
+
+  public void addImagePerfDataListener(@Nullable ImagePerfDataListener imagePerfDataListener) {
     if (imagePerfDataListener == null) {
       return;
     }
@@ -63,7 +90,7 @@ public class ImagePerfMonitor extends BaseRequestListener {
   }
 
   public void notifyListeners(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
-    if (mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
+    if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }
     ImagePerfData data = state.snapshot();
@@ -92,5 +119,11 @@ public class ImagePerfMonitor extends BaseRequestListener {
       mForwardingRequestListener =
           new ForwardingRequestListener(mImagePerfRequestListener, mImageOriginRequestListener);
     }
+  }
+
+  public void reset() {
+    clearImagePerfDataListeners();
+    setEnabled(false);
+    mImagePerfState.reset();
   }
 }

@@ -15,6 +15,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -46,6 +47,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
   @Nullable
   private ImmutableList<DrawableFactory> mCustomDrawableFactories;
   @Nullable private ImageOriginListener mImageOriginListener;
+  @Nullable private ImagePerfDataListener mImagePerfDataListener;
 
   public PipelineDraweeControllerBuilder(
       Context context,
@@ -99,6 +101,12 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     return getThis();
   }
 
+  public PipelineDraweeControllerBuilder setPerfDataListener(
+      @Nullable ImagePerfDataListener imagePerfDataListener) {
+    mImagePerfDataListener = imagePerfDataListener;
+    return getThis();
+  }
+
   @Override
   protected PipelineDraweeController obtainController() {
     DraweeController oldController = getOldController();
@@ -116,6 +124,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
         getCallerContext(),
         mCustomDrawableFactories,
         mImageOriginListener);
+    controller.initializePerformanceMonitoring(mImagePerfDataListener);
     return controller;
   }
 

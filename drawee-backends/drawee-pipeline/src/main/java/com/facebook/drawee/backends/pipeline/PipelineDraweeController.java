@@ -18,12 +18,15 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.debug.DebugControllerOverlayDrawable;
@@ -77,6 +80,8 @@ public class PipelineDraweeController
 
   // Drawable factories that are unique for a given image request
   private @Nullable ImmutableList<DrawableFactory> mCustomDrawableFactories;
+
+  private @Nullable ImagePerfMonitor mImagePerfMonitor;
 
   @GuardedBy("this")
   @Nullable
@@ -168,6 +173,20 @@ public class PipelineDraweeController
     setCustomDrawableFactories(customDrawableFactories);
     clearImageOriginListeners();
     addImageOriginListener(imageOriginListener);
+  }
+
+  protected synchronized void initializePerformanceMonitoring(
+      @Nullable ImagePerfDataListener imagePerfDataListener) {
+    if (mImagePerfMonitor != null) {
+      mImagePerfMonitor.reset();
+    }
+    if (imagePerfDataListener != null) {
+      if (mImagePerfMonitor == null) {
+        mImagePerfMonitor = new ImagePerfMonitor(RealtimeSinceBootClock.get(), this);
+      }
+      mImagePerfMonitor.addImagePerfDataListener(imagePerfDataListener);
+      mImagePerfMonitor.setEnabled(true);
+    }
   }
 
   public void setDrawDebugOverlay(boolean drawDebugOverlay) {
