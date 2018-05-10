@@ -15,9 +15,13 @@ package com.facebook.samples.kotlin
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus
+import com.facebook.drawee.backends.pipeline.info.ImagePerfData
+import com.facebook.drawee.backends.pipeline.info.ImagePerfUtils
 import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
@@ -46,7 +50,13 @@ data class ImageHolder(private val view: View,
                 .build())
         .setOldController(itemView.controller)
         .setAutoPlayAnimations(true)
+        .setPerfDataListener(::logImagePerf)
         .build()
+  }
+
+  private fun logImagePerf(imagePerfData: ImagePerfData, @ImageLoadStatus state: Int) {
+    Log.d("ImagePerf",
+            "state=${ImagePerfUtils.toString(state)}, data=${imagePerfData.createDebugString()}")
   }
 }
 
