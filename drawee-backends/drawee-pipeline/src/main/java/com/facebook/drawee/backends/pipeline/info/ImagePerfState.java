@@ -22,6 +22,7 @@ public class ImagePerfState {
 
   // Controller timings
   private long mControllerSubmitTimeMs = UNSET;
+  private long mControllerIntermediateImageSetTimeMs = UNSET;
   private long mControllerFinalImageSetTimeMs = UNSET;
   private long mControllerFailureTimeMs = UNSET;
 
@@ -70,6 +71,10 @@ public class ImagePerfState {
     mControllerSubmitTimeMs = controllerSubmitTimeMs;
   }
 
+  public void setControllerIntermediateImageSetTimeMs(long controllerIntermediateImageSetTimeMs) {
+    mControllerIntermediateImageSetTimeMs = controllerIntermediateImageSetTimeMs;
+  }
+
   public void setControllerFinalImageSetTimeMs(long controllerFinalImageSetTimeMs) {
     mControllerFinalImageSetTimeMs = controllerFinalImageSetTimeMs;
   }
@@ -113,6 +118,7 @@ public class ImagePerfState {
         mCallerContext,
         mImageInfo,
         mControllerSubmitTimeMs,
+        mControllerIntermediateImageSetTimeMs,
         mControllerFinalImageSetTimeMs,
         mControllerFailureTimeMs,
         mImageRequestStartTimeMs,

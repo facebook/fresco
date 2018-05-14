@@ -21,6 +21,7 @@ public class ImagePerfData {
   private final @Nullable ImageInfo mImageInfo;
 
   private final long mControllerSubmitTimeMs;
+  private final long mControllerIntermediateImageSetTimeMs;
   private final long mControllerFinalImageSetTimeMs;
   private final long mControllerFailureTimeMs;
 
@@ -37,6 +38,7 @@ public class ImagePerfData {
       @Nullable Object callerContext,
       @Nullable ImageInfo imageInfo,
       long controllerSubmitTimeMs,
+      long controllerIntermediateImageSetTimeMs,
       long controllerFinalImageSetTimeMs,
       long controllerFailureTimeMs,
       long imageRequestStartTimeMs,
@@ -50,6 +52,7 @@ public class ImagePerfData {
     mCallerContext = callerContext;
     mImageInfo = imageInfo;
     mControllerSubmitTimeMs = controllerSubmitTimeMs;
+    mControllerIntermediateImageSetTimeMs = controllerIntermediateImageSetTimeMs;
     mControllerFinalImageSetTimeMs = controllerFinalImageSetTimeMs;
     mControllerFailureTimeMs = controllerFailureTimeMs;
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
@@ -82,6 +85,10 @@ public class ImagePerfData {
 
   public long getControllerSubmitTimeMs() {
     return mControllerSubmitTimeMs;
+  }
+
+  public long getControllerIntermediateImageSetTimeMs() {
+    return mControllerIntermediateImageSetTimeMs;
   }
 
   public long getControllerFinalImageSetTimeMs() {
@@ -119,6 +126,13 @@ public class ImagePerfData {
   public long getFinalImageLoadTimeMs() {
     if (isSuccessful()) {
       return getImageRequestEndTimeMs() - getImageRequestStartTimeMs();
+    }
+    return UNSET;
+  }
+
+  public long getIntermediateImageLoadTimeMs() {
+    if (isSuccessful()) {
+      return getControllerIntermediateImageSetTimeMs() - getControllerSubmitTimeMs();
     }
     return UNSET;
   }

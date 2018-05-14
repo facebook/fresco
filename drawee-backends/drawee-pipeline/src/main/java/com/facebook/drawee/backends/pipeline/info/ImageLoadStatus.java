@@ -8,6 +8,7 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.CANCELED;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.ERROR;
+import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.INTERMEDIATE_AVAILABLE;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.ORIGIN_AVAILABLE;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.REQUESTED;
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.SUCCESS;
@@ -20,6 +21,7 @@ import java.lang.annotation.Retention;
 @IntDef({
   REQUESTED,
   ORIGIN_AVAILABLE,
+  INTERMEDIATE_AVAILABLE,
   SUCCESS,
   CANCELED,
   ERROR,
@@ -28,7 +30,8 @@ public @interface ImageLoadStatus {
 
   int REQUESTED = 0;
   int ORIGIN_AVAILABLE = 1;
-  int SUCCESS = 2;
-  int CANCELED = 3;
-  int ERROR = 4;
+  int INTERMEDIATE_AVAILABLE = 2;
+  int SUCCESS = 3;
+  int CANCELED = 4;
+  int ERROR = 5;
 }

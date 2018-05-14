@@ -18,6 +18,8 @@ public class ImagePerfUtils {
         return "success";
       case ImageLoadStatus.CANCELED:
         return "canceled";
+      case ImageLoadStatus.INTERMEDIATE_AVAILABLE:
+        return "intermediate_available";
       case ImageLoadStatus.ERROR:
         return "error";
       default:

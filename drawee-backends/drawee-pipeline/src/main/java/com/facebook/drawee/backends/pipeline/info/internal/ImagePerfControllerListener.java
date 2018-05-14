@@ -39,6 +39,16 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
   }
 
   @Override
+  public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
+    mImagePerfState.setControllerIntermediateImageSetTimeMs(mClock.now());
+
+    mImagePerfState.setRequestId(id);
+    mImagePerfState.setImageInfo(imageInfo);
+
+    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.INTERMEDIATE_AVAILABLE);
+  }
+
+  @Override
   public void onFinalImageSet(
       String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
     mImagePerfState.setControllerFinalImageSetTimeMs(mClock.now());
