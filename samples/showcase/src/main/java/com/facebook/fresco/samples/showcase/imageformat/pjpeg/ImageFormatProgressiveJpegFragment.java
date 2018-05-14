@@ -26,12 +26,14 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.misc.LogcatImagePerfDataListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -63,6 +65,7 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
   };
 
   private final DateFormat mDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+  private final ImagePerfDataListener mImagePerfDataListener = new LogcatImagePerfDataListener();
 
   private SimpleDraweeView mSimpleDraweeView;
   private boolean mProgressiveRenderingEnabled;
@@ -125,40 +128,43 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
         .setProgressiveRenderingEnabled(mProgressiveRenderingEnabled)
         .build();
-    DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setImageRequest(request)
-        .setRetainImageOnFailure(true)
-        .setControllerListener(new BaseControllerListener<ImageInfo>() {
-          @Override
-          public void onFinalImageSet(
-              String id,
-              @javax.annotation.Nullable ImageInfo imageInfo,
-              @javax.annotation.Nullable Animatable animatable) {
-            if (imageInfo != null) {
-              QualityInfo qualityInfo = imageInfo.getQualityInfo();
-              logScan(qualityInfo, true);
-            }
-          }
+    DraweeController controller =
+        Fresco.newDraweeControllerBuilder()
+            .setImageRequest(request)
+            .setRetainImageOnFailure(true)
+            .setPerfDataListener(mImagePerfDataListener)
+            .setControllerListener(
+                new BaseControllerListener<ImageInfo>() {
+                  @Override
+                  public void onFinalImageSet(
+                      String id,
+                      @javax.annotation.Nullable ImageInfo imageInfo,
+                      @javax.annotation.Nullable Animatable animatable) {
+                    if (imageInfo != null) {
+                      QualityInfo qualityInfo = imageInfo.getQualityInfo();
+                      logScan(qualityInfo, true);
+                    }
+                  }
 
-          @Override
-          public void onIntermediateImageSet(
-              String id, @javax.annotation.Nullable ImageInfo imageInfo) {
-            if (imageInfo != null) {
-              QualityInfo qualityInfo = imageInfo.getQualityInfo();
-              logScan(qualityInfo, false);
-            }
-          }
+                  @Override
+                  public void onIntermediateImageSet(
+                      String id, @javax.annotation.Nullable ImageInfo imageInfo) {
+                    if (imageInfo != null) {
+                      QualityInfo qualityInfo = imageInfo.getQualityInfo();
+                      logScan(qualityInfo, false);
+                    }
+                  }
 
-          @Override
-          public void onIntermediateImageFailed(String id, Throwable throwable) {
-            mDebugOutput.append(
-                String.format(
-                    Locale.getDefault(),
-                    "onIntermediateImageFailed, %s\n",
-                    throwable.getMessage()));
-          }
-        })
-        .build();
+                  @Override
+                  public void onIntermediateImageFailed(String id, Throwable throwable) {
+                    mDebugOutput.append(
+                        String.format(
+                            Locale.getDefault(),
+                            "onIntermediateImageFailed, %s\n",
+                            throwable.getMessage()));
+                  }
+                })
+            .build();
     mSimpleDraweeView.setController(controller);
   }
 
