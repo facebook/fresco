@@ -21,10 +21,10 @@ public class ImageOriginUtils {
         return "network";
       case ImageOrigin.DISK:
         return "disk";
-      case ImageOrigin.MEMORY_BITMAP:
-        return "memory_bitmap";
       case ImageOrigin.MEMORY_ENCODED:
         return "memory_encoded";
+      case ImageOrigin.MEMORY_BITMAP:
+        return "memory_bitmap";
       default:
         return "unknown";
     }

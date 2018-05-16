@@ -24,14 +24,14 @@ import java.lang.annotation.Retention;
   UNKNOWN,
   NETWORK,
   DISK,
-  MEMORY_BITMAP,
   MEMORY_ENCODED,
+  MEMORY_BITMAP,
 })
 public @interface ImageOrigin {
 
   int UNKNOWN = -1;
   int NETWORK = 0;
   int DISK = 1;
-  int MEMORY_BITMAP = 2;
-  int MEMORY_ENCODED = 3;
+  int MEMORY_ENCODED = 2;
+  int MEMORY_BITMAP = 3;
 }
