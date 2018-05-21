@@ -359,7 +359,9 @@ public class ImagePipeline {
   public void evictFromMemoryCache(final Uri uri) {
     Predicate<CacheKey> predicate = predicateForUri(uri);
     mBitmapMemoryCache.removeAll(predicate);
-    mOtherFrameCache.removeAll(predicate);
+    if (mOtherFrameCache != null) {
+      mOtherFrameCache.removeAll(predicate);
+    }
     mEncodedMemoryCache.removeAll(predicate);
   }
 
@@ -410,7 +412,9 @@ public class ImagePipeline {
           }
         };
     mBitmapMemoryCache.removeAll(allPredicate);
-    mOtherFrameCache.removeAll(allPredicate);
+    if (mOtherFrameCache != null) {
+      mOtherFrameCache.removeAll(allPredicate);
+    }
     mEncodedMemoryCache.removeAll(allPredicate);
   }
 
@@ -441,8 +445,7 @@ public class ImagePipeline {
       return false;
     }
     Predicate<CacheKey> bitmapCachePredicate = predicateForUri(uri);
-    return mBitmapMemoryCache.contains(bitmapCachePredicate) ||
-            mOtherFrameCache.contains(bitmapCachePredicate);
+    return mBitmapMemoryCache.contains(bitmapCachePredicate);
   }
 
   /**
