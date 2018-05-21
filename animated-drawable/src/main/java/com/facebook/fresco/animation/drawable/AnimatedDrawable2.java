@@ -54,6 +54,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
 
   private static final int DEFAULT_FRAME_SCHEDULING_DELAY_MS = 8;
   private static final int DEFAULT_FRAME_SCHEDULING_OFFSET_MS = 0;
+  private static final int NO_VALUE = -1;
 
   @Nullable
   private AnimationBackend mAnimationBackend;
@@ -66,6 +67,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   private long mLastFrameAnimationTimeMs;
   private long mExpectedRenderTimeMs;
   private int mLastDrawnFrameNumber;
+  private long mDropFrameTimeOffset;
+  private long mLastNoDrawTime = NO_VALUE;
+  private boolean mEnableDropFrame;
 
   private long mFrameSchedulingDelayMs = DEFAULT_FRAME_SCHEDULING_DELAY_MS;
   private long mFrameSchedulingOffsetMs = DEFAULT_FRAME_SCHEDULING_OFFSET_MS;
@@ -104,8 +108,15 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
 
   public AnimatedDrawable2(
       @Nullable AnimationBackend animationBackend) {
+    this(animationBackend, false);
+  }
+
+  public AnimatedDrawable2(
+          @Nullable AnimationBackend animationBackend,
+          boolean enableDropFrame) {
     mAnimationBackend = animationBackend;
     mFrameScheduler = createSchedulerForBackendAndDelayMethod(mAnimationBackend);
+    mEnableDropFrame = enableDropFrame;
   }
 
   @Override
@@ -137,6 +148,8 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     mExpectedRenderTimeMs = mStartTimeMs;
     mLastFrameAnimationTimeMs = -1;
     mLastDrawnFrameNumber = -1;
+    mDropFrameTimeOffset = 0;
+    mLastNoDrawTime = NO_VALUE;
     invalidateSelf();
     mAnimationListener.onAnimationStart(this);
   }
@@ -154,6 +167,8 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     mExpectedRenderTimeMs = mStartTimeMs;
     mLastFrameAnimationTimeMs = -1;
     mLastDrawnFrameNumber = -1;
+    mDropFrameTimeOffset = 0;
+    mLastNoDrawTime = NO_VALUE;
     unscheduleSelf(mInvalidateRunnable);
     mAnimationListener.onAnimationStop(this);
   }
@@ -182,8 +197,11 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
       return;
     }
     long actualRenderTimeStartMs = now();
+    if (mLastNoDrawTime != NO_VALUE) {
+      mDropFrameTimeOffset += mLastNoDrawTime - actualRenderTimeStartMs;
+    }
     long animationTimeMs = mIsRunning
-        ? actualRenderTimeStartMs - mStartTimeMs + mFrameSchedulingOffsetMs
+        ? actualRenderTimeStartMs - mStartTimeMs + mFrameSchedulingOffsetMs + mDropFrameTimeOffset
         : Math.max(mLastFrameAnimationTimeMs, 0);
 
     // What frame should be drawn?
@@ -205,10 +223,15 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     // Draw the frame
     boolean frameDrawn = mAnimationBackend.drawFrame(this, canvas, frameNumberToDraw);
     if (frameDrawn) {
+      mLastNoDrawTime = NO_VALUE;
       // Notify listeners that we draw a new frame and
       // that the animation might be repeated
       mAnimationListener.onAnimationFrame(this, frameNumberToDraw);
       mLastDrawnFrameNumber = frameNumberToDraw;
+    } else {
+      if (mEnableDropFrame) {
+        mLastNoDrawTime = actualRenderTimeStartMs;
+      }
     }
 
     // Log potential dropped frames

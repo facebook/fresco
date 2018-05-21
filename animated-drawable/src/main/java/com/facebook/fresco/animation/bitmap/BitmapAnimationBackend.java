@@ -16,6 +16,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.backend.AnimationBackend;
@@ -106,6 +107,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   @Nullable
   private FrameListener mFrameListener;
+  private boolean mEnableDropFrame;
 
   public BitmapAnimationBackend(
       PlatformBitmapFactory platformBitmapFactory,
@@ -114,12 +116,30 @@ public class BitmapAnimationBackend implements AnimationBackend,
       BitmapFrameRenderer bitmapFrameRenderer,
       @Nullable BitmapFramePreparationStrategy bitmapFramePreparationStrategy,
       @Nullable BitmapFramePreparer bitmapFramePreparer) {
+    this(platformBitmapFactory,
+            bitmapFrameCache,
+            animationInformation,
+            bitmapFrameRenderer,
+            bitmapFramePreparationStrategy,
+            bitmapFramePreparer,
+            false);
+  }
+
+  public BitmapAnimationBackend(
+          PlatformBitmapFactory platformBitmapFactory,
+          BitmapFrameCache bitmapFrameCache,
+          AnimationInformation animationInformation,
+          BitmapFrameRenderer bitmapFrameRenderer,
+          @Nullable BitmapFramePreparationStrategy bitmapFramePreparationStrategy,
+          @Nullable BitmapFramePreparer bitmapFramePreparer,
+          boolean enableDropFrame) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mBitmapFrameCache = bitmapFrameCache;
     mAnimationInformation = animationInformation;
     mBitmapFrameRenderer = bitmapFrameRenderer;
     mBitmapFramePreparationStrategy = bitmapFramePreparationStrategy;
     mBitmapFramePreparer = bitmapFramePreparer;
+    mEnableDropFrame = enableDropFrame;
 
     mPaint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
     updateBitmapDimensions();
@@ -183,7 +203,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
 
   private boolean drawFrameOrFallback(Canvas canvas, int frameNumber, @FrameType int frameType) {
     CloseableReference<Bitmap> bitmapReference = null;
-    boolean drawn = false;
+    boolean drawn;
     int nextFrameType = FRAME_TYPE_UNKNOWN;
 
     try {
@@ -200,7 +220,11 @@ public class BitmapAnimationBackend implements AnimationBackend,
           // Try to render the frame and draw on the canvas immediately after
           drawn = renderFrameInBitmap(frameNumber, bitmapReference) &&
               drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_REUSED);
-          nextFrameType = FRAME_TYPE_CREATED;
+          if (!mEnableDropFrame) {
+            nextFrameType = FRAME_TYPE_CREATED;
+          } else {
+            nextFrameType = FRAME_TYPE_FALLBACK;
+          }
           break;
 
         case FRAME_TYPE_CREATED:

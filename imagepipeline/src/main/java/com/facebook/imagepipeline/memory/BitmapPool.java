@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.memory;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imageutils.BitmapUtil;

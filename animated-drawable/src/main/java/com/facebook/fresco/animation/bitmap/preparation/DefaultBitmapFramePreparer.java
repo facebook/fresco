@@ -7,6 +7,7 @@
 package com.facebook.fresco.animation.bitmap.preparation;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
@@ -30,17 +31,32 @@ public class DefaultBitmapFramePreparer
   private final BitmapFrameRenderer mBitmapFrameRenderer;
   private final Bitmap.Config mBitmapConfig;
   private final ExecutorService mExecutorService;
+  private final ExecutorService mOtherFrameExecutorService;
   private final SparseArray<Runnable> mPendingFrameDecodeJobs;
+
+  public DefaultBitmapFramePreparer(
+          PlatformBitmapFactory platformBitmapFactory,
+          BitmapFrameRenderer bitmapFrameRenderer,
+          Bitmap.Config bitmapConfig,
+          ExecutorService executorService) {
+    this(platformBitmapFactory,
+            bitmapFrameRenderer,
+            bitmapConfig,
+            executorService,
+            null);
+  }
 
   public DefaultBitmapFramePreparer(
       PlatformBitmapFactory platformBitmapFactory,
       BitmapFrameRenderer bitmapFrameRenderer,
       Bitmap.Config bitmapConfig,
-      ExecutorService executorService) {
+      ExecutorService executorService,
+      ExecutorService otherFrameService) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mBitmapFrameRenderer = bitmapFrameRenderer;
     mBitmapConfig = bitmapConfig;
     mExecutorService = executorService;
+    mOtherFrameExecutorService = otherFrameService;
     mPendingFrameDecodeJobs = new SparseArray<>();
   }
 
@@ -68,7 +84,11 @@ public class DefaultBitmapFramePreparer
           frameNumber,
           frameId);
       mPendingFrameDecodeJobs.put(frameId, frameDecodeRunnable);
-      mExecutorService.execute(frameDecodeRunnable);
+      if (frameNumber != 0 && mOtherFrameExecutorService != null) {
+        mOtherFrameExecutorService.execute(frameDecodeRunnable);
+      } else {
+        mExecutorService.execute(frameDecodeRunnable);
+      }
     }
     return true;
   }
@@ -79,12 +99,13 @@ public class DefaultBitmapFramePreparer
     return result;
   }
 
-  private class FrameDecodeRunnable implements Runnable {
+  private class FrameDecodeRunnable implements Runnable, Comparable<FrameDecodeRunnable> {
 
     private final BitmapFrameCache mBitmapFrameCache;
     private final AnimationBackend mAnimationBackend;
     private final int mFrameNumber;
     private final int mHashCode;
+    private final long mCreateTime;
 
     public FrameDecodeRunnable(
         AnimationBackend animationBackend,
@@ -95,6 +116,7 @@ public class DefaultBitmapFramePreparer
       mBitmapFrameCache = bitmapFrameCache;
       mFrameNumber = frameNumber;
       mHashCode = hashCode;
+      mCreateTime = System.currentTimeMillis();
     }
 
     @Override
@@ -186,6 +208,18 @@ public class DefaultBitmapFramePreparer
         mBitmapFrameCache.onFramePrepared(mFrameNumber, bitmapReference, frameType);
       }
       return true;
+    }
+
+    @Override
+    public int compareTo(@NonNull FrameDecodeRunnable o) {
+      long result = o.mCreateTime - mCreateTime;
+      if (result < 0) {
+        return -1;
+      } else if (result > 0) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
   }
 }

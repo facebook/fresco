@@ -21,6 +21,7 @@ public class AnimatedImageResult {
 
   private final AnimatedImage mImage;
   private final int mFrameForPreview;
+  private final boolean mEnableDropFrame;
   private @Nullable CloseableReference<Bitmap> mPreviewBitmap;
   private @Nullable List<CloseableReference<Bitmap>> mDecodedFrames;
 
@@ -29,11 +30,13 @@ public class AnimatedImageResult {
     mFrameForPreview = builder.getFrameForPreview();
     mPreviewBitmap = builder.getPreviewBitmap();
     mDecodedFrames = builder.getDecodedFrames();
+    mEnableDropFrame = builder.getEnableDropFrame();
   }
 
   private AnimatedImageResult(AnimatedImage image) {
     mImage = Preconditions.checkNotNull(image);
     mFrameForPreview = 0;
+    mEnableDropFrame = false;
   }
 
   /**
@@ -110,6 +113,10 @@ public class AnimatedImageResult {
    */
   public synchronized CloseableReference<Bitmap> getPreviewBitmap() {
     return CloseableReference.cloneOrNull(mPreviewBitmap);
+  }
+
+  public boolean getEnableDropFrame() {
+    return mEnableDropFrame;
   }
 
   /**

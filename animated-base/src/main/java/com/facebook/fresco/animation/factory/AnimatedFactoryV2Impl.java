@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.executors.DefaultSerialExecutorService;
+import com.facebook.common.executors.DropSerialExecutorService;
 import com.facebook.common.executors.SerialExecutorService;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.DoNotStrip;
@@ -49,6 +50,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final ExecutorSupplier mExecutorSupplier;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
+  private final CountingMemoryCache<CacheKey, CloseableImage> mOtherCache;
 
   private @Nullable AnimatedImageFactory mAnimatedImageFactory;
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
@@ -60,9 +62,22 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+    this(platformBitmapFactory,
+            executorSupplier,
+            backingCache,
+            null);
+  }
+
+  @DoNotStrip
+  public AnimatedFactoryV2Impl(
+          PlatformBitmapFactory platformBitmapFactory,
+          ExecutorSupplier executorSupplier,
+          CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+          CountingMemoryCache<CacheKey, CloseableImage> otherCahce) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
+    mOtherCache = otherCahce;
   }
 
   @Nullable
@@ -113,6 +128,9 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
     final SerialExecutorService serialExecutorServiceForFramePreparing =
         new DefaultSerialExecutorService(mExecutorSupplier.forDecode());
 
+    final SerialExecutorService dropExecutorServiceForFramePreparing =
+        new DropSerialExecutorService(mExecutorSupplier.forDecode());
+
     Supplier<Integer> numberOfFramesToPrepareSupplier = new Supplier<Integer>() {
       @Override
       public Integer get() {
@@ -128,7 +146,9 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         mPlatformBitmapFactory,
         mBackingCache,
         cachingStrategySupplier,
-        numberOfFramesToPrepareSupplier);
+        numberOfFramesToPrepareSupplier,
+        mOtherCache,
+        dropExecutorServiceForFramePreparing);
   }
 
   private AnimatedDrawableUtil getAnimatedDrawableUtil() {

@@ -29,9 +29,12 @@ import javax.annotation.concurrent.GuardedBy;
 public class FrescoFrameCache implements BitmapFrameCache {
 
   private static final Class<?> TAG = FrescoFrameCache.class;
+  private static final int NO_VALUE = -1;
 
   private final AnimatedFrameCache mAnimatedFrameCache;
+  private AnimatedFrameCache mOtherFrameCache;
   private final boolean mEnableBitmapReusing;
+  private int mLastRenderedFrame = NO_VALUE;
   @GuardedBy("this")
   private final SparseArray<CloseableReference<CloseableImage>> mPreparedPendingFrames;
 
@@ -39,15 +42,34 @@ public class FrescoFrameCache implements BitmapFrameCache {
   @Nullable
   private CloseableReference<CloseableImage> mLastRenderedItem;
 
-  public FrescoFrameCache(AnimatedFrameCache animatedFrameCache, boolean enableBitmapReusing) {
+  public FrescoFrameCache(AnimatedFrameCache animatedFrameCache,
+                          boolean enableBitmapReusing) {
+    this(animatedFrameCache, enableBitmapReusing, null);
+  }
+
+  public FrescoFrameCache(AnimatedFrameCache animatedFrameCache,
+                          boolean enableBitmapReusing,
+                          AnimatedFrameCache otherFrameCache) {
     mAnimatedFrameCache = animatedFrameCache;
     mEnableBitmapReusing = enableBitmapReusing;
     mPreparedPendingFrames = new SparseArray<>();
+    mOtherFrameCache = otherFrameCache;
+  }
+
+  private boolean checkOtherFrameEnable(int frame) {
+    return frame != 0 && mOtherFrameCache != null;
+  }
+
+  private boolean checkDropFrame() {
+    return mOtherFrameCache != null;
   }
 
   @Nullable
   @Override
   public synchronized CloseableReference<Bitmap> getCachedFrame(int frameNumber) {
+    if (checkOtherFrameEnable(frameNumber)) {
+      return convertToBitmapReferenceAndClose(mOtherFrameCache.get(frameNumber));
+    }
     return convertToBitmapReferenceAndClose(mAnimatedFrameCache.get(frameNumber));
   }
 
@@ -66,11 +88,17 @@ public class FrescoFrameCache implements BitmapFrameCache {
     if (!mEnableBitmapReusing) {
       return null;
     }
+    if (checkOtherFrameEnable(frameNumber)) {
+      return convertToBitmapReferenceAndClose(mOtherFrameCache.getForReuse());
+    }
     return convertToBitmapReferenceAndClose(mAnimatedFrameCache.getForReuse());
   }
 
   @Override
   public synchronized boolean contains(int frameNumber) {
+    if (checkOtherFrameEnable(frameNumber)) {
+      return mOtherFrameCache.contains(frameNumber);
+    }
     return mAnimatedFrameCache.contains(frameNumber);
   }
 
@@ -99,7 +127,13 @@ public class FrescoFrameCache implements BitmapFrameCache {
     Preconditions.checkNotNull(bitmapReference);
 
     // Close up prepared references.
-    removePreparedReference(frameNumber);
+    if (checkDropFrame()) {
+      if (mLastRenderedFrame != NO_VALUE && mLastRenderedFrame != frameNumber) {
+        removePreparedReference(mLastRenderedFrame);
+      }
+    } else {
+      removePreparedReference(frameNumber);
+    }
 
     // Create the new image reference and cache it.
     CloseableReference<CloseableImage> closableReference = null;
@@ -107,11 +141,16 @@ public class FrescoFrameCache implements BitmapFrameCache {
       closableReference = createImageReference(bitmapReference);
       if (closableReference != null) {
         CloseableReference.closeSafely(mLastRenderedItem);
-        mLastRenderedItem = mAnimatedFrameCache.cache(frameNumber, closableReference);
+        if (checkOtherFrameEnable(frameNumber)) {
+          mLastRenderedItem = mOtherFrameCache.cache(frameNumber, closableReference);
+        } else {
+          mLastRenderedItem = mAnimatedFrameCache.cache(frameNumber, closableReference);
+        }
       }
     } finally {
       CloseableReference.closeSafely(closableReference);
     }
+    mLastRenderedFrame = frameNumber;
   }
 
   @Override
@@ -126,8 +165,12 @@ public class FrescoFrameCache implements BitmapFrameCache {
       if (closableReference == null) {
         return;
       }
-      CloseableReference<CloseableImage> newReference =
-          mAnimatedFrameCache.cache(frameNumber, closableReference);
+      CloseableReference<CloseableImage> newReference;
+      if (checkOtherFrameEnable(frameNumber)) {
+        newReference = mOtherFrameCache.cache(frameNumber, closableReference);
+      } else {
+        newReference = mAnimatedFrameCache.cache(frameNumber, closableReference);
+      }
       if (CloseableReference.isValid(newReference)) {
         CloseableReference<CloseableImage> oldReference = mPreparedPendingFrames.get(frameNumber);
         CloseableReference.closeSafely(oldReference);

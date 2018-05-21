@@ -67,6 +67,7 @@ public class ImagePipelineConfig {
   // There are a lot of parameters in this class. Please follow strict alphabetical order.
   private final Bitmap.Config mBitmapConfig;
   private final Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+  private final Supplier<MemoryCacheParams> mOtherFrameMemoryCacheParamsSupplier;
   private final CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Context mContext;
@@ -101,6 +102,11 @@ public class ImagePipelineConfig {
             new DefaultBitmapMemoryCacheParamsSupplier(
                 (ActivityManager) builder.mContext.getSystemService(Context.ACTIVITY_SERVICE)) :
             builder.mBitmapMemoryCacheParamsSupplier;
+    mOtherFrameMemoryCacheParamsSupplier =
+            builder.mOtherMemoryCacheParamsSupplier == null ?
+                    new DefaultBitmapMemoryCacheParamsSupplier(
+                            (ActivityManager) builder.mContext.getSystemService(Context.ACTIVITY_SERVICE)) :
+                    builder.mOtherMemoryCacheParamsSupplier;
     mBitmapMemoryCacheTrimStrategy =
         builder.mBitmapMemoryCacheTrimStrategy == null ?
             new BitmapMemoryCacheTrimStrategy() :
@@ -226,6 +232,10 @@ public class ImagePipelineConfig {
     return mBitmapMemoryCacheParamsSupplier;
   }
 
+  public Supplier<MemoryCacheParams> getOtherFrameCacheParamsSupplier() {
+    return mOtherFrameMemoryCacheParamsSupplier;
+  }
+
   public CountingMemoryCache.CacheTrimStrategy getBitmapMemoryCacheTrimStrategy() {
     return mBitmapMemoryCacheTrimStrategy;
   }
@@ -344,6 +354,7 @@ public class ImagePipelineConfig {
 
     private Bitmap.Config mBitmapConfig;
     private Supplier<MemoryCacheParams> mBitmapMemoryCacheParamsSupplier;
+    private Supplier<MemoryCacheParams> mOtherMemoryCacheParamsSupplier;
     private CountingMemoryCache.CacheTrimStrategy mBitmapMemoryCacheTrimStrategy;
     private CacheKeyFactory mCacheKeyFactory;
     private final Context mContext;
@@ -382,6 +393,13 @@ public class ImagePipelineConfig {
         Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier) {
       mBitmapMemoryCacheParamsSupplier =
           Preconditions.checkNotNull(bitmapMemoryCacheParamsSupplier);
+      return this;
+    }
+
+    public Builder setOtherFrameMemoryCacheParamsSupplier(
+            Supplier<MemoryCacheParams> bitmapMemoryCacheParamsSupplier) {
+      mOtherMemoryCacheParamsSupplier =
+              Preconditions.checkNotNull(bitmapMemoryCacheParamsSupplier);
       return this;
     }
 
