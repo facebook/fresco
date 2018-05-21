@@ -246,6 +246,9 @@ public class BitmapAnimationBackend implements AnimationBackend,
         case FRAME_TYPE_FALLBACK:
           bitmapReference = mBitmapFrameCache.getFallbackFrame(frameNumber);
           drawn = drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_FALLBACK);
+          if (mEnableDropFrame) {
+            drawn = false;
+          }
           break;
 
         default:
