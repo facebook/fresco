@@ -30,7 +30,7 @@ For a sample that just loads an URI see the `DraweeSimpleFragment` in the showca
 
 ### Sample: Loading a Local File
 
-For a sample on how to correctly load user-selected files (e.g. using the `content://` URI) see the `DraweeMediaPickerFragment` in the showcase app: [DraweeSimpleFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeMediaPickerFragment.java)
+For a sample on how to correctly load user-selected files (e.g. using the `content://` URI) see the `DraweeMediaPickerFragment` in the showcase app: [DraweeMediaPickerFragment.java](https://github.com/facebook/fresco/blob/master/samples/showcase/src/main/java/com/facebook/fresco/samples/showcase/drawee/DraweeMediaPickerFragment.java)
 
 ![A sample with local files](/static/images/docs/01-supported-uris-sample-local-file.png)
 
