@@ -278,7 +278,7 @@ public class PipelineDraweeController
 
   @Override
   public boolean isSameImageRequest(@Nullable DraweeController other) {
-    if (other instanceof PipelineDraweeController) {
+    if (mCacheKey != null && other instanceof PipelineDraweeController) {
       return Objects.equal(mCacheKey, ((PipelineDraweeController) other).getCacheKey());
     }
     return false;
