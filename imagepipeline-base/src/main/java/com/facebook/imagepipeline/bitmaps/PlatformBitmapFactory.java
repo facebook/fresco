@@ -312,7 +312,7 @@ public abstract class PlatformBitmapFactory {
     int newWidth = width;
     int newHeight = height;
 
-    Canvas canvas = new Canvas();
+    Canvas canvas;
     CloseableReference<Bitmap> bitmapRef;
     Paint paint;
 
@@ -322,6 +322,8 @@ public abstract class PlatformBitmapFactory {
 
     if (matrix == null || matrix.isIdentity()) {
       bitmapRef = createBitmap(newWidth, newHeight, newConfig, source.hasAlpha(), callerContext);
+      setPropertyFromSourceBitmap(source, bitmapRef.get());
+      canvas = new Canvas(bitmapRef.get());
       paint = null;   // not needed
     } else {
       boolean transformed = !matrix.rectStaysRect();
@@ -338,6 +340,8 @@ public abstract class PlatformBitmapFactory {
               transformed || source.hasAlpha(),
               callerContext);
 
+      setPropertyFromSourceBitmap(source, bitmapRef.get());
+      canvas = new Canvas(bitmapRef.get());
       canvas.translate(-deviceRectangle.left, -deviceRectangle.top);
       canvas.concat(matrix);
 
@@ -348,20 +352,6 @@ public abstract class PlatformBitmapFactory {
       }
     }
 
-    // The new bitmap was created from a known bitmap source so assume that
-    // they use the same density
-    Bitmap bitmap = bitmapRef.get();
-    bitmap.setDensity(source.getDensity());
-
-    if (Build.VERSION.SDK_INT >= 12) {
-      bitmap.setHasAlpha(source.hasAlpha());
-    }
-
-    if (Build.VERSION.SDK_INT >= 19) {
-      bitmap.setPremultiplied(source.isPremultiplied());
-    }
-
-    canvas.setBitmap(bitmap);
     canvas.drawBitmap(source, srcRectangle, dstRectangle, paint);
     canvas.setBitmap(null);
 
@@ -753,6 +743,26 @@ public abstract class PlatformBitmapFactory {
     Preconditions.checkArgument(
         y + height <= source.getHeight(),
         "y + height must be <= bitmap.height()");
+  }
+
+  /**
+   * Set some property of the source bitmap to the destination bitmap
+   *
+   *
+   * @param source the source bitmap
+   * @param destination the destination bitmap
+   */
+  private static void setPropertyFromSourceBitmap(Bitmap source, Bitmap destination) {
+    // The new bitmap was created from a known bitmap source so assume that
+    // they use the same density
+    destination.setDensity(source.getDensity());
+    if (Build.VERSION.SDK_INT >= 12) {
+      destination.setHasAlpha(source.hasAlpha());
+    }
+
+    if (Build.VERSION.SDK_INT >= 19) {
+      destination.setPremultiplied(source.isPremultiplied());
+    }
   }
 
   /**
