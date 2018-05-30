@@ -37,7 +37,7 @@ public interface PooledByteBuffer extends Closeable {
    * @param length number of bytes to copy
    * @return number of bytes copied
    */
-  void read(int offset, byte[] buffer, int bufferOffset, int length);
+  int read(int offset, byte[] buffer, int bufferOffset, int length);
 
   /**
    * @return pointer to native memory backing this buffer
