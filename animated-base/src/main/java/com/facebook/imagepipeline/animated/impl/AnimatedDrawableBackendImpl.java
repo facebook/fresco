@@ -233,10 +233,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
       mRenderSrcRect.set(0, 0, frameWidth, frameHeight);
       mRenderDstRect.set(0, 0, frameWidth, frameHeight);
 
-      float xScale = (float) mRenderedBounds.width() / (float) mAnimatedImage.getWidth();
-      float yScale = (float) mRenderedBounds.height() / (float) mAnimatedImage.getHeight();
       canvas.save();
-      canvas.scale(xScale, yScale);
       canvas.translate(xOffset, yOffset);
       canvas.drawBitmap(mTempBitmap, mRenderSrcRect, mRenderDstRect, null);
       canvas.restore();

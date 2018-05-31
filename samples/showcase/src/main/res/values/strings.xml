@@ -108,6 +108,7 @@
   <string name="category_format">Image Format</string>
 
   <string name="format_switch_checker_board">Checker board background</string>
+  <string name="format_switch_aspect_ratio">Portrait aspect ratio</string>
 
   <string name="format_gif_title">GIF</string>
   <string name="format_gif_help">Select a size in the spinner to start playing that file. The animation has 36 frames and plays at 30 FPS.</string>

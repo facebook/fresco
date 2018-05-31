@@ -74,6 +74,16 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
       }
     });
 
+    final SwitchCompat switchAspect = (SwitchCompat) view.findViewById(R.id.switch_aspect_ratio);
+    switchAspect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        ViewGroup.LayoutParams layoutParams = mSimpleDraweeView.getLayoutParams();
+        layoutParams.height = layoutParams.width * (isChecked ? 2 : 1);
+        mSimpleDraweeView.setLayoutParams(layoutParams);
+      }
+    });
+
     final Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
     spinner.setAdapter(new SimpleUriListAdapter());
     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
