@@ -234,4 +234,6 @@
   <string translatable="false" name="message_application_needs_restart">In order to keep this change you have to kill and restart this application</string>
   <string translatable="false" name="message_restart_now">Kill Now</string>
   <string name="switch_big_images">Big Images</string>
+  <string name="drawee_hierarchy_switch_rounded">Round corners</string>
+  <string name="drawee_hierarchy_switch_ninepatch">Use ninepatch</string>
 </resources>

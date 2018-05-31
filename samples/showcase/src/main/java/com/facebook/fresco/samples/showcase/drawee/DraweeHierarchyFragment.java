@@ -22,13 +22,18 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.imagepipeline.request.ImageRequest;
 
 /**
  * A {@link Fragment} that illustrates the different drawables one can set in a hierarchy.
@@ -90,6 +95,28 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
       public void onClick(View v) {
         draweeView.setController(null);
         Fresco.getImagePipeline().evictFromCache(uriSuccess);
+      }
+    });
+
+    final SwitchCompat roundCorners = view.findViewById(R.id.switch_rounded);
+    roundCorners.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        RoundingParams roundingParams = new RoundingParams().setCornersRadius(isChecked
+            ? buttonView.getResources()
+                .getDimensionPixelSize(R.dimen.drawee_hierarchy_corner_radius)
+            : 0);
+        draweeView.getHierarchy().setRoundingParams(roundingParams);
+      }
+    });
+
+    final SwitchCompat useNinePatch = view.findViewById(R.id.switch_ninepatch);
+    useNinePatch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        draweeView.getHierarchy().setPlaceholderImage(
+            isChecked ? R.drawable.ninepatch : R.drawable.logo,
+            isChecked ? ScaleType.FIT_XY : ScaleType.CENTER_INSIDE);
       }
     });
   }
