@@ -611,6 +611,7 @@ void WebPFrame_nativeRenderFrame(
   }
 
   if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+    spNativeContext.reset();
     throwIllegalStateException(pEnv, "Wrong color format");
     return;
   }
@@ -627,12 +628,14 @@ void WebPFrame_nativeRenderFrame(
 
   ret = (WebPGetFeatures(pPayload , payloadSize, &config.input) == VP8_STATUS_OK);
   if (!ret) {
+    spNativeContext.reset();
     throwIllegalStateException(pEnv, "WebPGetFeatures failed");
     return;
   }
 
   uint8_t* pixels;
   if (AndroidBitmap_lockPixels(pEnv, bitmap, (void**) &pixels) != ANDROID_BITMAP_RESULT_SUCCESS) {
+    spNativeContext.reset();
     throwIllegalStateException(pEnv, "Bad bitmap");
     return;
   }
