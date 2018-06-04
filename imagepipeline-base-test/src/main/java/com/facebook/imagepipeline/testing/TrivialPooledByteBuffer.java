@@ -36,8 +36,9 @@ public class TrivialPooledByteBuffer implements PooledByteBuffer {
   }
 
   @Override
-  public void read(int offset, byte[] buffer, int bufferOffset, int length) {
+  public int read(int offset, byte[] buffer, int bufferOffset, int length) {
     System.arraycopy(mBuf, offset, buffer, bufferOffset, length);
+    return length;
   }
 
   @Override
