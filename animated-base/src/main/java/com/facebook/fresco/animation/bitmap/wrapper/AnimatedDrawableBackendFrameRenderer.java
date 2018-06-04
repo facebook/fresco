@@ -8,6 +8,7 @@ package com.facebook.fresco.animation.bitmap.wrapper;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.fresco.animation.bitmap.BitmapFrameRenderer;
@@ -19,6 +20,8 @@ import javax.annotation.Nullable;
  * {@link BitmapFrameRenderer} that wraps around an {@link AnimatedDrawableBackend}.
  */
 public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer {
+
+  private static final Class<?> TAG = AnimatedDrawableBackendFrameRenderer.class;
 
   private final BitmapFrameCache mBitmapFrameCache;
 
@@ -69,7 +72,12 @@ public class AnimatedDrawableBackendFrameRenderer implements BitmapFrameRenderer
 
   @Override
   public boolean renderFrame(int frameNumber, Bitmap targetBitmap) {
-    mAnimatedImageCompositor.renderFrame(frameNumber, targetBitmap);
+    try {
+      mAnimatedImageCompositor.renderFrame(frameNumber, targetBitmap);
+    } catch (IllegalStateException exception) {
+      FLog.e(TAG, exception, "Rendering of frame unsuccessful. Frame number: %d", frameNumber);
+      return false;
+    }
     return true;
   }
 }

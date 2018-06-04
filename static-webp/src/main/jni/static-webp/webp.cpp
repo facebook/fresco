@@ -653,7 +653,8 @@ void WebPFrame_nativeRenderFrame(
   ret = WebPDecode(pPayload, payloadSize, &config);
   AndroidBitmap_unlockPixels(pEnv, bitmap);
   if (ret != VP8_STATUS_OK) {
-    throwIllegalStateException(pEnv, "Failed to decode frame");
+    spNativeContext.reset();
+    throwIllegalStateException(pEnv, "Failed to decode frame. VP8StatusCode: %d", ret);
   }
 }
 

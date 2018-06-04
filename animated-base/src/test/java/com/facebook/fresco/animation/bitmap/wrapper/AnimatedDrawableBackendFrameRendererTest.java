@@ -9,11 +9,14 @@ package com.facebook.fresco.animation.bitmap.wrapper;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import com.facebook.fresco.animation.bitmap.BitmapFrameCache;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend;
@@ -82,5 +85,22 @@ public class AnimatedDrawableBackendFrameRendererTest {
     boolean rendered = mAnimatedDrawableBackendFrameRenderer.renderFrame(0, bitmap);
 
     assertThat(rendered).isTrue();
+  }
+
+  @Test
+  public void testRenderFrameUnsuccessful() {
+    int frameNumber = 0;
+
+    when(mAnimatedDrawableBackend.getHeight()).thenReturn(1200);
+    Bitmap bitmap = mock(Bitmap.class);
+    AnimatedDrawableFrameInfo animatedDrawableFrameInfo = mock(AnimatedDrawableFrameInfo.class);
+    when(mAnimatedDrawableBackend.getFrameInfo(anyInt())).thenReturn(animatedDrawableFrameInfo);
+    doThrow(new IllegalStateException())
+        .when(mAnimatedDrawableBackend)
+        .renderFrame(eq(frameNumber), any(Canvas.class));
+
+    boolean rendered = mAnimatedDrawableBackendFrameRenderer.renderFrame(frameNumber, bitmap);
+
+    assertThat(rendered).isFalse();
   }
 }
