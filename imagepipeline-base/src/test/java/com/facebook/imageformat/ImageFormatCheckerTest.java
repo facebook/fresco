@@ -93,6 +93,11 @@ public class ImageFormatCheckerTest {
         DefaultImageFormats.BMP);
   }
 
+  @Test
+  public void testHeifs() throws Exception {
+    singleImageTypeTest(getName("heifs/1.heif"), DefaultImageFormats.HEIF);
+  }
+
   private void singleImageTypeTest(
       final List<String> resourceNames,
       final ImageFormat expectedImageType)

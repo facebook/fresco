@@ -25,6 +25,7 @@ public final class DefaultImageFormats {
   public static final ImageFormat WEBP_EXTENDED_WITH_ALPHA =
       new ImageFormat("WEBP_EXTENDED_WITH_ALPHA", "webp");
   public static final ImageFormat WEBP_ANIMATED = new ImageFormat("WEBP_ANIMATED", "webp");
+  public static final ImageFormat HEIF = new ImageFormat("HEIF", "heif");
 
   private static ImmutableList<ImageFormat> sAllDefaultFormats;
 
@@ -70,6 +71,7 @@ public final class DefaultImageFormats {
       mDefaultFormats.add(WEBP_EXTENDED);
       mDefaultFormats.add(WEBP_EXTENDED_WITH_ALPHA);
       mDefaultFormats.add(WEBP_ANIMATED);
+      mDefaultFormats.add(HEIF);
       sAllDefaultFormats = ImmutableList.copyOf(mDefaultFormats);
     }
     return sAllDefaultFormats;
