@@ -67,8 +67,8 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
     return new Rect(
         0,
         0,
-        Math.min(targetBounds.width(), image.getWidth()),
-        Math.min(targetBounds.height(), image.getHeight()));
+        image.getWidth(),
+        image.getHeight());
   }
 
   @Override
