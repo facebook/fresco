@@ -2,6 +2,7 @@
 docid: post-processor
 title: Modifying the Image (Post-processing)
 layout: docs
+redirect_from: /docs/post-processor.html
 permalink: /docs/modifying-image.html
 ---
 
