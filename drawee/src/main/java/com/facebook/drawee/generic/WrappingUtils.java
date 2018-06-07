@@ -13,8 +13,10 @@ import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.logging.FLog;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
@@ -22,6 +24,7 @@ import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
+import com.facebook.drawee.drawable.RoundedNinePatchDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import javax.annotation.Nullable;
@@ -30,6 +33,8 @@ import javax.annotation.Nullable;
  * A class that contains helper methods for wrapping and rounding.
  */
 public class WrappingUtils {
+
+  private static final String TAG = "WrappingUtils";
 
   // Empty drawable to be temporarily used for hierarchy manipulations.
   //
@@ -270,13 +275,20 @@ public class WrappingUtils {
               bitmapDrawable.getPaint());
       applyRoundingParams(roundedBitmapDrawable, roundingParams);
       return roundedBitmapDrawable;
-    }
-    if (drawable instanceof ColorDrawable &&
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    } else if (drawable instanceof NinePatchDrawable) {
+      final NinePatchDrawable ninePatchDrawableDrawable = (NinePatchDrawable) drawable;
+      RoundedNinePatchDrawable roundedNinePatchDrawable =
+          new RoundedNinePatchDrawable(ninePatchDrawableDrawable);
+      applyRoundingParams(roundedNinePatchDrawable, roundingParams);
+      return roundedNinePatchDrawable;
+    } else if (drawable instanceof ColorDrawable
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       RoundedColorDrawable roundedColorDrawable =
           RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
       applyRoundingParams(roundedColorDrawable, roundingParams);
       return roundedColorDrawable;
+    } else {
+      FLog.w(TAG, "Don't know how to round that drawable: %s", drawable);
     }
     return drawable;
   }
