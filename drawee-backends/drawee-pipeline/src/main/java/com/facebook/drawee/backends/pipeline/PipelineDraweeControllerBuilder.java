@@ -28,6 +28,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.Set;
 import javax.annotation.Nullable;
 
@@ -109,23 +110,28 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   @Override
   protected PipelineDraweeController obtainController() {
-    DraweeController oldController = getOldController();
-    PipelineDraweeController controller;
-    final String controllerId = generateUniqueControllerId();
-    if (oldController instanceof PipelineDraweeController) {
-      controller = (PipelineDraweeController) oldController;
-    } else {
-      controller = mPipelineDraweeControllerFactory.newController();
+    FrescoSystrace.beginSection("obtainController");
+    try {
+      DraweeController oldController = getOldController();
+      PipelineDraweeController controller;
+      final String controllerId = generateUniqueControllerId();
+      if (oldController instanceof PipelineDraweeController) {
+        controller = (PipelineDraweeController) oldController;
+      } else {
+        controller = mPipelineDraweeControllerFactory.newController();
+      }
+      controller.initialize(
+          obtainDataSourceSupplier(controller, controllerId),
+          controllerId,
+          getCacheKey(),
+          getCallerContext(),
+          mCustomDrawableFactories,
+          mImageOriginListener);
+      controller.initializePerformanceMonitoring(mImagePerfDataListener);
+      return controller;
+    } finally {
+      FrescoSystrace.endSection();
     }
-    controller.initialize(
-        obtainDataSourceSupplier(controller, controllerId),
-        controllerId,
-        getCacheKey(),
-        getCallerContext(),
-        mCustomDrawableFactories,
-        mImageOriginListener);
-    controller.initializePerformanceMonitoring(mImagePerfDataListener);
-    return controller;
   }
 
   private CacheKey getCacheKey() {
