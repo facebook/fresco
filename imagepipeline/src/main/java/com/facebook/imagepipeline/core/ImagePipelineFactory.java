@@ -375,7 +375,8 @@ public class ImagePipelineFactory {
               mThreadHandoffProducerQueue,
               mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
               useBitmapPrepareToDraw,
-              mConfig.getExperiments().isPartialImageCachingEnabled());
+              mConfig.getExperiments().isPartialImageCachingEnabled(),
+              mConfig.isDiskCacheEnabled());
     }
     return mProducerSequenceFactory;
   }

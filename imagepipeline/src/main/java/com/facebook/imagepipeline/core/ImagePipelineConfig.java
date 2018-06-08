@@ -89,6 +89,7 @@ public class ImagePipelineConfig {
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
   @Nullable private final ImageDecoderConfig mImageDecoderConfig;
   private final ImagePipelineExperiments mImagePipelineExperiments;
+  private final boolean mDiskCacheEnabled;
 
   private static DefaultImageRequestConfig
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
@@ -176,6 +177,7 @@ public class ImagePipelineConfig {
     mExecutorSupplier =
         builder.mExecutorSupplier == null ?
             new DefaultExecutorSupplier(numCpuBoundThreads) : builder.mExecutorSupplier;
+    mDiskCacheEnabled = builder.mDiskCacheEnabled;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -248,6 +250,10 @@ public class ImagePipelineConfig {
 
   public boolean isDownsampleEnabled() {
     return mDownsampleEnabled;
+  }
+
+  public boolean isDiskCacheEnabled() {
+    return mDiskCacheEnabled;
   }
 
   public Supplier<MemoryCacheParams> getEncodedMemoryCacheParamsSupplier() {
@@ -367,6 +373,7 @@ public class ImagePipelineConfig {
     private int mHttpConnectionTimeout = -1;
     private final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
+    private boolean mDiskCacheEnabled = true;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -412,6 +419,15 @@ public class ImagePipelineConfig {
 
     public Builder setDownsampleEnabled(boolean downsampleEnabled) {
       mDownsampleEnabled = downsampleEnabled;
+      return this;
+    }
+
+    public boolean isDiskCacheEnabled() {
+      return mDiskCacheEnabled;
+    }
+
+    public Builder setDiskCacheEnabled(boolean diskCacheEnabled) {
+      mDiskCacheEnabled = diskCacheEnabled;
       return this;
     }
 

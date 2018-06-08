@@ -62,6 +62,7 @@ public class ProducerSequenceFactory {
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
   private final boolean mUseDownsamplingRatio;
   private final boolean mUseBitmapPrepareToDraw;
+  private final boolean mDiskCacheEnabled;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -101,7 +102,8 @@ public class ProducerSequenceFactory {
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
       boolean useDownsamplingRatio,
       boolean useBitmapPrepareToDraw,
-      boolean partialImageCachingEnabled) {
+      boolean partialImageCachingEnabled,
+      boolean diskCacheEnabled) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
@@ -114,6 +116,7 @@ public class ProducerSequenceFactory {
     mUseDownsamplingRatio = useDownsamplingRatio;
     mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
     mPartialImageCachingEnabled = partialImageCachingEnabled;
+    mDiskCacheEnabled = diskCacheEnabled;
   }
 
   /**
@@ -558,7 +561,9 @@ public class ProducerSequenceFactory {
         (!mWebpSupportEnabled || WebpSupportStatus.sWebpBitmapFactory == null)) {
       inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
     }
-    inputProducer = newDiskCacheSequence(inputProducer);
+    if (mDiskCacheEnabled) {
+      inputProducer = newDiskCacheSequence(inputProducer);
+    }
     EncodedMemoryCacheProducer encodedMemoryCacheProducer =
         mProducerFactory.newEncodedMemoryCacheProducer(inputProducer);
     return mProducerFactory.newEncodedCacheKeyMultiplexProducer(encodedMemoryCacheProducer);

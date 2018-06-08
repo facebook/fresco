@@ -77,7 +77,8 @@ public class ProducerSequenceFactoryTest {
         null,
         false,
         false,
-        false);
+        false,
+        true);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -331,6 +332,7 @@ public class ProducerSequenceFactoryTest {
         null,
         false,
         /* useBitmapPrepareToDraw */ true,
-        false);
+        false,
+        true);
   }
 }
