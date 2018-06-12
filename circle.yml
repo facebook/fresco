@@ -24,9 +24,9 @@ jobs:
       - run:
           name: Setup NDK
           command: |
-            wget --quiet https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
-            unzip -q android-ndk-r16b-linux-x86_64.zip -d /home/circleci
-            echo "ndk.dir=/home/circleci/android-ndk-r16b" >> /home/circleci/fresco/local.properties
+            wget --quiet https://dl.google.com/android/repository/android-ndk-r17-linux-x86_64.zip
+            unzip -q android-ndk-r17-linux-x86_64.zip -d /home/circleci
+            echo "ndk.dir=/home/circleci/android-ndk-r17" >> /home/circleci/fresco/local.properties
       - run:
           name: "NDK Fix: https://github.com/android-ndk/ndk/issues/188"
           command: sudo apt-get install file
