@@ -114,6 +114,9 @@ public class ImagePerfMonitor extends BaseRequestListener {
     if (mImageOriginRequestListener == null) {
       mImageOriginRequestListener =
           new ImageOriginRequestListener(mPipelineDraweeController.getId(), mImageOriginListener);
+    } else {
+      // The ID could have changed
+      mImageOriginRequestListener.init(mPipelineDraweeController.getId());
     }
     if (mForwardingRequestListener == null) {
       mForwardingRequestListener =

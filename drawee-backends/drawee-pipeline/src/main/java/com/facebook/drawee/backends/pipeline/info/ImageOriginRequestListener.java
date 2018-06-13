@@ -15,13 +15,22 @@ import javax.annotation.Nullable;
  */
 public class ImageOriginRequestListener extends BaseRequestListener {
 
-  private final String mControllerId;
+  private String mControllerId;
   private final @Nullable ImageOriginListener mImageOriginLister;
 
   public ImageOriginRequestListener(
       String controllerId, @Nullable ImageOriginListener imageOriginLister) {
-    mControllerId = controllerId;
     mImageOriginLister = imageOriginLister;
+    init(controllerId);
+  }
+
+  /**
+   * Re-initialize the listener in case the underlying controller ID changes.
+   *
+   * @param controllerId the new controller ID
+   */
+  public void init(String controllerId) {
+    mControllerId = controllerId;
   }
 
   @Override
