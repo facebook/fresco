@@ -106,8 +106,7 @@ public class ImagePerfMonitor extends BaseRequestListener {
           new ImagePerfControllerListener(mMonotonicClock, mImagePerfState, this);
     }
     if (mImagePerfRequestListener == null) {
-      mImagePerfRequestListener =
-          new ImagePerfRequestListener(mMonotonicClock, mImagePerfState, this);
+      mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);
     }
     if (mImageOriginListener == null) {
       mImageOriginListener = new ImagePerfImageOriginListener(mImagePerfState, this);

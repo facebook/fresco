@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 public class ImagePerfState {
 
   // General image metadata
+  private @Nullable String mControllerId;
   private @Nullable String mRequestId;
   private @Nullable ImageRequest mImageRequest;
   private @Nullable Object mCallerContext;
@@ -69,6 +70,10 @@ public class ImagePerfState {
   @ImageLoadStatus
   public int getImageLoadStatus() {
     return mImageLoadStatus;
+  }
+
+  public void setControllerId(@Nullable String controllerId) {
+    mControllerId = controllerId;
   }
 
   public void setRequestId(@Nullable String requestId) {
@@ -133,6 +138,7 @@ public class ImagePerfState {
 
   public ImagePerfData snapshot() {
     return new ImagePerfData(
+        mControllerId,
         mRequestId,
         mImageRequest,
         mCallerContext,
