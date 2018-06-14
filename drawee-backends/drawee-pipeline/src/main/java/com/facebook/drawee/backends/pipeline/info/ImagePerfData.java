@@ -24,6 +24,7 @@ public class ImagePerfData {
   private final long mControllerIntermediateImageSetTimeMs;
   private final long mControllerFinalImageSetTimeMs;
   private final long mControllerFailureTimeMs;
+  private final long mControllerCancelTimeMs;
 
   private final long mImageRequestStartTimeMs;
   private final long mImageRequestEndTimeMs;
@@ -41,6 +42,7 @@ public class ImagePerfData {
       long controllerIntermediateImageSetTimeMs,
       long controllerFinalImageSetTimeMs,
       long controllerFailureTimeMs,
+      long controllerCancelTimeMs,
       long imageRequestStartTimeMs,
       long imageRequestEndTimeMs,
       @ImageOrigin int imageOrigin,
@@ -55,6 +57,7 @@ public class ImagePerfData {
     mControllerIntermediateImageSetTimeMs = controllerIntermediateImageSetTimeMs;
     mControllerFinalImageSetTimeMs = controllerFinalImageSetTimeMs;
     mControllerFailureTimeMs = controllerFailureTimeMs;
+    mControllerCancelTimeMs = controllerCancelTimeMs;
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
     mImageOrigin = imageOrigin;
@@ -143,6 +146,7 @@ public class ImagePerfData {
         .add("controller submit", mControllerSubmitTimeMs)
         .add("controller final image", mControllerFinalImageSetTimeMs)
         .add("controller failure", mControllerFailureTimeMs)
+        .add("controller cancel", mControllerCancelTimeMs)
         .add("start time", mImageRequestStartTimeMs)
         .add("end time", mImageRequestEndTimeMs)
         .add("origin", ImageOriginUtils.toString(mImageOrigin))

@@ -69,4 +69,16 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
 
     mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.ERROR);
   }
+
+  @Override
+  public void onRelease(String id) {
+    super.onRelease(id);
+    int lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
+    if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
+        || lastImageLoadStatus != ImageLoadStatus.ERROR) {
+      // The image request was canceled
+      mImagePerfState.setCanceled(true);
+      mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.CANCELED);
+    }
+  }
 }

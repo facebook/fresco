@@ -90,6 +90,7 @@ public class ImagePerfMonitor extends BaseRequestListener {
   }
 
   public void notifyListeners(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
+    mImagePerfState.setImageLoadStatus(imageLoadStatus);
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }

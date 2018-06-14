@@ -25,6 +25,7 @@ public class ImagePerfState {
   private long mControllerIntermediateImageSetTimeMs = UNSET;
   private long mControllerFinalImageSetTimeMs = UNSET;
   private long mControllerFailureTimeMs = UNSET;
+  private long mControllerCancelTimeMs = UNSET;
 
   // Image request timings
   private long mImageRequestStartTimeMs = UNSET;
@@ -36,6 +37,9 @@ public class ImagePerfState {
   private boolean mIsSuccessful;
   private boolean mIsPrefetch;
 
+  // Internal parameters
+  private @ImageLoadStatus int mImageLoadStatus = ImageLoadStatus.UNKNOWN;
+
   public void reset() {
     mRequestId = null;
     mImageRequest = null;
@@ -45,6 +49,7 @@ public class ImagePerfState {
     mControllerSubmitTimeMs = UNSET;
     mControllerFinalImageSetTimeMs = UNSET;
     mControllerFailureTimeMs = UNSET;
+    mControllerCancelTimeMs = UNSET;
 
     mImageRequestStartTimeMs = UNSET;
     mImageRequestEndTimeMs = UNSET;
@@ -53,6 +58,17 @@ public class ImagePerfState {
     mIsCanceled = false;
     mIsSuccessful = false;
     mIsPrefetch = false;
+
+    mImageLoadStatus = ImageLoadStatus.UNKNOWN;
+  }
+
+  public void setImageLoadStatus(@ImageLoadStatus int imageLoadStatus) {
+    mImageLoadStatus = imageLoadStatus;
+  }
+
+  @ImageLoadStatus
+  public int getImageLoadStatus() {
+    return mImageLoadStatus;
   }
 
   public void setRequestId(@Nullable String requestId) {
@@ -81,6 +97,10 @@ public class ImagePerfState {
 
   public void setControllerFailureTimeMs(long controllerFailureTimeMs) {
     mControllerFailureTimeMs = controllerFailureTimeMs;
+  }
+
+  public void setControllerCancelTimeMs(long controllerCancelTimeMs) {
+    mControllerCancelTimeMs = controllerCancelTimeMs;
   }
 
   public void setImageRequestStartTimeMs(long imageRequestStartTimeMs) {
@@ -121,6 +141,7 @@ public class ImagePerfState {
         mControllerIntermediateImageSetTimeMs,
         mControllerFinalImageSetTimeMs,
         mControllerFailureTimeMs,
+        mControllerCancelTimeMs,
         mImageRequestStartTimeMs,
         mImageRequestEndTimeMs,
         mImageOrigin,
