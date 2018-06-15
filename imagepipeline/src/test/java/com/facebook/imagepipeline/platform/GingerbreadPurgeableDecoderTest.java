@@ -21,7 +21,6 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
-import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
@@ -41,7 +40,6 @@ import org.robolectric.RobolectricTestRunner;
  */
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
-    BitmapCounterProvider.class,
     BitmapFactory.class,
     Bitmaps.class})
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
@@ -79,9 +77,6 @@ public class GingerbreadPurgeableDecoderTest {
     mBitmap = MockBitmapFactory.create();
     mBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_SIZE);
 
-    mockStatic(BitmapCounterProvider.class);
-    when(BitmapCounterProvider.get()).thenReturn(mBitmapCounter);
-
     mockStatic(BitmapFactory.class);
     when(BitmapFactory.decodeFileDescriptor(
             any(FileDescriptor.class),
@@ -98,7 +93,7 @@ public class GingerbreadPurgeableDecoderTest {
     mDecodeBufRef = CloseableReference.of(mDecodeBuf, mock(ResourceReleaser.class));
 
     mockStatic(Bitmaps.class);
-    mGingerbreadPurgeableDecoder = new GingerbreadPurgeableDecoder();
+    mGingerbreadPurgeableDecoder = new GingerbreadPurgeableDecoder(mBitmapCounter);
   }
 
   @Test

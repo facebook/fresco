@@ -20,6 +20,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferInputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
+import com.facebook.imagepipeline.memory.BitmapCounter;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,6 +37,10 @@ import javax.annotation.Nullable;
 public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
 
   private static Method sGetFileDescriptorMethod;
+
+  public GingerbreadPurgeableDecoder(BitmapCounter bitmapCounter) {
+    super(bitmapCounter);
+  }
 
   /**
    * Decodes a byteArray into a purgeable bitmap

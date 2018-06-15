@@ -14,6 +14,7 @@ import android.os.Build;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imageutils.JfifUtil;
 import javax.annotation.concurrent.ThreadSafe;
@@ -30,7 +31,8 @@ import javax.annotation.concurrent.ThreadSafe;
 public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
   private final FlexByteArrayPool mFlexByteArrayPool;
 
-  public KitKatPurgeableDecoder(FlexByteArrayPool flexByteArrayPool) {
+  public KitKatPurgeableDecoder(BitmapCounter bitmapCounter, FlexByteArrayPool flexByteArrayPool) {
+    super(bitmapCounter);
     mFlexByteArrayPool = flexByteArrayPool;
   }
 

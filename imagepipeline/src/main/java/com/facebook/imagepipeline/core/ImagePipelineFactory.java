@@ -41,6 +41,8 @@ import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.memory.BitmapCounter;
+import com.facebook.imagepipeline.memory.BitmapCounterConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
@@ -63,6 +65,7 @@ public class ImagePipelineFactory {
 
   private static ImagePipelineFactory sInstance = null;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  private BitmapCounter mBitmapCounter;
 
   /**
    * Gets the instance of {@link ImagePipelineFactory}.
@@ -243,6 +246,13 @@ public class ImagePipelineFactory {
     return mMainFileCache;
   }
 
+  public BitmapCounter getBitmapCounter(BitmapCounterConfig config) {
+    if (mBitmapCounter == null) {
+      mBitmapCounter = new BitmapCounter(mConfig.getBitmapCounterConfig().getMaxBitmapCount());
+    }
+    return mBitmapCounter;
+  }
+
   public ImagePipeline getImagePipeline() {
     if (mImagePipeline == null) {
       mImagePipeline =
@@ -294,15 +304,17 @@ public class ImagePipelineFactory {
   }
 
   /**
-   * Provide the implementation of the PlatformDecoder for the current platform using the
-   * provided PoolFactory
+   * Provide the implementation of the PlatformDecoder for the current platform using the provided
+   * PoolFactory
    *
    * @param poolFactory The PoolFactory
+   * @param bitmapCounter Bitmap Counter
    * @return The PlatformDecoder implementation
    */
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
-      boolean directWebpDirectDecodingEnabled) {
+      boolean directWebpDirectDecodingEnabled,
+      BitmapCounter bitmapCounter) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
@@ -312,18 +324,20 @@ public class ImagePipelineFactory {
     } else {
       if (directWebpDirectDecodingEnabled
           && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-        return new GingerbreadPurgeableDecoder();
+        return new GingerbreadPurgeableDecoder(bitmapCounter);
       } else {
-        return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
+        return new KitKatPurgeableDecoder(bitmapCounter, poolFactory.getFlexByteArrayPool());
       }
     }
   }
 
   public PlatformDecoder getPlatformDecoder() {
     if (mPlatformDecoder == null) {
-      mPlatformDecoder = buildPlatformDecoder(
-          mConfig.getPoolFactory(),
-          mConfig.getExperiments().isWebpSupportEnabled());
+      mPlatformDecoder =
+          buildPlatformDecoder(
+              mConfig.getPoolFactory(),
+              mConfig.getExperiments().isWebpSupportEnabled(),
+              getBitmapCounter(mConfig.getBitmapCounterConfig()));
     }
     return mPlatformDecoder;
   }

@@ -30,7 +30,6 @@ import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imagepipeline.common.TooManyBitmapsException;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
-import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
@@ -54,7 +53,6 @@ import org.robolectric.annotation.Config;
  */
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
-    BitmapCounterProvider.class,
     BitmapFactory.class,
     Bitmaps.class})
 @Config(sdk = Build.VERSION_CODES.KITKAT)
@@ -94,9 +92,6 @@ public class KitKatPurgeableDecoderTest {
     mBitmap = MockBitmapFactory.create();
     mBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_SIZE);
 
-    mockStatic(BitmapCounterProvider.class);
-    when(BitmapCounterProvider.get()).thenReturn(mBitmapCounter);
-
     mockStatic(BitmapFactory.class);
     when(BitmapFactory.decodeByteArray(
             any(byte[].class),
@@ -115,7 +110,7 @@ public class KitKatPurgeableDecoderTest {
     when(mFlexByteArrayPool.get(Integer.valueOf(LENGTH))).thenReturn(mDecodeBufRef);
 
     mockStatic(Bitmaps.class);
-    mKitKatPurgeableDecoder = new KitKatPurgeableDecoder(mFlexByteArrayPool);
+    mKitKatPurgeableDecoder = new KitKatPurgeableDecoder(mBitmapCounter, mFlexByteArrayPool);
   }
 
   @Test

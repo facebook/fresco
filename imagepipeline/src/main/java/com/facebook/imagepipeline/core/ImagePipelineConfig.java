@@ -35,6 +35,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.memory.BitmapCounterConfig;
 import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
@@ -90,6 +91,7 @@ public class ImagePipelineConfig {
   @Nullable private final ImageDecoderConfig mImageDecoderConfig;
   private final ImagePipelineExperiments mImagePipelineExperiments;
   private final boolean mDiskCacheEnabled;
+  private final BitmapCounterConfig mBitmapCounterConfig;
 
   private static DefaultImageRequestConfig
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
@@ -172,6 +174,10 @@ public class ImagePipelineConfig {
             mMainDiskCacheConfig :
             builder.mSmallImageDiskCacheConfig;
     mImageDecoderConfig = builder.mImageDecoderConfig;
+    mBitmapCounterConfig =
+        builder.mBitmapCounterConfig == null
+            ? new BitmapCounterConfig.Builder().build()
+            : builder.mBitmapCounterConfig;
     // Below this comment can't be built in alphabetical order, because of dependencies
     int numCpuBoundThreads = mPoolFactory.getFlexByteArrayPoolMaxNumThreads();
     mExecutorSupplier =
@@ -194,6 +200,10 @@ public class ImagePipelineConfig {
         }
       }
     }
+  }
+
+  public BitmapCounterConfig getBitmapCounterConfig() {
+    return mBitmapCounterConfig;
   }
 
   private static void setWebpBitmapFactory(
@@ -374,6 +384,7 @@ public class ImagePipelineConfig {
     private final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
     private boolean mDiskCacheEnabled = true;
+    private BitmapCounterConfig mBitmapCounterConfig;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -382,6 +393,11 @@ public class ImagePipelineConfig {
 
     public Builder setBitmapsConfig(Bitmap.Config config) {
       mBitmapConfig = config;
+      return this;
+    }
+
+    public Builder setBitmapCounterConfig(BitmapCounterConfig bitmapCounterConfig) {
+      mBitmapCounterConfig = bitmapCounterConfig;
       return this;
     }
 
