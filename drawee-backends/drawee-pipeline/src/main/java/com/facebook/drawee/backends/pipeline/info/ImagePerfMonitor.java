@@ -90,6 +90,7 @@ public class ImagePerfMonitor extends BaseRequestListener {
   }
 
   public void notifyListeners(ImagePerfState state, @ImageLoadStatus int imageLoadStatus) {
+    mImagePerfState.setImageLoadStatus(imageLoadStatus);
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }
@@ -105,8 +106,7 @@ public class ImagePerfMonitor extends BaseRequestListener {
           new ImagePerfControllerListener(mMonotonicClock, mImagePerfState, this);
     }
     if (mImagePerfRequestListener == null) {
-      mImagePerfRequestListener =
-          new ImagePerfRequestListener(mMonotonicClock, mImagePerfState, this);
+      mImagePerfRequestListener = new ImagePerfRequestListener(mMonotonicClock, mImagePerfState);
     }
     if (mImageOriginListener == null) {
       mImageOriginListener = new ImagePerfImageOriginListener(mImagePerfState, this);
@@ -114,6 +114,9 @@ public class ImagePerfMonitor extends BaseRequestListener {
     if (mImageOriginRequestListener == null) {
       mImageOriginRequestListener =
           new ImageOriginRequestListener(mPipelineDraweeController.getId(), mImageOriginListener);
+    } else {
+      // The ID could have changed
+      mImageOriginRequestListener.init(mPipelineDraweeController.getId());
     }
     if (mForwardingRequestListener == null) {
       mForwardingRequestListener =

@@ -32,7 +32,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
   public void onSubmit(String id, Object callerContext) {
     mImagePerfState.setControllerSubmitTimeMs(mClock.now());
 
-    mImagePerfState.setRequestId(id);
+    mImagePerfState.setControllerId(id);
     mImagePerfState.setCallerContext(callerContext);
 
     mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.REQUESTED);
@@ -42,7 +42,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
   public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
     mImagePerfState.setControllerIntermediateImageSetTimeMs(mClock.now());
 
-    mImagePerfState.setRequestId(id);
+    mImagePerfState.setControllerId(id);
     mImagePerfState.setImageInfo(imageInfo);
 
     mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.INTERMEDIATE_AVAILABLE);
@@ -53,7 +53,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
       String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
     mImagePerfState.setControllerFinalImageSetTimeMs(mClock.now());
 
-    mImagePerfState.setRequestId(id);
+    mImagePerfState.setControllerId(id);
     mImagePerfState.setImageInfo(imageInfo);
     mImagePerfState.setSuccessful(true);
 
@@ -64,9 +64,22 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
   public void onFailure(String id, Throwable throwable) {
     mImagePerfState.setControllerFailureTimeMs(mClock.now());
 
-    mImagePerfState.setRequestId(id);
+    mImagePerfState.setControllerId(id);
     mImagePerfState.setSuccessful(false);
 
     mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.ERROR);
+  }
+
+  @Override
+  public void onRelease(String id) {
+    super.onRelease(id);
+    int lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
+    if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
+        || lastImageLoadStatus != ImageLoadStatus.ERROR) {
+      mImagePerfState.setControllerId(id);
+      // The image request was canceled
+      mImagePerfState.setCanceled(true);
+      mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.CANCELED);
+    }
   }
 }

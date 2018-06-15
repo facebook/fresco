@@ -15,6 +15,7 @@ public class ImagePerfData {
 
   public static final int UNSET = -1;
 
+  private final @Nullable String mControllerId;
   private final @Nullable String mRequestId;
   private final @Nullable Object mCallerContext;
   private final @Nullable ImageRequest mImageRequest;
@@ -24,6 +25,7 @@ public class ImagePerfData {
   private final long mControllerIntermediateImageSetTimeMs;
   private final long mControllerFinalImageSetTimeMs;
   private final long mControllerFailureTimeMs;
+  private final long mControllerCancelTimeMs;
 
   private final long mImageRequestStartTimeMs;
   private final long mImageRequestEndTimeMs;
@@ -33,6 +35,7 @@ public class ImagePerfData {
   private final boolean mIsPrefetch;
 
   public ImagePerfData(
+      @Nullable String controllerId,
       @Nullable String requestId,
       @Nullable ImageRequest imageRequest,
       @Nullable Object callerContext,
@@ -41,12 +44,14 @@ public class ImagePerfData {
       long controllerIntermediateImageSetTimeMs,
       long controllerFinalImageSetTimeMs,
       long controllerFailureTimeMs,
+      long controllerCancelTimeMs,
       long imageRequestStartTimeMs,
       long imageRequestEndTimeMs,
       @ImageOrigin int imageOrigin,
       boolean isCanceled,
       boolean isSuccessful,
       boolean isPrefetch) {
+    mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
     mCallerContext = callerContext;
@@ -55,12 +60,18 @@ public class ImagePerfData {
     mControllerIntermediateImageSetTimeMs = controllerIntermediateImageSetTimeMs;
     mControllerFinalImageSetTimeMs = controllerFinalImageSetTimeMs;
     mControllerFailureTimeMs = controllerFailureTimeMs;
+    mControllerCancelTimeMs = controllerCancelTimeMs;
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
     mImageOrigin = imageOrigin;
     mIsCanceled = isCanceled;
     mIsSuccessful = isSuccessful;
     mIsPrefetch = isPrefetch;
+  }
+
+  @Nullable
+  public String getControllerId() {
+    return mControllerId;
   }
 
   @Nullable
@@ -139,10 +150,12 @@ public class ImagePerfData {
 
   public String createDebugString() {
     return Objects.toStringHelper(this)
+        .add("controller ID", mControllerId)
         .add("request ID", mRequestId)
         .add("controller submit", mControllerSubmitTimeMs)
         .add("controller final image", mControllerFinalImageSetTimeMs)
         .add("controller failure", mControllerFailureTimeMs)
+        .add("controller cancel", mControllerCancelTimeMs)
         .add("start time", mImageRequestStartTimeMs)
         .add("end time", mImageRequestEndTimeMs)
         .add("origin", ImageOriginUtils.toString(mImageOrigin))

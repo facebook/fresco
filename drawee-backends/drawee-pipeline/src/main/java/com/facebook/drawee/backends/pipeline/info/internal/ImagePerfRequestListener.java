@@ -7,8 +7,6 @@
 package com.facebook.drawee.backends.pipeline.info.internal;
 
 import com.facebook.common.time.MonotonicClock;
-import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
-import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -17,15 +15,10 @@ public class ImagePerfRequestListener extends BaseRequestListener {
 
   private final MonotonicClock mClock;
   private final ImagePerfState mImagePerfState;
-  private final ImagePerfMonitor mImagePerfMonitor;
 
-  public ImagePerfRequestListener(
-      MonotonicClock monotonicClock,
-      ImagePerfState imagePerfState,
-      ImagePerfMonitor imagePerfMonitor) {
+  public ImagePerfRequestListener(MonotonicClock monotonicClock, ImagePerfState imagePerfState) {
     mClock = monotonicClock;
     mImagePerfState = imagePerfState;
-    mImagePerfMonitor = imagePerfMonitor;
   }
 
   @Override
@@ -37,8 +30,6 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setCallerContext(callerContext);
     mImagePerfState.setRequestId(requestId);
     mImagePerfState.setPrefetch(isPrefetch);
-
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.REQUESTED);
   }
 
   @Override
@@ -49,8 +40,6 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setRequestId(requestId);
     mImagePerfState.setPrefetch(isPrefetch);
     mImagePerfState.setSuccessful(true);
-
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.SUCCESS);
   }
 
   @Override
@@ -62,8 +51,6 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setRequestId(requestId);
     mImagePerfState.setPrefetch(isPrefetch);
     mImagePerfState.setSuccessful(false);
-
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.ERROR);
   }
 
   @Override
@@ -72,7 +59,5 @@ public class ImagePerfRequestListener extends BaseRequestListener {
 
     mImagePerfState.setRequestId(requestId);
     mImagePerfState.setCanceled(true);
-
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.CANCELED);
   }
 }
