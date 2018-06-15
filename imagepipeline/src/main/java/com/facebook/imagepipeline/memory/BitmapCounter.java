@@ -7,8 +7,6 @@
 
 package com.facebook.imagepipeline.memory;
 
-import static com.facebook.common.util.ByteConstants.MB;
-
 import android.graphics.Bitmap;
 import android.os.Build;
 import com.facebook.common.internal.Preconditions;
@@ -36,19 +34,6 @@ public class BitmapCounter {
   private final int mMaxCount;
   private final int mMaxSize;
   private final ResourceReleaser<Bitmap> mUnpooledBitmapsReleaser;
-
-  private static int getMaxSizeHardCap() {
-    final int maxMemory = (int) Math.min(Runtime.getRuntime().maxMemory(), Integer.MAX_VALUE);
-    if (maxMemory > 16 * MB) {
-      return maxMemory / 4 * 3;
-    } else {
-      return maxMemory / 2;
-    }
-  }
-
-  public BitmapCounter(int maxCount) {
-    this(maxCount, getMaxSizeHardCap());
-  }
 
   public BitmapCounter(int maxCount, int maxSize) {
     Preconditions.checkArgument(maxCount > 0);

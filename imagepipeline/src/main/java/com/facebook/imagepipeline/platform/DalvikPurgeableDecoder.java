@@ -18,6 +18,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.TooManyBitmapsException;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
+import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
@@ -33,8 +34,8 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
 
   private final BitmapCounter mUnpooledBitmapsCounter;
 
-  DalvikPurgeableDecoder(BitmapCounter bitmapCounter) {
-    mUnpooledBitmapsCounter = bitmapCounter;
+  DalvikPurgeableDecoder() {
+    mUnpooledBitmapsCounter = BitmapCounterProvider.get();
   }
 
   /**

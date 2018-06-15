@@ -24,7 +24,6 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
-import com.facebook.imagepipeline.memory.BitmapCounterConfig;
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
@@ -67,10 +66,6 @@ public class ShowcaseApplication extends Application {
             .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
             .experiment()
             .setSmartResizingEnabled(Suppliers.BOOLEAN_TRUE)
-            .setBitmapCounterConfig(
-                new BitmapCounterConfig.Builder()
-                    .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
-                    .build())
             .build();
 
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);
