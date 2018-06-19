@@ -35,7 +35,8 @@ public class SimpleScaleTypeAdapter extends BaseAdapter {
       new Entry(ScalingUtils.ScaleType.FIT_END, "fit_end", null),
       new Entry(ScalingUtils.ScaleType.FIT_XY, "fit_xy", null),
       new Entry(ScalingUtils.ScaleType.FOCUS_CROP, "focus_crop (0, 0)", new PointF(0, 0)),
-      new Entry(ScalingUtils.ScaleType.FOCUS_CROP, "focus_crop (1, 0.5)", new PointF(1, 0.5f))
+      new Entry(ScalingUtils.ScaleType.FOCUS_CROP, "focus_crop (1, 0.5)", new PointF(1, 0.5f)),
+      new Entry(ScalingUtils.ScaleType.PARALLAX, "parallax,touch image", new PointF(0.5f, 0.5f))
   };
 
   private static final Entry[] CUSTOM_TYPES = new Entry[]{

@@ -90,6 +90,12 @@ public class ScalingUtils {
     ScaleType FIT_BOTTOM_START = ScaleTypeFitBottomStart.INSTANCE;
 
     /**
+     * Scales the child so that it can be used in a parallax animation. When the wrapper View slide
+     * horizontally or vertically, the inner image can also parallax move.
+     */
+    ScaleType PARALLAX = ScaleTypeParallax.INSTANCE;
+
+    /**
      * Gets transformation matrix based on the scale type.
      *
      * @param outTransform out matrix to store result
@@ -380,6 +386,45 @@ public class ScalingUtils {
     @Override
     public String toString() {
       return "center_crop";
+    }
+  }
+
+  private static class ScaleTypeParallax extends AbstractScaleType {
+
+    public static final ScaleType INSTANCE = new ScaleTypeParallax();
+
+    private float mParallaxFactor = 1.2f;
+
+    /**
+     * set the parallax factor to the Drawable.
+     * @param factor the parallax factor to config the the image's off-screen size
+     */
+    public void setParallaxFactor(float factor) {
+      mParallaxFactor = factor;
+    }
+
+    @Override
+    public void getTransformImpl(
+            Matrix outTransform,
+            Rect parentRect,
+            int childWidth,
+            int childHeight,
+            float focusX,
+            float focusY,
+            float scaleX,
+            float scaleY) {
+      float scale = Math.max(scaleX, scaleY) * mParallaxFactor;
+      float parallaxTotalX = parentRect.width() / scale - childWidth;
+      float parallaxTotalY = parentRect.height() / scale - childHeight;
+      float dx = focusX * parallaxTotalX;
+      float dy = focusY * parallaxTotalY;
+      outTransform.setScale(scale, scale);
+      outTransform.preTranslate((int) (dx + 0.5f), (int) (dy + 0.5f));
+    }
+
+    @Override
+    public String toString() {
+      return "parallax";
     }
   }
 
