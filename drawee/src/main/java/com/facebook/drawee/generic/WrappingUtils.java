@@ -27,6 +27,7 @@ import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.RoundedNinePatchDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import javax.annotation.Nullable;
 
 /**
@@ -288,6 +289,7 @@ public class WrappingUtils {
       applyRoundingParams(roundedColorDrawable, roundingParams);
       return roundedColorDrawable;
     } else {
+      ((AnimatedDrawable2)drawable).setRoundAsCircle(true);
       FLog.w(TAG, "Don't know how to round that drawable: %s", drawable);
     }
     return drawable;
