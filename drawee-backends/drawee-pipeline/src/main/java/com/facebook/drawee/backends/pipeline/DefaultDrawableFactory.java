@@ -33,8 +33,7 @@ public class DefaultDrawableFactory implements DrawableFactory {
   }
 
   @Override
-  public Drawable createDrawable(
-      CloseableImage closeableImage) {
+  public Drawable createDrawable(CloseableImage closeableImage) {
     if (closeableImage instanceof CloseableStaticBitmap) {
       CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
       Drawable bitmapDrawable =

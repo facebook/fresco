@@ -28,7 +28,6 @@ import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import java.lang.annotation.Retention;
-import java.nio.Buffer;
 import javax.annotation.Nullable;
 
 /**
@@ -108,7 +107,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   private int mBitmapWidth;
   private int mBitmapHeight;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
-  private boolean mRoundAsCricle;
+  private boolean mRoundAsCircle;
   @Nullable
   private FrameListener mFrameListener;
 
@@ -167,7 +166,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       mFrameListener.onDrawFrameStart(this, frameNumber);
     }
 
-    mRoundAsCricle = ((AnimatedDrawable2)parent).isRoundAsCircle();
+    mRoundAsCircle = ((AnimatedDrawable2)parent).isRoundAsCircle();
     boolean drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED);
 
     // We could not draw anything
@@ -324,7 +323,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   }
 
   public void setRoundAsCircle(boolean roundAsCircle) {
-    mRoundAsCricle = roundAsCircle;
+    mRoundAsCircle = roundAsCircle;
   }
 
   /**
@@ -349,9 +348,9 @@ public class BitmapAnimationBackend implements AnimationBackend,
     }
 
     // Make frame a circle
-    if(mRoundAsCricle)
-      RoundBitmap(bitmapReference.get());
-
+    if (mRoundAsCircle) {
+      roundBitmap(bitmapReference.get());
+    }
     if (mBounds == null) {
       canvas.drawBitmap(bitmapReference.get(), 0f, 0f, mPaint);
     } else {
@@ -373,7 +372,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
     return true;
   }
 
-  private void RoundBitmap(Bitmap sourceBitmap) {
+  private void roundBitmap(Bitmap sourceBitmap) {
     Bitmap roundedBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
         sourceBitmap.getHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(roundedBitmap);

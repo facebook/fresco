@@ -11,7 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.imageformat.color;
 
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;

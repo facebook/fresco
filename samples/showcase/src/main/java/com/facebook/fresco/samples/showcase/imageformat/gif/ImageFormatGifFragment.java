@@ -36,8 +36,7 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
   public static final Uri URI_GIF_S =
-      //Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_s.gif");
-      Uri.parse("https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif");
+      Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_s.gif");
   public static final Uri URI_GIF_M =
       Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_m.gif");
   public static final Uri URI_GIF_L =

@@ -11,7 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.imageformat.svg;
 
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
