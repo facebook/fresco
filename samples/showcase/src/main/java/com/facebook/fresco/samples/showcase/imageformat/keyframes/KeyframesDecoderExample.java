@@ -11,6 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase.imageformat.keyframes;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import com.facebook.common.internal.Closeables;

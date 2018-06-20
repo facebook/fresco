@@ -70,6 +70,8 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   private long mFrameSchedulingDelayMs = DEFAULT_FRAME_SCHEDULING_DELAY_MS;
   private long mFrameSchedulingOffsetMs = DEFAULT_FRAME_SCHEDULING_OFFSET_MS;
 
+  private boolean mRoundAsCircle;
+
   // Animation statistics
   private int mDroppedFrames;
 
@@ -174,6 +176,10 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (mAnimationBackend != null) {
       mAnimationBackend.setBounds(bounds);
     }
+  }
+
+  public boolean isRoundAsCircle() {
+    return mRoundAsCircle;
   }
 
   @Override
@@ -484,5 +490,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (mAnimationBackend != null) {
       mAnimationBackend.clear();
     }
+  }
+
+  public void setRoundAsCircle(boolean roundAsCircle) {
+    mRoundAsCircle = roundAsCircle;
   }
 }

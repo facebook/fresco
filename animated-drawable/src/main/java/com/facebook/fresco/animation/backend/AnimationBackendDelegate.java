@@ -143,5 +143,7 @@ public class AnimationBackendDelegate<T extends AnimationBackend> implements Ani
     if (mColorFilter != null) {
       backend.setColorFilter(mColorFilter);
     }
+
+
   }
 }

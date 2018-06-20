@@ -49,7 +49,9 @@ public class MediaControlFragment extends Fragment
     ImageView imageView = (ImageView) view.findViewById(R.id.animation_container);
 
     // Create a new animated drawable. The backend will be set by the backend configurator.
-    mAnimatedDrawable = new AnimatedDrawable2();
+    mAnimatedDrawable = new AnimatedDrawable2(
+        resources,
+        createAnimationBackend(((CloseableAnimatedImage) image).getImageResult()));
 
     imageView.setImageDrawable(mAnimatedDrawable);
 

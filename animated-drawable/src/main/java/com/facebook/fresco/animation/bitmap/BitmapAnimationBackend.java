@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
@@ -23,8 +25,10 @@ import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactiv
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import java.lang.annotation.Retention;
+import java.nio.Buffer;
 import javax.annotation.Nullable;
 
 /**
@@ -104,6 +108,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
   private int mBitmapWidth;
   private int mBitmapHeight;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
+  private boolean mRoundAsCricle;
   @Nullable
   private FrameListener mFrameListener;
 
@@ -162,6 +167,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       mFrameListener.onDrawFrameStart(this, frameNumber);
     }
 
+    mRoundAsCricle = ((AnimatedDrawable2)parent).isRoundAsCircle();
     boolean drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED);
 
     // We could not draw anything
@@ -317,6 +323,10 @@ public class BitmapAnimationBackend implements AnimationBackend,
     return frameRendered;
   }
 
+  public void setRoundAsCircle(boolean roundAsCircle) {
+    mRoundAsCricle = roundAsCircle;
+  }
+
   /**
    * Helper method that draws the given bitmap on the canvas respecting the bounds (if set).
    *
@@ -337,6 +347,11 @@ public class BitmapAnimationBackend implements AnimationBackend,
     if (!CloseableReference.isValid(bitmapReference)) {
       return false;
     }
+
+    // Make frame a circle
+    if(mRoundAsCricle)
+      RoundBitmap(bitmapReference.get());
+
     if (mBounds == null) {
       canvas.drawBitmap(bitmapReference.get(), 0f, 0f, mPaint);
     } else {
@@ -357,4 +372,28 @@ public class BitmapAnimationBackend implements AnimationBackend,
     }
     return true;
   }
+
+  private void RoundBitmap(Bitmap sourceBitmap) {
+    Bitmap roundedBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
+        sourceBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(roundedBitmap);
+
+    final int color = 0xff424242;
+    final Paint paint = new Paint();
+    final Rect rect = new Rect(0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight());
+
+    paint.setAntiAlias(true);
+    canvas.drawARGB(0, 0, 0, 0);
+    paint.setColor(color);
+
+    canvas.drawCircle(sourceBitmap.getWidth() / 2, sourceBitmap.getHeight() / 2,
+        sourceBitmap.getWidth() / 2, paint);
+    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+    canvas.drawBitmap(sourceBitmap, rect, rect, paint);
+
+    int[] pixels = new int[roundedBitmap.getWidth() * roundedBitmap.getHeight()];
+    roundedBitmap.getPixels(pixels, 0, roundedBitmap.getWidth(), 0, 0, roundedBitmap.getWidth(), roundedBitmap.getHeight());
+    sourceBitmap.setPixels(pixels, 0, sourceBitmap.getWidth(), 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight());
+  }
+
 }

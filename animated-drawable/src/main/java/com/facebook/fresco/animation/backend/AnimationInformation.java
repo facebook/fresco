@@ -38,4 +38,6 @@ public interface AnimationInformation {
    * @return the loop count or {@link #LOOP_COUNT_INFINITE}
    */
   int getLoopCount();
+
+
 }

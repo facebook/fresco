@@ -6,6 +6,7 @@
  */
 package com.facebook.imagepipeline.drawable;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import com.facebook.imagepipeline.image.CloseableImage;
 import javax.annotation.Nullable;
@@ -28,6 +29,8 @@ public interface DrawableFactory {
    * It is guaranteed that this method is only called if
    * {@link #supportsImageType(CloseableImage)} returned true.
    *
+   *
+   * @param resources
    * @param image the image to create the drawable for
    * @return the Drawable for the image or null if an error occurred
    */

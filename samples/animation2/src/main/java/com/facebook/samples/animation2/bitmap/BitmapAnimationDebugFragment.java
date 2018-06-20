@@ -130,7 +130,9 @@ public class BitmapAnimationDebugFragment extends Fragment {
 
     mFrameInformationContainer = (LinearLayout) view.findViewById(R.id.frame_information);
 
-    mAnimatedDrawable = new AnimatedDrawable2();
+    mAnimatedDrawable = new AnimatedDrawable2(
+        resources,
+        createAnimationBackend(((CloseableAnimatedImage) image).getImageResult()));
     mAnimatedDrawable.setDrawListener(new AnimatedDrawable2DebugDrawListener());
 
     view.findViewById(R.id.invalidate_button).setOnClickListener(new View.OnClickListener() {
