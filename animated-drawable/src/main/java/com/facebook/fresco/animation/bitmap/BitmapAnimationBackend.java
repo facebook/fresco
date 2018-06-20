@@ -322,10 +322,6 @@ public class BitmapAnimationBackend implements AnimationBackend,
     return frameRendered;
   }
 
-  public void setRoundAsCircle(boolean roundAsCircle) {
-    mRoundAsCircle = roundAsCircle;
-  }
-
   /**
    * Helper method that draws the given bitmap on the canvas respecting the bounds (if set).
    *

@@ -20,6 +20,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.MatrixDrawable;
+import com.facebook.drawee.drawable.RoundableFrame;
 import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedColorDrawable;
@@ -27,7 +28,6 @@ import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.RoundedNinePatchDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import javax.annotation.Nullable;
 
 /**
@@ -288,8 +288,8 @@ public class WrappingUtils {
           RoundedColorDrawable.fromColorDrawable((ColorDrawable) drawable);
       applyRoundingParams(roundedColorDrawable, roundingParams);
       return roundedColorDrawable;
-    } else if (drawable instanceof  AnimatedDrawable2) {
-      ((AnimatedDrawable2)drawable).setRoundAsCircle(true);
+    } else if (drawable instanceof RoundableFrame) {
+      ((RoundableFrame)drawable).setRoundAsCircle(true);
     } else {
       FLog.w(TAG, "Don't know how to round that drawable: %s", drawable);
     }

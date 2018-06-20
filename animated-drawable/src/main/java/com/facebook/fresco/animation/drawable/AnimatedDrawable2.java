@@ -16,6 +16,7 @@ import android.os.SystemClock;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.drawable.DrawableProperties;
+import com.facebook.drawee.drawable.RoundableFrame;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.frame.DropFramesFrameScheduler;
@@ -26,7 +27,8 @@ import javax.annotation.Nullable;
  * Experimental new animated drawable that uses a supplied
  * {@link AnimationBackend} for drawing frames.
  */
-public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableWithCaches {
+public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableWithCaches,
+    RoundableFrame {
 
   /**
    * {@link #draw(Canvas)} listener that is notified for each draw call. Can be used for debugging.
@@ -492,6 +494,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     }
   }
 
+  @Override
   public void setRoundAsCircle(boolean roundAsCircle) {
     mRoundAsCircle = roundAsCircle;
   }
