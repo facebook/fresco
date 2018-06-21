@@ -166,7 +166,10 @@ public class BitmapAnimationBackend implements AnimationBackend,
       mFrameListener.onDrawFrameStart(this, frameNumber);
     }
 
-    mRoundAsCircle = ((AnimatedDrawable2)parent).isRoundAsCircle();
+    if(parent instanceof AnimatedDrawable2) {
+      mRoundAsCircle = ((AnimatedDrawable2) parent).isRoundAsCircle();
+    }
+
     boolean drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED);
 
     // We could not draw anything
