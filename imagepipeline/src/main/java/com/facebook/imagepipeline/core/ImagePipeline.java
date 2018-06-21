@@ -214,6 +214,23 @@ public class ImagePipeline {
   /**
    * Submits a request for execution and returns a DataSource representing the pending decoded
    * image(s).
+   *
+   * <p>The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @param requestListener additional image request listener independent of ImageRequest listeners
+   * @return a DataSource representing the pending decoded image(s)
+   */
+  public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
+      ImageRequest imageRequest, Object callerContext, @Nullable RequestListener requestListener) {
+    return fetchDecodedImage(
+        imageRequest, callerContext, ImageRequest.RequestLevel.FULL_FETCH, requestListener);
+  }
+
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
    * <p>The returned DataSource must be closed once the client has finished with it.
    *
    * @param imageRequest the request to submit
@@ -274,6 +291,22 @@ public class ImagePipeline {
   public DataSource<CloseableReference<PooledByteBuffer>> fetchEncodedImage(
       ImageRequest imageRequest,
       Object callerContext) {
+    return fetchEncodedImage(imageRequest, callerContext, null);
+  }
+
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending encoded
+   * image(s).
+   *
+   * <p>The ResizeOptions in the imageRequest will be ignored for this fetch
+   *
+   * <p>The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @return a DataSource representing the pending encoded image(s)
+   */
+  public DataSource<CloseableReference<PooledByteBuffer>> fetchEncodedImage(
+      ImageRequest imageRequest, Object callerContext, @Nullable RequestListener requestListener) {
     Preconditions.checkNotNull(imageRequest.getSourceUri());
     try {
       Producer<CloseableReference<PooledByteBuffer>> producerSequence =
@@ -294,7 +327,7 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          null);
+          requestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
