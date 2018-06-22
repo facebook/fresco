@@ -17,6 +17,7 @@ import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Suppliers;
+import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.time.SystemClock;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -61,6 +62,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public class ImagePipelineFactory {
 
+  private static final Class<?> TAG = ImagePipelineFactory.class;
+
   private static ImagePipelineFactory sInstance = null;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
 
@@ -71,24 +74,29 @@ public class ImagePipelineFactory {
     return Preconditions.checkNotNull(sInstance, "ImagePipelineFactory was not initialized!");
   }
 
-  /**
-   * Initializes {@link ImagePipelineFactory} with default config.
-   */
-  public static void initialize(Context context) {
+  /** Initializes {@link ImagePipelineFactory} with default config. */
+  public static synchronized void initialize(Context context) {
     initialize(ImagePipelineConfig.newBuilder(context).build());
   }
 
-  /**
-   * Initializes {@link ImagePipelineFactory} with the specified config.
-   */
-  public static void initialize(ImagePipelineConfig imagePipelineConfig) {
+  /** Initializes {@link ImagePipelineFactory} with the specified config. */
+  public static synchronized void initialize(ImagePipelineConfig imagePipelineConfig) {
+    if (sInstance != null) {
+      FLog.w(
+          TAG,
+          "ImagePipelineFactory has already been initialized! `ImagePipelineFactory.initialize(...)` should only be called once to avoid unexpected behavior.");
+    }
+
     sInstance = new ImagePipelineFactory(imagePipelineConfig);
   }
 
-  /**
-   * Shuts {@link ImagePipelineFactory} down.
-   */
-  public static void shutDown() {
+  /** Checks if {@link ImagePipelineFactory} has already been initialized */
+  public static synchronized boolean hasBeenInitialized() {
+    return sInstance != null;
+  }
+
+  /** Shuts {@link ImagePipelineFactory} down. */
+  public static synchronized void shutDown() {
     if (sInstance != null) {
       sInstance.getBitmapMemoryCache().removeAll(AndroidPredicates.<CacheKey>True());
       sInstance.getEncodedMemoryCache().removeAll(AndroidPredicates.<CacheKey>True());
