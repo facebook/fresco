@@ -76,6 +76,7 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
     int lastImageLoadStatus = mImagePerfState.getImageLoadStatus();
     if (lastImageLoadStatus != ImageLoadStatus.SUCCESS
         && lastImageLoadStatus != ImageLoadStatus.ERROR) {
+      mImagePerfState.setControllerCancelTimeMs(mClock.now());
       mImagePerfState.setControllerId(id);
       // The image request was canceled
       mImagePerfState.setCanceled(true);
