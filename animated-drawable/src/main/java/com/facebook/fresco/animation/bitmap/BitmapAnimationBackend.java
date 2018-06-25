@@ -372,6 +372,10 @@ public class BitmapAnimationBackend implements AnimationBackend,
   }
 
   private void roundBitmap(Bitmap sourceBitmap) {
+    if(sourceBitmap.getWidth() <= 0 || sourceBitmap.getHeight() <= 0) {
+      return;
+    }
+
     Bitmap roundedBitmap = Bitmap.createBitmap(sourceBitmap.getWidth(),
         sourceBitmap.getHeight(), Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(roundedBitmap);

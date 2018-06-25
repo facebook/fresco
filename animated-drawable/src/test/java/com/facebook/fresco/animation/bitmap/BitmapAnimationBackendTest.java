@@ -426,7 +426,6 @@ public class BitmapAnimationBackendTest {
   public void testRoundBitmapWithRoundAsCircle(){
     AnimatedDrawable2 drawable = new AnimatedDrawable2(mBitmapAnimationBackend);
     drawable.setRoundAsCircle(true);
-    when(drawable.isRoundAsCircle()).thenReturn(true);
 
     when(mPlatformBitmapFactory.createBitmap(anyInt(), anyInt(), any(Bitmap.Config.class)))
         .thenReturn(mBitmapRefererence);
