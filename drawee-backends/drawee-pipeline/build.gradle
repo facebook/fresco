@@ -12,6 +12,9 @@ dependencies {
     api project(':fbcore')
     api project(':drawee')
     api project(':imagepipeline')
+
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 }
 apply from: rootProject.file('release.gradle')
 
