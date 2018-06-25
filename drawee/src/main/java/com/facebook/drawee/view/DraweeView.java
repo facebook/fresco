@@ -283,14 +283,18 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
       View changedView,
       int visibility) {
     super.onVisibilityChanged(changedView, visibility);
-    maybeOverrideVisibilityHandling();
+    maybeOverrideVisibilityHandling(visibility);
   }
 
   private void maybeOverrideVisibilityHandling() {
+    maybeOverrideVisibilityHandling(getVisibility());
+  }
+
+  private void maybeOverrideVisibilityHandling(int visibility) {
     if (mLegacyVisibilityHandlingEnabled)  {
       Drawable drawable = getDrawable();
       if (drawable != null) {
-        drawable.setVisible(getVisibility() == VISIBLE, false);
+        drawable.setVisible(visibility == VISIBLE, false);
       }
     }
   }
