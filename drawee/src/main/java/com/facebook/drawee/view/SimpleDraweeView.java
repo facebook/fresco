@@ -209,8 +209,4 @@ public class SimpleDraweeView extends GenericDraweeView {
     super.setImageResource(resId);
   }
 
-  @Override
-  public boolean performClick() {
-    return super.performClick();
-  }
 }
