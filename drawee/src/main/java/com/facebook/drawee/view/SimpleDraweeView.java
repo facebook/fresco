@@ -208,5 +208,4 @@ public class SimpleDraweeView extends GenericDraweeView {
   public void setImageResource(int resId) {
     super.setImageResource(resId);
   }
-
 }
