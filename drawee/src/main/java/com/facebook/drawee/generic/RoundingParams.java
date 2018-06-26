@@ -12,6 +12,7 @@ import android.support.annotation.ColorInt;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
 import java.util.Arrays;
+import javax.annotation.Nullable;
 
 /**
  * Class that encapsulates rounding parameters.
@@ -262,7 +263,7 @@ public class RoundingParams {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
