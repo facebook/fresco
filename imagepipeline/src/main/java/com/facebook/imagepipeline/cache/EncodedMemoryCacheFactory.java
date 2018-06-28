@@ -12,7 +12,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 
 public class EncodedMemoryCacheFactory {
 
-  public static MemoryCache<CacheKey, PooledByteBuffer> get(
+  public static InstrumentedMemoryCache<CacheKey, PooledByteBuffer> get(
       final CountingMemoryCache<CacheKey, PooledByteBuffer> encodedCountingMemoryCache,
       final ImageCacheStatsTracker imageCacheStatsTracker) {
 

@@ -34,9 +34,9 @@ import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
+import com.facebook.imagepipeline.cache.InstrumentedMemoryCache;
 import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
-import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -107,9 +107,9 @@ public class ImagePipelineFactory {
   private final ImagePipelineConfig mConfig;
   private CountingMemoryCache<CacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
-  private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
+  private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
-  private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
+  private InstrumentedMemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
   private BufferedDiskCache mMainBufferedDiskCache;
   private FileCache mMainFileCache;
   private ImageDecoder mImageDecoder;
@@ -162,7 +162,7 @@ public class ImagePipelineFactory {
     return mBitmapCountingMemoryCache;
   }
 
-  public MemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
+  public InstrumentedMemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
     if (mBitmapMemoryCache == null) {
       mBitmapMemoryCache =
           BitmapMemoryCacheFactory.get(
@@ -183,7 +183,7 @@ public class ImagePipelineFactory {
     return mEncodedCountingMemoryCache;
   }
 
-  public MemoryCache<CacheKey, PooledByteBuffer> getEncodedMemoryCache() {
+  public InstrumentedMemoryCache<CacheKey, PooledByteBuffer> getEncodedMemoryCache() {
     if (mEncodedMemoryCache == null) {
       mEncodedMemoryCache =
           EncodedMemoryCacheFactory.get(

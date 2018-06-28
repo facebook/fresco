@@ -12,9 +12,9 @@ import com.facebook.imagepipeline.image.CloseableImage;
 
 public class BitmapMemoryCacheFactory {
 
-  public static MemoryCache<CacheKey, CloseableImage> get(
-    final CountingMemoryCache<CacheKey, CloseableImage> bitmapCountingMemoryCache,
-    final ImageCacheStatsTracker imageCacheStatsTracker) {
+  public static InstrumentedMemoryCache<CacheKey, CloseableImage> get(
+      final CountingMemoryCache<CacheKey, CloseableImage> bitmapCountingMemoryCache,
+      final ImageCacheStatsTracker imageCacheStatsTracker) {
 
     imageCacheStatsTracker.registerBitmapMemoryCache(bitmapCountingMemoryCache);
 
