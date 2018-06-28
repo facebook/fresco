@@ -20,6 +20,7 @@ public class AnimatedImageResultBuilder {
   private CloseableReference<Bitmap> mPreviewBitmap;
   private List<CloseableReference<Bitmap>> mDecodedFrames;
   private int mFrameForPreview;
+  private boolean mEnableDropFrame;
 
   AnimatedImageResultBuilder(AnimatedImage image) {
     mImage = image;
@@ -97,6 +98,15 @@ public class AnimatedImageResultBuilder {
       List<CloseableReference<Bitmap>> decodedFrames) {
     mDecodedFrames = CloseableReference.cloneOrNull(decodedFrames);
     return this;
+  }
+
+  public AnimatedImageResultBuilder setEnableDropFrame(boolean enable) {
+    mEnableDropFrame = enable;
+    return this;
+  }
+
+  public boolean getEnableDropFrame() {
+    return mEnableDropFrame;
   }
 
   /**

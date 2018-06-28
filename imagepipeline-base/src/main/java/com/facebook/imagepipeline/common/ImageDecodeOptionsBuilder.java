@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
+
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import javax.annotation.Nullable;
 
@@ -21,6 +22,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
+  private boolean mEnableDropFrame;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
 
@@ -40,6 +42,7 @@ public class ImageDecodeOptionsBuilder {
     mForceStaticImage = options.forceStaticImage;
     mBitmapConfig = options.bitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
+    mEnableDropFrame = options.enableDropFrame;
     return this;
   }
 
@@ -190,6 +193,15 @@ public class ImageDecodeOptionsBuilder {
   public ImageDecodeOptionsBuilder setBitmapConfig(Bitmap.Config bitmapConfig) {
     mBitmapConfig = bitmapConfig;
     return this;
+  }
+
+  public ImageDecodeOptionsBuilder setEnableDropFrame(boolean enable) {
+    mEnableDropFrame = enable;
+    return this;
+  }
+
+  public boolean getEnableDropFrame() {
+    return mEnableDropFrame;
   }
 
   /**

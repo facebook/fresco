@@ -95,6 +95,7 @@ public class ImagePipelineTest {
         mPrefetchEnabledSupplier,
         mBitmapMemoryCache,
         mEncodedMemoryCache,
+        null,
         mMainDiskStorageCache,
         mSmallImageDiskStorageCache,
         mCacheKeyFactory,

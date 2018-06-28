@@ -20,6 +20,7 @@ import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -51,6 +52,7 @@ public class ShowcaseApplication extends Application {
 
     ImagePipelineConfig imagePipelineConfig =
         OkHttpImagePipelineConfigFactory.newBuilder(this, okHttpClient)
+            .setOtherFrameMemoryCacheParamsSupplier(getOtherMemSupper())
             .setRequestListeners(listeners)
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
             .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
@@ -92,5 +94,22 @@ public class ShowcaseApplication extends Application {
                 })
             .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
             .build());
+  }
+
+  /**
+   * config for the webp(Exclude frame 0)
+   */
+  private Supplier<MemoryCacheParams> getOtherMemSupper() {
+    return new Supplier<MemoryCacheParams>() {
+      @Override
+      public MemoryCacheParams get() {
+        return new MemoryCacheParams(
+                (int) Runtime.getRuntime().maxMemory() / 8,
+                Integer.MAX_VALUE,
+                (int) Runtime.getRuntime().maxMemory() / 16,
+                300,
+                Integer.MAX_VALUE);
+      }
+    };
   }
 }

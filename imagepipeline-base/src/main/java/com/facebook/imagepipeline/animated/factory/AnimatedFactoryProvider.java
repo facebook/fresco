@@ -22,7 +22,8 @@ public class AnimatedFactoryProvider {
   public static AnimatedFactory getAnimatedFactory(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
-      CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      CountingMemoryCache<CacheKey, CloseableImage> otherFrameCache) {
     if (!sImplLoaded) {
       try {
         final Class<?> clazz =
@@ -30,11 +31,13 @@ public class AnimatedFactoryProvider {
         final Constructor<?> constructor = clazz.getConstructor(
             PlatformBitmapFactory.class,
             ExecutorSupplier.class,
+            CountingMemoryCache.class,
             CountingMemoryCache.class);
         sImpl = (AnimatedFactory) constructor.newInstance(
             platformBitmapFactory,
             executorSupplier,
-            backingCache);
+            backingCache,
+            otherFrameCache);
       } catch (Throwable e) {
         // Head in the sand
       }

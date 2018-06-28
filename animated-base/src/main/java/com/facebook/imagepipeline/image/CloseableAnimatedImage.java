@@ -55,11 +55,6 @@ public class CloseableAnimatedImage extends CloseableImage {
     return isClosed() ? 0 : mImageResult.getImage().getSizeInBytes();
   }
 
-  @Override
-  public boolean isStateful() {
-    return true;
-  }
-
   public synchronized AnimatedImageResult getImageResult() {
     return mImageResult;
   }
@@ -67,4 +62,5 @@ public class CloseableAnimatedImage extends CloseableImage {
   public synchronized AnimatedImage getImage() {
     return isClosed() ? null : mImageResult.getImage();
   }
+
 }

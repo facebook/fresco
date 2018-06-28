@@ -10,6 +10,7 @@ package com.facebook.fresco.animation.factory;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.time.MonotonicClock;
@@ -24,6 +25,7 @@ import com.facebook.fresco.animation.bitmap.cache.NoOpCache;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
 import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePreparer;
+import com.facebook.fresco.animation.bitmap.preparation.DropFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation;
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer;
@@ -39,7 +41,10 @@ import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Animation factory for {@link AnimatedDrawable2}.
@@ -55,9 +60,11 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private final AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
   private final ScheduledExecutorService mScheduledExecutorServiceForUiThread;
   private final ExecutorService mExecutorServiceForFramePreparing;
+  private final ExecutorService mDropServiceForFramePreparing;
   private final MonotonicClock mMonotonicClock;
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
+  private final CountingMemoryCache<CacheKey, CloseableImage> mOtherFrameCache;
   private final Supplier<Integer> mCachingStrategySupplier;
   private final Supplier<Integer> mNumberOfFramesToPrepareSupplier;
 
@@ -69,7 +76,9 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
       PlatformBitmapFactory platformBitmapFactory,
       CountingMemoryCache<CacheKey, CloseableImage> backingCache,
       Supplier<Integer> cachingStrategySupplier,
-      Supplier<Integer> numberOfFramesToPrepareSupplier) {
+      Supplier<Integer> numberOfFramesToPrepareSupplier,
+      CountingMemoryCache<CacheKey, CloseableImage> otherCache,
+      ExecutorService dropServiceForFramePreparing) {
     mAnimatedDrawableBackendProvider = animatedDrawableBackendProvider;
     mScheduledExecutorServiceForUiThread = scheduledExecutorServiceForUiThread;
     mExecutorServiceForFramePreparing = executorServiceForFramePreparing;
@@ -78,6 +87,8 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     mBackingCache = backingCache;
     mCachingStrategySupplier = cachingStrategySupplier;
     mNumberOfFramesToPrepareSupplier = numberOfFramesToPrepareSupplier;
+    mOtherFrameCache = otherCache;
+    mDropServiceForFramePreparing = dropServiceForFramePreparing;
   }
 
   @Override
@@ -87,9 +98,11 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
 
   @Override
   public AnimatedDrawable2 createDrawable(CloseableImage image) {
+    CloseableAnimatedImage animatedImage = (CloseableAnimatedImage) image;
+    AnimatedImageResult result = animatedImage.getImageResult();
     return new AnimatedDrawable2(
-        createAnimationBackend(
-            ((CloseableAnimatedImage) image).getImageResult()));
+        createAnimationBackend(result),
+            result.getEnableDropFrame());
   }
 
   private AnimationBackend createAnimationBackend(AnimatedImageResult animatedImageResult) {
@@ -104,8 +117,13 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     BitmapFramePreparationStrategy bitmapFramePreparationStrategy = null;
     BitmapFramePreparer bitmapFramePreparer = null;
     if (numberOfFramesToPrefetch > 0) {
-      bitmapFramePreparationStrategy =
-          new FixedNumberBitmapFramePreparationStrategy(numberOfFramesToPrefetch);
+      if (animatedImageResult.getEnableDropFrame()) {
+        bitmapFramePreparationStrategy =
+                new DropFramePreparationStrategy();
+      } else {
+        bitmapFramePreparationStrategy =
+                new FixedNumberBitmapFramePreparationStrategy(numberOfFramesToPrefetch);
+        }
       bitmapFramePreparer = createBitmapFramePreparer(bitmapFrameRenderer);
     }
 
@@ -115,7 +133,8 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
         new AnimatedDrawableBackendAnimationInformation(animatedDrawableBackend),
         bitmapFrameRenderer,
         bitmapFramePreparationStrategy,
-        bitmapFramePreparer);
+        bitmapFramePreparer,
+        animatedImageResult.getEnableDropFrame());
 
     return AnimationBackendDelegateWithInactivityCheck.createForBackend(
         bitmapAnimationBackend,
@@ -128,7 +147,8 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
         mPlatformBitmapFactory,
         bitmapFrameRenderer,
         Bitmap.Config.ARGB_8888,
-        mExecutorServiceForFramePreparing);
+        mExecutorServiceForFramePreparing,
+        mDropServiceForFramePreparing);
   }
 
   private AnimatedDrawableBackend createAnimatedDrawableBackend(
@@ -141,9 +161,11 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
   private BitmapFrameCache createBitmapFrameCache(AnimatedImageResult animatedImageResult) {
     switch (mCachingStrategySupplier.get()) {
       case CACHING_STRATEGY_FRESCO_CACHE:
-        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), true);
+        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult),
+                true, createOtherFrameCache(animatedImageResult));
       case CACHING_STRATEGY_FRESCO_CACHE_NO_REUSING:
-        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult), false);
+        return new FrescoFrameCache(createAnimatedFrameCache(animatedImageResult),
+                false, createOtherFrameCache(animatedImageResult));
       case CACHING_STRATEGY_KEEP_LAST_CACHE:
         return new KeepLastFrameCache();
       case CACHING_STRATEGY_NO_CACHE:
@@ -157,6 +179,16 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     return new AnimatedFrameCache(
         new AnimationFrameCacheKey(animatedImageResult.hashCode()),
         mBackingCache);
+  }
+
+  private AnimatedFrameCache createOtherFrameCache(
+          final AnimatedImageResult animatedImageResult) {
+    if (!animatedImageResult.getEnableDropFrame() || mOtherFrameCache == null) {
+      return null;
+    }
+    return new AnimatedFrameCache(
+            new AnimationFrameCacheKey(animatedImageResult.hashCode()),
+            mOtherFrameCache);
   }
 
   public static class AnimationFrameCacheKey implements CacheKey {
@@ -177,6 +209,19 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     @Override
     public String getUriString() {
       return mAnimationUriString;
+    }
+
+    @Override
+    public int hashCode() {
+      return mAnimationUriString.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (obj instanceof AnimationFrameCacheKey) {
+        return ((AnimationFrameCacheKey) obj).mAnimationUriString.equals(mAnimationUriString);
+      }
+      return false;
     }
   }
 }

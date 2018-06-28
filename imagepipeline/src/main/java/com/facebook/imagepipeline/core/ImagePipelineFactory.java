@@ -107,6 +107,8 @@ public class ImagePipelineFactory {
   private final ImagePipelineConfig mConfig;
   private CountingMemoryCache<CacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
+  private CountingMemoryCache<CacheKey, CloseableImage>
+      mOtherFrameCountingMemoryCahce;
   private MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private CountingMemoryCache<CacheKey, PooledByteBuffer> mEncodedCountingMemoryCache;
   private MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
@@ -137,7 +139,8 @@ public class ImagePipelineFactory {
       mAnimatedFactory = AnimatedFactoryProvider.getAnimatedFactory(
           getPlatformBitmapFactory(),
           mConfig.getExecutorSupplier(),
-          getBitmapCountingMemoryCache());
+          getBitmapCountingMemoryCache(),
+          getOtherFrameCountingMemoryCache());
     }
     return mAnimatedFactory;
   }
@@ -160,6 +163,20 @@ public class ImagePipelineFactory {
               mConfig.getBitmapMemoryCacheTrimStrategy());
     }
     return mBitmapCountingMemoryCache;
+  }
+
+  public CountingMemoryCache<CacheKey, CloseableImage>
+  getOtherFrameCountingMemoryCache() {
+    if (mOtherFrameCountingMemoryCahce == null) {
+      mOtherFrameCountingMemoryCahce =
+              BitmapCountingMemoryCacheFactory.get(
+                      mConfig.getOtherFrameCacheParamsSupplier(),
+                      mConfig.getMemoryTrimmableRegistry(),
+                      getPlatformBitmapFactory(),
+                      mConfig.getExperiments().isExternalCreatedBitmapLogEnabled(),
+                      mConfig.getBitmapMemoryCacheTrimStrategy());
+    }
+    return mOtherFrameCountingMemoryCahce;
   }
 
   public MemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
@@ -260,6 +277,7 @@ public class ImagePipelineFactory {
               mConfig.getIsPrefetchEnabledSupplier(),
               getBitmapMemoryCache(),
               getEncodedMemoryCache(),
+              getOtherFrameCountingMemoryCache(),
               getMainBufferedDiskCache(),
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),

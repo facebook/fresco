@@ -143,6 +143,7 @@ public class AnimatedImageFactoryImpl implements AnimatedImageFactory {
           .setPreviewBitmap(previewBitmap)
           .setFrameForPreview(frameForPreview)
           .setDecodedFrames(decodedFrames)
+          .setEnableDropFrame(options.enableDropFrame)
           .build();
       return new CloseableAnimatedImage(animatedImageResult);
     } finally {

@@ -121,6 +121,8 @@
   <string name="format_webp_translucent_help">The above Drawee displays a loss-less WebP image with semi-transparent areas.</string>
   <string name="format_webp_animated_help">The above Drawee displays an animated WebP image</string>
 
+  <string name="format_webp_list_title">WebP List</string>
+
   <string name="format_pjpeg_title">Progressive JPEG</string>
   <string name="format_pjpeg_help">Select a progressive JPEG from the spinner and enable or disable progessive JPEG support with the switch.</string>
   <string name="format_pjpeg_switch_rendering_enabled">Progressive JPEG rendering enabled</string>
@@ -229,6 +231,7 @@
   <string name="format_name_png_landscape">PNG landscape</string>
   <string name="format_name_png_portrait">PNG portrait</string>
   <string name="format_name_webp">WebP</string>
+  <string name="format_name_webp_list_drop_enable">Drop frame</string>
   <string name="format_name_animated_webp">animated WebP</string>
   <string name="format_name_translucent_webp">translucent WebP</string>
 

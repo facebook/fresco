@@ -55,6 +55,8 @@ public class ImageDecodeOptions {
    */
   public final Bitmap.Config bitmapConfig;
 
+  public final boolean enableDropFrame;
+
   /**
    * Custom image decoder override.
    */
@@ -68,6 +70,7 @@ public class ImageDecodeOptions {
     this.forceStaticImage = b.getForceStaticImage();
     this.bitmapConfig = b.getBitmapConfig();
     this.customImageDecoder = b.getCustomImageDecoder();
+    this.enableDropFrame = b.getEnableDropFrame();
   }
 
   /**
@@ -101,6 +104,7 @@ public class ImageDecodeOptions {
     if (forceStaticImage != that.forceStaticImage) return false;
     if (bitmapConfig != that.bitmapConfig) return false;
     if (customImageDecoder != that.customImageDecoder) return false;
+    if (enableDropFrame != that.enableDropFrame) return false;
     return true;
   }
 
@@ -113,6 +117,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (forceStaticImage ? 1 : 0);
     result = 31 * result + bitmapConfig.ordinal();
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
+    result = 31 * result + (enableDropFrame ? 1 : 0);
     return result;
   }
 
@@ -120,13 +125,14 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%b-%b-%b-%b-%s-%s",
+        "%d-%b-%b-%b-%b-%s-%s-%b",
         minDecodeIntervalMs,
         decodePreviewFrame,
         useLastFrameForPreview,
         decodeAllFrames,
         forceStaticImage,
         bitmapConfig.name(),
-        customImageDecoder);
+        customImageDecoder,
+        enableDropFrame);
   }
 }

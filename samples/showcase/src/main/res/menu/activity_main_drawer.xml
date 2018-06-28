@@ -118,6 +118,10 @@
             android:title="@string/format_webp_title"
             />
         <item
+            android:id="@+id/nav_format_webp_list"
+            android:title="@string/format_webp_list_title"
+            />
+        <item
             android:id="@+id/nav_format_svg"
             android:title="@string/format_svg_title"
             />

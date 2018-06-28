@@ -47,6 +47,7 @@ import com.facebook.fresco.samples.showcase.imageformat.override.ImageFormatOver
 import com.facebook.fresco.samples.showcase.imageformat.pjpeg.ImageFormatProgressiveJpegFragment;
 import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragment;
 import com.facebook.fresco.samples.showcase.imageformat.webp.ImageFormatWebpFragment;
+import com.facebook.fresco.samples.showcase.imageformat.webplist.ImageFormatWebpListFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineBitmapFactoryFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineNotificationFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePostProcessorFragment;
@@ -220,6 +221,9 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.nav_format_webp:
         fragment = new ImageFormatWebpFragment();
+        break;
+      case R.id.nav_format_webp_list:
+        fragment = new ImageFormatWebpListFragment();
         break;
       case R.id.nav_format_svg:
         fragment = new ImageFormatSvgFragment();
