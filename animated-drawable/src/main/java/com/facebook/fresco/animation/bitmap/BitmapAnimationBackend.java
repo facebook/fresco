@@ -9,22 +9,32 @@ package com.facebook.fresco.animation.bitmap;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import android.util.SparseArray;
+
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.drawee.drawable.DrawableUtils;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationBackendDelegateWithInactivityCheck;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
+import com.facebook.fresco.animation.drawable.RoundedAnimationDrawable;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import java.lang.annotation.Retention;
+import java.lang.ref.WeakReference;
+
 import javax.annotation.Nullable;
 
 /**
@@ -98,6 +108,10 @@ public class BitmapAnimationBackend implements AnimationBackend,
   @Nullable
   private final BitmapFramePreparer mBitmapFramePreparer;
   private final Paint mPaint;
+  private final Paint mRoundPaint;
+  private final Paint mBorderPaint;
+  private final SparseArray<WeakReference<BitmapShader>> mShaderCache;
+  private int mPreBitmapHashCode;
 
   @Nullable
   private Rect mBounds;
@@ -121,7 +135,11 @@ public class BitmapAnimationBackend implements AnimationBackend,
     mBitmapFramePreparationStrategy = bitmapFramePreparationStrategy;
     mBitmapFramePreparer = bitmapFramePreparer;
 
+    mShaderCache = new SparseArray<>(15);
+    mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    mRoundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     mPaint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
+    mBorderPaint.setStyle(Paint.Style.STROKE);
     updateBitmapDimensions();
   }
 
@@ -162,7 +180,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       mFrameListener.onDrawFrameStart(this, frameNumber);
     }
 
-    boolean drawn = drawFrameOrFallback(canvas, frameNumber, FRAME_TYPE_CACHED);
+    boolean drawn = drawFrameOrFallback(parent, canvas, frameNumber, FRAME_TYPE_CACHED);
 
     // We could not draw anything
     if (!drawn && mFrameListener != null) {
@@ -181,7 +199,11 @@ public class BitmapAnimationBackend implements AnimationBackend,
     return drawn;
   }
 
-  private boolean drawFrameOrFallback(Canvas canvas, int frameNumber, @FrameType int frameType) {
+  private boolean drawFrameOrFallback(
+          Drawable drawable,
+          Canvas canvas,
+          int frameNumber,
+          @FrameType int frameType) {
     CloseableReference<Bitmap> bitmapReference = null;
     boolean drawn = false;
     int nextFrameType = FRAME_TYPE_UNKNOWN;
@@ -190,7 +212,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
       switch (frameType) {
         case FRAME_TYPE_CACHED:
           bitmapReference = mBitmapFrameCache.getCachedFrame(frameNumber);
-          drawn = drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_CACHED);
+          drawn = drawBitmapAndCache(drawable, frameNumber, bitmapReference, canvas, FRAME_TYPE_CACHED);
           nextFrameType = FRAME_TYPE_REUSED;
           break;
 
@@ -199,7 +221,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
               mBitmapFrameCache.getBitmapToReuseForFrame(frameNumber, mBitmapWidth, mBitmapHeight);
           // Try to render the frame and draw on the canvas immediately after
           drawn = renderFrameInBitmap(frameNumber, bitmapReference) &&
-              drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_REUSED);
+              drawBitmapAndCache(drawable, frameNumber, bitmapReference, canvas, FRAME_TYPE_REUSED);
           nextFrameType = FRAME_TYPE_CREATED;
           break;
 
@@ -215,13 +237,13 @@ public class BitmapAnimationBackend implements AnimationBackend,
           }
           // Try to render the frame and draw on the canvas immediately after
           drawn = renderFrameInBitmap(frameNumber, bitmapReference) &&
-              drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_CREATED);
+              drawBitmapAndCache(drawable, frameNumber, bitmapReference, canvas, FRAME_TYPE_CREATED);
           nextFrameType = FRAME_TYPE_FALLBACK;
           break;
 
         case FRAME_TYPE_FALLBACK:
           bitmapReference = mBitmapFrameCache.getFallbackFrame(frameNumber);
-          drawn = drawBitmapAndCache(frameNumber, bitmapReference, canvas, FRAME_TYPE_FALLBACK);
+          drawn = drawBitmapAndCache(drawable, frameNumber, bitmapReference, canvas, FRAME_TYPE_FALLBACK);
           break;
 
         default:
@@ -234,18 +256,22 @@ public class BitmapAnimationBackend implements AnimationBackend,
     if (drawn || nextFrameType == FRAME_TYPE_UNKNOWN) {
       return drawn;
     } else {
-      return drawFrameOrFallback(canvas, frameNumber, nextFrameType);
+      return drawFrameOrFallback(drawable, canvas, frameNumber, nextFrameType);
     }
   }
 
   @Override
   public void setAlpha(@IntRange(from = 0, to = 255) int alpha) {
     mPaint.setAlpha(alpha);
+    mRoundPaint.setAlpha(alpha);
+    mBorderPaint.setAlpha(alpha);
   }
 
   @Override
   public void setColorFilter(@Nullable ColorFilter colorFilter) {
     mPaint.setColorFilter(colorFilter);
+    mRoundPaint.setColorFilter(colorFilter);
+    mBorderPaint.setColorFilter(colorFilter);
   }
 
   @Override
@@ -330,6 +356,7 @@ public class BitmapAnimationBackend implements AnimationBackend,
    * @return true if the bitmap has been drawn
    */
   private boolean drawBitmapAndCache(
+      Drawable drawable,
       int frameNumber,
       @Nullable CloseableReference<Bitmap> bitmapReference,
       Canvas canvas,
@@ -337,10 +364,10 @@ public class BitmapAnimationBackend implements AnimationBackend,
     if (!CloseableReference.isValid(bitmapReference)) {
       return false;
     }
-    if (mBounds == null) {
-      canvas.drawBitmap(bitmapReference.get(), 0f, 0f, mPaint);
+    if (drawable instanceof RoundedAnimationDrawable) {
+      drawRoundBitmap((RoundedAnimationDrawable) drawable, canvas, bitmapReference);
     } else {
-      canvas.drawBitmap(bitmapReference.get(), null, mBounds, mPaint);
+      drawNormalBitmap(canvas, bitmapReference);
     }
 
     // Notify the cache that a frame has been rendered.
@@ -356,5 +383,61 @@ public class BitmapAnimationBackend implements AnimationBackend,
       mFrameListener.onFrameDrawn(this, frameNumber, frameType);
     }
     return true;
+  }
+
+  private void drawNormalBitmap(
+          Canvas canvas,
+          CloseableReference<Bitmap> bitmapReference) {
+    if (mBounds == null) {
+      canvas.drawBitmap(bitmapReference.get(), 0f, 0f, mPaint);
+    } else {
+      canvas.drawBitmap(bitmapReference.get(), null, mBounds, mPaint);
+    }
+  }
+
+  private void drawRoundBitmap(
+          RoundedAnimationDrawable drawable,
+          Canvas canvas,
+          CloseableReference<Bitmap> bitmapReference) {
+    if (!drawable.shouldRound()) {
+      drawNormalBitmap(canvas, bitmapReference);
+    } else {
+      drawable.updateTransform();
+      drawable.updatePath();
+      updatePaint(bitmapReference.get(), drawable);
+      int saveCount = canvas.save();
+      canvas.concat(drawable.getInverseParent());
+      canvas.drawPath(drawable.getPath(), mRoundPaint);
+      float borderWidth = drawable.getBorderWidth();
+      if (borderWidth > 0) {
+        int borderColor = drawable.getBorderColor();
+        Path borderPath = drawable.getBorderPath();
+        mBorderPaint.setStrokeWidth(borderWidth);
+        mBorderPaint.setColor(DrawableUtils.multiplyColorAlpha(borderColor, mRoundPaint.getAlpha()));
+        canvas.drawPath(borderPath, mBorderPaint);
+      }
+      canvas.restoreToCount(saveCount);
+    }
+  }
+
+  private void updatePaint(Bitmap bitmap, RoundedAnimationDrawable drawable) {
+    Matrix transform = drawable.getTransform();
+    boolean matrixChanged = drawable.getTransformChanged();
+    int bitmapHashCode = bitmap.hashCode();
+    if (bitmapHashCode != mPreBitmapHashCode) {
+      WeakReference<BitmapShader> shaderReference = mShaderCache.get(bitmapHashCode);
+      if (shaderReference != null && shaderReference.get() != null) {
+        mRoundPaint.setShader(shaderReference.get());
+      } else {
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        mShaderCache.put(bitmapHashCode, new WeakReference<>(shader));
+        mRoundPaint.setShader(shader);
+      }
+      matrixChanged = true;
+      mPreBitmapHashCode = bitmapHashCode;
+    }
+    if (matrixChanged) {
+      mRoundPaint.getShader().setLocalMatrix(transform);
+    }
   }
 }
