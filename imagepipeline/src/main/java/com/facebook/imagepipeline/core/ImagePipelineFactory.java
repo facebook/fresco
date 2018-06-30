@@ -74,6 +74,16 @@ public class ImagePipelineFactory {
     return Preconditions.checkNotNull(sInstance, "ImagePipelineFactory was not initialized!");
   }
 
+  /**
+   * Overrides current instance with a new one. Usually used when dealing with multiple
+   * ImagePipelineFactories
+   *
+   * @param newInstance
+   */
+  public static void setInstance(ImagePipelineFactory newInstance) {
+    sInstance = newInstance;
+  }
+
   /** Initializes {@link ImagePipelineFactory} with default config. */
   public static synchronized void initialize(Context context) {
     initialize(ImagePipelineConfig.newBuilder(context).build());
