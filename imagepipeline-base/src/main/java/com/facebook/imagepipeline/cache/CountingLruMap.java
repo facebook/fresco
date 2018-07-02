@@ -6,7 +6,7 @@
  */
 package com.facebook.imagepipeline.cache;
 
-import com.android.internal.util.Predicate;
+import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Iterator;

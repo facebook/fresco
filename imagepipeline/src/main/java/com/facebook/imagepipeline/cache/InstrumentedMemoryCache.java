@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.cache;
 
-import com.android.internal.util.Predicate;
+import com.facebook.common.internal.Predicate;
 import com.facebook.common.references.CloseableReference;
 
 public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
-import com.android.internal.util.Predicate;
+import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;

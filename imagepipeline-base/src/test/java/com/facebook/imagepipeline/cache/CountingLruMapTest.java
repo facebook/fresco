@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.cache;
 
 import static org.junit.Assert.*;
 
-import com.android.internal.util.Predicate;
+import com.facebook.common.internal.Predicate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.*;

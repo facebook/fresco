@@ -9,8 +9,8 @@ package com.facebook.imagepipeline.cache;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
-import com.android.internal.util.Predicate;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimType;

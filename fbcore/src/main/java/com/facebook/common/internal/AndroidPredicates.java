@@ -7,8 +7,6 @@
 
 package com.facebook.common.internal;
 
-import com.android.internal.util.Predicate;
-
 /**
  * Additional predicates.
  */
