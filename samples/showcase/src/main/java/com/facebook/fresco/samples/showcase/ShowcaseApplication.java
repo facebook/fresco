@@ -24,6 +24,8 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
+import com.facebook.imagepipeline.memory.BitmapCounterConfig;
+import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
 import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
@@ -76,6 +78,10 @@ public class ShowcaseApplication extends Application {
     draweeConfigBuilder.setDebugOverlayEnabledSupplier(
         DebugOverlaySupplierSingleton.getInstance(getApplicationContext()));
 
+    BitmapCounterProvider.initialize(
+        BitmapCounterConfig.newBuilder()
+            .setMaxBitmapCount(BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT)
+            .build());
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build());
 
     final Context context = this;

@@ -7,9 +7,12 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.ThreadSafe;
 
 public class BitmapCounterProvider {
+  private static final Class<?> TAG = BitmapCounterProvider.class;
+
   private static final long KB = 1024;
   private static final long MB = 1024 * KB;
 
@@ -21,7 +24,8 @@ public class BitmapCounterProvider {
    * background process to be killed.
    */
   public static final int MAX_BITMAP_TOTAL_SIZE = getMaxSizeHardCap();
-  public static final int MAX_BITMAP_COUNT = 384;
+
+  private static int sMaxBitmapCount = BitmapCounterConfig.DEFAULT_MAX_BITMAP_COUNT;
 
   private static volatile BitmapCounter sBitmapCounter;
 
@@ -34,12 +38,20 @@ public class BitmapCounterProvider {
     }
   }
 
+  public static void initialize(BitmapCounterConfig bitmapCounterConfig) {
+    if (sBitmapCounter != null) {
+      throw new IllegalStateException("BitmapCounter has already been created! `BitmapCounterProvider.initialize(...)` should only be called before `BitmapCounterProvider.get()` or not at all!");
+    } else {
+      sMaxBitmapCount = bitmapCounterConfig.getMaxBitmapCount();
+    }
+  }
+
   @ThreadSafe
   public static BitmapCounter get() {
     if (sBitmapCounter == null) {
       synchronized (BitmapCounterProvider.class) {
         if (sBitmapCounter == null) {
-         sBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_TOTAL_SIZE);
+          sBitmapCounter = new BitmapCounter(sMaxBitmapCount, MAX_BITMAP_TOTAL_SIZE);
         }
       }
     }
