@@ -20,7 +20,7 @@ class OOMSoftReferenceBucket<V> extends Bucket<V> {
   private LinkedList<OOMSoftReference<V>> mSpareReferences;
 
   public OOMSoftReferenceBucket(int itemSize, int maxLength, int inUseLength) {
-    super(itemSize, maxLength, inUseLength);
+    super(itemSize, maxLength, inUseLength, false);
     mSpareReferences = new LinkedList<>();
   }
 

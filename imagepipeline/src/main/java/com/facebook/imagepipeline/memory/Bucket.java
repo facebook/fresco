@@ -47,15 +47,18 @@ class Bucket<V> {
   public final int mMaxLength; // 'max' length for this bucket
   final Queue mFreeList; // the free list for this bucket, subclasses can vary type
 
+  private final boolean mFixBucketsReinitialization;
+
   private int mInUseLength; // current number of entries 'in use' (i.e.) not in the free list
 
   /**
    * Constructs a new Bucket instance. The constructed bucket will have an empty freelist
+   *
    * @param itemSize size in bytes of each item in this bucket
    * @param maxLength max length for the bucket (used + free)
    * @param inUseLength current in-use-length for the bucket
    */
-  public Bucket(int itemSize, int maxLength, int inUseLength) {
+  public Bucket(int itemSize, int maxLength, int inUseLength, boolean fixBucketsReinitialization) {
     Preconditions.checkState(itemSize > 0);
     Preconditions.checkState(maxLength >= 0);
     Preconditions.checkState(inUseLength >= 0);
@@ -64,6 +67,8 @@ class Bucket<V> {
     mMaxLength = maxLength;
     mFreeList = new LinkedList();
     mInUseLength = inUseLength;
+
+    mFixBucketsReinitialization = fixBucketsReinitialization;
   }
 
   /**
@@ -117,11 +122,19 @@ class Bucket<V> {
    */
   public void release(V value) {
     Preconditions.checkNotNull(value);
-    if (mInUseLength > 0) {
+    if (mFixBucketsReinitialization) {
+      // Proper way
+      Preconditions.checkState(mInUseLength > 0);
       mInUseLength--;
       addToFreeList(value);
     } else {
-      FLog.e(TAG, "Tried to release value %s from an empty bucket!", value);
+      // Keep using previous adhoc
+      if (mInUseLength > 0) {
+        mInUseLength--;
+        addToFreeList(value);
+      } else {
+        FLog.e(TAG, "Tried to release value %s from an empty bucket!", value);
+      }
     }
   }
 

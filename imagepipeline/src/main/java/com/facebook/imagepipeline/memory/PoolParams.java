@@ -53,6 +53,8 @@ public class PoolParams {
   public final int minBucketSize;
   public final int maxBucketSize;
 
+  public boolean fixBucketsReinitialization;
+
   /** The maximum number of threads that may be accessing this pool.
    *
    * <p>Pool implementations may or may not need this to be set.
