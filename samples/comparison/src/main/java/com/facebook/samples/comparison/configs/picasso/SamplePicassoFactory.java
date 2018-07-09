@@ -14,8 +14,8 @@ package com.facebook.samples.comparison.configs.picasso;
 
 import android.content.Context;
 import com.facebook.samples.comparison.configs.ConfigConstants;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.LruCache;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 /**
