@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
     implementation "com.android.volley:volley:${VOLLEY_VERSION}"
     implementation "com.nostra13.universalimageloader:universal-image-loader:${UIL_VERSION}"
     implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
