@@ -23,6 +23,7 @@ import com.facebook.cache.common.MultiCacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.common.Priority;
@@ -74,6 +75,7 @@ public class DiskCacheWriteProducerTest {
   private CloseableReference<PooledByteBuffer> mIntermediateImageReference;
   private CloseableReference<PooledByteBuffer> mFinalImageReference;
   private EncodedImage mIntermediateEncodedImage;
+  private EncodedImage mFinalEncodedImageFormatUnknown;
   private EncodedImage mFinalEncodedImage;
   private DiskCacheWriteProducer mDiskCacheWriteProducer;
 
@@ -94,7 +96,10 @@ public class DiskCacheWriteProducerTest {
     mIntermediateImageReference = CloseableReference.of(mIntermediatePooledByteBuffer);
     mFinalImageReference = CloseableReference.of(mFinalPooledByteBuffer);
     mIntermediateEncodedImage = new EncodedImage(mIntermediateImageReference);
+    mFinalEncodedImageFormatUnknown = new EncodedImage(mFinalImageReference);
+
     mFinalEncodedImage = new EncodedImage(mFinalImageReference);
+    mFinalEncodedImage.setImageFormat(new ImageFormat("jpeg", null));
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,
@@ -149,14 +154,28 @@ public class DiskCacheWriteProducerTest {
   }
 
   @Test
+  public void testSmallImageDiskCacheInputProducerUnknownFormat() {
+    when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.SMALL);
+    setupInputProducerSuccessFormatUnknown();
+    mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
+    verify(mSmallImageBufferedDiskCache, never()).put(mCacheKey, mIntermediateEncodedImage);
+    verify(mSmallImageBufferedDiskCache, never()).put(mCacheKey, mFinalEncodedImageFormatUnknown);
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImageFormatUnknown, Consumer.IS_LAST);
+    verifyZeroInteractions(mProducerListener);
+  }
+
+  @Test
   public void testDoesNotWriteToCacheIfPartialResult() {
-    setupInputProducerSuccessWithStatusFlags(Consumer.IS_PARTIAL_RESULT);
+    setupInputProducerSuccessWithStatusFlags(
+        Consumer.IS_PARTIAL_RESULT, mFinalEncodedImageFormatUnknown);
 
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.IS_PARTIAL_RESULT);
     verify(mConsumer)
-        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
+        .onNewResult(
+            mFinalEncodedImageFormatUnknown, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
 
     verifyZeroInteractions(mDefaultBufferedDiskCache, mSmallImageBufferedDiskCache);
   }
@@ -186,10 +205,10 @@ public class DiskCacheWriteProducerTest {
   @Test
   public void testDoesNotWriteResultToCacheIfNotEnabled() {
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(false);
-    setupInputProducerSuccess();
+    setupInputProducerSuccessFormatUnknown();
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
-    verify(mConsumer).onNewResult(mFinalEncodedImage, Consumer.IS_LAST);
+    verify(mConsumer).onNewResult(mFinalEncodedImageFormatUnknown, Consumer.IS_LAST);
     verifyNoMoreInteractions(
         mProducerListener,
         mCacheKeyFactory,
@@ -199,11 +218,13 @@ public class DiskCacheWriteProducerTest {
 
   @Test
   public void testDoesNotWriteResultToCacheIfResultStatusSaysNotTo() {
-    setupInputProducerSuccessWithStatusFlags(Consumer.DO_NOT_CACHE_ENCODED);
+    setupInputProducerSuccessWithStatusFlags(
+        Consumer.DO_NOT_CACHE_ENCODED, mFinalEncodedImageFormatUnknown);
     mDiskCacheWriteProducer.produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.DO_NOT_CACHE_ENCODED);
     verify(mConsumer)
-        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
+        .onNewResult(
+            mFinalEncodedImageFormatUnknown, Consumer.IS_LAST | Consumer.DO_NOT_CACHE_ENCODED);
     verifyNoMoreInteractions(
         mProducerListener,
         mCacheKeyFactory,
@@ -223,21 +244,28 @@ public class DiskCacheWriteProducerTest {
         mProducerListener);
   }
 
-  private void setupInputProducerSuccess() {
-    setupInputProducerSuccessWithStatusFlags(0);
+  private void setupInputProducerSuccessFormatUnknown() {
+    setupInputProducerSuccessWithStatusFlags(0, mFinalEncodedImageFormatUnknown);
   }
 
-  private void setupInputProducerSuccessWithStatusFlags(final @Consumer.Status int statusFlags) {
+  private void setupInputProducerSuccess() {
+    setupInputProducerSuccessWithStatusFlags(0, mFinalEncodedImage);
+  }
+
+  private void setupInputProducerSuccessWithStatusFlags(
+      final @Consumer.Status int statusFlags, final EncodedImage finalEncodedImage) {
     doAnswer(
-        new Answer<Object>() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            Consumer consumer = (Consumer) invocation.getArguments()[0];
-            consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS | statusFlags);
-            consumer.onNewResult(mFinalEncodedImage, Consumer.IS_LAST | statusFlags);
-            return null;
-          }
-        }).when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
+            new Answer<Object>() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                Consumer consumer = (Consumer) invocation.getArguments()[0];
+                consumer.onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS | statusFlags);
+                consumer.onNewResult(finalEncodedImage, Consumer.IS_LAST | statusFlags);
+                return null;
+              }
+            })
+        .when(mInputProducer)
+        .produceResults(any(Consumer.class), eq(mProducerContext));
   }
 
   private void setupInputProducerFailure() {
