@@ -165,8 +165,6 @@ public class ImagePipelineFactory {
           BitmapCountingMemoryCacheFactory.get(
               mConfig.getBitmapMemoryCacheParamsSupplier(),
               mConfig.getMemoryTrimmableRegistry(),
-              getPlatformBitmapFactory(),
-              mConfig.getExperiments().isExternalCreatedBitmapLogEnabled(),
               mConfig.getBitmapMemoryCacheTrimStrategy());
     }
     return mBitmapCountingMemoryCache;
@@ -186,9 +184,7 @@ public class ImagePipelineFactory {
     if (mEncodedCountingMemoryCache == null) {
       mEncodedCountingMemoryCache =
           EncodedCountingMemoryCacheFactory.get(
-              mConfig.getEncodedMemoryCacheParamsSupplier(),
-              mConfig.getMemoryTrimmableRegistry(),
-              getPlatformBitmapFactory());
+              mConfig.getEncodedMemoryCacheParamsSupplier(), mConfig.getMemoryTrimmableRegistry());
     }
     return mEncodedCountingMemoryCache;
   }

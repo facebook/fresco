@@ -14,15 +14,10 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,14 +28,12 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -65,7 +58,6 @@ public class CountingMemoryCacheTest {
   @Mock public CountingMemoryCache.CacheTrimStrategy mCacheTrimStrategy;
   @Mock public Supplier<MemoryCacheParams> mParamsSupplier;
   @Mock public CountingMemoryCache.EntryStateObserver<String> mEntryStateObserver;
-  @Mock public PlatformBitmapFactory.BitmapCreationObserver mBitmapCreationObserver;
   @Mock public Bitmap mBitmap;
 
   @Rule
@@ -74,7 +66,6 @@ public class CountingMemoryCacheTest {
   private ValueDescriptor<Integer> mValueDescriptor;
   private MemoryCacheParams mParams;
   private CountingMemoryCache<String, Integer> mCache;
-  private PlatformBitmapFactory mPlatformBitmapFactory;
   private CloseableReference<Bitmap> mBitmapReference;
 
   private static final String KEY = "KEY";
@@ -108,54 +99,8 @@ public class CountingMemoryCacheTest {
         CACHE_EVICTION_QUEUE_MAX_COUNT,
         CACHE_ENTRY_MAX_SIZE);
     when(mParamsSupplier.get()).thenReturn(mParams);
-    mPlatformBitmapFactory = Mockito.mock(PlatformBitmapFactory.class);
     mBitmapReference = CloseableReference.of(mBitmap, FAKE_BITMAP_RESOURCE_RELEASER);
-    mCache = new CountingMemoryCache<>(
-        mValueDescriptor,
-        mCacheTrimStrategy,
-        mParamsSupplier,
-        mPlatformBitmapFactory,
-        true);
-  }
-
-  @Test
-  public void testSetCreationListener() throws Exception {
-    verify(mPlatformBitmapFactory, times(1))
-        .setCreationListener(any(PlatformBitmapFactory.BitmapCreationObserver.class));
-  }
-
-  @Test
-  public void testAddBitmapReference() throws Exception {
-    when(mPlatformBitmapFactory.createBitmapInternal(anyInt(), anyInt(), any(Bitmap.Config.class)))
-        .thenReturn(mBitmapReference);
-    when(mPlatformBitmapFactory.createBitmap(anyInt(), anyInt())).thenCallRealMethod();
-    when(mPlatformBitmapFactory.createBitmap(anyInt(), anyInt(), any(Bitmap.Config.class)))
-        .thenCallRealMethod();
-    when(mPlatformBitmapFactory.createBitmap(
-        anyInt(),
-        anyInt(),
-        any(Bitmap.Config.class),
-        anyObject()))
-        .thenCallRealMethod();
-    CloseableReference<Bitmap> bitmapReference = mPlatformBitmapFactory.createBitmap(50, 50);
-    assertEquals(bitmapReference, mBitmapReference);
-    verify(mPlatformBitmapFactory).addBitmapReference(mBitmapReference.get(), null);
-  }
-
-  @Test
-  public void testOnBitmapCreated() throws Exception {
-    mPlatformBitmapFactory = mock(PlatformBitmapFactory.class, CALLS_REAL_METHODS);
-
-    mCache = new CountingMemoryCache<>(
-        mValueDescriptor,
-        mCacheTrimStrategy,
-        mParamsSupplier,
-        mPlatformBitmapFactory,
-        true);
-
-    assertEquals("other entries count mismatch", 0, mCache.mOtherEntries.size());
-    mPlatformBitmapFactory.addBitmapReference(mBitmapReference.get(), null);
-    assertEquals("other entries count mismatch" ,1, mCache.mOtherEntries.size());
+    mCache = new CountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier);
   }
 
   @Test

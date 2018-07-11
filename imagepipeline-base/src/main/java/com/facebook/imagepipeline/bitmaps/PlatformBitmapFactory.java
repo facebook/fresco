@@ -71,9 +71,7 @@ public abstract class PlatformBitmapFactory {
       int height,
       Bitmap.Config bitmapConfig,
       @Nullable Object callerContext) {
-    CloseableReference<Bitmap> reference = createBitmapInternal(width, height, bitmapConfig);
-    addBitmapReference(reference.get(), callerContext);
-    return reference;
+    return createBitmapInternal(width, height, bitmapConfig);
   }
 
   /**
@@ -513,7 +511,6 @@ public abstract class PlatformBitmapFactory {
       bitmap.eraseColor(0xff000000);
     }
 
-    addBitmapReference(bitmapRef.get(), callerContext);
     return bitmapRef;
   }
 
@@ -559,7 +556,6 @@ public abstract class PlatformBitmapFactory {
     CloseableReference<Bitmap> bitmapRef = createBitmapInternal(width, height, config);
     Bitmap bitmap = bitmapRef.get();
     bitmap.setPixels(colors, 0, width, 0, 0, width, height);
-    addBitmapReference(bitmapRef.get(), callerContext);
     return bitmapRef;
   }
 
@@ -780,29 +776,4 @@ public abstract class PlatformBitmapFactory {
       int height,
       Bitmap.Config bitmapConfig);
 
-  private static BitmapCreationObserver sBitmapCreationObserver;
-
-  public void setCreationListener(final BitmapCreationObserver bitmapCreationObserver) {
-    if (sBitmapCreationObserver == null) {
-      sBitmapCreationObserver = bitmapCreationObserver;
-    }
-  }
-
-  public void addBitmapReference(
-      Bitmap bitmap,
-      @Nullable Object callerContext) {
-    if (sBitmapCreationObserver != null) {
-      sBitmapCreationObserver.onBitmapCreated(bitmap, callerContext);
-    }
-  }
-
-  /**
-   * Observer that notifies external creation of bitmap using
-   * {@link PlatformBitmapFactory#createBitmap(int, int)} or
-   * {@link PlatformBitmapFactory#createBitmap(int, int, Bitmap.Config)}.
-   */
-  public interface BitmapCreationObserver {
-
-    void onBitmapCreated(Bitmap bitmap, @Nullable Object callerContext);
-  }
 }

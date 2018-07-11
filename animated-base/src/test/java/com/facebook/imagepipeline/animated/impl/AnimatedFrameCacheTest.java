@@ -57,11 +57,7 @@ public class AnimatedFrameCacheTest {
         Integer.MAX_VALUE);
     when(mMemoryCacheParamsSupplier.get()).thenReturn(params);
     CountingMemoryCache<CacheKey, CloseableImage> countingMemoryCache =
-        BitmapCountingMemoryCacheFactory.get(
-            mMemoryCacheParamsSupplier,
-            mMemoryTrimmableRegistry,
-            mPlatformBitmapFactory,
-            true);
+        BitmapCountingMemoryCacheFactory.get(mMemoryCacheParamsSupplier, mMemoryTrimmableRegistry);
     mCacheKey = new SimpleCacheKey("key");
     mAnimatedFrameCache = new AnimatedFrameCache(mCacheKey, countingMemoryCache);
     mFrame1 = CloseableReference.of(mock(CloseableImage.class));

@@ -34,7 +34,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 public class ImagePipelineExperiments {
 
   private final boolean mWebpSupportEnabled;
-  private final boolean mExternalCreatedBitmapLogEnabled;
   private final Supplier<Boolean> mMediaVariationsIndexEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
@@ -52,7 +51,6 @@ public class ImagePipelineExperiments {
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
-    mExternalCreatedBitmapLogEnabled = builder.mExternalCreatedBitmapLogEnabled;
     if (builder.mMediaVariationsIndexEnabled != null) {
       mMediaVariationsIndexEnabled = builder.mMediaVariationsIndexEnabled;
     } else {
@@ -80,10 +78,6 @@ public class ImagePipelineExperiments {
       mProducerFactoryMethod = builder.mProducerFactoryMethod;
     }
     mLazyDataSource = builder.mLazyDataSource;
-  }
-
-  public boolean isExternalCreatedBitmapLogEnabled() {
-    return mExternalCreatedBitmapLogEnabled;
   }
 
   public boolean getMediaVariationsIndexEnabled() {
@@ -151,7 +145,6 @@ public class ImagePipelineExperiments {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private boolean mWebpSupportEnabled = false;
-    private boolean mExternalCreatedBitmapLogEnabled = false;
     private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
@@ -169,12 +162,6 @@ public class ImagePipelineExperiments {
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
-    }
-
-    public ImagePipelineConfig.Builder setExternalCreatedBitmapLogEnabled(
-        boolean externalCreatedBitmapLogEnabled) {
-      mExternalCreatedBitmapLogEnabled = externalCreatedBitmapLogEnabled;
-      return mConfigBuilder;
     }
 
     /**

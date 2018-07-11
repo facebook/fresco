@@ -11,14 +11,12 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.PooledByteBuffer;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 
 public class EncodedCountingMemoryCacheFactory {
 
   public static CountingMemoryCache<CacheKey, PooledByteBuffer> get(
-       Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
-       MemoryTrimmableRegistry memoryTrimmableRegistry,
-       PlatformBitmapFactory platformBitmapFactory) {
+      Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
+      MemoryTrimmableRegistry memoryTrimmableRegistry) {
 
     ValueDescriptor<PooledByteBuffer> valueDescriptor =
         new ValueDescriptor<PooledByteBuffer>() {
@@ -31,12 +29,7 @@ public class EncodedCountingMemoryCacheFactory {
     CountingMemoryCache.CacheTrimStrategy trimStrategy = new NativeMemoryCacheTrimStrategy();
 
     CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
-        new CountingMemoryCache<>(
-            valueDescriptor,
-            trimStrategy,
-            encodedMemoryCacheParamsSupplier,
-            platformBitmapFactory,
-            false);
+        new CountingMemoryCache<>(valueDescriptor, trimStrategy, encodedMemoryCacheParamsSupplier);
 
     memoryTrimmableRegistry.registerMemoryTrimmable(countingCache);
 
