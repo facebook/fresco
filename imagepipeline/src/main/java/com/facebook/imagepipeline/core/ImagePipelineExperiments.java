@@ -38,7 +38,6 @@ public class ImagePipelineExperiments {
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
-  private final boolean mSuppressBitmapPrefetching;
   private final boolean mUseDownsamplingRatioForResizing;
   private final boolean mUseBitmapPrepareToDraw;
   private final int mBitmapPrepareToDrawMinSizeBytes;
@@ -64,7 +63,6 @@ public class ImagePipelineExperiments {
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
-    mSuppressBitmapPrefetching = builder.mSuppressBitmapPrefetching;
     mUseDownsamplingRatioForResizing = builder.mUseDownsamplingRatioForResizing;
     mUseBitmapPrepareToDraw = builder.mUseBitmapPrepareToDraw;
     mBitmapPrepareToDrawMinSizeBytes = builder.mBitmapPrepareToDrawMinSizeBytes;
@@ -149,7 +147,6 @@ public class ImagePipelineExperiments {
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
-    private boolean mSuppressBitmapPrefetching = false;
     private boolean mUseDownsamplingRatioForResizing = false;
     private boolean mUseBitmapPrepareToDraw = false;
     private int mBitmapPrepareToDrawMinSizeBytes = 0;
@@ -221,12 +218,6 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setWebpBitmapFactory(
         WebpBitmapFactory webpBitmapFactory) {
       mWebpBitmapFactory = webpBitmapFactory;
-      return mConfigBuilder;
-    }
-
-    public ImagePipelineConfig.Builder setSuppressBitmapPrefetching(
-        boolean suppressBitmapPrefetching) {
-      mSuppressBitmapPrefetching = suppressBitmapPrefetching;
       return mConfigBuilder;
     }
 
