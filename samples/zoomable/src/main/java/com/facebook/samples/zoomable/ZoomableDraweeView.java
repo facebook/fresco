@@ -56,6 +56,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private boolean mAllowTouchInterceptionWhileZoomed = true;
 
   private boolean mIsDialtoneEnabled = false;
+  private boolean mZoomingEnabled = true;
 
   private final ControllerListener mControllerListener = new BaseControllerListener<Object>() {
     @Override
@@ -217,6 +218,11 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     mTapGestureDetector.setIsLongpressEnabled(enabled);
   }
 
+  public void setZoomingEnabled(boolean zoomingEnabled) {
+    mZoomingEnabled = zoomingEnabled;
+    mZoomableController.setEnabled(false);
+  }
+
   /**
    * Sets the image controller.
    */
@@ -370,7 +376,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   private void onFinalImageSet() {
     FLog.v(getLogTag(), "onFinalImageSet: view %x", this.hashCode());
-    if (!mZoomableController.isEnabled()) {
+    if (!mZoomableController.isEnabled() && mZoomingEnabled) {
       mZoomableController.setEnabled(true);
       updateZoomableControllerBounds();
     }
