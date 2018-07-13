@@ -30,7 +30,8 @@ public class BitmapMemoryCacheGetProducer extends BitmapMemoryCacheProducer {
   @Override
   protected Consumer<CloseableReference<CloseableImage>> wrapConsumer(
       final Consumer<CloseableReference<CloseableImage>> consumer,
-      final CacheKey cacheKey) {
+      final CacheKey cacheKey,
+      boolean isMemoryCacheEnabled) {
     // since this cache is read-only, we can pass our consumer directly to the next producer
     return consumer;
   }

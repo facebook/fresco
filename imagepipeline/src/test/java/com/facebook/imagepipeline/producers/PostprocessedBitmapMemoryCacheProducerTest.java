@@ -86,6 +86,18 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
     when(mRepeatedPostprocessor.getPostprocessorCacheKey()).thenReturn(mPostProcessorCacheKey);
     when(mCacheKeyFactory.getPostprocessedBitmapCacheKey(mImageRequest, PRODUCER_NAME))
         .thenReturn(mPostprocessedBitmapCacheKey);
+
+    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(true);
+  }
+
+  @Test
+  public void testDisableMemoryCache() {
+    when(mImageRequest.getPostprocessor()).thenReturn(mRepeatedPostprocessor);
+    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(false);
+    Consumer consumer = performCacheMiss();
+    consumer.onNewResult(mImageRef1, Consumer.NO_FLAGS);
+    mImageRef1.close();
+    verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
   }
 
   @Test

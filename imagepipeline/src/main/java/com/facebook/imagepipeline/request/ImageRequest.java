@@ -80,6 +80,9 @@ public class ImageRequest {
   /** Whether the disk cache should be used for this request */
   private final boolean mIsDiskCacheEnabled;
 
+  /** Whether the memory cache should be used for this request */
+  private final boolean mIsMemoryCacheEnabled;
+
   /** Postprocessor to run on the output bitmap. */
   private final @Nullable Postprocessor mPostprocessor;
 
@@ -117,6 +120,7 @@ public class ImageRequest {
     mRequestPriority = builder.getRequestPriority();
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
+    mIsMemoryCacheEnabled = builder.isMemoryCacheEnabled();
 
     mPostprocessor = builder.getPostprocessor();
 
@@ -190,6 +194,10 @@ public class ImageRequest {
 
   public boolean isDiskCacheEnabled() {
     return mIsDiskCacheEnabled;
+  }
+
+  public boolean isMemoryCacheEnabled() {
+    return mIsMemoryCacheEnabled;
   }
 
   public synchronized File getSourceFile() {

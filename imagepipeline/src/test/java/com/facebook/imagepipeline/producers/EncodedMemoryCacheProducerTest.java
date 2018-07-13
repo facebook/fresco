@@ -94,6 +94,16 @@ public class EncodedMemoryCacheProducerTest {
     when(mProducerContext.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
 
+    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(true);
+  }
+
+  @Test
+  public void testDisableMemoryCache() {
+    setupEncodedMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccess();
+    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(false);
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+    verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
   }
 
   @Test

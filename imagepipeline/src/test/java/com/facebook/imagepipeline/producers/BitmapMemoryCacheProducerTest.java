@@ -95,6 +95,19 @@ public class BitmapMemoryCacheProducerTest {
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
     when(mCacheKeyFactory.getBitmapCacheKey(mImageRequest, PRODUCER_NAME))
         .thenReturn(mBitmapMemoryCacheKey);
+
+    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(true);
+  }
+
+  @Test
+  public void testDisableMemoryCache() {
+    setupBitmapMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccess();
+    when(mMemoryCache.get(mBitmapMemoryCacheKey)).thenReturn(null);
+    when(mImageRequest.isMemoryCacheEnabled()).thenReturn(false);
+    mBitmapMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+    verify(mMemoryCache, never())
+        .cache(any(BitmapMemoryCacheKey.class), any(CloseableReference.class));
   }
 
   @Test

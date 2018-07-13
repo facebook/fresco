@@ -40,6 +40,7 @@ public class ImageRequestBuilder {
   private Priority mRequestPriority = Priority.HIGH;
   private @Nullable Postprocessor mPostprocessor = null;
   private boolean mDiskCacheEnabled = true;
+  private boolean mMemoryCacheEnabled = true;
   private @Nullable RequestListener mRequestListener;
   private @Nullable MediaVariations mMediaVariations = null;
   private @Nullable BytesRange mBytesRange = null;
@@ -300,6 +301,17 @@ public class ImageRequestBuilder {
   /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
   public boolean isDiskCacheEnabled() {
     return mDiskCacheEnabled && UriUtil.isNetworkUri(mSourceUri);
+  }
+
+  /** Disables memory cache for this request. */
+  public ImageRequestBuilder disableMemoryCache() {
+    mMemoryCacheEnabled = false;
+    return this;
+  }
+
+  /** Returns whether the use of the memory cache is enabled. */
+  public boolean isMemoryCacheEnabled() {
+    return mMemoryCacheEnabled;
   }
 
   /**

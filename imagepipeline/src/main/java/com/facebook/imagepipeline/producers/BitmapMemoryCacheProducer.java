@@ -83,7 +83,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       return;
     }
 
-    Consumer<CloseableReference<CloseableImage>> wrappedConsumer = wrapConsumer(consumer, cacheKey);
+    Consumer<CloseableReference<CloseableImage>> wrappedConsumer =
+        wrapConsumer(consumer, cacheKey, producerContext.getImageRequest().isMemoryCacheEnabled());
     listener.onProducerFinishWithSuccess(
         requestId,
         getProducerName(),
@@ -95,14 +96,13 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
 
   protected Consumer<CloseableReference<CloseableImage>> wrapConsumer(
       final Consumer<CloseableReference<CloseableImage>> consumer,
-      final CacheKey cacheKey) {
+      final CacheKey cacheKey,
+      final boolean isMemoryCacheEnabled) {
     return new DelegatingConsumer<
-        CloseableReference<CloseableImage>,
-        CloseableReference<CloseableImage>>(consumer) {
+        CloseableReference<CloseableImage>, CloseableReference<CloseableImage>>(consumer) {
       @Override
       public void onNewResultImpl(
-          CloseableReference<CloseableImage> newResult,
-          @Status int status) {
+          CloseableReference<CloseableImage> newResult, @Status int status) {
         final boolean isLast = isLast(status);
         // ignore invalid intermediate results and forward the null result if last
         if (newResult == null) {
@@ -133,15 +133,17 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
             }
           }
         }
-        // cache and forward the new result
-        CloseableReference<CloseableImage> newCachedResult =
-            mMemoryCache.cache(cacheKey, newResult);
+        // cache, if needed, and forward the new result
+        CloseableReference<CloseableImage> newCachedResult = null;
+        if (isMemoryCacheEnabled) {
+          newCachedResult = mMemoryCache.cache(cacheKey, newResult);
+        }
         try {
           if (isLast) {
             getConsumer().onProgressUpdate(1f);
           }
-          getConsumer().onNewResult(
-              (newCachedResult != null) ? newCachedResult : newResult, status);
+          getConsumer()
+              .onNewResult((newCachedResult != null) ? newCachedResult : newResult, status);
         } finally {
           CloseableReference.closeSafely(newCachedResult);
         }
