@@ -12,7 +12,6 @@ import static com.facebook.imagepipeline.producers.JobScheduler.JobRunnable;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.references.CloseableReference;
@@ -64,7 +63,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final boolean mDownsampleEnabled;
   private final boolean mDownsampleEnabledForNetwork;
   private final boolean mDecodeCancellationEnabled;
-  private final Supplier<Boolean> mExperimentalSmartResizingEnabled;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -74,8 +72,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final boolean downsampleEnabled,
       final boolean downsampleEnabledForNetwork,
       final boolean decodeCancellationEnabled,
-      final Producer<EncodedImage> inputProducer,
-      final Supplier<Boolean> experimentalSmartResizingEnabled) {
+      final Producer<EncodedImage> inputProducer) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -84,7 +81,6 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mDecodeCancellationEnabled = decodeCancellationEnabled;
-    mExperimentalSmartResizingEnabled = experimentalSmartResizingEnabled;
   }
 
   @Override
@@ -139,9 +135,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             @Override
             public void run(EncodedImage encodedImage, @Status int status) {
               if (encodedImage != null) {
-                if (mDownsampleEnabled
-                    || (mExperimentalSmartResizingEnabled.get()
-                        && !statusHasFlag(status, Consumer.IS_RESIZING_DONE))) {
+                if (mDownsampleEnabled || !statusHasFlag(status, Consumer.IS_RESIZING_DONE)) {
                   ImageRequest request = producerContext.getImageRequest();
                   if (mDownsampleEnabledForNetwork
                       || !UriUtil.isNetworkUri(request.getSourceUri())) {

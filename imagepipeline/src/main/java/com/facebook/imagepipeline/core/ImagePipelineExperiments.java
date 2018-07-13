@@ -10,7 +10,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
-import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -44,7 +43,6 @@ public class ImagePipelineExperiments {
   private final int mBitmapPrepareToDrawMaxSizeBytes;
   private boolean mBitmapPrepareToDrawForPrefetch;
   private final boolean mPartialImageCachingEnabled;
-  private final Supplier<Boolean> mSmartResizingEnabled;
   private final ProducerFactoryMethod mProducerFactoryMethod;
   private final Supplier<Boolean> mLazyDataSource;
 
@@ -69,7 +67,6 @@ public class ImagePipelineExperiments {
     mBitmapPrepareToDrawMaxSizeBytes = builder.mBitmapPrepareToDrawMaxSizeBytes;
     mBitmapPrepareToDrawForPrefetch = builder.mBitmapPrepareToDrawForPrefetch;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
-    mSmartResizingEnabled = builder.mSmartResizingEnabled;
     if (builder.mProducerFactoryMethod == null) {
       mProducerFactoryMethod = new DefaultProducerFactoryMethod();
     } else {
@@ -118,10 +115,6 @@ public class ImagePipelineExperiments {
     return mPartialImageCachingEnabled;
   }
 
-  public Supplier<Boolean> isSmartResizingEnabled() {
-    return mSmartResizingEnabled;
-  }
-
   public ProducerFactoryMethod getProducerFactoryMethod() {
     return mProducerFactoryMethod;
   }
@@ -153,7 +146,6 @@ public class ImagePipelineExperiments {
     private int mBitmapPrepareToDrawMaxSizeBytes = 0;
     public boolean mBitmapPrepareToDrawForPrefetch = false;
     private boolean mPartialImageCachingEnabled = false;
-    private Supplier<Boolean> mSmartResizingEnabled = Suppliers.BOOLEAN_FALSE;
     private ProducerFactoryMethod mProducerFactoryMethod;
     public Supplier<Boolean> mLazyDataSource;
 
@@ -248,18 +240,6 @@ public class ImagePipelineExperiments {
     }
 
     /**
-     * Smart resizing combines transcoding and downsampling depending on the image format.
-     *
-     * @param smartResizingEnabled true if smart resizing should be enabled
-     * @return The Builder itself for chaining
-     */
-    public ImagePipelineConfig.Builder setSmartResizingEnabled(
-        Supplier<Boolean> smartResizingEnabled) {
-      mSmartResizingEnabled = smartResizingEnabled;
-      return mConfigBuilder;
-    }
-
-    /**
      * Stores an alternative method to instantiate the {@link ProducerFactory}. This allows
      * experimenting with overridden producers.
      */
@@ -290,7 +270,6 @@ public class ImagePipelineExperiments {
         boolean downsampleEnabled,
         boolean resizeAndRotateEnabledForNetwork,
         boolean decodeCancellationEnabled,
-        Supplier<Boolean> experimentalSmartResizingEnabled,
         ExecutorSupplier executorSupplier,
         PooledByteBufferFactory pooledByteBufferFactory,
         MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
@@ -316,7 +295,6 @@ public class ImagePipelineExperiments {
         boolean downsampleEnabled,
         boolean resizeAndRotateEnabledForNetwork,
         boolean decodeCancellationEnabled,
-        Supplier<Boolean> experimentalSmartResizingEnabled,
         ExecutorSupplier executorSupplier,
         PooledByteBufferFactory pooledByteBufferFactory,
         MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
@@ -337,7 +315,6 @@ public class ImagePipelineExperiments {
           downsampleEnabled,
           resizeAndRotateEnabledForNetwork,
           decodeCancellationEnabled,
-          experimentalSmartResizingEnabled,
           executorSupplier,
           pooledByteBufferFactory,
           bitmapMemoryCache,

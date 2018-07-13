@@ -356,7 +356,6 @@ public class ImagePipelineFactory {
                   mConfig.isDownsampleEnabled(),
                   mConfig.isResizeAndRotateEnabledForNetwork(),
                   mConfig.getExperiments().isDecodeCancellationEnabled(),
-                  mConfig.getExperiments().isSmartResizingEnabled(),
                   mConfig.getExecutorSupplier(),
                   mConfig.getPoolFactory().getPooledByteBufferFactory(),
                   getBitmapMemoryCache(),

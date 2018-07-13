@@ -13,7 +13,6 @@ import static org.mockito.Mockito.*;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -77,7 +76,6 @@ public class DecodeProducerTest {
 
   @Mock public ProgressiveJpegParser mProgressiveJpegParser;
   @Mock public JobScheduler mJobScheduler;
-  @Mock public Supplier<Boolean> mExperimentalResizingEnabledSupplier;
 
   private DecodeProducer mDecodeProducer;
 
@@ -104,7 +102,6 @@ public class DecodeProducerTest {
     PowerMockito.mockStatic(JobScheduler.class);
     PowerMockito.whenNew(JobScheduler.class).withAnyArguments()
         .thenReturn(mJobScheduler);
-    when(mExperimentalResizingEnabledSupplier.get()).thenReturn(false);
 
     mDecodeProducer =
         new DecodeProducer(
@@ -115,8 +112,7 @@ public class DecodeProducerTest {
             false, /* Set downsampleEnabled to false */
             false, /* Set resizeAndRotateForNetwork to false */
             false, /* We don't cancel when the request is cancelled */
-            mInputProducer,
-            mExperimentalResizingEnabledSupplier); /* No experimental resizing */
+            mInputProducer);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);
@@ -392,7 +388,6 @@ public class DecodeProducerTest {
       throws Exception {
     int resizedWidth = 10;
     int resizedHeight = 10;
-    when(mExperimentalResizingEnabledSupplier.get()).thenReturn(true);
     setupLocalUri(ResizeOptions.forDimensions(resizedWidth, resizedHeight));
 
     produceResults();
@@ -409,7 +404,6 @@ public class DecodeProducerTest {
       throws Exception {
     int resizedWidth = 10;
     int resizedHeight = 10;
-    when(mExperimentalResizingEnabledSupplier.get()).thenReturn(true);
     setupNetworkUri(ResizeOptions.forDimensions(resizedWidth, resizedHeight));
 
     produceResults();
