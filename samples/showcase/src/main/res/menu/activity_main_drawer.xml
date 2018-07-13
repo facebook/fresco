@@ -58,10 +58,6 @@
     <menu>
       <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_imagepipeline_media_variations"
-            android:title="@string/imagepipeline_media_variations_title"
-            />
-        <item
             android:id="@+id/nav_imagepipeline_notification"
             android:title="@string/imagepipeline_notification_title"
             />

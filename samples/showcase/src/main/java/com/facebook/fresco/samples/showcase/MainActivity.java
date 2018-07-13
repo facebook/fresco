@@ -54,7 +54,6 @@ import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelinePrefetchF
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineQualifiedResourceFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineRegionDecodingFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineResizingFragment;
-import com.facebook.fresco.samples.showcase.imagepipeline.MediaVariationsFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.PartialRequestFragment;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment;
@@ -180,9 +179,6 @@ public class MainActivity extends AppCompatActivity
         break;
 
       // Imagepipline
-      case R.id.nav_imagepipeline_media_variations:
-        fragment = new MediaVariationsFragment();
-        break;
       case R.id.nav_imagepipeline_notification:
         fragment = new ImagePipelineNotificationFragment();
         break;

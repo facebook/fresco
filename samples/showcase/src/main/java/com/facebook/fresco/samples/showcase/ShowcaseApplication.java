@@ -13,7 +13,6 @@ package com.facebook.fresco.samples.showcase;
 
 import android.app.Application;
 import android.content.Context;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
@@ -56,14 +55,6 @@ public class ShowcaseApplication extends Application {
             .setRequestListeners(listeners)
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
             .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
-            .experiment()
-            .setMediaVariationsIndexEnabled(
-                new Supplier<Boolean>() {
-                  @Override
-                  public Boolean get() {
-                    return true;
-                  }
-                })
             .experiment()
             .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
             .experiment()

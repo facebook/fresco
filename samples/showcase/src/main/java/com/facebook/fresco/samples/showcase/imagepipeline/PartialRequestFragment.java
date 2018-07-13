@@ -84,7 +84,6 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
 
   private void loadImageIntoDrawee(SimpleDraweeView draweeView, @Nullable BytesRange bytesRange) {
     final ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(URI)
-        .setMediaVariationsForMediaId("partial")
         .setBytesRange(bytesRange)
         .build();
 
