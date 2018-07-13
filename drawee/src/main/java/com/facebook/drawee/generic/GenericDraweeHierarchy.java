@@ -16,6 +16,7 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.drawable.DrawableParent;
 import com.facebook.drawee.drawable.FadeDrawable;
 import com.facebook.drawee.drawable.ForwardingDrawable;
@@ -577,5 +578,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   @Nullable
   public RoundingParams getRoundingParams() {
     return mRoundingParams;
+  }
+
+  @VisibleForTesting
+  public boolean hasImage() {
+    return mActualImageWrapper.getDrawable() != mEmptyActualImageDrawable;
   }
 }
