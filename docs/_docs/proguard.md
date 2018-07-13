@@ -10,17 +10,15 @@ Fresco's large size may seem intimidating, but it need not leave you with a larg
 
 ### ProGuard
 
-You can download Fresco's ProGuard file, [proguard-fresco.pro](https://raw.githubusercontent.com/facebook/fresco/master/fbcore/proguard-fresco.pro), and add it to your project.
-
-To enable ProGuard and configure it to use the Fresco configuration, modify your `build.gradle` file to include the lines contained in the `release` section below.
+Since Fresco 1.9.0 a ProGuard configuration file is included in Fresco itself which is automatically applied if you enable ProGuard for your app.
+To enable ProGuard, modify your `build.gradle` file to include the lines contained in the `release` section below.
 
 ```groovy
 android {
   buildTypes {
     release {
       minifyEnabled true
-      proguardFiles getDefaultProguardFile('proguard-android.txt'),
-        'proguard-fresco.pro'
+      proguardFiles getDefaultProguardFile('proguard-android.txt')
     }
   }
 }
