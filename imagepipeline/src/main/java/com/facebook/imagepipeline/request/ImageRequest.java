@@ -48,9 +48,6 @@ public class ImageRequest {
 
   private final @SourceUriType int mSourceUriType;
 
-  /** Media variations - useful for potentially providing fallback to an alternative cached image */
-  private final @Nullable MediaVariations mMediaVariations;
-
   /** Source File - for local fetches only, lazily initialized */
   private File mSourceFile;
 
@@ -105,7 +102,6 @@ public class ImageRequest {
     mCacheChoice = builder.getCacheChoice();
     mSourceUri = builder.getSourceUri();
     mSourceUriType = getSourceUriType(mSourceUri);
-    mMediaVariations = builder.getMediaVariations();
 
     mProgressiveRenderingEnabled = builder.isProgressiveRenderingEnabled();
     mLocalThumbnailPreviewsEnabled = builder.isLocalThumbnailPreviewsEnabled();
@@ -137,10 +133,6 @@ public class ImageRequest {
 
   public @SourceUriType int getSourceUriType() {
     return mSourceUriType;
-  }
-
-  public @Nullable MediaVariations getMediaVariations() {
-    return mMediaVariations;
   }
 
   public int getPreferredWidth() {
@@ -223,7 +215,6 @@ public class ImageRequest {
     ImageRequest request = (ImageRequest) o;
     if (!Objects.equal(mSourceUri, request.mSourceUri)
         || !Objects.equal(mCacheChoice, request.mCacheChoice)
-        || !Objects.equal(mMediaVariations, request.mMediaVariations)
         || !Objects.equal(mSourceFile, request.mSourceFile)
         || !Objects.equal(mBytesRange, request.mBytesRange)
         || !Objects.equal(mImageDecodeOptions, request.mImageDecodeOptions)
@@ -245,7 +236,6 @@ public class ImageRequest {
     return Objects.hashCode(
         mCacheChoice,
         mSourceUri,
-        mMediaVariations,
         mSourceFile,
         mBytesRange,
         mImageDecodeOptions,
@@ -265,7 +255,6 @@ public class ImageRequest {
         .add("resizeOptions", mResizeOptions)
         .add("rotationOptions", mRotationOptions)
         .add("bytesRange", mBytesRange)
-        .add("mediaVariations", mMediaVariations)
         .toString();
   }
 

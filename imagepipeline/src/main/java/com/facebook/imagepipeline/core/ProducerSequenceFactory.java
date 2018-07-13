@@ -578,9 +578,7 @@ public class ProducerSequenceFactory {
     } else {
       cacheWriteProducer = mProducerFactory.newDiskCacheWriteProducer(inputProducer);
     }
-    Producer<EncodedImage> mediaVariationsProducer =
-        mProducerFactory.newMediaVariationsProducer(cacheWriteProducer);
-    return mProducerFactory.newDiskCacheReadProducer(mediaVariationsProducer);
+    return mProducerFactory.newDiskCacheReadProducer(cacheWriteProducer);
   }
 
   /**

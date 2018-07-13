@@ -19,7 +19,6 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
-import com.facebook.common.time.SystemClock;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -35,9 +34,6 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.InstrumentedMemoryCache;
-import com.facebook.imagepipeline.cache.MediaVariationsIndex;
-import com.facebook.imagepipeline.cache.MediaVariationsIndexDatabase;
-import com.facebook.imagepipeline.cache.NoOpMediaVariationsIndex;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
@@ -128,7 +124,6 @@ public class ImagePipelineFactory {
   private ProducerSequenceFactory mProducerSequenceFactory;
   private BufferedDiskCache mSmallImageBufferedDiskCache;
   private FileCache mSmallImageFileCache;
-  private MediaVariationsIndex mMediaVariationsIndex;
 
   private PlatformBitmapFactory mPlatformBitmapFactory;
   private PlatformDecoder mPlatformDecoder;
@@ -362,7 +357,6 @@ public class ImagePipelineFactory {
                   getEncodedMemoryCache(),
                   getMainBufferedDiskCache(),
                   getSmallImageBufferedDiskCache(),
-                  getMediaVariationsIndex(),
                   mConfig.getCacheKeyFactory(),
                   getPlatformBitmapFactory(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
@@ -416,18 +410,4 @@ public class ImagePipelineFactory {
     return mSmallImageBufferedDiskCache;
   }
 
-  public MediaVariationsIndex getMediaVariationsIndex() {
-    if (mMediaVariationsIndex == null) {
-      mMediaVariationsIndex =
-          mConfig.getExperiments().getMediaVariationsIndexEnabled()
-              ? new MediaVariationsIndexDatabase(
-                  mConfig.getContext(),
-                  mConfig.getExecutorSupplier().forLocalStorageRead(),
-                  mConfig.getExecutorSupplier().forLocalStorageWrite(),
-                  SystemClock.get())
-              : new NoOpMediaVariationsIndex();
-    }
-
-    return mMediaVariationsIndex;
-  }
 }

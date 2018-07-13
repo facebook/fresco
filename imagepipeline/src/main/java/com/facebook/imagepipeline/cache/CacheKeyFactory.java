@@ -43,8 +43,7 @@ public interface CacheKeyFactory {
    * Creates a key to be used in the encoded memory and disk caches.
    *
    * <p>This version of the method receives a specific URI which may differ from the one held by the
-   * request (in cases such as when using MediaVariations). You should not consider the URI in the
-   * request.
+   * request. You should not consider the URI in the request.
    *
    * <p>Implementations must return consistent values for the same request or else caches will not
    * work efficiently.

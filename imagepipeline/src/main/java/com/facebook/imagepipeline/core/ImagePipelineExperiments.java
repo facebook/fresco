@@ -17,7 +17,6 @@ import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
-import com.facebook.imagepipeline.cache.MediaVariationsIndex;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -33,7 +32,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 public class ImagePipelineExperiments {
 
   private final boolean mWebpSupportEnabled;
-  private final Supplier<Boolean> mMediaVariationsIndexEnabled;
   private final WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
   private final boolean mDecodeCancellationEnabled;
   private final WebpBitmapFactory mWebpBitmapFactory;
@@ -48,16 +46,6 @@ public class ImagePipelineExperiments {
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
-    if (builder.mMediaVariationsIndexEnabled != null) {
-      mMediaVariationsIndexEnabled = builder.mMediaVariationsIndexEnabled;
-    } else {
-      mMediaVariationsIndexEnabled = new Supplier<Boolean>() {
-        @Override
-        public Boolean get() {
-          return Boolean.FALSE;
-        }
-      };
-    }
     mWebpErrorLogger = builder.mWebpErrorLogger;
     mDecodeCancellationEnabled = builder.mDecodeCancellationEnabled;
     mWebpBitmapFactory = builder.mWebpBitmapFactory;
@@ -73,10 +61,6 @@ public class ImagePipelineExperiments {
       mProducerFactoryMethod = builder.mProducerFactoryMethod;
     }
     mLazyDataSource = builder.mLazyDataSource;
-  }
-
-  public boolean getMediaVariationsIndexEnabled() {
-    return mMediaVariationsIndexEnabled.get().booleanValue();
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -136,7 +120,6 @@ public class ImagePipelineExperiments {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
     private boolean mWebpSupportEnabled = false;
-    private Supplier<Boolean> mMediaVariationsIndexEnabled = null;
     private WebpBitmapFactory.WebpErrorLogger mWebpErrorLogger;
     private boolean mDecodeCancellationEnabled = false;
     private WebpBitmapFactory mWebpBitmapFactory;
@@ -151,18 +134,6 @@ public class ImagePipelineExperiments {
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
-    }
-
-    /**
-     * If true, this will allow the image pipeline to keep an index of the ID in each request's
-     * {@link com.facebook.imagepipeline.request.MediaVariations} object (if present) to possibly
-     * provide fallback images which are present in cache, without the need to explicitly provide
-     * alternative variants of the image in the request.
-     */
-    public ImagePipelineConfig.Builder setMediaVariationsIndexEnabled(
-        Supplier<Boolean> mediaVariationsIndexEnabled) {
-      mMediaVariationsIndexEnabled = mediaVariationsIndexEnabled;
-      return mConfigBuilder;
     }
 
     public ImagePipelineConfig.Builder setWebpSupportEnabled(boolean webpSupportEnabled) {
@@ -276,7 +247,6 @@ public class ImagePipelineExperiments {
         MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
         BufferedDiskCache defaultBufferedDiskCache,
         BufferedDiskCache smallImageBufferedDiskCache,
-        MediaVariationsIndex mediaVariationsIndex,
         CacheKeyFactory cacheKeyFactory,
         PlatformBitmapFactory platformBitmapFactory,
         int bitmapPrepareToDrawMinSizeBytes,
@@ -301,7 +271,6 @@ public class ImagePipelineExperiments {
         MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
         BufferedDiskCache defaultBufferedDiskCache,
         BufferedDiskCache smallImageBufferedDiskCache,
-        MediaVariationsIndex mediaVariationsIndex,
         CacheKeyFactory cacheKeyFactory,
         PlatformBitmapFactory platformBitmapFactory,
         int bitmapPrepareToDrawMinSizeBytes,
@@ -321,7 +290,6 @@ public class ImagePipelineExperiments {
           encodedMemoryCache,
           defaultBufferedDiskCache,
           smallImageBufferedDiskCache,
-          mediaVariationsIndex,
           cacheKeyFactory,
           platformBitmapFactory,
           bitmapPrepareToDrawMinSizeBytes,

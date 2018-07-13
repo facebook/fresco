@@ -10,7 +10,6 @@ import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
-import com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 
 public class ImageOriginUtils {
@@ -39,8 +38,6 @@ public class ImageOriginUtils {
         return ImageOrigin.MEMORY_ENCODED;
       case DiskCacheReadProducer.PRODUCER_NAME:
         return ImageOrigin.DISK;
-      case MediaVariationsFallbackProducer.PRODUCER_NAME:
-        return ImageOrigin.MEMORY_BITMAP;
       case NetworkFetchProducer.PRODUCER_NAME:
         return ImageOrigin.NETWORK;
       default:

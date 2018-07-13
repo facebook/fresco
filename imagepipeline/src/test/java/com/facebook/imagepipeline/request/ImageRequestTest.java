@@ -31,7 +31,6 @@ public class ImageRequestTest {
         .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
         .setLocalThumbnailPreviewsEnabled(true)
         .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.DISK_CACHE)
-        .setMediaVariations(MediaVariations.forMediaId("A113"))
         .setPostprocessor(new BasePostprocessor() {
           @Override
           public String getName() {
