@@ -70,7 +70,9 @@ public class DefaultFrescoSystrace implements FrescoSystrace.Systrace {
       if (mStringBuilder.length() > 127) {
         mStringBuilder.setLength(127);
       }
-      Trace.beginSection(mStringBuilder.toString());
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        Trace.beginSection(mStringBuilder.toString());
+      }
     }
 
     @Override
