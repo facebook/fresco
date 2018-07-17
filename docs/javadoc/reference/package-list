@@ -22,6 +22,7 @@ com.facebook.datasource
 com.facebook.drawable.base
 com.facebook.drawee.backends.pipeline
 com.facebook.drawee.backends.pipeline.info
+com.facebook.drawee.backends.pipeline.info.internal
 com.facebook.drawee.backends.volley
 com.facebook.drawee.components
 com.facebook.drawee.controller
@@ -64,6 +65,7 @@ com.facebook.imagepipeline.platform
 com.facebook.imagepipeline.postprocessors
 com.facebook.imagepipeline.producers
 com.facebook.imagepipeline.request
+com.facebook.imagepipeline.systrace
 com.facebook.imageutils
 com.facebook.webpsupport
 com.facebook.widget.text.span

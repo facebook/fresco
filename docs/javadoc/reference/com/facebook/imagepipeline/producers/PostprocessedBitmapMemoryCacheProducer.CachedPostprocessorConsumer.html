@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -277,6 +279,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
@@ -333,7 +337,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFileFetchProducer.html">LocalFileFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalResourceFetchProducer.html">LocalResourceFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalVideoThumbnailProducer.html">LocalVideoThumbnailProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html">MediaVariationsFallbackProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
@@ -705,7 +708,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html#CachedPostprocessorConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey, boolean, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>)">CachedPostprocessorConsumer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, boolean isRepeatedProcessor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html#CachedPostprocessorConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey, boolean, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, boolean)">CachedPostprocessorConsumer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, boolean isRepeatedProcessor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, boolean isMemoryCachedEnabled)
         
   </td></tr>
 
@@ -1510,7 +1513,7 @@ From interface
 
 
 
-<a id="CachedPostprocessorConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey, boolean, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>)"></a>
+<a id="CachedPostprocessorConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey, boolean, com.facebook.imagepipeline.cache.MemoryCache<com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage>, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1523,7 +1526,7 @@ From interface
         
       </span>
       <span class="sympad">CachedPostprocessorConsumer</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, boolean isRepeatedProcessor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, boolean isRepeatedProcessor, <a href="../../../../com/facebook/imagepipeline/cache/MemoryCache.html">MemoryCache</a>&lt;<a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a>,&nbsp;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt; memoryCache, boolean isMemoryCachedEnabled)</span>
     </h4>
       <div class="api-level">
         <div>

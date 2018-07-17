@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -277,6 +279,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
@@ -333,7 +337,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFileFetchProducer.html">LocalFileFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalResourceFetchProducer.html">LocalResourceFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalVideoThumbnailProducer.html">LocalVideoThumbnailProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html">MediaVariationsFallbackProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
@@ -492,6 +495,12 @@ Summary:
             
               <a href="../../../../com/facebook/imagepipeline/listener/ForwardingRequestListener.html">ForwardingRequestListener</a>,
             
+              <a href="../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginRequestListener.html">ImageOriginRequestListener</a>,
+            
+              <a href="../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfMonitor.html">ImagePerfMonitor</a>,
+            
+              <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfRequestListener.html">ImagePerfRequestListener</a>,
+            
               <a href="../../../../com/facebook/imagepipeline/listener/RequestListener.html">RequestListener</a>,
             
               <a href="../../../../com/facebook/imagepipeline/listener/RequestLoggingListener.html">RequestLoggingListener</a>
@@ -511,10 +520,23 @@ Summary:
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginRequestListener.html">ImageOriginRequestListener</a></td>
+              <td class="jd-descrcol" width="100%">Image origin request listener that maps all image requests for a given Drawee controller to an
+ <code><a href="../../../../com/facebook/drawee/backends/pipeline/info/ImageOrigin.html">ImageOrigin</a></code> and corresponding <code><a href="../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html">ImageOriginListener</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfMonitor.html">ImagePerfMonitor</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/ImagePerfRequestListener.html">ImagePerfRequestListener</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/listener/RequestListener.html">RequestListener</a></td>
               <td class="jd-descrcol" width="100%">Listener for <code><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></code>.&nbsp;</td>
           </tr>
-        <tr class=" api apilevel-" >
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/listener/RequestLoggingListener.html">RequestLoggingListener</a></td>
               <td class="jd-descrcol" width="100%">Logging for <code><a href="../../../../com/facebook/imagepipeline/request/ImageRequest.html">ImageRequest</a></code>s.&nbsp;</td>
           </tr>

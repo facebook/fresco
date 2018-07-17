@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -277,6 +279,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
@@ -333,7 +337,6 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFileFetchProducer.html">LocalFileFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalResourceFetchProducer.html">LocalResourceFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalVideoThumbnailProducer.html">LocalVideoThumbnailProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html">MediaVariationsFallbackProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
@@ -716,7 +719,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.html#wrapConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey)">wrapConsumer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.html#wrapConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey, boolean)">wrapConsumer</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, boolean isMemoryCacheEnabled)
         
   </td></tr>
 
@@ -1215,7 +1218,7 @@ From interface
 </div>
 
 
-<a id="wrapConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey)"></a>
+<a id="wrapConsumer(com.facebook.imagepipeline.producers.Consumer<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>, com.facebook.cache.common.CacheKey, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1228,7 +1231,7 @@ From interface
         <a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt;
       </span>
       <span class="sympad">wrapConsumer</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey)</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; consumer, <a href="../../../../com/facebook/cache/common/CacheKey.html">CacheKey</a> cacheKey, boolean isMemoryCacheEnabled)</span>
     </h4>
       <div class="api-level">
         <div>

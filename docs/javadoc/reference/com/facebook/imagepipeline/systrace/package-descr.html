@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  PlatformBitmapFactory.BitmapCreationObserver - Fresco API
+  com.facebook.imagepipeline.systrace Details - Fresco API
 
 
 | Fresco
@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -246,7 +248,7 @@
   <a href="../../../../com/facebook/imagepipeline/backends/okhttp3/package-summary.html">com.facebook.imagepipeline.backends.okhttp3</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/backends/volley/package-summary.html">com.facebook.imagepipeline.backends.volley</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/bitmaps/package-summary.html">com.facebook.imagepipeline.bitmaps</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/cache/package-summary.html">com.facebook.imagepipeline.cache</a></li>
@@ -276,6 +278,8 @@
   <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="selected api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -290,19 +294,15 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.BitmapCreationObserver.html">PlatformBitmapFactory.BitmapCreationObserver</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/systrace/FrescoSystrace.ArgsBuilder.html">FrescoSystrace.ArgsBuilder</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/systrace/FrescoSystrace.Systrace.html">FrescoSystrace.Systrace</a></li>
       </ul>
     </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/ArtBitmapFactory.html">ArtBitmapFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/EmptyJpegGenerator.html">EmptyJpegGenerator</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/GingerbreadBitmapFactory.html">GingerbreadBitmapFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/HoneycombBitmapCreator.html">HoneycombBitmapCreator</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/HoneycombBitmapFactory.html">HoneycombBitmapFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html">PlatformBitmapFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/bitmaps/SimpleBitmapReleaser.html">SimpleBitmapReleaser</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/systrace/DefaultFrescoSystrace.html">DefaultFrescoSystrace</a></li>
+        <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/systrace/FrescoSystrace.html">FrescoSystrace</a></li>
       </ul>
     </li>
               
@@ -343,14 +343,6 @@
 <div class="g-unit" id="doc-content">
 
 <div id="api-info-block">
-
-
-
-
-<div class="sum-details-links">
-
-
-</div><!-- end sum-details-links -->
 <div class="api-level">
   
 
@@ -359,226 +351,29 @@
   
 
 </div>
-</div><!-- end api-info-block -->
-
-
-<!-- ======== START OF CLASS DATA ======== -->
+</div>
 
 <div id="jd-header">
-    public
-    static 
-     
-    
-    interface
-<h1>PlatformBitmapFactory.BitmapCreationObserver</h1>
-
-
-
-  
-  
-  
-
-
+  package
+  <h1>com.facebook.imagepipeline.systrace</b></h1>
+  <div class="jd-nav">
+      <a class="jd-navlink" href="package-summary.html">Classes</a> | Description
+  </div>
 </div><!-- end header -->
 
 <div id="naMessage"></div>
 
 <div id="jd-content" class="api apilevel-">
-<table class="jd-inheritance-table">
-
-
-    <tr>
-         	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory.BitmapCreationObserver</td>
-    </tr>
-    
-
-</table>
-
-
-
-
-
-
-
 <div class="jd-descr">
-
-
-<h2>Class Overview</h2>
-<p>Observer that notifies external creation of bitmap using
- <code><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#createBitmap(int, int)">createBitmap(int, int)</a></code> or
- <code><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.html#createBitmap(int, int, android.graphics.Bitmap.Config)">createBitmap(int, int, Bitmap.Config)</a></code>.
-</p>
-
-
-
-
-
-</div><!-- jd-descr -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="jd-descr">
-
-
-<h2>Summary</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
-
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            abstract
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/bitmaps/PlatformBitmapFactory.BitmapCreationObserver.html#onBitmapCreated(android.graphics.Bitmap, java.lang.Object)">onBitmapCreated</a></span>(Bitmap bitmap, Object callerContext)
-        
-  </td></tr>
-
-
-
-</table>
-
-
-
-
-
-
-
-</div><!-- jd-descr (summary) -->
-
-<!-- Details -->
-
-
-
-
-
-
-
-
-<!-- XML Attributes -->
-
-
-<!-- Enum Values -->
-
-
-<!-- Constants -->
-
-
-<!-- Fields -->
-
-
-<!-- Public ctors -->
-
-
-
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<!-- Protected ctors -->
-
-
-
-<!-- ========= METHOD DETAIL ======== -->
-<!-- Public methdos -->
-
-<h2>Public Methods</h2>
-
-
-
-<a id="onBitmapCreated(android.graphics.Bitmap, java.lang.Object)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-        abstract 
-         
-        void
-      </span>
-      <span class="sympad">onBitmapCreated</span>
-      <span class="normal">(Bitmap bitmap, Object callerContext)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
+<p></p>
 </div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-
-
-
-<!-- ========= METHOD DETAIL ======== -->
-
-
-
-<!-- ========= END OF CLASS DATA ========= -->
-<a id="navbar_top"></a>
 
 <div id="footer">
  +Generated by <a href="http://code.google.com/p/doclava/">Doclava</a>.
  +</div> <!-- end footer - @generated -->
 
-</div> <!-- jd-content -->
-
-</div><!-- end doc-content -->
+</div><!-- end jd-content -->
+</div> <!-- end doc-content -->
 
 </div> <!-- end body-content --> 
 

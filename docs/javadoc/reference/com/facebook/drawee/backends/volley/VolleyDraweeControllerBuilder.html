@@ -192,6 +192,8 @@
   <a href="../../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
@@ -276,6 +278,8 @@
   <a href="../../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -614,7 +618,7 @@ Summary:
             <a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Bitmap&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerBuilder.html#getDataSourceForRequest(android.net.Uri, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceForRequest</a></span>(Uri imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/backends/volley/VolleyDraweeControllerBuilder.html#getDataSourceForRequest(com.facebook.drawee.interfaces.DraweeController, java.lang.String, android.net.Uri, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceForRequest</a></span>(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId, Uri imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
         
         <div class="jd-descrdiv">Concrete builder classes should override this method to return a data source for the request.</div>
   
@@ -842,7 +846,7 @@ From class
             <a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceForRequest(REQUEST, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceForRequest</a></span>(REQUEST imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceForRequest(com.facebook.drawee.interfaces.DraweeController, java.lang.String, REQUEST, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceForRequest</a></span>(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId, REQUEST imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
         
         <div class="jd-descrdiv">Concrete builder classes should override this method to return a data source for the request.</div>
   
@@ -878,7 +882,7 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplierForRequest(REQUEST, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceSupplierForRequest</a></span>(REQUEST imageRequest, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplierForRequest(com.facebook.drawee.interfaces.DraweeController, java.lang.String, REQUEST)">getDataSourceSupplierForRequest</a></span>(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId, REQUEST imageRequest)
         
         <div class="jd-descrdiv">Creates a data source supplier for the given image request.</div>
   
@@ -896,7 +900,7 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplierForRequest(REQUEST)">getDataSourceSupplierForRequest</a></span>(REQUEST imageRequest)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getDataSourceSupplierForRequest(com.facebook.drawee.interfaces.DraweeController, java.lang.String, REQUEST, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)">getDataSourceSupplierForRequest</a></span>(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId, REQUEST imageRequest, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)
         
         <div class="jd-descrdiv">Creates a data source supplier for the given image request.</div>
   
@@ -914,7 +918,7 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(REQUEST[], boolean)">getFirstAvailableDataSourceSupplier</a></span>(REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst)
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#getFirstAvailableDataSourceSupplier(com.facebook.drawee.interfaces.DraweeController, java.lang.String, REQUEST[], boolean)">getFirstAvailableDataSourceSupplier</a></span>(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId, REQUEST[] imageRequests, boolean tryBitmapCacheOnlyFirst)
         
   </td></tr>
 
@@ -1126,7 +1130,7 @@ From class
             <a href="../../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;IMAGE&gt;&gt;
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#obtainDataSourceSupplier()">obtainDataSourceSupplier</a></span>()
+        <span class="sympad"><a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.html#obtainDataSourceSupplier(com.facebook.drawee.interfaces.DraweeController, java.lang.String)">obtainDataSourceSupplier</a></span>(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId)
         
         <div class="jd-descrdiv">Gets the top-level data source supplier to be used by a controller.</div>
   
@@ -1878,7 +1882,7 @@ From interface
 
 
 
-<a id="getDataSourceForRequest(android.net.Uri, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)"></a>
+<a id="getDataSourceForRequest(com.facebook.drawee.interfaces.DraweeController, java.lang.String, android.net.Uri, java.lang.Object, com.facebook.drawee.controller.AbstractDraweeControllerBuilder.CacheLevel)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1891,7 +1895,7 @@ From interface
         <a href="../../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;Bitmap&gt;
       </span>
       <span class="sympad">getDataSourceForRequest</span>
-      <span class="normal">(Uri imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)</span>
+      <span class="normal">(<a href="../../../../../com/facebook/drawee/interfaces/DraweeController.html">DraweeController</a> controller, String controllerId, Uri imageRequest, Object callerContext, <a href="../../../../../com/facebook/drawee/controller/AbstractDraweeControllerBuilder.CacheLevel.html">AbstractDraweeControllerBuilder.CacheLevel</a> cacheLevel)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1905,10 +1909,10 @@ From interface
       
   <div class="jd-tagdata jd-tagdescr"><p>Concrete builder classes should override this method to return a data source for the request.
 
- <p/>IMPORTANT: Do NOT ever call this method directly. This method is only to be called from
- a supplier created in {#code getDataSourceSupplierForRequest(REQUEST, boolean)}.
+ <p>IMPORTANT: Do NOT ever call this method directly. This method is only to be called from a
+ supplier created in {#code getDataSourceSupplierForRequest(REQUEST, boolean)}.
 
- <p/>IMPORTANT: Make sure that you do NOT use any non-final field from this method, as the field
+ <p>IMPORTANT: Make sure that you do NOT use any non-final field from this method, as the field
  may change if the instance of this builder gets reused. If any such field is required, override
  {#code getDataSourceSupplierForRequest(REQUEST, boolean)}, and store the field in a final
  variable (same as it is done for callerContext).

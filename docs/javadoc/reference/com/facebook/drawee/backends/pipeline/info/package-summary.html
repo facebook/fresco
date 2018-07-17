@@ -193,6 +193,8 @@
     <li class="selected api apilevel-">
   <a href="../../../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -277,6 +279,8 @@
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
@@ -291,12 +295,25 @@
     <li><h2>Interfaces</h2>
       <ul>
         <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html">ImageOriginListener</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfDataListener.html">ImagePerfDataListener</a></li>
       </ul>
     </li>
               
+    <li><h2>Classes</h2>
+      <ul>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ForwardingImageOriginListener.html">ForwardingImageOriginListener</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginRequestListener.html">ImageOriginRequestListener</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginUtils.html">ImageOriginUtils</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfData.html">ImagePerfData</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfMonitor.html">ImagePerfMonitor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a></li>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfUtils.html">ImagePerfUtils</a></li>
+      </ul>
+    </li>
               
     <li><h2>Annotations</h2>
       <ul>
+        <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageLoadStatus.html">ImageLoadStatus</a></li>
         <li class="api apilevel-"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOrigin.html">ImageOrigin</a></li>
       </ul>
     </li>
@@ -371,11 +388,51 @@
               <td class="jd-descrcol" width="100%">Listener that can be attached to a <code><a href="../../../../../../com/facebook/drawee/backends/pipeline/PipelineDraweeController.html">PipelineDraweeController</a></code> to observe the image origin
  (cache, disk, network, ...) for a given controller.&nbsp;</td>
           </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfDataListener.html">ImagePerfDataListener</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
   </table>
     </div>
   
 
 
+  
+    <h2>Classes</h2>
+    <div class="jd-sumtable">
+    
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ForwardingImageOriginListener.html">ForwardingImageOriginListener</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginRequestListener.html">ImageOriginRequestListener</a></td>
+              <td class="jd-descrcol" width="100%">Image origin request listener that maps all image requests for a given Drawee controller to an
+ <code><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOrigin.html">ImageOrigin</a></code> and corresponding <code><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginListener.html">ImageOriginListener</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImageOriginUtils.html">ImageOriginUtils</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfData.html">ImagePerfData</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfMonitor.html">ImagePerfMonitor</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfState.html">ImagePerfState</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../com/facebook/drawee/backends/pipeline/info/ImagePerfUtils.html">ImagePerfUtils</a></td>
+              <td class="jd-descrcol" width="100%">&nbsp;</td>
+          </tr>
+  </table>
+    </div>
   
 
 

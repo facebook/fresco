@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -277,6 +279,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
@@ -316,6 +320,8 @@
           <li class="selected api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html">RoundedBitmapDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedColorDrawable.html">RoundedColorDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedCornersDrawable.html">RoundedCornersDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">RoundedDrawable</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/RoundedNinePatchDrawable.html">RoundedNinePatchDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScaleTypeDrawable.html">ScaleTypeDrawable</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.html">ScalingUtils</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/drawee/drawable/ScalingUtils.AbstractScaleType.html">ScalingUtils.AbstractScaleType</a></li>
@@ -373,6 +379,8 @@
   
   
   
+   
+  
   
 
   
@@ -416,8 +424,11 @@ Summary:
 
 
 
+  <a href="#inhfields">Inherited Fields</a>
+  
 
-  <a href="#pubctors">Ctors</a>
+
+  &#124; <a href="#pubctors">Ctors</a>
   
 
 
@@ -464,19 +475,12 @@ Summary:
   
 
   
-    extends BitmapDrawable<br/>
+    extends <a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">RoundedDrawable</a><br/>
   
   
   
 
   
-  
-      implements 
-      
-        <a href="../../../../com/facebook/drawee/drawable/Rounded.html">Rounded</a> 
-      
-        <a href="../../../../com/facebook/drawee/drawable/TransformAwareDrawable.html">TransformAwareDrawable</a> 
-      
   
   
 
@@ -509,7 +513,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="2" class="jd-inheritance-class-cell">android.graphics.drawable.BitmapDrawable</td>
+        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">com.facebook.drawee.drawable.RoundedDrawable</a></td>
     </tr>
     
 
@@ -535,10 +539,6 @@ Summary:
 
 <div class="jd-descr">
 
-
-<h2>Class Overview</h2>
-<p>A drawable that can have rounded corners.
-</p>
 
 
 
@@ -586,6 +586,123 @@ Summary:
 
 
 
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="inhfields" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Fields</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-com.facebook.drawee.drawable.RoundedDrawable" class="jd-expando-trigger closed"
+          ><img id="inherited-fields-com.facebook.drawee.drawable.RoundedDrawable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From class
+<a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">com.facebook.drawee.drawable.RoundedDrawable</a>
+<div id="inherited-fields-com.facebook.drawee.drawable.RoundedDrawable">
+  <div id="inherited-fields-com.facebook.drawee.drawable.RoundedDrawable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-fields-com.facebook.drawee.drawable.RoundedDrawable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          int</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mBorderColor">mBorderColor</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          Path</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mBorderPath">mBorderPath</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          float</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mBorderWidth">mBorderWidth</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mIsCircle">mIsCircle</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mIsShaderTransformDirty">mIsShaderTransformDirty</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          final
+          Path</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mPath">mPath</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          protected
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#mRadiiNonZero">mRadiiNonZero</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+
+
+
+
+
+
+
+</table>
+
+
 
 
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -604,7 +721,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap)">RoundedBitmapDrawable</a></span>(Resources res, Bitmap bitmap)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap, android.graphics.Paint)">RoundedBitmapDrawable</a></span>(Resources res, Bitmap bitmap, Paint paint)
         
   </td></tr>
 
@@ -620,7 +737,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap, android.graphics.Paint)">RoundedBitmapDrawable</a></span>(Resources res, Bitmap bitmap, Paint paint)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap)">RoundedBitmapDrawable</a></span>(Resources res, Bitmap bitmap)
         
   </td></tr>
 
@@ -680,114 +797,6 @@ Summary:
             
             
             
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#getBorderColor()">getBorderColor</a></span>()
-        
-        <div class="jd-descrdiv">Gets the border color.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            float
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#getBorderWidth()">getBorderWidth</a></span>()
-        
-        <div class="jd-descrdiv">Gets the border width.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            float
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#getPadding()">getPadding</a></span>()
-        
-        <div class="jd-descrdiv">Gets the padding.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            float[]
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#getRadii()">getRadii</a></span>()
-        
-        <div class="jd-descrdiv">Gets the radii.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#getScaleDownInsideBorders()">getScaleDownInsideBorders</a></span>()
-        
-        <div class="jd-descrdiv">Gets whether image should be scaled down inside borders.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#isCircle()">isCircle</a></span>()
-        
-        <div class="jd-descrdiv">Returns whether or not this drawable rounds as circle.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
             void
         </td>
         <td class="jd-linkcol" width="100%">
@@ -807,134 +816,8 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setBorder(int, float)">setBorder</a></span>(int color, float width)
-        
-        <div class="jd-descrdiv">Sets the border</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setCircle(boolean)">setCircle</a></span>(boolean isCircle)
-        
-        <div class="jd-descrdiv">Sets whether to round as circle.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setColorFilter(android.graphics.ColorFilter)">setColorFilter</a></span>(ColorFilter colorFilter)
         
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setPadding(float)">setPadding</a></span>(float padding)
-        
-        <div class="jd-descrdiv">Sets the padding for the bitmap.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setRadii(float[])">setRadii</a></span>(float[] radii)
-        
-        <div class="jd-descrdiv">Specify radii for each of the 4 corners.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setRadius(float)">setRadius</a></span>(float radius)
-        
-        <div class="jd-descrdiv">Specify radius for the corners of the rectangle.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setScaleDownInsideBorders(boolean)">setScaleDownInsideBorders</a></span>(boolean scaleDownInsideBorders)
-        
-        <div class="jd-descrdiv">Sets whether image should be scaled down inside borders.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedBitmapDrawable.html#setTransformCallback(com.facebook.drawee.drawable.TransformCallback)">setTransformCallback</a></span>(<a href="../../../../com/facebook/drawee/drawable/TransformCallback.html">TransformCallback</a> transformCallback)
-        
-        <div class="jd-descrdiv">TransformAwareDrawable method </div>
-  
   </td></tr>
 
 
@@ -955,19 +838,19 @@ Summary:
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-android.graphics.drawable.BitmapDrawable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-android.graphics.drawable.BitmapDrawable-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.drawee.drawable.RoundedDrawable" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.drawee.drawable.RoundedDrawable-trigger"
           src="../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From class
 
-  android.graphics.drawable.BitmapDrawable
+  <a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html">com.facebook.drawee.drawable.RoundedDrawable</a>
 
-<div id="inherited-methods-android.graphics.drawable.BitmapDrawable">
-  <div id="inherited-methods-android.graphics.drawable.BitmapDrawable-list"
+<div id="inherited-methods-com.facebook.drawee.drawable.RoundedDrawable">
+  <div id="inherited-methods-com.facebook.drawee.drawable.RoundedDrawable-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-android.graphics.drawable.BitmapDrawable-summary" style="display: none;">
+  <div id="inherited-methods-com.facebook.drawee.drawable.RoundedDrawable-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -983,29 +866,13 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">applyTheme</span>(Resources.Theme arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#clearColorFilter()">clearColorFilter</a></span>()
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">canApplyTheme</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1015,7 +882,23 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">draw</span>(Canvas arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#draw(android.graphics.Canvas)">draw</a></span>(Canvas canvas)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getAlpha()">getAlpha</a></span>()
         
   </td></tr>
 
@@ -1031,8 +914,10 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getAlpha</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getBorderColor()">getBorderColor</a></span>()
         
+        <div class="jd-descrdiv">Gets the border color.</div>
+  
   </td></tr>
 
 
@@ -1041,35 +926,21 @@ From class
         <td class="jd-typecol">
             
             
-            final
             
             
-            Bitmap
+            
+            float
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getBitmap</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getBorderWidth()">getBorderWidth</a></span>()
         
+        <div class="jd-descrdiv">Gets the border width.</div>
+  
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            int
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getChangingConfigurations</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1079,23 +950,7 @@ From class
             ColorFilter
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getColorFilter</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Drawable.ConstantState
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getConstantState</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getColorFilter()">getColorFilter</a></span>()
         
   </td></tr>
 
@@ -1111,7 +966,7 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getGravity</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getIntrinsicHeight()">getIntrinsicHeight</a></span>()
         
   </td></tr>
 
@@ -1127,7 +982,7 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getIntrinsicHeight</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getIntrinsicWidth()">getIntrinsicWidth</a></span>()
         
   </td></tr>
 
@@ -1143,7 +998,7 @@ From class
             int
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getIntrinsicWidth</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getOpacity()">getOpacity</a></span>()
         
   </td></tr>
 
@@ -1156,11 +1011,13 @@ From class
             
             
             
-            int
+            float
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getOpacity</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getPadding()">getPadding</a></span>()
         
+        <div class="jd-descrdiv">Gets the padding.</div>
+  
   </td></tr>
 
 
@@ -1172,75 +1029,13 @@ From class
             
             
             
-            void
+            float[]
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">getOutline</span>(Outline arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getRadii()">getRadii</a></span>()
         
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            Paint
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getPaint</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            Shader.TileMode
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getTileModeX</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            Shader.TileMode
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getTileModeY</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">hasAntiAlias</span>()
-        
+        <div class="jd-descrdiv">Gets the radii.</div>
+  
   </td></tr>
 
 
@@ -1255,40 +1050,10 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">hasMipMap</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#getScaleDownInsideBorders()">getScaleDownInsideBorders</a></span>()
         
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">inflate</span>(Resources arg0, XmlPullParser arg1, AttributeSet arg2, Resources.Theme arg3)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">isAutoMirrored</span>()
-        
+        <div class="jd-descrdiv">Gets whether image should be scaled down inside borders.</div>
+  
   </td></tr>
 
 
@@ -1303,40 +1068,10 @@ From class
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">isFilterBitmap</span>()
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#isCircle()">isCircle</a></span>()
         
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">isStateful</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            Drawable
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">mutate</span>()
-        
+        <div class="jd-descrdiv">Returns whether or not this drawable rounds as circle.</div>
+  
   </td></tr>
 
 
@@ -1351,39 +1086,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">onBoundsChange</span>(Rect arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            boolean
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">onStateChange</span>(int[] arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setAlpha</span>(int arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#onBoundsChange(android.graphics.Rect)">onBoundsChange</a></span>(Rect bounds)
         
   </td></tr>
 
@@ -1399,7 +1102,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setAntiAlias</span>(boolean arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setAlpha(int)">setAlpha</a></span>(int alpha)
         
   </td></tr>
 
@@ -1415,7 +1118,43 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setAutoMirrored</span>(boolean arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setBorder(int, float)">setBorder</a></span>(int color, float width)
+        
+        <div class="jd-descrdiv">Sets the border</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setCircle(boolean)">setCircle</a></span>(boolean isCircle)
+        
+        <div class="jd-descrdiv">Sets whether to round as circle.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setColorFilter(android.graphics.ColorFilter)">setColorFilter</a></span>(ColorFilter colorFilter)
         
   </td></tr>
 
@@ -1431,7 +1170,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setColorFilter</span>(ColorFilter arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setColorFilter(int, android.graphics.PorterDuff.Mode)">setColorFilter</a></span>(int color, PorterDuff.Mode mode)
         
   </td></tr>
 
@@ -1447,8 +1186,10 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setDither</span>(boolean arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setPadding(float)">setPadding</a></span>(float padding)
         
+        <div class="jd-descrdiv">Sets the padding for the bitmap.</div>
+  
   </td></tr>
 
 
@@ -1463,7 +1204,79 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setFilterBitmap</span>(boolean arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setRadii(float[])">setRadii</a></span>(float[] radii)
+        
+        <div class="jd-descrdiv">Specify radii for each of the 4 corners.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setRadius(float)">setRadius</a></span>(float radius)
+        
+        <div class="jd-descrdiv">Specify radius for the corners of the rectangle.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setScaleDownInsideBorders(boolean)">setScaleDownInsideBorders</a></span>(boolean scaleDownInsideBorders)
+        
+        <div class="jd-descrdiv">Sets whether image should be scaled down inside borders.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#setTransformCallback(com.facebook.drawee.drawable.TransformCallback)">setTransformCallback</a></span>(<a href="../../../../com/facebook/drawee/drawable/TransformCallback.html">TransformCallback</a> transformCallback)
+        
+        <div class="jd-descrdiv">TransformAwareDrawable method </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#updatePath()">updatePath</a></span>()
         
   </td></tr>
 
@@ -1479,151 +1292,7 @@ From class
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad">setGravity</span>(int arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setMipMap</span>(boolean arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTargetDensity</span>(DisplayMetrics arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTargetDensity</span>(Canvas arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTargetDensity</span>(int arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTileModeX</span>(Shader.TileMode arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTileModeXY</span>(Shader.TileMode arg0, Shader.TileMode arg1)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTileModeY</span>(Shader.TileMode arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTintList</span>(ColorStateList arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setTintMode</span>(PorterDuff.Mode arg0)
+        <span class="sympad"><a href="../../../../com/facebook/drawee/drawable/RoundedDrawable.html#updateTransform()">updateTransform</a></span>()
         
   </td></tr>
 
@@ -3262,7 +2931,7 @@ From interface
 
 
 
-<a id="RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap)"></a>
+<a id="RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap, android.graphics.Paint)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3275,7 +2944,7 @@ From interface
         
       </span>
       <span class="sympad">RoundedBitmapDrawable</span>
-      <span class="normal">(Resources res, Bitmap bitmap)</span>
+      <span class="normal">(Resources res, Bitmap bitmap, Paint paint)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -3293,7 +2962,7 @@ From interface
 </div>
 
 
-<a id="RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap, android.graphics.Paint)"></a>
+<a id="RoundedBitmapDrawable(android.content.res.Resources, android.graphics.Bitmap)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -3306,7 +2975,7 @@ From interface
         
       </span>
       <span class="sympad">RoundedBitmapDrawable</span>
-      <span class="normal">(Resources res, Bitmap bitmap, Paint paint)</span>
+      <span class="normal">(Resources res, Bitmap bitmap)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -3419,192 +3088,6 @@ From interface
 </div>
 
 
-<a id="getBorderColor()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        int
-      </span>
-      <span class="sympad">getBorderColor</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the border color. </p></div>
-
-    </div>
-</div>
-
-
-<a id="getBorderWidth()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        float
-      </span>
-      <span class="sympad">getBorderWidth</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the border width. </p></div>
-
-    </div>
-</div>
-
-
-<a id="getPadding()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        float
-      </span>
-      <span class="sympad">getPadding</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the padding. </p></div>
-
-    </div>
-</div>
-
-
-<a id="getRadii()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        float[]
-      </span>
-      <span class="sympad">getRadii</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets the radii. </p></div>
-
-    </div>
-</div>
-
-
-<a id="getScaleDownInsideBorders()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">getScaleDownInsideBorders</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Gets whether image should be scaled down inside borders. </p></div>
-
-    </div>
-</div>
-
-
-<a id="isCircle()"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        boolean
-      </span>
-      <span class="sympad">isCircle</span>
-      <span class="normal">()</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Returns whether or not this drawable rounds as circle. </p></div>
-
-    </div>
-</div>
-
-
 <a id="setAlpha(int)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -3636,92 +3119,6 @@ From interface
 </div>
 
 
-<a id="setBorder(int, float)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setBorder</span>
-      <span class="normal">(int color, float width)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the border</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>color</th>
-          <td>of the border</td>
-        </tr>
-        <tr>
-          <th>width</th>
-          <td>of the border
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="setCircle(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setCircle</span>
-      <span class="normal">(boolean isCircle)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets whether to round as circle.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>isCircle</th>
-          <td>whether or not to round as circle
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
 <a id="setColorFilter(android.graphics.ColorFilter)"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -3748,194 +3145,6 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setPadding(float)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setPadding</span>
-      <span class="normal">(float padding)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets the padding for the bitmap.</p></div>
-
-    </div>
-</div>
-
-
-<a id="setRadii(float[])"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setRadii</span>
-      <span class="normal">(float[] radii)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Specify radii for each of the 4 corners. For each corner, the array
- contains 2 values, [X_radius, Y_radius]. The corners are ordered
- top-left, top-right, bottom-right, bottom-left</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>radii</th>
-          <td>the x and y radii of the corners
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="setRadius(float)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setRadius</span>
-      <span class="normal">(float radius)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Specify radius for the corners of the rectangle. If this is > 0, then the
- drawable is drawn in a round-rectangle, rather than a rectangle.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>radius</th>
-          <td>the radius for the corners of the rectangle
-</td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="setScaleDownInsideBorders(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setScaleDownInsideBorders</span>
-      <span class="normal">(boolean scaleDownInsideBorders)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Sets whether image should be scaled down inside borders.</p></div>
-
-    </div>
-</div>
-
-
-<a id="setTransformCallback(com.facebook.drawee.drawable.TransformCallback)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        void
-      </span>
-      <span class="sympad">setTransformCallback</span>
-      <span class="normal">(<a href="../../../../com/facebook/drawee/drawable/TransformCallback.html">TransformCallback</a> transformCallback)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>TransformAwareDrawable method </p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>transformCallback</th>
-          <td>the transform callback to be set
-</td>
-        </tr>
-      </table>
-  </div>
 
     </div>
 </div>

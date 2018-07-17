@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -276,6 +278,8 @@
   <a href="../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="api apilevel-">
+  <a href="../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
     <li class="api apilevel-">
   <a href="../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -555,6 +559,25 @@ Summary:
             
             
             
+            static
+            &lt;T&gt;
+            <a href="../../../com/facebook/datasource/IncreasingQualityDataSourceSupplier.html">IncreasingQualityDataSourceSupplier</a>&lt;T&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../com/facebook/datasource/IncreasingQualityDataSourceSupplier.html#create(java.util.List<com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<T>>>, boolean)">create</a></span>(List&lt;<a href="../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt;&gt;&gt; dataSourceSuppliers, boolean dataSourceLazy)
+        
+        <div class="jd-descrdiv">Creates a new data source supplier with increasing-quality strategy with optional lazy state
+ creation.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
             
             
             boolean
@@ -566,7 +589,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -584,7 +607,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -600,7 +623,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -943,6 +966,7 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>Creates a new data source supplier with increasing-quality strategy.
+
  <p>Note: for performance reasons the list doesn't get cloned, so the caller of this method
  should not modify the list once passed in here.</p></div>
   <div class="jd-tagdata">
@@ -951,6 +975,55 @@ From interface
         <tr>
           <th>dataSourceSuppliers</th>
           <td>list of underlying suppliers
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="create(java.util.List<com.facebook.common.internal.Supplier<com.facebook.datasource.DataSource<T>>>, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../com/facebook/datasource/IncreasingQualityDataSourceSupplier.html">IncreasingQualityDataSourceSupplier</a>&lt;T&gt;
+      </span>
+      <span class="sympad">create</span>
+      <span class="normal">(List&lt;<a href="../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;<a href="../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt;&gt;&gt; dataSourceSuppliers, boolean dataSourceLazy)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new data source supplier with increasing-quality strategy with optional lazy state
+ creation.
+
+ <p>Note: for performance reasons the list doesn't get cloned, so the caller of this method
+ should not modify the list once passed in here.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>dataSourceSuppliers</th>
+          <td>list of underlying suppliers</td>
+        </tr>
+        <tr>
+          <th>dataSourceLazy</th>
+          <td>if true, the state of data source would be created only if necessary
 </td>
         </tr>
       </table>

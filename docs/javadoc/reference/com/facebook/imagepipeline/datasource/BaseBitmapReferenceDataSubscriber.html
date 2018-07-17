@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  MediaVariationsFallbackProducer - Fresco API
+  BaseBitmapReferenceDataSubscriber - Fresco API
 
 
 | Fresco
@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -254,7 +256,7 @@
   <a href="../../../../com/facebook/imagepipeline/common/package-summary.html">com.facebook.imagepipeline.common</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/core/package-summary.html">com.facebook.imagepipeline.core</a></li>
-    <li class="api apilevel-">
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/datasource/package-summary.html">com.facebook.imagepipeline.datasource</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/decoder/package-summary.html">com.facebook.imagepipeline.decoder</a></li>
@@ -272,10 +274,12 @@
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/postprocessors/package-summary.html">com.facebook.imagepipeline.postprocessors</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -288,79 +292,20 @@
           <div id="classes-nav">
             <ul>
               
-    <li><h2>Interfaces</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/JobScheduler.JobRunnable.html">JobScheduler.JobRunnable</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.html">NetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetcher.Callback.html">NetworkFetcher.Callback</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerContextCallbacks.html">ProducerContextCallbacks</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ProducerListener.html">ProducerListener</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThumbnailProducer.html">ThumbnailProducer</a>&lt;T&gt;</li>
-      </ul>
-    </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/AddImageTransformMetaDataProducer.html">AddImageTransformMetaDataProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseConsumer.html">BaseConsumer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseNetworkFetcher.html">BaseNetworkFetcher</a>&lt;FETCH_STATE&nbsp;extends&nbsp;<a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a>&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContext.html">BaseProducerContext</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BaseProducerContextCallbacks.html">BaseProducerContextCallbacks</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheGetProducer.html">BitmapMemoryCacheGetProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheKeyMultiplexProducer.html">BitmapMemoryCacheKeyMultiplexProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.html">BitmapMemoryCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BitmapPrepareProducer.html">BitmapPrepareProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/BranchOnSeparateImagesProducer.html">BranchOnSeparateImagesProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DataFetchProducer.html">DataFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DecodeProducer.html">DecodeProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DelegatingConsumer.html">DelegatingConsumer</a>&lt;I,&nbsp;O&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheReadProducer.html">DiskCacheReadProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DiskCacheWriteProducer.html">DiskCacheWriteProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/DownsampleUtil.html">DownsampleUtil</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/EncodedCacheKeyMultiplexProducer.html">EncodedCacheKeyMultiplexProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/EncodedMemoryCacheProducer.html">EncodedMemoryCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/FetchState.html">FetchState</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/HttpUrlConnectionNetworkFetcher.html">HttpUrlConnectionNetworkFetcher</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/JobScheduler.html">JobScheduler</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalAssetFetchProducer.html">LocalAssetFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalContentUriFetchProducer.html">LocalContentUriFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalContentUriThumbnailFetchProducer.html">LocalContentUriThumbnailFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalExifThumbnailProducer.html">LocalExifThumbnailProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFetchProducer.html">LocalFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalFileFetchProducer.html">LocalFileFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalResourceFetchProducer.html">LocalResourceFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/LocalVideoThumbnailProducer.html">LocalVideoThumbnailProducer</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html">MediaVariationsFallbackProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/MultiplexProducer.html">MultiplexProducer</a>&lt;K,&nbsp;T&nbsp;extends&nbsp;Closeable&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NetworkFetchProducer.html">NetworkFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/NullProducer.html">NullProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PartialDiskCacheProducer.html">PartialDiskCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.html">PostprocessedBitmapMemoryCacheProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer.html">PostprocessedBitmapMemoryCacheProducer.CachedPostprocessorConsumer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/PostprocessorProducer.html">PostprocessorProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/QualifiedResourceFetchProducer.html">QualifiedResourceFetchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/RemoveImageTransformMetaDataProducer.html">RemoveImageTransformMetaDataProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ResizeAndRotateProducer.html">ResizeAndRotateProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/SettableProducerContext.html">SettableProducerContext</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/StatefulProducerRunnable.html">StatefulProducerRunnable</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/SwallowResultProducer.html">SwallowResultProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducer.html">ThreadHandoffProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThreadHandoffProducerQueue.html">ThreadHandoffProducerQueue</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThrottlingProducer.html">ThrottlingProducer</a>&lt;T&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThumbnailBranchProducer.html">ThumbnailBranchProducer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/ThumbnailSizeChecker.html">ThumbnailSizeChecker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/WebpTranscodeProducer.html">WebpTranscodeProducer</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/AbstractProducerToDataSourceAdapter.html">AbstractProducerToDataSourceAdapter</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/BaseBitmapDataSubscriber.html">BaseBitmapDataSubscriber</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/BaseBitmapReferenceDataSubscriber.html">BaseBitmapReferenceDataSubscriber</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/BaseListBitmapDataSubscriber.html">BaseListBitmapDataSubscriber</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/CloseableProducerToDataSourceAdapter.html">CloseableProducerToDataSourceAdapter</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/ListDataSource.html">ListDataSource</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/ProducerToDataSourceAdapter.html">ProducerToDataSourceAdapter</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/datasource/SettableDataSource.html">SettableDataSource</a>&lt;T&gt;</li>
       </ul>
     </li>
               
-    <li><h2>Annotations</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/producers/Consumer.Status.html">Consumer.Status</a></li>
-      </ul>
-    </li>
               
               
               
@@ -415,6 +360,13 @@
   
   
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
@@ -425,14 +377,11 @@ Summary:
 
 
 
-  <a href="#constants">Constants</a>
-  
 
 
 
 
-
-  &#124; <a href="#pubctors">Ctors</a>
+  <a href="#pubctors">Ctors</a>
   
 
 
@@ -440,6 +389,9 @@ Summary:
   &#124; <a href="#pubmethods">Methods</a>
   
 
+
+  &#124; <a href="#promethods">Protected Methods</a>
+  
 
 
   &#124; <a href="#inhmethods">Inherited Methods</a>
@@ -464,24 +416,23 @@ Summary:
     public
      
      
-    
+    abstract
     class
-<h1>MediaVariationsFallbackProducer</h1>
+<h1>BaseBitmapReferenceDataSubscriber</h1>
 
 
 
-  
-    extends Object<br/>
   
   
   
 
   
+    extends <a href="../../../../com/facebook/datasource/BaseDataSubscriber.html">BaseDataSubscriber</a>&lt;T&gt;<br/>
   
-      implements 
-      
-        <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;T&gt; 
-      
+  
+  
+
+  
   
   
 
@@ -496,7 +447,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -504,7 +455,17 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.producers.MediaVariationsFallbackProducer</td>
+        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html">com.facebook.datasource.BaseDataSubscriber</a>&lt;T&gt;</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+         	
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.datasource.BaseBitmapReferenceDataSubscriber</td>
     </tr>
     
 
@@ -520,20 +481,30 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Disk cache read producer.
+<p>Implementation of <code><a href="../../../../com/facebook/datasource/DataSubscriber.html">DataSubscriber</a></code> for cases where the client wants access to a bitmap
+ reference.
 
- <p>This producer looks in the disk cache for variations of the original image which hasn't been
- found in cache itself.
+ <p>Sample usage:
 
- <p>If an alternative image is found, then it is passed to the consumer. If it's big enough for
- the request's <code><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></code> then the request goes no further down the pipeline. If it's
- smaller than required then it will be passed as a non-final response.
+ <pre>
+ <code>
+ dataSource.subscribe(
+   new BaseBitmapReferenceDataSubscriber() {
+     @Override
+     public void onNewResultImpl(@Nullable CloseableReference<Bitmap> bitmapReference) {
+       // Pass bitmap to another component, which clones the bitmap reference if it needs to
+       // hold on to the bitmap.
+       doSomething(bitmapReference);
+       // No need to do any cleanup.
+     }
 
- <p>If the image is not found or is sent as non-final, then the request is passed to the next
- producer in the sequence. Any results that the producer returns are passed to the consumer.
-
- <p>This producer is used only if the media variations experiment is turned on and does nothing
- unless the image request includes defined <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> and <code><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></code>.
+     @Override
+     public void onFailureImpl(DataSource dataSource) {
+       // No cleanup required here.
+     }
+   });
+ </code>
+ </pre>
 </p>
 
 
@@ -574,50 +545,6 @@ Summary:
 
 
 
-<!-- =========== ENUM CONSTANT SUMMARY =========== -->
-<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
-
-
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">String</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#EXTRA_CACHED_VALUE_FOUND">EXTRA_CACHED_VALUE_FOUND</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">String</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#EXTRA_CACHED_VALUE_USED_AS_LAST">EXTRA_CACHED_VALUE_USED_AS_LAST</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">String</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#EXTRA_VARIANTS_COUNT">EXTRA_VARIANTS_COUNT</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">String</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#EXTRA_VARIANTS_SOURCE">EXTRA_VARIANTS_SOURCE</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">String</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#PRODUCER_NAME">PRODUCER_NAME</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-
-</table>
-
-
 
 
 
@@ -644,7 +571,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#MediaVariationsFallbackProducer(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)">MediaVariationsFallbackProducer</a></span>(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/BaseBitmapReferenceDataSubscriber.html#BaseBitmapReferenceDataSubscriber()">BaseBitmapReferenceDataSubscriber</a></span>()
         
   </td></tr>
 
@@ -673,7 +600,7 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/MediaVariationsFallbackProducer.html#produceResults(com.facebook.imagepipeline.producers.Consumer<com.facebook.imagepipeline.image.EncodedImage>, com.facebook.imagepipeline.producers.ProducerContext)">produceResults</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; consumer, <a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a> producerContext)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/BaseBitmapReferenceDataSubscriber.html#onNewResultImpl(com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>)">onNewResultImpl</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; dataSource)
         
   </td></tr>
 
@@ -684,6 +611,33 @@ Summary:
 
 
 
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="promethods" class="jd-sumtable"><tr><th colspan="12">Protected Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/datasource/BaseBitmapReferenceDataSubscriber.html#onNewResultImpl(com.facebook.common.references.CloseableReference<android.graphics.Bitmap>)">onNewResultImpl</a></span>(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference)
+        
+        <div class="jd-descrdiv">The bitmap reference will be closed immediately after this method is called.</div>
+  
+  </td></tr>
+
+
+
+</table>
+
+
 
 
 
@@ -691,6 +645,137 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.datasource.BaseDataSubscriber" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.datasource.BaseDataSubscriber-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  <a href="../../../../com/facebook/datasource/BaseDataSubscriber.html">com.facebook.datasource.BaseDataSubscriber</a>
+
+<div id="inherited-methods-com.facebook.datasource.BaseDataSubscriber">
+  <div id="inherited-methods-com.facebook.datasource.BaseDataSubscriber-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.datasource.BaseDataSubscriber-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html#onCancellation(com.facebook.datasource.DataSource<T>)">onCancellation</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called whenever the request is cancelled (a request being cancelled means that is was closed
+ before it finished).</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html#onFailure(com.facebook.datasource.DataSource<T>)">onFailure</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called whenever an error occurs inside of the pipeline.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html#onFailureImpl(com.facebook.datasource.DataSource<T>)">onFailureImpl</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html#onNewResult(com.facebook.datasource.DataSource<T>)">onNewResult</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called whenever a new value is ready to be retrieved from the DataSource.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html#onNewResultImpl(com.facebook.datasource.DataSource<T>)">onNewResultImpl</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/BaseDataSubscriber.html#onProgressUpdate(com.facebook.datasource.DataSource<T>)">onProgressUpdate</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called when the progress updates.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
 
 
 <tr class="api apilevel-" >
@@ -897,19 +982,19 @@ From class
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.producers.Producer" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.facebook.imagepipeline.producers.Producer-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.datasource.DataSubscriber" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.datasource.DataSubscriber-trigger"
           src="../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From interface
 
-  <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">com.facebook.imagepipeline.producers.Producer</a>
+  <a href="../../../../com/facebook/datasource/DataSubscriber.html">com.facebook.datasource.DataSubscriber</a>
 
-<div id="inherited-methods-com.facebook.imagepipeline.producers.Producer">
-  <div id="inherited-methods-com.facebook.imagepipeline.producers.Producer-list"
+<div id="inherited-methods-com.facebook.datasource.DataSubscriber">
+  <div id="inherited-methods-com.facebook.datasource.DataSubscriber-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-com.facebook.imagepipeline.producers.Producer-summary" style="display: none;">
+  <div id="inherited-methods-com.facebook.datasource.DataSubscriber-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -925,9 +1010,64 @@ From interface
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/Producer.html#produceResults(com.facebook.imagepipeline.producers.Consumer<T>, com.facebook.imagepipeline.producers.ProducerContext)">produceResults</a></span>(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;T&gt; consumer, <a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a> context)
+        <span class="sympad"><a href="../../../../com/facebook/datasource/DataSubscriber.html#onCancellation(com.facebook.datasource.DataSource<T>)">onCancellation</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
         
-        <div class="jd-descrdiv">Start producing results for given context.</div>
+        <div class="jd-descrdiv">Called whenever the request is cancelled (a request being cancelled means that is was closed
+ before it finished).</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/DataSubscriber.html#onFailure(com.facebook.datasource.DataSource<T>)">onFailure</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called whenever an error occurs inside of the pipeline.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/DataSubscriber.html#onNewResult(com.facebook.datasource.DataSource<T>)">onNewResult</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called whenever a new value is ready to be retrieved from the DataSource.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/datasource/DataSubscriber.html#onProgressUpdate(com.facebook.datasource.DataSource<T>)">onProgressUpdate</a></span>(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;T&gt; dataSource)
+        
+        <div class="jd-descrdiv">Called when the progress updates.</div>
   
   </td></tr>
 
@@ -961,208 +1101,6 @@ From interface
 <!-- Constants -->
 
 
-<!-- ========= ENUM CONSTANTS DETAIL ======== -->
-<h2>Constants</h2>
-
-
-
-
-<a id="EXTRA_CACHED_VALUE_FOUND"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        String
-      </span>
-        EXTRA_CACHED_VALUE_FOUND
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                "cached_value_found"
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="EXTRA_CACHED_VALUE_USED_AS_LAST"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        String
-      </span>
-        EXTRA_CACHED_VALUE_USED_AS_LAST
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                "cached_value_used_as_last"
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="EXTRA_VARIANTS_COUNT"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        String
-      </span>
-        EXTRA_VARIANTS_COUNT
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                "variants_count"
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="EXTRA_VARIANTS_SOURCE"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        String
-      </span>
-        EXTRA_VARIANTS_SOURCE
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                "variants_source"
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="PRODUCER_NAME"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        String
-      </span>
-        PRODUCER_NAME
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                "MediaVariationsFallbackProducer"
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-
 <!-- Fields -->
 
 
@@ -1174,7 +1112,7 @@ From interface
 
 
 
-<a id="MediaVariationsFallbackProducer(com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.BufferedDiskCache, com.facebook.imagepipeline.cache.CacheKeyFactory, com.facebook.imagepipeline.cache.MediaVariationsIndex, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>)"></a>
+<a id="BaseBitmapReferenceDataSubscriber()"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1186,8 +1124,8 @@ From interface
          
         
       </span>
-      <span class="sympad">MediaVariationsFallbackProducer</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> defaultBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/BufferedDiskCache.html">BufferedDiskCache</a> smallImageBufferedDiskCache, <a href="../../../../com/facebook/imagepipeline/cache/CacheKeyFactory.html">CacheKeyFactory</a> cacheKeyFactory, <a href="../../../../com/facebook/imagepipeline/cache/MediaVariationsIndex.html">MediaVariationsIndex</a> mediaVariationsIndex, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer)</span>
+      <span class="sympad">BaseBitmapReferenceDataSubscriber</span>
+      <span class="normal">()</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1220,7 +1158,7 @@ From interface
 
 
 
-<a id="produceResults(com.facebook.imagepipeline.producers.Consumer<com.facebook.imagepipeline.image.EncodedImage>, com.facebook.imagepipeline.producers.ProducerContext)"></a>
+<a id="onNewResultImpl(com.facebook.datasource.DataSource<com.facebook.common.references.CloseableReference<com.facebook.imagepipeline.image.CloseableImage>>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1232,8 +1170,8 @@ From interface
          
         void
       </span>
-      <span class="sympad">produceResults</span>
-      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/producers/Consumer.html">Consumer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; consumer, <a href="../../../../com/facebook/imagepipeline/producers/ProducerContext.html">ProducerContext</a> producerContext)</span>
+      <span class="sympad">onNewResultImpl</span>
+      <span class="normal">(<a href="../../../../com/facebook/datasource/DataSource.html">DataSource</a>&lt;<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/CloseableImage.html">CloseableImage</a>&gt;&gt; dataSource)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1255,6 +1193,53 @@ From interface
 
 
 <!-- ========= METHOD DETAIL ======== -->
+
+<h2>Protected Methods</h2>
+
+
+
+<a id="onNewResultImpl(com.facebook.common.references.CloseableReference<android.graphics.Bitmap>)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        abstract 
+         
+        void
+      </span>
+      <span class="sympad">onNewResultImpl</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/references/CloseableReference.html">CloseableReference</a>&lt;Bitmap&gt; bitmapReference)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The bitmap reference will be closed immediately after this method is called. Clone the
+ reference if you need to hold on to the bitmap and close once no longer needed.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>bitmapReference</th>
+          <td>the bitmap reference or null if not a bitmap-based image
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 
 
 

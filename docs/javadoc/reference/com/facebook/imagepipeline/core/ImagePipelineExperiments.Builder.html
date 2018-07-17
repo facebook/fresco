@@ -193,6 +193,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/info/internal/package-summary.html">com.facebook.drawee.backends.pipeline.info.internal</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/volley/package-summary.html">com.facebook.drawee.backends.volley</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/components/package-summary.html">com.facebook.drawee.components</a></li>
@@ -276,6 +278,8 @@
   <a href="../../../../com/facebook/imagepipeline/producers/package-summary.html">com.facebook.imagepipeline.producers</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -521,6 +525,17 @@ Summary:
       </tr>
       
     
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          
+          <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt;</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#mLazyDataSource">mLazyDataSource</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
 
 </table>
 
@@ -644,34 +659,15 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setExternalCreatedBitmapLogEnabled(boolean)">setExternalCreatedBitmapLogEnabled</a></span>(boolean externalCreatedBitmapLogEnabled)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setLazyDataSource(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setLazyDataSource</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; lazyDataSource)
         
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setMediaVariationsIndexEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)
-        
-        <div class="jd-descrdiv">If true, this will allow the image pipeline to keep an index of the ID in each request's
- <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
- provide fallback images which are present in cache, without the need to explicitly provide
- alternative variants of the image in the request.</div>
+        <div class="jd-descrdiv">Stores an alternative lazy method to instantiate the data souce.</div>
   
   </td></tr>
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -690,7 +686,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -708,41 +704,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setSmartResizingEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)">setSmartResizingEnabled</a></span>(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; smartResizingEnabled)
-        
-        <div class="jd-descrdiv">Smart resizing combines transcoding and downsampling depending on the image format.</div>
-  
-  </td></tr>
-
-
-	 
     <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setSuppressBitmapPrefetching(boolean)">setSuppressBitmapPrefetching</a></span>(boolean suppressBitmapPrefetching)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -758,7 +720,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -774,7 +736,7 @@ Summary:
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -790,7 +752,7 @@ Summary:
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1083,6 +1045,36 @@ From class
 
 
 
+<a id="mLazyDataSource"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        <a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt;
+      </span>
+        mLazyDataSource
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
 
 <!-- Public ctors -->
 
@@ -1307,7 +1299,7 @@ From class
 </div>
 
 
-<a id="setExternalCreatedBitmapLogEnabled(boolean)"></a>
+<a id="setLazyDataSource(com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1319,8 +1311,8 @@ From class
          
         <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
       </span>
-      <span class="sympad">setExternalCreatedBitmapLogEnabled</span>
-      <span class="normal">(boolean externalCreatedBitmapLogEnabled)</span>
+      <span class="sympad">setLazyDataSource</span>
+      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; lazyDataSource)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1332,42 +1324,7 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    </div>
-</div>
-
-
-<a id="setMediaVariationsIndexEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setMediaVariationsIndexEnabled</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; mediaVariationsIndexEnabled)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>If true, this will allow the image pipeline to keep an index of the ID in each request's
- <code><a href="../../../../com/facebook/imagepipeline/request/MediaVariations.html">MediaVariations</a></code> object (if present) to possibly
- provide fallback images which are present in cache, without the need to explicitly provide
- alternative variants of the image in the request.
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Stores an alternative lazy method to instantiate the data souce. </p></div>
 
     </div>
 </div>
@@ -1434,82 +1391,6 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Stores an alternative method to instantiate the <code><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a></code>. This allows
  experimenting with overridden producers.
 </p></div>
-
-    </div>
-</div>
-
-
-<a id="setSmartResizingEnabled(com.facebook.common.internal.Supplier<java.lang.Boolean>)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setSmartResizingEnabled</span>
-      <span class="normal">(<a href="../../../../com/facebook/common/internal/Supplier.html">Supplier</a>&lt;Boolean&gt; smartResizingEnabled)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Smart resizing combines transcoding and downsampling depending on the image format.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>smartResizingEnabled</th>
-          <td>true if smart resizing should be enabled</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>The Builder itself for chaining
-</li></ul>
-  </div>
-
-    </div>
-</div>
-
-
-<a id="setSuppressBitmapPrefetching(boolean)"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
-      </span>
-      <span class="sympad">setSuppressBitmapPrefetching</span>
-      <span class="normal">(boolean suppressBitmapPrefetching)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
