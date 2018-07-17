@@ -20,7 +20,7 @@
       android:layout_width="@dimen/drawee_width_medium"
       android:layout_height="@dimen/drawee_height_medium"
       android:layout_marginTop="@dimen/margin_medium"
-      app:actualImageScaleType="fitXY"
+      app:actualImageScaleType="fitCenter"
       />
 
   <android.support.v7.widget.SwitchCompat

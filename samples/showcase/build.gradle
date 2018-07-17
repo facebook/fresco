@@ -82,6 +82,7 @@ dependencies {
 
     implementation project(':animated-base')
     implementation project(':animated-gif')
+    implementation project(':animated-gif-lite')
     implementation project(':animated-webp')
     implementation project(':static-webp')
 

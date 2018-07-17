@@ -23,17 +23,33 @@ import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.facebook.animated.giflite.GifDecoder;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.imagepipeline.common.ImageDecodeOptions;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * GIF example that illustrates how to display a simple GIF file
  */
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
+
+  private static final String IS_LITE_KEY = "IS_LITE";
+
+  public static ImageFormatGifFragment newFragment(boolean isLite) {
+
+    ImageFormatGifFragment fragment = new ImageFormatGifFragment();
+    if (isLite) {
+      Bundle args = new Bundle();
+      args.putBoolean(IS_LITE_KEY, true);
+      fragment.setArguments(args);
+    }
+    return fragment;
+  }
 
   public static final Uri URI_GIF_S =
       Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_s.gif");
@@ -101,17 +117,30 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
   }
 
   private void setAnimationUri(Uri uri) {
-    final DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setAutoPlayAnimations(true)
-        .setOldController(mSimpleDraweeView.getController())
-        .setUri(uri)
-        .build();
-    mSimpleDraweeView.setController(controller);
+    final PipelineDraweeControllerBuilder controllerBuilder =
+        Fresco.newDraweeControllerBuilder()
+            .setAutoPlayAnimations(true)
+            .setOldController(mSimpleDraweeView.getController());
+    if (isLiteMode()) {
+      controllerBuilder.setImageRequest(
+          ImageRequestBuilder.newBuilderWithSource(uri)
+              .setImageDecodeOptions(
+                  ImageDecodeOptions.newBuilder().setCustomImageDecoder(new GifDecoder()).build())
+              .build());
+    } else {
+      controllerBuilder.setUri(uri).build();
+    }
+    mSimpleDraweeView.setController(controllerBuilder.build());
+  }
+
+  private boolean isLiteMode() {
+    return getArguments() != null
+        && getArguments().getBoolean(IS_LITE_KEY, false /* defaultValue */);
   }
 
   @Override
   public int getTitleId() {
-    return R.string.format_gif_title;
+    return isLiteMode() ? R.string.format_gif_lite_title : R.string.format_gif_title;
   }
 
   private class SimpleUriListAdapter extends BaseAdapter {

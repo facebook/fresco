@@ -1,0 +1,27 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    implementation project(':animated-base')
+    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+}
+apply from: rootProject.file('release.gradle')
+
+android {
+
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    sourceSets {
+        main
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts.add('archives', sourcesJar)
