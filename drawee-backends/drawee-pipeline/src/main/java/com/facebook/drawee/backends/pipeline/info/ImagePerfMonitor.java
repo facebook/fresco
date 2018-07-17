@@ -6,11 +6,13 @@
  */
 package com.facebook.drawee.backends.pipeline.info;
 
+import android.graphics.Rect;
 import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
+import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import java.util.LinkedList;
@@ -94,9 +96,21 @@ public class ImagePerfMonitor extends BaseRequestListener {
     if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
       return;
     }
+    if (imageLoadStatus == ImageLoadStatus.SUCCESS) {
+      addViewportData();
+    }
     ImagePerfData data = state.snapshot();
     for (ImagePerfDataListener listener : mImagePerfDataListeners) {
       listener.onImagePerfDataUpdated(data, imageLoadStatus);
+    }
+  }
+
+  private void addViewportData() {
+    DraweeHierarchy hierarchy = mPipelineDraweeController.getHierarchy();
+    if (hierarchy != null && hierarchy.getTopLevelDrawable() != null) {
+      Rect bounds = hierarchy.getTopLevelDrawable().getBounds();
+      mImagePerfState.setOnScreenWidth(bounds.width());
+      mImagePerfState.setOnScreenHeight(bounds.height());
     }
   }
 

@@ -34,6 +34,9 @@ public class ImagePerfData {
   private final boolean mIsSuccessful;
   private final boolean mIsPrefetch;
 
+  private final int mOnScreenWidthPx;
+  private final int mOnScreenHeightPx;
+
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
@@ -50,7 +53,9 @@ public class ImagePerfData {
       @ImageOrigin int imageOrigin,
       boolean isCanceled,
       boolean isSuccessful,
-      boolean isPrefetch) {
+      boolean isPrefetch,
+      int onScreenWidthPx,
+      int onScreenHeightPx) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -67,6 +72,8 @@ public class ImagePerfData {
     mIsCanceled = isCanceled;
     mIsSuccessful = isSuccessful;
     mIsPrefetch = isPrefetch;
+    mOnScreenWidthPx = onScreenWidthPx;
+    mOnScreenHeightPx = onScreenHeightPx;
   }
 
   @Nullable
@@ -134,6 +141,14 @@ public class ImagePerfData {
     return mIsPrefetch;
   }
 
+  public int getOnScreenWidthPx() {
+    return mOnScreenWidthPx;
+  }
+
+  public int getOnScreenHeightPx() {
+    return mOnScreenHeightPx;
+  }
+
   public long getFinalImageLoadTimeMs() {
     if (isSuccessful()) {
       return getImageRequestEndTimeMs() - getImageRequestStartTimeMs();
@@ -165,6 +180,8 @@ public class ImagePerfData {
         .add("caller context", mCallerContext)
         .add("image request", mImageRequest)
         .add("image info", mImageInfo)
+        .add("on-screen width", mOnScreenWidthPx)
+        .add("on-screen height", mOnScreenHeightPx)
         .toString();
   }
 }

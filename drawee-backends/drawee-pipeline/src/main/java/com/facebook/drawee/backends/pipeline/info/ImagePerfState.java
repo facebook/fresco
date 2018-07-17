@@ -38,6 +38,10 @@ public class ImagePerfState {
   private boolean mIsSuccessful;
   private boolean mIsPrefetch;
 
+  // On screen information
+  private int mOnScreenWidthPx = UNSET;
+  private int mOnScreenHeightPx = UNSET;
+
   // Internal parameters
   private @ImageLoadStatus int mImageLoadStatus = ImageLoadStatus.UNKNOWN;
 
@@ -59,6 +63,9 @@ public class ImagePerfState {
     mIsCanceled = false;
     mIsSuccessful = false;
     mIsPrefetch = false;
+
+    mOnScreenWidthPx = UNSET;
+    mOnScreenHeightPx = UNSET;
 
     mImageLoadStatus = ImageLoadStatus.UNKNOWN;
   }
@@ -136,6 +143,14 @@ public class ImagePerfState {
     mImageInfo = imageInfo;
   }
 
+  public void setOnScreenWidth(int onScreenWidthPx) {
+    mOnScreenWidthPx = onScreenWidthPx;
+  }
+
+  public void setOnScreenHeight(int onScreenHeightPx) {
+    mOnScreenHeightPx = onScreenHeightPx;
+  }
+
   public ImagePerfData snapshot() {
     return new ImagePerfData(
         mControllerId,
@@ -153,6 +168,8 @@ public class ImagePerfState {
         mImageOrigin,
         mIsCanceled,
         mIsSuccessful,
-        mIsPrefetch);
+        mIsPrefetch,
+        mOnScreenWidthPx,
+        mOnScreenHeightPx);
   }
 }
