@@ -436,6 +436,22 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }
+  /** Sets a new placeholder drawable with scale type and disable the rounding optional. */
+  public void setPlaceholderImage(Drawable drawable, ScalingUtils.ScaleType scaleType, boolean roundingBorderDisable) {
+    if (!roundingBorderDisable) {
+      setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
+    }else {
+      int borderColor = mRoundingParams.getBorderColor();
+      float borderWidth = mRoundingParams.getBorderWidth();
+
+      //if set the roundingBorderOnPlaceHolderDisable attributes, set the reset the border
+      mRoundingParams.setBorder(Color.TRANSPARENT,0);
+      setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
+      //when the placeholder image load finish,set the border back,avoid effect the actual image
+      mRoundingParams.setBorder(borderColor, borderWidth);
+    }
+    getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
+  }
 
   /**
    * @return true if there is a placeholder image set.
