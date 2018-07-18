@@ -363,24 +363,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /**
-   * Sets the drawable at the specified index while keeping the old scale type and rounding.
-   * In case the given drawable is null, scale type gets cleared too.
-   */
-  private void setChildDrawableAtIndex(int index, @Nullable Drawable drawable, boolean borderValid) {
-    if (drawable == null) {
-      mFadeDrawable.setDrawable(index, null);
-      return;
-    }
-    if (!borderValid) {
-      RoundingParams roundingParams = mRoundingParams;
-      roundingParams.setBorder(Color.TRANSPARENT, 0);
-      drawable = WrappingUtils.maybeApplyLeafRounding(drawable, roundingParams, mResources);
-    }
-    drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
-    getParentDrawableAtIndex(index).setDrawable(drawable);
-  }
-
-  /**
    * Gets the ScaleTypeDrawable at the specified index.
    * In case there is no child at the specified index, a NullPointerException is thrown.
    * In case there is a child, but the ScaleTypeDrawable does not exist,
@@ -454,11 +436,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }
-
-  public void setPlaceholderImage(Drawable drawable, boolean borderValid) {
-    setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable, borderValid);
-  }
-
 
   /**
    * @return true if there is a placeholder image set.
@@ -627,5 +604,4 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public boolean hasImage() {
     return mActualImageWrapper.getDrawable() != mEmptyActualImageDrawable;
   }
-
 }
