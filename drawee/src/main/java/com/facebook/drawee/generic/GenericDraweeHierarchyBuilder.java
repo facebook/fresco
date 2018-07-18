@@ -44,6 +44,7 @@ public class GenericDraweeHierarchyBuilder {
 
   private Drawable mPlaceholderImage;
   private @Nullable ScalingUtils.ScaleType mPlaceholderImageScaleType;
+  private boolean mPlaceholderImageBorderDisable;
 
   private Drawable mRetryImage;
   private ScalingUtils.ScaleType mRetryImageScaleType;
@@ -84,6 +85,7 @@ public class GenericDraweeHierarchyBuilder {
 
     mPlaceholderImage = null;
     mPlaceholderImageScaleType = DEFAULT_SCALE_TYPE;
+    mPlaceholderImageBorderDisable = false;
 
     mRetryImage = null;
     mRetryImageScaleType = DEFAULT_SCALE_TYPE;
@@ -240,6 +242,27 @@ public class GenericDraweeHierarchyBuilder {
     mPlaceholderImage = mResources.getDrawable(resourceId);
     mPlaceholderImageScaleType = placeholderImageScaleType;
     return this;
+  }
+
+  /**
+   * sets the optional for disable the rounding when the actual image fail.
+   *
+   * <p>If not set.the rounding will exist,when the actual image fail.
+   *
+   * @param placeholderImageBorderDisable the optional about disable the rounding when the actual image fail
+   * @return modified instance of this builder
+   */
+  public GenericDraweeHierarchyBuilder setPlaceholderImageBorderDisable(boolean placeholderImageBorderDisable) {
+    mPlaceholderImageBorderDisable = placeholderImageBorderDisable;
+    return this;
+  }
+
+  /**
+   * gets the optional about disable the rounding when the actual image fail.
+   * @return the optional about disable rounding
+   */
+  public boolean getPlaceholderImageBorderDisable() {
+    return mPlaceholderImageBorderDisable;
   }
 
   /**

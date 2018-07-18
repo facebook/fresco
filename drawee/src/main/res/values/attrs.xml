@@ -137,6 +137,8 @@
     <attr name="roundingBorderColor" format="color"/>
     <!-- Rounding border padding -->
     <attr name="roundingBorderPadding" format="dimension" />
+    <!-- Rounding border on placeHolder disable -->
+    <attr name="roundingBorderOnPlaceHolderDisable" format="boolean"/>
 
   </declare-styleable>
 

@@ -113,9 +113,10 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     // array of layers
     Drawable[] layers = new Drawable[numLayers];
     layers[BACKGROUND_IMAGE_INDEX] = buildBranch(builder.getBackground(), null);
-    layers[PLACEHOLDER_IMAGE_INDEX] = buildBranch(
+    layers[PLACEHOLDER_IMAGE_INDEX] = buildPlaceHolderImageBranch(
         builder.getPlaceholderImage(),
-        builder.getPlaceholderImageScaleType());
+        builder.getPlaceholderImageScaleType(),
+        builder.getPlaceholderImageBorderDisable());
     layers[ACTUAL_IMAGE_INDEX] = buildActualImageBranch(
         mActualImageWrapper,
         builder.getActualImageScaleType(),
@@ -157,6 +158,24 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mTopLevelDrawable.mutate();
 
     resetFade();
+  }
+
+  @Nullable
+  private Drawable buildPlaceHolderImageBranch(@Nullable Drawable drawable,
+                                               @Nullable ScalingUtils.ScaleType scaleType,
+                                               boolean placeHolderImageBorderDisable){
+    if (!placeHolderImageBorderDisable) {
+      return buildBranch(drawable, scaleType);
+    }
+    int borderColor = mRoundingParams.getBorderColor();
+    float borderWidth = mRoundingParams.getBorderWidth();
+
+    //if set the roundingBorderOnPlaceHolderDisable attributes, set the reset the border
+    mRoundingParams.setBorder(Color.TRANSPARENT,0);
+    drawable = buildBranch(drawable, scaleType);
+    //when the placeholder image load finish,set the border back,avoid effect the actual image
+    mRoundingParams.setBorder(borderColor, borderWidth);
+    return drawable;
   }
 
   @Nullable
@@ -344,6 +363,24 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /**
+   * Sets the drawable at the specified index while keeping the old scale type and rounding.
+   * In case the given drawable is null, scale type gets cleared too.
+   */
+  private void setChildDrawableAtIndex(int index, @Nullable Drawable drawable, boolean borderValid) {
+    if (drawable == null) {
+      mFadeDrawable.setDrawable(index, null);
+      return;
+    }
+    if (!borderValid) {
+      RoundingParams roundingParams = mRoundingParams;
+      roundingParams.setBorder(Color.TRANSPARENT, 0);
+      drawable = WrappingUtils.maybeApplyLeafRounding(drawable, roundingParams, mResources);
+    }
+    drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
+    getParentDrawableAtIndex(index).setDrawable(drawable);
+  }
+
+  /**
    * Gets the ScaleTypeDrawable at the specified index.
    * In case there is no child at the specified index, a NullPointerException is thrown.
    * In case there is a child, but the ScaleTypeDrawable does not exist,
@@ -418,6 +455,11 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }
 
+  public void setPlaceholderImage(Drawable drawable, boolean borderValid) {
+    setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable, borderValid);
+  }
+
+
   /**
    * @return true if there is a placeholder image set.
    */
@@ -449,6 +491,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public void setPlaceholderImage(int resourceId, ScalingUtils.ScaleType scaleType) {
     setPlaceholderImage(mResources.getDrawable(resourceId), scaleType);
   }
+
 
   /** Sets a new failure drawable with old scale type. */
   public void setFailureImage(@Nullable Drawable drawable) {
@@ -584,4 +627,5 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   public boolean hasImage() {
     return mActualImageWrapper.getDrawable() != mEmptyActualImageDrawable;
   }
+
 }

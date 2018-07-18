@@ -154,6 +154,9 @@ public class GenericDraweeHierarchyInflater {
           } else if (attr == R.styleable.GenericDraweeHierarchy_progressBarImageScaleType) {
             builder.setProgressBarImageScaleType(getScaleTypeFromXml(gdhAttrs, attr));
 
+          } else if (attr == R.styleable.GenericDraweeHierarchy_roundingBorderOnPlaceHolderDisable) {
+            builder.setPlaceholderImageBorderDisable(gdhAttrs.getBoolean(attr, false));
+
           } else if (attr == R.styleable.GenericDraweeHierarchy_progressBarAutoRotateInterval) {
             progressBarAutoRotateInterval =
                 gdhAttrs.getInteger(attr, progressBarAutoRotateInterval);
