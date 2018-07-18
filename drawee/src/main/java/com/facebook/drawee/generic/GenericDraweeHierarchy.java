@@ -469,7 +469,6 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     setPlaceholderImage(mResources.getDrawable(resourceId), scaleType);
   }
 
-
   /** Sets a new failure drawable with old scale type. */
   public void setFailureImage(@Nullable Drawable drawable) {
     setChildDrawableAtIndex(FAILURE_IMAGE_INDEX, drawable);
