@@ -33,7 +33,7 @@ public class GifDecoder implements ImageDecoder {
       ImageDecodeOptions options) {
 
     Movie movie = Movie.decodeStream(encodedImage.getInputStream());
-    MovieScaleHolder movieScaleHolder = new MovieScaleHolder(movie.width(), movie.height());
+    MovieDrawer drawer = new MovieDrawer(movie);
 
     List<Integer> frameStartTimes = getMovieFrameStartTimes(movie);
 
@@ -41,7 +41,7 @@ public class GifDecoder implements ImageDecoder {
     for (int i = 0, N = frameStartTimes.size(); i < N; i++) {
       int frameStart = frameStartTimes.get(i);
       int frameDuration = (i == N - 1 ? movie.duration() : frameStartTimes.get(i + 1)) - frameStart;
-      frames[i] = new MovieFrame(movie, movieScaleHolder, frameStart, frameDuration);
+      frames[i] = new MovieFrame(drawer, frameStart, frameDuration, movie.width(), movie.height());
     }
 
     return new CloseableAnimatedImage(

@@ -8,29 +8,27 @@
 package com.facebook.animated.giflite;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Movie;
-import android.support.annotation.Nullable;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 
 /**
- * Simple wrapper for an animated image frame back by {@link Movie}. All {@link MovieFrame} for the
- * same {@link MovieAnimatedImage} will be backed by the same {@link Movie} and can therefore not be
- * used in parallel.
+ * Simple wrapper for an animated image frame back by {@link MovieDrawer}. All {@link MovieFrame}
+ * for the same {@link MovieAnimatedImage} will be backed by the same {@link MovieDrawer}.
  */
 class MovieFrame implements AnimatedImageFrame {
 
-  private final Movie mMovie;
-  private final MovieScaleHolder mScaleHolder;
+  private final MovieDrawer mMovieDrawer;
   private final int mFrameStart;
   private final int mFrameDuration;
-  private @Nullable Canvas mCanvas;
+  private final int mFrameWidth;
+  private final int mFrameHeight;
 
-  public MovieFrame(Movie movie, MovieScaleHolder scaleHolder, int frameStart, int frameDuration) {
-    mMovie = movie;
-    mScaleHolder = scaleHolder;
+  public MovieFrame(
+      MovieDrawer movieDrawer, int frameStart, int frameDuration, int frameWidth, int frameHeight) {
+    mMovieDrawer = movieDrawer;
     mFrameStart = frameStart;
     mFrameDuration = frameDuration;
+    mFrameWidth = frameWidth;
+    mFrameHeight = frameHeight;
   }
 
   @Override
@@ -38,19 +36,7 @@ class MovieFrame implements AnimatedImageFrame {
 
   @Override
   public void renderFrame(int w, int h, Bitmap bitmap) {
-    mMovie.setTime(mFrameStart);
-
-    if (mCanvas == null) {
-      mCanvas = new Canvas(bitmap);
-    } else {
-      mCanvas.setBitmap(bitmap);
-    }
-
-    mScaleHolder.updateViewPort(w, h);
-    mCanvas.save();
-    mCanvas.scale(mScaleHolder.getScale(), mScaleHolder.getScale());
-    mMovie.draw(mCanvas, mScaleHolder.getLeft(), mScaleHolder.getTop());
-    mCanvas.restore();
+    mMovieDrawer.drawFrame(mFrameStart, w, h, bitmap);
   }
 
   @Override
@@ -60,12 +46,12 @@ class MovieFrame implements AnimatedImageFrame {
 
   @Override
   public int getWidth() {
-    return mMovie.width();
+    return mFrameWidth;
   }
 
   @Override
   public int getHeight() {
-    return mMovie.height();
+    return mFrameHeight;
   }
 
   @Override
