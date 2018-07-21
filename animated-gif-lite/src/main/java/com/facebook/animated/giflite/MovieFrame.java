@@ -34,9 +34,7 @@ class MovieFrame implements AnimatedImageFrame {
   }
 
   @Override
-  public void dispose() {
-    mCanvas = null;
-  }
+  public void dispose() {}
 
   @Override
   public void renderFrame(int w, int h, Bitmap bitmap) {
