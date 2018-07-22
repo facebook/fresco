@@ -40,10 +40,12 @@ public class ForwardingImageOriginListener implements ImageOriginListener {
     final int numberOfListeners = mImageOriginListeners.size();
     for (int i = 0; i < numberOfListeners; i++) {
       ImageOriginListener listener = mImageOriginListeners.get(i);
-      try {
-        listener.onImageLoaded(controllerId, imageOrigin, successful);
-      } catch (Exception e) {
-        FLog.e(TAG, "InternalListener exception in onImageLoaded", e);
+      if (listener != null) {
+        try {
+          listener.onImageLoaded(controllerId, imageOrigin, successful);
+        } catch (Exception e) {
+          FLog.e(TAG, "InternalListener exception in onImageLoaded", e);
+        }
       }
     }
   }
