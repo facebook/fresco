@@ -85,6 +85,7 @@ public class ResizeAndRotateProducerTest {
 
   private static final int MIN_TRANSFORM_INTERVAL_MS =
       ResizeAndRotateProducer.MIN_TRANSFORM_INTERVAL_MS;
+  private static final int MAX_BITMAP_SIZE = 2024;
   private TestExecutorService mTestExecutorService;
   private ResizeAndRotateProducer mResizeAndRotateProducer;
   private Consumer<EncodedImage> mResizeAndRotateProducerConsumer;
@@ -694,12 +695,14 @@ public class ResizeAndRotateProducerTest {
   }
 
   private void whenResizingEnabledIs(boolean resizingEnabled) {
-    mResizeAndRotateProducer = new ResizeAndRotateProducer(
-        mTestExecutorService,
-        mPooledByteBufferFactory,
-        resizingEnabled,
-        mInputProducer,
-        false);
+    mResizeAndRotateProducer =
+        new ResizeAndRotateProducer(
+            mTestExecutorService,
+            mPooledByteBufferFactory,
+            resizingEnabled,
+            mInputProducer,
+            false,
+            MAX_BITMAP_SIZE);
 
     mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
   }

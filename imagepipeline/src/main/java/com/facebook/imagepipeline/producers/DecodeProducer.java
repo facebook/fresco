@@ -63,6 +63,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final boolean mDownsampleEnabled;
   private final boolean mDownsampleEnabledForNetwork;
   private final boolean mDecodeCancellationEnabled;
+  private final int mMaxBitmapSize;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -72,7 +73,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final boolean downsampleEnabled,
       final boolean downsampleEnabledForNetwork,
       final boolean decodeCancellationEnabled,
-      final Producer<EncodedImage> inputProducer) {
+      final Producer<EncodedImage> inputProducer,
+      final int maxBitmapSize) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -81,6 +83,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mDownsampleEnabledForNetwork = downsampleEnabledForNetwork;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mDecodeCancellationEnabled = decodeCancellationEnabled;
+    mMaxBitmapSize = maxBitmapSize;
   }
 
   @Override
@@ -90,18 +93,19 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     final ImageRequest imageRequest = producerContext.getImageRequest();
     ProgressiveDecoder progressiveDecoder;
     if (!UriUtil.isNetworkUri(imageRequest.getSourceUri())) {
-      progressiveDecoder = new LocalImagesProgressiveDecoder(
-          consumer,
-          producerContext,
-          mDecodeCancellationEnabled);
+      progressiveDecoder =
+          new LocalImagesProgressiveDecoder(
+              consumer, producerContext, mDecodeCancellationEnabled, mMaxBitmapSize);
     } else {
       ProgressiveJpegParser jpegParser = new ProgressiveJpegParser(mByteArrayPool);
-      progressiveDecoder = new NetworkImagesProgressiveDecoder(
-          consumer,
-          producerContext,
-          jpegParser,
-          mProgressiveJpegConfig,
-          mDecodeCancellationEnabled);
+      progressiveDecoder =
+          new NetworkImagesProgressiveDecoder(
+              consumer,
+              producerContext,
+              jpegParser,
+              mProgressiveJpegConfig,
+              mDecodeCancellationEnabled,
+              mMaxBitmapSize);
     }
     mInputProducer.produceResults(progressiveDecoder, producerContext);
   }
@@ -124,7 +128,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     public ProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext,
-        final boolean decodeCancellationEnabled) {
+        final boolean decodeCancellationEnabled,
+        final int maxBitmapSize) {
       super(consumer);
       mProducerContext = producerContext;
       mProducerListener = producerContext.getListener();
@@ -140,7 +145,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                   if (mDownsampleEnabledForNetwork
                       || !UriUtil.isNetworkUri(request.getSourceUri())) {
                     encodedImage.setSampleSize(
-                        DownsampleUtil.determineSampleSize(request, encodedImage));
+                        DownsampleUtil.determineSampleSize(request, encodedImage, maxBitmapSize));
                   }
                 }
                 doDecode(encodedImage, status);
@@ -397,8 +402,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     public LocalImagesProgressiveDecoder(
         final Consumer<CloseableReference<CloseableImage>> consumer,
         final ProducerContext producerContext,
-        final boolean decodeCancellationEnabled) {
-      super(consumer, producerContext, decodeCancellationEnabled);
+        final boolean decodeCancellationEnabled,
+        final int maxBitmapSize) {
+      super(consumer, producerContext, decodeCancellationEnabled, maxBitmapSize);
     }
 
     @Override
@@ -431,8 +437,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         final ProducerContext producerContext,
         final ProgressiveJpegParser progressiveJpegParser,
         final ProgressiveJpegConfig progressiveJpegConfig,
-        final boolean decodeCancellationEnabled) {
-      super(consumer, producerContext, decodeCancellationEnabled);
+        final boolean decodeCancellationEnabled,
+        final int maxBitmapSize) {
+      super(consumer, producerContext, decodeCancellationEnabled, maxBitmapSize);
       mProgressiveJpegParser = Preconditions.checkNotNull(progressiveJpegParser);
       mProgressiveJpegConfig = Preconditions.checkNotNull(progressiveJpegConfig);
       mLastScheduledScanNumber = 0;

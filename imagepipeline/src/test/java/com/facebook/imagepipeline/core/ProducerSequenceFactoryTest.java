@@ -52,6 +52,7 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class ProducerSequenceFactoryTest {
 
+  private static final int MAX_BITMAP_SIZE = 2024;
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
   private final String mDummyMime = "dummy_mime";
@@ -68,17 +69,19 @@ public class ProducerSequenceFactoryTest {
 
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
 
-    mProducerSequenceFactory = new ProducerSequenceFactory(
-        RuntimeEnvironment.application.getContentResolver(),
-        producerFactory,
-        null,
-        true,
-        false,
-        null,
-        false,
-        false,
-        false,
-        true);
+    mProducerSequenceFactory =
+        new ProducerSequenceFactory(
+            RuntimeEnvironment.application.getContentResolver(),
+            producerFactory,
+            null,
+            true,
+            false,
+            null,
+            false,
+            false,
+            false,
+            true,
+            MAX_BITMAP_SIZE);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -323,16 +326,18 @@ public class ProducerSequenceFactoryTest {
 
   private void internalUseSequenceFactoryWithBitmapPrepare() {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
-    mProducerSequenceFactory = new ProducerSequenceFactory(
-        RuntimeEnvironment.application.getContentResolver(),
-        producerFactory,
-        null,
-        true,
-        false,
-        null,
-        false,
-        /* useBitmapPrepareToDraw */ true,
-        false,
-        true);
+    mProducerSequenceFactory =
+        new ProducerSequenceFactory(
+            RuntimeEnvironment.application.getContentResolver(),
+            producerFactory,
+            null,
+            true,
+            false,
+            null,
+            false,
+            /* useBitmapPrepareToDraw */ true,
+            false,
+            true,
+            MAX_BITMAP_SIZE);
   }
 }

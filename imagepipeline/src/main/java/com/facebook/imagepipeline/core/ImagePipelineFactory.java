@@ -361,7 +361,8 @@ public class ImagePipelineFactory {
                   getPlatformBitmapFactory(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes(),
-                  mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch());
+                  mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch(),
+                  mConfig.getExperiments().getMaxBitmapSize());
     }
     return mProducerFactory;
   }
@@ -383,7 +384,8 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
               useBitmapPrepareToDraw,
               mConfig.getExperiments().isPartialImageCachingEnabled(),
-              mConfig.isDiskCacheEnabled());
+              mConfig.isDiskCacheEnabled(),
+              mConfig.getExperiments().getMaxBitmapSize());
     }
     return mProducerSequenceFactory;
   }

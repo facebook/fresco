@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Encapsulates additional elements of the {@link ImagePipelineConfig} which are currently in an
@@ -40,6 +41,7 @@ public class ImagePipelineExperiments {
   private final int mBitmapPrepareToDrawMinSizeBytes;
   private final int mBitmapPrepareToDrawMaxSizeBytes;
   private boolean mBitmapPrepareToDrawForPrefetch;
+  private final int mMaxBitmapSize;
   private final boolean mPartialImageCachingEnabled;
   private final ProducerFactoryMethod mProducerFactoryMethod;
   private final Supplier<Boolean> mLazyDataSource;
@@ -54,6 +56,7 @@ public class ImagePipelineExperiments {
     mBitmapPrepareToDrawMinSizeBytes = builder.mBitmapPrepareToDrawMinSizeBytes;
     mBitmapPrepareToDrawMaxSizeBytes = builder.mBitmapPrepareToDrawMaxSizeBytes;
     mBitmapPrepareToDrawForPrefetch = builder.mBitmapPrepareToDrawForPrefetch;
+    mMaxBitmapSize = builder.mMaxBitmapSize;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
     if (builder.mProducerFactoryMethod == null) {
       mProducerFactoryMethod = new DefaultProducerFactoryMethod();
@@ -112,6 +115,10 @@ public class ImagePipelineExperiments {
     return mBitmapPrepareToDrawForPrefetch;
   }
 
+  public int getMaxBitmapSize() {
+    return mMaxBitmapSize;
+  }
+
   public Supplier<Boolean> isLazyDataSource() {
     return mLazyDataSource;
   }
@@ -128,6 +135,7 @@ public class ImagePipelineExperiments {
     private int mBitmapPrepareToDrawMinSizeBytes = 0;
     private int mBitmapPrepareToDrawMaxSizeBytes = 0;
     public boolean mBitmapPrepareToDrawForPrefetch = false;
+    private int mMaxBitmapSize = (int) BitmapUtil.MAX_BITMAP_SIZE;
     private boolean mPartialImageCachingEnabled = false;
     private ProducerFactoryMethod mProducerFactoryMethod;
     public Supplier<Boolean> mLazyDataSource;
@@ -211,6 +219,14 @@ public class ImagePipelineExperiments {
     }
 
     /**
+     * Sets the maximum bitmap size use to compute the downsampling value when decoding Jpeg images.
+     */
+    public ImagePipelineConfig.Builder setMaxBitmapSize(int maxBitmapSize) {
+      mMaxBitmapSize = maxBitmapSize;
+      return mConfigBuilder;
+    }
+
+    /**
      * Stores an alternative method to instantiate the {@link ProducerFactory}. This allows
      * experimenting with overridden producers.
      */
@@ -251,7 +267,8 @@ public class ImagePipelineExperiments {
         PlatformBitmapFactory platformBitmapFactory,
         int bitmapPrepareToDrawMinSizeBytes,
         int bitmapPrepareToDrawMaxSizeBytes,
-        boolean bitmapPrepareToDrawForPrefetch);
+        boolean bitmapPrepareToDrawForPrefetch,
+        int maxBitmapSize);
   }
 
   public static class DefaultProducerFactoryMethod implements ProducerFactoryMethod {
@@ -275,7 +292,8 @@ public class ImagePipelineExperiments {
         PlatformBitmapFactory platformBitmapFactory,
         int bitmapPrepareToDrawMinSizeBytes,
         int bitmapPrepareToDrawMaxSizeBytes,
-        boolean bitmapPrepareToDrawForPrefetch) {
+        boolean bitmapPrepareToDrawForPrefetch,
+        int maxBitmapSize) {
       return new ProducerFactory(
           context,
           byteArrayPool,
@@ -294,7 +312,8 @@ public class ImagePipelineExperiments {
           platformBitmapFactory,
           bitmapPrepareToDrawMinSizeBytes,
           bitmapPrepareToDrawMaxSizeBytes,
-          bitmapPrepareToDrawForPrefetch);
+          bitmapPrepareToDrawForPrefetch,
+          maxBitmapSize);
     }
   }
 }

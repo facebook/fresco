@@ -13,10 +13,8 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imageutils.BitmapUtil;
 
 public class DownsampleUtil {
-
   public static final int DEFAULT_SAMPLE_SIZE = 1;
   private static final float INTERVAL_ROUNDING = 1.0f/3;
 
@@ -28,9 +26,12 @@ public class DownsampleUtil {
    *
    * @param imageRequest the request containing the requested dimensions
    * @param encodedImage the encoded image with the actual dimensions
+   * @param maxBitmapSize the maximum supported bitmap size (in pixels) when not specified in the
+   *     encoded image resizeOptions.
    * @return
    */
-  public static int determineSampleSize(ImageRequest imageRequest, EncodedImage encodedImage) {
+  public static int determineSampleSize(
+      ImageRequest imageRequest, EncodedImage encodedImage, int maxBitmapSize) {
     if (!EncodedImage.isMetaDataAvailable(encodedImage)) {
       return DEFAULT_SAMPLE_SIZE;
     }
@@ -46,10 +47,9 @@ public class DownsampleUtil {
     // possible dimension for an image.
     int maxDimension = Math.max(encodedImage.getHeight(), encodedImage.getWidth());
     final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
-    final float maxBitmapSize = resizeOptions != null
-        ? resizeOptions.maxBitmapSize
-        : BitmapUtil.MAX_BITMAP_SIZE;
-    while (maxDimension / sampleSize > maxBitmapSize) {
+    final float computedMaxBitmapSize =
+        resizeOptions != null ? resizeOptions.maxBitmapSize : maxBitmapSize;
+    while (maxDimension / sampleSize > computedMaxBitmapSize) {
       if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
         sampleSize *= 2;
       } else {
@@ -81,8 +81,8 @@ public class DownsampleUtil {
     float ratio = Math.max(widthRatio, heightRatio);
     FLog.v(
         "DownsampleUtil",
-        "Downsample - Specified size: %dx%d, image size: %dx%d " +
-            "ratio: %.1f x %.1f, ratio: %.3f for %s",
+        "Downsample - Specified size: %dx%d, image size: %dx%d "
+            + "ratio: %.1f x %.1f, ratio: %.3f for %s",
         resizeOptions.width,
         resizeOptions.height,
         widthAfterRotation,
@@ -146,5 +146,4 @@ public class DownsampleUtil {
       compare *= 2;
     }
   }
-
 }

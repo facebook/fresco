@@ -96,6 +96,8 @@ public class ProducerFactory {
   private final int mBitmapPrepareToDrawMaxSizeBytes;
   private boolean mBitmapPrepareToDrawForPrefetch;
 
+  private final int mMaxBitmapSize;
+
   public ProducerFactory(
       Context context,
       ByteArrayPool byteArrayPool,
@@ -114,7 +116,8 @@ public class ProducerFactory {
       PlatformBitmapFactory platformBitmapFactory,
       int bitmapPrepareToDrawMinSizeBytes,
       int bitmapPrepareToDrawMaxSizeBytes,
-      boolean bitmapPrepareToDrawForPrefetch) {
+      boolean bitmapPrepareToDrawForPrefetch,
+      int maxBitmapSize) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -139,6 +142,8 @@ public class ProducerFactory {
     mBitmapPrepareToDrawMinSizeBytes = bitmapPrepareToDrawMinSizeBytes;
     mBitmapPrepareToDrawMaxSizeBytes = bitmapPrepareToDrawMaxSizeBytes;
     mBitmapPrepareToDrawForPrefetch = bitmapPrepareToDrawForPrefetch;
+
+    mMaxBitmapSize = maxBitmapSize;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -180,7 +185,8 @@ public class ProducerFactory {
         mDownsampleEnabled,
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
-        inputProducer);
+        inputProducer,
+        mMaxBitmapSize);
   }
 
   public DiskCacheReadProducer newDiskCacheReadProducer(
@@ -313,13 +319,15 @@ public class ProducerFactory {
   public ResizeAndRotateProducer newResizeAndRotateProducer(
       Producer<EncodedImage> inputProducer,
       boolean resizingEnabledIfNotDownsampling,
-      boolean useDownsamplingRatio) {
+      boolean useDownsamplingRatio,
+      int maxBitmapSize) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
         resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
         inputProducer,
-        useDownsamplingRatio);
+        useDownsamplingRatio,
+        maxBitmapSize);
   }
 
   public static <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {

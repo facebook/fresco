@@ -70,18 +70,21 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private final boolean mResizingEnabled;
   private final Producer<EncodedImage> mInputProducer;
   private final boolean mUseDownsamplingRatio;
+  private final int mMaxBitmapSize;
 
   public ResizeAndRotateProducer(
       Executor executor,
       PooledByteBufferFactory pooledByteBufferFactory,
       boolean resizingEnabled,
       Producer<EncodedImage> inputProducer,
-      boolean useDownsamplingRatio) {
+      boolean useDownsamplingRatio,
+      int maxBitmapSize) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mResizingEnabled = resizingEnabled;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mUseDownsamplingRatio = useDownsamplingRatio;
+    mMaxBitmapSize = maxBitmapSize;
   }
 
   @Override
@@ -187,7 +190,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             imageRequest,
             encodedImage,
             mResizingEnabled);
-        final int downsampleRatio = DownsampleUtil.determineSampleSize(imageRequest, encodedImage);
+        final int downsampleRatio =
+            DownsampleUtil.determineSampleSize(imageRequest, encodedImage, mMaxBitmapSize);
         final int downsampleNumerator = calculateDownsampleNumerator(downsampleRatio);
         final int numerator;
         if (mUseDownsamplingRatio) {

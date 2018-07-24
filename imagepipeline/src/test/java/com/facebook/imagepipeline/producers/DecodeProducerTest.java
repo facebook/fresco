@@ -59,6 +59,7 @@ public class DecodeProducerTest {
   private static final int IMAGE_SIZE = 1000;
   private static final int IMAGE_ROTATION_ANGLE = 0;
   private static final int IMAGE_EXIF_ORIENTATION = ExifInterface.ORIENTATION_NORMAL;
+  private static final int MAX_BITMAP_SIZE = 2024;
 
   @Mock public ByteArrayPool mByteArrayPool;
   @Mock public Executor mExecutor;
@@ -112,7 +113,8 @@ public class DecodeProducerTest {
             false, /* Set downsampleEnabled to false */
             false, /* Set resizeAndRotateForNetwork to false */
             false, /* We don't cancel when the request is cancelled */
-            mInputProducer);
+            mInputProducer,
+            MAX_BITMAP_SIZE);
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);
