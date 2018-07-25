@@ -45,13 +45,13 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private static final int TEXT_COLOR = 0xFFFFFFFF;
   private static final int OUTLINE_STROKE_WIDTH_PX = 2;
   private static final int MAX_TEXT_SIZE_PX = 40;
-  private static final int MIN_TEXT_SIZE_PX = 12;
+  private static final int MIN_TEXT_SIZE_PX = 10;
   private static final int TEXT_LINE_SPACING_PX = 8;
   private static final int TEXT_PADDING_PX = 10;
 
   // Debug-text dependent parameters
-  private static final int MAX_NUMBER_OF_LINES = 7;
-  private static final int MAX_LINE_WIDTH_EM = 7;
+  private static final int MAX_NUMBER_OF_LINES = 9;
+  private static final int MAX_LINE_WIDTH_EM = 8;
 
   // General information
   private String mControllerId;
@@ -82,6 +82,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private int mCurrentTextYPx;
 
   private long mFinalImageTimeMs;
+  private String mOrigin;
 
   public DebugControllerOverlayDrawable() {
     reset();
@@ -96,6 +97,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mImageFormat = null;
     setControllerId(null);
     mFinalImageTimeMs = -1;
+    mOrigin = null;
     invalidateSelf();
   }
 
@@ -130,6 +132,11 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   public void setAnimationInfo(int frameCount, int loopCount) {
     mFrameCount = frameCount;
     mLoopCount = loopCount;
+    invalidateSelf();
+  }
+
+  public void setOrigin(String s) {
+    mOrigin = s;
     invalidateSelf();
   }
 
@@ -201,6 +208,9 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     }
     if (mFinalImageTimeMs >= 0) {
       addDebugText(canvas, "t: %d ms", mFinalImageTimeMs);
+    }
+    if (mOrigin != null) {
+      addDebugText(canvas, "origin: %s", mOrigin);
     }
   }
 
