@@ -591,12 +591,9 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
         mStorage.clearAll();
         mResourceIndex.clear();
         mCacheEventListener.onCleared();
-      } catch (IOException ioe) {
+      } catch (IOException | NullPointerException e) {
         mCacheErrorLogger.logError(
-            CacheErrorLogger.CacheErrorCategory.EVICTION,
-            TAG,
-            "clearAll: " + ioe.getMessage(),
-            ioe);
+            CacheErrorLogger.CacheErrorCategory.EVICTION, TAG, "clearAll: " + e.getMessage(), e);
       }
       mCacheStats.reset();
     }
