@@ -23,6 +23,7 @@ import com.facebook.drawee.backends.pipeline.info.ForwardingImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.ImageOriginRequestListener;
+import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.components.DeferredReleaser;
@@ -86,6 +87,8 @@ public class PipelineDraweeController
   @Nullable
   private ImageOriginListener mImageOriginListener;
 
+  private int mImageOrigin = ImageOrigin.UNKNOWN;
+
   public PipelineDraweeController(
       Resources resources,
       DeferredReleaser deferredReleaser,
@@ -121,6 +124,7 @@ public class PipelineDraweeController
     mCacheKey = cacheKey;
     setCustomDrawableFactories(customDrawableFactories);
     clearImageOriginListeners();
+    maybeUpdateDebugOverlay(null);
     addImageOriginListener(imageOriginListener);
   }
 
@@ -290,11 +294,22 @@ public class PipelineDraweeController
     }
 
     if (getControllerOverlay() == null) {
-      DebugControllerOverlayDrawable controllerOverlay = new DebugControllerOverlayDrawable();
+      final DebugControllerOverlayDrawable controllerOverlay = new DebugControllerOverlayDrawable();
       ImageLoadingTimeControllerListener overlayImageLoadListener =
           new ImageLoadingTimeControllerListener(controllerOverlay);
       addControllerListener(overlayImageLoadListener);
       setControllerOverlay(controllerOverlay);
+    }
+
+    if (mImageOriginListener == null) {
+      ImageOriginListener overlayImageOriginListener =
+          new ImageOriginListener() {
+            @Override
+            public void onImageLoaded(String controllerId, int imageOrigin, boolean successful) {
+              mImageOrigin = imageOrigin;
+            }
+          };
+      addImageOriginListener(overlayImageOriginListener);
     }
 
     if (getControllerOverlay() instanceof DebugControllerOverlayDrawable) {
@@ -310,6 +325,7 @@ public class PipelineDraweeController
         scaleType = scaleTypeDrawable != null ? scaleTypeDrawable.getScaleType() : null;
       }
       debugOverlay.setScaleType(scaleType);
+      debugOverlay.setOrigin(ImageOriginUtils.toString(mImageOrigin));
       if (image != null) {
         debugOverlay.setDimensions(image.getWidth(), image.getHeight());
         debugOverlay.setImageSize(image.getSizeInBytes());
