@@ -7,7 +7,6 @@
 
 package com.facebook.common.media;
 
-import android.webkit.MimeTypeMap;
 import com.facebook.common.internal.ImmutableMap;
 import java.util.Locale;
 import java.util.Map;
@@ -39,8 +38,9 @@ public class MediaUtils {
     if (extension == null) {
       return null;
     }
+
     extension = extension.toLowerCase(Locale.US);
-    String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    String mimeType = MimeTypeMapWrapper.getMimeTypeFromExtension(extension);
 
     // If we did not find a mime type for the extension specified, check our additional
     // extension/mime-type mappings.
