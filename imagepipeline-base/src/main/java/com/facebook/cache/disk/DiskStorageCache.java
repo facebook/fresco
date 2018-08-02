@@ -173,14 +173,15 @@ public class DiskStorageCache implements FileCache, DiskTrimmable {
 
     this.mCacheStats = new CacheStats();
 
-    if (diskTrimmableRegistry != null) {
-      diskTrimmableRegistry.registerDiskTrimmable(this);
-    }
     this.mClock = SystemClock.get();
 
     mIndexPopulateAtStartupEnabled = indexPopulateAtStartupEnabled;
 
     this.mResourceIndex = new HashSet<>();
+
+    if (diskTrimmableRegistry != null) {
+      diskTrimmableRegistry.registerDiskTrimmable(this);
+    }
 
     if (mIndexPopulateAtStartupEnabled) {
       mCountDownLatch = new CountDownLatch(1);
