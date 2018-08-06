@@ -110,7 +110,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   @Override
   protected PipelineDraweeController obtainController() {
-    FrescoSystrace.beginSection("obtainController");
+    FrescoSystrace.beginSection("PipelineDraweeControllerBuilder#obtainController");
     try {
       DraweeController oldController = getOldController();
       PipelineDraweeController controller;

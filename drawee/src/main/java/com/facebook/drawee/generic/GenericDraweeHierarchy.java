@@ -24,6 +24,7 @@ import com.facebook.drawee.drawable.MatrixDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
 /**
@@ -99,6 +100,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final ForwardingDrawable mActualImageWrapper;
 
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
+    FrescoSystrace.beginSection("GenericDraweeHierarchy()");
     mResources = builder.getResources();
     mRoundingParams = builder.getRoundingParams();
 
@@ -157,6 +159,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mTopLevelDrawable.mutate();
 
     resetFade();
+    FrescoSystrace.endSection();
   }
 
   @Nullable

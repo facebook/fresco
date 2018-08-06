@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.Arrays;
 
 public abstract class RoundedDrawable extends Drawable
@@ -373,6 +374,8 @@ public abstract class RoundedDrawable extends Drawable
 
   @Override
   public void draw(@NonNull Canvas canvas) {
+    FrescoSystrace.beginSection("RoundedDrawable#draw");
     mDelegate.draw(canvas);
+    FrescoSystrace.endSection();
   }
 }

@@ -8,7 +8,7 @@ package com.facebook.drawee.drawable;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.NinePatchDrawable;
-import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
 public class RoundedNinePatchDrawable extends RoundedDrawable {
 
@@ -18,14 +18,17 @@ public class RoundedNinePatchDrawable extends RoundedDrawable {
 
   @Override
   public void draw(Canvas canvas) {
+    FrescoSystrace.beginSection("RoundedNinePatchDrawable#draw");
     if (!shouldRound()) {
       super.draw(canvas);
+      FrescoSystrace.endSection();
       return;
     }
     updateTransform();
     updatePath();
     canvas.clipPath(mPath);
     super.draw(canvas);
+    FrescoSystrace.endSection();
   }
 
 }

@@ -16,6 +16,7 @@ import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
 public class DefaultDrawableFactory implements DrawableFactory {
 
@@ -34,25 +35,30 @@ public class DefaultDrawableFactory implements DrawableFactory {
 
   @Override
   public Drawable createDrawable(CloseableImage closeableImage) {
-    if (closeableImage instanceof CloseableStaticBitmap) {
-      CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-      Drawable bitmapDrawable =
-          new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
-      if (!hasTransformableRotationAngle(closeableStaticBitmap)
-          && !hasTransformableExifOrientation(closeableStaticBitmap)) {
-        // Return the bitmap drawable directly as there's nothing to transform in it
-        return bitmapDrawable;
-      } else {
-        return new OrientedDrawable(
-            bitmapDrawable,
-            closeableStaticBitmap.getRotationAngle(),
-            closeableStaticBitmap.getExifOrientation());
+    try {
+      FrescoSystrace.beginSection("DefaultDrawableFactory#createDrawable");
+      if (closeableImage instanceof CloseableStaticBitmap) {
+        CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
+        Drawable bitmapDrawable =
+            new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+        if (!hasTransformableRotationAngle(closeableStaticBitmap)
+            && !hasTransformableExifOrientation(closeableStaticBitmap)) {
+          // Return the bitmap drawable directly as there's nothing to transform in it
+          return bitmapDrawable;
+        } else {
+          return new OrientedDrawable(
+              bitmapDrawable,
+              closeableStaticBitmap.getRotationAngle(),
+              closeableStaticBitmap.getExifOrientation());
+        }
+      } else if (mAnimatedDrawableFactory != null
+          && mAnimatedDrawableFactory.supportsImageType(closeableImage)) {
+        return mAnimatedDrawableFactory.createDrawable(closeableImage);
       }
-    } else if (mAnimatedDrawableFactory != null
-        && mAnimatedDrawableFactory.supportsImageType(closeableImage)) {
-      return mAnimatedDrawableFactory.createDrawable(closeableImage);
+      return null;
+    } finally {
+      FrescoSystrace.endSection();
     }
-    return null;
   }
 
   /* Returns true if there is anything to rotate using the rotation angle */

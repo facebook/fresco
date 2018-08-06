@@ -15,6 +15,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.lang.ref.WeakReference;
 import javax.annotation.Nullable;
 
@@ -42,8 +43,10 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
   @Override
   public void draw(Canvas canvas) {
+    FrescoSystrace.beginSection("RoundedBitmapDrawable#draw");
     if (!shouldRound()) {
       super.draw(canvas);
+      FrescoSystrace.endSection();
       return;
     }
     updateTransform();
@@ -58,6 +61,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
       canvas.drawPath(mBorderPath, mBorderPaint);
     }
     canvas.restoreToCount(saveCount);
+    FrescoSystrace.endSection();
   }
 
   private void updatePaint() {

@@ -22,6 +22,7 @@ import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
 /**
@@ -75,33 +76,38 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   private void init(Context context, @Nullable AttributeSet attrs) {
-    if (isInEditMode()) {
-      return;
-    }
-    Preconditions.checkNotNull(
-        sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
-    mControllerBuilder = sDraweecontrollerbuildersupplier.get();
-
-    if (attrs != null) {
-      TypedArray gdhAttrs = context.obtainStyledAttributes(
-          attrs,
-          R.styleable.SimpleDraweeView);
-      try {
-        if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
-          setImageURI(
-              Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)),
-              null);
-        } else if (gdhAttrs.hasValue((R.styleable.SimpleDraweeView_actualImageResource))) {
-          int resId = gdhAttrs.getResourceId(
-              R.styleable.SimpleDraweeView_actualImageResource,
-              NO_ID);
-          if (resId != NO_ID) {
-            setActualImageResource(resId);
-          }
-        }
-      } finally {
-        gdhAttrs.recycle();
+    try {
+      FrescoSystrace.beginSection("SimpleDraweeView#init");
+      if (isInEditMode()) {
+        return;
       }
+      Preconditions.checkNotNull(
+          sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
+      mControllerBuilder = sDraweecontrollerbuildersupplier.get();
+
+      if (attrs != null) {
+        TypedArray gdhAttrs = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.SimpleDraweeView);
+        try {
+          if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
+            setImageURI(
+                Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)),
+                null);
+          } else if (gdhAttrs.hasValue((R.styleable.SimpleDraweeView_actualImageResource))) {
+            int resId = gdhAttrs.getResourceId(
+                R.styleable.SimpleDraweeView_actualImageResource,
+                NO_ID);
+            if (resId != NO_ID) {
+              setActualImageResource(resId);
+            }
+          }
+        } finally {
+          gdhAttrs.recycle();
+        }
+      }
+    } finally {
+      FrescoSystrace.endSection();
     }
   }
 

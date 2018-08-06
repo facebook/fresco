@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.soloader.SoLoader;
 import java.io.IOException;
 import javax.annotation.Nullable;
@@ -49,6 +50,7 @@ public class Fresco {
       Context context,
       @Nullable ImagePipelineConfig imagePipelineConfig,
       @Nullable DraweeConfig draweeConfig) {
+    FrescoSystrace.beginSection("Fresco#initialize");
     if (sIsInitialized) {
       FLog.w(
           TAG,
@@ -60,6 +62,7 @@ public class Fresco {
     try {
       SoLoader.init(context, 0);
     } catch (IOException e) {
+      FrescoSystrace.endSection();
       throw new RuntimeException("Could not initialize SoLoader", e);
     }
     // we should always use the application context to avoid memory leaks
@@ -70,6 +73,7 @@ public class Fresco {
       ImagePipelineFactory.initialize(imagePipelineConfig);
     }
     initializeDrawee(context, draweeConfig);
+    FrescoSystrace.endSection();
   }
 
   /** Initializes Drawee with the specified config. */

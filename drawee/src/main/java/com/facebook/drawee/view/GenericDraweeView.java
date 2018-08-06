@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.GenericDraweeHierarchyInflater;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
 /**
@@ -51,9 +52,11 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   protected void inflateHierarchy(Context context, @Nullable AttributeSet attrs) {
+    FrescoSystrace.beginSection("GenericDraweeView#inflateHierarchy");
     GenericDraweeHierarchyBuilder builder =
         GenericDraweeHierarchyInflater.inflateBuilder(context, attrs);
     setAspectRatio(builder.getDesiredAspectRatio());
     setHierarchy(builder.build());
+    FrescoSystrace.endSection();
   }
 }

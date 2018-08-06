@@ -19,6 +19,7 @@ import com.facebook.datasource.IncreasingQualityDataSourceSupplier;
 import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import java.util.ArrayList;
 import java.util.List;
@@ -306,12 +307,14 @@ public abstract class AbstractDraweeControllerBuilder <
 
   /** Builds a regular controller. */
   protected AbstractDraweeController buildController() {
+    FrescoSystrace.beginSection("AbstractDraweeControllerBuilder#buildController");
     AbstractDraweeController controller = obtainController();
     controller.setRetainImageOnFailure(getRetainImageOnFailure());
     controller.setContentDescription(getContentDescription());
     controller.setControllerViewportVisibilityListener(getControllerViewportVisibilityListener());
     maybeBuildAndSetRetryManager(controller);
     maybeAttachListeners(controller);
+    FrescoSystrace.endSection();
     return controller;
   }
 

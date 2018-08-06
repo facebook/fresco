@@ -18,6 +18,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;
 import com.facebook.samples.scrollperf.conf.Const;
@@ -37,6 +38,7 @@ public final class DraweeUtil {
   public static GenericDraweeHierarchy createDraweeHierarchy(
           final Context context,
           final Config config) {
+    FrescoSystrace.beginSection("DraweeUtil#createDraweeHierarchy");
     GenericDraweeHierarchyBuilder builder =
             new GenericDraweeHierarchyBuilder(context.getResources())
             .setFadeDuration(config.fadeDurationMs)
@@ -63,7 +65,9 @@ public final class DraweeUtil {
 
       builder.setRoundingParams(roundingParams);
     }
-    return builder.build();
+    GenericDraweeHierarchy result = builder.build();
+    FrescoSystrace.endSection();
+    return result;
   }
 
   public static void applyScaleType(GenericDraweeHierarchyBuilder builder, final Config config) {

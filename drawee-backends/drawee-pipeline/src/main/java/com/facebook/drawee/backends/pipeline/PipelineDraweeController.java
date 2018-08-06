@@ -42,6 +42,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -119,6 +120,7 @@ public class PipelineDraweeController
       Object callerContext,
       @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
       @Nullable ImageOriginListener imageOriginListener) {
+    FrescoSystrace.beginSection("PipelineDraweeController#initialize");
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
@@ -126,6 +128,7 @@ public class PipelineDraweeController
     clearImageOriginListeners();
     maybeUpdateDebugOverlay(null);
     addImageOriginListener(imageOriginListener);
+    FrescoSystrace.endSection();
   }
 
   protected synchronized void initializePerformanceMonitoring(
@@ -227,34 +230,43 @@ public class PipelineDraweeController
 
   @Override
   protected DataSource<CloseableReference<CloseableImage>> getDataSource() {
+    FrescoSystrace.beginSection("PipelineDraweeController#getDataSource");
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(TAG, "controller %x: getDataSource", System.identityHashCode(this));
     }
-    return mDataSourceSupplier.get();
+    DataSource<CloseableReference<CloseableImage>> result = mDataSourceSupplier.get();
+    FrescoSystrace.endSection();
+    return result;
   }
 
   @Override
   protected Drawable createDrawable(CloseableReference<CloseableImage> image) {
-    Preconditions.checkState(CloseableReference.isValid(image));
-    CloseableImage closeableImage = image.get();
+    try {
+      FrescoSystrace.beginSection("PipelineDraweeController#createDrawable");
+      Preconditions.checkState(CloseableReference.isValid(image));
+      CloseableImage closeableImage = image.get();
 
-    maybeUpdateDebugOverlay(closeableImage);
+      maybeUpdateDebugOverlay(closeableImage);
 
-    Drawable drawable = maybeCreateDrawableFromFactories(mCustomDrawableFactories, closeableImage);
-    if (drawable != null) {
-      return drawable;
+      Drawable drawable =
+          maybeCreateDrawableFromFactories(mCustomDrawableFactories, closeableImage);
+      if (drawable != null) {
+        return drawable;
+      }
+
+      drawable = maybeCreateDrawableFromFactories(mGlobalDrawableFactories, closeableImage);
+      if (drawable != null) {
+        return drawable;
+      }
+
+      drawable = mDefaultDrawableFactory.createDrawable(closeableImage);
+      if (drawable != null) {
+        return drawable;
+      }
+      throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
+    } finally {
+      FrescoSystrace.endSection();
     }
-
-    drawable = maybeCreateDrawableFromFactories(mGlobalDrawableFactories, closeableImage);
-    if (drawable != null) {
-      return drawable;
-    }
-
-    drawable = mDefaultDrawableFactory.createDrawable(closeableImage);
-    if (drawable != null) {
-      return drawable;
-    }
-    throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
   }
 
   private Drawable maybeCreateDrawableFromFactories(

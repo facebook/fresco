@@ -10,7 +10,6 @@ package com.facebook.drawee.generic;
 import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -18,6 +17,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import com.facebook.drawee.R;
 import com.facebook.drawee.drawable.AutoRotateDrawable;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import javax.annotation.Nullable;
 
@@ -76,9 +76,12 @@ public class GenericDraweeHierarchyInflater {
   public static GenericDraweeHierarchyBuilder inflateBuilder(
       Context context,
       @Nullable AttributeSet attrs) {
+    FrescoSystrace.beginSection("GenericDraweeHierarchyBuilder#inflateBuilder");
     Resources resources = context.getResources();
     GenericDraweeHierarchyBuilder builder = new GenericDraweeHierarchyBuilder(resources);
-    return updateBuilder(builder, context, attrs);
+    builder = updateBuilder(builder, context, attrs);
+    FrescoSystrace.endSection();
+    return builder;
   }
 
   /**
