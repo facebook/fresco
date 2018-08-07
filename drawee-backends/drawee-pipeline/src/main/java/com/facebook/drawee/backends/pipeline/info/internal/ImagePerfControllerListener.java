@@ -55,7 +55,6 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
 
     mImagePerfState.setControllerId(id);
     mImagePerfState.setImageInfo(imageInfo);
-    mImagePerfState.setSuccessful(true);
 
     mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.SUCCESS);
   }
@@ -65,7 +64,6 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
     mImagePerfState.setControllerFailureTimeMs(mClock.now());
 
     mImagePerfState.setControllerId(id);
-    mImagePerfState.setSuccessful(false);
 
     mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.ERROR);
   }
@@ -79,7 +77,6 @@ public class ImagePerfControllerListener extends BaseControllerListener<ImageInf
       mImagePerfState.setControllerCancelTimeMs(mClock.now());
       mImagePerfState.setControllerId(id);
       // The image request was canceled
-      mImagePerfState.setCanceled(true);
       mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.CANCELED);
     }
   }

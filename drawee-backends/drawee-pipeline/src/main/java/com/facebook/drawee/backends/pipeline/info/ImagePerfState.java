@@ -34,8 +34,6 @@ public class ImagePerfState {
 
   // Image pipeline information
   private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
-  private boolean mIsCanceled;
-  private boolean mIsSuccessful;
   private boolean mIsPrefetch;
 
   // On screen information
@@ -60,8 +58,6 @@ public class ImagePerfState {
     mImageRequestEndTimeMs = UNSET;
 
     mImageOrigin = ImageOrigin.UNKNOWN;
-    mIsCanceled = false;
-    mIsSuccessful = false;
     mIsPrefetch = false;
 
     mOnScreenWidthPx = UNSET;
@@ -127,14 +123,6 @@ public class ImagePerfState {
     mImageOrigin = imageOrigin;
   }
 
-  public void setCanceled(boolean canceled) {
-    mIsCanceled = canceled;
-  }
-
-  public void setSuccessful(boolean successful) {
-    mIsSuccessful = successful;
-  }
-
   public void setPrefetch(boolean prefetch) {
     mIsPrefetch = prefetch;
   }
@@ -166,8 +154,6 @@ public class ImagePerfState {
         mImageRequestStartTimeMs,
         mImageRequestEndTimeMs,
         mImageOrigin,
-        mIsCanceled,
-        mIsSuccessful,
         mIsPrefetch,
         mOnScreenWidthPx,
         mOnScreenHeightPx);

@@ -30,8 +30,6 @@ public class ImagePerfData {
   private final long mImageRequestStartTimeMs;
   private final long mImageRequestEndTimeMs;
   private final @ImageOrigin int mImageOrigin;
-  private final boolean mIsCanceled;
-  private final boolean mIsSuccessful;
   private final boolean mIsPrefetch;
 
   private final int mOnScreenWidthPx;
@@ -51,8 +49,6 @@ public class ImagePerfData {
       long imageRequestStartTimeMs,
       long imageRequestEndTimeMs,
       @ImageOrigin int imageOrigin,
-      boolean isCanceled,
-      boolean isSuccessful,
       boolean isPrefetch,
       int onScreenWidthPx,
       int onScreenHeightPx) {
@@ -69,8 +65,6 @@ public class ImagePerfData {
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
     mImageOrigin = imageOrigin;
-    mIsCanceled = isCanceled;
-    mIsSuccessful = isSuccessful;
     mIsPrefetch = isPrefetch;
     mOnScreenWidthPx = onScreenWidthPx;
     mOnScreenHeightPx = onScreenHeightPx;
@@ -129,14 +123,6 @@ public class ImagePerfData {
     return mImageOrigin;
   }
 
-  public boolean isCanceled() {
-    return mIsCanceled;
-  }
-
-  public boolean isSuccessful() {
-    return mIsSuccessful;
-  }
-
   public boolean isPrefetch() {
     return mIsPrefetch;
   }
@@ -150,17 +136,19 @@ public class ImagePerfData {
   }
 
   public long getFinalImageLoadTimeMs() {
-    if (isSuccessful()) {
-      return getImageRequestEndTimeMs() - getImageRequestStartTimeMs();
+    if (getImageRequestEndTimeMs() == UNSET || getImageRequestStartTimeMs() == UNSET) {
+      return UNSET;
     }
-    return UNSET;
+
+    return getImageRequestEndTimeMs() - getImageRequestStartTimeMs();
   }
 
   public long getIntermediateImageLoadTimeMs() {
-    if (isSuccessful()) {
-      return getControllerIntermediateImageSetTimeMs() - getControllerSubmitTimeMs();
+    if (getControllerIntermediateImageSetTimeMs() == UNSET || getControllerSubmitTimeMs() == UNSET) {
+      return UNSET;
     }
-    return UNSET;
+
+    return getControllerIntermediateImageSetTimeMs() - getControllerSubmitTimeMs();
   }
 
   public String createDebugString() {
@@ -174,8 +162,6 @@ public class ImagePerfData {
         .add("start time", mImageRequestStartTimeMs)
         .add("end time", mImageRequestEndTimeMs)
         .add("origin", ImageOriginUtils.toString(mImageOrigin))
-        .add("canceled", mIsCanceled)
-        .add("successful", mIsSuccessful)
         .add("prefetch", mIsPrefetch)
         .add("caller context", mCallerContext)
         .add("image request", mImageRequest)

@@ -39,7 +39,6 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setImageRequest(request);
     mImagePerfState.setRequestId(requestId);
     mImagePerfState.setPrefetch(isPrefetch);
-    mImagePerfState.setSuccessful(true);
   }
 
   @Override
@@ -50,7 +49,6 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setImageRequest(request);
     mImagePerfState.setRequestId(requestId);
     mImagePerfState.setPrefetch(isPrefetch);
-    mImagePerfState.setSuccessful(false);
   }
 
   @Override
@@ -58,6 +56,5 @@ public class ImagePerfRequestListener extends BaseRequestListener {
     mImagePerfState.setImageRequestEndTimeMs(mClock.now());
 
     mImagePerfState.setRequestId(requestId);
-    mImagePerfState.setCanceled(true);
   }
 }
