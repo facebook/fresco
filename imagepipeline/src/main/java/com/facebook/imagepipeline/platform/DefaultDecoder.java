@@ -11,6 +11,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.util.Pools.SynchronizedPool;
@@ -60,6 +61,22 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     }
   }
 
+  @Override
+  public CloseableReference<Bitmap> decodeFromEncodedImage(
+      EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
+    return decodeFromEncodedImageWithColorSpace(encodedImage, bitmapConfig, regionToDecode, false);
+  }
+
+  @Override
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
+      @Nullable Rect regionToDecode,
+      int length) {
+    return decodeJPEGFromEncodedImageWithColorSpace(
+        encodedImage, bitmapConfig, regionToDecode, length, false);
+  }
+
   /**
    * Creates a bitmap from encoded bytes.
    *
@@ -67,19 +84,25 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
    *     Bitmap
    * @param regionToDecode optional image region to decode or null to decode the whole image
+   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
    * @return the bitmap
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeFromEncodedImage(
-      EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
+  public CloseableReference<Bitmap> decodeFromEncodedImageWithColorSpace(
+      EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
+      @Nullable Rect regionToDecode,
+      final boolean transformToSRGB) {
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
     boolean retryOnFail = options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
-      return decodeStaticImageFromStream(encodedImage.getInputStream(), options, regionToDecode);
+      return decodeFromStream(
+          encodedImage.getInputStream(), options, regionToDecode, transformToSRGB);
     } catch (RuntimeException re) {
       if (retryOnFail) {
-        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888, regionToDecode);
+        return decodeFromEncodedImageWithColorSpace(
+            encodedImage, Bitmap.Config.ARGB_8888, regionToDecode, transformToSRGB);
       }
       throw re;
     }
@@ -93,18 +116,19 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    *     Bitmap
    * @param regionToDecode optional image region to decode or null to decode the whole image
    * @param length the number of encoded bytes in the buffer
+   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
    * @return the bitmap
    * @exception java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImageWithColorSpace(
       EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
-      int length) {
+      int length,
+      final boolean transformToSRGB) {
     boolean isJpegComplete = encodedImage.isCompleteAt(length);
     final BitmapFactory.Options options = getDecodeOptionsForStream(encodedImage, bitmapConfig);
-
     InputStream jpegDataStream = encodedImage.getInputStream();
     // At this point the InputStream from the encoded image should not be null since in the
     // pipeline,this comes from a call stack where this was checked before. Also this method needs
@@ -118,17 +142,43 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     }
     boolean retryOnFail = options.inPreferredConfig != Bitmap.Config.ARGB_8888;
     try {
-      return decodeStaticImageFromStream(jpegDataStream, options, regionToDecode);
+      return decodeFromStream(jpegDataStream, options, regionToDecode, transformToSRGB);
     } catch (RuntimeException re) {
       if (retryOnFail) {
-        return decodeFromEncodedImage(encodedImage, Bitmap.Config.ARGB_8888, regionToDecode);
+        return decodeJPEGFromEncodedImageWithColorSpace(
+            encodedImage, Bitmap.Config.ARGB_8888, regionToDecode, length, transformToSRGB);
       }
       throw re;
     }
   }
 
+  /**
+   * This method is needed because of dependency issues.
+   *
+   * @param inputStream the InputStream
+   * @param options the {@link android.graphics.BitmapFactory.Options} used to decode the stream
+   * @param regionToDecode optional image region to decode or null to decode the whole image
+   * @return the bitmap
+   */
   protected CloseableReference<Bitmap> decodeStaticImageFromStream(
       InputStream inputStream, BitmapFactory.Options options, @Nullable Rect regionToDecode) {
+    return decodeFromStream(inputStream, options, regionToDecode, false);
+  }
+
+  /**
+   * Create a bitmap from an input stream.
+   *
+   * @param inputStream the InputStream
+   * @param options the {@link android.graphics.BitmapFactory.Options} used to decode the stream
+   * @param regionToDecode optional image region to decode or null to decode the whole image
+   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
+   * @return the bitmap
+   */
+  private CloseableReference<Bitmap> decodeFromStream(
+      InputStream inputStream,
+      BitmapFactory.Options options,
+      @Nullable Rect regionToDecode,
+      final boolean transformToSRGB) {
     Preconditions.checkNotNull(inputStream);
     int targetWidth = options.outWidth;
     int targetHeight = options.outHeight;
@@ -142,6 +192,11 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       throw new NullPointerException("BitmapPool.get returned null");
     }
     options.inBitmap = bitmapToReuse;
+
+    // Performs transformation at load time to sRGB.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && transformToSRGB) {
+      options.inPreferredColorSpace = ColorSpace.get(ColorSpace.Named.SRGB);
+    }
 
     Bitmap decodedBitmap = null;
     ByteBuffer byteBuffer = mDecodeBuffers.acquire();

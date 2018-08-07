@@ -144,7 +144,8 @@ public class DefaultImageDecoder implements ImageDecoder {
       final EncodedImage encodedImage,
       ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
-        mPlatformDecoder.decodeFromEncodedImage(encodedImage, options.bitmapConfig, null);
+        mPlatformDecoder.decodeFromEncodedImageWithColorSpace(
+            encodedImage, options.bitmapConfig, null, options.transformToSRGB);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,
@@ -170,8 +171,8 @@ public class DefaultImageDecoder implements ImageDecoder {
       QualityInfo qualityInfo,
       ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
-        mPlatformDecoder.decodeJPEGFromEncodedImage(
-            encodedImage, options.bitmapConfig, null, length);
+        mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
+            encodedImage, options.bitmapConfig, null, length, options.transformToSRGB);
     try {
       return new CloseableStaticBitmap(
           bitmapReference,

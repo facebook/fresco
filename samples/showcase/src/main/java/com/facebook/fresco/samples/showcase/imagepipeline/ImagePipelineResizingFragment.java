@@ -32,6 +32,7 @@ import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.imagepipeline.widget.ResizableFrameLayout;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -178,7 +179,10 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
 
   private void reloadImage(Uri imageUri, @Nullable ResizeOptions resizeOptions) {
     final ImageRequest imageRequest =
-        ImageRequestBuilder.newBuilderWithSource(imageUri).setResizeOptions(resizeOptions).build();
+        ImageRequestBuilder.newBuilderWithSource(imageUri)
+            .setResizeOptions(resizeOptions)
+            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().setTransformToSRGB(true).build())
+            .build();
 
     final DraweeController draweeController = Fresco.newDraweeControllerBuilder()
         .setOldController(mDraweeMain.getController())

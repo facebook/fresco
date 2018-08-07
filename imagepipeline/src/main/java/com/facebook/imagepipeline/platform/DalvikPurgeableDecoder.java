@@ -38,6 +38,22 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
   }
 
+  @Override
+  public CloseableReference<Bitmap> decodeFromEncodedImage(
+      EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
+    return decodeFromEncodedImageWithColorSpace(encodedImage, bitmapConfig, regionToDecode, false);
+  }
+
+  @Override
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+      EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
+      @Nullable Rect regionToDecode,
+      int length) {
+    return decodeJPEGFromEncodedImageWithColorSpace(
+        encodedImage, bitmapConfig, regionToDecode, length, false);
+  }
+
   /**
    * Creates a bitmap from encoded bytes.
    *
@@ -45,13 +61,17 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
    * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
    *     Bitmap
    * @param regionToDecode optional image region to decode. currently not supported.
+   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeFromEncodedImage(
-      final EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
+  public CloseableReference<Bitmap> decodeFromEncodedImageWithColorSpace(
+      final EncodedImage encodedImage,
+      Bitmap.Config bitmapConfig,
+      @Nullable Rect regionToDecode,
+      final boolean transformToSRGB) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
         encodedImage.getSampleSize(),
         bitmapConfig);
@@ -73,16 +93,18 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
    *     Bitmap
    * @param regionToDecode optional image region to decode. currently not supported.
    * @param length the number of encoded bytes in the buffer
+   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
    */
   @Override
-  public CloseableReference<Bitmap> decodeJPEGFromEncodedImage(
+  public CloseableReference<Bitmap> decodeJPEGFromEncodedImageWithColorSpace(
       final EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
-      int length) {
+      int length,
+      final boolean transformToSRGB) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
         encodedImage.getSampleSize(),
         bitmapConfig);
