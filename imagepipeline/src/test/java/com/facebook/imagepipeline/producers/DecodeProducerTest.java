@@ -129,6 +129,8 @@ public class DecodeProducerTest {
   private static EncodedImage mockEncodedJpeg(CloseableReference<PooledByteBuffer> ref) {
     final EncodedImage encodedImage = new EncodedImage(ref);
     encodedImage.setImageFormat(DefaultImageFormats.JPEG);
+    encodedImage.setWidth(IMAGE_WIDTH);
+    encodedImage.setHeight(IMAGE_HEIGHT);
     return encodedImage;
   }
 

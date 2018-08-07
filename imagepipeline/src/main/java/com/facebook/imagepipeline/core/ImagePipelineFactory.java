@@ -42,6 +42,7 @@ import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.ArtDecoder;
 import com.facebook.imagepipeline.platform.GingerbreadPurgeableDecoder;
 import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
+import com.facebook.imagepipeline.platform.OreoDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -312,7 +313,11 @@ public class ImagePipelineFactory {
   public static PlatformDecoder buildPlatformDecoder(
       PoolFactory poolFactory,
       boolean directWebpDirectDecodingEnabled) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
+      return new OreoDecoder(
+          poolFactory.getBitmapPool(), maxNumThreads, new Pools.SynchronizedPool<>(maxNumThreads));
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new ArtDecoder(
           poolFactory.getBitmapPool(),

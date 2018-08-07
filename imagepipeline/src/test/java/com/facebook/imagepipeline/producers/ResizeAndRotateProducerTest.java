@@ -625,11 +625,7 @@ public class ResizeAndRotateProducerTest {
     PowerMockito.verifyStatic(never());
     try {
       JpegTranscoder.transcodeJpeg(
-          any(InputStream.class),
-          any(OutputStream.class),
-          anyInt(),
-          anyInt(),
-          anyInt());
+          any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());
     } catch (IOException ioe) {
       throw new RuntimeException(ioe);
     }

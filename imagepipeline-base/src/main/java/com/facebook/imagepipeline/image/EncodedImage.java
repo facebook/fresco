@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.image;
 
+import android.graphics.ColorSpace;
 import android.media.ExifInterface;
 import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
@@ -21,6 +22,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.ImageMetaData;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.imageutils.WebpUtil;
 import java.io.Closeable;
@@ -64,6 +66,7 @@ public class EncodedImage implements Closeable {
   private int mSampleSize = DEFAULT_SAMPLE_SIZE;
   private int mStreamSize = UNKNOWN_STREAM_SIZE;
   private @Nullable BytesRange mBytesRange;
+  private @Nullable ColorSpace mColorSpace;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -213,6 +216,7 @@ public class EncodedImage implements Closeable {
    * Returns the image format if known, otherwise ImageFormat.UNKNOWN.
    */
   public ImageFormat getImageFormat() {
+    parseMetaDataIfNeeded();
     return mImageFormat;
   }
 
@@ -222,6 +226,7 @@ public class EncodedImage implements Closeable {
    * be known if the image is incomplete (e.g. for progressive JPEGs).
    */
   public int getRotationAngle() {
+    parseMetaDataIfNeeded();
     return mRotationAngle;
   }
 
@@ -229,11 +234,13 @@ public class EncodedImage implements Closeable {
    * Only valid if the image format is JPEG. Returns the exif orientation if known (1 - 8), else 0.
    */
   public int getExifOrientation() {
+    parseMetaDataIfNeeded();
     return mExifOrientation;
   }
 
   /** Returns the image width if known, else -1. */
   public int getWidth() {
+    parseMetaDataIfNeeded();
     return mWidth;
   }
 
@@ -241,11 +248,23 @@ public class EncodedImage implements Closeable {
    * Returns the image height if known, else -1.
    */
   public int getHeight() {
+    parseMetaDataIfNeeded();
     return mHeight;
   }
 
   /**
+   * The color space is always null if Android API level < 26.
+   *
+   * @return the color space of the image if known, else null.
+   */
+  public @Nullable ColorSpace getColorSpace() {
+    parseMetaDataIfNeeded();
+    return mColorSpace;
+  }
+
+  /**
    * Only valid if the image format is JPEG.
+   *
    * @return sample size of the image.
    */
   public int getSampleSize() {
@@ -318,6 +337,13 @@ public class EncodedImage implements Closeable {
     return stringBuilder.toString();
   }
 
+  /** Sets the encoded image meta data if needed. */
+  private void parseMetaDataIfNeeded() {
+    if (mWidth < 0 || mHeight < 0) {
+      parseMetaData();
+    }
+  }
+
   /** Sets the encoded image meta data. */
   public void parseMetaData() {
     final ImageFormat imageFormat = ImageFormatChecker.getImageFormat_WrapIOException(
@@ -329,7 +355,7 @@ public class EncodedImage implements Closeable {
     if (DefaultImageFormats.isWebpFormat(imageFormat)) {
       dimensions = readWebPImageSize();
     } else {
-      dimensions = readImageSize();
+      dimensions = readImageMetaData().getDimensions();
     }
     if (imageFormat == DefaultImageFormats.JPEG && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       // Load the JPEG rotation angle only if we have the dimensions
@@ -354,20 +380,20 @@ public class EncodedImage implements Closeable {
     return dimensions;
   }
 
-  /**
-   * We get the size from a generic image
-   */
-  private Pair<Integer, Integer> readImageSize() {
+  /** We get the size from a generic image */
+  private ImageMetaData readImageMetaData() {
     InputStream inputStream = null;
-    Pair<Integer, Integer> dimensions = null;
+    ImageMetaData metaData = null;
     try {
       inputStream = getInputStream();
-      dimensions = BitmapUtil.decodeDimensions(inputStream);
+      metaData = BitmapUtil.decodeDimensionsAndColorSpace(inputStream);
+      mColorSpace = metaData.getColorSpace();
+      Pair<Integer, Integer> dimensions = metaData.getDimensions();
       if (dimensions != null) {
         mWidth = dimensions.first;
         mHeight = dimensions.second;
       }
-    }finally {
+    } finally {
       if (inputStream != null) {
         try {
           inputStream.close();
@@ -376,7 +402,7 @@ public class EncodedImage implements Closeable {
         }
       }
     }
-    return dimensions;
+    return metaData;
   }
 
   /**
@@ -393,6 +419,7 @@ public class EncodedImage implements Closeable {
     mSampleSize = encodedImage.getSampleSize();
     mStreamSize = encodedImage.getSize();
     mBytesRange = encodedImage.getBytesRange();
+    mColorSpace = encodedImage.getColorSpace();
   }
 
   /**

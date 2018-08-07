@@ -10,6 +10,7 @@ package com.facebook.imageutils;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ColorSpace;
 import android.os.Build;
 import android.support.v4.util.Pools;
 import android.util.Pair;
@@ -25,8 +26,8 @@ import javax.annotation.Nullable;
 public final class BitmapUtil {
   private static final int DECODE_BUFFER_SIZE = 16 * 1024;
   private static final int POOL_SIZE = 12;
-  private static final Pools.SynchronizedPool<ByteBuffer> DECODE_BUFFERS
-      = new Pools.SynchronizedPool<>(POOL_SIZE);
+  private static final Pools.SynchronizedPool<ByteBuffer> DECODE_BUFFERS =
+      new Pools.SynchronizedPool<>(POOL_SIZE);
 
   /**
    * Bytes per pixel definitions
@@ -35,6 +36,7 @@ public final class BitmapUtil {
   public static final int ARGB_4444_BYTES_PER_PIXEL = 2;
   public static final int ARGB_8888_BYTES_PER_PIXEL = 4;
   public static final int RGB_565_BYTES_PER_PIXEL = 2;
+  public static final int RGBA_F16_BYTES_PER_PIXEL = 8;
 
   public static final float MAX_BITMAP_SIZE = 2048f;
 
@@ -69,6 +71,7 @@ public final class BitmapUtil {
   /**
    * Decodes only the bounds of an image and returns its width and height or null if the size can't
    * be determined
+   *
    * @param bytes the input byte array of the image
    * @return dimensions of the image
    */
@@ -78,8 +81,9 @@ public final class BitmapUtil {
   }
 
   /**
-   * Decodes only the bounds of an image and returns its width and height or null if the size can't
-   * be determined
+   * Decodes the bounds of an image and returns its width and height or null if the size can't be
+   * determined
+   *
    * @param is the InputStream containing the image data
    * @return dimensions of the image
    */
@@ -94,8 +98,39 @@ public final class BitmapUtil {
     try {
       options.inTempStorage = byteBuffer.array();
       BitmapFactory.decodeStream(is, null, options);
-      return (options.outWidth == -1 || options.outHeight == -1) ?
-          null : new Pair(options.outWidth, options.outHeight);
+
+      return (options.outWidth == -1 || options.outHeight == -1)
+          ? null
+          : new Pair<>(options.outWidth, options.outHeight);
+    } finally {
+      DECODE_BUFFERS.release(byteBuffer);
+    }
+  }
+
+  /**
+   * Decodes the bounds of an image and returns its width and height or null if the size can't be
+   * determined. It also recovers the color space of the image, or null if it can't be determined.
+   *
+   * @param is the InputStream containing the image data
+   * @return the metadata of the image
+   */
+  public static ImageMetaData decodeDimensionsAndColorSpace(InputStream is) {
+    Preconditions.checkNotNull(is);
+    ByteBuffer byteBuffer = DECODE_BUFFERS.acquire();
+    if (byteBuffer == null) {
+      byteBuffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
+    }
+    BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+    try {
+      options.inTempStorage = byteBuffer.array();
+      BitmapFactory.decodeStream(is, null, options);
+
+      ColorSpace colorSpace = null;
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        colorSpace = options.outColorSpace;
+      }
+      return new ImageMetaData(options.outWidth, options.outHeight, colorSpace);
     } finally {
       DECODE_BUFFERS.release(byteBuffer);
     }
@@ -119,6 +154,8 @@ public final class BitmapUtil {
         return ARGB_4444_BYTES_PER_PIXEL;
       case RGB_565:
         return RGB_565_BYTES_PER_PIXEL;
+      case RGBA_F16:
+        return RGBA_F16_BYTES_PER_PIXEL;
     }
     throw new UnsupportedOperationException("The provided Bitmap.Config is not supported");
   }

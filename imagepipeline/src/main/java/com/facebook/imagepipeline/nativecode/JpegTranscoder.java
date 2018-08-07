@@ -95,7 +95,8 @@ public class JpegTranscoder {
       OutputStream outputStream,
       int rotationAngle,
       int scaleNominator,
-      int quality) throws IOException;
+      int quality)
+      throws IOException;
 
   /**
    * Downscales and rotates jpeg image

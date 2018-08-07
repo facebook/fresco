@@ -100,6 +100,8 @@ public class DiskCacheWriteProducerTest {
 
     mFinalEncodedImage = new EncodedImage(mFinalImageReference);
     mFinalEncodedImage.setImageFormat(new ImageFormat("jpeg", null));
+    mFinalEncodedImage.setWidth(100);
+    mFinalEncodedImage.setHeight(100);
 
     mProducerContext = new SettableProducerContext(
         mImageRequest,
