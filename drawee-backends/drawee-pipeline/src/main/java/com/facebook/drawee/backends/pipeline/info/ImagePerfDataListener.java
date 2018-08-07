@@ -8,5 +8,5 @@ package com.facebook.drawee.backends.pipeline.info;
 
 public interface ImagePerfDataListener {
 
-  void onImagePerfDataUpdated(ImagePerfData imagePerfData, @ImageLoadStatus int imageLoadStatus);
+  void onImageLoadStatusUpdated(ImagePerfData imagePerfData, @ImageLoadStatus int imageLoadStatus);
 }

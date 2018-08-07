@@ -101,7 +101,7 @@ public class ImagePerfMonitor extends BaseRequestListener {
     }
     ImagePerfData data = state.snapshot();
     for (ImagePerfDataListener listener : mImagePerfDataListeners) {
-      listener.onImagePerfDataUpdated(data, imageLoadStatus);
+      listener.onImageLoadStatusUpdated(data, imageLoadStatus);
     }
   }
 

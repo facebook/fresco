@@ -88,7 +88,7 @@ public class ImagePerfMonitorTest {
     mImagePerfMonitor.notifyListeners(state, ImageLoadStatus.SUCCESS);
 
     verify(state).setImageLoadStatus(eq(ImageLoadStatus.SUCCESS));
-    verify(listener).onImagePerfDataUpdated(any(ImagePerfData.class), eq(ImageLoadStatus.SUCCESS));
+    verify(listener).onImageLoadStatusUpdated(any(ImagePerfData.class), eq(ImageLoadStatus.SUCCESS));
   }
 
   @Test
