@@ -26,6 +26,6 @@ public class ImagePerfImageOriginListener implements ImageOriginListener {
   @Override
   public void onImageLoaded(String controllerId, @ImageOrigin int imageOrigin, boolean successful) {
     mImagePerfState.setImageOrigin(imageOrigin);
-    mImagePerfMonitor.notifyListeners(mImagePerfState, ImageLoadStatus.ORIGIN_AVAILABLE);
+    mImagePerfMonitor.notifyStatusUpdated(mImagePerfState, ImageLoadStatus.ORIGIN_AVAILABLE);
   }
 }

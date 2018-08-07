@@ -44,7 +44,7 @@ public class ImagePerfImageOriginListenerTest {
 
     verify(mImagePerfState).setImageOrigin(eq(ImageOrigin.NETWORK));
     verify(mImagePerfMonitor)
-        .notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.ORIGIN_AVAILABLE));
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.ORIGIN_AVAILABLE));
     verifyNoMoreInteractions(mImagePerfMonitor);
   }
 }

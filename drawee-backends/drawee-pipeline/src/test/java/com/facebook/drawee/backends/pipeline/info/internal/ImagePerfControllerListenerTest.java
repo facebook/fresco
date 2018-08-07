@@ -62,8 +62,8 @@ public class ImagePerfControllerListenerTest {
     mListener.onRelease(CONTROLLER_ID);
 
     verify(mMonotonicClock, times(2)).now();
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerFinalImageSetTimeMs(imageLoadTime);
     verifyNoMoreInteractions(mImagePerfMonitor);
@@ -87,8 +87,8 @@ public class ImagePerfControllerListenerTest {
     mListener.onRelease(CONTROLLER_ID);
 
     verify(mMonotonicClock, times(2)).now();
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.ERROR));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.ERROR));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerFailureTimeMs(imageLoadTime);
   }
@@ -106,8 +106,8 @@ public class ImagePerfControllerListenerTest {
     mListener.onRelease(CONTROLLER_ID);
 
     verify(mMonotonicClock, times(2)).now();
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.CANCELED));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.CANCELED));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerCancelTimeMs(imageReleaseTime);
   }
@@ -135,10 +135,10 @@ public class ImagePerfControllerListenerTest {
     mListener.onRelease(CONTROLLER_ID);
 
     verify(mMonotonicClock, times(3)).now();
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor)
-        .notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.INTERMEDIATE_AVAILABLE));
-    verify(mImagePerfMonitor).notifyListeners(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
+        .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.INTERMEDIATE_AVAILABLE));
+    verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerIntermediateImageSetTimeMs(intermediateImageTime);
     verify(mImagePerfState).setControllerFinalImageSetTimeMs(imageLoadTime);

@@ -72,7 +72,7 @@ public class ImagePerfMonitorTest {
   public void testNotifyListeners_whenNoListener_thenDoNothing() {
     ImagePerfState state = mock(ImagePerfState.class);
     mImagePerfMonitor.setEnabled(true);
-    mImagePerfMonitor.notifyListeners(state, ImageLoadStatus.SUCCESS);
+    mImagePerfMonitor.notifyStatusUpdated(state, ImageLoadStatus.SUCCESS);
 
     verify(state).setImageLoadStatus(eq(ImageLoadStatus.SUCCESS));
     verifyNoMoreInteractions(state);
@@ -85,7 +85,7 @@ public class ImagePerfMonitorTest {
 
     mImagePerfMonitor.setEnabled(true);
     mImagePerfMonitor.addImagePerfDataListener(listener);
-    mImagePerfMonitor.notifyListeners(state, ImageLoadStatus.SUCCESS);
+    mImagePerfMonitor.notifyStatusUpdated(state, ImageLoadStatus.SUCCESS);
 
     verify(state).setImageLoadStatus(eq(ImageLoadStatus.SUCCESS));
     verify(listener).onImageLoadStatusUpdated(any(ImagePerfData.class), eq(ImageLoadStatus.SUCCESS));
@@ -98,7 +98,7 @@ public class ImagePerfMonitorTest {
 
     mImagePerfMonitor.setEnabled(false);
     mImagePerfMonitor.addImagePerfDataListener(listener);
-    mImagePerfMonitor.notifyListeners(state, ImageLoadStatus.SUCCESS);
+    mImagePerfMonitor.notifyStatusUpdated(state, ImageLoadStatus.SUCCESS);
 
     verify(state).setImageLoadStatus(eq(ImageLoadStatus.SUCCESS));
     verifyNoMoreInteractions(listener);
