@@ -105,7 +105,19 @@ public class ImagePerfMonitor extends BaseRequestListener {
     }
   }
 
-  private void addViewportData() {
+  public void notifyListenersOfVisibilityStateUpdate(
+      ImagePerfState state, @VisibilityState int visibilityState) {
+    if (!mEnabled || mImagePerfDataListeners == null || mImagePerfDataListeners.isEmpty()) {
+      return;
+    }
+
+    ImagePerfData data = state.snapshot();
+    for (ImagePerfDataListener listener : mImagePerfDataListeners) {
+      listener.onImageVisibilityUpdated(data, visibilityState);
+    }
+  }
+
+  public void addViewportData() {
     DraweeHierarchy hierarchy = mPipelineDraweeController.getHierarchy();
     if (hierarchy != null && hierarchy.getTopLevelDrawable() != null) {
       Rect bounds = hierarchy.getTopLevelDrawable().getBounds();

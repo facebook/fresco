@@ -8,8 +8,10 @@
  */
 package com.facebook.drawee.backends.pipeline.info.internal;
 
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -19,6 +21,7 @@ import com.facebook.common.time.MonotonicClock;
 import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfMonitor;
 import com.facebook.drawee.backends.pipeline.info.ImagePerfState;
+import com.facebook.drawee.backends.pipeline.info.VisibilityState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +43,7 @@ public class ImagePerfControllerListenerTest {
     mImagePerfMonitor = mock(ImagePerfMonitor.class);
     mImagePerfState = mock(ImagePerfState.class);
     mListener =
-        new ImagePerfControllerListener(mMonotonicClock, mImagePerfState, mImagePerfMonitor);
+        spy(new ImagePerfControllerListener(mMonotonicClock, mImagePerfState, mImagePerfMonitor));
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.UNKNOWN);
   }
 
@@ -64,6 +67,11 @@ public class ImagePerfControllerListenerTest {
     verify(mMonotonicClock, times(2)).now();
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
+    verify(mImagePerfMonitor)
+        .notifyListenersOfVisibilityStateUpdate(eq(mImagePerfState), eq(VisibilityState.VISIBLE));
+    verify(mImagePerfMonitor)
+        .notifyListenersOfVisibilityStateUpdate(eq(mImagePerfState), eq(VisibilityState.INVISIBLE));
+    verify(mListener).reportViewVisible(anyLong());
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerFinalImageSetTimeMs(imageLoadTime);
     verifyNoMoreInteractions(mImagePerfMonitor);
@@ -139,6 +147,11 @@ public class ImagePerfControllerListenerTest {
     verify(mImagePerfMonitor)
         .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.INTERMEDIATE_AVAILABLE));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
+    verify(mListener).reportViewVisible(anyLong());
+    verify(mImagePerfMonitor)
+        .notifyListenersOfVisibilityStateUpdate(eq(mImagePerfState), eq(VisibilityState.VISIBLE));
+    verify(mImagePerfMonitor)
+        .notifyListenersOfVisibilityStateUpdate(eq(mImagePerfState), eq(VisibilityState.INVISIBLE));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
     verify(mImagePerfState).setControllerIntermediateImageSetTimeMs(intermediateImageTime);
     verify(mImagePerfState).setControllerFinalImageSetTimeMs(imageLoadTime);

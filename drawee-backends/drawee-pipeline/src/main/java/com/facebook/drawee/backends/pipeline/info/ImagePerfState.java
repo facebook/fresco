@@ -42,6 +42,10 @@ public class ImagePerfState {
 
   // Internal parameters
   private @ImageLoadStatus int mImageLoadStatus = ImageLoadStatus.UNKNOWN;
+  // Visibility
+  private @VisibilityState int mVisibilityState = VisibilityState.UNKNOWN;
+  private long mVisibilityEventTimeMs;
+  private long mInvisibilityEventTimeMs;
 
   public void reset() {
     mRequestId = null;
@@ -119,6 +123,14 @@ public class ImagePerfState {
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
   }
 
+  public void setVisibilityEventTimeMs(long visibilityEventTimeMs) {
+    mVisibilityEventTimeMs = visibilityEventTimeMs;
+  }
+
+  public void setInvisibilityEventTimeMs(long invisibilityEventTimeMs) {
+    mInvisibilityEventTimeMs = invisibilityEventTimeMs;
+  }
+
   public void setImageOrigin(@ImageOrigin int imageOrigin) {
     mImageOrigin = imageOrigin;
   }
@@ -139,6 +151,10 @@ public class ImagePerfState {
     mOnScreenHeightPx = onScreenHeightPx;
   }
 
+  public void setVisible(boolean visible) {
+    mVisibilityState = visible ? VisibilityState.VISIBLE : VisibilityState.INVISIBLE;
+  }
+
   public ImagePerfData snapshot() {
     return new ImagePerfData(
         mControllerId,
@@ -156,6 +172,9 @@ public class ImagePerfState {
         mImageOrigin,
         mIsPrefetch,
         mOnScreenWidthPx,
-        mOnScreenHeightPx);
+        mOnScreenHeightPx,
+        mVisibilityState,
+        mVisibilityEventTimeMs,
+        mInvisibilityEventTimeMs);
   }
 }

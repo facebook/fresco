@@ -29,7 +29,18 @@ public class LogcatImagePerfDataListener implements ImagePerfDataListener {
         String.format(
             (Locale) null,
             "status=%s, data=%s",
-            ImagePerfUtils.toString(imageLoadStatus),
+            ImagePerfUtils.toString(imagePerfData.getImageLoadStatus()),
+            imagePerfData.createDebugString()));
+  }
+
+  @Override
+  public void onImagePerfDataVisibilityChanges(ImagePerfData imagePerfData) {
+    Log.d(
+        TAG,
+        String.format(
+            (Locale) null,
+            "visibility=%s, data=%s",
+            ImagePerfUtils.toString(imagePerfData.getVisibilityState()),
             imagePerfData.createDebugString()));
   }
 }

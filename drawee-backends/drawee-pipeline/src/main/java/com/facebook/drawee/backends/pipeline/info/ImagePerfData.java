@@ -35,6 +35,11 @@ public class ImagePerfData {
   private final int mOnScreenWidthPx;
   private final int mOnScreenHeightPx;
 
+  // Visibility
+  @VisibilityState private final int mVisibilityState;
+  private final long mVisibilityEventTimeMs;
+  private final long mInvisibilityEventTimeMs;
+
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
@@ -51,7 +56,10 @@ public class ImagePerfData {
       @ImageOrigin int imageOrigin,
       boolean isPrefetch,
       int onScreenWidthPx,
-      int onScreenHeightPx) {
+      int onScreenHeightPx,
+      int visibilityState,
+      long visibilityEventTimeMs,
+      long invisibilityEventTime) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -68,6 +76,9 @@ public class ImagePerfData {
     mIsPrefetch = isPrefetch;
     mOnScreenWidthPx = onScreenWidthPx;
     mOnScreenHeightPx = onScreenHeightPx;
+    mVisibilityState = visibilityState;
+    mVisibilityEventTimeMs = visibilityEventTimeMs;
+    mInvisibilityEventTimeMs = invisibilityEventTime;
   }
 
   @Nullable
@@ -151,6 +162,18 @@ public class ImagePerfData {
     return getControllerIntermediateImageSetTimeMs() - getControllerSubmitTimeMs();
   }
 
+  public int getVisibilityState() {
+    return mVisibilityState;
+  }
+
+  public long getVisibilityEventTimeMs() {
+    return mVisibilityEventTimeMs;
+  }
+
+  public long getInvisibilityEventTimeMs() {
+    return mInvisibilityEventTimeMs;
+  }
+
   public String createDebugString() {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
@@ -168,6 +191,7 @@ public class ImagePerfData {
         .add("image info", mImageInfo)
         .add("on-screen width", mOnScreenWidthPx)
         .add("on-screen height", mOnScreenHeightPx)
+        .add("visibility state", mVisibilityState)
         .toString();
   }
 }

@@ -9,4 +9,6 @@ package com.facebook.drawee.backends.pipeline.info;
 public interface ImagePerfDataListener {
 
   void onImageLoadStatusUpdated(ImagePerfData imagePerfData, @ImageLoadStatus int imageLoadStatus);
+
+  void onImageVisibilityUpdated(ImagePerfData imagePerfData, @VisibilityState int visibilityState);
 }
