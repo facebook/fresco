@@ -51,6 +51,12 @@ public class ImageDecodeOptions {
   public final boolean forceStaticImage;
 
   /**
+   * Allow color space transformation to sRGB. This flag can affect performance, unless the color
+   * space is unknown or if the color space is already sRGB.
+   */
+  public final boolean transformToSRGB;
+
+  /**
    * StaticImage and JPEG will decode with this config;
    */
   public final Bitmap.Config bitmapConfig;
@@ -68,6 +74,7 @@ public class ImageDecodeOptions {
     this.forceStaticImage = b.getForceStaticImage();
     this.bitmapConfig = b.getBitmapConfig();
     this.customImageDecoder = b.getCustomImageDecoder();
+    this.transformToSRGB = b.getTransformToSRGB();
   }
 
   /**
@@ -99,6 +106,7 @@ public class ImageDecodeOptions {
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
+    if (transformToSRGB != that.transformToSRGB) return false;
     if (bitmapConfig != that.bitmapConfig) return false;
     if (customImageDecoder != that.customImageDecoder) return false;
     return true;
@@ -111,6 +119,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
+    result = 31 * result + (transformToSRGB ? 1 : 0);
     result = 31 * result + bitmapConfig.ordinal();
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     return result;
@@ -120,12 +129,13 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%b-%b-%b-%b-%s-%s",
+        "%d-%b-%b-%b-%b-%b-%s-%s",
         minDecodeIntervalMs,
         decodePreviewFrame,
         useLastFrameForPreview,
         decodeAllFrames,
         forceStaticImage,
+        transformToSRGB,
         bitmapConfig.name(),
         customImageDecoder);
   }

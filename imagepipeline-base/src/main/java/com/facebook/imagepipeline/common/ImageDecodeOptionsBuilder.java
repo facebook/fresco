@@ -21,6 +21,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mUseLastFrameForPreview;
   private boolean mDecodeAllFrames;
   private boolean mForceStaticImage;
+  private boolean mTransformToSRGB;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
 
@@ -40,6 +41,7 @@ public class ImageDecodeOptionsBuilder {
     mForceStaticImage = options.forceStaticImage;
     mBitmapConfig = options.bitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
+    mTransformToSRGB = options.transformToSRGB;
     return this;
   }
 
@@ -189,6 +191,26 @@ public class ImageDecodeOptionsBuilder {
    */
   public ImageDecodeOptionsBuilder setBitmapConfig(Bitmap.Config bitmapConfig) {
     mBitmapConfig = bitmapConfig;
+    return this;
+  }
+
+  /**
+   * Gets whether to allow or not an image color space to be transformed into sRGB.
+   *
+   * @return whether to allow the color space to be transformed into sRGB.
+   */
+  public boolean getTransformToSRGB() {
+    return mTransformToSRGB;
+  }
+
+  /**
+   * Sets whether to allow or not the color space transformation of the image.
+   *
+   * @param transformToSRGB whether to allow the color space to be transformed to sRGB
+   * @return this builder
+   */
+  public ImageDecodeOptionsBuilder setTransformToSRGB(boolean transformToSRGB) {
+    mTransformToSRGB = transformToSRGB;
     return this;
   }
 
