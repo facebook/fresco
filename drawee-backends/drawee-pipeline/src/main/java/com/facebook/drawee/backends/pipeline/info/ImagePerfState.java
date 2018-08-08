@@ -44,8 +44,8 @@ public class ImagePerfState {
   private @ImageLoadStatus int mImageLoadStatus = ImageLoadStatus.UNKNOWN;
   // Visibility
   private @VisibilityState int mVisibilityState = VisibilityState.UNKNOWN;
-  private long mVisibilityEventTimeMs;
-  private long mInvisibilityEventTimeMs;
+  private long mVisibilityEventTimeMs = UNSET;
+  private long mInvisibilityEventTimeMs = UNSET;
 
   public void reset() {
     mRequestId = null;
@@ -68,6 +68,10 @@ public class ImagePerfState {
     mOnScreenHeightPx = UNSET;
 
     mImageLoadStatus = ImageLoadStatus.UNKNOWN;
+
+    mVisibilityState = VisibilityState.UNKNOWN;
+    mVisibilityEventTimeMs = UNSET;
+    mInvisibilityEventTimeMs = UNSET;
   }
 
   public void setImageLoadStatus(@ImageLoadStatus int imageLoadStatus) {
