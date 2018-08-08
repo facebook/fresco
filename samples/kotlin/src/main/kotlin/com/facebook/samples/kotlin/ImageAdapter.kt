@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.backends.pipeline.info.ImageLoadStatus
 import com.facebook.drawee.backends.pipeline.info.ImagePerfData
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener
 import com.facebook.drawee.backends.pipeline.info.ImagePerfUtils
 import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.facebook.drawee.drawable.ScalingUtils
@@ -41,6 +42,17 @@ data class ImageHolder(private val view: View,
     itemView.layoutParams = ViewGroup.LayoutParams(width, height)
   }
 
+  val logImagePerf = object: ImagePerfDataListener {
+    override fun onImageLoadStatusUpdated(imagePerfData: ImagePerfData?, imageLoadStatus: Int) {
+      Log.d("ImagePerf",
+              "state=${ImagePerfUtils.toString(imageLoadStatus)}, data=${imagePerfData?.createDebugString()}")
+    }
+
+    override fun onImageVisibilityUpdated(imagePerfData: ImagePerfData?, visibilityState: Int) {
+      // ignore
+    }
+  }
+
   fun bind(uri: Uri) {
     itemView as? SimpleDraweeView ?: return
     itemView.controller = Fresco.newDraweeControllerBuilder()
@@ -50,13 +62,8 @@ data class ImageHolder(private val view: View,
                 .build())
         .setOldController(itemView.controller)
         .setAutoPlayAnimations(true)
-        .setPerfDataListener(::logImagePerf)
+        .setPerfDataListener(logImagePerf)
         .build()
-  }
-
-  private fun logImagePerf(imagePerfData: ImagePerfData, @ImageLoadStatus state: Int) {
-    Log.d("ImagePerf",
-            "state=${ImagePerfUtils.toString(state)}, data=${imagePerfData.createDebugString()}")
   }
 }
 
