@@ -12,6 +12,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Sets;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
@@ -57,29 +58,34 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
 
   @Override
   public void produceResults(Consumer<T> consumer, ProducerContext context) {
-    K key = getKey(context);
-    Multiplexer multiplexer;
-    boolean createdNewMultiplexer;
-    // We do want to limit scope of this lock to guard only accesses to mMultiplexers map.
-    // However what we would like to do here is to atomically lookup mMultiplexers, add new
-    // consumer to consumers set associated with the map's entry and call consumer's callback with
-    // last intermediate result. We should not do all of those things under this lock.
-    do {
-      createdNewMultiplexer = false;
-      synchronized (this) {
-        multiplexer = getExistingMultiplexer(key);
-        if (multiplexer == null) {
-          multiplexer = createAndPutNewMultiplexer(key);
-          createdNewMultiplexer = true;
+    try {
+      FrescoSystrace.beginSection("MultiplexProducer#produceResults");
+      K key = getKey(context);
+      Multiplexer multiplexer;
+      boolean createdNewMultiplexer;
+      // We do want to limit scope of this lock to guard only accesses to mMultiplexers map.
+      // However what we would like to do here is to atomically lookup mMultiplexers, add new
+      // consumer to consumers set associated with the map's entry and call consumer's callback with
+      // last intermediate result. We should not do all of those things under this lock.
+      do {
+        createdNewMultiplexer = false;
+        synchronized (this) {
+          multiplexer = getExistingMultiplexer(key);
+          if (multiplexer == null) {
+            multiplexer = createAndPutNewMultiplexer(key);
+            createdNewMultiplexer = true;
+          }
         }
-      }
-      // addNewConsumer may call consumer's onNewResult method immediately. For this reason
-      // we release "this" lock. If multiplexer is removed from mMultiplexers in the meantime,
-      // which is not very probable, then addNewConsumer will fail and we will be able to retry.
-    } while (!multiplexer.addNewConsumer(consumer, context));
+        // addNewConsumer may call consumer's onNewResult method immediately. For this reason
+        // we release "this" lock. If multiplexer is removed from mMultiplexers in the meantime,
+        // which is not very probable, then addNewConsumer will fail and we will be able to retry.
+      } while (!multiplexer.addNewConsumer(consumer, context));
 
-    if (createdNewMultiplexer) {
-      multiplexer.startInputProducerIfHasAttachedConsumers();
+      if (createdNewMultiplexer) {
+        multiplexer.startInputProducerIfHasAttachedConsumers();
+      }
+    } finally {
+      FrescoSystrace.endSection();
     }
   }
 
@@ -496,22 +502,42 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
     private class ForwardingConsumer extends BaseConsumer<T> {
       @Override
       protected void onNewResultImpl(T newResult, @Status int status) {
-        Multiplexer.this.onNextResult(this, newResult, status);
+        try {
+          FrescoSystrace.beginSection("MultiplexProducer#onNewResult");
+          Multiplexer.this.onNextResult(this, newResult, status);
+        } finally {
+          FrescoSystrace.endSection();
+        }
       }
 
       @Override
       protected void onFailureImpl(Throwable t) {
-        Multiplexer.this.onFailure(this, t);
+        try {
+          FrescoSystrace.beginSection("MultiplexProducer#onFailure");
+          Multiplexer.this.onFailure(this, t);
+        } finally {
+          FrescoSystrace.endSection();
+        }
       }
 
       @Override
       protected void onCancellationImpl() {
-        Multiplexer.this.onCancelled(this);
+        try {
+          FrescoSystrace.beginSection("MultiplexProducer#onCancellation");
+          Multiplexer.this.onCancelled(this);
+        } finally {
+          FrescoSystrace.endSection();
+        }
       }
 
       @Override
       protected void onProgressUpdateImpl(float progress) {
-        Multiplexer.this.onProgressUpdate(this, progress);
+        try {
+          FrescoSystrace.beginSection("MultiplexProducer#onProgressUpdate");
+          Multiplexer.this.onProgressUpdate(this, progress);
+        } finally {
+          FrescoSystrace.endSection();
+        }
       }
     }
   }
