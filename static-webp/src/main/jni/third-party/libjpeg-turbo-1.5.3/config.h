@@ -115,7 +115,13 @@
 /* Define if your (broken) compiler shifts signed values as if they were
    unsigned. */
 /* #undef RIGHT_SHIFT_IS_UNSIGNED */
-#define SIZEOF_SIZE_T 1
+
+/* The size of `size_t', as computed by sizeof. */
+#ifdef __LP64__
+#  define SIZEOF_SIZE_T 8
+#else
+#  define SIZEOF_SIZE_T 4
+#endif
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
