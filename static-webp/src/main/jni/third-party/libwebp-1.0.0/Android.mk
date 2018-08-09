@@ -56,9 +56,11 @@ LOCAL_SRC_FILES := \
     src/dsp/upsampling.c \
     src/dsp/upsampling_neon.$(NEON) \
     src/dsp/upsampling_sse2.c \
+    src/dsp/upsampling_sse41.c \
     src/dsp/yuv.c \
     src/dsp/yuv_neon.$(NEON) \
     src/dsp/yuv_sse2.c \
+    src/dsp/yuv_sse41.c \
     src/utils/bit_reader_utils.c \
     src/utils/color_cache_utils.c \
     src/utils/filters_utils.c \
