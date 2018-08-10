@@ -17,13 +17,15 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import javax.annotation.Nullable;
 
 public class DefaultDrawableFactory implements DrawableFactory {
 
   private final Resources mResources;
-  private final DrawableFactory mAnimatedDrawableFactory;
+  private final @Nullable DrawableFactory mAnimatedDrawableFactory;
 
-  public DefaultDrawableFactory(Resources resources, DrawableFactory animatedDrawableFactory) {
+  public DefaultDrawableFactory(
+      Resources resources, @Nullable DrawableFactory animatedDrawableFactory) {
     mResources = resources;
     mAnimatedDrawableFactory = animatedDrawableFactory;
   }
@@ -34,6 +36,7 @@ public class DefaultDrawableFactory implements DrawableFactory {
   }
 
   @Override
+  @Nullable
   public Drawable createDrawable(CloseableImage closeableImage) {
     try {
       FrescoSystrace.beginSection("DefaultDrawableFactory#createDrawable");
