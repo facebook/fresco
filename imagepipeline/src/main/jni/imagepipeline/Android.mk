@@ -33,7 +33,7 @@ LOCAL_STATIC_LIBRARIES += memchunk
 LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
 
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libjpeg-turbo-1.5.0)
+$(call import-module,libjpeg-turbo-1.5.3)
 $(call import-module,bitmaps)
 $(call import-module,filters)
 $(call import-module,memchunk)
