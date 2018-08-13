@@ -4,8 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-
 package com.facebook.imagepipeline.animated.factory;
 
 import static org.junit.Assert.assertFalse;
@@ -37,6 +35,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
+import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import org.junit.Before;
 import org.junit.Rule;
@@ -103,7 +102,7 @@ public class AnimatedImageFactoryWebPImplTest {
   }
 
   @Test
-  public void testCreateDefaults() {
+  public void testCreateDefaultsUsingPointer() {
     WebPImage mockWebPImage = mock(WebPImage.class);
 
     // Expect a call to WebPImage.create
@@ -111,6 +110,83 @@ public class AnimatedImageFactoryWebPImplTest {
     when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
         .thenReturn(mockWebPImage);
 
+    testCreateDefaults(mockWebPImage, byteBuffer);
+  }
+
+  @Test
+  public void testCreateDefaultsUsingByteBuffer() {
+    WebPImage mockWebPImage = mock(WebPImage.class);
+
+    // Expect a call to WebPImage.create
+    TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
+    when(mWebPImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockWebPImage);
+
+    testCreateDefaults(mockWebPImage, byteBuffer);
+  }
+
+  @Test
+  public void testCreateWithPreviewBitmapUsingPointer() throws Exception {
+    WebPImage mockWebPImage = mock(WebPImage.class);
+    Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to WebPImage.create
+    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
+    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockWebPImage);
+    when(mockWebPImage.getWidth()).thenReturn(50);
+    when(mockWebPImage.getHeight()).thenReturn(50);
+
+    testCreateWithPreviewBitmap(mockWebPImage, byteBuffer, mockBitmap);
+  }
+
+  @Test
+  public void testCreateWithPreviewBitmapUsingByteBuffer() throws Exception {
+    WebPImage mockWebPImage = mock(WebPImage.class);
+    Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to WebPImage.create
+    TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
+    when(mWebPImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockWebPImage);
+    when(mockWebPImage.getWidth()).thenReturn(50);
+    when(mockWebPImage.getHeight()).thenReturn(50);
+
+    testCreateWithPreviewBitmap(mockWebPImage, byteBuffer, mockBitmap);
+  }
+
+  @Test
+  public void testCreateWithDecodeAlFramesUsingPointer() throws Exception {
+    WebPImage mockWebPImage = mock(WebPImage.class);
+
+    Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+    Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to WebPImage.create
+    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
+    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockWebPImage);
+    when(mockWebPImage.getWidth()).thenReturn(50);
+    when(mockWebPImage.getHeight()).thenReturn(50);
+
+    testCreateWithDecodeAlFrames(mockWebPImage, byteBuffer, mockBitmap1, mockBitmap2);
+  }
+
+  @Test
+  public void testCreateWithDecodeAlFramesUsingByteBuffer() throws Exception {
+    WebPImage mockWebPImage = mock(WebPImage.class);
+
+    Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+    Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to WebPImage.create
+    TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
+    when(mWebPImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockWebPImage);
+    when(mockWebPImage.getWidth()).thenReturn(50);
+    when(mockWebPImage.getHeight()).thenReturn(50);
+
+    testCreateWithDecodeAlFrames(mockWebPImage, byteBuffer, mockBitmap1, mockBitmap2);
+  }
+
+  private void testCreateDefaults(WebPImage mockWebPImage, PooledByteBuffer byteBuffer) {
     EncodedImage encodedImage = new EncodedImage(
         CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
     encodedImage.setImageFormat(ImageFormat.UNKNOWN);
@@ -132,26 +208,14 @@ public class AnimatedImageFactoryWebPImplTest {
     verifyZeroInteractions(mMockBitmapFactory);
   }
 
-  @Test
-  public void testCreateWithPreviewBitmap() throws Exception {
-    WebPImage mockWebPImage = mock(WebPImage.class);
-
-    Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
-
-    // Expect a call to WebPImage.create
-    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockWebPImage);
-    when(mockWebPImage.getWidth()).thenReturn(50);
-    when(mockWebPImage.getHeight()).thenReturn(50);
-
+  private void testCreateWithPreviewBitmap(
+      WebPImage mockWebPImage, PooledByteBuffer byteBuffer, Bitmap mockBitmap) throws Exception {
     // For decoding preview frame, expect some calls.
     final AnimatedDrawableBackend mockAnimatedDrawableBackend =
         createAnimatedDrawableBackendMock(1);
 
     when(mMockAnimatedDrawableBackendProvider.get(
-            any(AnimatedImageResult.class),
-            isNull(Rect.class)))
+            any(AnimatedImageResult.class), isNull(Rect.class)))
         .thenReturn(mockAnimatedDrawableBackend);
     when(mMockBitmapFactory.createBitmapInternal(50, 50, DEFAULT_BITMAP_CONFIG))
         .thenReturn(CloseableReference.of(mockBitmap, FAKE_BITMAP_RESOURCE_RELEASER));
@@ -188,20 +252,9 @@ public class AnimatedImageFactoryWebPImplTest {
     verify(mockCompositor).renderFrame(0, mockBitmap);
   }
 
-  @Test
-  public void testCreateWithDecodeAlFrames() throws Exception {
-    WebPImage mockWebPImage = mock(WebPImage.class);
-
-    Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
-    Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
-
-    // Expect a call to WebPImage.create
-    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mWebPImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockWebPImage);
-    when(mockWebPImage.getWidth()).thenReturn(50);
-    when(mockWebPImage.getHeight()).thenReturn(50);
-
+  private void testCreateWithDecodeAlFrames(
+      WebPImage mockWebPImage, PooledByteBuffer byteBuffer, Bitmap mockBitmap1, Bitmap mockBitmap2)
+      throws Exception {
     // For decoding preview frame, expect some calls.
     final AnimatedDrawableBackend mockAnimatedDrawableBackend =
         createAnimatedDrawableBackendMock(2);
@@ -252,16 +305,22 @@ public class AnimatedImageFactoryWebPImplTest {
     verify(mockCompositor).renderFrame(1, mockBitmap2);
   }
 
-  private TrivialPooledByteBuffer createByteBuffer() {
+  private static TrivialPooledByteBuffer createByteBuffer() {
     byte[] buf = new byte[16];
     return new TrivialPooledByteBuffer(buf);
   }
 
+  private static TrivialBufferPooledByteBuffer createDirectByteBuffer() {
+    byte[] buf = new byte[16];
+    return new TrivialBufferPooledByteBuffer(buf);
+  }
+
   /**
    * Creates the mock for the AnimatedDrawableBackend with the number of frame
+   *
    * @param frameCount The number of frame to mock
    */
-  private AnimatedDrawableBackend createAnimatedDrawableBackendMock(final int frameCount) {
+  private static AnimatedDrawableBackend createAnimatedDrawableBackendMock(final int frameCount) {
     // For decoding preview frame, expect some calls.
     final AnimatedDrawableBackend mockAnimatedDrawableBackend = mock(AnimatedDrawableBackend.class);
     when(mockAnimatedDrawableBackend.getFrameCount()).thenReturn(frameCount);

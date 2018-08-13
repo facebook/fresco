@@ -4,8 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-
 package com.facebook.imagepipeline.animated.factory;
 
 import static org.junit.Assert.assertFalse;
@@ -37,6 +35,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
+import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.soloader.SoLoader;
 import org.junit.Before;
@@ -108,7 +107,7 @@ public class AnimatedImageFactoryGifImplTest {
   }
 
   @Test
-  public void testCreateDefaults() {
+  public void testCreateDefaultsUsingPointer() {
     GifImage mockGifImage = mock(GifImage.class);
 
     // Expect a call to GifImage.create
@@ -116,6 +115,83 @@ public class AnimatedImageFactoryGifImplTest {
     when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
         .thenReturn(mockGifImage);
 
+    testCreateDefaults(mockGifImage, byteBuffer);
+  }
+
+  @Test
+  public void testCreateDefaultsUsingByteBuffer() {
+    GifImage mockGifImage = mock(GifImage.class);
+
+    // Expect a call to GifImage.create
+    TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
+    when(mGifImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockGifImage);
+
+    testCreateDefaults(mockGifImage, byteBuffer);
+  }
+
+  @Test
+  public void testCreateWithPreviewBitmapUsingPointer() throws Exception {
+    GifImage mockGifImage = mock(GifImage.class);
+    Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to WebPImage.create
+    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
+    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockGifImage);
+    when(mockGifImage.getWidth()).thenReturn(50);
+    when(mockGifImage.getHeight()).thenReturn(50);
+
+    testCreateWithPreviewBitmap(mockGifImage, mockBitmap, byteBuffer);
+  }
+
+  @Test
+  public void testCreateWithPreviewBitmapUsingByteBuffer() throws Exception {
+    GifImage mockGifImage = mock(GifImage.class);
+    Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to WebPImage.create
+    TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
+    when(mGifImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockGifImage);
+    when(mockGifImage.getWidth()).thenReturn(50);
+    when(mockGifImage.getHeight()).thenReturn(50);
+
+    testCreateWithPreviewBitmap(mockGifImage, mockBitmap, byteBuffer);
+  }
+
+  @Test
+  public void testCreateWithDecodeAlFramesUsingPointer() throws Exception {
+    GifImage mockGifImage = mock(GifImage.class);
+
+    Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+    Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to GifImage.create
+    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
+    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
+        .thenReturn(mockGifImage);
+    when(mockGifImage.getWidth()).thenReturn(50);
+    when(mockGifImage.getHeight()).thenReturn(50);
+
+    testCreateWithDecodeAlFrames(mockGifImage, mockBitmap1, mockBitmap2, byteBuffer);
+  }
+
+  @Test
+  public void testCreateWithDecodeAlFramesUsingByteBuffer() throws Exception {
+    GifImage mockGifImage = mock(GifImage.class);
+
+    Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+    Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
+
+    // Expect a call to GifImage.create
+    TrivialBufferPooledByteBuffer byteBuffer = createDirectByteBuffer();
+    when(mGifImageMock.decode(byteBuffer.getByteBuffer())).thenReturn(mockGifImage);
+    when(mockGifImage.getWidth()).thenReturn(50);
+    when(mockGifImage.getHeight()).thenReturn(50);
+
+    testCreateWithDecodeAlFrames(mockGifImage, mockBitmap1, mockBitmap2, byteBuffer);
+  }
+
+  private void testCreateDefaults(GifImage mockGifImage, PooledByteBuffer byteBuffer) {
     EncodedImage encodedImage = new EncodedImage(
         CloseableReference.of(byteBuffer, FAKE_RESOURCE_RELEASER));
     encodedImage.setImageFormat(ImageFormat.UNKNOWN);
@@ -137,19 +213,8 @@ public class AnimatedImageFactoryGifImplTest {
     verifyZeroInteractions(mMockBitmapFactory);
   }
 
-  @Test
-  public void testCreateWithPreviewBitmap() throws Exception {
-    GifImage mockGifImage = mock(GifImage.class);
-
-    Bitmap mockBitmap = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
-
-    // Expect a call to WebPImage.create
-    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockGifImage);
-    when(mockGifImage.getWidth()).thenReturn(50);
-    when(mockGifImage.getHeight()).thenReturn(50);
-
+  private void testCreateWithPreviewBitmap(
+      GifImage mockGifImage, Bitmap mockBitmap, PooledByteBuffer byteBuffer) throws Exception {
     // For decoding preview frame, expect some calls.
     final AnimatedDrawableBackend mockAnimatedDrawableBackend =
         createAnimatedDrawableBackendMock(1);
@@ -192,20 +257,9 @@ public class AnimatedImageFactoryGifImplTest {
     verify(mockCompositor).renderFrame(0, mockBitmap);
   }
 
-  @Test
-  public void testCreateWithDecodeAlFrames() throws Exception {
-    GifImage mockGifImage = mock(GifImage.class);
-
-    Bitmap mockBitmap1 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
-    Bitmap mockBitmap2 = MockBitmapFactory.create(50, 50, DEFAULT_BITMAP_CONFIG);
-
-    // Expect a call to GifImage.create
-    TrivialPooledByteBuffer byteBuffer = createByteBuffer();
-    when(mGifImageMock.decode(byteBuffer.getNativePtr(), byteBuffer.size()))
-        .thenReturn(mockGifImage);
-    when(mockGifImage.getWidth()).thenReturn(50);
-    when(mockGifImage.getHeight()).thenReturn(50);
-
+  private void testCreateWithDecodeAlFrames(
+      GifImage mockGifImage, Bitmap mockBitmap1, Bitmap mockBitmap2, PooledByteBuffer byteBuffer)
+      throws Exception {
     // For decoding preview frame, expect some calls.
     final AnimatedDrawableBackend mockAnimatedDrawableBackend =
         createAnimatedDrawableBackendMock(2);
@@ -260,6 +314,11 @@ public class AnimatedImageFactoryGifImplTest {
   private TrivialPooledByteBuffer createByteBuffer() {
     byte[] buf = new byte[16];
     return new TrivialPooledByteBuffer(buf);
+  }
+
+  private static TrivialBufferPooledByteBuffer createDirectByteBuffer() {
+    byte[] buf = new byte[16];
+    return new TrivialBufferPooledByteBuffer(buf);
   }
 
   /**

@@ -74,6 +74,19 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
     return nativeCreateFromDirectByteBuffer(byteBuffer);
   }
 
+  /**
+   * Creates a {@link WebPImage} from a ByteBuffer containing the image. This will throw if it fails
+   * to create.
+   *
+   * @param byteBuffer the ByteBuffer containing the image
+   */
+  public static WebPImage create(ByteBuffer byteBuffer) {
+    ensure();
+    byteBuffer.rewind();
+
+    return nativeCreateFromDirectByteBuffer(byteBuffer);
+  }
+
   public static WebPImage create(long nativePtr, int sizeInBytes) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
@@ -83,6 +96,11 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
   @Override
   public AnimatedImage decode(long nativePtr, int sizeInBytes) {
     return WebPImage.create(nativePtr, sizeInBytes);
+  }
+
+  @Override
+  public AnimatedImage decode(ByteBuffer byteBuffer) {
+    return WebPImage.create(byteBuffer);
   }
 
   @Override

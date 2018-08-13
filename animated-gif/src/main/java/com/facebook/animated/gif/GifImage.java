@@ -60,6 +60,19 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     return nativeCreateFromDirectByteBuffer(byteBuffer);
   }
 
+  /**
+   * Creates a {@link GifImage} from a ByteBuffer containing the image. This will throw if it fails
+   * to create.
+   *
+   * @param byteBuffer the ByteBuffer containing the image (a copy will be made)
+   */
+  public static GifImage create(ByteBuffer byteBuffer) {
+    ensure();
+    byteBuffer.rewind();
+
+    return nativeCreateFromDirectByteBuffer(byteBuffer);
+  }
+
   public static GifImage create(long nativePtr, int sizeInBytes) {
     ensure();
     Preconditions.checkArgument(nativePtr != 0);
@@ -69,6 +82,11 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   @Override
   public AnimatedImage decode(long nativePtr, int sizeInBytes) {
     return GifImage.create(nativePtr, sizeInBytes);
+  }
+
+  @Override
+  public AnimatedImage decode(ByteBuffer byteBuffer) {
+    return GifImage.create(byteBuffer);
   }
 
   @DoNotStrip

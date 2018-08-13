@@ -7,6 +7,7 @@
 package com.facebook.imagepipeline.animated.factory;
 
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
+import java.nio.ByteBuffer;
 
 public interface AnimatedImageDecoder {
 
@@ -17,4 +18,12 @@ public interface AnimatedImageDecoder {
    * @return The AnimatedImage allocation
    */
   AnimatedImage decode(long nativePtr, int sizeInBytes);
+
+  /**
+   * Factory method to create the AnimatedImage from a ByteBuffer
+   *
+   * @param byteBuffer The ByteBuffer containing the image
+   * @return The AnimatedImage allocation
+   */
+  AnimatedImage decode(ByteBuffer byteBuffer);
 }
