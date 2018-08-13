@@ -25,9 +25,9 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
 
   @GuardedBy("this")
   @VisibleForTesting
-  CloseableReference<NativeMemoryChunk> mBufRef;
+  CloseableReference<MemoryChunk> mBufRef;
 
-  public NativePooledByteBuffer(CloseableReference<NativeMemoryChunk> bufRef, int size) {
+  public NativePooledByteBuffer(CloseableReference<MemoryChunk> bufRef, int size) {
     Preconditions.checkNotNull(bufRef);
     Preconditions.checkArgument(size >= 0 && size <= bufRef.get().getSize());
     mBufRef = bufRef.clone();

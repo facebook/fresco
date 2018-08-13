@@ -37,7 +37,7 @@ public class NativePooledByteBufferFactory implements PooledByteBufferFactory {
   @Override
   public NativePooledByteBuffer newByteBuffer(int size) {
     Preconditions.checkArgument(size > 0);
-    CloseableReference<NativeMemoryChunk> chunkRef = CloseableReference.of(mPool.get(size), mPool);
+    CloseableReference<MemoryChunk> chunkRef = CloseableReference.of(mPool.get(size), mPool);
     try {
       return new NativePooledByteBuffer(chunkRef, size);
     } finally {

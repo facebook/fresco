@@ -21,7 +21,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public class NativePooledByteBufferOutputStream extends PooledByteBufferOutputStream {
   private final NativeMemoryChunkPool mPool;  // the pool to allocate memory chunks from
-  private CloseableReference<NativeMemoryChunk> mBufRef; // the current chunk that we're writing to
+  private CloseableReference<MemoryChunk> mBufRef; // the current chunk that we're writing to
   private int mCount; // number of bytes 'used' in the current chunk
 
   /**
@@ -136,7 +136,7 @@ public class NativePooledByteBufferOutputStream extends PooledByteBufferOutputSt
     if (newLength <= mBufRef.get().getSize()) {
       return;
     }
-    NativeMemoryChunk newbuf = mPool.get(newLength);
+    MemoryChunk newbuf = mPool.get(newLength);
     mBufRef.get().copy(0, newbuf, 0, mCount);
     mBufRef.close();
     mBufRef = CloseableReference.of(newbuf, mPool);

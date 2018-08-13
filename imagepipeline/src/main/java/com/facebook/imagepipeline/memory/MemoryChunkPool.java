@@ -16,11 +16,18 @@ import javax.annotation.concurrent.ThreadSafe;
 public abstract class MemoryChunkPool extends BasePool<MemoryChunk> {
   private final int[] mBucketSizes;
 
+  /**
+   * Initialize a new instance of the MemoryChunkPool
+   *
+   * @param memoryTrimmableRegistry the memory manager to register with
+   * @param poolParams provider for pool parameters
+   * @param memoryChunkPoolStatsTracker the pool stats tracker
+   */
   MemoryChunkPool(
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       PoolParams poolParams,
-      PoolStatsTracker nativeMemoryChunkPoolStatsTracker) {
-    super(memoryTrimmableRegistry, poolParams, nativeMemoryChunkPoolStatsTracker);
+      PoolStatsTracker memoryChunkPoolStatsTracker) {
+    super(memoryTrimmableRegistry, poolParams, memoryChunkPoolStatsTracker);
     SparseIntArray bucketSizes = poolParams.bucketSizes;
     mBucketSizes = new int[bucketSizes.size()];
     for (int i = 0; i < mBucketSizes.length; ++i) {

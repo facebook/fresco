@@ -43,7 +43,7 @@ public class NativePooledByteBufferTest extends TestUsingNativeMemoryChunk {
     mChunk = new FakeNativeMemoryChunk(BYTES.length);
     mChunk.write(0, BYTES, 0, BYTES.length);
     mPool = mock(NativeMemoryChunkPool.class);
-    CloseableReference<NativeMemoryChunk> poolRef = CloseableReference.of(mChunk, mPool);
+    CloseableReference<MemoryChunk> poolRef = CloseableReference.of(mChunk, mPool);
     mPooledByteBuffer = new NativePooledByteBuffer(
         poolRef,
         BUFFER_LENGTH);

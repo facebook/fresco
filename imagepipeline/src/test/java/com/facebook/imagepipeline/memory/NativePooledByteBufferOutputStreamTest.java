@@ -154,7 +154,7 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
     NativePooledByteBuffer buf2 = doWrite(os1, Arrays.copyOf(mData, 3));
     Assert.assertEquals(12, buf2.size());
 
-    final CloseableReference<NativeMemoryChunk> chunk = buf1.mBufRef;
+    final CloseableReference<MemoryChunk> chunk = buf1.mBufRef;
     Assert.assertEquals(3, chunk.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     os1.close();
     buf1.close();

@@ -113,7 +113,7 @@ public class NativeMemoryChunkPoolTest extends TestUsingNativeMemoryChunk {
 
   @Test
   public void testIsReusable() throws Exception {
-    NativeMemoryChunk chunk = mPool.get(1);
+    MemoryChunk chunk = mPool.get(1);
     Assert.assertTrue(mPool.isReusable(chunk));
     chunk.close();
     Assert.assertFalse(mPool.isReusable(chunk));
