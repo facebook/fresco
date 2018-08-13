@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.testing;
 
+import com.facebook.imagepipeline.memory.MemoryChunk;
 import com.facebook.imagepipeline.memory.NativeMemoryChunk;
 
 /**
@@ -57,7 +58,7 @@ public class FakeNativeMemoryChunk extends NativeMemoryChunk {
   }
 
   @Override
-  public void copy(int offset, NativeMemoryChunk other, int otherOffset, int count) {
+  public void copy(int offset, MemoryChunk other, int otherOffset, int count) {
     FakeNativeMemoryChunk that = (FakeNativeMemoryChunk)other;
     int numToCopy = Math.min(count, mBuf.length - offset);
     System.arraycopy(mBuf, offset, that.mBuf, otherOffset, numToCopy);
