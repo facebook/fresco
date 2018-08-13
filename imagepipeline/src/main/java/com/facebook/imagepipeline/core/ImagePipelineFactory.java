@@ -236,7 +236,7 @@ public class ImagePipelineFactory {
       mMainBufferedDiskCache =
           new BufferedDiskCache(
               getMainFileCache(),
-              mConfig.getPoolFactory().getPooledByteBufferFactory(),
+              mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
               mConfig.getPoolFactory().getPooledByteStreams(),
               mConfig.getExecutorSupplier().forLocalStorageRead(),
               mConfig.getExecutorSupplier().forLocalStorageWrite(),
@@ -287,8 +287,7 @@ public class ImagePipelineFactory {
       return new ArtBitmapFactory(poolFactory.getBitmapPool());
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       return new HoneycombBitmapFactory(
-          new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()),
-          platformDecoder);
+          new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()), platformDecoder);
     } else {
       return new GingerbreadBitmapFactory();
     }
@@ -357,7 +356,7 @@ public class ImagePipelineFactory {
                   mConfig.isResizeAndRotateEnabledForNetwork(),
                   mConfig.getExperiments().isDecodeCancellationEnabled(),
                   mConfig.getExecutorSupplier(),
-                  mConfig.getPoolFactory().getPooledByteBufferFactory(),
+                  mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
                   getBitmapMemoryCache(),
                   getEncodedMemoryCache(),
                   getMainBufferedDiskCache(),
@@ -408,7 +407,7 @@ public class ImagePipelineFactory {
       mSmallImageBufferedDiskCache =
           new BufferedDiskCache(
               getSmallImageFileCache(),
-              mConfig.getPoolFactory().getPooledByteBufferFactory(),
+              mConfig.getPoolFactory().getPooledByteBufferFactory(mConfig.getMemoryChunkType()),
               mConfig.getPoolFactory().getPooledByteStreams(),
               mConfig.getExecutorSupplier().forLocalStorageRead(),
               mConfig.getExecutorSupplier().forLocalStorageWrite(),

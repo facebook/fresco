@@ -60,7 +60,6 @@ import javax.annotation.Nullable;
  * <p>This should only be done once per process.
  */
 public class ImagePipelineConfig {
-
   // If a member here is marked @Nullable, it must be constructed by ImagePipelineFactory
   // on demand if needed.
 
@@ -79,6 +78,7 @@ public class ImagePipelineConfig {
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+  @MemoryChunkType private final int mMemoryChunkType;
   private final NetworkFetcher mNetworkFetcher;
   private final int mHttpNetworkTimeout;
   @Nullable private final PlatformBitmapFactory mPlatformBitmapFactory;
@@ -145,6 +145,7 @@ public class ImagePipelineConfig {
         builder.mMemoryTrimmableRegistry == null ?
             NoOpMemoryTrimmableRegistry.getInstance() :
             builder.mMemoryTrimmableRegistry;
+    mMemoryChunkType = builder.mMemoryChunkType;
     mHttpNetworkTimeout =
         builder.mHttpConnectionTimeout < 0
             ? HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
@@ -285,6 +286,11 @@ public class ImagePipelineConfig {
     return mMemoryTrimmableRegistry;
   }
 
+  @MemoryChunkType
+  public int getMemoryChunkType() {
+    return mMemoryChunkType;
+  }
+
   public NetworkFetcher getNetworkFetcher() {
     return mNetworkFetcher;
   }
@@ -361,6 +367,7 @@ public class ImagePipelineConfig {
     private Supplier<Boolean> mIsPrefetchEnabledSupplier;
     private DiskCacheConfig mMainDiskCacheConfig;
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
+    @MemoryChunkType private int mMemoryChunkType = MemoryChunkType.NATIVE_MEMORY;
     private NetworkFetcher mNetworkFetcher;
     private PlatformBitmapFactory mPlatformBitmapFactory;
     private PoolFactory mPoolFactory;
@@ -465,6 +472,16 @@ public class ImagePipelineConfig {
 
     public Builder setMemoryTrimmableRegistry(MemoryTrimmableRegistry memoryTrimmableRegistry) {
       mMemoryTrimmableRegistry = memoryTrimmableRegistry;
+      return this;
+    }
+
+    @MemoryChunkType
+    public int getMemoryChunkType() {
+      return mMemoryChunkType;
+    }
+
+    public Builder setMemoryChunkType(@MemoryChunkType int memoryChunkType) {
+      mMemoryChunkType = memoryChunkType;
       return this;
     }
 

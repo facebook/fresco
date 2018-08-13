@@ -7,10 +7,14 @@
 
 package com.facebook.imagepipeline.memory;
 
+import static com.facebook.imagepipeline.core.MemoryChunkType.BUFFER_MEMORY;
+import static com.facebook.imagepipeline.core.MemoryChunkType.NATIVE_MEMORY;
+
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteStreams;
+import com.facebook.imagepipeline.core.MemoryChunkType;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -80,9 +84,14 @@ public class PoolFactory {
   }
 
   public PooledByteBufferFactory getPooledByteBufferFactory() {
+    return getPooledByteBufferFactory(NATIVE_MEMORY);
+  }
+
+  public PooledByteBufferFactory getPooledByteBufferFactory(@MemoryChunkType int memoryChunkType) {
     if (mPooledByteBufferFactory == null) {
       mPooledByteBufferFactory =
-          new MemoryPooledByteBufferFactory(getNativeMemoryChunkPool(), getPooledByteStreams());
+          new MemoryPooledByteBufferFactory(
+              getMemoryChunkPool(memoryChunkType), getPooledByteStreams());
     }
     return mPooledByteBufferFactory;
   }
@@ -111,5 +120,16 @@ public class PoolFactory {
           mConfig.getSmallByteArrayPoolStatsTracker());
     }
     return mSmallByteArrayPool;
+  }
+
+  private MemoryChunkPool getMemoryChunkPool(@MemoryChunkType int memoryChunkType) {
+    switch (memoryChunkType) {
+      case NATIVE_MEMORY:
+        return getNativeMemoryChunkPool();
+      case BUFFER_MEMORY:
+        return getBufferMemoryChunkPool();
+      default:
+        throw new IllegalArgumentException("Invalid MemoryChunkType");
+    }
   }
 }
