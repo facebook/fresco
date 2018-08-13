@@ -24,8 +24,8 @@ public class PoolConfig {
   private final PoolStatsTracker mBitmapPoolStatsTracker;
   private final PoolParams mFlexByteArrayPoolParams;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-  private final PoolParams mNativeMemoryChunkPoolParams;
-  private final PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
+  private final PoolParams mMemoryChunkPoolParams;
+  private final PoolStatsTracker mMemoryChunkPoolStatsTracker;
   private final PoolParams mSmallByteArrayPoolParams;
   private final PoolStatsTracker mSmallByteArrayPoolStatsTracker;
 
@@ -46,14 +46,14 @@ public class PoolConfig {
         builder.mMemoryTrimmableRegistry == null ?
             NoOpMemoryTrimmableRegistry.getInstance() :
             builder.mMemoryTrimmableRegistry;
-    mNativeMemoryChunkPoolParams =
-        builder.mNativeMemoryChunkPoolParams == null ?
-            DefaultNativeMemoryChunkPoolParams.get() :
-            builder.mNativeMemoryChunkPoolParams;
-    mNativeMemoryChunkPoolStatsTracker =
-        builder.mNativeMemoryChunkPoolStatsTracker == null ?
-            NoOpPoolStatsTracker.getInstance() :
-            builder.mNativeMemoryChunkPoolStatsTracker;
+    mMemoryChunkPoolParams =
+        builder.mMemoryChunkPoolParams == null
+            ? DefaultNativeMemoryChunkPoolParams.get()
+            : builder.mMemoryChunkPoolParams;
+    mMemoryChunkPoolStatsTracker =
+        builder.mMemoryChunkPoolStatsTracker == null
+            ? NoOpPoolStatsTracker.getInstance()
+            : builder.mMemoryChunkPoolStatsTracker;
     mSmallByteArrayPoolParams =
         builder.mSmallByteArrayPoolParams == null ?
             DefaultByteArrayPoolParams.get() :
@@ -76,12 +76,12 @@ public class PoolConfig {
     return mMemoryTrimmableRegistry;
   }
 
-  public PoolParams getNativeMemoryChunkPoolParams() {
-    return mNativeMemoryChunkPoolParams;
+  public PoolParams getMemoryChunkPoolParams() {
+    return mMemoryChunkPoolParams;
   }
 
-  public PoolStatsTracker getNativeMemoryChunkPoolStatsTracker() {
-    return mNativeMemoryChunkPoolStatsTracker;
+  public PoolStatsTracker getMemoryChunkPoolStatsTracker() {
+    return mMemoryChunkPoolStatsTracker;
   }
 
   public PoolParams getFlexByteArrayPoolParams() {
@@ -106,8 +106,8 @@ public class PoolConfig {
     private PoolStatsTracker mBitmapPoolStatsTracker;
     private PoolParams mFlexByteArrayPoolParams;
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-    private PoolParams mNativeMemoryChunkPoolParams;
-    private PoolStatsTracker mNativeMemoryChunkPoolStatsTracker;
+    private PoolParams mMemoryChunkPoolParams;
+    private PoolStatsTracker mMemoryChunkPoolStatsTracker;
     private PoolParams mSmallByteArrayPoolParams;
     private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
 
@@ -135,15 +135,14 @@ public class PoolConfig {
       return this;
     }
 
-    public Builder setNativeMemoryChunkPoolParams(PoolParams nativeMemoryChunkPoolParams) {
-      mNativeMemoryChunkPoolParams = Preconditions.checkNotNull(nativeMemoryChunkPoolParams);
+    public Builder setNativeMemoryChunkPoolParams(PoolParams memoryChunkPoolParams) {
+      mMemoryChunkPoolParams = Preconditions.checkNotNull(memoryChunkPoolParams);
       return this;
     }
 
     public Builder setNativeMemoryChunkPoolStatsTracker(
-        PoolStatsTracker nativeMemoryChunkPoolStatsTracker) {
-      mNativeMemoryChunkPoolStatsTracker =
-          Preconditions.checkNotNull(nativeMemoryChunkPoolStatsTracker);
+        PoolStatsTracker memoryChunkPoolStatsTracker) {
+      mMemoryChunkPoolStatsTracker = Preconditions.checkNotNull(memoryChunkPoolStatsTracker);
       return this;
     }
 

@@ -22,6 +22,7 @@ public class PoolFactory {
   private final PoolConfig mConfig;
 
   private BitmapPool mBitmapPool;
+  private BufferMemoryChunkPool mBufferMemoryChunkPool;
   private FlexByteArrayPool mFlexByteArrayPool;
   private NativeMemoryChunkPool mNativeMemoryChunkPool;
   private PooledByteBufferFactory mPooledByteBufferFactory;
@@ -43,6 +44,17 @@ public class PoolFactory {
     return mBitmapPool;
   }
 
+  public BufferMemoryChunkPool getBufferMemoryChunkPool() {
+    if (mBufferMemoryChunkPool == null) {
+      mBufferMemoryChunkPool =
+          new BufferMemoryChunkPool(
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getMemoryChunkPoolParams(),
+              mConfig.getMemoryChunkPoolStatsTracker());
+    }
+    return mBufferMemoryChunkPool;
+  }
+
   public FlexByteArrayPool getFlexByteArrayPool() {
     if (mFlexByteArrayPool == null) {
       mFlexByteArrayPool = new FlexByteArrayPool(
@@ -58,10 +70,11 @@ public class PoolFactory {
 
   public NativeMemoryChunkPool getNativeMemoryChunkPool() {
     if (mNativeMemoryChunkPool == null) {
-      mNativeMemoryChunkPool = new NativeMemoryChunkPool(
-          mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getNativeMemoryChunkPoolParams(),
-          mConfig.getNativeMemoryChunkPoolStatsTracker());
+      mNativeMemoryChunkPool =
+          new NativeMemoryChunkPool(
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getMemoryChunkPoolParams(),
+              mConfig.getMemoryChunkPoolStatsTracker());
     }
     return mNativeMemoryChunkPool;
   }
