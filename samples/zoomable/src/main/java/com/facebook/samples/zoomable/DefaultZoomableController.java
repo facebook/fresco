@@ -59,6 +59,7 @@ public class DefaultZoomableController
   private boolean mIsRotationEnabled = false;
   private boolean mIsScaleEnabled = true;
   private boolean mIsTranslationEnabled = true;
+  private boolean mIsGestureZoomEnabled = true;
 
   private float mMinScaleFactor = 1.0f;
   private float mMaxScaleFactor = 2.0f;
@@ -170,6 +171,16 @@ public class DefaultZoomableController
   /** Gets the maximum scale factor allowed. */
   public float getMaxScaleFactor() {
     return mMaxScaleFactor;
+  }
+
+  /** Sets whether gesture zooms are enabled or not. */
+  public void setGestureZoomEnabled(boolean isGestureZoomEnabled) {
+    mIsGestureZoomEnabled = isGestureZoomEnabled;
+  }
+
+  /** Gets whether gesture zooms are enabled or not. */
+  public boolean isGestureZoomEnabled() {
+    return mIsGestureZoomEnabled;
   }
 
   /** Gets the current scale factor. */
@@ -366,7 +377,7 @@ public class DefaultZoomableController
   @Override
   public boolean onTouchEvent(MotionEvent event) {
     FLog.v(TAG, "onTouchEvent: action: ", event.getAction());
-    if (mIsEnabled) {
+    if (mIsEnabled && mIsGestureZoomEnabled) {
       return mGestureDetector.onTouchEvent(event);
     }
     return false;
