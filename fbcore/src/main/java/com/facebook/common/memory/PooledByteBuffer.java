@@ -8,6 +8,8 @@
 package com.facebook.common.memory;
 
 import java.io.Closeable;
+import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * A 'pooled' byte-buffer abstraction. Represents an immutable sequence of bytes stored off the
@@ -40,9 +42,16 @@ public interface PooledByteBuffer extends Closeable {
   int read(int offset, byte[] buffer, int bufferOffset, int length);
 
   /**
-   * @return pointer to native memory backing this buffer
+   * Gets the pointer to native memory backing this buffer if present
+   *
+   * @return the pointer
+   * @throws UnsupportedOperationException if the buffer does not have a pointer to memory
    */
   long getNativePtr();
+
+  /** Gets the underlying ByteBuffer backing this buffer if present, else null. */
+  @Nullable
+  ByteBuffer getByteBuffer();
 
   /**
    * Close this PooledByteBuffer and release all underlying resources

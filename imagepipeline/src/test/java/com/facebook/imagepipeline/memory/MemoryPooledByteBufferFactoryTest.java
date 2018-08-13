@@ -21,13 +21,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Basic tests for {@link NativePooledByteBufferFactory}
- */
+/** Basic tests for {@link MemoryPooledByteBufferFactory} */
 @RunWith(RobolectricTestRunner.class)
-public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChunk {
+public class MemoryPooledByteBufferFactoryTest extends TestUsingNativeMemoryChunk {
   private NativeMemoryChunkPool mPool;
-  private NativePooledByteBufferFactory mFactory;
+  private MemoryPooledByteBufferFactory mFactory;
   private PoolStats mStats;
   PooledByteStreams mPooledByteStreams;
   private byte[] mData;
@@ -43,7 +41,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
     when(byteArrayPool.get(8)).thenReturn(pooledByteArray);
     mPooledByteStreams = new PooledByteStreams(byteArrayPool, 8);
 
-    mFactory = new NativePooledByteBufferFactory(mPool, mPooledByteStreams);
+    mFactory = new MemoryPooledByteBufferFactory(mPool, mPooledByteStreams);
   }
 
   // assert that the first 'length' bytes of expected are the same as those in 'actual'
@@ -55,7 +53,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
     }
   }
 
-  private byte[] getBytes(NativePooledByteBuffer bb) {
+  private static byte[] getBytes(MemoryPooledByteBuffer bb) {
     byte[] bytes = new byte[bb.size()];
     bb.mBufRef.get().read(0, bytes, 0, bytes.length);
     return bytes;
@@ -63,7 +61,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
 
   @Test
   public void testNewByteBuf_1() throws Exception {
-    NativePooledByteBuffer sb1 = mFactory.newByteBuffer(new ByteArrayInputStream(mData));
+    MemoryPooledByteBuffer sb1 = mFactory.newByteBuffer(new ByteArrayInputStream(mData));
     Assert.assertEquals(16, sb1.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb1), mData.length);
     mStats.refresh();
@@ -78,7 +76,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
 
   @Test
   public void testNewByteBuf_2() throws Exception {
-    NativePooledByteBuffer sb2 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 8);
+    MemoryPooledByteBuffer sb2 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 8);
     Assert.assertEquals(16, sb2.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb2), mData.length);
     mStats.refresh();
@@ -93,7 +91,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
 
   @Test
   public void testNewByteBuf_3() throws Exception {
-    NativePooledByteBuffer sb3 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 16);
+    MemoryPooledByteBuffer sb3 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 16);
     Assert.assertEquals(16, sb3.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb3), mData.length);
     mStats.refresh();
@@ -108,7 +106,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
 
   @Test
   public void testNewByteBuf_4() throws Exception {
-    NativePooledByteBuffer sb4 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 32);
+    MemoryPooledByteBuffer sb4 = mFactory.newByteBuffer(new ByteArrayInputStream(mData), 32);
     Assert.assertEquals(32, sb4.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb4), mData.length);
     mStats.refresh();
@@ -123,7 +121,7 @@ public class NativePooledByteBufferFactoryTest extends TestUsingNativeMemoryChun
 
   @Test
   public void testNewByteBuf_5() {
-    NativePooledByteBuffer sb5 = mFactory.newByteBuffer(5);
+    MemoryPooledByteBuffer sb5 = mFactory.newByteBuffer(5);
     Assert.assertEquals(8, sb5.mBufRef.get().getSize());
     Assert.assertEquals(1, sb5.mBufRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     mStats.refresh();

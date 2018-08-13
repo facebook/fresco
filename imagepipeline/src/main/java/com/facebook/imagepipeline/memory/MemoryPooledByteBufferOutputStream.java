@@ -15,32 +15,34 @@ import java.io.IOException;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
- * An implementation of {@link PooledByteBufferOutputStream} that produces a
- * {@link NativePooledByteBuffer}
+ * An implementation of {@link PooledByteBufferOutputStream} that produces a {@link
+ * MemoryPooledByteBuffer}
  */
 @NotThreadSafe
-public class NativePooledByteBufferOutputStream extends PooledByteBufferOutputStream {
-  private final NativeMemoryChunkPool mPool;  // the pool to allocate memory chunks from
+public class MemoryPooledByteBufferOutputStream extends PooledByteBufferOutputStream {
+  private final MemoryChunkPool mPool; // the pool to allocate memory chunks from
   private CloseableReference<MemoryChunk> mBufRef; // the current chunk that we're writing to
   private int mCount; // number of bytes 'used' in the current chunk
 
   /**
-   * Construct a new instance of this outputstream
+   * Construct a new instance of this OutputStream
+   *
    * @param pool the pool to use
    */
-  public NativePooledByteBufferOutputStream(NativeMemoryChunkPool pool) {
+  public MemoryPooledByteBufferOutputStream(MemoryChunkPool pool) {
     this(pool, pool.getMinBufferSize());
   }
 
   /**
-   * Construct a new instance of this output stream with this initial capacity
-   * It is not an error to have this initial capacity be inaccurate. If the actual contents
-   * end up being larger than the initialCapacity, then we will reallocate memory
-   * if needed. If the actual contents are smaller, then we'll end up wasting some memory
+   * Construct a new instance of this output stream with this initial capacity It is not an error to
+   * have this initial capacity be inaccurate. If the actual contents end up being larger than the
+   * initialCapacity, then we will reallocate memory if needed. If the actual contents are smaller,
+   * then we'll end up wasting some memory
+   *
    * @param pool the pool to use
    * @param initialCapacity initial capacity to allocate for this stream
    */
-  public NativePooledByteBufferOutputStream(NativeMemoryChunkPool pool, int initialCapacity) {
+  public MemoryPooledByteBufferOutputStream(MemoryChunkPool pool, int initialCapacity) {
     super();
 
     Preconditions.checkArgument(initialCapacity > 0);
@@ -52,13 +54,14 @@ public class NativePooledByteBufferOutputStream extends PooledByteBufferOutputSt
   /**
    * Gets a PooledByteBuffer from the current contents. If the stream has already been closed, then
    * an InvalidStreamException is thrown.
+   *
    * @return a PooledByteBuffer instance for the contents of the stream
    * @throws InvalidStreamException if the stream is invalid
    */
   @Override
-  public NativePooledByteBuffer toByteBuffer() {
+  public MemoryPooledByteBuffer toByteBuffer() {
     ensureValid();
-    return new NativePooledByteBuffer(mBufRef, mCount);
+    return new MemoryPooledByteBuffer(mBufRef, mCount);
   }
 
   /**

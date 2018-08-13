@@ -68,9 +68,8 @@ public class PoolFactory {
 
   public PooledByteBufferFactory getPooledByteBufferFactory() {
     if (mPooledByteBufferFactory == null) {
-      mPooledByteBufferFactory = new NativePooledByteBufferFactory(
-          getNativeMemoryChunkPool(),
-          getPooledByteStreams());
+      mPooledByteBufferFactory =
+          new MemoryPooledByteBufferFactory(getNativeMemoryChunkPool(), getPooledByteStreams());
     }
     return mPooledByteBufferFactory;
   }

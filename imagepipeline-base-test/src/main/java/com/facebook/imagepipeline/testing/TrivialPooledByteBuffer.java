@@ -8,6 +8,8 @@
 package com.facebook.imagepipeline.testing;
 
 import com.facebook.common.memory.PooledByteBuffer;
+import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 
 /**
  * A trivial implementation of {@link PooledByteBuffer}
@@ -44,6 +46,12 @@ public class TrivialPooledByteBuffer implements PooledByteBuffer {
   @Override
   public long getNativePtr() {
     return mNativePtr;
+  }
+
+  @Override
+  @Nullable
+  public ByteBuffer getByteBuffer() {
+    return null;
   }
 
   @Override

@@ -26,17 +26,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Basic tests for {@link NativePooledByteBuffer}
- */
+/** Basic tests for {@link MemoryPooledByteBuffer} */
 @RunWith(RobolectricTestRunner.class)
-public class NativePooledByteBufferTest extends TestUsingNativeMemoryChunk {
+public class MemoryPooledByteBufferTest extends TestUsingNativeMemoryChunk {
   private static final byte[] BYTES = new byte[] {1, 4, 5, 0, 100, 34, 0, 1, -1, -1};
   private static final int BUFFER_LENGTH = BYTES.length - 2;
 
   @Mock public NativeMemoryChunkPool mPool;
   private NativeMemoryChunk mChunk;
-  private NativePooledByteBuffer mPooledByteBuffer;
+  private MemoryPooledByteBuffer mPooledByteBuffer;
 
   @Before
   public void setUp() {
@@ -44,9 +42,7 @@ public class NativePooledByteBufferTest extends TestUsingNativeMemoryChunk {
     mChunk.write(0, BYTES, 0, BYTES.length);
     mPool = mock(NativeMemoryChunkPool.class);
     CloseableReference<MemoryChunk> poolRef = CloseableReference.of(mChunk, mPool);
-    mPooledByteBuffer = new NativePooledByteBuffer(
-        poolRef,
-        BUFFER_LENGTH);
+    mPooledByteBuffer = new MemoryPooledByteBuffer(poolRef, BUFFER_LENGTH);
     poolRef.close();
   }
 

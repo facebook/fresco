@@ -11,15 +11,17 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import java.nio.ByteBuffer;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * An implementation of {@link PooledByteBuffer} that uses native memory
- * ({@link NativeMemoryChunk}) to store data
+ * An implementation of {@link PooledByteBuffer} that uses ({@link MemoryChunk}) to
+ * store data
  */
 @ThreadSafe
-public class NativePooledByteBuffer implements PooledByteBuffer {
+public class MemoryPooledByteBuffer implements PooledByteBuffer {
 
   private final int mSize;
 
@@ -27,7 +29,7 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
   @VisibleForTesting
   CloseableReference<MemoryChunk> mBufRef;
 
-  public NativePooledByteBuffer(CloseableReference<MemoryChunk> bufRef, int size) {
+  public MemoryPooledByteBuffer(CloseableReference<MemoryChunk> bufRef, int size) {
     Preconditions.checkNotNull(bufRef);
     Preconditions.checkArgument(size >= 0 && size <= bufRef.get().getSize());
     mBufRef = bufRef.clone();
@@ -35,8 +37,9 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
   }
 
   /**
-   * Gets the size of the bytebuffer if it is valid. Otherwise, an exception is raised
-   * @return the size of the bytebuffer if it is not closed.
+   * Gets the size of the ByteBuffer if it is valid. Otherwise, an exception is raised
+   *
+   * @return the size of the ByteBuffer if it is not closed.
    * @throws {@link ClosedException}
    */
   @Override
@@ -63,25 +66,26 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
   }
 
   @Override
-  public synchronized long getNativePtr() {
+  public synchronized long getNativePtr() throws UnsupportedOperationException {
     ensureValid();
     return mBufRef.get().getNativePtr();
   }
 
-  /**
-   * Check if this bytebuffer is already closed
-   * @return true if this bytebuffer is closed.
-   */
+  @Override
+  @Nullable
+  public synchronized ByteBuffer getByteBuffer() {
+    return mBufRef.get().getByteBuffer();
+  }
+
   @Override
   public synchronized boolean isClosed() {
     return !CloseableReference.isValid(mBufRef);
   }
 
   /**
-   * Closes this instance, and releases the underlying buffer to the pool.
-   * Once the bytebuffer has been closed, subsequent operations (especially {@code getStream()} will
-   * fail.
-   * Note: It is not an error to close an already closed bytebuffer
+   * Closes this instance, and releases the underlying buffer to the pool. Once the ByteBuffer has
+   * been closed, subsequent operations (especially {@code getStream()} will fail. Note: It is not
+   * an error to close an already closed ByteBuffer
    */
   @Override
   public synchronized void close() {
@@ -90,9 +94,10 @@ public class NativePooledByteBuffer implements PooledByteBuffer {
   }
 
   /**
-   * Validates that the bytebuffer instance is valid (aka not closed). If it is closed, then we
-   * raise a ClosedException
-   * This doesn't really need to be synchronized, but lint won't shut up otherwise
+   * Validates that the ByteBuffer instance is valid (aka not closed). If it is closed, then we
+   * raise a ClosedException This doesn't really need to be synchronized, but lint won't shut up
+   * otherwise
+   *
    * @throws ClosedException
    */
   synchronized void ensureValid() {

@@ -17,11 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for NativePooledByteBufferOutputStream
- */
+/** Tests for {@link MemoryPooledByteBufferOutputStream} */
 @RunWith(RobolectricTestRunner.class)
-public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemoryChunk {
+public class MemoryPooledByteBufferOutputStreamTest extends TestUsingNativeMemoryChunk {
   private NativeMemoryChunkPool mPool;
   private byte[] mData;
   private PoolStats<byte[]> mStats;
@@ -34,7 +32,7 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
   }
 
   // write out the contents of data into the output stream
-  private NativePooledByteBuffer doWrite(NativePooledByteBufferOutputStream os, byte[] data)
+  private static MemoryPooledByteBuffer doWrite(MemoryPooledByteBufferOutputStream os, byte[] data)
       throws Exception {
     for (int i = 0; i < data.length; i++) {
       os.write(data, i, 1);
@@ -51,7 +49,7 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
     }
   }
 
-  private byte[] getBytes(NativePooledByteBuffer bb) {
+  private static byte[] getBytes(MemoryPooledByteBuffer bb) {
     byte[] bytes = new byte[bb.size()];
     bb.mBufRef.get().read(0, bytes, 0, bytes.length);
     return bytes;
@@ -59,8 +57,8 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testBasic_1() throws Exception {
-    NativePooledByteBufferOutputStream os1 = new NativePooledByteBufferOutputStream(mPool);
-    NativePooledByteBuffer sb1 = doWrite(os1, mData);
+    MemoryPooledByteBufferOutputStream os1 = new MemoryPooledByteBufferOutputStream(mPool);
+    MemoryPooledByteBuffer sb1 = doWrite(os1, mData);
     Assert.assertEquals(16, sb1.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb1), mData.length);
     mStats.refresh();
@@ -75,8 +73,8 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testBasic_2() throws Exception {
-    NativePooledByteBufferOutputStream os2 = new NativePooledByteBufferOutputStream(mPool, 8);
-    NativePooledByteBuffer sb2 = doWrite(os2, mData);
+    MemoryPooledByteBufferOutputStream os2 = new MemoryPooledByteBufferOutputStream(mPool, 8);
+    MemoryPooledByteBuffer sb2 = doWrite(os2, mData);
     Assert.assertEquals(16, sb2.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb2), mData.length);
     mStats.refresh();
@@ -91,8 +89,8 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testBasic_3() throws Exception {
-    NativePooledByteBufferOutputStream os3 = new NativePooledByteBufferOutputStream(mPool, 16);
-    NativePooledByteBuffer sb3 = doWrite(os3, mData);
+    MemoryPooledByteBufferOutputStream os3 = new MemoryPooledByteBufferOutputStream(mPool, 16);
+    MemoryPooledByteBuffer sb3 = doWrite(os3, mData);
     Assert.assertEquals(16, sb3.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb3), mData.length);
     mStats.refresh();
@@ -107,8 +105,8 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testBasic_4() throws Exception {
-    NativePooledByteBufferOutputStream os4 = new NativePooledByteBufferOutputStream(mPool, 32);
-    NativePooledByteBuffer sb4 = doWrite(os4, mData);
+    MemoryPooledByteBufferOutputStream os4 = new MemoryPooledByteBufferOutputStream(mPool, 32);
+    MemoryPooledByteBuffer sb4 = doWrite(os4, mData);
     Assert.assertEquals(32, sb4.mBufRef.get().getSize());
     assertArrayEquals(mData, getBytes(sb4), mData.length);
     mStats.refresh();
@@ -123,7 +121,7 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testClose() throws Exception {
-    NativePooledByteBufferOutputStream os = new NativePooledByteBufferOutputStream(mPool);
+    MemoryPooledByteBufferOutputStream os = new MemoryPooledByteBufferOutputStream(mPool);
     os.close();
     mStats.refresh();
     Assert.assertEquals(
@@ -137,7 +135,7 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testToByteBufException() throws Exception {
-    NativePooledByteBufferOutputStream os1 = new NativePooledByteBufferOutputStream(mPool);
+    MemoryPooledByteBufferOutputStream os1 = new MemoryPooledByteBufferOutputStream(mPool);
     os1.close();
     try {
       os1.toByteBuffer();
@@ -149,9 +147,9 @@ public class NativePooledByteBufferOutputStreamTest extends TestUsingNativeMemor
 
   @Test
   public void testWriteAfterToByteBuf() throws Exception {
-    NativePooledByteBufferOutputStream os1 = new NativePooledByteBufferOutputStream(mPool);
-    NativePooledByteBuffer buf1 = doWrite(os1, Arrays.copyOf(mData, 9));
-    NativePooledByteBuffer buf2 = doWrite(os1, Arrays.copyOf(mData, 3));
+    MemoryPooledByteBufferOutputStream os1 = new MemoryPooledByteBufferOutputStream(mPool);
+    MemoryPooledByteBuffer buf1 = doWrite(os1, Arrays.copyOf(mData, 9));
+    MemoryPooledByteBuffer buf2 = doWrite(os1, Arrays.copyOf(mData, 3));
     Assert.assertEquals(12, buf2.size());
 
     final CloseableReference<MemoryChunk> chunk = buf1.mBufRef;
