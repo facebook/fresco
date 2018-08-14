@@ -29,6 +29,11 @@ import java.lang.annotation.RetentionPolicy;
 public class DefaultZoomableController
     implements ZoomableController, TransformGestureDetector.Listener {
 
+  /** Interface for handling call backs when the image bounds are set. */
+  public interface ImageBoundsListener {
+    void onImageBoundsSet(RectF imageBounds);
+  }
+
   @IntDef(flag=true, value={
       LIMIT_NONE,
       LIMIT_TRANSLATION_X,
@@ -52,6 +57,8 @@ public class DefaultZoomableController
   private static final RectF IDENTITY_RECT = new RectF(0, 0, 1, 1);
 
   private TransformGestureDetector mGestureDetector;
+
+  private @Nullable ImageBoundsListener mImageBoundsListener;
 
   private @Nullable Listener mListener = null;
 
@@ -195,6 +202,9 @@ public class DefaultZoomableController
     if (!imageBounds.equals(mImageBounds)) {
       mImageBounds.set(imageBounds);
       onTransformChanged();
+      if (mImageBoundsListener != null) {
+        mImageBoundsListener.onImageBoundsSet(mImageBounds);
+      }
     }
   }
 
@@ -217,6 +227,16 @@ public class DefaultZoomableController
   /** Gets the view bounds. */
   public RectF getViewBounds() {
     return mViewBounds;
+  }
+
+  /** Sets the image bounds listener. */
+  public void setImageBoundsListener(@Nullable ImageBoundsListener imageBoundsListener) {
+    mImageBoundsListener = imageBoundsListener;
+  }
+
+  /** Gets the image bounds listener. */
+  public @Nullable ImageBoundsListener getImageBoundsListener() {
+    return mImageBoundsListener;
   }
 
   /**
