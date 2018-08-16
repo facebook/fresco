@@ -319,4 +319,9 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
           });
     }
   }
+
+  @Override
+  public boolean isReadyToPlay() {
+    return false;
+  }
 }

@@ -139,5 +139,10 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
         RetainingDataSource.this.onDatasourceProgress(dataSource);
       }
     }
+
+    @Override
+    public boolean isReadyToPlay() {
+      return true;
+    }
   }
 }

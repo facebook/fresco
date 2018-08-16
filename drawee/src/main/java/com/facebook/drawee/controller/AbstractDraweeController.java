@@ -7,11 +7,10 @@
 
 package com.facebook.drawee.controller;
 
-import static com.facebook.drawee.components.DraweeEventTracker.Event;
-
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
+
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
@@ -27,9 +26,13 @@ import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.ReturnsOwnership;
+
 import java.util.concurrent.Executor;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+
+import static com.facebook.drawee.components.DraweeEventTracker.Event;
 
 /**
  * Abstract Drawee controller that implements common functionality
@@ -443,7 +446,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
       mEventTracker.recordEvent(Event.ON_SUBMIT_CACHE_HIT);
       getControllerListener().onSubmit(mId, mCallerContext);
       onImageLoadedFromCacheImmediately(mId, closeableImage);
-      onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true);
+      onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true, true);
       FrescoSystrace.endSection();
       return;
     }
@@ -470,10 +473,11 @@ public abstract class AbstractDraweeController<T, INFO> implements
             // isFinished must be obtained before image, otherwise we might set intermediate result
             // as final image.
             boolean isFinished = dataSource.isFinished();
+            boolean isReadyToPlay = dataSource.isReadyToPlay();
             float progress = dataSource.getProgress();
             T image = dataSource.getResult();
             if (image != null) {
-              onNewResultInternal(id, dataSource, image, progress, isFinished, wasImmediate);
+              onNewResultInternal(id, dataSource, image, progress, isFinished, wasImmediate, isReadyToPlay);
             } else if (isFinished) {
               onFailureInternal(id, dataSource, new NullPointerException(), /* isFinished */ true);
             }
@@ -499,7 +503,8 @@ public abstract class AbstractDraweeController<T, INFO> implements
       @Nullable T image,
       float progress,
       boolean isFinished,
-      boolean wasImmediate) {
+      boolean wasImmediate,
+      boolean isReadyToPlay) {
     try {
       FrescoSystrace.beginSection("AbstractDraweeController#onNewResultInternal");
       // ignore late callbacks (data source that returned the new result is not the one we expected)
@@ -532,7 +537,10 @@ public abstract class AbstractDraweeController<T, INFO> implements
           mDataSource = null;
           mSettableDraweeHierarchy.setImage(drawable, 1f, wasImmediate);
           getControllerListener().onFinalImageSet(id, getImageInfo(image), getAnimatable());
-          // IMPORTANT: do not execute any instance-specific code after this point
+        } else if (isReadyToPlay) {
+          logMessageAndImage("set_temporary_result @ onNewResult", image);
+          mSettableDraweeHierarchy.setImage(drawable, 1f, wasImmediate);
+          getControllerListener().onFinalImageSet(id, getImageInfo(image), getAnimatable());
         } else {
           logMessageAndImage("set_intermediate_result @ onNewResult", image);
           mSettableDraweeHierarchy.setImage(drawable, progress, wasImmediate);
