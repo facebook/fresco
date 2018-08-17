@@ -40,7 +40,7 @@ public class PoolFactory {
 
   public BitmapPool getBitmapPool() {
     if (mBitmapPool == null) {
-      mBitmapPool = new BitmapPool(
+      mBitmapPool = new BucketsBitmapPool(
           mConfig.getMemoryTrimmableRegistry(),
           mConfig.getBitmapPoolParams(),
           mConfig.getBitmapPoolStatsTracker());

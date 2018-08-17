@@ -43,7 +43,7 @@ public class BitmapPoolTest {
   }
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)
-  public BitmapPool mPool;
+  public BucketsBitmapPool mPool;
 
   @Before
   public void setup() {
