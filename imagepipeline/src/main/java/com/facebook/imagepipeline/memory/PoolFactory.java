@@ -40,10 +40,18 @@ public class PoolFactory {
 
   public BitmapPool getBitmapPool() {
     if (mBitmapPool == null) {
-      mBitmapPool = new BucketsBitmapPool(
-          mConfig.getMemoryTrimmableRegistry(),
-          mConfig.getBitmapPoolParams(),
-          mConfig.getBitmapPoolStatsTracker());
+      final String bitmapPoolType = mConfig.getBitmapPoolType();
+      switch (bitmapPoolType) {
+        case "dummy":
+          mBitmapPool = new DummyBitmapPool();
+        case "legacy":
+          // fall through
+        default:
+          mBitmapPool = new BucketsBitmapPool(
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getBitmapPoolParams(),
+              mConfig.getBitmapPoolStatsTracker());
+      }
     }
     return mBitmapPool;
   }
