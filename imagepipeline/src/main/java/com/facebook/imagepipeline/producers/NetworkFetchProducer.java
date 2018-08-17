@@ -156,7 +156,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         fetchState.getConsumer());
   }
 
-  private void notifyConsumer(
+  protected static void notifyConsumer(
       PooledByteBufferOutputStream pooledOutputStream,
       @Consumer.Status int status,
       @Nullable BytesRange responseBytesRange,
