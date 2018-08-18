@@ -52,19 +52,23 @@ public class ImagePerfControllerListenerTest {
     final long startTime = 10L;
     final long imageLoadTime = 200L;
     final long imageReleaseTime = 345L;
+    int expectedNumOfTimestamps = 0;
 
     when(mMonotonicClock.now()).thenReturn(startTime);
     mListener.onSubmit(CONTROLLER_ID, CALLER_CONTEXT);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.REQUESTED);
 
     when(mMonotonicClock.now()).thenReturn(imageLoadTime);
     mListener.onFinalImageSet(CONTROLLER_ID, null, null);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.SUCCESS);
 
     when(mMonotonicClock.now()).thenReturn(imageReleaseTime);
     mListener.onRelease(CONTROLLER_ID);
+    expectedNumOfTimestamps++;
 
-    verify(mMonotonicClock, times(2)).now();
+    verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.SUCCESS));
     verify(mImagePerfMonitor)
@@ -82,19 +86,23 @@ public class ImagePerfControllerListenerTest {
     final long startTime = 10L;
     final long imageLoadTime = 200L;
     final long imageReleaseTime = 345L;
+    int expectedNumOfTimestamps = 0;
 
     when(mMonotonicClock.now()).thenReturn(startTime);
     mListener.onSubmit(CONTROLLER_ID, CALLER_CONTEXT);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.REQUESTED);
 
     when(mMonotonicClock.now()).thenReturn(imageLoadTime);
     mListener.onFailure(CONTROLLER_ID, new Throwable("Error"));
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.ERROR);
 
     when(mMonotonicClock.now()).thenReturn(imageReleaseTime);
     mListener.onRelease(CONTROLLER_ID);
+    expectedNumOfTimestamps++;
 
-    verify(mMonotonicClock, times(2)).now();
+    verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.ERROR));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
@@ -105,15 +113,18 @@ public class ImagePerfControllerListenerTest {
   public void testCancellation() {
     final long startTime = 10L;
     final long imageReleaseTime = 123L;
+    int expectedNumOfTimestamps = 0;
 
     when(mMonotonicClock.now()).thenReturn(startTime);
     mListener.onSubmit(CONTROLLER_ID, CALLER_CONTEXT);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.REQUESTED);
 
     when(mMonotonicClock.now()).thenReturn(imageReleaseTime);
     mListener.onRelease(CONTROLLER_ID);
+    expectedNumOfTimestamps++;
 
-    verify(mMonotonicClock, times(2)).now();
+    verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.CANCELED));
     verify(mImagePerfState).setControllerSubmitTimeMs(startTime);
@@ -126,23 +137,28 @@ public class ImagePerfControllerListenerTest {
     final long intermediateImageTime = 123L;
     final long imageLoadTime = 200L;
     final long imageReleaseTime = 345L;
+    int expectedNumOfTimestamps = 0;
 
     when(mMonotonicClock.now()).thenReturn(startTime);
     mListener.onSubmit(CONTROLLER_ID, CALLER_CONTEXT);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.REQUESTED);
 
     when(mMonotonicClock.now()).thenReturn(intermediateImageTime);
     mListener.onIntermediateImageSet(CONTROLLER_ID, null);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.INTERMEDIATE_AVAILABLE);
 
     when(mMonotonicClock.now()).thenReturn(imageLoadTime);
     mListener.onFinalImageSet(CONTROLLER_ID, null, null);
+    expectedNumOfTimestamps++;
     when(mImagePerfState.getImageLoadStatus()).thenReturn(ImageLoadStatus.SUCCESS);
 
     when(mMonotonicClock.now()).thenReturn(imageReleaseTime);
     mListener.onRelease(CONTROLLER_ID);
+    expectedNumOfTimestamps++;
 
-    verify(mMonotonicClock, times(3)).now();
+    verify(mMonotonicClock, times(expectedNumOfTimestamps)).now();
     verify(mImagePerfMonitor).notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.REQUESTED));
     verify(mImagePerfMonitor)
         .notifyStatusUpdated(eq(mImagePerfState), eq(ImageLoadStatus.INTERMEDIATE_AVAILABLE));
