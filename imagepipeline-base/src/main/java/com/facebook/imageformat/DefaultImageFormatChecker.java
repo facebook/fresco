@@ -32,6 +32,7 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
           PNG_HEADER_LENGTH,
           GIF_HEADER_LENGTH,
           BMP_HEADER_LENGTH,
+          ICO_HEADER_LENGTH,
           HEIF_HEADER_LENGTH);
 
   @Override
@@ -70,6 +71,10 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
 
     if (isBmpHeader(headerBytes, headerSize)) {
       return DefaultImageFormats.BMP;
+    }
+
+    if (isIcoHeader(headerBytes, headerSize)) {
+      return DefaultImageFormats.ICO;
     }
 
     if (isHeifHeader(headerBytes, headerSize)) {
@@ -209,6 +214,27 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
       return false;
     }
     return ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, BMP_HEADER);
+  }
+
+  /**
+   * Every ico image starts with 0x00000100 bytes
+   */
+  private static final byte[] ICO_HEADER = new byte[]{(byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00};
+  private static final int ICO_HEADER_LENGTH = ICO_HEADER.length;
+
+  /**
+   * Checks if first headerSize bytes of imageHeaderBytes constitute a valid header for a ico image.
+   * Details on ICO header can be found <a href="https://en.wikipedia.org/wiki/ICO_(file_format)">
+   * </a>
+   * @param imageHeaderBytes
+   * @param headerSize
+   * @return true if imageHeaderBytes is a valid header for a ico image
+   */
+  private static boolean isIcoHeader(final byte[] imageHeaderBytes, final int headerSize) {
+    if (headerSize < ICO_HEADER.length) {
+      return false;
+    }
+    return ImageFormatCheckerUtils.startsWithPattern(imageHeaderBytes, ICO_HEADER);
   }
 
   /**

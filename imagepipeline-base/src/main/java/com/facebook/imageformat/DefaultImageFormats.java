@@ -19,6 +19,7 @@ public final class DefaultImageFormats {
   public static final ImageFormat PNG = new ImageFormat("PNG", "png");
   public static final ImageFormat GIF = new ImageFormat("GIF", "gif");
   public static final ImageFormat BMP = new ImageFormat("BMP", "bmp");
+  public static final ImageFormat ICO = new ImageFormat("ICO", "ico");
   public static final ImageFormat WEBP_SIMPLE = new ImageFormat("WEBP_SIMPLE", "webp");
   public static final ImageFormat WEBP_LOSSLESS = new ImageFormat("WEBP_LOSSLESS", "webp");
   public static final ImageFormat WEBP_EXTENDED = new ImageFormat("WEBP_EXTENDED", "webp");
@@ -66,6 +67,7 @@ public final class DefaultImageFormats {
       mDefaultFormats.add(PNG);
       mDefaultFormats.add(GIF);
       mDefaultFormats.add(BMP);
+      mDefaultFormats.add(ICO);
       mDefaultFormats.add(WEBP_SIMPLE);
       mDefaultFormats.add(WEBP_LOSSLESS);
       mDefaultFormats.add(WEBP_EXTENDED);
