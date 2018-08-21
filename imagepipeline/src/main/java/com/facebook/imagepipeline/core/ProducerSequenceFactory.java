@@ -48,6 +48,7 @@ import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,10 +61,9 @@ public class ProducerSequenceFactory {
   private final boolean mWebpSupportEnabled;
   private final boolean mPartialImageCachingEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
-  private final boolean mUseDownsamplingRatio;
   private final boolean mUseBitmapPrepareToDraw;
   private final boolean mDiskCacheEnabled;
-  private final int mMaxBitmapSize;
+  private final ImageTranscoderFactory mImageTranscoderFactory;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -101,11 +101,10 @@ public class ProducerSequenceFactory {
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
-      boolean useDownsamplingRatio,
       boolean useBitmapPrepareToDraw,
       boolean partialImageCachingEnabled,
       boolean diskCacheEnabled,
-      int maxBitmapSize) {
+      ImageTranscoderFactory imageTranscoderFactory) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
@@ -115,11 +114,10 @@ public class ProducerSequenceFactory {
     mCloseableImagePrefetchSequences = new HashMap<>();
     mBitmapPrepareSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
-    mUseDownsamplingRatio = useDownsamplingRatio;
     mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
     mPartialImageCachingEnabled = partialImageCachingEnabled;
     mDiskCacheEnabled = diskCacheEnabled;
-    mMaxBitmapSize = maxBitmapSize;
+    mImageTranscoderFactory = imageTranscoderFactory;
   }
 
   /**
@@ -337,8 +335,7 @@ public class ProducerSequenceFactory {
           mProducerFactory.newResizeAndRotateProducer(
               mCommonNetworkFetchToEncodedMemorySequence,
               mResizeAndRotateEnabledForNetwork,
-              mUseDownsamplingRatio,
-              mMaxBitmapSize);
+              mImageTranscoderFactory);
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
   }
@@ -507,8 +504,7 @@ public class ProducerSequenceFactory {
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
       inputProducer =
-          mProducerFactory.newResizeAndRotateProducer(
-              inputProducer, true, mUseDownsamplingRatio, mMaxBitmapSize);
+          mProducerFactory.newResizeAndRotateProducer(inputProducer, true, mImageTranscoderFactory);
       mDataFetchSequence = newBitmapCacheGetToDecodeSequence(inputProducer);
     }
     return mDataFetchSequence;
@@ -618,7 +614,7 @@ public class ProducerSequenceFactory {
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
     localImageProducer =
         mProducerFactory.newResizeAndRotateProducer(
-            localImageProducer, true, mUseDownsamplingRatio, mMaxBitmapSize);
+            localImageProducer, true, mImageTranscoderFactory);
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(localImageProducer);
@@ -633,7 +629,7 @@ public class ProducerSequenceFactory {
         mProducerFactory.newThumbnailBranchProducer(thumbnailProducers);
 
     return mProducerFactory.newResizeAndRotateProducer(
-        thumbnailBranchProducer, true, mUseDownsamplingRatio, mMaxBitmapSize);
+        thumbnailBranchProducer, true, mImageTranscoderFactory);
   }
 
   /**

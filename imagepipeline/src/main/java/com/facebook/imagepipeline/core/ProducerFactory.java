@@ -59,6 +59,7 @@ import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 
 public class ProducerFactory {
 
@@ -319,15 +320,13 @@ public class ProducerFactory {
   public ResizeAndRotateProducer newResizeAndRotateProducer(
       Producer<EncodedImage> inputProducer,
       boolean resizingEnabledIfNotDownsampling,
-      boolean useDownsamplingRatio,
-      int maxBitmapSize) {
+      ImageTranscoderFactory imageTranscoderFactory) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
         resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
         inputProducer,
-        useDownsamplingRatio,
-        maxBitmapSize);
+        imageTranscoderFactory);
   }
 
   public static <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {

@@ -37,6 +37,7 @@ import javax.annotation.Nullable;
 @DoNotStrip
 public class NativeJpegTranscoder implements ImageTranscoder {
   public static final String TAG = "NativeJpegTranscoder";
+
   private boolean mResizingEnabled;
   private int mMaxBitmapSize;
   private boolean mUseDownsamplingRatio;

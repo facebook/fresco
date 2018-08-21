@@ -23,10 +23,10 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.transcoder.ImageTranscodeResult;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.imagepipeline.transcoder.TranscodeStatus;
 import java.util.HashMap;
@@ -56,29 +56,27 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private final PooledByteBufferFactory mPooledByteBufferFactory;
   private final boolean mResizingEnabled;
   private final Producer<EncodedImage> mInputProducer;
-  private final boolean mUseDownsamplingRatio;
-  private final int mMaxBitmapSize;
+  private final ImageTranscoderFactory mImageTranscoderFactory;
 
   public ResizeAndRotateProducer(
       final Executor executor,
       final PooledByteBufferFactory pooledByteBufferFactory,
       final boolean resizingEnabled,
       final Producer<EncodedImage> inputProducer,
-      final boolean useDownsamplingRatio,
-      final int maxBitmapSize) {
+      final ImageTranscoderFactory imageTranscoderFactory) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mResizingEnabled = resizingEnabled;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
-    mUseDownsamplingRatio = useDownsamplingRatio;
-    mMaxBitmapSize = maxBitmapSize;
+    mImageTranscoderFactory = Preconditions.checkNotNull(imageTranscoderFactory);
   }
 
   @Override
   public void produceResults(
       final Consumer<EncodedImage> consumer,
       final ProducerContext context) {
-    mInputProducer.produceResults(new TransformingConsumer(consumer, context), context);
+    mInputProducer.produceResults(
+        new TransformingConsumer(consumer, context, mImageTranscoderFactory), context);
   }
 
   private class TransformingConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
@@ -91,12 +89,12 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
     public TransformingConsumer(
         final Consumer<EncodedImage> consumer,
-        final ProducerContext producerContext) {
+        final ProducerContext producerContext,
+        final ImageTranscoderFactory imageTranscoderFactory) {
       super(consumer);
       mIsCancelled = false;
       mProducerContext = producerContext;
-      mImageTranscoder =
-          new NativeJpegTranscoder(mResizingEnabled, mMaxBitmapSize, mUseDownsamplingRatio);
+      mImageTranscoder = imageTranscoderFactory.createImageTranscoder();
 
       JobScheduler.JobRunnable job = new JobScheduler.JobRunnable() {
         @Override

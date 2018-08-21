@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +53,6 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class ProducerSequenceFactoryTest {
 
-  private static final int MAX_BITMAP_SIZE = 2024;
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
   private final String mDummyMime = "dummy_mime";
@@ -68,6 +68,7 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.mockStatic(UriUtil.class, MediaUtils.class);
 
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
 
     mProducerSequenceFactory =
         new ProducerSequenceFactory(
@@ -79,9 +80,8 @@ public class ProducerSequenceFactoryTest {
             null,
             false,
             false,
-            false,
             true,
-            MAX_BITMAP_SIZE);
+            imageTranscoderFactory);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -326,6 +326,8 @@ public class ProducerSequenceFactoryTest {
 
   private void internalUseSequenceFactoryWithBitmapPrepare() {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
+
     mProducerSequenceFactory =
         new ProducerSequenceFactory(
             RuntimeEnvironment.application.getContentResolver(),
@@ -334,10 +336,9 @@ public class ProducerSequenceFactoryTest {
             true,
             false,
             null,
-            false,
             /* useBitmapPrepareToDraw */ true,
             false,
             true,
-            MAX_BITMAP_SIZE);
+            imageTranscoderFactory);
   }
 }

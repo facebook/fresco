@@ -37,8 +37,10 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
+import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -75,6 +77,7 @@ public class ImagePipelineConfig {
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
   @Nullable private final ImageDecoder mImageDecoder;
+  private final ImageTranscoderFactory mImageTranscoderFactory;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
@@ -128,6 +131,13 @@ public class ImagePipelineConfig {
             NoOpImageCacheStatsTracker.getInstance() :
             builder.mImageCacheStatsTracker;
     mImageDecoder = builder.mImageDecoder;
+    mImageTranscoderFactory =
+        builder.mImageTranscoderFactory == null
+            ? new NativeJpegTranscoderFactory(
+                builder.mResizeAndRotateEnabledForNetwork && !builder.mDownsampleEnabled,
+                mImagePipelineExperiments.getMaxBitmapSize(),
+                mImagePipelineExperiments.getUseDownsamplingRatioForResizing())
+            : builder.mImageTranscoderFactory;
     mIsPrefetchEnabledSupplier =
         builder.mIsPrefetchEnabledSupplier == null ?
             new Supplier<Boolean>() {
@@ -274,6 +284,10 @@ public class ImagePipelineConfig {
     return mImageDecoder;
   }
 
+  public ImageTranscoderFactory getImageTranscoderFactory() {
+    return mImageTranscoderFactory;
+  }
+
   public Supplier<Boolean> getIsPrefetchEnabledSupplier() {
     return mIsPrefetchEnabledSupplier;
   }
@@ -364,6 +378,7 @@ public class ImagePipelineConfig {
     private ExecutorSupplier mExecutorSupplier;
     private ImageCacheStatsTracker mImageCacheStatsTracker;
     private ImageDecoder mImageDecoder;
+    private ImageTranscoderFactory mImageTranscoderFactory;
     private Supplier<Boolean> mIsPrefetchEnabledSupplier;
     private DiskCacheConfig mMainDiskCacheConfig;
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
@@ -457,6 +472,11 @@ public class ImagePipelineConfig {
 
     public Builder setImageDecoder(ImageDecoder imageDecoder) {
       mImageDecoder = imageDecoder;
+      return this;
+    }
+
+    public Builder setImageTranscoderFactory(ImageTranscoderFactory imageTranscoderFactory) {
+      mImageTranscoderFactory = imageTranscoderFactory;
       return this;
     }
 

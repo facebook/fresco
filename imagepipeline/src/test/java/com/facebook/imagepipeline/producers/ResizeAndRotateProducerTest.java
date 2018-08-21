@@ -36,6 +36,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
+import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -68,7 +69,8 @@ import org.robolectric.annotation.Config;
 @PrepareOnlyThisForTest({
   NativeJpegTranscoder.class,
   SystemClock.class,
-  UiThreadImmediateExecutorService.class
+  UiThreadImmediateExecutorService.class,
+  JpegTranscoderUtils.class
 })
 public class ResizeAndRotateProducerTest {
   static {
@@ -687,14 +689,15 @@ public class ResizeAndRotateProducerTest {
   }
 
   private void whenResizingEnabledIs(boolean resizingEnabled) {
+    NativeJpegTranscoderFactory jpegTranscoderFactory =
+        new NativeJpegTranscoderFactory(resizingEnabled, MAX_BITMAP_SIZE, false);
     mResizeAndRotateProducer =
         new ResizeAndRotateProducer(
             mTestExecutorService,
             mPooledByteBufferFactory,
             resizingEnabled,
             mInputProducer,
-            false,
-            MAX_BITMAP_SIZE);
+            jpegTranscoderFactory);
 
     mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
   }
