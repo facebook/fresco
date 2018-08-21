@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static com.facebook.imagepipeline.producers.ResizeAndRotateProducer.calculateDownsampleNumerator;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
@@ -68,8 +68,7 @@ import org.robolectric.annotation.Config;
 @PrepareOnlyThisForTest({
   NativeJpegTranscoder.class,
   SystemClock.class,
-  UiThreadImmediateExecutorService.class,
-  JpegTranscoderUtils.class
+  UiThreadImmediateExecutorService.class
 })
 public class ResizeAndRotateProducerTest {
   static {
@@ -138,13 +137,12 @@ public class ResizeAndRotateProducerTest {
                     (TimeUnit) invocation.getArguments()[2]);
               }
             });
+
+    PowerMockito.mockStatic(NativeJpegTranscoder.class);
     PowerMockito.mockStatic(UiThreadImmediateExecutorService.class);
     when(UiThreadImmediateExecutorService.getInstance()).thenReturn(
         mUiThreadImmediateExecutorService);
 
-    PowerMockito.mockStatic(NativeJpegTranscoder.class);
-    PowerMockito.mockStatic(JpegTranscoderUtils.class);
-    PowerMockito.when(JpegTranscoderUtils.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
@@ -535,45 +533,38 @@ public class ResizeAndRotateProducerTest {
 
   @Test
   public void testRoundNumerator() {
-    assertEquals(1, ResizeAndRotateProducer.roundNumerator(
-        1.0f/8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(1, ResizeAndRotateProducer.roundNumerator(
-        5.0f/32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(1, ResizeAndRotateProducer.roundNumerator(
-        1.0f/6 - 0.01f, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(2, ResizeAndRotateProducer.roundNumerator(
-        1.0f/6, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(2, ResizeAndRotateProducer.roundNumerator(
-        3.0f/16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
-    assertEquals(2, ResizeAndRotateProducer.roundNumerator(
-        2.0f/8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(
+        1, JpegTranscoderUtils.roundNumerator(1.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(
+        1, JpegTranscoderUtils.roundNumerator(5.0f / 32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(
+        1,
+        JpegTranscoderUtils.roundNumerator(
+            1.0f / 6 - 0.01f, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(
+        2, JpegTranscoderUtils.roundNumerator(1.0f / 6, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(
+        2, JpegTranscoderUtils.roundNumerator(3.0f / 16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
+    assertEquals(
+        2, JpegTranscoderUtils.roundNumerator(2.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION));
   }
 
   @Test
   public void testDownsamplingRatioUsage() {
-    assertEquals(8, calculateDownsampleNumerator(1));
-    assertEquals(4, calculateDownsampleNumerator(2));
-    assertEquals(2, calculateDownsampleNumerator(4));
-    assertEquals(1, calculateDownsampleNumerator(8));
-    assertEquals(1, calculateDownsampleNumerator(16));
-    assertEquals(1, calculateDownsampleNumerator(32));
+    assertEquals(8, JpegTranscoderUtils.calculateDownsampleNumerator(1));
+    assertEquals(4, JpegTranscoderUtils.calculateDownsampleNumerator(2));
+    assertEquals(2, JpegTranscoderUtils.calculateDownsampleNumerator(4));
+    assertEquals(1, JpegTranscoderUtils.calculateDownsampleNumerator(8));
+    assertEquals(1, JpegTranscoderUtils.calculateDownsampleNumerator(16));
+    assertEquals(1, JpegTranscoderUtils.calculateDownsampleNumerator(32));
   }
 
   @Test
   public void testResizeRatio() {
     ResizeOptions resizeOptions = new ResizeOptions(512, 512);
-    assertEquals(
-        0.5f,
-        ResizeAndRotateProducer.determineResizeRatio(resizeOptions, 1024, 1024),
-        0.01);
-    assertEquals(
-        0.25f,
-        ResizeAndRotateProducer.determineResizeRatio(resizeOptions, 2048, 4096),
-        0.01);
-    assertEquals(
-        0.5f,
-        ResizeAndRotateProducer.determineResizeRatio(resizeOptions, 4096, 512),
-        0.01);
+    assertEquals(0.5f, JpegTranscoderUtils.determineResizeRatio(resizeOptions, 1024, 1024), 0.01);
+    assertEquals(0.25f, JpegTranscoderUtils.determineResizeRatio(resizeOptions, 2048, 4096), 0.01);
+    assertEquals(0.5f, JpegTranscoderUtils.determineResizeRatio(resizeOptions, 4096, 512), 0.01);
   }
 
   private void verifyIntermediateResultPassedThroughUnchanged() {
@@ -605,7 +596,7 @@ public class ResizeAndRotateProducerTest {
           any(OutputStream.class),
           eq(rotationAngle),
           eq(numerator),
-          eq(ResizeAndRotateProducer.DEFAULT_JPEG_QUALITY));
+          eq(DEFAULT_JPEG_QUALITY));
     } catch (IOException ioe) {
       throw new RuntimeException(ioe);
     }
@@ -620,7 +611,7 @@ public class ResizeAndRotateProducerTest {
           any(OutputStream.class),
           eq(exifOrientation),
           eq(numerator),
-          eq(ResizeAndRotateProducer.DEFAULT_JPEG_QUALITY));
+          eq(DEFAULT_JPEG_QUALITY));
     } catch (IOException ioe) {
       throw new RuntimeException(ioe);
     }

@@ -151,7 +151,11 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
                   if (mDownsampleEnabledForNetwork
                       || !UriUtil.isNetworkUri(request.getSourceUri())) {
                     encodedImage.setSampleSize(
-                        DownsampleUtil.determineSampleSize(request, encodedImage, maxBitmapSize));
+                        DownsampleUtil.determineSampleSize(
+                            request.getRotationOptions(),
+                            request.getResizeOptions(),
+                            encodedImage,
+                            maxBitmapSize));
                   }
                 }
                 doDecode(encodedImage, status);

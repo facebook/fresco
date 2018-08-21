@@ -4,14 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package com.facebook.imagepipeline.producers;
 
-import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.SCALE_DENOMINATOR;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS;
 
 import android.media.ExifInterface;
-import com.facebook.common.internal.Closeables;
-import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -27,8 +25,10 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.transcoder.ImageTranscodeResult;
+import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
-import java.io.InputStream;
+import com.facebook.imagepipeline.transcoder.TranscodeStatus;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -44,28 +44,13 @@ import javax.annotation.Nullable;
  * constructor.
  */
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
-  public static final String PRODUCER_NAME = "ResizeAndRotateProducer";
+  private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
   private static final String ORIGINAL_SIZE_KEY = "Original size";
   private static final String REQUESTED_SIZE_KEY = "Requested size";
-  private static final String DOWNSAMPLE_ENUMERATOR_KEY = "downsampleEnumerator";
-  private static final String SOFTWARE_ENUMERATOR_KEY = "softwareEnumerator";
-  private static final String ROTATION_ANGLE_KEY = "rotationAngle";
-  private static final String FRACTION_KEY = "Fraction";
-  private static final int FULL_ROUND = 360;
+  private static final String TRANSCODING_RESULT = "Transcoding result";
+  private static final String TRANSCODER_ID = "Transcoder id";
 
-  @VisibleForTesting static final int DEFAULT_JPEG_QUALITY = 85;
   @VisibleForTesting static final int MIN_TRANSFORM_INTERVAL_MS = 100;
-
-  /*
-   * Inverted EXIF orientations in clockwise rotation order. Rotating 90 degrees clockwise gets you
-   * the next item in the list
-   */
-  private static final ImmutableList<Integer> INVERTED_EXIF_ORIENTATIONS =
-      ImmutableList.of(
-          ExifInterface.ORIENTATION_FLIP_HORIZONTAL,
-          ExifInterface.ORIENTATION_TRANSVERSE,
-          ExifInterface.ORIENTATION_FLIP_VERTICAL,
-          ExifInterface.ORIENTATION_TRANSPOSE);
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
@@ -75,12 +60,12 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private final int mMaxBitmapSize;
 
   public ResizeAndRotateProducer(
-      Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory,
-      boolean resizingEnabled,
-      Producer<EncodedImage> inputProducer,
-      boolean useDownsamplingRatio,
-      int maxBitmapSize) {
+      final Executor executor,
+      final PooledByteBufferFactory pooledByteBufferFactory,
+      final boolean resizingEnabled,
+      final Producer<EncodedImage> inputProducer,
+      final boolean useDownsamplingRatio,
+      final int maxBitmapSize) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mResizingEnabled = resizingEnabled;
@@ -98,6 +83,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private class TransformingConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
+    private final ImageTranscoder mImageTranscoder;
     private final ProducerContext mProducerContext;
     private boolean mIsCancelled;
 
@@ -109,6 +95,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       super(consumer);
       mIsCancelled = false;
       mProducerContext = producerContext;
+      mImageTranscoder =
+          new NativeJpegTranscoder(mResizingEnabled, mMaxBitmapSize, mUseDownsamplingRatio);
 
       JobScheduler.JobRunnable job = new JobScheduler.JobRunnable() {
         @Override
@@ -126,6 +114,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
                 mJobScheduler.scheduleJob();
               }
             }
+
             @Override
             public void onCancellationRequested() {
               mJobScheduler.clearJob();
@@ -149,7 +138,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         return;
       }
       TriState shouldTransform =
-          shouldTransform(mProducerContext.getImageRequest(), newResult, mResizingEnabled);
+          shouldTransform(
+              mProducerContext.getImageRequest(), newResult, mResizingEnabled, mImageTranscoder);
       // ignore the intermediate result if we don't know what to do with it
       if (!isLast && shouldTransform == TriState.UNSET) {
         return;
@@ -185,49 +175,22 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       ImageRequest imageRequest = mProducerContext.getImageRequest();
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
       Map<String, String> extraMap = null;
-      EncodedImage ret = null;
-      InputStream is = null;
+      EncodedImage ret;
       try {
-        final int softwareNumerator = getSoftwareNumerator(
-            imageRequest,
-            encodedImage,
-            mResizingEnabled);
-        final int downsampleRatio =
-            DownsampleUtil.determineSampleSize(imageRequest, encodedImage, mMaxBitmapSize);
-        final int downsampleNumerator = calculateDownsampleNumerator(downsampleRatio);
-        final int numerator;
-        if (mUseDownsamplingRatio) {
-          numerator = downsampleNumerator;
-        } else {
-          numerator = softwareNumerator;
-        }
-        is = encodedImage.getInputStream();
-        if (INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation())) {
-          // Use exif orientation to rotate since we can't use the rotation angle for
-          // inverted exif orientations
-          final int exifOrientation =
-              getForceRotatedInvertedExifOrientation(
-                  imageRequest.getRotationOptions(), encodedImage);
-          extraMap =
-              getExtraMap(
-                  encodedImage, imageRequest, numerator, downsampleNumerator, softwareNumerator, 0);
-          NativeJpegTranscoder.transcodeJpegWithExifOrientation(
-              is, outputStream, exifOrientation, numerator, DEFAULT_JPEG_QUALITY);
-        } else {
-          // Use actual rotation angle in degrees to rotate
-          final int rotationAngle =
-              getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
-          extraMap =
-              getExtraMap(
-                  encodedImage,
-                  imageRequest,
-                  numerator,
-                  downsampleNumerator,
-                  softwareNumerator,
-                  rotationAngle);
-          NativeJpegTranscoder.transcodeJpeg(
-              is, outputStream, rotationAngle, numerator, DEFAULT_JPEG_QUALITY);
-        }
+        ImageTranscodeResult result =
+            mImageTranscoder.transcode(
+                encodedImage,
+                outputStream,
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                null,
+                DEFAULT_JPEG_QUALITY);
+        extraMap =
+            getExtraMap(
+                encodedImage,
+                imageRequest.getResizeOptions(),
+                result,
+                mImageTranscoder.getIdentifier());
         CloseableReference<PooledByteBuffer> ref =
             CloseableReference.of(outputStream.toByteBuffer());
         try {
@@ -237,7 +200,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             ret.parseMetaData();
             mProducerContext.getListener().
                 onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
-            if (downsampleRatio != DownsampleUtil.DEFAULT_SAMPLE_SIZE) {
+            if (result.getTranscodeStatus() != TranscodeStatus.TRANSCODING_NO_RESIZING) {
               status |= Consumer.IS_RESIZING_DONE;
             }
             getConsumer().onNewResult(ret, status);
@@ -255,40 +218,33 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
         return;
       } finally {
-        Closeables.closeQuietly(is);
         outputStream.close();
       }
     }
 
     private Map<String, String> getExtraMap(
         EncodedImage encodedImage,
-        ImageRequest imageRequest,
-        int numerator,
-        int downsampleNumerator,
-        int softwareNumerator,
-        int rotationAngle) {
+        @Nullable ResizeOptions resizeOptions,
+        @Nullable ImageTranscodeResult transcodeResult,
+        @Nullable String transcoderId) {
       if (!mProducerContext.getListener().requiresExtraMap(mProducerContext.getId())) {
         return null;
       }
       String originalSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();
 
       String requestedSize;
-      if (imageRequest.getResizeOptions() != null) {
-        requestedSize =
-            imageRequest.getResizeOptions().width + "x" + imageRequest.getResizeOptions().height;
+      if (resizeOptions != null) {
+        requestedSize = resizeOptions.width + "x" + resizeOptions.height;
       } else {
         requestedSize = "Unspecified";
       }
 
-      String fraction = numerator > 0 ? numerator + "/8" : "";
       final Map<String, String> map = new HashMap<>();
       map.put(ORIGINAL_SIZE_KEY, originalSize);
       map.put(REQUESTED_SIZE_KEY, requestedSize);
-      map.put(FRACTION_KEY, fraction);
       map.put(JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()));
-      map.put(DOWNSAMPLE_ENUMERATOR_KEY, Integer.toString(downsampleNumerator));
-      map.put(SOFTWARE_ENUMERATOR_KEY, Integer.toString(softwareNumerator));
-      map.put(ROTATION_ANGLE_KEY, Integer.toString(rotationAngle));
+      map.put(TRANSCODER_ID, transcoderId);
+      map.put(TRANSCODING_RESULT, String.valueOf(transcodeResult));
       return ImmutableMap.copyOf(map);
     }
   }
@@ -296,7 +252,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static TriState shouldTransform(
       ImageRequest request,
       EncodedImage encodedImage,
-      boolean resizingEnabled) {
+      boolean resizingEnabled,
+      ImageTranscoder imageTranscoder) {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
     }
@@ -304,125 +261,17 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return TriState.NO;
     }
     return TriState.valueOf(
-        shouldRotate(request.getRotationOptions(), encodedImage) ||
-            shouldResize(getSoftwareNumerator(request, encodedImage, resizingEnabled)));
-  }
-
-  @VisibleForTesting static float determineResizeRatio(
-      ResizeOptions resizeOptions,
-      int width,
-      int height) {
-
-    if (resizeOptions == null) {
-      return 1.0f;
-    }
-
-    final float widthRatio = ((float) resizeOptions.width) / width;
-    final float heightRatio = ((float) resizeOptions.height) / height;
-    float ratio = Math.max(widthRatio, heightRatio);
-
-    if (width * ratio > resizeOptions.maxBitmapSize) {
-      ratio = resizeOptions.maxBitmapSize / width;
-    }
-    if (height * ratio > resizeOptions.maxBitmapSize) {
-      ratio = resizeOptions.maxBitmapSize / height;
-    }
-    return ratio;
-  }
-
-  @VisibleForTesting static int roundNumerator(float maxRatio, float roundUpFraction) {
-    return (int) (roundUpFraction + maxRatio * SCALE_DENOMINATOR);
-  }
-
-  private static int getSoftwareNumerator(
-      ImageRequest imageRequest,
-      EncodedImage encodedImage,
-      boolean resizingEnabled) {
-    if (!resizingEnabled) {
-      return SCALE_DENOMINATOR;
-    }
-    final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
-    if (resizeOptions == null) {
-      return SCALE_DENOMINATOR;
-    }
-
-    final int rotationAngle = getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
-    int exifOrientation = ExifInterface.ORIENTATION_UNDEFINED;
-    if (INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation())) {
-      exifOrientation =
-          getForceRotatedInvertedExifOrientation(imageRequest.getRotationOptions(), encodedImage);
-    }
-
-    final boolean swapDimensions =
-        rotationAngle == 90
-            || rotationAngle == 270
-            || exifOrientation == ExifInterface.ORIENTATION_TRANSPOSE
-            || exifOrientation == ExifInterface.ORIENTATION_TRANSVERSE;
-    final int widthAfterRotation = swapDimensions ? encodedImage.getHeight() :
-            encodedImage.getWidth();
-    final int heightAfterRotation = swapDimensions ? encodedImage.getWidth() :
-            encodedImage.getHeight();
-
-    float ratio = determineResizeRatio(resizeOptions, widthAfterRotation, heightAfterRotation);
-    int numerator = roundNumerator(ratio, resizeOptions.roundUpFraction);
-    if (numerator > JpegTranscoderUtils.SCALE_DENOMINATOR) {
-      return JpegTranscoderUtils.SCALE_DENOMINATOR;
-    }
-    return (numerator < 1) ? 1 : numerator;
-  }
-
-  private static int getRotationAngle(RotationOptions rotationOptions, EncodedImage encodedImage) {
-    if (!rotationOptions.rotationEnabled()) {
-      return RotationOptions.NO_ROTATION;
-    }
-    int rotationFromMetadata = extractOrientationFromMetadata(encodedImage);
-    if (rotationOptions.useImageMetadata()) {
-      return rotationFromMetadata;
-    }
-    return (rotationFromMetadata + rotationOptions.getForcedAngle()) % FULL_ROUND;
-  }
-
-  /**
-   * Get an inverted exif orientation (2, 4, 5, 7) but adjusted to take the force rotation angle
-   * into consideration
-   *
-   * @throws IllegalArgumentException if encoded image passed doesn't have an inverted EXIF
-   *     orientation
-   */
-  private static int getForceRotatedInvertedExifOrientation(
-      RotationOptions rotationOptions, EncodedImage encodedImage) {
-    int exifOrientation = encodedImage.getExifOrientation();
-    int index = INVERTED_EXIF_ORIENTATIONS.indexOf(exifOrientation);
-    if (index < 0) {
-      throw new IllegalArgumentException("Only accepts inverted exif orientations");
-    }
-    int forcedAngle = RotationOptions.NO_ROTATION;
-    if (!rotationOptions.useImageMetadata()) {
-      forcedAngle = rotationOptions.getForcedAngle();
-    }
-    int timesToRotate = forcedAngle / 90;
-    return INVERTED_EXIF_ORIENTATIONS.get(
-        (index + timesToRotate) % INVERTED_EXIF_ORIENTATIONS.size());
-  }
-
-  private static int extractOrientationFromMetadata(EncodedImage encodedImage) {
-    switch (encodedImage.getRotationAngle()) {
-      case RotationOptions.ROTATE_90:
-      case RotationOptions.ROTATE_180:
-      case RotationOptions.ROTATE_270:
-        return encodedImage.getRotationAngle();
-      default:
-        return 0;
-    }
-  }
-
-  private static boolean shouldResize(int numerator) {
-    return numerator < JpegTranscoderUtils.SCALE_DENOMINATOR;
+        shouldRotate(request.getRotationOptions(), encodedImage)
+            || imageTranscoder.canResize(
+                encodedImage,
+                request.getRotationOptions(),
+                request.getResizeOptions(),
+                resizingEnabled));
   }
 
   private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {
     return !rotationOptions.canDeferUntilRendered()
-        && (getRotationAngle(rotationOptions, encodedImage) != 0
+        && (JpegTranscoderUtils.getRotationAngle(rotationOptions, encodedImage) != 0
             || shouldRotateUsingExifOrientation(rotationOptions, encodedImage));
   }
 
@@ -433,14 +282,5 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return false;
     }
     return INVERTED_EXIF_ORIENTATIONS.contains(encodedImage.getExifOrientation());
-  }
-
-  /**
-   * This method calculate the ratio in case the downsampling was enabled
-   * @param downsampleRatio The ratio from downsampling
-   * @return The ratio to use for software resize using the downsampling limitation
-   */
-  @VisibleForTesting static int calculateDownsampleNumerator(int downsampleRatio) {
-    return Math.max(1, SCALE_DENOMINATOR / downsampleRatio);
   }
 }

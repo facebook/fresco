@@ -6,13 +6,14 @@
  */
 package com.facebook.imagepipeline.producers;
 
+import android.support.annotation.Nullable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.request.ImageRequest;
 
 public class DownsampleUtil {
   public static final int DEFAULT_SAMPLE_SIZE = 1;
@@ -24,18 +25,22 @@ public class DownsampleUtil {
    * Get the factor between the dimensions of the encodedImage (actual image) and the ones of the
    * imageRequest (requested size).
    *
-   * @param imageRequest the request containing the requested dimensions
+   * @param rotationOptions the rotations options of the request
+   * @param resizeOptions the resize options of the request
    * @param encodedImage the encoded image with the actual dimensions
    * @param maxBitmapSize the maximum supported bitmap size (in pixels) when not specified in the
    *     encoded image resizeOptions.
    * @return
    */
   public static int determineSampleSize(
-      ImageRequest imageRequest, EncodedImage encodedImage, int maxBitmapSize) {
+      final RotationOptions rotationOptions,
+      @Nullable final ResizeOptions resizeOptions,
+      final EncodedImage encodedImage,
+      final int maxBitmapSize) {
     if (!EncodedImage.isMetaDataAvailable(encodedImage)) {
       return DEFAULT_SAMPLE_SIZE;
     }
-    float ratio = determineDownsampleRatio(imageRequest, encodedImage);
+    float ratio = determineDownsampleRatio(rotationOptions, resizeOptions, encodedImage);
     int sampleSize;
     if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
       sampleSize = ratioToSampleSizeJPEG(ratio);
@@ -46,7 +51,6 @@ public class DownsampleUtil {
     // Check the case when the dimension of the downsampled image is still larger than the max
     // possible dimension for an image.
     int maxDimension = Math.max(encodedImage.getHeight(), encodedImage.getWidth());
-    final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
     final float computedMaxBitmapSize =
         resizeOptions != null ? resizeOptions.maxBitmapSize : maxBitmapSize;
     while (maxDimension / sampleSize > computedMaxBitmapSize) {
@@ -61,15 +65,16 @@ public class DownsampleUtil {
 
   @VisibleForTesting
   static float determineDownsampleRatio(
-      ImageRequest imageRequest, EncodedImage encodedImage) {
+      final RotationOptions rotationOptions,
+      @Nullable final ResizeOptions resizeOptions,
+      final EncodedImage encodedImage) {
     Preconditions.checkArgument(EncodedImage.isMetaDataAvailable(encodedImage));
-    final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
     if (resizeOptions == null || resizeOptions.height <= 0 || resizeOptions.width <= 0
         || encodedImage.getWidth() == 0 || encodedImage.getHeight() == 0) {
       return 1.0f;
     }
 
-    final int rotationAngle = getRotationAngle(imageRequest, encodedImage);
+    final int rotationAngle = getRotationAngle(rotationOptions, encodedImage);
     final boolean swapDimensions = rotationAngle == 90 || rotationAngle == 270;
     final int widthAfterRotation = swapDimensions ?
             encodedImage.getHeight() : encodedImage.getWidth();
@@ -82,20 +87,19 @@ public class DownsampleUtil {
     FLog.v(
         "DownsampleUtil",
         "Downsample - Specified size: %dx%d, image size: %dx%d "
-            + "ratio: %.1f x %.1f, ratio: %.3f for %s",
+            + "ratio: %.1f x %.1f, ratio: %.3f",
         resizeOptions.width,
         resizeOptions.height,
         widthAfterRotation,
         heightAfterRotation,
         widthRatio,
         heightRatio,
-        ratio,
-        imageRequest.getSourceUri().toString());
+        ratio);
     return ratio;
   }
 
   @VisibleForTesting
-  static int ratioToSampleSize(float ratio) {
+  static int ratioToSampleSize(final float ratio) {
     if (ratio > 0.5f + 0.5f * INTERVAL_ROUNDING) {
       return 1; // should have resized
     }
@@ -111,7 +115,7 @@ public class DownsampleUtil {
   }
 
   @VisibleForTesting
-  static int ratioToSampleSizeJPEG(float ratio) {
+  static int ratioToSampleSizeJPEG(final float ratio) {
     if (ratio > 0.5f + 0.5f * INTERVAL_ROUNDING) {
       return 1; // should have resized
     }
@@ -126,8 +130,9 @@ public class DownsampleUtil {
     }
   }
 
-  private static int getRotationAngle(ImageRequest imageRequest, EncodedImage encodedImage) {
-    if (!imageRequest.getRotationOptions().useImageMetadata()) {
+  private static int getRotationAngle(
+      final RotationOptions rotationOptions, final EncodedImage encodedImage) {
+    if (!rotationOptions.useImageMetadata()) {
       return 0;
     }
     int rotationAngle = encodedImage.getRotationAngle();
@@ -137,7 +142,7 @@ public class DownsampleUtil {
   }
 
   @VisibleForTesting
-  static int roundToPowerOfTwo(int sampleSize) {
+  static int roundToPowerOfTwo(final int sampleSize) {
     int compare = 1;
     while (true) {
       if (compare >= sampleSize) {

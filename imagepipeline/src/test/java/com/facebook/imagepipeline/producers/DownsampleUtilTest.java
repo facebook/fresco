@@ -12,7 +12,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import android.media.ExifInterface;
-import android.net.Uri;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -35,9 +34,6 @@ public class DownsampleUtilTest {
   @Before
   public void setup() {
     mImageRequest = mock(ImageRequest.class);
-    Uri uri = mock(Uri.class);
-    when(uri.toString()).thenReturn("test");
-    when(mImageRequest.getSourceUri()).thenReturn(uri);
   }
 
   @Test
@@ -45,7 +41,12 @@ public class DownsampleUtilTest {
     whenImageWidthAndHeight(0, 0);
     // Null resizeOptions
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -53,16 +54,31 @@ public class DownsampleUtilTest {
     whenImageWidthAndHeight(0, 0);
     whenRequestResizeWidthAndHeightWithExifRotation(1, 1);
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     // Width or height of the encoded image are 0
     mEncodedImage.setWidth(100);
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
     mEncodedImage.setWidth(0);
     mEncodedImage.setHeight(100);
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -70,11 +86,21 @@ public class DownsampleUtilTest {
     whenImageWidthAndHeight(100, 100);
     whenRequestResizeWidthAndHeightWithExifRotation(50, 50);
     assertEquals(
-        2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        2,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     whenRequestResizeWidthAndHeightWithExifRotation(50, 25);
     assertEquals(
-        2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        2,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -83,7 +109,12 @@ public class DownsampleUtilTest {
     mEncodedImage.setImageFormat(DefaultImageFormats.PNG);
     whenRequestResizeWidthAndHeightWithExifRotation(50, 50);
     assertEquals(
-        3, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        3,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -92,11 +123,21 @@ public class DownsampleUtilTest {
 
     whenRequestResizeWidthAndHeightWithExifRotation(50, 25);
     assertEquals(
-        2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        2,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     whenRequestResizeWidthAndHeightWithExifRotation(25, 50);
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -107,17 +148,32 @@ public class DownsampleUtilTest {
     // 50,100 -> 50,25 = 1
     whenRequestResizeWidthHeightAndForcedRotation(50, 25, 90);
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     // 50,100 -> 25,50 = 2
     whenRequestResizeWidthHeightAndForcedRotation(25, 50, 270);
     assertEquals(
-        2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        2,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     // 50,100 -> 10,20 = 5
     whenRequestResizeWidthHeightAndForcedRotation(10, 20, 180);
     assertEquals(
-        5, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        5,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -126,12 +182,22 @@ public class DownsampleUtilTest {
 
     whenRequestResizeWidthAndHeightWithExifRotation(4000, 4000);
     assertEquals(
-        2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        2,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     whenImageWidthAndHeight(8000, 8000);
     whenRequestResizeWidthAndHeightWithExifRotation(8000, 8000);
     assertEquals(
-        4, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        4,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
@@ -140,12 +206,22 @@ public class DownsampleUtilTest {
 
     whenRequestResizeWidthHeightAndMaxBitmapSize(4000, 4000, 4096);
     assertEquals(
-        1, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        1,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
 
     whenImageWidthAndHeight(8000, 8000);
     whenRequestResizeWidthHeightAndMaxBitmapSize(8000, 8000, 4096);
     assertEquals(
-        2, DownsampleUtil.determineSampleSize(mImageRequest, mEncodedImage, MAX_BITMAP_SIZE));
+        2,
+        DownsampleUtil.determineSampleSize(
+            mImageRequest.getRotationOptions(),
+            mImageRequest.getResizeOptions(),
+            mEncodedImage,
+            MAX_BITMAP_SIZE));
   }
 
   @Test
