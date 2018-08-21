@@ -7,9 +7,16 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MAX_QUALITY;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MAX_SCALE_NUMERATOR;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MIN_QUALITY;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MIN_SCALE_NUMERATOR;
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.SCALE_DENOMINATOR;
+
 import android.media.ExifInterface;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,39 +27,6 @@ public class NativeJpegTranscoder {
 
   static {
     ImagePipelineNativeLoader.load();
-  }
-
-  public static final int MIN_QUALITY = 0;
-  public static final int MAX_QUALITY = 100;
-  public static final int MIN_SCALE_NUMERATOR = 1;
-  public static final int MAX_SCALE_NUMERATOR = 16;
-  public static final int SCALE_DENOMINATOR = 8;
-
-  /**
-   * @return true if and only if given number of degrees is allowed rotation angle, that is
-   *   it is equal to 0, 90, 180 or 270
-   */
-  public static boolean isRotationAngleAllowed(int degrees) {
-    return (degrees >= 0) && (degrees <= 270) && (degrees % 90 == 0);
-  }
-
-  /**
-   * @return true if and only if given value is a valid EXIF orientation
-   */
-  public static boolean isExifOrientationAllowed(int exifOrientation) {
-    switch (exifOrientation) {
-      case ExifInterface.ORIENTATION_NORMAL:
-      case ExifInterface.ORIENTATION_ROTATE_90:
-      case ExifInterface.ORIENTATION_ROTATE_180:
-      case ExifInterface.ORIENTATION_ROTATE_270:
-      case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-      case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-      case ExifInterface.ORIENTATION_TRANSPOSE:
-      case ExifInterface.ORIENTATION_TRANSVERSE:
-        return true;
-      default:
-        return false;
-    }
   }
 
   /**
@@ -75,7 +49,7 @@ public class NativeJpegTranscoder {
     Preconditions.checkArgument(scaleNumerator <= MAX_SCALE_NUMERATOR);
     Preconditions.checkArgument(quality >= MIN_QUALITY);
     Preconditions.checkArgument(quality <= MAX_QUALITY);
-    Preconditions.checkArgument(isRotationAngleAllowed(rotationAngle));
+    Preconditions.checkArgument(JpegTranscoderUtils.isRotationAngleAllowed(rotationAngle));
     Preconditions.checkArgument(
         scaleNumerator != SCALE_DENOMINATOR || rotationAngle != 0,
         "no transformation requested");
@@ -116,7 +90,7 @@ public class NativeJpegTranscoder {
     Preconditions.checkArgument(scaleNumerator <= MAX_SCALE_NUMERATOR);
     Preconditions.checkArgument(quality >= MIN_QUALITY);
     Preconditions.checkArgument(quality <= MAX_QUALITY);
-    Preconditions.checkArgument(isExifOrientationAllowed(exifOrientation));
+    Preconditions.checkArgument(JpegTranscoderUtils.isExifOrientationAllowed(exifOrientation));
     Preconditions.checkArgument(
         scaleNumerator != SCALE_DENOMINATOR || exifOrientation != ExifInterface.ORIENTATION_NORMAL,
         "no transformation requested");

@@ -7,6 +7,8 @@
 
 package com.facebook.imagepipeline.producers;
 
+import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.SCALE_DENOMINATOR;
+
 import android.media.ExifInterface;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.ImmutableList;
@@ -25,6 +27,7 @@ import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -328,7 +331,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   @VisibleForTesting static int roundNumerator(float maxRatio, float roundUpFraction) {
-    return (int) (roundUpFraction + maxRatio * NativeJpegTranscoder.SCALE_DENOMINATOR);
+    return (int) (roundUpFraction + maxRatio * SCALE_DENOMINATOR);
   }
 
   private static int getSoftwareNumerator(
@@ -336,11 +339,11 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       EncodedImage encodedImage,
       boolean resizingEnabled) {
     if (!resizingEnabled) {
-      return NativeJpegTranscoder.SCALE_DENOMINATOR;
+      return SCALE_DENOMINATOR;
     }
     final ResizeOptions resizeOptions = imageRequest.getResizeOptions();
     if (resizeOptions == null) {
-      return NativeJpegTranscoder.SCALE_DENOMINATOR;
+      return SCALE_DENOMINATOR;
     }
 
     final int rotationAngle = getRotationAngle(imageRequest.getRotationOptions(), encodedImage);
@@ -362,8 +365,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
     float ratio = determineResizeRatio(resizeOptions, widthAfterRotation, heightAfterRotation);
     int numerator = roundNumerator(ratio, resizeOptions.roundUpFraction);
-    if (numerator > NativeJpegTranscoder.SCALE_DENOMINATOR) {
-      return NativeJpegTranscoder.SCALE_DENOMINATOR;
+    if (numerator > JpegTranscoderUtils.SCALE_DENOMINATOR) {
+      return JpegTranscoderUtils.SCALE_DENOMINATOR;
     }
     return (numerator < 1) ? 1 : numerator;
   }
@@ -414,7 +417,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   private static boolean shouldResize(int numerator) {
-    return numerator < NativeJpegTranscoder.SCALE_DENOMINATOR;
+    return numerator < JpegTranscoderUtils.SCALE_DENOMINATOR;
   }
 
   private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {
@@ -438,6 +441,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
    * @return The ratio to use for software resize using the downsampling limitation
    */
   @VisibleForTesting static int calculateDownsampleNumerator(int downsampleRatio) {
-    return Math.max(1, NativeJpegTranscoder.SCALE_DENOMINATOR / downsampleRatio);
+    return Math.max(1, SCALE_DENOMINATOR / downsampleRatio);
   }
 }

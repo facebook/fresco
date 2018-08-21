@@ -41,6 +41,7 @@ import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
 import com.facebook.imagepipeline.testing.TestScheduledExecutorService;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
+import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.soloader.SoLoader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +68,8 @@ import org.robolectric.annotation.Config;
 @PrepareOnlyThisForTest({
   NativeJpegTranscoder.class,
   SystemClock.class,
-  UiThreadImmediateExecutorService.class
+  UiThreadImmediateExecutorService.class,
+  JpegTranscoderUtils.class
 })
 public class ResizeAndRotateProducerTest {
   static {
@@ -141,7 +143,8 @@ public class ResizeAndRotateProducerTest {
         mUiThreadImmediateExecutorService);
 
     PowerMockito.mockStatic(NativeJpegTranscoder.class);
-    PowerMockito.when(NativeJpegTranscoder.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
+    PowerMockito.mockStatic(JpegTranscoderUtils.class);
+    PowerMockito.when(JpegTranscoderUtils.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
