@@ -131,7 +131,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         if (isNotLast(status)
             || newResult == null
             || statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)
-                || newResult.getImageFormat() == ImageFormat.UNKNOWN) {
+            || newResult.getImageFormat() == ImageFormat.UNKNOWN) {
           getConsumer().onNewResult(newResult, status);
           return;
         }
