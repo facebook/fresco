@@ -37,7 +37,6 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
@@ -77,7 +76,7 @@ public class ImagePipelineConfig {
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
   @Nullable private final ImageDecoder mImageDecoder;
-  private final ImageTranscoderFactory mImageTranscoderFactory;
+  @Nullable private final ImageTranscoderFactory mImageTranscoderFactory;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
@@ -131,13 +130,7 @@ public class ImagePipelineConfig {
             NoOpImageCacheStatsTracker.getInstance() :
             builder.mImageCacheStatsTracker;
     mImageDecoder = builder.mImageDecoder;
-    mImageTranscoderFactory =
-        builder.mImageTranscoderFactory == null
-            ? new NativeJpegTranscoderFactory(
-                builder.mResizeAndRotateEnabledForNetwork && !builder.mDownsampleEnabled,
-                mImagePipelineExperiments.getMaxBitmapSize(),
-                mImagePipelineExperiments.getUseDownsamplingRatioForResizing())
-            : builder.mImageTranscoderFactory;
+    mImageTranscoderFactory = builder.mImageTranscoderFactory;
     mIsPrefetchEnabledSupplier =
         builder.mIsPrefetchEnabledSupplier == null ?
             new Supplier<Boolean>() {
@@ -284,6 +277,7 @@ public class ImagePipelineConfig {
     return mImageDecoder;
   }
 
+  @Nullable
   public ImageTranscoderFactory getImageTranscoderFactory() {
     return mImageTranscoderFactory;
   }

@@ -18,6 +18,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.media.MediaUtils;
@@ -61,9 +62,11 @@ public class ProducerSequenceFactory {
   private final boolean mWebpSupportEnabled;
   private final boolean mPartialImageCachingEnabled;
   private final ThreadHandoffProducerQueue mThreadHandoffProducerQueue;
+  private final boolean mUseDownsamplingRatio;
   private final boolean mUseBitmapPrepareToDraw;
   private final boolean mDiskCacheEnabled;
-  private final ImageTranscoderFactory mImageTranscoderFactory;
+  private final int mMaxBitmapSize;
+  private final @Nullable ImageTranscoderFactory mImageTranscoderFactory;
 
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
@@ -101,10 +104,12 @@ public class ProducerSequenceFactory {
       boolean resizeAndRotateEnabledForNetwork,
       boolean webpSupportEnabled,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
+      boolean useDownsamplingRatio,
       boolean useBitmapPrepareToDraw,
       boolean partialImageCachingEnabled,
       boolean diskCacheEnabled,
-      ImageTranscoderFactory imageTranscoderFactory) {
+      int maxBitmapSize,
+      @Nullable ImageTranscoderFactory imageTranscoderFactory) {
     mContentResolver = contentResolver;
     mProducerFactory = producerFactory;
     mNetworkFetcher = networkFetcher;
@@ -114,9 +119,11 @@ public class ProducerSequenceFactory {
     mCloseableImagePrefetchSequences = new HashMap<>();
     mBitmapPrepareSequences = new HashMap<>();
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
+    mUseDownsamplingRatio = useDownsamplingRatio;
     mUseBitmapPrepareToDraw = useBitmapPrepareToDraw;
     mPartialImageCachingEnabled = partialImageCachingEnabled;
     mDiskCacheEnabled = diskCacheEnabled;
+    mMaxBitmapSize = maxBitmapSize;
     mImageTranscoderFactory = imageTranscoderFactory;
   }
 
@@ -335,6 +342,8 @@ public class ProducerSequenceFactory {
           mProducerFactory.newResizeAndRotateProducer(
               mCommonNetworkFetchToEncodedMemorySequence,
               mResizeAndRotateEnabledForNetwork,
+              mUseDownsamplingRatio,
+              mMaxBitmapSize,
               mImageTranscoderFactory);
     }
     return mCommonNetworkFetchToEncodedMemorySequence;
@@ -504,7 +513,8 @@ public class ProducerSequenceFactory {
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
       inputProducer =
-          mProducerFactory.newResizeAndRotateProducer(inputProducer, true, mImageTranscoderFactory);
+          mProducerFactory.newResizeAndRotateProducer(
+              inputProducer, true, mUseDownsamplingRatio, mMaxBitmapSize, mImageTranscoderFactory);
       mDataFetchSequence = newBitmapCacheGetToDecodeSequence(inputProducer);
     }
     return mDataFetchSequence;
@@ -614,7 +624,11 @@ public class ProducerSequenceFactory {
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
     localImageProducer =
         mProducerFactory.newResizeAndRotateProducer(
-            localImageProducer, true, mImageTranscoderFactory);
+            localImageProducer,
+            true,
+            mUseDownsamplingRatio,
+            mMaxBitmapSize,
+            mImageTranscoderFactory);
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(localImageProducer);
@@ -629,7 +643,11 @@ public class ProducerSequenceFactory {
         mProducerFactory.newThumbnailBranchProducer(thumbnailProducers);
 
     return mProducerFactory.newResizeAndRotateProducer(
-        thumbnailBranchProducer, true, mImageTranscoderFactory);
+        thumbnailBranchProducer,
+        true,
+        mUseDownsamplingRatio,
+        mMaxBitmapSize,
+        mImageTranscoderFactory);
   }
 
   /**

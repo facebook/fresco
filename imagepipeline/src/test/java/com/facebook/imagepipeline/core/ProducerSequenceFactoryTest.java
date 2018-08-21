@@ -53,6 +53,7 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class ProducerSequenceFactoryTest {
 
+  private static final int MAX_BITMAP_SIZE = 2024;
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
   private final String mDummyMime = "dummy_mime";
@@ -80,7 +81,9 @@ public class ProducerSequenceFactoryTest {
             null,
             false,
             false,
+            false,
             true,
+            MAX_BITMAP_SIZE,
             imageTranscoderFactory);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
@@ -336,9 +339,11 @@ public class ProducerSequenceFactoryTest {
             true,
             false,
             null,
+            false,
             /* useBitmapPrepareToDraw */ true,
             false,
             true,
+            MAX_BITMAP_SIZE,
             imageTranscoderFactory);
   }
 }

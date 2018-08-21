@@ -385,9 +385,11 @@ public class ImagePipelineFactory {
               mConfig.isResizeAndRotateEnabledForNetwork(),
               mConfig.getExperiments().isWebpSupportEnabled(),
               mThreadHandoffProducerQueue,
+              mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
               useBitmapPrepareToDraw,
               mConfig.getExperiments().isPartialImageCachingEnabled(),
               mConfig.isDiskCacheEnabled(),
+              mConfig.getExperiments().getMaxBitmapSize(),
               mConfig.getImageTranscoderFactory());
     }
     return mProducerSequenceFactory;
