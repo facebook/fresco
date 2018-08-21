@@ -76,15 +76,15 @@ static JNINativeMethod gJpegTranscoderMethods[] = {
 };
 
 bool registerJpegTranscoderMethods(JNIEnv* env) {
-  auto jpegTranscoderClass = env->FindClass(
-      "com/facebook/imagepipeline/nativecode/JpegTranscoder");
-  if (jpegTranscoderClass == nullptr) {
-    LOGE("could not find JpegTranscoder class");
+  auto nativeJpegTranscoderClass = env->FindClass(
+      "com/facebook/imagepipeline/nativecode/NativeJpegTranscoder");
+  if (nativeJpegTranscoderClass == nullptr) {
+    LOGE("could not find NativeJpegTranscoder class");
     return false;
   }
 
   auto result = env->RegisterNatives(
-      jpegTranscoderClass,
+      nativeJpegTranscoderClass,
       gJpegTranscoderMethods,
       std::extent<decltype(gJpegTranscoderMethods)>::value);
 

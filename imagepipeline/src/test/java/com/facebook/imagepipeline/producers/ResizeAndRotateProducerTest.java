@@ -35,7 +35,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.nativecode.JpegTranscoder;
+import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -62,11 +62,13 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@Config(manifest= Config.NONE)
-@PrepareOnlyThisForTest({JpegTranscoder.class, SystemClock.class,
-                          UiThreadImmediateExecutorService.class})
-
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@Config(manifest = Config.NONE)
+@PrepareOnlyThisForTest({
+  NativeJpegTranscoder.class,
+  SystemClock.class,
+  UiThreadImmediateExecutorService.class
+})
 public class ResizeAndRotateProducerTest {
   static {
     SoLoader.setInTestMode();
@@ -138,8 +140,8 @@ public class ResizeAndRotateProducerTest {
     when(UiThreadImmediateExecutorService.getInstance()).thenReturn(
         mUiThreadImmediateExecutorService);
 
-    PowerMockito.mockStatic(JpegTranscoder.class);
-    PowerMockito.when(JpegTranscoder.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
+    PowerMockito.mockStatic(NativeJpegTranscoder.class);
+    PowerMockito.when(NativeJpegTranscoder.isRotationAngleAllowed(anyInt())).thenCallRealMethod();
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
@@ -595,7 +597,7 @@ public class ResizeAndRotateProducerTest {
   private static void verifyJpegTranscoderInteractions(int numerator, int rotationAngle) {
     PowerMockito.verifyStatic();
     try {
-      JpegTranscoder.transcodeJpeg(
+      NativeJpegTranscoder.transcodeJpeg(
           any(InputStream.class),
           any(OutputStream.class),
           eq(rotationAngle),
@@ -610,7 +612,7 @@ public class ResizeAndRotateProducerTest {
       int numerator, int exifOrientation) {
     PowerMockito.verifyStatic();
     try {
-      JpegTranscoder.transcodeJpegWithExifOrientation(
+      NativeJpegTranscoder.transcodeJpegWithExifOrientation(
           any(InputStream.class),
           any(OutputStream.class),
           eq(exifOrientation),
@@ -624,7 +626,7 @@ public class ResizeAndRotateProducerTest {
   private static void verifyZeroJpegTranscoderInteractions() {
     PowerMockito.verifyStatic(never());
     try {
-      JpegTranscoder.transcodeJpeg(
+      NativeJpegTranscoder.transcodeJpeg(
           any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());
     } catch (IOException ioe) {
       throw new RuntimeException(ioe);
@@ -634,7 +636,7 @@ public class ResizeAndRotateProducerTest {
   private static void verifyZeroJpegTranscoderExifOrientationInteractions() {
     PowerMockito.verifyStatic(never());
     try {
-      JpegTranscoder.transcodeJpegWithExifOrientation(
+      NativeJpegTranscoder.transcodeJpegWithExifOrientation(
           any(InputStream.class), any(OutputStream.class), anyInt(), anyInt(), anyInt());
     } catch (IOException ioe) {
       throw new RuntimeException(ioe);

@@ -14,11 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Helper methods for modifying jpeg images.
- */
+/** Transcoder for jpeg images, using native code and libjpeg-turbo library. */
 @DoNotStrip
-public class JpegTranscoder {
+public class NativeJpegTranscoder {
 
   static {
     ImagePipelineNativeLoader.load();
@@ -58,10 +56,10 @@ public class JpegTranscoder {
   }
 
   /**
-   * Downscales and rotates jpeg image
+   * Transcodes an image to match the specified rotation angle and the scale factor.
    *
-   * @param inputStream
-   * @param outputStream
+   * @param inputStream The {@link InputStream} of the image that will be transcoded.
+   * @param outputStream The {@link OutputStream} where the newly created image is written to.
    * @param rotationAngle 0, 90, 180 or 270
    * @param scaleNumerator 1 - 16, image will be scaled using scaleNumerator/8 factor
    * @param quality 1 - 100
@@ -99,10 +97,10 @@ public class JpegTranscoder {
       throws IOException;
 
   /**
-   * Downscales and rotates jpeg image
+   * Transcodes an image to match the specified exif orientation and the scale factor.
    *
-   * @param inputStream
-   * @param outputStream
+   * @param inputStream The {@link InputStream} of the image that will be transcoded.
+   * @param outputStream The {@link OutputStream} where the newly created image is written to.
    * @param exifOrientation 0, 90, 180 or 270
    * @param scaleNumerator 1 - 16, image will be scaled using scaleNumerator/8 factor
    * @param quality 1 - 100
