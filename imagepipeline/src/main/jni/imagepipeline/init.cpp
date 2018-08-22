@@ -92,6 +92,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
       -1);
 
   THROW_AND_RETURNVAL_IF(
+      registerDalvikDecoderMethods(env) == JNI_ERR,
+      "Could not register DalvikPurgeableDecoder methods",
+      -1);
+
+  THROW_AND_RETURNVAL_IF(
       registerNativeMemoryChunkMethods(env) == JNI_ERR,
       "Could not register NativeMemoryChunk methods",
       -1);

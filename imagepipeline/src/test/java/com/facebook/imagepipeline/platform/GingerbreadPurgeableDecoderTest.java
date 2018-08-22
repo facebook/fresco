@@ -7,9 +7,12 @@
 
 package com.facebook.imagepipeline.platform;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -23,28 +26,31 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imagepipeline.nativecode.DalvikPurgeableDecoder;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer;
 import com.facebook.soloader.SoLoader;
 import java.io.FileDescriptor;
+import java.util.ConcurrentModificationException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link GingerbreadPurgeableDecoder}.
- */
+/** Tests for {@link GingerbreadPurgeableDecoder}. */
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
-    BitmapCounterProvider.class,
-    BitmapFactory.class,
-    Bitmaps.class})
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+  BitmapCounterProvider.class,
+  BitmapFactory.class,
+  DalvikPurgeableDecoder.class,
+  Bitmaps.class
+})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public class GingerbreadPurgeableDecoderTest {
 
   protected static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
@@ -79,6 +85,11 @@ public class GingerbreadPurgeableDecoderTest {
     mBitmap = MockBitmapFactory.create();
     mBitmapCounter = new BitmapCounter(MAX_BITMAP_COUNT, MAX_BITMAP_SIZE);
 
+    mockStatic(DalvikPurgeableDecoder.class);
+    when(DalvikPurgeableDecoder.getBitmapFactoryOptions(anyInt(), any(Bitmap.Config.class)))
+        .thenCallRealMethod();
+    when(DalvikPurgeableDecoder.endsWithEOI(any(CloseableReference.class), anyInt()))
+        .thenCallRealMethod();
     mockStatic(BitmapCounterProvider.class);
     when(BitmapCounterProvider.get()).thenReturn(mBitmapCounter);
 
@@ -99,6 +110,22 @@ public class GingerbreadPurgeableDecoderTest {
 
     mockStatic(Bitmaps.class);
     mGingerbreadPurgeableDecoder = new GingerbreadPurgeableDecoder();
+  }
+
+  @Test(expected = ConcurrentModificationException.class)
+  public void testPinBitmapFailure() {
+    GingerbreadPurgeableDecoder decoder = mock(GingerbreadPurgeableDecoder.class);
+    PowerMockito.doThrow(new ConcurrentModificationException())
+        .when(decoder)
+        .pinBitmap(any(Bitmap.class));
+    decoder.pinBitmap(any(Bitmap.class));
+    try {
+      decoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
+    } finally {
+      verify(mBitmap).recycle();
+      assertEquals(0, mBitmapCounter.getCount());
+      assertEquals(0, mBitmapCounter.getSize());
+    }
   }
 
   @Test

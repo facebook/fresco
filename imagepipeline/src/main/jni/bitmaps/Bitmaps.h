@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 jint registerBitmapsMethods(JNIEnv* env);
+jint registerDalvikDecoderMethods(JNIEnv* env);
 #ifdef __cplusplus
 }
 #endif

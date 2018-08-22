@@ -111,45 +111,4 @@ public class BitmapCounter {
   public ResourceReleaser<Bitmap> getReleaser() {
     return mUnpooledBitmapsReleaser;
   }
-
-  /**
-   * Associates bitmaps with the bitmap counter. <p/> <p>If this method throws
-   * TooManyBitmapsException, the code will have called {@link Bitmap#recycle} on the
-   * bitmaps.</p>
-   *
-   * @param bitmaps the bitmaps to associate
-   * @return the references to the bitmaps that are now tied to the bitmap pool
-   * @throws TooManyBitmapsException if the pool is full
-   */
-  public List<CloseableReference<Bitmap>> associateBitmapsWithBitmapCounter(
-      final List<Bitmap> bitmaps) {
-    int countedBitmaps = 0;
-    try {
-      for (; countedBitmaps < bitmaps.size(); ++countedBitmaps) {
-        final Bitmap bitmap = bitmaps.get(countedBitmaps);
-        // 'Pin' the bytes of the purgeable bitmap, so it is now not purgeable
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-          Bitmaps.pinBitmap(bitmap);
-        }
-        if (!increase(bitmap)) {
-          throw new TooManyBitmapsException();
-        }
-      }
-      List<CloseableReference<Bitmap>> ret = new ArrayList<>(bitmaps.size());
-      for (Bitmap bitmap : bitmaps) {
-        ret.add(CloseableReference.of(bitmap, mUnpooledBitmapsReleaser));
-      }
-      return ret;
-    } catch (Exception exception) {
-      if (bitmaps != null) {
-        for (Bitmap bitmap : bitmaps) {
-          if (countedBitmaps-- > 0) {
-            decrease(bitmap);
-          }
-          bitmap.recycle();
-        }
-      }
-      throw Throwables.propagate(exception);
-    }
-  }
 }

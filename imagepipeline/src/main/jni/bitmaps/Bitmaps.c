@@ -170,9 +170,6 @@ static void Bitmaps_copyBitmap(
 }
 
 static JNINativeMethod bitmaps_native_methods[] = {
-  { "nativePinBitmap",
-    "(Landroid/graphics/Bitmap;)V",
-    (void*) Bitmaps_pinBitmap },
   { "nativeCopyBitmap",
     "(Landroid/graphics/Bitmap;ILandroid/graphics/Bitmap;II)V",
     (void*) Bitmaps_copyBitmap },
@@ -205,6 +202,40 @@ jint registerBitmapsMethods(JNIEnv* env) {
       bitmaps_class,
       bitmaps_native_methods,
       ARRAY_SIZE(bitmaps_native_methods));
+  if (rc != JNI_OK) {
+    return JNI_ERR;
+  }
+
+  return JNI_VERSION_1_6;
+}
+
+static JNINativeMethod dalvik_decoder_native_methods[] = {
+  { "nativePinBitmap",
+    "(Landroid/graphics/Bitmap;)V",
+    (void*) Bitmaps_pinBitmap },
+};
+
+jint registerDalvikDecoderMethods(JNIEnv* env) {
+  jclass runtime_exception = (*env)->FindClass(
+      env,
+      "java/lang/RuntimeException");
+  if (!runtime_exception) {
+    return JNI_ERR;
+  }
+  runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
+
+  jclass dalvik_decoder_class = (*env)->FindClass(
+       env,
+      "com/facebook/imagepipeline/nativecode/DalvikPurgeableDecoder");
+  if (!dalvik_decoder_class) {
+    return JNI_ERR;
+  }
+
+  int rc = (*env)->RegisterNatives(
+      env,
+      dalvik_decoder_class,
+      dalvik_decoder_native_methods,
+      ARRAY_SIZE(dalvik_decoder_native_methods));
   if (rc != JNI_OK) {
     return JNI_ERR;
   }

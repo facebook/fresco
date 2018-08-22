@@ -5,21 +5,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.imagepipeline.platform;
+package com.facebook.imagepipeline.nativecode;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.Build;
+import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Throwables;
+import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.TooManyBitmapsException;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.memory.BitmapCounter;
 import com.facebook.imagepipeline.memory.BitmapCounterProvider;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
+import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
 import java.util.Locale;
@@ -27,14 +29,22 @@ import javax.annotation.Nullable;
 
 /**
  * Base class for bitmap decodes for Dalvik VM (Gingerbread to KitKat).
+ *
+ * <p>Native code used by this class is shipped as part of libimagepipeline.so
  */
-abstract class DalvikPurgeableDecoder implements PlatformDecoder {
+@DoNotStrip
+public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
+
+  static {
+    ImagePipelineNativeLoader.load();
+  }
+
   protected static final byte[] EOI = new byte[] {
       (byte) JfifUtil.MARKER_FIRST_BYTE, (byte) JfifUtil.MARKER_EOI };
 
   private final BitmapCounter mUnpooledBitmapsCounter;
 
-  DalvikPurgeableDecoder() {
+  protected DalvikPurgeableDecoder() {
     mUnpooledBitmapsCounter = BitmapCounterProvider.get();
   }
 
@@ -118,8 +128,6 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     }
   }
 
-
-
   /**
    * Decodes a byteArray into a purgeable bitmap
    *
@@ -127,28 +135,25 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
    * @param options the options passed to the BitmapFactory
    * @return
    */
-  abstract Bitmap decodeByteArrayAsPurgeable(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      BitmapFactory.Options options);
+  protected abstract Bitmap decodeByteArrayAsPurgeable(
+      CloseableReference<PooledByteBuffer> bytesRef, BitmapFactory.Options options);
 
   /**
    * Decodes a byteArray containing jpeg encoded bytes into a purgeable bitmap
    *
-   * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
+   * <p>Adds a JFIF End-Of-Image marker if needed before decoding.
    *
    * @param bytesRef the byte buffer that contains the encoded bytes
    * @param length the number of encoded bytes in the buffer
    * @param options the options passed to the BitmapFactory
    * @return
    */
-  abstract Bitmap decodeJPEGByteArrayAsPurgeable(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      int length,
-      BitmapFactory.Options options);
+  protected abstract Bitmap decodeJPEGByteArrayAsPurgeable(
+      CloseableReference<PooledByteBuffer> bytesRef, int length, BitmapFactory.Options options);
 
-  private static BitmapFactory.Options getBitmapFactoryOptions(
-      int sampleSize,
-      Bitmap.Config bitmapConfig) {
+  @VisibleForTesting
+  public static BitmapFactory.Options getBitmapFactoryOptions(
+      int sampleSize, Bitmap.Config bitmapConfig) {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = bitmapConfig;
@@ -164,7 +169,8 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     return options;
   }
 
-  protected static boolean endsWithEOI(CloseableReference<PooledByteBuffer> bytesRef, int length) {
+  @VisibleForTesting
+  public static boolean endsWithEOI(CloseableReference<PooledByteBuffer> bytesRef, int length) {
     PooledByteBuffer buffer = bytesRef.get();
     return length >= 2 &&
         buffer.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE &&
@@ -172,12 +178,18 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
   }
 
   /**
-   * Pins the bitmap
+   * Pin the bitmap so that it cannot be 'purged'. Only makes sense for purgeable bitmaps WARNING:
+   * Use with caution. Make sure that the pinned bitmap is recycled eventually. Otherwise, this will
+   * simply eat up ashmem memory and eventually lead to unfortunate crashes. We *may* eventually
+   * provide an unpin method - but we don't yet have a compelling use case for that.
+   *
+   * @param bitmap the purgeable bitmap to pin
    */
   public CloseableReference<Bitmap> pinBitmap(Bitmap bitmap) {
+    Preconditions.checkNotNull(bitmap);
     try {
       // Real decoding happens here - if the image was corrupted, this will throw an exception
-      Bitmaps.pinBitmap(bitmap);
+      nativePinBitmap(bitmap);
     } catch (Exception e) {
       bitmap.recycle();
       throw Throwables.propagate(e);
@@ -200,4 +212,6 @@ abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     return CloseableReference.of(bitmap, mUnpooledBitmapsCounter.getReleaser());
   }
 
+  @DoNotStrip
+  private static native void nativePinBitmap(Bitmap bitmap);
 }

@@ -15,6 +15,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.FlexByteArrayPool;
+import com.facebook.imagepipeline.nativecode.DalvikPurgeableDecoder;
 import com.facebook.imageutils.JfifUtil;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -42,8 +43,7 @@ public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
    */
   @Override
   protected Bitmap decodeByteArrayAsPurgeable(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      BitmapFactory.Options options) {
+      CloseableReference<PooledByteBuffer> bytesRef, BitmapFactory.Options options) {
     final PooledByteBuffer pooledByteBuffer = bytesRef.get();
     final int length = pooledByteBuffer.size();
     final CloseableReference<byte[]> encodedBytesArrayRef = mFlexByteArrayPool.get(length);
@@ -64,16 +64,14 @@ public class KitKatPurgeableDecoder extends DalvikPurgeableDecoder {
   /**
    * Decodes a byteArray containing jpeg encoded bytes into a purgeable bitmap
    *
-   * <p> Adds a JFIF End-Of-Image marker if needed before decoding.
+   * <p>Adds a JFIF End-Of-Image marker if needed before decoding.
    *
    * @param bytesRef the byte buffer that contains the encoded bytes
    * @return
    */
   @Override
   protected Bitmap decodeJPEGByteArrayAsPurgeable(
-      CloseableReference<PooledByteBuffer> bytesRef,
-      int length,
-      BitmapFactory.Options options) {
+      CloseableReference<PooledByteBuffer> bytesRef, int length, BitmapFactory.Options options) {
     byte[] suffix = endsWithEOI(bytesRef, length) ? null : EOI;
     final PooledByteBuffer pooledByteBuffer = bytesRef.get();
     Preconditions.checkArgument(length <= pooledByteBuffer.size());

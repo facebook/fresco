@@ -26,19 +26,6 @@ public class Bitmaps {
     ImagePipelineNativeLoader.load();
   }
 
-  /**
-   * Pin the bitmap so that it cannot be 'purged'. Only makes sense for purgeable bitmaps
-   * WARNING: Use with caution. Make sure that the pinned bitmap is recycled eventually. Otherwise,
-   * this will simply eat up ashmem memory and eventually lead to unfortunate crashes.
-   * We *may* eventually provide an unpin method - but we don't yet have a compelling use case for
-   * that.
-   * @param bitmap the purgeable bitmap to pin
-   */
-  public static void pinBitmap(Bitmap bitmap) {
-    Preconditions.checkNotNull(bitmap);
-    nativePinBitmap(bitmap);
-  }
-
   public static ByteBuffer getByteBuffer(Bitmap bitmap, long start, long size) {
     Preconditions.checkNotNull(bitmap);
     return nativeGetByteBuffer(bitmap, start, size);
@@ -95,9 +82,6 @@ public class Bitmaps {
 
   @DoNotStrip
   private static native ByteBuffer nativeGetByteBuffer(Bitmap bitmap, long start, long size);
-
-  @DoNotStrip
-  private static native void nativePinBitmap(Bitmap bitmap);
 
   @DoNotStrip
   private static native void nativeReleaseByteBuffer(Bitmap bitmap);

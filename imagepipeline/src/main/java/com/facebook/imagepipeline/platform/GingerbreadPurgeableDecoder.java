@@ -20,6 +20,7 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.common.streams.LimitedInputStream;
 import com.facebook.common.webp.WebpBitmapFactory;
 import com.facebook.common.webp.WebpSupportStatus;
+import com.facebook.imagepipeline.nativecode.DalvikPurgeableDecoder;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -121,7 +122,7 @@ public class GingerbreadPurgeableDecoder extends DalvikPurgeableDecoder {
     }
   }
 
-  protected Bitmap decodeFileDescriptorAsPurgeable(
+  private Bitmap decodeFileDescriptorAsPurgeable(
       CloseableReference<PooledByteBuffer> bytesRef,
       int inputLength,
       byte[] suffix,
