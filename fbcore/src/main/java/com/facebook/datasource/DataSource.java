@@ -54,7 +54,7 @@ public interface DataSource<T> {
    * @return true if any resources poured in the datasource should be sent to controllers. Usefull
    * with a RetainingDataSource to loaded resources are displayed correctly.
    */
-  boolean isReadyToPlay();
+  boolean hasMultipleResults();
 
   /**
    * @return true if request is finished, false otherwise

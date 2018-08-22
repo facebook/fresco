@@ -321,7 +321,7 @@ public abstract class AbstractDataSource<T> implements DataSource<T> {
   }
 
   @Override
-  public boolean isReadyToPlay() {
+  public boolean hasMultipleResults() {
     return false;
   }
 }

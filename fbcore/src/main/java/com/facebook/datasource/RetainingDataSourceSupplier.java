@@ -141,7 +141,7 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
     }
 
     @Override
-    public boolean isReadyToPlay() {
+    public boolean hasMultipleResults() {
       return true;
     }
   }
