@@ -7,11 +7,9 @@
 
 package com.facebook.imagepipeline.nativecode;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imageutils.BitmapUtil;
 import java.nio.ByteBuffer;
 
 /**
@@ -59,25 +57,6 @@ public class Bitmaps {
         src,
         src.getRowBytes(),
         dest.getHeight());
-  }
-
-  /**
-   * Reconfigures bitmap after checking its allocation size.
-   *
-   * <p> This method is here to overcome our testing framework limit. Robolectric does not provide
-   * KitKat specific APIs: {@link Bitmap#reconfigure} and {@link Bitmap#getAllocationByteCount}
-   * are part of that.
-   */
-  @TargetApi(19)
-  public static void reconfigureBitmap(
-      Bitmap bitmap,
-      int width,
-      int height,
-      Bitmap.Config bitmapConfig) {
-    Preconditions.checkArgument(
-        bitmap.getAllocationByteCount() >=
-            width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig));
-    bitmap.reconfigure(width, height, bitmapConfig);
   }
 
   @DoNotStrip

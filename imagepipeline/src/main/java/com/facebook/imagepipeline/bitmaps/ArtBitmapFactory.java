@@ -10,12 +10,11 @@ package com.facebook.imagepipeline.bitmaps;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.memory.BitmapPool;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.concurrent.ThreadSafe;
-
 
 /**
  * Bitmap factory for ART VM (Lollipop and up).
@@ -46,7 +45,10 @@ public class ArtBitmapFactory extends PlatformBitmapFactory {
       Bitmap.Config bitmapConfig) {
     int sizeInBytes = BitmapUtil.getSizeInByteForBitmap(width, height, bitmapConfig);
     Bitmap bitmap = mBitmapPool.get(sizeInBytes);
-    Bitmaps.reconfigureBitmap(bitmap, width, height, bitmapConfig);
+    Preconditions.checkArgument(
+        bitmap.getAllocationByteCount()
+            >= width * height * BitmapUtil.getPixelSizeForBitmapConfig(bitmapConfig));
+    bitmap.reconfigure(width, height, bitmapConfig);
     return CloseableReference.of(bitmap, mBitmapPool);
   }
 }
