@@ -8,6 +8,7 @@
 package com.facebook.common.util;
 
 import com.facebook.infer.annotation.Functional;
+import javax.annotation.Nullable;
 
 /**
  * Generic tri-state enum for boolean values that can also be unset.
@@ -97,7 +98,7 @@ public enum TriState {
    *     {@code this} is {@link TriState#UNSET}.
    */
   @Functional
-  public Boolean asBooleanObject() {
+  public @Nullable Boolean asBooleanObject() {
     switch (this) {
       case YES:
         return Boolean.TRUE;
