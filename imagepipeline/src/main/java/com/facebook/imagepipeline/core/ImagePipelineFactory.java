@@ -36,6 +36,7 @@ import com.facebook.imagepipeline.cache.EncodedMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.InstrumentedMemoryCache;
 import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.decoder.ResourceDrawableDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PoolFactory;
@@ -210,15 +211,19 @@ public class ImagePipelineFactory {
           webPDecoder = animatedFactory.getWebPDecoder(mConfig.getBitmapConfig());
         }
 
+        ImageDecoder resourceDecoder = new ResourceDrawableDecoder(mConfig.getContext());
+
         if (mConfig.getImageDecoderConfig() == null) {
           mImageDecoder = new DefaultImageDecoder(
               gifDecoder,
               webPDecoder,
+              resourceDecoder,
               getPlatformDecoder());
         } else {
           mImageDecoder = new DefaultImageDecoder(
               gifDecoder,
               webPDecoder,
+              resourceDecoder,
               getPlatformDecoder(),
               mConfig.getImageDecoderConfig().getCustomImageDecoders());
           // Add custom image formats if needed

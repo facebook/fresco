@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.image;
 
 import android.graphics.ColorSpace;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.util.Pair;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
@@ -67,6 +68,7 @@ public class EncodedImage implements Closeable {
   private int mStreamSize = UNKNOWN_STREAM_SIZE;
   private @Nullable BytesRange mBytesRange;
   private @Nullable ColorSpace mColorSpace;
+  private @Nullable Uri mUri;
 
   public EncodedImage(CloseableReference<PooledByteBuffer> pooledByteBufferRef) {
     Preconditions.checkArgument(CloseableReference.isValid(pooledByteBufferRef));
@@ -162,6 +164,13 @@ public class EncodedImage implements Closeable {
   }
 
   /**
+   * Sets the image uri to decode
+   */
+  public void setImageUri(Uri uri) {
+    this.mUri = uri;
+  }
+
+  /**
    * Sets the image format
    */
   public void setImageFormat(ImageFormat imageFormat) {
@@ -210,6 +219,13 @@ public class EncodedImage implements Closeable {
 
   public void setBytesRange(@Nullable BytesRange bytesRange) {
     mBytesRange = bytesRange;
+  }
+
+  /**
+   * Returns the image uri if set
+   */
+  public Uri getImageUri() {
+    return mUri;
   }
 
   /**
