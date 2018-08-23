@@ -94,7 +94,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           listener.requiresExtraMap(requestId)
               ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
               : null);
+      FrescoSystrace.beginSection("mInputProducer.produceResult");
       mInputProducer.produceResults(wrappedConsumer, producerContext);
+      FrescoSystrace.endSection();
     } finally {
       FrescoSystrace.endSection();
     }

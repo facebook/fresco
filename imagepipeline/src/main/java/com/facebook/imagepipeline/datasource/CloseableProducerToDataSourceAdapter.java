@@ -12,6 +12,8 @@ import com.facebook.datasource.DataSource;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -28,8 +30,11 @@ public class CloseableProducerToDataSourceAdapter<T>
       Producer<CloseableReference<T>> producer,
       SettableProducerContext settableProducerContext,
       RequestListener listener) {
-    return new CloseableProducerToDataSourceAdapter<T>(
+    FrescoSystrace.beginSection("CloseableProducerToDataSourceAdapter#create");
+    CloseableProducerToDataSourceAdapter<T> result = new CloseableProducerToDataSourceAdapter<T>(
         producer, settableProducerContext, listener);
+    FrescoSystrace.endSection();
+    return result;
   }
 
   private CloseableProducerToDataSourceAdapter(

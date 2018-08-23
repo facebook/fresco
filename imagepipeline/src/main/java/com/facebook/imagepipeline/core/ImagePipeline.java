@@ -35,6 +35,8 @@ import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
+
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -631,6 +633,7 @@ public class ImagePipeline {
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext,
       @Nullable RequestListener requestListener) {
+    FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
     final RequestListener finalRequestListener =
         getRequestListenerForRequest(imageRequest, requestListener);
 
@@ -654,6 +657,8 @@ public class ImagePipeline {
           producerSequence, settableProducerContext, finalRequestListener);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
+    } finally {
+      FrescoSystrace.endSection();
     }
   }
 
