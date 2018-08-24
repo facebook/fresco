@@ -47,14 +47,12 @@ public interface ImageTranscoder {
    * @param encodedImage The {@link EncodedImage} that will be transcoded.
    * @param rotationOptions The {@link RotationOptions} used when transcoding the image.
    * @param resizeOptions The {@link ResizeOptions} used when transcoding the image.
-   * @param isResizingEnabled true if resizing is allowed.
    * @return true if the image is resized, else false.
    */
   boolean canResize(
       EncodedImage encodedImage,
       @Nullable RotationOptions rotationOptions,
-      @Nullable ResizeOptions resizeOptions,
-      boolean isResizingEnabled);
+      @Nullable ResizeOptions resizeOptions);
 
   /**
    * Gets the identifier of the image transcoder. This is mostly used for logging purposes.

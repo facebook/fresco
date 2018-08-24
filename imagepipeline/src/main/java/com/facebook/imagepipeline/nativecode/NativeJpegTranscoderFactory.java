@@ -11,25 +11,16 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 
 public class NativeJpegTranscoderFactory implements ImageTranscoderFactory {
 
-  private ImageTranscoder mImageTranscoder;
-
-  private final boolean mResizingEnabled;
   private final int mMaxBitmapSize;
   private final boolean mUseDownSamplingRatio;
 
-  public NativeJpegTranscoderFactory(
-      final boolean resizingEnabled, final int maxBitmapSize, final boolean useDownSamplingRatio) {
-    mResizingEnabled = resizingEnabled;
+  public NativeJpegTranscoderFactory(final int maxBitmapSize, final boolean useDownSamplingRatio) {
     mMaxBitmapSize = maxBitmapSize;
     mUseDownSamplingRatio = useDownSamplingRatio;
   }
 
   @Override
-  public synchronized ImageTranscoder createImageTranscoder() {
-    if (mImageTranscoder == null) {
-      mImageTranscoder =
-          new NativeJpegTranscoder(mResizingEnabled, mMaxBitmapSize, mUseDownSamplingRatio);
-    }
-    return mImageTranscoder;
+  public ImageTranscoder createImageTranscoder(boolean isResizingEnabled) {
+    return new NativeJpegTranscoder(isResizingEnabled, mMaxBitmapSize, mUseDownSamplingRatio);
   }
 }

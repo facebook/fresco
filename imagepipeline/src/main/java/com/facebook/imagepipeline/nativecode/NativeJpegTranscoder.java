@@ -57,13 +57,12 @@ public class NativeJpegTranscoder implements ImageTranscoder {
   public boolean canResize(
       EncodedImage encodedImage,
       @Nullable RotationOptions rotationOptions,
-      @Nullable ResizeOptions resizeOptions,
-      boolean isResizingEnabled) {
+      @Nullable ResizeOptions resizeOptions) {
     if (rotationOptions == null) {
       rotationOptions = RotationOptions.autoRotate();
     }
     return JpegTranscoderUtils.getSoftwareNumerator(
-            rotationOptions, resizeOptions, encodedImage, isResizingEnabled)
+            rotationOptions, resizeOptions, encodedImage, mResizingEnabled)
         < JpegTranscoderUtils.SCALE_DENOMINATOR;
   }
 

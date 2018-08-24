@@ -26,7 +26,6 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.transcoder.ImageTranscodeResult;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
-import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.imagepipeline.transcoder.TranscodeStatus;
 import java.util.HashMap;
@@ -54,21 +53,18 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
-  private final boolean mResizingEnabled;
   private final Producer<EncodedImage> mInputProducer;
-  private final ImageTranscoderFactory mImageTranscoderFactory;
+  private final ImageTranscoder mImageTranscoder;
 
   public ResizeAndRotateProducer(
       final Executor executor,
       final PooledByteBufferFactory pooledByteBufferFactory,
-      final boolean resizingEnabled,
       final Producer<EncodedImage> inputProducer,
-      final ImageTranscoderFactory imageTranscoderFactory) {
+      final ImageTranscoder imageTranscoder) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
-    mResizingEnabled = resizingEnabled;
     mInputProducer = Preconditions.checkNotNull(inputProducer);
-    mImageTranscoderFactory = Preconditions.checkNotNull(imageTranscoderFactory);
+    mImageTranscoder = Preconditions.checkNotNull(imageTranscoder);
   }
 
   @Override
@@ -76,7 +72,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       final Consumer<EncodedImage> consumer,
       final ProducerContext context) {
     mInputProducer.produceResults(
-        new TransformingConsumer(consumer, context, mImageTranscoderFactory), context);
+        new TransformingConsumer(consumer, context, mImageTranscoder), context);
   }
 
   private class TransformingConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
@@ -90,11 +86,11 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     public TransformingConsumer(
         final Consumer<EncodedImage> consumer,
         final ProducerContext producerContext,
-        final ImageTranscoderFactory imageTranscoderFactory) {
+        final ImageTranscoder imageTranscoder) {
       super(consumer);
       mIsCancelled = false;
       mProducerContext = producerContext;
-      mImageTranscoder = imageTranscoderFactory.createImageTranscoder();
+      mImageTranscoder = imageTranscoder;
 
       JobScheduler.JobRunnable job = new JobScheduler.JobRunnable() {
         @Override
@@ -136,8 +132,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         return;
       }
       TriState shouldTransform =
-          shouldTransform(
-              mProducerContext.getImageRequest(), newResult, mResizingEnabled, mImageTranscoder);
+          shouldTransform(mProducerContext.getImageRequest(), newResult, mImageTranscoder);
       // ignore the intermediate result if we don't know what to do with it
       if (!isLast && shouldTransform == TriState.UNSET) {
         return;
@@ -250,7 +245,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static TriState shouldTransform(
       ImageRequest request,
       EncodedImage encodedImage,
-      boolean resizingEnabled,
       ImageTranscoder imageTranscoder) {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
@@ -261,10 +255,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     return TriState.valueOf(
         shouldRotate(request.getRotationOptions(), encodedImage)
             || imageTranscoder.canResize(
-                encodedImage,
-                request.getRotationOptions(),
-                request.getResizeOptions(),
-                resizingEnabled));
+                encodedImage, request.getRotationOptions(), request.getResizeOptions()));
   }
 
   private static boolean shouldRotate(RotationOptions rotationOptions, EncodedImage encodedImage) {

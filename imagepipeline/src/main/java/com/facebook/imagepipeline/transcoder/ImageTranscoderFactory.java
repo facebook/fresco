@@ -9,9 +9,11 @@ package com.facebook.imagepipeline.transcoder;
 public interface ImageTranscoderFactory {
 
   /**
-   * Create an image transcoder
+   * Creates an {@link ImageTranscoder} that enables or disables resizing depending on {@code
+   * isResizingEnabled}
    *
-   * @return the image transcoder
+   * @param isResizingEnabled true if resizing is allowed.
+   * @return The {@link ImageTranscoder}
    */
-  ImageTranscoder createImageTranscoder();
+  ImageTranscoder createImageTranscoder(boolean isResizingEnabled);
 }

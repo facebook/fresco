@@ -36,7 +36,6 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
@@ -689,15 +688,11 @@ public class ResizeAndRotateProducerTest {
   }
 
   private void whenResizingEnabledIs(boolean resizingEnabled) {
-    NativeJpegTranscoderFactory jpegTranscoderFactory =
-        new NativeJpegTranscoderFactory(resizingEnabled, MAX_BITMAP_SIZE, false);
+    NativeJpegTranscoder jpegTranscoder =
+        new NativeJpegTranscoder(resizingEnabled, MAX_BITMAP_SIZE, false);
     mResizeAndRotateProducer =
         new ResizeAndRotateProducer(
-            mTestExecutorService,
-            mPooledByteBufferFactory,
-            resizingEnabled,
-            mInputProducer,
-            jpegTranscoderFactory);
+            mTestExecutorService, mPooledByteBufferFactory, mInputProducer, jpegTranscoder);
 
     mResizeAndRotateProducer.produceResults(mConsumer, mProducerContext);
   }

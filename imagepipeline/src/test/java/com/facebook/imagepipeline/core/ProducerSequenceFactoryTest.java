@@ -16,6 +16,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWOR
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,6 +30,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -69,7 +71,9 @@ public class ProducerSequenceFactoryTest {
     PowerMockito.mockStatic(UriUtil.class, MediaUtils.class);
 
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    ImageTranscoder imageTranscoder = mock(ImageTranscoder.class);
     ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
+    when(imageTranscoderFactory.createImageTranscoder(anyBoolean())).thenReturn(imageTranscoder);
 
     mProducerSequenceFactory =
         new ProducerSequenceFactory(
@@ -83,7 +87,6 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             true,
-            MAX_BITMAP_SIZE,
             imageTranscoderFactory);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
@@ -343,7 +346,6 @@ public class ProducerSequenceFactoryTest {
             /* useBitmapPrepareToDraw */ true,
             false,
             true,
-            MAX_BITMAP_SIZE,
             imageTranscoderFactory);
   }
 }

@@ -11,7 +11,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
@@ -25,7 +24,6 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
@@ -61,7 +59,7 @@ import com.facebook.imagepipeline.producers.ThrottlingProducer;
 import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.producers.WebpTranscodeProducer;
-import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 
 public class ProducerFactory {
 
@@ -320,24 +318,12 @@ public class ProducerFactory {
   }
 
   public ResizeAndRotateProducer newResizeAndRotateProducer(
-      Producer<EncodedImage> inputProducer,
-      boolean resizingEnabledIfNotDownsampling,
-      boolean useDownsamplingRatio,
-      int maxBitmapSize,
-      @Nullable ImageTranscoderFactory imageTranscoderFactory) {
-    if (imageTranscoderFactory == null) {
-      imageTranscoderFactory =
-          new NativeJpegTranscoderFactory(
-              resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
-              maxBitmapSize,
-              useDownsamplingRatio);
-    }
+      Producer<EncodedImage> inputProducer, ImageTranscoder imageTranscoder) {
     return new ResizeAndRotateProducer(
         mExecutorSupplier.forBackgroundTasks(),
         mPooledByteBufferFactory,
-        resizingEnabledIfNotDownsampling && !mDownsampleEnabled,
         inputProducer,
-        imageTranscoderFactory);
+        imageTranscoder);
   }
 
   public static <T> SwallowResultProducer<T> newSwallowResultProducer(Producer<T> inputProducer) {
