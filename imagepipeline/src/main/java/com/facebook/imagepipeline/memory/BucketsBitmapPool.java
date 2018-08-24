@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.memory;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imageutils.BitmapUtil;
@@ -111,5 +112,14 @@ public class BucketsBitmapPool extends BasePool<Bitmap> implements BitmapPool {
     Preconditions.checkNotNull(value);
     return !value.isRecycled() &&
         value.isMutable();
+  }
+
+  @Override
+  public Bitmap get(int size) {
+    Bitmap result = super.get(size);
+    if (result != null) {
+      result.eraseColor(Color.TRANSPARENT);
+    }
+    return result;
   }
 }
