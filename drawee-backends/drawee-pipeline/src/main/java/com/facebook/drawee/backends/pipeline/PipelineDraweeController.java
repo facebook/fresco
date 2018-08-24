@@ -16,7 +16,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.references.CloseableReference;
-import com.facebook.common.time.RealtimeSinceBootClock;
+import com.facebook.common.time.AwakeTimeSinceBootClock;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawable.base.DrawableWithCaches;
 import com.facebook.drawee.backends.pipeline.debug.DebugOverlayImageOriginListener;
@@ -138,7 +138,7 @@ public class PipelineDraweeController
     }
     if (imagePerfDataListener != null) {
       if (mImagePerfMonitor == null) {
-        mImagePerfMonitor = new ImagePerfMonitor(RealtimeSinceBootClock.get(), this);
+        mImagePerfMonitor = new ImagePerfMonitor(AwakeTimeSinceBootClock.get(), this);
       }
       mImagePerfMonitor.addImagePerfDataListener(imagePerfDataListener);
       mImagePerfMonitor.setEnabled(true);

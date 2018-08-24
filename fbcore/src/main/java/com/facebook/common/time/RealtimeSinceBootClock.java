@@ -13,6 +13,9 @@ import com.facebook.common.internal.DoNotStrip;
  * A clock that returns number of milliseconds since boot. It guarantees that every next
  * call to now() will return a value that is not less that was returned from previous call to now().
  * This happens regardless system time changes, time zone changes, daylight saving changes etc.
+ *
+ * NOTE: For performance logging, consider using {@link AwakeTimeSinceBootClock} since it stops
+ * ticking while the device sleeps.
  */
 @DoNotStrip
 public class RealtimeSinceBootClock implements MonotonicClock {
