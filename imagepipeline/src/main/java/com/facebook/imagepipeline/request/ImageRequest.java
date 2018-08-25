@@ -74,11 +74,17 @@ public class ImageRequest {
   /** Lowest level that is permitted to fetch an image from */
   private final RequestLevel mLowestPermittedRequestLevel;
 
-  /** Whether the disk cache should be used for this request */
+  /** Whether the disk cache should be used for this request, which is partly dependent on the URI. */
   private final boolean mIsDiskCacheEnabled;
 
   /** Whether the memory cache should be used for this request */
   private final boolean mIsMemoryCacheEnabled;
+
+  /** Whether the decoded video thumbnail should be store to local disk image cache */
+  private final boolean mIsVideoThumbnailDiskCacheEnabled;
+
+  /** Whether the source uri is local video */
+  private boolean mIsLocalVideoUri = false;
 
   /** Postprocessor to run on the output bitmap. */
   private final @Nullable Postprocessor mPostprocessor;
@@ -117,6 +123,7 @@ public class ImageRequest {
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
     mIsMemoryCacheEnabled = builder.isMemoryCacheEnabled();
+    mIsVideoThumbnailDiskCacheEnabled = builder.isVideoThumbnailDiskCacheEnabled();
 
     mPostprocessor = builder.getPostprocessor();
 
@@ -185,7 +192,16 @@ public class ImageRequest {
   }
 
   public boolean isDiskCacheEnabled() {
-    return mIsDiskCacheEnabled;
+    return mIsDiskCacheEnabled && (UriUtil.isNetworkUri(mSourceUri)
+      || (mIsVideoThumbnailDiskCacheEnabled && mIsLocalVideoUri));
+  }
+
+  public boolean isVideoThumbnailDiskCacheEnabled() {
+    return mIsDiskCacheEnabled && (mIsVideoThumbnailDiskCacheEnabled && mIsLocalVideoUri);
+  }
+
+  public void setIsLocalVideoUri(boolean localVideoUri) {
+    mIsLocalVideoUri = localVideoUri;
   }
 
   public boolean isMemoryCacheEnabled() {
