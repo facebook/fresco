@@ -42,9 +42,15 @@ public class PoolFactory {
     if (mBitmapPool == null) {
       final String bitmapPoolType = mConfig.getBitmapPoolType();
       switch (bitmapPoolType) {
-        case "dummy":
+        case BitmapPoolType.DUMMY:
           mBitmapPool = new DummyBitmapPool();
-        case "legacy":
+          break;
+        case BitmapPoolType.EXPERIMENTAL:
+          mBitmapPool =
+              new LruBitmapPool(
+                  mConfig.getBitmapPoolMaxSize(), mConfig.getBitmapPoolStatsTracker());
+          break;
+        case BitmapPoolType.LEGACY:
           // fall through
         default:
           mBitmapPool = new BucketsBitmapPool(

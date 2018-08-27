@@ -18,8 +18,6 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class PoolConfig {
 
-  public static final String DEFAULT_BITMAP_POOL_TYPE = "legacy";
-
   // There are a lot of parameters in this class. Please follow strict alphabetical order.
 
   private final PoolParams mBitmapPoolParams;
@@ -31,6 +29,7 @@ public class PoolConfig {
   private final PoolParams mSmallByteArrayPoolParams;
   private final PoolStatsTracker mSmallByteArrayPoolStatsTracker;
   private final String mBitmapPoolType;
+  private final int mBitmapPoolMaxSize;
 
   private PoolConfig(Builder builder) {
     mBitmapPoolParams =
@@ -66,7 +65,9 @@ public class PoolConfig {
             NoOpPoolStatsTracker.getInstance() :
             builder.mSmallByteArrayPoolStatsTracker;
 
-    mBitmapPoolType = builder.mBitmapPoolType == null ? DEFAULT_BITMAP_POOL_TYPE : builder.mBitmapPoolType;
+    mBitmapPoolType =
+        builder.mBitmapPoolType == null ? BitmapPoolType.DEFAULT : builder.mBitmapPoolType;
+    mBitmapPoolMaxSize = builder.mBitmapPoolMaxSize;
   }
 
   public PoolParams getBitmapPoolParams() {
@@ -105,6 +106,10 @@ public class PoolConfig {
     return mBitmapPoolType;
   }
 
+  public int getBitmapPoolMaxSize() {
+    return mBitmapPoolMaxSize;
+  }
+
   public static Builder newBuilder() {
     return new Builder();
   }
@@ -120,6 +125,7 @@ public class PoolConfig {
     private PoolParams mSmallByteArrayPoolParams;
     private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
     private String mBitmapPoolType;
+    private int mBitmapPoolMaxSize;
 
     private Builder() {
     }
@@ -172,8 +178,14 @@ public class PoolConfig {
       return new PoolConfig(this);
     }
 
-    public void setBitmapPoolType(String bitmapPoolType) {
+    public Builder setBitmapPoolType(String bitmapPoolType) {
       mBitmapPoolType = bitmapPoolType;
+      return this;
+    }
+
+    public Builder setBitmapPoolMaxSize(int bitmapPoolMaxSize) {
+      mBitmapPoolMaxSize = bitmapPoolMaxSize;
+      return this;
     }
   }
 }
