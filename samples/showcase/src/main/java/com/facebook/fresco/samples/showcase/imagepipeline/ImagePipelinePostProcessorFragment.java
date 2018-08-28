@@ -29,6 +29,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.samples.showcase.postprocessor.BenchmarkPostprocessorForDuplicatedBitmap;
 import com.facebook.fresco.samples.showcase.postprocessor.BenchmarkPostprocessorForDuplicatedBitmapInPlace;
 import com.facebook.fresco.samples.showcase.postprocessor.BenchmarkPostprocessorForManualBitmapHandling;
 import com.facebook.fresco.samples.showcase.postprocessor.CachedWatermarkPostprocessor;
@@ -36,11 +37,15 @@ import com.facebook.fresco.samples.showcase.postprocessor.FasterGreyScalePostpro
 import com.facebook.fresco.samples.showcase.postprocessor.ScalingBlurPostprocessor;
 import com.facebook.fresco.samples.showcase.postprocessor.SlowGreyScalePostprocessor;
 import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor;
+import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -53,38 +58,7 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
   private static final int WATERMARK_COUNT = 10;
   private static final String WATERMARK_STRING = "WATERMARK";
 
-  private final Entry[] SPINNER_ENTRIES =
-      new Entry[] {
-        new Entry(R.string.imagepipeline_postprocessor_show_original, null),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_greyscale_slow,
-            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new SlowGreyScalePostprocessor())),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_greyscale,
-            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new FasterGreyScalePostprocessor())),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_watermark,
-            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new WatermarkPostprocessor(WATERMARK_COUNT, WATERMARK_STRING))),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_watermark_cached,
-            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new CachedWatermarkPostprocessor(WATERMARK_COUNT, WATERMARK_STRING))),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_blur,
-            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new IterativeBoxBlurPostProcessor(25, 3))),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_scaling_blur,
-            new BenchmarkPostprocessorForManualBitmapHandling(
-                this, new ScalingBlurPostprocessor(25, 3, 4))),
-        new Entry(
-            R.string.imagepipeline_postprocessor_set_round_as_circle,
-            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new RoundAsCirclePostprocessor())),
-      };
+  private List<Entry> mSpinnerEntries = new ArrayList<>();
 
   private Button mButton;
   private SimpleDraweeView mDraweeMain;
@@ -103,6 +77,7 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    mSpinnerEntries = getSpinnerItems();
     mUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.L);
 
     mButton = (Button) view.findViewById(R.id.button);
@@ -110,26 +85,27 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
     mSpinner = (Spinner) view.findViewById(R.id.spinner);
 
     mSpinner.setAdapter(new SimplePostprocessorAdapter());
-    mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final Entry spinnerEntry = SPINNER_ENTRIES[position];
-        setPostprocessor(spinnerEntry.postprocessor);
-      }
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            final Entry spinnerEntry = mSpinnerEntries.get(position);
+            setPostprocessor(spinnerEntry.postprocessor);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     mSpinner.setSelection(0);
 
-    mButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        final Entry spinnerEntry = SPINNER_ENTRIES[mSpinner.getSelectedItemPosition()];
-        setPostprocessor(spinnerEntry.postprocessor);
-      }
-    });
+    mButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            final Entry spinnerEntry = mSpinnerEntries.get(mSpinner.getSelectedItemPosition());
+            setPostprocessor(spinnerEntry.postprocessor);
+          }
+        });
   }
 
   @Override
@@ -166,12 +142,12 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
 
     @Override
     public int getCount() {
-      return SPINNER_ENTRIES.length;
+      return mSpinnerEntries.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return SPINNER_ENTRIES[position];
+      return mSpinnerEntries.get(position);
     }
 
     @Override
@@ -188,10 +164,47 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
           : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-      textView.setText(SPINNER_ENTRIES[position].descriptionId);
+      textView.setText(mSpinnerEntries.get(position).descriptionId);
 
       return view;
     }
+  }
+
+  private List<Entry> getSpinnerItems() {
+    return Arrays.asList(
+        new Entry(R.string.imagepipeline_postprocessor_show_original, null),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_greyscale_slow,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new SlowGreyScalePostprocessor())),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_greyscale,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new FasterGreyScalePostprocessor())),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_watermark,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new WatermarkPostprocessor(WATERMARK_COUNT, WATERMARK_STRING))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_watermark_cached,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new CachedWatermarkPostprocessor(WATERMARK_COUNT, WATERMARK_STRING))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_native_blur,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new IterativeBoxBlurPostProcessor(25, 3))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_blur,
+            new BenchmarkPostprocessorForDuplicatedBitmap(
+                this, new BlurPostProcessor(20, getContext()))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_scaling_blur,
+            new BenchmarkPostprocessorForManualBitmapHandling(
+                this, new ScalingBlurPostprocessor(25, 3, 4))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_round_as_circle,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new RoundAsCirclePostprocessor())));
   }
 
   private static class Entry {

@@ -63,7 +63,6 @@ public class ScalingBlurPostprocessor extends BasePostprocessor {
 
       NativeBlurFilter.iterativeBoxBlur(
           destBitmap, mIterations, Math.max(1, mBlurRadius / mScaleRatio));
-
       return CloseableReference.cloneOrNull(bitmapRef);
     } finally {
       CloseableReference.closeSafely(bitmapRef);

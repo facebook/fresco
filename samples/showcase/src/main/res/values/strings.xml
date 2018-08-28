@@ -64,6 +64,7 @@
   <string name="imagepipeline_postprocessor_set_greyscale">Grey Scale Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_watermark">Watermark Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_watermark_cached">Watermark Post-Processor (cached)</string>
+  <string name="imagepipeline_postprocessor_set_native_blur">Native Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_blur">Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_scaling_blur">Scaling Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_round_as_circle">Round As Circle Post-Processor</string>
