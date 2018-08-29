@@ -47,8 +47,7 @@ public class PoolFactory {
           break;
         case BitmapPoolType.EXPERIMENTAL:
           mBitmapPool =
-              new LruBitmapPool(
-                  mConfig.getBitmapPoolMaxSize(), mConfig.getBitmapPoolStatsTracker());
+              new LruBitmapPool(mConfig.getBitmapPoolMaxSize(), NoOpPoolStatsTracker.getInstance());
           break;
         case BitmapPoolType.LEGACY:
           // fall through
