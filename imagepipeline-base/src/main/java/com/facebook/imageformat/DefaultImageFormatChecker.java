@@ -245,7 +245,7 @@ public class DefaultImageFormatChecker implements ImageFormat.FormatChecker {
    */
   private static final String HEIF_HEADER_PREFIX = "ftyp";
 
-  private static final String[] HEIF_HEADER_SUFFIXES = {"heic", "heix", "hevc", "hevx"};
+  private static final String[] HEIF_HEADER_SUFFIXES = {"heic", "heix", "hevc", "hevx", "mif1", "msf1"};
   private static final int HEIF_HEADER_LENGTH =
       ImageFormatCheckerUtils.asciiBytes(HEIF_HEADER_PREFIX + HEIF_HEADER_SUFFIXES[0]).length;
 
