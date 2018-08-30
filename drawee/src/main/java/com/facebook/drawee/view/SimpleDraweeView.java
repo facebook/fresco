@@ -79,11 +79,13 @@ public class SimpleDraweeView extends GenericDraweeView {
     try {
       FrescoSystrace.beginSection("SimpleDraweeView#init");
       if (isInEditMode()) {
-        return;
+        getTopLevelDrawable().setVisible(true, false);
+        getTopLevelDrawable().invalidateSelf();
+      } else {
+        Preconditions.checkNotNull(
+            sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
+        mControllerBuilder = sDraweecontrollerbuildersupplier.get();
       }
-      Preconditions.checkNotNull(
-          sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
-      mControllerBuilder = sDraweecontrollerbuildersupplier.get();
 
       if (attrs != null) {
         TypedArray gdhAttrs = context.obtainStyledAttributes(
@@ -99,7 +101,11 @@ public class SimpleDraweeView extends GenericDraweeView {
                 R.styleable.SimpleDraweeView_actualImageResource,
                 NO_ID);
             if (resId != NO_ID) {
-              setActualImageResource(resId);
+              if (isInEditMode()) {
+                setImageResource(resId);
+              } else {
+                setActualImageResource(resId);
+              }
             }
           }
         } finally {
