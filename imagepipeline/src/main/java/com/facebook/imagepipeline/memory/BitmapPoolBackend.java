@@ -11,21 +11,48 @@ package com.facebook.imagepipeline.memory;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import com.facebook.common.logging.FLog;
 import com.facebook.imageutils.BitmapUtil;
 
 public class BitmapPoolBackend extends LruBucketsPoolBackend<Bitmap> {
+
+  private static final String TAG = "BitmapPoolBackend";
+
+  @Override
+  public void put(Bitmap bitmap) {
+    if (isReusable(bitmap)) {
+      super.put(bitmap);
+    }
+  }
+
   @Nullable
   @Override
   public Bitmap get(int size) {
     Bitmap bitmap = super.get(size);
-    if (bitmap != null) {
+    if (bitmap != null && isReusable(bitmap)) {
       bitmap.eraseColor(Color.TRANSPARENT);
+      return bitmap;
     }
-    return bitmap;
+    return null;
   }
 
   @Override
   public int getSize(Bitmap bitmap) {
     return BitmapUtil.getSizeInBytes(bitmap);
+  }
+
+  protected boolean isReusable(@Nullable Bitmap bitmap) {
+    if (bitmap == null) {
+      return false;
+    }
+    if (bitmap.isRecycled()) {
+      FLog.wtf(TAG, "Cannot reuse a recycled bitmap: %s", bitmap);
+      return false;
+    }
+    if (!bitmap.isMutable()) {
+      FLog.wtf(TAG, "Cannot reuse an immutable bitmap: %s", bitmap);
+      return false;
+    }
+    return true;
   }
 }
