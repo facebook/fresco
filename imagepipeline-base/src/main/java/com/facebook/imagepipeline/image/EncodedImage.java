@@ -22,6 +22,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.imageutils.HeifExifUtil;
 import com.facebook.imageutils.ImageMetaData;
 import com.facebook.imageutils.JfifUtil;
 import com.facebook.imageutils.WebpUtil;
@@ -221,7 +222,6 @@ public class EncodedImage implements Closeable {
   }
 
   /**
-   * Only valid if the image format is JPEG.
    * @return the rotation angle if the rotation angle is known, else -1. The rotation angle may not
    * be known if the image is incomplete (e.g. for progressive JPEGs).
    */
@@ -230,9 +230,7 @@ public class EncodedImage implements Closeable {
     return mRotationAngle;
   }
 
-  /**
-   * Only valid if the image format is JPEG. Returns the exif orientation if known (1 - 8), else 0.
-   */
+  /** Returns the exif orientation if known (1 - 8), else 0. */
   public int getExifOrientation() {
     parseMetaDataIfNeeded();
     return mExifOrientation;
@@ -363,6 +361,10 @@ public class EncodedImage implements Closeable {
         mExifOrientation = JfifUtil.getOrientation(getInputStream());
         mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(mExifOrientation);
       }
+    } else if (imageFormat == DefaultImageFormats.HEIF
+        && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
+      mExifOrientation = HeifExifUtil.getOrientation(getInputStream());
+      mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(mExifOrientation);
     } else {
       mRotationAngle = 0;
     }
