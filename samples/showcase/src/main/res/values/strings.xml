@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Fresco Showcase</string>
 
   <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -27,7 +27,7 @@
   <string name="drawee_scale_type_help">Select either the landscape or portrait picture. Then select a scale type to apply for the large Drawee.</string>
 
   <string name="drawee_span_simple_title">Simple DraweeSpan</string>
-  <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan. Also works with % animated images!</string>
+  <string name="drawee_span_simple_text">Text with an # inline image using a DraweeSpan. Also works with @ animated images!</string>
   <string name="drawee_span_simple_help">This example shows how to render text with an inline image. Change the scale type using the drop-down menu.</string>
 
   <string name="drawee_rounded_corners_title">Rounded Corners</string>
@@ -67,6 +67,7 @@
   <string name="imagepipeline_postprocessor_set_native_blur">Native Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_blur">Blur Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_scaling_blur">Scaling Blur Post-Processor</string>
+  <string name="imagepipeline_postprocessor_set_native_round_as_circle">Native Round As Circle Post-Processor</string>
   <string name="imagepipeline_postprocessor_set_round_as_circle">Round As Circle Post-Processor</string>
   <string name="imagepipeline_postprocessor_refresh">Refresh</string>
 
@@ -155,12 +156,12 @@
 
   <string name="preference_uri_override_title">URI Override</string>
   <string name="preference_uri_override_summary_none">&lt;none set&gt;</string>
-  <string name="preference_uri_override_summary_given">%1$s</string>
+  <string name="preference_uri_override_summary_given"><xliff:g id="name">%s</xliff:g></string>
 
   <string name="preference_uri_override_dialog_message">New URI to use in all requests instead of the default sample images</string>
   <string name="preference_uri_override_dialog_edittext_hint">https://example.org/cute_animal.jpg</string>
-  <string name="preference_uri_override_dialog_edittext_error_bad_uri">Bad URI: %1$s</string>
-  <string name="preference_uri_override_dialog_history">Last used: %1$s</string>
+  <string name="preference_uri_override_dialog_edittext_error_bad_uri">Bad URI: <xliff:g id="uri">%s</xliff:g></string>
+  <string name="preference_uri_override_dialog_history">Last used: <xliff:g id="uri">%s</xliff:g></string>
   <string name="preference_uri_override_dialog_button_set">Set</string>
   <string name="preference_uri_override_dialog_button_cancel">Cancel</string>
   <string name="preference_uri_override_dialog_button_remove">Remove Override</string>
@@ -172,12 +173,12 @@
   <string name="preferences_category_details">Version and Device Details</string>
 
   <string name="preference_details_android_version_title">Android Version</string>
-  <string name="preference_details_android_version_summary">SDK: %1$s (%2$s)</string>
+  <string name="preference_details_android_version_summary">SDK: <xliff:g id="name1">%s</xliff:g> (<xliff:g id="name2">%s</xliff:g>)</string>
   <string name="preference_details_cpu_architecture_title">CPU Architecture</string>
-  <string name="preference_details_cpu_architecture_summary_before_21">%1$s - supported ABIs: %2$s, %3$s</string>
-  <string name="preference_details_cpu_architecture_summary_after_21">%1$s - supported ABIs: %2$s</string>
+  <string name="preference_details_cpu_architecture_summary_before_21"><xliff:g id="name1">%s</xliff:g> - supported ABIs: <xliff:g id="name2">%s</xliff:g>, <xliff:g id="name3">%s</xliff:g></string>
+  <string name="preference_details_cpu_architecture_summary_after_21"><xliff:g id="name1">%s</xliff:g> - supported ABIs: <xliff:g id="name2">%s</xliff:g></string>
   <string name="preference_details_device_name_title">Device Name</string>
-  <string name="preference_details_device_name_summary">%1$s %2$s</string>
+  <string name="preference_details_device_name_summary"><xliff:g id="name1">%s</xliff:g> <xliff:g id="name2">%s</xliff:g></string>
 
   <!-- Other -->
 
@@ -193,7 +194,7 @@
   <string name="button_clear_cache">Clear Cache</string>
   <string name="button_prefetch">Prefetch</string>
   <string name="button_toggle_images">Toggle images</string>
-  <string name="prefetch_status">%1$d/%2$d prefetched, %3$d failed.</string>
+  <string name="prefetch_status"><xliff:g id="name1">%d</xliff:g>/<xliff:g id="name2">%d</xliff:g> prefetched, <xliff:g id="name3">%d</xliff:g> failed.</string>
 
   <string name="snackbar_uri_override_reminder_text">URI override is active</string>
   <string name="snackbar_uri_override_reminder_change_button">Change</string>

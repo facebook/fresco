@@ -106,7 +106,7 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
         false, /* auto resize */
         DraweeSpan.ALIGN_CENTER); /* alignment */
 
-    int imagePosition2 = text.indexOf('%');
+    int imagePosition2 = text.indexOf('@');
 
     DraweeHierarchy draweeAnimatedHierarchy =
         GenericDraweeHierarchyBuilder.newInstance(getResources())

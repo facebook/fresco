@@ -40,6 +40,7 @@ import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor
 import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor;
+import com.facebook.imagepipeline.postprocessors.RoundPostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
@@ -202,9 +203,12 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
             new BenchmarkPostprocessorForManualBitmapHandling(
                 this, new ScalingBlurPostprocessor(25, 3, 4))),
         new Entry(
-            R.string.imagepipeline_postprocessor_set_round_as_circle,
+            R.string.imagepipeline_postprocessor_set_native_round_as_circle,
             new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new RoundAsCirclePostprocessor())));
+                this, new RoundAsCirclePostprocessor())),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_round_as_circle,
+            new BenchmarkPostprocessorForDuplicatedBitmap(this, new RoundPostprocessor())));
   }
 
   private static class Entry {
