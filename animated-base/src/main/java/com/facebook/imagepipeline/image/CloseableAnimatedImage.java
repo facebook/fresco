@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.image;
 
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
+import javax.annotation.Nullable;
 
 /**
  * Encapsulates the data needed in order for {@code AnimatedDrawable} to render a
@@ -64,7 +65,7 @@ public class CloseableAnimatedImage extends CloseableImage {
     return mImageResult;
   }
 
-  public synchronized AnimatedImage getImage() {
+  public synchronized @Nullable AnimatedImage getImage() {
     return isClosed() ? null : mImageResult.getImage();
   }
 }
