@@ -13,6 +13,8 @@ import android.graphics.Color;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.imageutils.BitmapUtil;
+
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -114,9 +116,10 @@ public class BucketsBitmapPool extends BasePool<Bitmap> implements BitmapPool {
         value.isMutable();
   }
 
+  @Nullable
   @Override
-  public Bitmap get(int size) {
-    Bitmap result = super.get(size);
+  protected Bitmap getValue(Bucket<Bitmap> bucket) {
+    Bitmap result = super.getValue(bucket);
     if (result != null) {
       result.eraseColor(Color.TRANSPARENT);
     }

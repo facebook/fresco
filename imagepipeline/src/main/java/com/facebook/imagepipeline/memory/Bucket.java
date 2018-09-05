@@ -87,7 +87,9 @@ class Bucket<V> {
    * Gets a free item if possible from the freelist. Returns null if the free list is empty
    * Updates the bucket inUse count
    * @return an item from the free list, if available
+   * @deprecated use {@link BasePool#getValue(Bucket)}
    */
+  @Deprecated
   @Nullable
   public V get() {
     V value = pop();

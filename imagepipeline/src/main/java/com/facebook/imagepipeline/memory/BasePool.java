@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -188,6 +190,12 @@ public abstract class BasePool<V> implements Pool<V> {
     mPoolStatsTracker.setBasePool(this);
   }
 
+  @Nullable
+  protected synchronized V getValue(Bucket<V> bucket) {
+    //noinspection deprecation
+    return bucket.get();
+  }
+
   /**
    * Gets a new 'value' from the pool, if available. Allocates a new value if necessary.
    * If we need to perform an allocation,
@@ -211,7 +219,7 @@ public abstract class BasePool<V> implements Pool<V> {
 
       if (bucket != null) {
         // find an existing value that we can reuse
-        V value = bucket.get();
+        V value = getValue(bucket);
         if (value != null) {
           Preconditions.checkState(mInUseValues.add(value));
 
