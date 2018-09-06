@@ -40,6 +40,7 @@ import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import java.util.Collections;
 import java.util.HashSet;
@@ -98,6 +99,7 @@ public class ImagePipelineConfig {
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
 
   private ImagePipelineConfig(Builder builder) {
+    FrescoSystrace.beginSection("ImagePipelineConfig()");
     // We have to build experiments before the rest
     mImagePipelineExperiments = builder.mExperimentsBuilder.build();
     mBitmapMemoryCacheParamsSupplier =
@@ -159,10 +161,12 @@ public class ImagePipelineConfig {
         builder.mHttpConnectionTimeout < 0
             ? HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
             : builder.mHttpConnectionTimeout;
+    FrescoSystrace.beginSection("ImagePipelineConfig->mNetworkFetcher");
     mNetworkFetcher =
         builder.mNetworkFetcher == null
             ? new HttpUrlConnectionNetworkFetcher(mHttpNetworkTimeout)
             : builder.mNetworkFetcher;
+    FrescoSystrace.endSection();
     mPlatformBitmapFactory = builder.mPlatformBitmapFactory;
     mPoolFactory =
         builder.mPoolFactory == null ?
@@ -204,6 +208,7 @@ public class ImagePipelineConfig {
         }
       }
     }
+    FrescoSystrace.endSection();
   }
 
   private static void setWebpBitmapFactory(
@@ -222,7 +227,12 @@ public class ImagePipelineConfig {
   }
 
   private static DiskCacheConfig getDefaultMainDiskCacheConfig(final Context context) {
-    return DiskCacheConfig.newBuilder(context).build();
+    try {
+      FrescoSystrace.beginSection("DiskCacheConfig.getDefaultMainDiskCacheConfig");
+      return DiskCacheConfig.newBuilder(context).build();
+    } finally {
+      FrescoSystrace.endSection();
+    }
   }
 
   @VisibleForTesting

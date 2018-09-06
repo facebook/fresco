@@ -60,7 +60,9 @@ public class Fresco {
       sIsInitialized = true;
     }
     try {
+      FrescoSystrace.beginSection("Fresco.initialize->SoLoader.init");
       SoLoader.init(context, 0);
+      FrescoSystrace.endSection();
     } catch (IOException e) {
       FrescoSystrace.endSection();
       throw new RuntimeException("Could not initialize SoLoader", e);
@@ -80,9 +82,11 @@ public class Fresco {
   private static void initializeDrawee(
       Context context,
       @Nullable DraweeConfig draweeConfig) {
+    FrescoSystrace.beginSection("Fresco.initializeDrawee");
     sDraweeControllerBuilderSupplier =
         new PipelineDraweeControllerBuilderSupplier(context, draweeConfig);
     SimpleDraweeView.initialize(sDraweeControllerBuilderSupplier);
+    FrescoSystrace.endSection();
   }
 
   /** Gets the supplier of Fresco Drawee controller builders. */

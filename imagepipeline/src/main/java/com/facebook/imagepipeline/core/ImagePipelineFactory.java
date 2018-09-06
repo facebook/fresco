@@ -45,6 +45,8 @@ import com.facebook.imagepipeline.platform.KitKatPurgeableDecoder;
 import com.facebook.imagepipeline.platform.OreoDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
+
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -83,7 +85,9 @@ public class ImagePipelineFactory {
 
   /** Initializes {@link ImagePipelineFactory} with default config. */
   public static synchronized void initialize(Context context) {
+    FrescoSystrace.beginSection("ImagePipelineFactory#initialize");
     initialize(ImagePipelineConfig.newBuilder(context).build());
+    FrescoSystrace.endSection();
   }
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
@@ -132,9 +136,11 @@ public class ImagePipelineFactory {
   private AnimatedFactory mAnimatedFactory;
 
   public ImagePipelineFactory(ImagePipelineConfig config) {
+    FrescoSystrace.beginSection("ImagePipelineConfig()");
     mConfig = Preconditions.checkNotNull(config);
     mThreadHandoffProducerQueue = new ThreadHandoffProducerQueue(
         config.getExecutorSupplier().forLightweightBackgroundTasks());
+    FrescoSystrace.endSection();
   }
 
   @Nullable

@@ -16,6 +16,7 @@ import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -65,7 +66,9 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         fetchState, new NetworkFetcher.Callback() {
           @Override
           public void onResponse(InputStream response, int responseLength) throws IOException {
+            FrescoSystrace.beginSection("NetworkFetcher->onResponse");
             NetworkFetchProducer.this.onResponse(fetchState, response, responseLength);
+            FrescoSystrace.endSection();
           }
 
           @Override

@@ -10,6 +10,8 @@ package com.facebook.imagepipeline.memory;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
+import com.facebook.imagepipeline.systrace.FrescoSystrace;
+
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -32,6 +34,7 @@ public class PoolConfig {
   private final int mBitmapPoolMaxSize;
 
   private PoolConfig(Builder builder) {
+    FrescoSystrace.beginSection("PoolConfig()");
     mBitmapPoolParams =
         builder.mBitmapPoolParams == null ?
             DefaultBitmapPoolParams.get() :
@@ -68,6 +71,7 @@ public class PoolConfig {
     mBitmapPoolType =
         builder.mBitmapPoolType == null ? BitmapPoolType.DEFAULT : builder.mBitmapPoolType;
     mBitmapPoolMaxSize = builder.mBitmapPoolMaxSize;
+    FrescoSystrace.endSection();
   }
 
   public PoolParams getBitmapPoolParams() {
