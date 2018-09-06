@@ -19,6 +19,10 @@ public class NativeRoundingFilter {
     ImagePipelineNativeLoader.load();
   }
 
+  public static void toCircle(Bitmap bitmap) {
+    toCircle(bitmap, false);
+  }
+
   /**
    * This is a fast, native implementation for rounding a bitmap. It takes the given bitmap and
    * modifies it to be circular.
@@ -28,11 +32,11 @@ public class NativeRoundingFilter {
    *
    * @param bitmap the bitmap to modify
    */
-  public static void toCircle(Bitmap bitmap) {
+  public static void toCircle(Bitmap bitmap, boolean antiAliased) {
     Preconditions.checkNotNull(bitmap);
-    nativeToCircleFilter(bitmap);
+    nativeToCircleFilter(bitmap, antiAliased);
   }
 
   @DoNotStrip
-  private static native void nativeToCircleFilter(Bitmap bitmap);
+  private static native void nativeToCircleFilter(Bitmap bitmap, boolean antiAliased);
 }
