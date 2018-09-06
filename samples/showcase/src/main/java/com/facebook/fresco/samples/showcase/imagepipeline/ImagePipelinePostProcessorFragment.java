@@ -205,7 +205,11 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
         new Entry(
             R.string.imagepipeline_postprocessor_set_native_round_as_circle,
             new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
-                this, new RoundAsCirclePostprocessor())),
+                this, new RoundAsCirclePostprocessor(false))),
+        new Entry(
+            R.string.imagepipeline_postprocessor_set_round_as_aa_circle,
+            new BenchmarkPostprocessorForDuplicatedBitmapInPlace(
+                this, new RoundAsCirclePostprocessor(true))),
         new Entry(
             R.string.imagepipeline_postprocessor_set_round_as_circle,
             new BenchmarkPostprocessorForDuplicatedBitmap(this, new RoundPostprocessor())));
