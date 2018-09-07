@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 @DoNotStrip
 public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
 
+  private static boolean sEnableAshmemBitmap = true;
+
   static {
     ImagePipelineNativeLoader.load();
   }
@@ -157,10 +159,12 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     BitmapFactory.Options options = new BitmapFactory.Options();
     options.inDither = true; // known to improve picture quality at low cost
     options.inPreferredConfig = bitmapConfig;
-    // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
-    options.inPurgeable = true;
-    // Enable copy of of bitmap to enable purgeable decoding by filedescriptor
-    options.inInputShareable = true;
+    if (sEnableAshmemBitmap) {
+      // Decode the image into a 'purgeable' bitmap that lives on the ashmem heap
+      options.inPurgeable = true;
+      // Enable copy of of bitmap to enable purgeable decoding by filedescriptor
+      options.inInputShareable = true;
+    }
     // Sample size should ONLY be different than 1 when downsampling is enabled in the pipeline
     options.inSampleSize = sampleSize;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -188,8 +192,10 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
   public CloseableReference<Bitmap> pinBitmap(Bitmap bitmap) {
     Preconditions.checkNotNull(bitmap);
     try {
-      // Real decoding happens here - if the image was corrupted, this will throw an exception
-      nativePinBitmap(bitmap);
+      if (sEnableAshmemBitmap) {
+        // Real decoding happens here - if the image was corrupted, this will throw an exception
+        nativePinBitmap(bitmap);
+      }
     } catch (Exception e) {
       bitmap.recycle();
       throw Throwables.propagate(e);
@@ -210,6 +216,10 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
       throw new TooManyBitmapsException(detailMessage);
     }
     return CloseableReference.of(bitmap, mUnpooledBitmapsCounter.getReleaser());
+  }
+
+  public static void enableAshmemBitmap(final boolean enableAshmemBitmap) {
+    sEnableAshmemBitmap = enableAshmemBitmap;
   }
 
   @DoNotStrip
