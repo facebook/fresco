@@ -82,6 +82,8 @@ public class ProducerSequenceFactory {
   private Producer<EncodedImage> mCommonNetworkFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalImageFileFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalVideoFileFetchSequence;
+  @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalVideoFileFetchSequence2;
+  @VisibleForTesting Producer<EncodedImage> mLocalVideoFileFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalContentUriFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalResourceFetchSequence;
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mLocalAssetFetchSequence;
@@ -279,12 +281,12 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_NETWORK:
           return getNetworkFetchSequence();
         case SOURCE_TYPE_LOCAL_VIDEO_FILE:
-          return getLocalVideoFileFetchSequence();
+          return getLocalVideoFileFetchSequence(imageRequest);
         case SOURCE_TYPE_LOCAL_IMAGE_FILE:
           return getLocalImageFileFetchSequence();
         case SOURCE_TYPE_LOCAL_CONTENT:
           if (MediaUtils.isVideo(mContentResolver.getType(uri))) {
-            return getLocalVideoFileFetchSequence();
+            return getLocalVideoFileFetchSequence(imageRequest);
           }
           return getLocalContentUriFetchSequence();
         case SOURCE_TYPE_LOCAL_ASSET:
@@ -441,6 +443,14 @@ public class ProducerSequenceFactory {
     return mLocalImageFileFetchSequence;
   }
 
+
+  private Producer<CloseableReference<CloseableImage>>
+  getLocalVideoFileFetchSequence(ImageRequest imageRequest) {
+    imageRequest.setIsLocalVideoUri(true);
+    return imageRequest.isVideoThumbnailDiskCacheEnabled() ?
+        getLocalVideoFileFetchSequence2() : getLocalVideoFileFetchSequence();
+  }
+
   /**
    * Bitmap cache get -> thread hand off -> multiplex -> bitmap cache ->
    * local video thumbnail
@@ -454,6 +464,38 @@ public class ProducerSequenceFactory {
           newBitmapCacheGetToBitmapCacheSequence(localVideoThumbnailProducer);
     }
     return mLocalVideoFileFetchSequence;
+  }
+
+  /**
+   * Bitmap cache get -> thread hand off -> multiplex -> bitmap cache ->
+   * decode -> multiplex -> encoded cache -> disk cache -> (webp transcode) -> local video thumbnail
+   */
+  private synchronized Producer<CloseableReference<CloseableImage>>
+  getLocalVideoFileFetchSequence2() {
+    if (mLocalVideoFileFetchSequence2 == null) {
+      mLocalVideoFileFetchSequence2 =
+          newBitmapCacheGetToDecodeSequence(getLocalVideoFileFetchToEncodedMemorySequence());
+    }
+
+    return mLocalVideoFileFetchSequence2;
+  }
+
+  /**
+   * multiplex -> encoded cache -> disk cache -> (webp transcode) -> local video thumbnail.
+   */
+  private synchronized Producer<EncodedImage> getLocalVideoFileFetchToEncodedMemorySequence() {
+    FrescoSystrace.beginSection("ProducerSequenceFactory#getLocalVideoFileFetchToEncodedMemorySequence");
+    if (mLocalVideoFileFetchToEncodedMemorySequence == null) {
+      FrescoSystrace.beginSection("ProducerSequenceFactory#getLocalVideoFileFetchToEncodedMemorySequence:init");
+      Producer<EncodedImage> inputProducer =
+          newEncodedCacheMultiplexToTranscodeSequence(
+              mProducerFactory.newLocalVideoThumbnailProducer2());
+      mLocalVideoFileFetchToEncodedMemorySequence =
+          ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
+      FrescoSystrace.endSection();
+    }
+    FrescoSystrace.endSection();
+    return mLocalVideoFileFetchToEncodedMemorySequence;
   }
 
   /**

@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imagepipeline.producers.AddImageTransformMetaDataProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheKeyMultiplexProducer;
@@ -43,6 +44,7 @@ import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
+import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer2;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.NullProducer;
@@ -71,6 +73,7 @@ public class ProducerFactory {
   private AssetManager mAssetManager;
 
   // Decode dependencies
+  private final BitmapPool mBitmapPool;
   private final ByteArrayPool mByteArrayPool;
   private final ImageDecoder mImageDecoder;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
@@ -101,6 +104,7 @@ public class ProducerFactory {
 
   public ProducerFactory(
       Context context,
+      BitmapPool bitmapPool,
       ByteArrayPool byteArrayPool,
       ImageDecoder imageDecoder,
       ProgressiveJpegConfig progressiveJpegConfig,
@@ -123,6 +127,7 @@ public class ProducerFactory {
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
 
+    mBitmapPool = bitmapPool;
     mByteArrayPool = byteArrayPool;
     mImageDecoder = imageDecoder;
     mProgressiveJpegConfig = progressiveJpegConfig;
@@ -290,6 +295,14 @@ public class ProducerFactory {
 
   public LocalVideoThumbnailProducer newLocalVideoThumbnailProducer() {
     return new LocalVideoThumbnailProducer(
+        mExecutorSupplier.forLocalStorageRead(),
+        mContentResolver);
+  }
+
+  public LocalVideoThumbnailProducer2 newLocalVideoThumbnailProducer2() {
+    return new LocalVideoThumbnailProducer2(
+        mPooledByteBufferFactory,
+        mBitmapPool,
         mExecutorSupplier.forLocalStorageRead(),
         mContentResolver);
   }

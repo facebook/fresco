@@ -41,6 +41,7 @@ public class ImageRequestBuilder {
   private @Nullable Postprocessor mPostprocessor = null;
   private boolean mDiskCacheEnabled = true;
   private boolean mMemoryCacheEnabled = true;
+  private boolean mVideoThumbnailDiskCacheEnable = true;
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
 
@@ -263,9 +264,20 @@ public class ImageRequestBuilder {
     return this;
   }
 
-  /** Returns whether the use of the disk cache is enabled, which is partly dependent on the URI. */
+  /** Returns whether the use of the disk cache is enabled */
   public boolean isDiskCacheEnabled() {
-    return mDiskCacheEnabled && UriUtil.isNetworkUri(mSourceUri);
+    return mDiskCacheEnabled;
+  }
+
+  /** Disables video thumbnail disk cache for this request if the image come from local video. */
+  public ImageRequestBuilder disableVideoThumbnailDiskCache() {
+    mVideoThumbnailDiskCacheEnable = false;
+    return this;
+  }
+
+  /** Return whether the disk cache of local video thumbnails is enabled */
+  public boolean isVideoThumbnailDiskCacheEnabled() {
+    return mVideoThumbnailDiskCacheEnable;
   }
 
   /** Disables memory cache for this request. */

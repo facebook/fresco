@@ -355,6 +355,7 @@ public class ImagePipelineFactory {
               .getProducerFactoryMethod()
               .createProducerFactory(
                   mConfig.getContext(),
+                  mConfig.getPoolFactory().getBitmapPool(),
                   mConfig.getPoolFactory().getSmallByteArrayPool(),
                   getImageDecoder(),
                   mConfig.getProgressiveJpegConfig(),

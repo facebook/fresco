@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
 
 /**
@@ -251,6 +252,7 @@ public class ImagePipelineExperiments {
 
     ProducerFactory createProducerFactory(
         Context context,
+        BitmapPool bitmapPool,
         ByteArrayPool byteArrayPool,
         ImageDecoder imageDecoder,
         ProgressiveJpegConfig progressiveJpegConfig,
@@ -276,6 +278,7 @@ public class ImagePipelineExperiments {
     @Override
     public ProducerFactory createProducerFactory(
         Context context,
+        BitmapPool bitmapPool,
         ByteArrayPool byteArrayPool,
         ImageDecoder imageDecoder,
         ProgressiveJpegConfig progressiveJpegConfig,
@@ -296,6 +299,7 @@ public class ImagePipelineExperiments {
         int maxBitmapSize) {
       return new ProducerFactory(
           context,
+          bitmapPool,
           byteArrayPool,
           imageDecoder,
           progressiveJpegConfig,
