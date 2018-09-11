@@ -9,6 +9,14 @@
     >
 
   <Spinner
+      android:id="@+id/spinner_select_decoder"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/margin_medium"
+      android:entries="@array/gif_decoder_options"
+      />
+
+  <Spinner
       android:id="@+id/spinner"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

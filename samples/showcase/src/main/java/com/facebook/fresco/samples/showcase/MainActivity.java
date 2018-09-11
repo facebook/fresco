@@ -212,10 +212,7 @@ public class MainActivity extends AppCompatActivity
         fragment = new ImageFormatColorFragment();
         break;
       case R.id.nav_format_gif:
-        fragment = ImageFormatGifFragment.newFragment(false);
-        break;
-      case R.id.nav_format_gif_lite:
-        fragment = ImageFormatGifFragment.newFragment(true);
+        fragment = new ImageFormatGifFragment();
         break;
       case R.id.nav_format_webp:
         fragment = new ImageFormatWebpFragment();

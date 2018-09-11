@@ -38,19 +38,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  */
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
-  private static final String IS_LITE_KEY = "IS_LITE";
-
-  public static ImageFormatGifFragment newFragment(boolean isLite) {
-
-    ImageFormatGifFragment fragment = new ImageFormatGifFragment();
-    if (isLite) {
-      Bundle args = new Bundle();
-      args.putBoolean(IS_LITE_KEY, true);
-      fragment.setArguments(args);
-    }
-    return fragment;
-  }
-
   public static final Uri URI_GIF_S =
       Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_s.gif");
   public static final Uri URI_GIF_M =
@@ -64,7 +51,9 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
       new Entry(R.string.format_gif_label_large, URI_GIF_L),
   };
 
+  private Spinner mSpinner;
   private SimpleDraweeView mSimpleDraweeView;
+  private @Nullable GifDecoder mGifDecoder;
 
   @Nullable
   @Override
@@ -100,20 +89,47 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
       }
     });
 
-    final Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-    spinner.setAdapter(new SimpleUriListAdapter());
-    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final Entry spinnerEntry = SPINNER_ENTRIES[spinner.getSelectedItemPosition()];
-        setAnimationUri(spinnerEntry.uri);
-      }
+    mSpinner = (Spinner) view.findViewById(R.id.spinner);
+    mSpinner.setAdapter(new SimpleUriListAdapter());
+    mSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            refreshAnimation();
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
-    spinner.setSelection(0);
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    mSpinner.setSelection(0);
+
+    final Spinner decoderSpinner = (Spinner) view.findViewById(R.id.spinner_select_decoder);
+    decoderSpinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            switch (position) {
+              case 0:
+                mGifDecoder = null;
+                break;
+              case 1:
+                mGifDecoder = new GifDecoder();
+                break;
+              default:
+                throw new IllegalArgumentException("Unknown decoder selected");
+            }
+            refreshAnimation();
+          }
+
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    decoderSpinner.setSelection(0);
+  }
+
+  private void refreshAnimation() {
+    final Entry spinnerEntry = SPINNER_ENTRIES[mSpinner.getSelectedItemPosition()];
+    setAnimationUri(spinnerEntry.uri);
   }
 
   private void setAnimationUri(Uri uri) {
@@ -121,11 +137,11 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
         Fresco.newDraweeControllerBuilder()
             .setAutoPlayAnimations(true)
             .setOldController(mSimpleDraweeView.getController());
-    if (isLiteMode()) {
+    if (mGifDecoder != null) {
       controllerBuilder.setImageRequest(
           ImageRequestBuilder.newBuilderWithSource(uri)
               .setImageDecodeOptions(
-                  ImageDecodeOptions.newBuilder().setCustomImageDecoder(new GifDecoder()).build())
+                  ImageDecodeOptions.newBuilder().setCustomImageDecoder(mGifDecoder).build())
               .build());
     } else {
       controllerBuilder.setUri(uri).build();
@@ -133,14 +149,9 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
     mSimpleDraweeView.setController(controllerBuilder.build());
   }
 
-  private boolean isLiteMode() {
-    return getArguments() != null
-        && getArguments().getBoolean(IS_LITE_KEY, false /* defaultValue */);
-  }
-
   @Override
   public int getTitleId() {
-    return isLiteMode() ? R.string.format_gif_lite_title : R.string.format_gif_title;
+    return R.string.format_gif_title;
   }
 
   private class SimpleUriListAdapter extends BaseAdapter {

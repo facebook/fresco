@@ -110,10 +110,6 @@
             android:title="@string/format_gif_title"
             />
         <item
-            android:id="@+id/nav_format_gif_lite"
-            android:title="@string/format_gif_lite_title"
-            />
-        <item
             android:id="@+id/nav_format_webp"
             android:title="@string/format_webp_title"
             />
