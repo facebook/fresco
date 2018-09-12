@@ -11,18 +11,17 @@ import android.graphics.Canvas;
 import android.graphics.Movie;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/* package-private */ class GifSimpleMetadataDecoder implements GifMetadataDecoder {
+/* package-private */ class GifMetadataMovieDecoder implements GifMetadataDecoder {
 
   private static final int FRAME_TIME_AT_60_FPS = 17; // ~17ms per frame at 60fps
 
   private final Movie mMovie;
   private final List<Integer> mFrameDurations = new ArrayList<>();
 
-  GifSimpleMetadataDecoder(Movie movie) {
+  GifMetadataMovieDecoder(Movie movie) {
     mMovie = movie;
   }
 

@@ -24,8 +24,10 @@ public interface GifMetadataDecoder {
   int getFrameDurationMs(int frameNumber);
 
   class Factory {
-    public static GifMetadataDecoder create(Movie movie) throws IOException {
-      GifMetadataDecoder decoder = new GifSimpleMetadataDecoder(movie);
+    public static GifMetadataDecoder create(boolean simple, Movie movie, InputStream is)
+        throws IOException {
+      GifMetadataDecoder decoder =
+          simple ? new GifMetadataMovieDecoder(movie) : new GifMetadataStreamDecoder(is);
       decoder.decode();
       return decoder;
     }
