@@ -55,7 +55,7 @@ public abstract class BaseBitmapReferenceDataSubscriber
     CloseableReference<Bitmap> bitmapReference = null;
     if (closeableImageRef != null && closeableImageRef.get() instanceof CloseableStaticBitmap) {
       bitmapReference =
-          ((CloseableStaticBitmap) closeableImageRef.get()).convertToBitmapReference();
+          ((CloseableStaticBitmap) closeableImageRef.get()).cloneUnderlyingBitmapReference();
     }
 
     try {
