@@ -33,7 +33,7 @@ public class ImagePerfState {
   private long mImageRequestEndTimeMs = UNSET;
 
   // Image pipeline information
-  private @ImageOrigin int mImageOrigin = ImageOrigin.UNKNOWN;
+  private @ImageOrigin int mImageOrigin = UNSET;
   private boolean mIsPrefetch;
 
   // On screen information

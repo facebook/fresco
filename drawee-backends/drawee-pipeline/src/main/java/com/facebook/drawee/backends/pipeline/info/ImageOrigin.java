@@ -7,6 +7,7 @@
 package com.facebook.drawee.backends.pipeline.info;
 
 import static com.facebook.drawee.backends.pipeline.info.ImageOrigin.DISK;
+import static com.facebook.drawee.backends.pipeline.info.ImageOrigin.LOCAL;
 import static com.facebook.drawee.backends.pipeline.info.ImageOrigin.MEMORY_BITMAP;
 import static com.facebook.drawee.backends.pipeline.info.ImageOrigin.MEMORY_ENCODED;
 import static com.facebook.drawee.backends.pipeline.info.ImageOrigin.NETWORK;
@@ -26,12 +27,14 @@ import java.lang.annotation.Retention;
   DISK,
   MEMORY_ENCODED,
   MEMORY_BITMAP,
+  LOCAL,
 })
 public @interface ImageOrigin {
 
-  int UNKNOWN = -1;
-  int NETWORK = 0;
-  int DISK = 1;
-  int MEMORY_ENCODED = 2;
-  int MEMORY_BITMAP = 3;
+  int UNKNOWN = 1;
+  int NETWORK = 2;
+  int DISK = 3;
+  int MEMORY_ENCODED = 4;
+  int MEMORY_BITMAP = 5;
+  int LOCAL = 6;
 }

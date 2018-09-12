@@ -8,8 +8,14 @@ package com.facebook.drawee.backends.pipeline.info;
 
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheGetProducer;
 import com.facebook.imagepipeline.producers.BitmapMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.DataFetchProducer;
 import com.facebook.imagepipeline.producers.DiskCacheReadProducer;
 import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
+import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
+import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
+import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProducer;
+import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
+import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 
 public class ImageOriginUtils {
@@ -24,8 +30,13 @@ public class ImageOriginUtils {
         return "memory_encoded";
       case ImageOrigin.MEMORY_BITMAP:
         return "memory_bitmap";
+      case ImageOrigin.LOCAL:
+        return "local";
+      case ImageOrigin.UNKNOWN:
+        // fall through
       default:
         return "unknown";
+
     }
   }
 
@@ -40,6 +51,15 @@ public class ImageOriginUtils {
         return ImageOrigin.DISK;
       case NetworkFetchProducer.PRODUCER_NAME:
         return ImageOrigin.NETWORK;
+
+      case DataFetchProducer.PRODUCER_NAME:
+      case LocalFileFetchProducer.PRODUCER_NAME:
+      case LocalResourceFetchProducer.PRODUCER_NAME:
+      case LocalAssetFetchProducer.PRODUCER_NAME:
+      case LocalContentUriFetchProducer.PRODUCER_NAME:
+      case LocalContentUriThumbnailFetchProducer.PRODUCER_NAME:
+        return ImageOrigin.LOCAL;
+
       default:
         return ImageOrigin.UNKNOWN;
     }
