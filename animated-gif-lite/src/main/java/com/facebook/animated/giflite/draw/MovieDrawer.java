@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package com.facebook.animated.giflite;
+package com.facebook.animated.giflite.draw;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,7 +17,7 @@ import android.support.annotation.Nullable;
  * not be accessed outside of {@link MovieDrawer}. Attempts to optimize work done by the drawing
  * {@link Canvas} by detecting if the underlying {@link Bitmap} has changed.
  */
-class MovieDrawer {
+public class MovieDrawer {
 
   private final Movie mMovie;
   private final MovieScaleHolder mScaleHolder;

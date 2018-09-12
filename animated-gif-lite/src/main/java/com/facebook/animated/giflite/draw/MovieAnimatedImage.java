@@ -5,26 +5,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.animated.giflite;
+package com.facebook.animated.giflite.draw;
 
 import android.graphics.Movie;
-import android.support.annotation.Nullable;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImage;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 
 /** Simple wrapper for an animated image backed by {@link Movie}. */
-class MovieAnimatedImage implements AnimatedImage {
+public class MovieAnimatedImage implements AnimatedImage {
 
   private final MovieFrame[] mFrames;
   private final int mSizeInBytes;
   private final int mDuration;
-  private @Nullable int[] mFrameDurations;
+  private final int mLoopCount;
+  private final int[] mFrameDurations;
 
-  public MovieAnimatedImage(MovieFrame[] frames, int sizeInBytes, int duration) {
+  public MovieAnimatedImage(MovieFrame[] frames, int sizeInBytes, int duration, int loopCount) {
     mFrames = frames;
     mSizeInBytes = sizeInBytes;
     mDuration = duration;
+    mLoopCount = loopCount;
+    mFrameDurations = new int[mFrames.length];
+    for (int i = 0, N = mFrames.length; i < N; i++) {
+      mFrameDurations[i] = mFrames[i].getDurationMs();
+    }
   }
 
   @Override
@@ -52,23 +57,12 @@ class MovieAnimatedImage implements AnimatedImage {
 
   @Override
   public int[] getFrameDurations() {
-    if (mFrameDurations == null) {
-      mFrameDurations = new int[mFrames.length];
-      for (int i = 0, N = mFrames.length; i < N; i++) {
-        mFrameDurations[i] = mFrames[i].getDurationMs();
-      }
-    }
     return mFrameDurations;
   }
 
-  /**
-   * Does not support variable loop count gif images. Will loop forever
-   *
-   * @return {@link LOOP_COUNT_INFINITE}
-   */
   @Override
   public int getLoopCount() {
-    return LOOP_COUNT_INFINITE;
+    return mLoopCount;
   }
 
   @Override
@@ -88,13 +82,15 @@ class MovieAnimatedImage implements AnimatedImage {
 
   @Override
   public AnimatedDrawableFrameInfo getFrameInfo(int frameNumber) {
+    MovieFrame frame = mFrames[frameNumber];
     return new AnimatedDrawableFrameInfo(
         frameNumber,
-        mFrames[frameNumber].getXOffset(),
-        mFrames[frameNumber].getYOffset(),
-        mFrames[frameNumber].getWidth(),
-        mFrames[frameNumber].getHeight(),
-        AnimatedDrawableFrameInfo.BlendOperation.NO_BLEND,
-        AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_DO_NOT);
+        frame.getXOffset(),
+        frame.getYOffset(),
+        frame.getWidth(),
+        frame.getHeight(),
+        AnimatedDrawableFrameInfo.BlendOperation.BLEND_WITH_PREVIOUS,
+        mFrames[frameNumber].getDisposalMode());
   }
 }
+

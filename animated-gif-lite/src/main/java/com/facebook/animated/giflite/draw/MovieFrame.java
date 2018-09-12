@@ -5,30 +5,38 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.animated.giflite;
+package com.facebook.animated.giflite.draw;
 
 import android.graphics.Bitmap;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImageFrame;
 
 /**
  * Simple wrapper for an animated image frame back by {@link MovieDrawer}. All {@link MovieFrame}
  * for the same {@link MovieAnimatedImage} will be backed by the same {@link MovieDrawer}.
  */
-class MovieFrame implements AnimatedImageFrame {
+public class MovieFrame implements AnimatedImageFrame {
 
   private final MovieDrawer mMovieDrawer;
   private final int mFrameStart;
   private final int mFrameDuration;
   private final int mFrameWidth;
   private final int mFrameHeight;
+  private final AnimatedDrawableFrameInfo.DisposalMethod mDisposalMethod;
 
   public MovieFrame(
-      MovieDrawer movieDrawer, int frameStart, int frameDuration, int frameWidth, int frameHeight) {
+      MovieDrawer movieDrawer,
+      int frameStart,
+      int frameDuration,
+      int frameWidth,
+      int frameHeight,
+      AnimatedDrawableFrameInfo.DisposalMethod disposalMode) {
     mMovieDrawer = movieDrawer;
     mFrameStart = frameStart;
     mFrameDuration = frameDuration;
     mFrameWidth = frameWidth;
     mFrameHeight = frameHeight;
+    mDisposalMethod = disposalMode;
   }
 
   @Override
@@ -62,5 +70,9 @@ class MovieFrame implements AnimatedImageFrame {
   @Override
   public int getYOffset() {
     return 0;
+  }
+
+  public AnimatedDrawableFrameInfo.DisposalMethod getDisposalMode() {
+    return mDisposalMethod;
   }
 }

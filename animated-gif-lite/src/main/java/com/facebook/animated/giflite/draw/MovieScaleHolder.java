@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.animated.giflite;
+package com.facebook.animated.giflite.draw;
 
 class MovieScaleHolder {
 
