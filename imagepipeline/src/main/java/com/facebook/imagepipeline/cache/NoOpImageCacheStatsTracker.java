@@ -58,7 +58,7 @@ public class NoOpImageCacheStatsTracker implements ImageCacheStatsTracker {
   }
 
   @Override
-  public void onDiskCacheHit() {
+  public void onDiskCacheHit(CacheKey cacheKey) {
   }
 
   @Override
