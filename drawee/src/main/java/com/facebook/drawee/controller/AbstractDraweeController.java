@@ -437,6 +437,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
     FrescoSystrace.beginSection("AbstractDraweeController#submitRequest");
     final T closeableImage = getCachedImage();
     if (closeableImage != null) {
+      FrescoSystrace.beginSection("AbstractDraweeController#submitRequest->cache");
       mDataSource = null;
       mIsRequestSubmitted = true;
       mHasFetchFailed = false;
@@ -444,6 +445,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
       getControllerListener().onSubmit(mId, mCallerContext);
       onImageLoadedFromCacheImmediately(mId, closeableImage);
       onNewResultInternal(mId, mDataSource, closeableImage, 1.0f, true, true);
+      FrescoSystrace.endSection();
       FrescoSystrace.endSection();
       return;
     }

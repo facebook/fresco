@@ -366,16 +366,21 @@ public class PipelineDraweeController
 
   @Override
   protected CloseableReference<CloseableImage> getCachedImage() {
-    if (mMemoryCache == null || mCacheKey == null) {
-      return null;
+    FrescoSystrace.beginSection("PipelineDraweeController#getCachedImage");
+    try {
+      if (mMemoryCache == null || mCacheKey == null) {
+        return null;
+      }
+      // We get the CacheKey
+      CloseableReference<CloseableImage> closeableImage = mMemoryCache.get(mCacheKey);
+      if (closeableImage != null && !closeableImage.get().getQualityInfo().isOfFullQuality()) {
+        closeableImage.close();
+        return null;
+      }
+      return closeableImage;
+    } finally {
+      FrescoSystrace.endSection();
     }
-    // We get the CacheKey
-    CloseableReference<CloseableImage> closeableImage = mMemoryCache.get(mCacheKey);
-    if (closeableImage != null && !closeableImage.get().getQualityInfo().isOfFullQuality()) {
-      closeableImage.close();
-      return null;
-    }
-    return closeableImage;
   }
 
   @Override
