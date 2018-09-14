@@ -42,6 +42,7 @@ public class ImagePipelineExperiments {
   private final int mBitmapPrepareToDrawMaxSizeBytes;
   private boolean mBitmapPrepareToDrawForPrefetch;
   private final int mMaxBitmapSize;
+  private final boolean mNativeCodeDisabled;
   private final boolean mPartialImageCachingEnabled;
   private final ProducerFactoryMethod mProducerFactoryMethod;
   private final Supplier<Boolean> mLazyDataSource;
@@ -57,6 +58,7 @@ public class ImagePipelineExperiments {
     mBitmapPrepareToDrawMaxSizeBytes = builder.mBitmapPrepareToDrawMaxSizeBytes;
     mBitmapPrepareToDrawForPrefetch = builder.mBitmapPrepareToDrawForPrefetch;
     mMaxBitmapSize = builder.mMaxBitmapSize;
+    mNativeCodeDisabled = builder.mNativeCodeDisabled;
     mPartialImageCachingEnabled = builder.mPartialImageCachingEnabled;
     if (builder.mProducerFactoryMethod == null) {
       mProducerFactoryMethod = new DefaultProducerFactoryMethod();
@@ -98,6 +100,10 @@ public class ImagePipelineExperiments {
     return mBitmapPrepareToDrawMaxSizeBytes;
   }
 
+  public boolean isNativeCodeDisabled() {
+    return mNativeCodeDisabled;
+  }
+
   public boolean isPartialImageCachingEnabled() {
     return mPartialImageCachingEnabled;
   }
@@ -136,6 +142,7 @@ public class ImagePipelineExperiments {
     private int mBitmapPrepareToDrawMaxSizeBytes = 0;
     public boolean mBitmapPrepareToDrawForPrefetch = false;
     private int mMaxBitmapSize = (int) BitmapUtil.MAX_BITMAP_SIZE;
+    private boolean mNativeCodeDisabled = false;
     private boolean mPartialImageCachingEnabled = false;
     private ProducerFactoryMethod mProducerFactoryMethod;
     public Supplier<Boolean> mLazyDataSource;
@@ -223,6 +230,17 @@ public class ImagePipelineExperiments {
      */
     public ImagePipelineConfig.Builder setMaxBitmapSize(int maxBitmapSize) {
       mMaxBitmapSize = maxBitmapSize;
+      return mConfigBuilder;
+    }
+
+    /**
+     * If true, the pipeline will use alternative implementations without native code.
+     *
+     * @param nativeCodeDisabled set true for disabling native implementation.
+     * @return The Builder itself for chaining
+     */
+    public ImagePipelineConfig.Builder setNativeCodeDisabled(boolean nativeCodeDisabled) {
+      mNativeCodeDisabled = nativeCodeDisabled;
       return mConfigBuilder;
     }
 

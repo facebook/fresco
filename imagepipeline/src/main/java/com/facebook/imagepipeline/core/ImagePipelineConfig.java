@@ -78,7 +78,7 @@ public class ImagePipelineConfig {
   private final ExecutorSupplier mExecutorSupplier;
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
   @Nullable private final ImageDecoder mImageDecoder;
-  private final ImageTranscoderFactory mImageTranscoderFactory;
+  @Nullable private final ImageTranscoderFactory mImageTranscoderFactory;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
@@ -133,12 +133,7 @@ public class ImagePipelineConfig {
             NoOpImageCacheStatsTracker.getInstance() :
             builder.mImageCacheStatsTracker;
     mImageDecoder = builder.mImageDecoder;
-    mImageTranscoderFactory =
-        builder.mImageTranscoderFactory == null
-            ? new NativeJpegTranscoderFactory(
-                mImagePipelineExperiments.getMaxBitmapSize(),
-                mImagePipelineExperiments.getUseDownsamplingRatioForResizing())
-            : builder.mImageTranscoderFactory;
+    mImageTranscoderFactory = getImageTranscoderFactory(builder, mImagePipelineExperiments);
     mIsPrefetchEnabledSupplier =
         builder.mIsPrefetchEnabledSupplier == null ?
             new Supplier<Boolean>() {
@@ -156,7 +151,7 @@ public class ImagePipelineConfig {
         builder.mMemoryTrimmableRegistry == null ?
             NoOpMemoryTrimmableRegistry.getInstance() :
             builder.mMemoryTrimmableRegistry;
-    mMemoryChunkType = builder.mMemoryChunkType;
+    mMemoryChunkType = getMemoryChunkType(builder, mImagePipelineExperiments);
     mHttpNetworkTimeout =
         builder.mHttpConnectionTimeout < 0
             ? HttpUrlConnectionNetworkFetcher.HTTP_DEFAULT_TIMEOUT
@@ -293,6 +288,7 @@ public class ImagePipelineConfig {
     return mImageDecoder;
   }
 
+  @Nullable
   public ImageTranscoderFactory getImageTranscoderFactory() {
     return mImageTranscoderFactory;
   }
@@ -356,6 +352,33 @@ public class ImagePipelineConfig {
     return new Builder(context);
   }
 
+  @Nullable
+  private static ImageTranscoderFactory getImageTranscoderFactory(
+      final Builder builder, final ImagePipelineExperiments imagePipelineExperiments) {
+    if (builder.mImageTranscoderFactory != null) {
+      return builder.mImageTranscoderFactory;
+    } else if (imagePipelineExperiments.isNativeCodeDisabled()) {
+      // This member will be constructed by ImagePipelineFactory
+      return null;
+    } else {
+      return new NativeJpegTranscoderFactory(
+          imagePipelineExperiments.getMaxBitmapSize(),
+          imagePipelineExperiments.getUseDownsamplingRatioForResizing());
+    }
+  }
+
+  @MemoryChunkType
+  private static int getMemoryChunkType(
+      final Builder builder, final ImagePipelineExperiments imagePipelineExperiments) {
+    if (builder.mMemoryChunkType != null) {
+      return builder.mMemoryChunkType;
+    } else if (imagePipelineExperiments.isNativeCodeDisabled()) {
+      return MemoryChunkType.BUFFER_MEMORY;
+    } else {
+      return MemoryChunkType.NATIVE_MEMORY;
+    }
+  }
+
   /**
    * Contains default configuration that can be personalized for all the request
    */
@@ -391,7 +414,7 @@ public class ImagePipelineConfig {
     private Supplier<Boolean> mIsPrefetchEnabledSupplier;
     private DiskCacheConfig mMainDiskCacheConfig;
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
-    @MemoryChunkType private int mMemoryChunkType = MemoryChunkType.NATIVE_MEMORY;
+    @Nullable @MemoryChunkType private Integer mMemoryChunkType = null;
     private NetworkFetcher mNetworkFetcher;
     private PlatformBitmapFactory mPlatformBitmapFactory;
     private PoolFactory mPoolFactory;
@@ -504,8 +527,9 @@ public class ImagePipelineConfig {
       return this;
     }
 
+    @Nullable
     @MemoryChunkType
-    public int getMemoryChunkType() {
+    public Integer getMemoryChunkType() {
       return mMemoryChunkType;
     }
 

@@ -46,7 +46,8 @@ import com.facebook.imagepipeline.platform.OreoDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -383,6 +384,14 @@ public class ImagePipelineFactory {
         && mConfig.getExperiments().getUseBitmapPrepareToDraw();
 
     if (mProducerSequenceFactory == null) {
+      ImageTranscoderFactory imageTranscoderFactory = mConfig.getImageTranscoderFactory();
+      if (imageTranscoderFactory == null) {
+        imageTranscoderFactory =
+            new SimpleImageTranscoderFactory(
+                mConfig.getExperiments().getMaxBitmapSize(),
+                getPlatformDecoder(),
+                getPlatformBitmapFactory());
+      }
       mProducerSequenceFactory =
           new ProducerSequenceFactory(
               mConfig.getContext().getApplicationContext().getContentResolver(),
@@ -395,7 +404,7 @@ public class ImagePipelineFactory {
               useBitmapPrepareToDraw,
               mConfig.getExperiments().isPartialImageCachingEnabled(),
               mConfig.isDiskCacheEnabled(),
-              mConfig.getImageTranscoderFactory());
+              imageTranscoderFactory);
     }
     return mProducerSequenceFactory;
   }

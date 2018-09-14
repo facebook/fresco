@@ -19,7 +19,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.imagepipeline.core.MemoryChunkType;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
@@ -52,7 +51,6 @@ public class ShowcaseApplication extends Application {
 
     ImagePipelineConfig imagePipelineConfig =
         OkHttpImagePipelineConfigFactory.newBuilder(this, okHttpClient)
-            .setMemoryChunkType(MemoryChunkType.BUFFER_MEMORY)
             .setRequestListeners(listeners)
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
             .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
