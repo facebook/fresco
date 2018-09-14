@@ -8,6 +8,7 @@
  */
 package com.facebook.imagepipeline.transcoder;
 
+import android.graphics.Matrix;
 import android.media.ExifInterface;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.VisibleForTesting;
@@ -165,6 +166,69 @@ public class JpegTranscoderUtils {
   @VisibleForTesting
   public static int calculateDownsampleNumerator(int downsampleRatio) {
     return Math.max(1, SCALE_DENOMINATOR / downsampleRatio);
+  }
+
+  /**
+   * Compute the transformation matrix needed to rotate the image. If no transformation is needed,
+   * it returns null.
+   *
+   * @param encodedImage The {@link EncodedImage} used when computing the matrix.
+   * @param rotationOptions The {@link RotationOptions} used when computing the matrix
+   * @return The transformation matrix, or null if no transformation is required.
+   */
+  @Nullable
+  public static Matrix getTransformationMatrix(
+      final EncodedImage encodedImage, final RotationOptions rotationOptions) {
+    Matrix transformationMatrix = null;
+
+    if (JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS.contains(
+        encodedImage.getExifOrientation())) {
+      // Use exif orientation to rotate since we can't use the rotation angle for inverted exif
+      // orientations
+      final int exifOrientation =
+          getForceRotatedInvertedExifOrientation(rotationOptions, encodedImage);
+      transformationMatrix = getTransformationMatrixFromInvertedExif(exifOrientation);
+    } else {
+      // Use actual rotation angle in degrees to rotate
+      final int rotationAngle = getRotationAngle(rotationOptions, encodedImage);
+      if (rotationAngle != 0) {
+        transformationMatrix = new Matrix();
+        transformationMatrix.setRotate(rotationAngle);
+      }
+    }
+    return transformationMatrix;
+  }
+
+  /**
+   * Returns the transformation matrix if the orientation corresponds to one present in {@link
+   * #INVERTED_EXIF_ORIENTATIONS}, else null.
+   *
+   * @param orientation the exif orientation
+   * @return the transformation matrix if inverted orientation, else null.
+   */
+  @Nullable
+  private static Matrix getTransformationMatrixFromInvertedExif(final int orientation) {
+    Matrix matrix = new Matrix();
+    switch (orientation) {
+      case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+        matrix.setScale(-1, 1);
+        break;
+      case ExifInterface.ORIENTATION_TRANSVERSE:
+        matrix.setRotate(-90);
+        matrix.postScale(-1, 1);
+        break;
+      case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+        matrix.setRotate(180);
+        matrix.postScale(-1, 1);
+        break;
+      case ExifInterface.ORIENTATION_TRANSPOSE:
+        matrix.setRotate(90);
+        matrix.postScale(-1, 1);
+        break;
+      default:
+        return null;
+    }
+    return matrix;
   }
 
   private static int extractOrientationFromMetadata(EncodedImage encodedImage) {
