@@ -26,6 +26,10 @@ import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import android.graphics.drawable.Animatable;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
 import java.util.List;
 
 public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
@@ -33,12 +37,24 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
   private List<Uri> mSampleUris;
   private int mUriIndex = 0;
 
+  private ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
+    @Override
+    public void onFinalImageSet(
+            String id,
+            @Nullable ImageInfo imageInfo,
+            @Nullable Animatable anim) {
+      if (anim != null) {
+        // app-specific logic to enable animation starting
+        anim.start();
+      }
+    }
+  };
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mSampleUris =
-        ImageUriProvider.getInstance(getContext()).getSampleUris(ImageUriProvider.ImageSize.M);
+    mSampleUris = ImageUriProvider.getInstance(getContext()).getSampleGifUris();
   }
 
   @Nullable
@@ -54,7 +70,10 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
     final RetainingDataSourceSupplier<CloseableReference<CloseableImage>> retainingSupplier =
         new RetainingDataSourceSupplier<>();
     simpleDraweeView.setController(
-        Fresco.newDraweeControllerBuilder().setDataSourceSupplier(retainingSupplier).build());
+        Fresco.newDraweeControllerBuilder()
+                .setDataSourceSupplier(retainingSupplier)
+                .setControllerListener(controllerListener)
+                .build());
     replaceImage(retainingSupplier);
     simpleDraweeView.setOnClickListener(
         new View.OnClickListener() {
