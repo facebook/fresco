@@ -11,7 +11,6 @@ import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawable.base.DrawableWithCaches;
@@ -26,7 +25,7 @@ import javax.annotation.Nullable;
  * Experimental new animated drawable that uses a supplied
  * {@link AnimationBackend} for drawing frames.
  */
-public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableWithCaches {
+public class AnimatedDrawable2 extends RoundedAnimationDrawable implements Animatable, DrawableWithCaches {
 
   /**
    * {@link #draw(Canvas)} listener that is notified for each draw call. Can be used for debugging.
