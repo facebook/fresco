@@ -16,10 +16,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -37,6 +39,7 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
   private SimpleDraweeView mDraweeTop2;
   private SimpleDraweeView mDraweeMain;
   private Spinner mSpinner;
+  private ParallaxTestListener mTextListener;
 
   @Nullable
   @Override
@@ -104,10 +107,55 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
     final GenericDraweeHierarchy hierarchy = mDraweeMain.getHierarchy();
     hierarchy.setActualImageScaleType(scaleType);
     hierarchy.setActualImageFocusPoint(focusPoint != null ? focusPoint : new PointF(0.5f, 0.5f));
+    setupTouchEventIfNeeded(scaleType, hierarchy);
+  }
+
+  private void setupTouchEventIfNeeded(ScaleType scaleType, GenericDraweeHierarchy hierarchy) {
+    if (scaleType == ScaleType.PARALLAX) {
+      if (mTextListener == null) {
+        mTextListener = new ParallaxTestListener(hierarchy);
+      }
+      mDraweeMain.setOnTouchListener(mTextListener);
+    } else {
+      mDraweeMain.setOnTouchListener(null);
+    }
   }
 
   @Override
   public int getTitleId() {
     return R.string.drawee_scale_type_title;
+  }
+
+  /**
+   * The helper class to show the parallax effect.
+   */
+  private static class ParallaxTestListener implements View.OnTouchListener {
+    private GenericDraweeHierarchy mHierarchy;
+    private PointF mFocus = new PointF(0.5f, 0.5f);
+    private int mViewWidth, mViewHeight;
+    private ParallaxTestListener(GenericDraweeHierarchy hierarchy) {
+      mHierarchy = hierarchy;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+      if (mViewHeight <= 0) {
+        mViewHeight = v.getHeight();
+      }
+      if (mViewWidth <= 0) {
+        mViewWidth = v.getWidth();
+      }
+      if (mViewWidth <= 0 || mViewHeight <= 0) {
+        return false;
+      }
+      float x = event.getX();
+      float y = event.getY();
+      float focusX = x / mViewWidth;
+      float focusY = y / mViewHeight;
+      mFocus.set(focusX, focusY);
+      mHierarchy.setActualImageFocusPoint(mFocus);
+      return true;
+    }
+
   }
 }
