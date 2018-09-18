@@ -344,7 +344,7 @@ public class BufferedDiskCache {
         return null;
       } else {
         FLog.v(TAG, "Found entry in disk cache for %s", key.getUriString());
-        mImageCacheStatsTracker.onDiskCacheHit();
+        mImageCacheStatsTracker.onDiskCacheHit(key);
       }
 
       PooledByteBuffer byteBuffer;

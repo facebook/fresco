@@ -48,7 +48,7 @@ public interface ImageCacheStatsTracker {
   void onStagingAreaMiss();
 
   /** Called on a disk cache hit. */
-  void onDiskCacheHit();
+  void onDiskCacheHit(CacheKey cacheKey);
 
   /** Called on a disk cache miss. */
   void onDiskCacheMiss();
