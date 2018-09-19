@@ -8,12 +8,17 @@
 package com.facebook.common.util;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+
 import java.io.File;
 import java.net.URL;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 public class UriUtil {
@@ -53,6 +58,14 @@ public class UriUtil {
    * than the application one. This has the constant value of "android.resource".
    */
   public static final String QUALIFIED_RESOURCE_SCHEME = ContentResolver.SCHEME_ANDROID_RESOURCE;
+
+  // android.resource://<package_name>/<type>/<name>.
+  private static final int NAME_URI_PATH_SEGMENTS = 2;
+  private static final int TYPE_PATH_SEGMENT_INDEX = 0;
+  private static final int NAME_PATH_SEGMENT_INDEX = 1;
+  // android.resource://<package_name>/<resource_id>
+  private static final int ID_PATH_SEGMENTS = 1;
+  private static final int RESOURCE_ID_SEGMENT_INDEX = 0;
 
   /**
    * Data scheme for URIs
@@ -265,5 +278,39 @@ public class UriUtil {
         .authority(packageName)
         .path(String.valueOf(resourceId))
         .build();
+  }
+
+  /**
+   * Returns a Resource Id for the given image uri
+   *
+   * @param context
+   * @param source the source Uri
+   * @return the resource id
+   */
+  public static int getResourceIdFromUri(Context context, Uri source) {
+    List<String> segments = source.getPathSegments();
+    Integer result = null;
+    if (segments.size() == NAME_URI_PATH_SEGMENTS) {
+      String packageName = source.getAuthority();
+      if (TextUtils.isEmpty(packageName)) {
+        packageName = context.getPackageName();
+      }
+      String typeName = segments.get(TYPE_PATH_SEGMENT_INDEX);
+      String resourceName = segments.get(NAME_PATH_SEGMENT_INDEX);
+      result = context.getResources().getIdentifier(resourceName, typeName, packageName);
+    } else if (segments.size() == ID_PATH_SEGMENTS) {
+      try {
+        result = Integer.valueOf(segments.get(RESOURCE_ID_SEGMENT_INDEX));
+      } catch (NumberFormatException e) {
+        // Ignored.
+      }
+    }
+
+    if (result == null) {
+      throw new IllegalArgumentException("Unrecognized Uri format: " + source);
+    } else if (result <= 0) {
+      throw new IllegalArgumentException("Failed to obtain resource id for: " + source);
+    }
+    return result;
   }
 }

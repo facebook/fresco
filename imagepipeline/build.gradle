@@ -7,6 +7,7 @@ version = VERSION_NAME
 dependencies {
     compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    compileOnly "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"

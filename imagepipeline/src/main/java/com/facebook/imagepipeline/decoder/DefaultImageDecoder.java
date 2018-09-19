@@ -8,7 +8,10 @@
 package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
+
 import com.facebook.common.references.CloseableReference;
+import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -41,6 +44,7 @@ public class DefaultImageDecoder implements ImageDecoder {
 
   private final ImageDecoder mAnimatedGifDecoder;
   private final ImageDecoder mAnimatedWebPDecoder;
+  private final ImageDecoder mResourceDrawableDecoder;
   private final PlatformDecoder mPlatformDecoder;
 
   private final ImageDecoder mDefaultDecoder =
@@ -59,6 +63,13 @@ public class DefaultImageDecoder implements ImageDecoder {
           } else if (imageFormat == DefaultImageFormats.WEBP_ANIMATED) {
             return decodeAnimatedWebp(encodedImage, length, qualityInfo, options);
           } else if (imageFormat == ImageFormat.UNKNOWN) {
+            // When we get here, if image format is unknown and uri is local android resource
+            // it might be an xml file or resources in other app. We cannot distinguish xml file type
+            // though file header magic number, so just delegate it to ResourceDrawableDecoder as a fallback
+            Uri uri = encodedImage.getImageUri();
+            if (UriUtil.isLocalResourceUri(uri) || UriUtil.isQualifiedResourceUri(uri)) {
+              return decodeResourceDrawable(encodedImage, length, qualityInfo, options);
+            }
             throw new DecodeException("unknown image format", encodedImage);
           }
           return decodeStaticImage(encodedImage, options);
@@ -71,17 +82,20 @@ public class DefaultImageDecoder implements ImageDecoder {
   public DefaultImageDecoder(
       final ImageDecoder animatedGifDecoder,
       final ImageDecoder animatedWebPDecoder,
+      final ImageDecoder resourceDrawableDecoder,
       final PlatformDecoder platformDecoder) {
-    this(animatedGifDecoder, animatedWebPDecoder, platformDecoder, null);
+    this(animatedGifDecoder, animatedWebPDecoder, resourceDrawableDecoder, platformDecoder, null);
   }
 
   public DefaultImageDecoder(
       final ImageDecoder animatedGifDecoder,
       final ImageDecoder animatedWebPDecoder,
+      final ImageDecoder resourceDrawableDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders) {
     mAnimatedGifDecoder = animatedGifDecoder;
     mAnimatedWebPDecoder = animatedWebPDecoder;
+    mResourceDrawableDecoder = resourceDrawableDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
   }
@@ -199,5 +213,22 @@ public class DefaultImageDecoder implements ImageDecoder {
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
     return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
+  }
+
+  /**
+   * Decode an android resource id into a CloseableImage.
+   *
+   * <p> The image is decoded into a drawable
+   *
+   * @param encodedImage input image (encoded bytes plus meta data)
+   * @param options
+   * @return a {@link CloseableImage}
+   */
+  public CloseableImage decodeResourceDrawable(
+          final EncodedImage encodedImage,
+          final int length,
+          final QualityInfo qualityInfo,
+          final ImageDecodeOptions options) {
+    return mResourceDrawableDecoder.decode(encodedImage, length, qualityInfo, options);
   }
 }

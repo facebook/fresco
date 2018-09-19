@@ -146,8 +146,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             @Override
             public void run(EncodedImage encodedImage, @Status int status) {
               if (encodedImage != null) {
+                ImageRequest request = producerContext.getImageRequest();
+                encodedImage.setImageUri(request.getSourceUri());
                 if (mDownsampleEnabled || !statusHasFlag(status, Consumer.IS_RESIZING_DONE)) {
-                  ImageRequest request = producerContext.getImageRequest();
                   if (mDownsampleEnabledForNetwork
                       || !UriUtil.isNetworkUri(request.getSourceUri())) {
                     encodedImage.setSampleSize(
