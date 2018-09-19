@@ -17,6 +17,7 @@ import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -62,6 +63,7 @@ public class EncodedMemoryCacheProducerTest {
   private CloseableReference<PooledByteBuffer> mIntermediateImageReference;
   private CloseableReference<PooledByteBuffer> mFinalImageReferenceClone;
   private EncodedImage mFinalEncodedImage;
+  private EncodedImage mFinalEncodedImageFormatUnknown;
   private EncodedImage mIntermediateEncodedImage;
   private EncodedImage mFinalEncodedImageClone;
   private EncodedMemoryCacheProducer mEncodedMemoryCacheProducer;
@@ -78,6 +80,11 @@ public class EncodedMemoryCacheProducerTest {
     mIntermediateImageReference = CloseableReference.of(mPooledByteBuffer2);
     mFinalImageReferenceClone = mFinalImageReference.clone();
     mFinalEncodedImage = new EncodedImage(mFinalImageReference);
+    mFinalEncodedImage.setImageFormat(new ImageFormat("jpeg", null));
+    mFinalEncodedImage.setWidth(100);
+    mFinalEncodedImage.setHeight(100);
+
+    mFinalEncodedImageFormatUnknown = new EncodedImage(mFinalImageReference);
     mIntermediateEncodedImage = new EncodedImage(mIntermediateImageReference);
     mFinalEncodedImageClone = new EncodedImage(mFinalImageReferenceClone);
     List<CacheKey> list = new ArrayList<>();
@@ -161,16 +168,33 @@ public class EncodedMemoryCacheProducerTest {
     testInputProducerSuccessButResultNotCacheableDueToStatusFlags(Consumer.IS_PARTIAL_RESULT);
   }
 
+  @Test
+  public void testEncodedMemoryCacheGetNotFoundInputProducerSuccessButResultIsUnknownFormat() {
+    setupEncodedMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccessFormatUnknown();
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+    verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
+    verify(mConsumer).onNewResult(mIntermediateEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer).onNewResult(mFinalEncodedImageFormatUnknown, Consumer.IS_LAST);
+    Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
+    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    Map<String, String> extraMap =
+            ImmutableMap.of(EncodedMemoryCacheProducer.EXTRA_CACHED_VALUE_FOUND, "false");
+    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, extraMap);
+    verify(mProducerListener, never())
+            .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+  }
+
   private void testInputProducerSuccessButResultNotCacheableDueToStatusFlags(
       final @Consumer.Status int statusFlags) {
-    setupInputProducerStreamingSuccessWithStatusFlags(statusFlags);
+    setupInputProducerStreamingSuccessWithStatusFlags(statusFlags, mFinalEncodedImageFormatUnknown);
     mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mMemoryCache, never()).cache(any(CacheKey.class), any(CloseableReference.class));
     verify(mConsumer)
         .onNewResult(mIntermediateEncodedImage, statusFlags);
     verify(mConsumer)
-        .onNewResult(mFinalEncodedImage, Consumer.IS_LAST | statusFlags);
+        .onNewResult(mFinalEncodedImageFormatUnknown, Consumer.IS_LAST | statusFlags);
     Assert.assertTrue(EncodedImage.isValid(mFinalEncodedImageClone));
     verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
     Map<String, String> extraMap =
@@ -231,13 +255,18 @@ public class EncodedMemoryCacheProducerTest {
     when(mMemoryCache.get(eq(mCacheKey))).thenReturn(null);
   }
 
-  private void setupInputProducerStreamingSuccess() {
-    setupInputProducerStreamingSuccessWithStatusFlags(0);
+  private void setupInputProducerStreamingSuccessFormatUnknown() {
+    setupInputProducerStreamingSuccessWithStatusFlags(0, mFinalEncodedImageFormatUnknown);
   }
 
-  private void setupInputProducerStreamingSuccessWithStatusFlags(@Consumer.Status int statusFlags) {
+  private void setupInputProducerStreamingSuccess() {
+    setupInputProducerStreamingSuccessWithStatusFlags(0, mFinalEncodedImage);
+  }
+
+  private void setupInputProducerStreamingSuccessWithStatusFlags(
+          @Consumer.Status int statusFlags, EncodedImage finalEncodedImage) {
     doAnswer(new ProduceResultsNewResultAnswer(
-            Arrays.asList(mIntermediateEncodedImage, mFinalEncodedImage), statusFlags))
+            Arrays.asList(mIntermediateEncodedImage, finalEncodedImage), statusFlags))
         .when(mInputProducer).produceResults(any(Consumer.class), eq(mProducerContext));
   }
 

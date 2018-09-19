@@ -11,6 +11,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -126,9 +127,11 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
       try {
         FrescoSystrace.beginSection("EncodedMemoryCacheProducer#onNewResultImpl");
         // intermediate, null or uncacheable results are not cached, so we just forward them
+        // as well as the images with unknown format which could be html response from the server
         if (isNotLast(status)
             || newResult == null
-            || statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)) {
+            || statusHasAnyFlag(status, DO_NOT_CACHE_ENCODED | IS_PARTIAL_RESULT)
+            || newResult.getImageFormat() == ImageFormat.UNKNOWN) {
           getConsumer().onNewResult(newResult, status);
           return;
         }
