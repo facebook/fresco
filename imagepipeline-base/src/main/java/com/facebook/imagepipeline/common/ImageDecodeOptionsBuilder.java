@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import javax.annotation.Nullable;
 
 /**
@@ -24,6 +25,7 @@ public class ImageDecodeOptionsBuilder {
   private boolean mTransformToSRGB;
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
+  private @Nullable BitmapTransformation mBitmapTransformation;
 
   public ImageDecodeOptionsBuilder() {
   }
@@ -42,6 +44,7 @@ public class ImageDecodeOptionsBuilder {
     mBitmapConfig = options.bitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
     mTransformToSRGB = options.transformToSRGB;
+    mBitmapTransformation = options.bitmapTransformation;
     return this;
   }
 
@@ -212,6 +215,23 @@ public class ImageDecodeOptionsBuilder {
   public ImageDecodeOptionsBuilder setTransformToSRGB(boolean transformToSRGB) {
     mTransformToSRGB = transformToSRGB;
     return this;
+  }
+
+  /**
+   * Set a custom in-place bitmap transformation that is applied immediately after decoding.
+   *
+   * @param bitmapTransformation the transformation to use
+   * @return the builder
+   */
+  public ImageDecodeOptionsBuilder setBitmapTransformation(
+      @Nullable BitmapTransformation bitmapTransformation) {
+    mBitmapTransformation = bitmapTransformation;
+    return this;
+  }
+
+  @Nullable
+  public BitmapTransformation getBitmapTransformation() {
+    return mBitmapTransformation;
   }
 
   /**

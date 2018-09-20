@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.decoder;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
@@ -19,6 +20,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import java.util.Map;
 import javax.annotation.Nullable;
 
@@ -147,6 +149,7 @@ public class DefaultImageDecoder implements ImageDecoder {
         mPlatformDecoder.decodeFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, null, options.transformToSRGB);
     try {
+      maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
       return new CloseableStaticBitmap(
           bitmapReference,
           ImmutableQualityInfo.FULL_QUALITY,
@@ -174,6 +177,7 @@ public class DefaultImageDecoder implements ImageDecoder {
         mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
             encodedImage, options.bitmapConfig, null, length, options.transformToSRGB);
     try {
+      maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
       return new CloseableStaticBitmap(
           bitmapReference,
           qualityInfo,
@@ -199,5 +203,18 @@ public class DefaultImageDecoder implements ImageDecoder {
       final QualityInfo qualityInfo,
       final ImageDecodeOptions options) {
     return mAnimatedWebPDecoder.decode(encodedImage, length, qualityInfo, options);
+  }
+
+  private void maybeApplyTransformation(
+      @Nullable BitmapTransformation transformation, CloseableReference<Bitmap> bitmapReference) {
+    if (transformation == null) {
+      return;
+    }
+    Bitmap bitmap = bitmapReference.get();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1
+        && transformation.modifiesTransparency()) {
+      bitmap.setHasAlpha(true);
+    }
+    transformation.transform(bitmap);
   }
 }

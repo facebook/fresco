@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -66,6 +67,9 @@ public class ImageDecodeOptions {
    */
   public final @Nullable ImageDecoder customImageDecoder;
 
+  /** Bitmap transformation override */
+  public final @Nullable BitmapTransformation bitmapTransformation;
+
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
@@ -75,6 +79,7 @@ public class ImageDecodeOptions {
     this.bitmapConfig = b.getBitmapConfig();
     this.customImageDecoder = b.getCustomImageDecoder();
     this.transformToSRGB = b.getTransformToSRGB();
+    this.bitmapTransformation = b.getBitmapTransformation();
   }
 
   /**
@@ -109,6 +114,7 @@ public class ImageDecodeOptions {
     if (transformToSRGB != that.transformToSRGB) return false;
     if (bitmapConfig != that.bitmapConfig) return false;
     if (customImageDecoder != that.customImageDecoder) return false;
+    if (bitmapTransformation != that.bitmapTransformation) return false;
     return true;
   }
 
@@ -122,6 +128,7 @@ public class ImageDecodeOptions {
     result = 31 * result + (transformToSRGB ? 1 : 0);
     result = 31 * result + bitmapConfig.ordinal();
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
+    result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
     return result;
   }
 
@@ -129,7 +136,7 @@ public class ImageDecodeOptions {
   public String toString() {
     return String.format(
         (Locale) null,
-        "%d-%b-%b-%b-%b-%b-%s-%s",
+        "%d-%b-%b-%b-%b-%b-%s-%s-%s",
         minDecodeIntervalMs,
         decodePreviewFrame,
         useLastFrameForPreview,
@@ -137,6 +144,7 @@ public class ImageDecodeOptions {
         forceStaticImage,
         transformToSRGB,
         bitmapConfig.name(),
-        customImageDecoder);
+        customImageDecoder,
+        bitmapTransformation);
   }
 }
