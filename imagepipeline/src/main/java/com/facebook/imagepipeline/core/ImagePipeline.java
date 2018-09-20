@@ -36,7 +36,6 @@ import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -625,6 +624,42 @@ public class ImagePipeline {
               }
             });
     return dataSource;
+  }
+/**
+ * @return {@link CacheKey} for doing bitmap cache lookups in the pipeline.
+ */
+  @Nullable
+  public CacheKey getCacheKey(ImageRequest imageRequest, Object callerContext) {
+    final CacheKeyFactory cacheKeyFactory = mCacheKeyFactory;
+    CacheKey cacheKey = null;
+    if (cacheKeyFactory != null && imageRequest != null) {
+      if (imageRequest.getPostprocessor() != null) {
+        cacheKey = cacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext);
+      } else {
+        cacheKey = cacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
+      }
+    }
+    return cacheKey;
+  }
+
+  /**
+   * Returns a reference to the cached image
+   *
+   * @param cacheKey
+   * @return a closeable reference or null if image was not present in cache
+   */
+  @Nullable
+  public CloseableReference<CloseableImage> getCachedImage(@Nullable CacheKey cacheKey) {
+    MemoryCache<CacheKey, CloseableImage> memoryCache = mBitmapMemoryCache;
+    if (memoryCache == null || cacheKey == null) {
+      return null;
+    }
+    CloseableReference<CloseableImage> closeableImage = memoryCache.get(cacheKey);
+    if (closeableImage != null && !closeableImage.get().getQualityInfo().isOfFullQuality()) {
+      closeableImage.close();
+      return null;
+    }
+    return closeableImage;
   }
 
   private <T> DataSource<CloseableReference<T>> submitFetchRequest(
