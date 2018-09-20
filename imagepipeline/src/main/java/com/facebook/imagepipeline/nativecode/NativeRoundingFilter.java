@@ -37,6 +37,16 @@ public class NativeRoundingFilter {
     nativeToCircleFilter(bitmap, antiAliased);
   }
 
+  public static void toCircleWithBorder(
+      Bitmap bitmap, int colorARGB, int borderWidthPx, boolean antiAliased) {
+    Preconditions.checkNotNull(bitmap);
+    nativeToCircleWithBorderFilter(bitmap, colorARGB, borderWidthPx, antiAliased);
+  }
+
   @DoNotStrip
   private static native void nativeToCircleFilter(Bitmap bitmap, boolean antiAliased);
+
+  @DoNotStrip
+  private static native void nativeToCircleWithBorderFilter(
+      Bitmap bitmap, int colorARGB, int borderWidthPx, boolean antiAliased);
 }
