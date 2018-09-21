@@ -183,8 +183,8 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     int targetWidth = options.outWidth;
     int targetHeight = options.outHeight;
     if (regionToDecode != null) {
-      targetWidth = regionToDecode.width();
-      targetHeight = regionToDecode.height();
+      targetWidth = regionToDecode.width() / options.inSampleSize;
+      targetHeight = regionToDecode.height() / options.inSampleSize;
     }
     int sizeInBytes = getBitmapSize(targetWidth, targetHeight, options);
     final Bitmap bitmapToReuse = mBitmapPool.get(sizeInBytes);
