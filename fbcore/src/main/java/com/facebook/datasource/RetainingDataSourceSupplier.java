@@ -139,5 +139,10 @@ public class RetainingDataSourceSupplier<T> implements Supplier<DataSource<T>> {
         RetainingDataSource.this.onDatasourceProgress(dataSource);
       }
     }
+
+    @Override
+    public boolean hasMultipleResults() {
+      return true;
+    }
   }
 }

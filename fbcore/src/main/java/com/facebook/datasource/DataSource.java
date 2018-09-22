@@ -50,6 +50,12 @@ public interface DataSource<T> {
   boolean hasResult();
 
   /**
+   * @return true if the data source has multiple results (e.g. multiple images). This can be used
+   *     for example by a RetainingDataSource to correctly display images.
+   */
+  boolean hasMultipleResults();
+
+  /**
    * @return true if request is finished, false otherwise
    */
   boolean isFinished();

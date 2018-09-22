@@ -146,6 +146,13 @@ public class ImageUriProvider {
   private static final String SAMPLE_URI_WEBP_ANIMATED =
       "https://www.gstatic.com/webp/animated/1.webp";
 
+  private static final String[] SAMPLE_URIS_GIFS =
+      new String[] {
+        "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif",
+        "https://media3.giphy.com/media/uegrGBitPHtKM/giphy.gif",
+        "https://media0.giphy.com/media/SWd9mTHEMIxQ4/giphy.gif"
+      };
+
   private static ImageUriProvider sInstance;
 
   private final SharedPreferences mSharedPreferences;
@@ -277,6 +284,14 @@ public class ImageUriProvider {
       data.add(Uri.parse(String.format((Locale) null, uriFormat, imageId)));
     }
     return data;
+  }
+
+  public List<Uri> getSampleGifUris() {
+    ArrayList<Uri> uris = new ArrayList<>();
+    for (String uri : SAMPLE_URIS_GIFS) {
+      uris.add(Uri.parse(uri));
+    }
+    return uris;
   }
 
   private Uri applyOverrideSettings(
