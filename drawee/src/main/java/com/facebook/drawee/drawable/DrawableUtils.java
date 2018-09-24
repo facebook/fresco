@@ -32,10 +32,11 @@ public class DrawableUtils {
 
   /**
    * Copies various properties from one drawable to the other.
+   *
    * @param to drawable to copy properties to
    * @param from drawable to copy properties from
    */
-  public static void copyProperties(Drawable to, Drawable from) {
+  public static void copyProperties(@Nullable Drawable to, @Nullable Drawable from) {
     if (from == null || to == null || to == from) {
       return;
     }
@@ -49,10 +50,12 @@ public class DrawableUtils {
 
   /**
    * Sets various paint properties on the drawable
+   *
    * @param drawable Drawable on which to set the properties
    * @param properties wrapper around mValue values to set on the drawable
    */
-  public static void setDrawableProperties(Drawable drawable, DrawableProperties properties) {
+  public static void setDrawableProperties(
+      @Nullable Drawable drawable, @Nullable DrawableProperties properties) {
     if (drawable == null || properties == null) {
       return;
     }
@@ -61,12 +64,13 @@ public class DrawableUtils {
 
   /**
    * Sets callback to the drawable.
+   *
    * @param drawable drawable to set callbacks to
    * @param callback standard Android Drawable.Callback
    * @param transformCallback TransformCallback used by TransformAwareDrawables
    */
   public static void setCallbacks(
-      Drawable drawable,
+      @Nullable Drawable drawable,
       @Nullable Drawable.Callback callback,
       @Nullable TransformCallback transformCallback) {
     if (drawable != null) {

@@ -11,10 +11,12 @@ import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 
 /**
  * A forwarding drawable class - the goal is to forward (delegate) drawable functionality to an
@@ -29,7 +31,7 @@ public class ForwardingDrawable extends Drawable
     implements Drawable.Callback, TransformCallback, TransformAwareDrawable, DrawableParent {
 
   /** The current drawable to be drawn by this drawable when drawing is needed */
-  private Drawable mCurrentDelegate;
+  private @Nullable Drawable mCurrentDelegate;
 
   private final DrawableProperties mDrawableProperties = new DrawableProperties();
 
@@ -43,9 +45,10 @@ public class ForwardingDrawable extends Drawable
 
   /**
    * Constructs a new forwarding drawable.
+   *
    * @param drawable drawable that this forwarding drawable will forward to
    */
-  public ForwardingDrawable(Drawable drawable) {
+  public ForwardingDrawable(@Nullable Drawable drawable) {
     mCurrentDelegate = drawable;
     DrawableUtils.setCallbacks(mCurrentDelegate, this, this);
   }
@@ -54,10 +57,11 @@ public class ForwardingDrawable extends Drawable
    * Sets a new drawable to be the delegate, and returns the old one (or null).
    *
    * <p>This method will cause the drawable to be invalidated.
+   *
    * @param newDelegate
    * @return the previous delegate
    */
-  public Drawable setCurrent(Drawable newDelegate) {
+  public @Nullable Drawable setCurrent(@Nullable Drawable newDelegate) {
     Drawable previousDelegate = setCurrentWithoutInvalidate(newDelegate);
     invalidateSelf();
     return previousDelegate;
@@ -66,10 +70,11 @@ public class ForwardingDrawable extends Drawable
   /**
    * As {@code setCurrent}, but without invalidating a drawable. Subclasses are responsible to call
    * {@code invalidateSelf} on their own.
+   *
    * @param newDelegate
    * @return the previous delegate
    */
-  protected Drawable setCurrentWithoutInvalidate(Drawable newDelegate) {
+  protected @Nullable Drawable setCurrentWithoutInvalidate(@Nullable Drawable newDelegate) {
     Drawable previousDelegate = mCurrentDelegate;
     DrawableUtils.setCallbacks(previousDelegate, null, null);
     DrawableUtils.setCallbacks(newDelegate, null, null);
@@ -82,104 +87,155 @@ public class ForwardingDrawable extends Drawable
 
   @Override
   public int getOpacity() {
+    if (mCurrentDelegate == null) {
+      return PixelFormat.UNKNOWN;
+    }
+
     return mCurrentDelegate.getOpacity();
   }
 
   @Override
   public void setAlpha(int alpha) {
     mDrawableProperties.setAlpha(alpha);
-    mCurrentDelegate.setAlpha(alpha);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.setAlpha(alpha);
+    }
   }
 
   @Override
   public void setColorFilter(ColorFilter colorFilter) {
     mDrawableProperties.setColorFilter(colorFilter);
-    mCurrentDelegate.setColorFilter(colorFilter);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.setColorFilter(colorFilter);
+    }
   }
 
   @Override
   public void setDither(boolean dither) {
     mDrawableProperties.setDither(dither);
-    mCurrentDelegate.setDither(dither);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.setDither(dither);
+    }
   }
 
   @Override
   public void setFilterBitmap(boolean filterBitmap) {
     mDrawableProperties.setFilterBitmap(filterBitmap);
-    mCurrentDelegate.setFilterBitmap(filterBitmap);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.setFilterBitmap(filterBitmap);
+    }
   }
 
   @Override
   public boolean setVisible(boolean visible, boolean restart) {
-    super.setVisible(visible, restart);
+    final boolean superResult = super.setVisible(visible, restart);
+    if (mCurrentDelegate == null) {
+      return superResult;
+    }
+
     return mCurrentDelegate.setVisible(visible, restart);
   }
 
   @Override
   protected void onBoundsChange(Rect bounds) {
-    mCurrentDelegate.setBounds(bounds);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.setBounds(bounds);
+    }
   }
 
   @Override
-  public Drawable.ConstantState getConstantState() {
+  public @Nullable Drawable.ConstantState getConstantState() {
+    if (mCurrentDelegate == null) {
+      return super.getConstantState();
+    }
+
     return mCurrentDelegate.getConstantState();
   }
 
   @Override
   public boolean isStateful() {
+    if (mCurrentDelegate == null) {
+      return false;
+    }
+
     return mCurrentDelegate.isStateful();
   }
 
   @Override
   protected boolean onStateChange(int[] state) {
+    if (mCurrentDelegate == null) {
+      return super.onStateChange(state);
+    }
+
     return mCurrentDelegate.setState(state);
   }
 
   @Override
   protected boolean onLevelChange(int level) {
+    if (mCurrentDelegate == null) {
+      return super.onLevelChange(level);
+    }
+
     return mCurrentDelegate.setLevel(level);
   }
 
   @Override
   public void draw(Canvas canvas) {
-    mCurrentDelegate.draw(canvas);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.draw(canvas);
+    }
   }
 
   @Override
   public int getIntrinsicWidth() {
+    if (mCurrentDelegate == null) {
+      return super.getIntrinsicWidth();
+    }
+
     return mCurrentDelegate.getIntrinsicWidth();
   }
 
   @Override
   public int getIntrinsicHeight() {
+    if (mCurrentDelegate == null) {
+      return super.getIntrinsicHeight();
+    }
+
     return mCurrentDelegate.getIntrinsicHeight();
   }
 
   @Override
   public boolean getPadding(Rect padding) {
+    if (mCurrentDelegate == null) {
+      return super.getPadding(padding);
+    }
+
     return mCurrentDelegate.getPadding(padding);
   }
 
   @Override
   public Drawable mutate() {
-    mCurrentDelegate.mutate();
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.mutate();
+    }
+
     return this;
   }
 
   @Override
-  public Drawable getCurrent() {
+  public @Nullable Drawable getCurrent() {
     return mCurrentDelegate;
   }
 
   // DrawableParent methods
 
   @Override
-  public Drawable setDrawable(Drawable newDrawable) {
+  public Drawable setDrawable(@Nullable Drawable newDrawable) {
     return setCurrent(newDrawable);
   }
 
   @Override
-  public Drawable getDrawable() {
+  public @Nullable Drawable getDrawable() {
     return getCurrent();
   }
 
@@ -247,6 +303,8 @@ public class ForwardingDrawable extends Drawable
   @Override
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public void setHotspot(float x, float y) {
-    mCurrentDelegate.setHotspot(x, y);
+    if (mCurrentDelegate != null) {
+      mCurrentDelegate.setHotspot(x, y);
+    }
   }
 }
