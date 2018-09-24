@@ -52,8 +52,8 @@ public class AnimatedFrameCache {
       }
       if (o instanceof FrameKey) {
         FrameKey that = (FrameKey) o;
-        return this.mImageCacheKey == that.mImageCacheKey &&
-            this.mFrameIndex == that.mFrameIndex;
+        return this.mFrameIndex == that.mFrameIndex
+            && this.mImageCacheKey.equals(that.mImageCacheKey);
       }
       return false;
     }
