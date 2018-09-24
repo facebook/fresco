@@ -27,6 +27,7 @@ import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparationStrategy;
 import com.facebook.fresco.animation.bitmap.preparation.BitmapFramePreparer;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -399,6 +400,48 @@ public class BitmapAnimationBackendTest {
     verifyFramePreparationStrategyCalled(4);
     verify(mFrameListener)
         .onFrameDropped(mBitmapAnimationBackend, 4);
+  }
+
+  @Test
+  public void testRoundBitmapWithoutRoundAsCircle(){
+    AnimatedDrawable2 drawable = new AnimatedDrawable2(mBitmapAnimationBackend);
+    when(mPlatformBitmapFactory.createBitmap(anyInt(), anyInt(), any(Bitmap.Config.class)))
+        .thenReturn(mBitmapRefererence);
+    when(mBitmapFrameRenderer.renderFrame(anyInt(), any(Bitmap.class))).thenReturn(true);
+
+    mBitmapAnimationBackend.drawFrame(drawable, mCanvas, 2);
+
+    verify(mFrameListener).onDrawFrameStart(mBitmapAnimationBackend, 2);
+    verify(mBitmapFrameCache).getCachedFrame(2);
+    verify(mBitmapFrameCache).getBitmapToReuseForFrame(2, 0, 0);
+    verify(mPlatformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888);
+    verify(mBitmapFrameRenderer).renderFrame(2, mBitmap);
+    verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(2);
+    verifyListenersAndCacheNotified(2, BitmapAnimationBackend.FRAME_TYPE_CREATED);
+    assertReferencesClosed();
+  }
+
+  @Test
+  public void testRoundBitmapWithRoundAsCircle(){
+    AnimatedDrawable2 drawable = new AnimatedDrawable2(mBitmapAnimationBackend);
+    drawable.setRoundAsCircle(true);
+
+    when(mPlatformBitmapFactory.createBitmap(anyInt(), anyInt(), any(Bitmap.Config.class)))
+        .thenReturn(mBitmapRefererence);
+    when(mBitmapFrameRenderer.renderFrame(anyInt(), any(Bitmap.class))).thenReturn(true);
+
+    mBitmapAnimationBackend.drawFrame(drawable, mCanvas, 2);
+
+    verify(mFrameListener).onDrawFrameStart(mBitmapAnimationBackend, 2);
+    verify(mBitmapFrameCache).getCachedFrame(2);
+    verify(mBitmapFrameCache).getBitmapToReuseForFrame(2, 0, 0);
+    verify(mPlatformBitmapFactory).createBitmap(0, 0, Bitmap.Config.ARGB_8888);
+    verify(mBitmapFrameRenderer).renderFrame(2, mBitmap);
+    verify(mCanvas).drawBitmap(eq(mBitmap), eq(0f), eq(0f), any(Paint.class));
+    verifyFramePreparationStrategyCalled(2);
+    verifyListenersAndCacheNotified(2, BitmapAnimationBackend.FRAME_TYPE_CREATED);
+    assertReferencesClosed();
   }
 
   private void verifyFramePreparationStrategyCalled(int frameNumber) {
