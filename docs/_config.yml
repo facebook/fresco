@@ -1,7 +1,7 @@
 ---
 permalink: /blog/:categories/:year/:month/:day/:title.html
 url: "https://facebook.github.io/fresco/"
-cdn_url: "https://frescolib.org"
+cdn_url: "https://frescolib.org/"
 title: Fresco
 tagline: An Image Management Library
 fbappid: "1615782811974223"
