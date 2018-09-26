@@ -1,6 +1,7 @@
 ---
 permalink: /blog/:categories/:year/:month/:day/:title.html
 url: "https://frescolib.org"
+baseurl: ""
 title: Fresco
 tagline: An Image Management Library
 fbappid: "1615782811974223"
