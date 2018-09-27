@@ -15,13 +15,12 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imagepipeline.nativecode.NativeRoundingFilter;
 
 /**
  * Not-in-place rounding image algorithm using {@link Canvas} that requires an Android version >=
  * 3.1. If image quality is preferred above performance, this algorithm performs anti-aliasing and
  * will generate better looking images, otherwise clients that look for better performances should
- * use {@link NativeRoundingFilter}.
+ * use NativeRoundingFilter.
  */
 public final class XferRoundFilter {
 

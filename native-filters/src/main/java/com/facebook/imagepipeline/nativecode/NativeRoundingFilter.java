@@ -16,7 +16,7 @@ import com.facebook.common.internal.Preconditions;
 public class NativeRoundingFilter {
 
   static {
-    ImagePipelineNativeLoader.load();
+    NativeFiltersLoader.load();
   }
 
   public static void toCircle(Bitmap bitmap) {

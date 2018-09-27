@@ -18,7 +18,7 @@ import com.facebook.common.internal.Preconditions;
 public class NativeBlurFilter {
 
   static {
-    ImagePipelineNativeLoader.load();
+    NativeFiltersLoader.load();
   }
 
   /**

@@ -85,6 +85,7 @@ dependencies {
     implementation project(':animated-gif-lite')
     implementation project(':animated-webp')
     implementation project(':static-webp')
+    implementation project(':native-filters')
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':drawee-span')

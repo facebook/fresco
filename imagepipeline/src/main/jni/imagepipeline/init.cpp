@@ -13,8 +13,6 @@
 #include "logging.h"
 #include "JpegTranscoder.h"
 #include "NativeMemoryChunk.h"
-#include "blur_filter.h"
-#include "rounding_filter.h"
 
 jmethodID midInputStreamRead;
 jmethodID midInputStreamSkip;
@@ -99,16 +97,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
   THROW_AND_RETURNVAL_IF(
       registerNativeMemoryChunkMethods(env) == JNI_ERR,
       "Could not register NativeMemoryChunk methods",
-      -1);
-
-  THROW_AND_RETURNVAL_IF(
-      registerBlurFilterMethods(env) == JNI_ERR,
-      "Could not register NativeBlurFilter methods",
-      -1);
-
-  THROW_AND_RETURNVAL_IF(
-      registerRoundingFilterMethods(env) == JNI_ERR,
-      "Could not register NativeRoundingFilter methods",
       -1);
 
   return JNI_VERSION_1_6;

@@ -8,12 +8,11 @@ package com.facebook.imagepipeline.filter;
 
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
-import com.facebook.imagepipeline.nativecode.NativeRoundingFilter;
 import com.facebook.imageutils.BitmapUtil;
 
 /**
  * Modified midpoint circle algorithm. Clients that look for better performances should use the
- * native implementation of this algorithm in {@link NativeRoundingFilter}.
+ * native implementation of this algorithm in NativeRoundingFilter.
  */
 public final class InPlaceRoundFilter {
 
