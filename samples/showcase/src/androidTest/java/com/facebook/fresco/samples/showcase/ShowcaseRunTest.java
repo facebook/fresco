@@ -32,6 +32,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.TextView;
 import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,7 @@ public class ShowcaseRunTest {
   }
 
   @Test
+  @Ignore /* TODO T34443404, Circle CI instrumentation test fails due to network issue */
   public void testShowImage() {
     openScreenFromMenu(R.string.drawee_simple_title);
     onView(withId(R.id.drawee_view)).perform(waitFor(5000));
