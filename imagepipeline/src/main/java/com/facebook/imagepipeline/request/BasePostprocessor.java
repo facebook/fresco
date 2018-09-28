@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.request;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
@@ -29,12 +28,6 @@ public abstract class BasePostprocessor implements Postprocessor {
    * animations.
    */
   public static final Bitmap.Config FALLBACK_BITMAP_CONFIGURATION = Bitmap.Config.ARGB_8888;
-
-  /**
-   * This is the default value that define if native bitmap copy is enable or not. If it isn't, the
-   * fallback is drawing the bitmap using {@link Canvas#drawBitmap(Bitmap, float, float, Paint)}.
-   */
-  public static boolean sEnableNativeBitmapCopy = true;
 
   @Override
   public String getName() {
@@ -116,11 +109,10 @@ public abstract class BasePostprocessor implements Postprocessor {
   /**
    * Copies the content of {@code sourceBitmap} to {@code destBitmap}. Both bitmaps must have the
    * same width and height. If their {@link Bitmap.Config} are identical, the memory is directly
-   * copied if {@link #sEnableNativeBitmapCopy} is true. Otherwise, the {@code sourceBitmap} is
-   * drawn into {@code destBitmap}.
+   * copied. Otherwise, the {@code sourceBitmap} is drawn into {@code destBitmap}.
    */
   private static void internalCopyBitmap(Bitmap destBitmap, Bitmap sourceBitmap) {
-    if (destBitmap.getConfig() == sourceBitmap.getConfig() && sEnableNativeBitmapCopy) {
+    if (destBitmap.getConfig() == sourceBitmap.getConfig()) {
       Bitmaps.copyBitmap(destBitmap, sourceBitmap);
     } else {
       // The bitmap configurations might be different when the source bitmap's configuration is
