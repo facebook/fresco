@@ -41,8 +41,11 @@ public class LruBitmapPool implements BitmapPool {
   }
 
   @Override
-  public synchronized Bitmap get(int size) {
-    Bitmap cached = mStrategy.get(size);
+  public synchronized Bitmap get(final int size) {
+    if (mCurrentSize > mMaxSize) {
+      trimTo(mMaxSize);
+    }
+    final Bitmap cached = mStrategy.get(size);
     if (cached != null) {
       final int reusedSize = mStrategy.getSize(cached);
       mCurrentSize -= reusedSize;
@@ -59,13 +62,10 @@ public class LruBitmapPool implements BitmapPool {
   }
 
   @Override
-  public synchronized void release(Bitmap value) {
+  public synchronized void release(final Bitmap value) {
     final int size = mStrategy.getSize(value);
     mPoolStatsTracker.onValueRelease(size);
     mStrategy.put(value);
     mCurrentSize += size;
-    if (mCurrentSize > mMaxSize) {
-      trimTo(mMaxSize);
-    }
   }
 }
