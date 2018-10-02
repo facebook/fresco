@@ -16,6 +16,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_NETWOR
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
@@ -26,6 +27,7 @@ import com.facebook.common.media.MediaUtils;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -55,7 +57,6 @@ import org.robolectric.annotation.Config;
 @Config(manifest = Config.NONE)
 public class ProducerSequenceFactoryTest {
 
-  private static final int MAX_BITMAP_SIZE = 2024;
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
   private final String mDummyMime = "dummy_mime";
@@ -73,7 +74,8 @@ public class ProducerSequenceFactoryTest {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
     ImageTranscoder imageTranscoder = mock(ImageTranscoder.class);
     ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
-    when(imageTranscoderFactory.createImageTranscoder(anyBoolean())).thenReturn(imageTranscoder);
+    when(imageTranscoderFactory.createImageTranscoder(any(ImageFormat.class), anyBoolean()))
+        .thenReturn(imageTranscoder);
 
     mProducerSequenceFactory =
         new ProducerSequenceFactory(

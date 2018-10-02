@@ -37,7 +37,6 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -133,7 +132,7 @@ public class ImagePipelineConfig {
             NoOpImageCacheStatsTracker.getInstance() :
             builder.mImageCacheStatsTracker;
     mImageDecoder = builder.mImageDecoder;
-    mImageTranscoderFactory = getImageTranscoderFactory(builder, mImagePipelineExperiments);
+    mImageTranscoderFactory = getImageTranscoderFactory(builder);
     mIsPrefetchEnabledSupplier =
         builder.mIsPrefetchEnabledSupplier == null ?
             new Supplier<Boolean>() {
@@ -353,17 +352,11 @@ public class ImagePipelineConfig {
   }
 
   @Nullable
-  private static ImageTranscoderFactory getImageTranscoderFactory(
-      final Builder builder, final ImagePipelineExperiments imagePipelineExperiments) {
+  private static ImageTranscoderFactory getImageTranscoderFactory(final Builder builder) {
     if (builder.mImageTranscoderFactory != null) {
       return builder.mImageTranscoderFactory;
-    } else if (imagePipelineExperiments.isNativeCodeDisabled()) {
-      // This member will be constructed by ImagePipelineFactory
-      return null;
     } else {
-      return new NativeJpegTranscoderFactory(
-          imagePipelineExperiments.getMaxBitmapSize(),
-          imagePipelineExperiments.getUseDownsamplingRatioForResizing());
+      return null; // This member will be constructed by ImagePipelineFactory
     }
   }
 

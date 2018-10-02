@@ -34,7 +34,7 @@ public class SimpleImageTranscoder implements ImageTranscoder {
   private final PlatformDecoder mPlatformDecoder;
   private final PlatformBitmapFactory mPlatformBitmapFactory;
 
-  SimpleImageTranscoder(
+  public SimpleImageTranscoder(
       final boolean resizingEnabled,
       final int maxBitmapSize,
       final PlatformDecoder platformDecoder,
@@ -120,6 +120,11 @@ public class SimpleImageTranscoder implements ImageTranscoder {
         && DownsampleUtil.determineSampleSize(
                 rotationOptions, resizeOptions, encodedImage, mMaxBitmapSize)
             > DownsampleUtil.DEFAULT_SAMPLE_SIZE;
+  }
+
+  @Override
+  public boolean canTranscode(ImageFormat imageFormat) {
+    return imageFormat == DefaultImageFormats.HEIF || imageFormat == DefaultImageFormats.JPEG;
   }
 
   @Override

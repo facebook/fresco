@@ -6,6 +6,9 @@
  */
 package com.facebook.imagepipeline.nativecode;
 
+import android.support.annotation.Nullable;
+import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 
@@ -20,7 +23,11 @@ public class NativeJpegTranscoderFactory implements ImageTranscoderFactory {
   }
 
   @Override
-  public ImageTranscoder createImageTranscoder(boolean isResizingEnabled) {
+  @Nullable
+  public ImageTranscoder createImageTranscoder(ImageFormat imageFormat, boolean isResizingEnabled) {
+    if (imageFormat != DefaultImageFormats.JPEG) {
+      return null;
+    }
     return new NativeJpegTranscoder(isResizingEnabled, mMaxBitmapSize, mUseDownSamplingRatio);
   }
 }

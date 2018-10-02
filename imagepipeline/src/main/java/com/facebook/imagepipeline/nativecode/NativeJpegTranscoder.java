@@ -19,6 +19,7 @@ import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -64,6 +65,11 @@ public class NativeJpegTranscoder implements ImageTranscoder {
     return JpegTranscoderUtils.getSoftwareNumerator(
             rotationOptions, resizeOptions, encodedImage, mResizingEnabled)
         < JpegTranscoderUtils.SCALE_DENOMINATOR;
+  }
+
+  @Override
+  public boolean canTranscode(ImageFormat imageFormat) {
+    return imageFormat == DefaultImageFormats.JPEG;
   }
 
   @Override

@@ -50,7 +50,6 @@ import com.facebook.imagepipeline.producers.ThumbnailBranchProducer;
 import com.facebook.imagepipeline.producers.ThumbnailProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -373,8 +372,8 @@ public class ProducerSequenceFactory {
       mCommonNetworkFetchToEncodedMemorySequence =
           mProducerFactory.newResizeAndRotateProducer(
               mCommonNetworkFetchToEncodedMemorySequence,
-              mImageTranscoderFactory.createImageTranscoder(
-                  mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled));
+              mResizeAndRotateEnabledForNetwork && !mDownsampleEnabled,
+              mImageTranscoderFactory);
       FrescoSystrace.endSection();
     }
     FrescoSystrace.endSection();
@@ -552,8 +551,8 @@ public class ProducerSequenceFactory {
         inputProducer = mProducerFactory.newWebpTranscodeProducer(inputProducer);
       }
       inputProducer = mProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
-      ImageTranscoder imageTranscoder = mImageTranscoderFactory.createImageTranscoder(true);
-      inputProducer = mProducerFactory.newResizeAndRotateProducer(inputProducer, imageTranscoder);
+      inputProducer =
+          mProducerFactory.newResizeAndRotateProducer(inputProducer, true, mImageTranscoderFactory);
       mDataFetchSequence = newBitmapCacheGetToDecodeSequence(inputProducer);
     }
     return mDataFetchSequence;
@@ -668,9 +667,9 @@ public class ProducerSequenceFactory {
       ThumbnailProducer<EncodedImage>[] thumbnailProducers) {
     Producer<EncodedImage> localImageProducer =
         ProducerFactory.newAddImageTransformMetaDataProducer(inputProducer);
-    ImageTranscoder imageTranscoder = mImageTranscoderFactory.createImageTranscoder(true);
     localImageProducer =
-        mProducerFactory.newResizeAndRotateProducer(localImageProducer, imageTranscoder);
+        mProducerFactory.newResizeAndRotateProducer(
+            localImageProducer, true, mImageTranscoderFactory);
     ThrottlingProducer<EncodedImage>
         localImageThrottlingProducer =
         mProducerFactory.newThrottlingProducer(localImageProducer);
@@ -683,8 +682,8 @@ public class ProducerSequenceFactory {
       ThumbnailProducer<EncodedImage>[] thumbnailProducers) {
     ThumbnailBranchProducer thumbnailBranchProducer =
         mProducerFactory.newThumbnailBranchProducer(thumbnailProducers);
-    ImageTranscoder imageTranscoder = mImageTranscoderFactory.createImageTranscoder(true);
-    return mProducerFactory.newResizeAndRotateProducer(thumbnailBranchProducer, imageTranscoder);
+    return mProducerFactory.newResizeAndRotateProducer(
+        thumbnailBranchProducer, true, mImageTranscoderFactory);
   }
 
   /**

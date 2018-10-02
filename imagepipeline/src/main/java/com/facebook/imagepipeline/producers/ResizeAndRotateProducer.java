@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.transcoder.ImageTranscodeResult;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
+import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
 import com.facebook.imagepipeline.transcoder.TranscodeStatus;
 import java.util.HashMap;
@@ -34,16 +35,15 @@ import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
 
 /**
- * Resizes and rotates JPEG image according to the EXIF orientation data or a specified rotation
- * angle.
+ * Resizes and rotates images according to the EXIF orientation data or a specified rotation angle.
  *
- * <p> If the image is not JPEG, no transformation is applied.
+ * <p>If the image is not supported by the {@link ImageTranscoder}, no transformation is applied.
  *
- * <p> This can be used even if downsampling is enabled as long as resizing is disabled in the
- * constructor.
+ * <p>This can be used even if downsampling is enabled as long as resizing is disabled.
  */
 public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private static final String PRODUCER_NAME = "ResizeAndRotateProducer";
+  private static final String INPUT_IMAGE_FORMAT = "Image format";
   private static final String ORIGINAL_SIZE_KEY = "Original size";
   private static final String REQUESTED_SIZE_KEY = "Requested size";
   private static final String TRANSCODING_RESULT = "Transcoding result";
@@ -54,17 +54,20 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   private final Executor mExecutor;
   private final PooledByteBufferFactory mPooledByteBufferFactory;
   private final Producer<EncodedImage> mInputProducer;
-  private final ImageTranscoder mImageTranscoder;
+  private final boolean mIsResizingEnabled;
+  private final ImageTranscoderFactory mImageTranscoderFactory;
 
   public ResizeAndRotateProducer(
       final Executor executor,
       final PooledByteBufferFactory pooledByteBufferFactory,
       final Producer<EncodedImage> inputProducer,
-      final ImageTranscoder imageTranscoder) {
+      final boolean isResizingEnabled,
+      final ImageTranscoderFactory imageTranscoderFactory) {
     mExecutor = Preconditions.checkNotNull(executor);
     mPooledByteBufferFactory = Preconditions.checkNotNull(pooledByteBufferFactory);
     mInputProducer = Preconditions.checkNotNull(inputProducer);
-    mImageTranscoder = Preconditions.checkNotNull(imageTranscoder);
+    mImageTranscoderFactory = Preconditions.checkNotNull(imageTranscoderFactory);
+    mIsResizingEnabled = isResizingEnabled;
   }
 
   @Override
@@ -72,32 +75,42 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       final Consumer<EncodedImage> consumer,
       final ProducerContext context) {
     mInputProducer.produceResults(
-        new TransformingConsumer(consumer, context, mImageTranscoder), context);
+        new TransformingConsumer(consumer, context, mIsResizingEnabled, mImageTranscoderFactory),
+        context);
   }
 
   private class TransformingConsumer extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
-    private final ImageTranscoder mImageTranscoder;
+    private final boolean mIsResizingEnabled;
+    private final ImageTranscoderFactory mImageTranscoderFactory;
     private final ProducerContext mProducerContext;
     private boolean mIsCancelled;
 
     private final JobScheduler mJobScheduler;
 
-    public TransformingConsumer(
+    TransformingConsumer(
         final Consumer<EncodedImage> consumer,
         final ProducerContext producerContext,
-        final ImageTranscoder imageTranscoder) {
+        final boolean isResizingEnabled,
+        final ImageTranscoderFactory imageTranscoderFactory) {
       super(consumer);
       mIsCancelled = false;
       mProducerContext = producerContext;
-      mImageTranscoder = imageTranscoder;
+      mIsResizingEnabled = isResizingEnabled;
+      mImageTranscoderFactory = imageTranscoderFactory;
 
-      JobScheduler.JobRunnable job = new JobScheduler.JobRunnable() {
-        @Override
-        public void run(EncodedImage encodedImage, @Status int status) {
-          doTransform(encodedImage, status);
-        }
-      };
+      JobScheduler.JobRunnable job =
+          new JobScheduler.JobRunnable() {
+            @Override
+            public void run(EncodedImage encodedImage, @Status int status) {
+              doTransform(
+                  encodedImage,
+                  status,
+                  Preconditions.checkNotNull(
+                      mImageTranscoderFactory.createImageTranscoder(
+                          encodedImage.getImageFormat(), mIsResizingEnabled)));
+            }
+          };
       mJobScheduler = new JobScheduler(mExecutor, job, MIN_TRANSFORM_INTERVAL_MS);
 
       mProducerContext.addCallbacks(
@@ -132,7 +145,12 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         return;
       }
       TriState shouldTransform =
-          shouldTransform(mProducerContext.getImageRequest(), newResult, mImageTranscoder);
+          shouldTransform(
+              mProducerContext.getImageRequest(),
+              newResult,
+              Preconditions.checkNotNull(
+                  mImageTranscoderFactory.createImageTranscoder(
+                      newResult.getImageFormat(), mIsResizingEnabled)));
       // ignore the intermediate result if we don't know what to do with it
       if (!isLast && shouldTransform == TriState.UNSET) {
         return;
@@ -163,7 +181,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       return cloned;
     }
 
-    private void doTransform(EncodedImage encodedImage, @Status int status) {
+    private void doTransform(
+        EncodedImage encodedImage, @Status int status, ImageTranscoder imageTranscoder) {
       mProducerContext.getListener().onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
       ImageRequest imageRequest = mProducerContext.getImageRequest();
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
@@ -171,7 +190,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       EncodedImage ret;
       try {
         ImageTranscodeResult result =
-            mImageTranscoder.transcode(
+            imageTranscoder.transcode(
                 encodedImage,
                 outputStream,
                 imageRequest.getRotationOptions(),
@@ -183,7 +202,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
                 encodedImage,
                 imageRequest.getResizeOptions(),
                 result,
-                mImageTranscoder.getIdentifier());
+                imageTranscoder.getIdentifier());
         CloseableReference<PooledByteBuffer> ref =
             CloseableReference.of(outputStream.toByteBuffer());
         try {
@@ -233,6 +252,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       }
 
       final Map<String, String> map = new HashMap<>();
+      map.put(INPUT_IMAGE_FORMAT, String.valueOf(encodedImage.getImageFormat()));
       map.put(ORIGINAL_SIZE_KEY, originalSize);
       map.put(REQUESTED_SIZE_KEY, requestedSize);
       map.put(JobScheduler.QUEUE_TIME_KEY, String.valueOf(mJobScheduler.getQueuedTime()));
@@ -249,9 +269,11 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
     }
-    if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG) {
+
+    if (!imageTranscoder.canTranscode(encodedImage.getImageFormat())) {
       return TriState.NO;
     }
+
     return TriState.valueOf(
         shouldRotate(request.getRotationOptions(), encodedImage)
             || imageTranscoder.canResize(

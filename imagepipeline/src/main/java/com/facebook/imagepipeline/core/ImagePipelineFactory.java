@@ -46,7 +46,9 @@ import com.facebook.imagepipeline.platform.OreoDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -126,6 +128,7 @@ public class ImagePipelineFactory {
   private FileCache mMainFileCache;
   private ImageDecoder mImageDecoder;
   private ImagePipeline mImagePipeline;
+  private ImageTranscoderFactory mImageTranscoderFactory;
   private ProducerFactory mProducerFactory;
   private ProducerSequenceFactory mProducerSequenceFactory;
   private BufferedDiskCache mSmallImageBufferedDiskCache;
@@ -384,14 +387,6 @@ public class ImagePipelineFactory {
         && mConfig.getExperiments().getUseBitmapPrepareToDraw();
 
     if (mProducerSequenceFactory == null) {
-      ImageTranscoderFactory imageTranscoderFactory = mConfig.getImageTranscoderFactory();
-      if (imageTranscoderFactory == null) {
-        imageTranscoderFactory =
-            new SimpleImageTranscoderFactory(
-                mConfig.getExperiments().getMaxBitmapSize(),
-                getPlatformDecoder(),
-                getPlatformBitmapFactory());
-      }
       mProducerSequenceFactory =
           new ProducerSequenceFactory(
               mConfig.getContext().getApplicationContext().getContentResolver(),
@@ -404,7 +399,7 @@ public class ImagePipelineFactory {
               useBitmapPrepareToDraw,
               mConfig.getExperiments().isPartialImageCachingEnabled(),
               mConfig.isDiskCacheEnabled(),
-              imageTranscoderFactory);
+              getImageTranscoderFactory());
     }
     return mProducerSequenceFactory;
   }
@@ -431,4 +426,33 @@ public class ImagePipelineFactory {
     return mSmallImageBufferedDiskCache;
   }
 
+  /**
+   * Defines the correct {@link ImageTranscoder}. If a custom {@link ImageTranscoder} was define in
+   * the config, it will be used whenever possible. Else, if the native code is disabled it uses
+   * {@link SimpleImageTranscoderFactory}. Otherwise {@link MultiImageTranscoderFactory} determines
+   * the {@link ImageTranscoder} to use based on the image format.
+   *
+   * @return The {@link ImageTranscoderFactory}
+   */
+  private ImageTranscoderFactory getImageTranscoderFactory() {
+    if (mImageTranscoderFactory == null) {
+      if (mConfig.getImageTranscoderFactory() == null
+          && mConfig.getExperiments().isNativeCodeDisabled()) {
+        mImageTranscoderFactory =
+            new SimpleImageTranscoderFactory(
+                mConfig.getExperiments().getMaxBitmapSize(),
+                getPlatformDecoder(),
+                getPlatformBitmapFactory());
+      } else {
+        mImageTranscoderFactory =
+            new MultiImageTranscoderFactory(
+                mConfig.getExperiments().getMaxBitmapSize(),
+                mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
+                getPlatformDecoder(),
+                getPlatformBitmapFactory(),
+                mConfig.getImageTranscoderFactory());
+      }
+    }
+    return mImageTranscoderFactory;
+  }
 }

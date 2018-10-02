@@ -42,7 +42,7 @@ public class ImageDecoderConfig {
     private List<ImageFormat.FormatChecker> mCustomImageFormats;
 
     /**
-     * Add a new decoding cabability for a new image format.
+     * Add a new decoding capability for a new image format.
      *
      * @param imageFormat the new image format
      * @param imageFormatChecker the format checker that can determine the new image format

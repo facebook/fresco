@@ -6,6 +6,7 @@
  */
 package com.facebook.imagepipeline.transcoder;
 
+import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 
@@ -26,7 +27,7 @@ public class SimpleImageTranscoderFactory implements ImageTranscoderFactory {
   }
 
   @Override
-  public ImageTranscoder createImageTranscoder(boolean isResizingEnabled) {
+  public ImageTranscoder createImageTranscoder(ImageFormat imageFormat, boolean isResizingEnabled) {
     return new SimpleImageTranscoder(
         isResizingEnabled, mMaxBitmapSize, mPlatformDecoder, mPlatformBitmapFactory);
   }

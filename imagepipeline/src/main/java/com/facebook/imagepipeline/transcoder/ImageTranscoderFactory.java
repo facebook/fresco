@@ -6,14 +6,20 @@
  */
 package com.facebook.imagepipeline.transcoder;
 
+import android.support.annotation.Nullable;
+import com.facebook.imageformat.ImageFormat;
+
 public interface ImageTranscoderFactory {
 
   /**
    * Creates an {@link ImageTranscoder} that enables or disables resizing depending on {@code
-   * isResizingEnabled}
+   * isResizingEnabled}. It can return null if the {@link ImageFormat} is not supported by this
+   * {@link ImageTranscoder}.
    *
+   * @param imageFormat the {@link ImageFormat} of the input images.
    * @param isResizingEnabled true if resizing is allowed.
-   * @return The {@link ImageTranscoder}
+   * @return The {@link ImageTranscoder} or null if the image format is not supported.
    */
-  ImageTranscoder createImageTranscoder(boolean isResizingEnabled);
+  @Nullable
+  ImageTranscoder createImageTranscoder(ImageFormat imageFormat, boolean isResizingEnabled);
 }

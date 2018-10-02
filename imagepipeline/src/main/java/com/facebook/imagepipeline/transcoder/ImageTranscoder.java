@@ -55,6 +55,14 @@ public interface ImageTranscoder {
       @Nullable ResizeOptions resizeOptions);
 
   /**
+   * Whether the input {@link ImageFormat} can be transcoded by the image transcoder.
+   *
+   * @param imageFormat The {@link ImageFormat} that will be transcoded.
+   * @return true if this image format is handled by the image transcoder, else false.
+   */
+  boolean canTranscode(ImageFormat imageFormat);
+
+  /**
    * Gets the identifier of the image transcoder. This is mostly used for logging purposes.
    *
    * @return the identifier of the image transcoder.
