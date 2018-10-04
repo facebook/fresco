@@ -7,18 +7,16 @@
 package com.facebook.imagepipeline.transcoder;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Build;
 import com.facebook.common.logging.FLog;
-import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
-import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.producers.DownsampleUtil;
 import java.io.OutputStream;
 import javax.annotation.Nullable;
@@ -31,18 +29,10 @@ public class SimpleImageTranscoder implements ImageTranscoder {
   private static final String TAG = "SimpleImageTranscoder";
   private final boolean mResizingEnabled;
   private final int mMaxBitmapSize;
-  private final PlatformDecoder mPlatformDecoder;
-  private final PlatformBitmapFactory mPlatformBitmapFactory;
 
-  public SimpleImageTranscoder(
-      final boolean resizingEnabled,
-      final int maxBitmapSize,
-      final PlatformDecoder platformDecoder,
-      final PlatformBitmapFactory platformBitmapFactory) {
+  public SimpleImageTranscoder(final boolean resizingEnabled, final int maxBitmapSize) {
     mResizingEnabled = resizingEnabled;
     mMaxBitmapSize = maxBitmapSize;
-    mPlatformDecoder = platformDecoder;
-    mPlatformBitmapFactory = platformBitmapFactory;
   }
 
   @Override
@@ -60,18 +50,18 @@ public class SimpleImageTranscoder implements ImageTranscoder {
       rotationOptions = RotationOptions.autoRotate();
     }
 
-    // Keep the current sample size to avoid cloning the encodedImage
-    final int oldSampleSize = encodedImage.getSampleSize();
-    // Update the encoded image sample size for decoding.
     final int sampleSize = getSampleSize(encodedImage, rotationOptions, resizeOptions);
-    encodedImage.setSampleSize(sampleSize);
-    CloseableReference<Bitmap> resizedBitmapRef =
-        mPlatformDecoder.decodeFromEncodedImageWithColorSpace(
-            encodedImage, Bitmap.Config.ARGB_8888, null, true);
-    // Reset encoded image sample size for the rest of the pipeline.
-    encodedImage.setSampleSize(oldSampleSize);
+    final BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inSampleSize = sampleSize;
+    Bitmap resizedBitmap;
+    try {
+      resizedBitmap = BitmapFactory.decodeStream(encodedImage.getInputStream(), null, options);
+    } catch (OutOfMemoryError oom) {
+      FLog.e(TAG, "Out-Of-Memory during transcode", oom);
+      return new ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR);
+    }
 
-    if (resizedBitmapRef == null || !resizedBitmapRef.isValid()) {
+    if (resizedBitmap == null) {
       FLog.e(TAG, "Couldn't decode the EncodedImage InputStream ! ");
       return new ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR);
     }
@@ -79,20 +69,18 @@ public class SimpleImageTranscoder implements ImageTranscoder {
     Matrix transformationMatrix =
         JpegTranscoderUtils.getTransformationMatrix(encodedImage, rotationOptions);
 
-    CloseableReference<Bitmap> rotatedBitmapRef = null;
-    Bitmap srcBitmap = resizedBitmapRef.get();
+    Bitmap srcBitmap = resizedBitmap;
     try {
       if (transformationMatrix != null) {
-        rotatedBitmapRef =
-            mPlatformBitmapFactory.createBitmap(
-                srcBitmap,
+        srcBitmap =
+            Bitmap.createBitmap(
+                resizedBitmap,
                 0,
                 0,
-                srcBitmap.getWidth(),
-                srcBitmap.getHeight(),
+                resizedBitmap.getWidth(),
+                resizedBitmap.getHeight(),
                 transformationMatrix,
                 false);
-        srcBitmap = rotatedBitmapRef.get();
       }
       srcBitmap.compress(getOutputFormat(outputFormat), quality, outputStream);
       return new ImageTranscodeResult(
@@ -103,8 +91,8 @@ public class SimpleImageTranscoder implements ImageTranscoder {
       FLog.e(TAG, "Out-Of-Memory during transcode", oom);
       return new ImageTranscodeResult(TranscodeStatus.TRANSCODING_ERROR);
     } finally {
-      CloseableReference.closeSafely(resizedBitmapRef);
-      CloseableReference.closeSafely(rotatedBitmapRef);
+      srcBitmap.recycle();
+      resizedBitmap.recycle();
     }
   }
 

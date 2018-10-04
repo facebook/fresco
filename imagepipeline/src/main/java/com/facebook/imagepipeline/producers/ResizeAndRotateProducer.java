@@ -132,6 +132,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           });
     }
 
+
     @Override
     protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {
       if (mIsCancelled) {
@@ -144,6 +145,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
         return;
       }
+
       TriState shouldTransform =
           shouldTransform(
               mProducerContext.getImageRequest(),
@@ -197,12 +199,18 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
                 imageRequest.getResizeOptions(),
                 null,
                 DEFAULT_JPEG_QUALITY);
+
+        if (result.getTranscodeStatus() == TranscodeStatus.TRANSCODING_ERROR) {
+          throw new RuntimeException("Error while transcoding the image");
+        }
+
         extraMap =
             getExtraMap(
                 encodedImage,
                 imageRequest.getResizeOptions(),
                 result,
                 imageTranscoder.getIdentifier());
+
         CloseableReference<PooledByteBuffer> ref =
             CloseableReference.of(outputStream.toByteBuffer());
         try {

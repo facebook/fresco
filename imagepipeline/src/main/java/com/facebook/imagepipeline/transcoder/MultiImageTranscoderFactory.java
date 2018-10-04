@@ -6,9 +6,7 @@
 package com.facebook.imagepipeline.transcoder;
 
 import com.facebook.imageformat.ImageFormat;
-import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
-import com.facebook.imagepipeline.platform.PlatformDecoder;
 import javax.annotation.Nullable;
 
 /**
@@ -21,20 +19,14 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
 
   private final int mMaxBitmapSize;
   private final boolean mUseDownSamplingRatio;
-  private final PlatformDecoder mPlatformDecoder;
-  private final PlatformBitmapFactory mPlatformBitmapFactory;
   @Nullable private final ImageTranscoderFactory mPrimaryImageTranscoderFactory;
 
   public MultiImageTranscoderFactory(
       final int maxBitmapSize,
       final boolean useDownSamplingRatio,
-      final PlatformDecoder platformDecoder,
-      final PlatformBitmapFactory platformBitmapFactory,
       @Nullable final ImageTranscoderFactory primaryImageTranscoderFactory) {
     mMaxBitmapSize = maxBitmapSize;
     mUseDownSamplingRatio = useDownSamplingRatio;
-    mPlatformDecoder = platformDecoder;
-    mPlatformBitmapFactory = platformBitmapFactory;
     mPrimaryImageTranscoderFactory = primaryImageTranscoderFactory;
   }
 
@@ -68,8 +60,7 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
 
   private ImageTranscoder getSimpleImageTranscoder(
       ImageFormat imageFormat, boolean isResizingEnabled) {
-    return new SimpleImageTranscoderFactory(
-            mMaxBitmapSize, mPlatformDecoder, mPlatformBitmapFactory)
+    return new SimpleImageTranscoderFactory(mMaxBitmapSize)
         .createImageTranscoder(imageFormat, isResizingEnabled);
   }
 }
