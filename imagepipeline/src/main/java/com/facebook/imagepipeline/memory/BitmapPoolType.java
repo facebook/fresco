@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.memory;
 
 public @interface BitmapPoolType {
   String LEGACY = "legacy";
+  String LEGACY_DEFAULT_PARAMS = "legacy_default_params";
   String DUMMY = "dummy";
   String EXPERIMENTAL = "experimental";
 

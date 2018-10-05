@@ -49,6 +49,13 @@ public class PoolFactory {
           mBitmapPool =
               new LruBitmapPool(mConfig.getBitmapPoolMaxSize(), NoOpPoolStatsTracker.getInstance());
           break;
+        case BitmapPoolType.LEGACY_DEFAULT_PARAMS:
+          mBitmapPool =
+              new BucketsBitmapPool(
+                  mConfig.getMemoryTrimmableRegistry(),
+                  DefaultBitmapPoolParams.get(),
+                  mConfig.getBitmapPoolStatsTracker());
+          break;
         case BitmapPoolType.LEGACY:
           // fall through
         default:
