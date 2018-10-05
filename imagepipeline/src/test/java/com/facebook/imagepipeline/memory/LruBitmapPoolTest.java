@@ -25,7 +25,8 @@ public class LruBitmapPoolTest {
 
   @Before
   public void setup() {
-    mPool = spy(new LruBitmapPool(10 * 1024 * 1024, NoOpPoolStatsTracker.getInstance()));
+    mPool =
+        spy(new LruBitmapPool(10 * 1024 * 1024, 1024 * 1024, NoOpPoolStatsTracker.getInstance()));
   }
 
   @Test

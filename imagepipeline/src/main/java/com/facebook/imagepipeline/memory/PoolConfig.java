@@ -11,6 +11,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -18,6 +19,9 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public class PoolConfig {
+
+  public static final int BITMAP_POOL_MAX_BITMAP_SIZE_DEFAULT =
+      1024 * 1024 * BitmapUtil.ARGB_8888_BYTES_PER_PIXEL;
 
   // There are a lot of parameters in this class. Please follow strict alphabetical order.
 
@@ -30,7 +34,8 @@ public class PoolConfig {
   private final PoolParams mSmallByteArrayPoolParams;
   private final PoolStatsTracker mSmallByteArrayPoolStatsTracker;
   private final String mBitmapPoolType;
-  private final int mBitmapPoolMaxSize;
+  private final int mBitmapPoolMaxPoolSize;
+  private final int mBitmapPoolMaxBitmapSize;
 
   private PoolConfig(Builder builder) {
     if (FrescoSystrace.isTracing()) {
@@ -71,7 +76,11 @@ public class PoolConfig {
 
     mBitmapPoolType =
         builder.mBitmapPoolType == null ? BitmapPoolType.DEFAULT : builder.mBitmapPoolType;
-    mBitmapPoolMaxSize = builder.mBitmapPoolMaxSize;
+    mBitmapPoolMaxPoolSize = builder.mBitmapPoolMaxPoolSize;
+    mBitmapPoolMaxBitmapSize =
+        builder.mBitmapPoolMaxBitmapSize > 0
+            ? builder.mBitmapPoolMaxBitmapSize
+            : BITMAP_POOL_MAX_BITMAP_SIZE_DEFAULT;
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
@@ -113,8 +122,12 @@ public class PoolConfig {
     return mBitmapPoolType;
   }
 
-  public int getBitmapPoolMaxSize() {
-    return mBitmapPoolMaxSize;
+  public int getBitmapPoolMaxPoolSize() {
+    return mBitmapPoolMaxPoolSize;
+  }
+
+  public int getBitmapPoolMaxBitmapSize() {
+    return mBitmapPoolMaxBitmapSize;
   }
 
   public static Builder newBuilder() {
@@ -132,7 +145,8 @@ public class PoolConfig {
     private PoolParams mSmallByteArrayPoolParams;
     private PoolStatsTracker mSmallByteArrayPoolStatsTracker;
     private String mBitmapPoolType;
-    private int mBitmapPoolMaxSize;
+    private int mBitmapPoolMaxPoolSize;
+    private int mBitmapPoolMaxBitmapSize;
 
     private Builder() {
     }
@@ -190,8 +204,13 @@ public class PoolConfig {
       return this;
     }
 
-    public Builder setBitmapPoolMaxSize(int bitmapPoolMaxSize) {
-      mBitmapPoolMaxSize = bitmapPoolMaxSize;
+    public Builder setBitmapPoolMaxPoolSize(int bitmapPoolMaxPoolSize) {
+      mBitmapPoolMaxPoolSize = bitmapPoolMaxPoolSize;
+      return this;
+    }
+
+    public Builder setBitmapPoolMaxBitmapSize(int bitmapPoolMaxBitmapSize) {
+      mBitmapPoolMaxBitmapSize = bitmapPoolMaxBitmapSize;
       return this;
     }
   }
