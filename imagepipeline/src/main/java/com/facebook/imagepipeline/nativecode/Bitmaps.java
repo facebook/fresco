@@ -24,16 +24,6 @@ public class Bitmaps {
     ImagePipelineNativeLoader.load();
   }
 
-  public static ByteBuffer getByteBuffer(Bitmap bitmap, long start, long size) {
-    Preconditions.checkNotNull(bitmap);
-    return nativeGetByteBuffer(bitmap, start, size);
-  }
-
-  public static void releaseByteBuffer(Bitmap bitmap) {
-    Preconditions.checkNotNull(bitmap);
-    nativeReleaseByteBuffer(bitmap);
-  }
-
   /**
    * This blits the pixel data from src to dest.
    * <p>The destination bitmap must have both a height and a width equal to the source. For maximum
@@ -58,12 +48,6 @@ public class Bitmaps {
         src.getRowBytes(),
         dest.getHeight());
   }
-
-  @DoNotStrip
-  private static native ByteBuffer nativeGetByteBuffer(Bitmap bitmap, long start, long size);
-
-  @DoNotStrip
-  private static native void nativeReleaseByteBuffer(Bitmap bitmap);
 
   @DoNotStrip
   private static native void nativeCopyBitmap(
