@@ -63,12 +63,17 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         .onProducerStart(context.getId(), PRODUCER_NAME);
     final FetchState fetchState = mNetworkFetcher.createFetchState(consumer, context);
     mNetworkFetcher.fetch(
-        fetchState, new NetworkFetcher.Callback() {
+        fetchState,
+        new NetworkFetcher.Callback() {
           @Override
           public void onResponse(InputStream response, int responseLength) throws IOException {
-            FrescoSystrace.beginSection("NetworkFetcher->onResponse");
+            if (FrescoSystrace.isTracing()) {
+              FrescoSystrace.beginSection("NetworkFetcher->onResponse");
+            }
             NetworkFetchProducer.this.onResponse(fetchState, response, responseLength);
-            FrescoSystrace.endSection();
+            if (FrescoSystrace.isTracing()) {
+              FrescoSystrace.endSection();
+            }
           }
 
           @Override

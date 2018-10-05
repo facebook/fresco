@@ -88,9 +88,13 @@ public class ImagePipelineFactory {
 
   /** Initializes {@link ImagePipelineFactory} with default config. */
   public static synchronized void initialize(Context context) {
-    FrescoSystrace.beginSection("ImagePipelineFactory#initialize");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("ImagePipelineFactory#initialize");
+    }
     initialize(ImagePipelineConfig.newBuilder(context).build());
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   /** Initializes {@link ImagePipelineFactory} with the specified config. */
@@ -140,11 +144,16 @@ public class ImagePipelineFactory {
   private AnimatedFactory mAnimatedFactory;
 
   public ImagePipelineFactory(ImagePipelineConfig config) {
-    FrescoSystrace.beginSection("ImagePipelineConfig()");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("ImagePipelineConfig()");
+    }
     mConfig = Preconditions.checkNotNull(config);
-    mThreadHandoffProducerQueue = new ThreadHandoffProducerQueue(
-        config.getExecutorSupplier().forLightweightBackgroundTasks());
-    FrescoSystrace.endSection();
+    mThreadHandoffProducerQueue =
+        new ThreadHandoffProducerQueue(
+            config.getExecutorSupplier().forLightweightBackgroundTasks());
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   @Nullable

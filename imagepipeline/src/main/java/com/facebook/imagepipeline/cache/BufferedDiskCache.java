@@ -129,14 +129,18 @@ public class BufferedDiskCache {
    */
   public Task<EncodedImage> get(CacheKey key, AtomicBoolean isCancelled) {
     try {
-      FrescoSystrace.beginSection("BufferedDiskCache#get");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("BufferedDiskCache#get");
+      }
       final EncodedImage pinnedImage = mStagingArea.get(key);
       if (pinnedImage != null) {
         return foundPinnedImage(key, pinnedImage);
       }
       return getAsync(key, isCancelled);
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -171,7 +175,9 @@ public class BufferedDiskCache {
             @Override
             public EncodedImage call() throws Exception {
               try {
-                FrescoSystrace.beginSection("BufferedDiskCache#getAsync");
+                if (FrescoSystrace.isTracing()) {
+                  FrescoSystrace.beginSection("BufferedDiskCache#getAsync");
+                }
                 if (isCancelled.get()) {
                   throw new CancellationException();
                 }
@@ -206,7 +212,9 @@ public class BufferedDiskCache {
                   return result;
                 }
               } finally {
-                FrescoSystrace.endSection();
+                if (FrescoSystrace.isTracing()) {
+                  FrescoSystrace.endSection();
+                }
               }
             }
           },
@@ -231,7 +239,9 @@ public class BufferedDiskCache {
       final CacheKey key,
       EncodedImage encodedImage) {
     try {
-      FrescoSystrace.beginSection("BufferedDiskCache#put");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("BufferedDiskCache#put");
+      }
       Preconditions.checkNotNull(key);
       Preconditions.checkArgument(EncodedImage.isValid(encodedImage));
 
@@ -249,12 +259,16 @@ public class BufferedDiskCache {
               @Override
               public void run() {
                 try {
-                  FrescoSystrace.beginSection("BufferedDiskCache#putAsync");
+                  if (FrescoSystrace.isTracing()) {
+                    FrescoSystrace.beginSection("BufferedDiskCache#putAsync");
+                  }
                   writeToDiskCache(key, finalEncodedImage);
                 } finally {
                   mStagingArea.remove(key, finalEncodedImage);
                   EncodedImage.closeSafely(finalEncodedImage);
-                  FrescoSystrace.endSection();
+                  if (FrescoSystrace.isTracing()) {
+                    FrescoSystrace.endSection();
+                  }
                 }
               }
             });
@@ -266,7 +280,9 @@ public class BufferedDiskCache {
         EncodedImage.closeSafely(finalEncodedImage);
       }
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -282,11 +298,15 @@ public class BufferedDiskCache {
             @Override
             public Void call() throws Exception {
               try {
-                FrescoSystrace.beginSection("BufferedDiskCache#remove");
+                if (FrescoSystrace.isTracing()) {
+                  FrescoSystrace.beginSection("BufferedDiskCache#remove");
+                }
                 mStagingArea.remove(key);
                 mFileCache.remove(key);
               } finally {
-                FrescoSystrace.endSection();
+                if (FrescoSystrace.isTracing()) {
+                  FrescoSystrace.endSection();
+                }
               }
               return null;
             }

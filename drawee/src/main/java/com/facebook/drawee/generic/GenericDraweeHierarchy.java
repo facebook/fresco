@@ -100,7 +100,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   private final ForwardingDrawable mActualImageWrapper;
 
   GenericDraweeHierarchy(GenericDraweeHierarchyBuilder builder) {
-    FrescoSystrace.beginSection("GenericDraweeHierarchy()");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("GenericDraweeHierarchy()");
+    }
     mResources = builder.getResources();
     mRoundingParams = builder.getRoundingParams();
 
@@ -115,23 +117,20 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     // array of layers
     Drawable[] layers = new Drawable[numLayers];
     layers[BACKGROUND_IMAGE_INDEX] = buildBranch(builder.getBackground(), null);
-    layers[PLACEHOLDER_IMAGE_INDEX] = buildBranch(
-        builder.getPlaceholderImage(),
-        builder.getPlaceholderImageScaleType());
-    layers[ACTUAL_IMAGE_INDEX] = buildActualImageBranch(
-        mActualImageWrapper,
-        builder.getActualImageScaleType(),
-        builder.getActualImageFocusPoint(),
-        builder.getActualImageColorFilter());
-    layers[PROGRESS_BAR_IMAGE_INDEX] = buildBranch(
-        builder.getProgressBarImage(),
-        builder.getProgressBarImageScaleType());
-    layers[RETRY_IMAGE_INDEX] = buildBranch(
-        builder.getRetryImage(),
-        builder.getRetryImageScaleType());
-    layers[FAILURE_IMAGE_INDEX] = buildBranch(
-        builder.getFailureImage(),
-        builder.getFailureImageScaleType());
+    layers[PLACEHOLDER_IMAGE_INDEX] =
+        buildBranch(builder.getPlaceholderImage(), builder.getPlaceholderImageScaleType());
+    layers[ACTUAL_IMAGE_INDEX] =
+        buildActualImageBranch(
+            mActualImageWrapper,
+            builder.getActualImageScaleType(),
+            builder.getActualImageFocusPoint(),
+            builder.getActualImageColorFilter());
+    layers[PROGRESS_BAR_IMAGE_INDEX] =
+        buildBranch(builder.getProgressBarImage(), builder.getProgressBarImageScaleType());
+    layers[RETRY_IMAGE_INDEX] =
+        buildBranch(builder.getRetryImage(), builder.getRetryImageScaleType());
+    layers[FAILURE_IMAGE_INDEX] =
+        buildBranch(builder.getFailureImage(), builder.getFailureImageScaleType());
     if (numOverlays > 0) {
       int index = 0;
       if (builder.getOverlays() != null) {
@@ -159,7 +158,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
     mTopLevelDrawable.mutate();
 
     resetFade();
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   @Nullable

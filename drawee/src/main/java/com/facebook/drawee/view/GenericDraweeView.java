@@ -52,11 +52,15 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
   }
 
   protected void inflateHierarchy(Context context, @Nullable AttributeSet attrs) {
-    FrescoSystrace.beginSection("GenericDraweeView#inflateHierarchy");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("GenericDraweeView#inflateHierarchy");
+    }
     GenericDraweeHierarchyBuilder builder =
         GenericDraweeHierarchyInflater.inflateBuilder(context, attrs);
     setAspectRatio(builder.getDesiredAspectRatio());
     setHierarchy(builder.build());
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 }

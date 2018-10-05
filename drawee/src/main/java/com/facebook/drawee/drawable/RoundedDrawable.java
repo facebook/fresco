@@ -374,8 +374,12 @@ public abstract class RoundedDrawable extends Drawable
 
   @Override
   public void draw(@NonNull Canvas canvas) {
-    FrescoSystrace.beginSection("RoundedDrawable#draw");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("RoundedDrawable#draw");
+    }
     mDelegate.draw(canvas);
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 }

@@ -77,7 +77,9 @@ public class SimpleDraweeView extends GenericDraweeView {
 
   private void init(Context context, @Nullable AttributeSet attrs) {
     try {
-      FrescoSystrace.beginSection("SimpleDraweeView#init");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("SimpleDraweeView#init");
+      }
       if (isInEditMode()) {
         // Disable roundingParams due to a bug in Android Studio
         // https://issuetracker.google.com/issues/113560562
@@ -91,18 +93,14 @@ public class SimpleDraweeView extends GenericDraweeView {
       }
 
       if (attrs != null) {
-        TypedArray gdhAttrs = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.SimpleDraweeView);
+        TypedArray gdhAttrs = context.obtainStyledAttributes(attrs, R.styleable.SimpleDraweeView);
         try {
           if (gdhAttrs.hasValue(R.styleable.SimpleDraweeView_actualImageUri)) {
             setImageURI(
-                Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)),
-                null);
+                Uri.parse(gdhAttrs.getString(R.styleable.SimpleDraweeView_actualImageUri)), null);
           } else if (gdhAttrs.hasValue((R.styleable.SimpleDraweeView_actualImageResource))) {
-            int resId = gdhAttrs.getResourceId(
-                R.styleable.SimpleDraweeView_actualImageResource,
-                NO_ID);
+            int resId =
+                gdhAttrs.getResourceId(R.styleable.SimpleDraweeView_actualImageResource, NO_ID);
             if (resId != NO_ID) {
               if (isInEditMode()) {
                 setImageResource(resId);
@@ -116,7 +114,9 @@ public class SimpleDraweeView extends GenericDraweeView {
         }
       }
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 

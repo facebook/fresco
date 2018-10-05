@@ -92,7 +92,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final ProducerContext producerContext) {
     try {
-      FrescoSystrace.beginSection("DecodeProducer#produceResults");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("DecodeProducer#produceResults");
+      }
       final ImageRequest imageRequest = producerContext.getImageRequest();
       ProgressiveDecoder progressiveDecoder;
       if (!UriUtil.isNetworkUri(imageRequest.getSourceUri())) {
@@ -112,7 +114,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
       mInputProducer.produceResults(progressiveDecoder, producerContext);
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -184,7 +188,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
       try {
-        FrescoSystrace.beginSection("DecodeProducer#onNewResultImpl");
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.beginSection("DecodeProducer#onNewResultImpl");
+        }
         final boolean isLast = isLast(status);
         if (isLast && !EncodedImage.isValid(newResult)) {
           handleError(new ExceptionWithNoStacktrace("Encoded image is not valid."));
@@ -198,7 +204,9 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           mJobScheduler.scheduleJob();
         }
       } finally {
-        FrescoSystrace.endSection();
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.endSection();
+        }
       }
     }
 

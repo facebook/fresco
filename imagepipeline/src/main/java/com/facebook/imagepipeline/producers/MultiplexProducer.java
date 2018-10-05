@@ -59,7 +59,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
   @Override
   public void produceResults(Consumer<T> consumer, ProducerContext context) {
     try {
-      FrescoSystrace.beginSection("MultiplexProducer#produceResults");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("MultiplexProducer#produceResults");
+      }
       K key = getKey(context);
       Multiplexer multiplexer;
       boolean createdNewMultiplexer;
@@ -85,7 +87,9 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         multiplexer.startInputProducerIfHasAttachedConsumers();
       }
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -503,40 +507,56 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
       @Override
       protected void onNewResultImpl(T newResult, @Status int status) {
         try {
-          FrescoSystrace.beginSection("MultiplexProducer#onNewResult");
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onNewResult");
+          }
           Multiplexer.this.onNextResult(this, newResult, status);
         } finally {
-          FrescoSystrace.endSection();
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
         }
       }
 
       @Override
       protected void onFailureImpl(Throwable t) {
         try {
-          FrescoSystrace.beginSection("MultiplexProducer#onFailure");
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onFailure");
+          }
           Multiplexer.this.onFailure(this, t);
         } finally {
-          FrescoSystrace.endSection();
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
         }
       }
 
       @Override
       protected void onCancellationImpl() {
         try {
-          FrescoSystrace.beginSection("MultiplexProducer#onCancellation");
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onCancellation");
+          }
           Multiplexer.this.onCancelled(this);
         } finally {
-          FrescoSystrace.endSection();
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
         }
       }
 
       @Override
       protected void onProgressUpdateImpl(float progress) {
         try {
-          FrescoSystrace.beginSection("MultiplexProducer#onProgressUpdate");
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("MultiplexProducer#onProgressUpdate");
+          }
           Multiplexer.this.onProgressUpdate(this, progress);
         } finally {
-          FrescoSystrace.endSection();
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
         }
       }
     }

@@ -17,7 +17,6 @@ import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.HasImageRequest;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -37,20 +36,32 @@ public abstract class AbstractProducerToDataSourceAdapter<T> extends AbstractDat
       Producer<T> producer,
       SettableProducerContext settableProducerContext,
       RequestListener requestListener) {
-    FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()");
+    }
     mSettableProducerContext = settableProducerContext;
     mRequestListener = requestListener;
-    FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()->onRequestStart");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()->onRequestStart");
+    }
     mRequestListener.onRequestStart(
         settableProducerContext.getImageRequest(),
         mSettableProducerContext.getCallerContext(),
         mSettableProducerContext.getId(),
         mSettableProducerContext.isPrefetch());
-    FrescoSystrace.endSection();
-    FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()->produceResult");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("AbstractProducerToDataSourceAdapter()->produceResult");
+    }
     producer.produceResults(createConsumer(), settableProducerContext);
-    FrescoSystrace.endSection();
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   private Consumer<T> createConsumer() {

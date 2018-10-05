@@ -11,7 +11,6 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -34,23 +33,25 @@ public class PoolConfig {
   private final int mBitmapPoolMaxSize;
 
   private PoolConfig(Builder builder) {
-    FrescoSystrace.beginSection("PoolConfig()");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PoolConfig()");
+    }
     mBitmapPoolParams =
-        builder.mBitmapPoolParams == null ?
-            DefaultBitmapPoolParams.get() :
-            builder.mBitmapPoolParams;
+        builder.mBitmapPoolParams == null
+            ? DefaultBitmapPoolParams.get()
+            : builder.mBitmapPoolParams;
     mBitmapPoolStatsTracker =
-        builder.mBitmapPoolStatsTracker == null ?
-            NoOpPoolStatsTracker.getInstance() :
-            builder.mBitmapPoolStatsTracker;
+        builder.mBitmapPoolStatsTracker == null
+            ? NoOpPoolStatsTracker.getInstance()
+            : builder.mBitmapPoolStatsTracker;
     mFlexByteArrayPoolParams =
-        builder.mFlexByteArrayPoolParams == null ?
-            DefaultFlexByteArrayPoolParams.get() :
-            builder.mFlexByteArrayPoolParams;
+        builder.mFlexByteArrayPoolParams == null
+            ? DefaultFlexByteArrayPoolParams.get()
+            : builder.mFlexByteArrayPoolParams;
     mMemoryTrimmableRegistry =
-        builder.mMemoryTrimmableRegistry == null ?
-            NoOpMemoryTrimmableRegistry.getInstance() :
-            builder.mMemoryTrimmableRegistry;
+        builder.mMemoryTrimmableRegistry == null
+            ? NoOpMemoryTrimmableRegistry.getInstance()
+            : builder.mMemoryTrimmableRegistry;
     mMemoryChunkPoolParams =
         builder.mMemoryChunkPoolParams == null
             ? DefaultNativeMemoryChunkPoolParams.get()
@@ -60,18 +61,20 @@ public class PoolConfig {
             ? NoOpPoolStatsTracker.getInstance()
             : builder.mMemoryChunkPoolStatsTracker;
     mSmallByteArrayPoolParams =
-        builder.mSmallByteArrayPoolParams == null ?
-            DefaultByteArrayPoolParams.get() :
-            builder.mSmallByteArrayPoolParams;
+        builder.mSmallByteArrayPoolParams == null
+            ? DefaultByteArrayPoolParams.get()
+            : builder.mSmallByteArrayPoolParams;
     mSmallByteArrayPoolStatsTracker =
-        builder.mSmallByteArrayPoolStatsTracker == null ?
-            NoOpPoolStatsTracker.getInstance() :
-            builder.mSmallByteArrayPoolStatsTracker;
+        builder.mSmallByteArrayPoolStatsTracker == null
+            ? NoOpPoolStatsTracker.getInstance()
+            : builder.mSmallByteArrayPoolStatsTracker;
 
     mBitmapPoolType =
         builder.mBitmapPoolType == null ? BitmapPoolType.DEFAULT : builder.mBitmapPoolType;
     mBitmapPoolMaxSize = builder.mBitmapPoolMaxSize;
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   public PoolParams getBitmapPoolParams() {

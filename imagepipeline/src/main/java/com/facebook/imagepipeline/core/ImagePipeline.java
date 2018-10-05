@@ -668,15 +668,16 @@ public class ImagePipeline {
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext,
       @Nullable RequestListener requestListener) {
-    FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
+    }
     final RequestListener finalRequestListener =
         getRequestListenerForRequest(imageRequest, requestListener);
 
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =
           ImageRequest.RequestLevel.getMax(
-              imageRequest.getLowestPermittedRequestLevel(),
-              lowestPermittedRequestLevelOnSubmit);
+              imageRequest.getLowestPermittedRequestLevel(), lowestPermittedRequestLevelOnSubmit);
       SettableProducerContext settableProducerContext =
           new SettableProducerContext(
               imageRequest,
@@ -693,7 +694,9 @@ public class ImagePipeline {
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 

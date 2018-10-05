@@ -43,10 +43,14 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
 
   @Override
   public void draw(Canvas canvas) {
-    FrescoSystrace.beginSection("RoundedBitmapDrawable#draw");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("RoundedBitmapDrawable#draw");
+    }
     if (!shouldRound()) {
       super.draw(canvas);
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
       return;
     }
     updateTransform();
@@ -61,7 +65,9 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
       canvas.drawPath(mBorderPath, mBorderPaint);
     }
     canvas.restoreToCount(saveCount);
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   private void updatePaint() {

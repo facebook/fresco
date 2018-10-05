@@ -307,14 +307,18 @@ public abstract class AbstractDraweeControllerBuilder <
 
   /** Builds a regular controller. */
   protected AbstractDraweeController buildController() {
-    FrescoSystrace.beginSection("AbstractDraweeControllerBuilder#buildController");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("AbstractDraweeControllerBuilder#buildController");
+    }
     AbstractDraweeController controller = obtainController();
     controller.setRetainImageOnFailure(getRetainImageOnFailure());
     controller.setContentDescription(getContentDescription());
     controller.setControllerViewportVisibilityListener(getControllerViewportVisibilityListener());
     maybeBuildAndSetRetryManager(controller);
     maybeAttachListeners(controller);
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
     return controller;
   }
 

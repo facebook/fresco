@@ -82,16 +82,22 @@ public class WrappingUtils {
       @Nullable Drawable drawable,
       @Nullable ScalingUtils.ScaleType scaleType,
       @Nullable PointF focusPoint) {
-    FrescoSystrace.beginSection("WrappingUtils#maybeWrapWithScaleType");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("WrappingUtils#maybeWrapWithScaleType");
+    }
     if (drawable == null || scaleType == null) {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
       return drawable;
     }
     ScaleTypeDrawable scaleTypeDrawable = new ScaleTypeDrawable(drawable, scaleType);
     if (focusPoint != null) {
       scaleTypeDrawable.setFocusPoint(focusPoint);
     }
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
     return scaleTypeDrawable;
   }
 
@@ -216,9 +222,12 @@ public class WrappingUtils {
       @Nullable Drawable drawable,
       @Nullable RoundingParams roundingParams) {
     try {
-      FrescoSystrace.beginSection("WrappingUtils#maybeWrapWithRoundedOverlayColor");
-      if (drawable == null || roundingParams == null ||
-          roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.OVERLAY_COLOR) {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("WrappingUtils#maybeWrapWithRoundedOverlayColor");
+      }
+      if (drawable == null
+          || roundingParams == null
+          || roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.OVERLAY_COLOR) {
         return drawable;
       }
       RoundedCornersDrawable roundedCornersDrawable = new RoundedCornersDrawable(drawable);
@@ -226,7 +235,9 @@ public class WrappingUtils {
       roundedCornersDrawable.setOverlayColor(roundingParams.getOverlayColor());
       return roundedCornersDrawable;
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -249,9 +260,12 @@ public class WrappingUtils {
       @Nullable RoundingParams roundingParams,
       Resources resources) {
     try {
-      FrescoSystrace.beginSection("WrappingUtils#maybeApplyLeafRounding");
-      if (drawable == null || roundingParams == null ||
-          roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("WrappingUtils#maybeApplyLeafRounding");
+      }
+      if (drawable == null
+          || roundingParams == null
+          || roundingParams.getRoundingMethod() != RoundingParams.RoundingMethod.BITMAP_ONLY) {
         return drawable;
       }
       if (drawable instanceof ForwardingDrawable) {
@@ -264,7 +278,9 @@ public class WrappingUtils {
         return applyLeafRounding(drawable, roundingParams, resources);
       }
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 

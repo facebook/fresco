@@ -78,7 +78,9 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   /** This method is idempotent so it only has effect the first time it's called */
   private void init(Context context) {
     try {
-      FrescoSystrace.beginSection("DraweeView#init");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("DraweeView#init");
+      }
       if (mInitialised) {
         return;
       }
@@ -93,10 +95,13 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
       }
       // In Android N and above, visibility handling for Drawables has been changed, which breaks
       // activity transitions with DraweeViews.
-      mLegacyVisibilityHandlingEnabled = sGlobalLegacyVisibilityHandlingEnabled &&
-          context.getApplicationInfo().targetSdkVersion >= 24; //Build.VERSION_CODES.N
+      mLegacyVisibilityHandlingEnabled =
+          sGlobalLegacyVisibilityHandlingEnabled
+              && context.getApplicationInfo().targetSdkVersion >= 24; // Build.VERSION_CODES.N
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 

@@ -39,7 +39,9 @@ public class DefaultDrawableFactory implements DrawableFactory {
   @Nullable
   public Drawable createDrawable(CloseableImage closeableImage) {
     try {
-      FrescoSystrace.beginSection("DefaultDrawableFactory#createDrawable");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("DefaultDrawableFactory#createDrawable");
+      }
       if (closeableImage instanceof CloseableStaticBitmap) {
         CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
         Drawable bitmapDrawable =
@@ -60,7 +62,9 @@ public class DefaultDrawableFactory implements DrawableFactory {
       }
       return null;
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 

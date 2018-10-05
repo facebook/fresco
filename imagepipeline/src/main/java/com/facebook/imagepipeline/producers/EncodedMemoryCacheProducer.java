@@ -43,7 +43,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
   public void produceResults(
       final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
     try {
-      FrescoSystrace.beginSection("EncodedMemoryCacheProducer#produceResults");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("EncodedMemoryCacheProducer#produceResults");
+      }
       final String requestId = producerContext.getId();
       final ProducerListener listener = producerContext.getListener();
       listener.onProducerStart(requestId, PRODUCER_NAME);
@@ -100,7 +102,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         CloseableReference.closeSafely(cachedReference);
       }
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -125,7 +129,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     @Override
     public void onNewResultImpl(EncodedImage newResult, @Status int status) {
       try {
-        FrescoSystrace.beginSection("EncodedMemoryCacheProducer#onNewResultImpl");
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.beginSection("EncodedMemoryCacheProducer#onNewResultImpl");
+        }
         // intermediate, null or uncacheable results are not cached, so we just forward them
         // as well as the images with unknown format which could be html response from the server
         if (isNotLast(status)
@@ -166,7 +172,9 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         }
         getConsumer().onNewResult(newResult, status);
       } finally {
-        FrescoSystrace.endSection();
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.endSection();
+        }
       }
     }
   }

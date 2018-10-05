@@ -18,17 +18,22 @@ public class RoundedNinePatchDrawable extends RoundedDrawable {
 
   @Override
   public void draw(Canvas canvas) {
-    FrescoSystrace.beginSection("RoundedNinePatchDrawable#draw");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("RoundedNinePatchDrawable#draw");
+    }
     if (!shouldRound()) {
       super.draw(canvas);
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
       return;
     }
     updateTransform();
     updatePath();
     canvas.clipPath(mPath);
     super.draw(canvas);
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
-
 }

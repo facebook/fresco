@@ -120,7 +120,9 @@ public class PipelineDraweeController
       Object callerContext,
       @Nullable ImmutableList<DrawableFactory> customDrawableFactories,
       @Nullable ImageOriginListener imageOriginListener) {
-    FrescoSystrace.beginSection("PipelineDraweeController#initialize");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeController#initialize");
+    }
     super.initialize(id, callerContext);
     init(dataSourceSupplier);
     mCacheKey = cacheKey;
@@ -128,7 +130,9 @@ public class PipelineDraweeController
     clearImageOriginListeners();
     maybeUpdateDebugOverlay(null);
     addImageOriginListener(imageOriginListener);
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
   }
 
   protected synchronized void initializePerformanceMonitoring(
@@ -230,19 +234,25 @@ public class PipelineDraweeController
 
   @Override
   protected DataSource<CloseableReference<CloseableImage>> getDataSource() {
-    FrescoSystrace.beginSection("PipelineDraweeController#getDataSource");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeController#getDataSource");
+    }
     if (FLog.isLoggable(FLog.VERBOSE)) {
       FLog.v(TAG, "controller %x: getDataSource", System.identityHashCode(this));
     }
     DataSource<CloseableReference<CloseableImage>> result = mDataSourceSupplier.get();
-    FrescoSystrace.endSection();
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
     return result;
   }
 
   @Override
   protected Drawable createDrawable(CloseableReference<CloseableImage> image) {
     try {
-      FrescoSystrace.beginSection("PipelineDraweeController#createDrawable");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("PipelineDraweeController#createDrawable");
+      }
       Preconditions.checkState(CloseableReference.isValid(image));
       CloseableImage closeableImage = image.get();
 
@@ -265,7 +275,9 @@ public class PipelineDraweeController
       }
       throw new UnsupportedOperationException("Unrecognized image class: " + closeableImage);
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -366,7 +378,9 @@ public class PipelineDraweeController
 
   @Override
   protected CloseableReference<CloseableImage> getCachedImage() {
-    FrescoSystrace.beginSection("PipelineDraweeController#getCachedImage");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeController#getCachedImage");
+    }
     try {
       if (mMemoryCache == null || mCacheKey == null) {
         return null;
@@ -379,7 +393,9 @@ public class PipelineDraweeController
       }
       return closeableImage;
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 

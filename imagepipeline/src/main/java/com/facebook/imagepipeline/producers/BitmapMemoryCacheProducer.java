@@ -43,7 +43,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final ProducerContext producerContext) {
     try {
-      FrescoSystrace.beginSection("BitmapMemoryCacheProducer#produceResults");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("BitmapMemoryCacheProducer#produceResults");
+      }
       final ProducerListener listener = producerContext.getListener();
       final String requestId = producerContext.getId();
       listener.onProducerStart(requestId, getProducerName());
@@ -94,11 +96,17 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           listener.requiresExtraMap(requestId)
               ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
               : null);
-      FrescoSystrace.beginSection("mInputProducer.produceResult");
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection("mInputProducer.produceResult");
+      }
       mInputProducer.produceResults(wrappedConsumer, producerContext);
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
@@ -112,7 +120,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       public void onNewResultImpl(
           CloseableReference<CloseableImage> newResult, @Status int status) {
         try {
-          FrescoSystrace.beginSection("BitmapMemoryCacheProducer#onNewResultImpl");
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.beginSection("BitmapMemoryCacheProducer#onNewResultImpl");
+          }
           final boolean isLast = isLast(status);
           // ignore invalid intermediate results and forward the null result if last
           if (newResult == null) {
@@ -159,7 +169,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
             CloseableReference.closeSafely(newCachedResult);
           }
         } finally {
-          FrescoSystrace.endSection();
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
         }
       }
     };

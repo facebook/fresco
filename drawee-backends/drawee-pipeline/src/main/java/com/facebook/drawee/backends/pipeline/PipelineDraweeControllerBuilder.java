@@ -110,7 +110,9 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
 
   @Override
   protected PipelineDraweeController obtainController() {
-    FrescoSystrace.beginSection("PipelineDraweeControllerBuilder#obtainController");
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("PipelineDraweeControllerBuilder#obtainController");
+    }
     try {
       DraweeController oldController = getOldController();
       PipelineDraweeController controller;
@@ -130,7 +132,9 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
       controller.initializePerformanceMonitoring(mImagePerfDataListener);
       return controller;
     } finally {
-      FrescoSystrace.endSection();
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
     }
   }
 
