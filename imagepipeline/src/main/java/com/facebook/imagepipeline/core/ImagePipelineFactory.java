@@ -446,6 +446,7 @@ public class ImagePipelineFactory {
   private ImageTranscoderFactory getImageTranscoderFactory() {
     if (mImageTranscoderFactory == null) {
       if (mConfig.getImageTranscoderFactory() == null
+          && mConfig.getImageTranscoderType() == null
           && mConfig.getExperiments().isNativeCodeDisabled()) {
         mImageTranscoderFactory =
             new SimpleImageTranscoderFactory(mConfig.getExperiments().getMaxBitmapSize());
@@ -454,7 +455,8 @@ public class ImagePipelineFactory {
             new MultiImageTranscoderFactory(
                 mConfig.getExperiments().getMaxBitmapSize(),
                 mConfig.getExperiments().getUseDownsamplingRatioForResizing(),
-                mConfig.getImageTranscoderFactory());
+                mConfig.getImageTranscoderFactory(),
+                mConfig.getImageTranscoderType());
       }
     }
     return mImageTranscoderFactory;

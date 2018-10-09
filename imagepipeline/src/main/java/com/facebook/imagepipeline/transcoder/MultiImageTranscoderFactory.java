@@ -6,6 +6,7 @@
 package com.facebook.imagepipeline.transcoder;
 
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.core.ImageTranscoderType;
 import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
 import javax.annotation.Nullable;
 
@@ -20,23 +21,33 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
   private final int mMaxBitmapSize;
   private final boolean mUseDownSamplingRatio;
   @Nullable private final ImageTranscoderFactory mPrimaryImageTranscoderFactory;
+  @Nullable @ImageTranscoderType private final Integer mImageTranscoderType;
 
   public MultiImageTranscoderFactory(
       final int maxBitmapSize,
       final boolean useDownSamplingRatio,
-      @Nullable final ImageTranscoderFactory primaryImageTranscoderFactory) {
+      @Nullable final ImageTranscoderFactory primaryImageTranscoderFactory,
+      @Nullable @ImageTranscoderType final Integer imageTranscoderType) {
     mMaxBitmapSize = maxBitmapSize;
     mUseDownSamplingRatio = useDownSamplingRatio;
     mPrimaryImageTranscoderFactory = primaryImageTranscoderFactory;
+    mImageTranscoderType = imageTranscoderType;
   }
 
   @Override
   public ImageTranscoder createImageTranscoder(ImageFormat imageFormat, boolean isResizingEnabled) {
+    // Use custom ImageTranscoder, if any
     ImageTranscoder imageTranscoder = getCustomImageTranscoder(imageFormat, isResizingEnabled);
+    // Use ImageTranscoder based on type passed, if any
+    if (imageTranscoder == null) {
+      imageTranscoder = getImageTranscoderWithType(imageFormat, isResizingEnabled);
+    }
+    // First fallback using native ImageTranscoder
     if (imageTranscoder == null) {
       imageTranscoder = getNativeImageTranscoder(imageFormat, isResizingEnabled);
     }
 
+    // Fallback to SimpleImageTranscoder if the format is not supported by native ImageTranscoder
     return imageTranscoder == null
         ? getSimpleImageTranscoder(imageFormat, isResizingEnabled)
         : imageTranscoder;
@@ -62,5 +73,22 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
       ImageFormat imageFormat, boolean isResizingEnabled) {
     return new SimpleImageTranscoderFactory(mMaxBitmapSize)
         .createImageTranscoder(imageFormat, isResizingEnabled);
+  }
+
+  @Nullable
+  private ImageTranscoder getImageTranscoderWithType(
+      ImageFormat imageFormat, boolean isResizingEnabled) {
+    if (mImageTranscoderType == null) {
+      return null;
+    }
+
+    switch (mImageTranscoderType) {
+      case ImageTranscoderType.NATIVE_TRANSCODER:
+        return getNativeImageTranscoder(imageFormat, isResizingEnabled);
+      case ImageTranscoderType.JAVA_TRANSCODER:
+        return getSimpleImageTranscoder(imageFormat, isResizingEnabled);
+      default:
+        throw new IllegalArgumentException("Invalid ImageTranscoderType");
+    }
   }
 }

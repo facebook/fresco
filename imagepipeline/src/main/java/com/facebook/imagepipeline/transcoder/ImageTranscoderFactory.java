@@ -16,6 +16,9 @@ public interface ImageTranscoderFactory {
    * isResizingEnabled}. It can return null if the {@link ImageFormat} is not supported by this
    * {@link ImageTranscoder}.
    *
+   * <p>Note that if JPEG images are not supported, we will fallback to our native {@link
+   * ImageTranscoder} implementation.
+   *
    * @param imageFormat the {@link ImageFormat} of the input images.
    * @param isResizingEnabled true if resizing is allowed.
    * @return The {@link ImageTranscoder} or null if the image format is not supported.

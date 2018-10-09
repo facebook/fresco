@@ -78,6 +78,7 @@ public class ImagePipelineConfig {
   private final ImageCacheStatsTracker mImageCacheStatsTracker;
   @Nullable private final ImageDecoder mImageDecoder;
   @Nullable private final ImageTranscoderFactory mImageTranscoderFactory;
+  @Nullable @ImageTranscoderType private final Integer mImageTranscoderType;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final DiskCacheConfig mMainDiskCacheConfig;
   private final MemoryTrimmableRegistry mMemoryTrimmableRegistry;
@@ -133,6 +134,7 @@ public class ImagePipelineConfig {
             : builder.mImageCacheStatsTracker;
     mImageDecoder = builder.mImageDecoder;
     mImageTranscoderFactory = getImageTranscoderFactory(builder);
+    mImageTranscoderType = builder.mImageTranscoderType;
     mIsPrefetchEnabledSupplier =
         builder.mIsPrefetchEnabledSupplier == null
             ? new Supplier<Boolean>() {
@@ -303,6 +305,12 @@ public class ImagePipelineConfig {
     return mImageTranscoderFactory;
   }
 
+  @Nullable
+  @ImageTranscoderType
+  public Integer getImageTranscoderType() {
+    return mImageTranscoderType;
+  }
+
   public Supplier<Boolean> getIsPrefetchEnabledSupplier() {
     return mIsPrefetchEnabledSupplier;
   }
@@ -364,6 +372,10 @@ public class ImagePipelineConfig {
 
   @Nullable
   private static ImageTranscoderFactory getImageTranscoderFactory(final Builder builder) {
+    if (builder.mImageTranscoderFactory != null && builder.mImageTranscoderType != null) {
+      throw new IllegalStateException(
+          "You can't define a custom ImageTranscoderFactory and provide an ImageTranscoderType");
+    }
     if (builder.mImageTranscoderFactory != null) {
       return builder.mImageTranscoderFactory;
     } else {
@@ -415,6 +427,7 @@ public class ImagePipelineConfig {
     private ImageCacheStatsTracker mImageCacheStatsTracker;
     private ImageDecoder mImageDecoder;
     private ImageTranscoderFactory mImageTranscoderFactory;
+    @Nullable @ImageTranscoderType private Integer mImageTranscoderType = null;
     private Supplier<Boolean> mIsPrefetchEnabledSupplier;
     private DiskCacheConfig mMainDiskCacheConfig;
     private MemoryTrimmableRegistry mMemoryTrimmableRegistry;
@@ -508,6 +521,17 @@ public class ImagePipelineConfig {
 
     public Builder setImageDecoder(ImageDecoder imageDecoder) {
       mImageDecoder = imageDecoder;
+      return this;
+    }
+
+    @Nullable
+    @ImageTranscoderType
+    public Integer getImageTranscoderType() {
+      return mImageTranscoderType;
+    }
+
+    public Builder setImageTranscoderType(@ImageTranscoderType int imageTranscoderType) {
+      mImageTranscoderType = imageTranscoderType;
       return this;
     }
 
