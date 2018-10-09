@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * Network fetcher that uses OkHttp as a backend.
@@ -57,6 +58,7 @@ public class OkHttpNetworkFetcher extends
   private static final String IMAGE_SIZE = "image_size";
 
   private final OkHttpClient mOkHttpClient;
+  private final @Nullable CacheControl mCacheControl;
 
   private Executor mCancellationExecutor;
 
@@ -64,8 +66,17 @@ public class OkHttpNetworkFetcher extends
    * @param okHttpClient client to use
    */
   public OkHttpNetworkFetcher(OkHttpClient okHttpClient) {
+    this(okHttpClient, true);
+  }
+
+  /**
+   * @param okHttpClient client to use
+   * @param disableOkHttpCache true if network requests should not be cached by OkHttp
+   */
+  public OkHttpNetworkFetcher(OkHttpClient okHttpClient, boolean disableOkHttpCache) {
     mOkHttpClient = okHttpClient;
     mCancellationExecutor = okHttpClient.getDispatcher().getExecutorService();
+    mCacheControl = disableOkHttpCache ? new CacheControl.Builder().noStore().build() : null;
   }
 
   @Override
@@ -82,12 +93,11 @@ public class OkHttpNetworkFetcher extends
     final Uri uri = fetchState.getUri();
 
     try {
-      Request request = new Request.Builder()
-        .cacheControl(new CacheControl.Builder().noStore().build())
-        .url(uri.toString())
-        .get()
-        .build();
-      fetchWithRequest(fetchState, callback, request);
+      final Request.Builder builder = new Request.Builder().url(uri.toString()).get();
+      if (mCacheControl != null) {
+        builder.cacheControl(mCacheControl);
+      }
+      fetchWithRequest(fetchState, callback, builder.build());
     } catch (Exception e) {
       // handle error while creating the request
       callback.onFailure(e);

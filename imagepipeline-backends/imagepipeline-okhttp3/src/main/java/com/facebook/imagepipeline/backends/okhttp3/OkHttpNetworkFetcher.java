@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -48,13 +49,13 @@ public class OkHttpNetworkFetcher extends
     }
   }
 
-  private static final String TAG = "OkHttpNetworkFetchProducer";
   private static final String QUEUE_TIME = "queue_time";
   private static final String FETCH_TIME = "fetch_time";
   private static final String TOTAL_TIME = "total_time";
   private static final String IMAGE_SIZE = "image_size";
 
   private final Call.Factory mCallFactory;
+  private final @Nullable CacheControl mCacheControl;
 
   private Executor mCancellationExecutor;
 
@@ -71,8 +72,20 @@ public class OkHttpNetworkFetcher extends
    * cancellation is requested from the UI Thread
    */
   public OkHttpNetworkFetcher(Call.Factory callFactory, Executor cancellationExecutor) {
+    this(callFactory, cancellationExecutor, true);
+  }
+
+  /**
+   * @param callFactory custom {@link Call.Factory} for fetching image from the network
+   * @param cancellationExecutor executor on which fetching cancellation is performed if
+   *     cancellation is requested from the UI Thread
+   * @param disableOkHttpCache true if network requests should not be cached by OkHttp
+   */
+  public OkHttpNetworkFetcher(
+      Call.Factory callFactory, Executor cancellationExecutor, boolean disableOkHttpCache) {
     mCallFactory = callFactory;
     mCancellationExecutor = cancellationExecutor;
+    mCacheControl = disableOkHttpCache ? new CacheControl.Builder().noStore().build() : null;
   }
 
   @Override
@@ -90,9 +103,12 @@ public class OkHttpNetworkFetcher extends
 
     try {
       final Request.Builder requestBuilder = new Request.Builder()
-          .cacheControl(new CacheControl.Builder().noStore().build())
           .url(uri.toString())
           .get();
+
+      if (mCacheControl != null) {
+        requestBuilder.cacheControl(mCacheControl);
+      }
 
       final BytesRange bytesRange = fetchState.getContext().getImageRequest().getBytesRange();
       if (bytesRange != null) {
