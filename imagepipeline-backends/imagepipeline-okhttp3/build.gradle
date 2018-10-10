@@ -4,10 +4,12 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-  api "com.squareup.okhttp3:okhttp:${OKHTTP3_VERSION}"
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 
-  implementation project(':fbcore')
-  implementation project(':imagepipeline')
+    api "com.squareup.okhttp3:okhttp:${OKHTTP3_VERSION}"
+
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
 }
 apply from: rootProject.file('release.gradle')
 
