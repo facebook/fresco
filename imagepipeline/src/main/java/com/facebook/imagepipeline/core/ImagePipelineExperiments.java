@@ -46,6 +46,7 @@ public class ImagePipelineExperiments {
   private final boolean mPartialImageCachingEnabled;
   private final ProducerFactoryMethod mProducerFactoryMethod;
   private final Supplier<Boolean> mLazyDataSource;
+  private final boolean mGingerbreadDecoderEnabled;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -66,6 +67,7 @@ public class ImagePipelineExperiments {
       mProducerFactoryMethod = builder.mProducerFactoryMethod;
     }
     mLazyDataSource = builder.mLazyDataSource;
+    mGingerbreadDecoderEnabled = builder.mGingerbreadDecoderEnabled;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -129,6 +131,10 @@ public class ImagePipelineExperiments {
     return mLazyDataSource;
   }
 
+  public boolean isGingerbreadDecoderEnabled() {
+    return mGingerbreadDecoderEnabled;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -146,6 +152,7 @@ public class ImagePipelineExperiments {
     private boolean mPartialImageCachingEnabled = false;
     private ProducerFactoryMethod mProducerFactoryMethod;
     public Supplier<Boolean> mLazyDataSource;
+    public boolean mGingerbreadDecoderEnabled;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -257,6 +264,12 @@ public class ImagePipelineExperiments {
     /** Stores an alternative lazy method to instantiate the data souce. */
     public ImagePipelineConfig.Builder setLazyDataSource(Supplier<Boolean> lazyDataSource) {
       mLazyDataSource = lazyDataSource;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setGingerbreadDecoderEnabled(
+        boolean gingerbreadDecoderEnabled) {
+      mGingerbreadDecoderEnabled = gingerbreadDecoderEnabled;
       return mConfigBuilder;
     }
 

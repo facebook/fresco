@@ -322,15 +322,14 @@ public class ImagePipelineFactory {
   }
 
   /**
-   * Provide the implementation of the PlatformDecoder for the current platform using the
-   * provided PoolFactory
+   * Provide the implementation of the PlatformDecoder for the current platform using the provided
+   * PoolFactory
    *
    * @param poolFactory The PoolFactory
    * @return The PlatformDecoder implementation
    */
   public static PlatformDecoder buildPlatformDecoder(
-      PoolFactory poolFactory,
-      boolean directWebpDirectDecodingEnabled) {
+      PoolFactory poolFactory, boolean gingerbreadDecoderEnabled) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       int maxNumThreads = poolFactory.getFlexByteArrayPoolMaxNumThreads();
       return new OreoDecoder(
@@ -342,8 +341,7 @@ public class ImagePipelineFactory {
           maxNumThreads,
           new Pools.SynchronizedPool<>(maxNumThreads));
     } else {
-      if (directWebpDirectDecodingEnabled
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+      if (gingerbreadDecoderEnabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
         return new GingerbreadPurgeableDecoder();
       } else {
         return new KitKatPurgeableDecoder(poolFactory.getFlexByteArrayPool());
@@ -353,9 +351,9 @@ public class ImagePipelineFactory {
 
   public PlatformDecoder getPlatformDecoder() {
     if (mPlatformDecoder == null) {
-      mPlatformDecoder = buildPlatformDecoder(
-          mConfig.getPoolFactory(),
-          mConfig.getExperiments().isWebpSupportEnabled());
+      mPlatformDecoder =
+          buildPlatformDecoder(
+              mConfig.getPoolFactory(), mConfig.getExperiments().isGingerbreadDecoderEnabled());
     }
     return mPlatformDecoder;
   }
