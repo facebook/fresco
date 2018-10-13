@@ -19,7 +19,10 @@ public enum MemoryTrimType {
   /** The application is approaching the device-specific Java heap limit. */
   OnCloseToDalvikHeapLimit(0.5),
 
-  /** The system as a whole is running out of memory, and this application is in the foreground. */
+  /** The system as a whole is running critically low on memory, and app is in the foreground. */
+  OnSystemMemoryCriticallyLowWhileAppInForeground(1),
+
+  /** The system as a whole is running low of memory, and this application is in the foreground. */
   OnSystemLowMemoryWhileAppInForeground(0.5),
 
   /** The system as a whole is running out of memory, and this application is in the background. */
