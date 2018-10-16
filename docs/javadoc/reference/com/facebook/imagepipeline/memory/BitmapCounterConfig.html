@@ -147,6 +147,12 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/package-summary.html">com.facebook.animated.giflite</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/decoder/package-summary.html">com.facebook.animated.giflite.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
@@ -190,6 +196,8 @@
   <a href="../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/debug/package-summary.html">com.facebook.drawee.backends.pipeline.debug</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
@@ -263,6 +271,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
@@ -281,6 +291,10 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transcoder/package-summary.html">com.facebook.imagepipeline.transcoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transformation/package-summary.html">com.facebook.imagepipeline.transformation</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/webpsupport/package-summary.html">com.facebook.webpsupport</a></li>
@@ -294,6 +308,8 @@
               
     <li><h2>Interfaces</h2>
       <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryChunk.html">MemoryChunk</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a></li>
       </ul>
     </li>
@@ -305,18 +321,27 @@
           <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterConfig.html">BitmapCounterConfig</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterConfig.Builder.html">BitmapCounterConfig.Builder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterProvider.html">BitmapCounterProvider</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPoolBackend.html">BitmapPoolBackend</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BucketMap.html">BucketMap</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BucketsBitmapPool.html">BucketsBitmapPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunk.html">BufferMemoryChunk</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BufferMemoryChunkPool.html">BufferMemoryChunkPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultBitmapPoolParams.html">DefaultBitmapPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultByteArrayPoolParams.html">DefaultByteArrayPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultFlexByteArrayPoolParams.html">DefaultFlexByteArrayPoolParams</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultNativeMemoryChunkPoolParams.html">DefaultNativeMemoryChunkPoolParams</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DummyBitmapPool.html">DummyBitmapPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/FlexByteArrayPool.html">FlexByteArrayPool</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/LruBitmapPool.html">LruBitmapPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/LruBucketsPoolBackend.html">LruBucketsPoolBackend</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryChunkPool.html">MemoryChunkPool</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryChunkUtil.html">MemoryChunkUtil</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryPooledByteBuffer.html">MemoryPooledByteBuffer</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryPooledByteBufferFactory.html">MemoryPooledByteBufferFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryPooledByteBufferOutputStream.html">MemoryPooledByteBufferOutputStream</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunk.html">NativeMemoryChunk</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferFactory.html">NativePooledByteBufferFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.html">NativePooledByteBufferOutputStream</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NoOpPoolStatsTracker.html">NoOpPoolStatsTracker</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html">PoolConfig</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a></li>
@@ -326,6 +351,11 @@
       </ul>
     </li>
               
+    <li><h2>Annotations</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPoolType.html">BitmapPoolType</a></li>
+      </ul>
+    </li>
               
               
     <li><h2>Exceptions</h2>
@@ -334,7 +364,7 @@
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.InvalidValueException.html">BasePool.InvalidValueException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.SizeTooLargeException.html">BasePool.SizeTooLargeException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.InvalidStreamException.html">NativePooledByteBufferOutputStream.InvalidStreamException</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/MemoryPooledByteBufferOutputStream.InvalidStreamException.html">MemoryPooledByteBufferOutputStream.InvalidStreamException</a></li>
       </ul>
     </li>
               

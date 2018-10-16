@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  NativePooledByteBufferOutputStream.InvalidStreamException - Fresco API
+  NativeJpegTranscoderFactory - Fresco API
 
 
 | Fresco
@@ -147,6 +147,12 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/package-summary.html">com.facebook.animated.giflite</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/decoder/package-summary.html">com.facebook.animated.giflite.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
@@ -190,6 +196,8 @@
   <a href="../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/debug/package-summary.html">com.facebook.drawee.backends.pipeline.debug</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
@@ -263,12 +271,14 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
-    <li class="selected api apilevel-">
-  <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/memory/package-summary.html">com.facebook.imagepipeline.memory</a></li>
+    <li class="selected api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/nativecode/package-summary.html">com.facebook.imagepipeline.nativecode</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/platform/package-summary.html">com.facebook.imagepipeline.platform</a></li>
@@ -280,6 +290,10 @@
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transcoder/package-summary.html">com.facebook.imagepipeline.transcoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transformation/package-summary.html">com.facebook.imagepipeline.transformation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -294,49 +308,28 @@
               
     <li><h2>Interfaces</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolStatsTracker.html">PoolStatsTracker</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/WebpTranscoder.html">WebpTranscoder</a></li>
       </ul>
     </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.html">BasePool</a>&lt;V&gt;</li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounter.html">BitmapCounter</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterConfig.html">BitmapCounterConfig</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterConfig.Builder.html">BitmapCounterConfig.Builder</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapCounterProvider.html">BitmapCounterProvider</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BitmapPool.html">BitmapPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultBitmapPoolParams.html">DefaultBitmapPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultByteArrayPoolParams.html">DefaultByteArrayPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultFlexByteArrayPoolParams.html">DefaultFlexByteArrayPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/DefaultNativeMemoryChunkPoolParams.html">DefaultNativeMemoryChunkPoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/FlexByteArrayPool.html">FlexByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/GenericByteArrayPool.html">GenericByteArrayPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunk.html">NativeMemoryChunk</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativeMemoryChunkPool.html">NativeMemoryChunkPool</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBuffer.html">NativePooledByteBuffer</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferFactory.html">NativePooledByteBufferFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.html">NativePooledByteBufferOutputStream</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NoOpPoolStatsTracker.html">NoOpPoolStatsTracker</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.html">PoolConfig</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolConfig.Builder.html">PoolConfig.Builder</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolFactory.html">PoolFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/PoolParams.html">PoolParams</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/SharedByteArray.html">SharedByteArray</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/Bitmaps.html">Bitmaps</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/DalvikPurgeableDecoder.html">DalvikPurgeableDecoder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/ImagePipelineNativeLoader.html">ImagePipelineNativeLoader</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeBlurFilter.html">NativeBlurFilter</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeFiltersLoader.html">NativeFiltersLoader</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html">NativeJpegTranscoder</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoderFactory.html">NativeJpegTranscoderFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeRoundingFilter.html">NativeRoundingFilter</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/StaticWebpNativeLoader.html">StaticWebpNativeLoader</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/WebpTranscoderFactory.html">WebpTranscoderFactory</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/WebpTranscoderImpl.html">WebpTranscoderImpl</a></li>
       </ul>
     </li>
               
               
               
-    <li><h2>Exceptions</h2>
-      <ul>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.InvalidSizeException.html">BasePool.InvalidSizeException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.InvalidValueException.html">BasePool.InvalidValueException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.PoolSizeViolationException.html">BasePool.PoolSizeViolationException</a></li>
-          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/BasePool.SizeTooLargeException.html">BasePool.SizeTooLargeException</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.InvalidStreamException.html">NativePooledByteBufferOutputStream.InvalidStreamException</a></li>
-      </ul>
-    </li>
               
             </ul><br/>
           </div><!-- end classes -->
@@ -376,16 +369,6 @@
 
 
   
-  
-  
-  
-
-  
-  
-  
-  
-
-  
    
   
   
@@ -394,11 +377,6 @@
 
   
    
-  
-  
-  
-  
-
   
   
   
@@ -423,6 +401,9 @@ Summary:
 
 
 
+  &#124; <a href="#pubmethods">Methods</a>
+  
+
 
 
   &#124; <a href="#inhmethods">Inherited Methods</a>
@@ -445,33 +426,26 @@ Summary:
 
 <div id="jd-header">
     public
-    static 
+     
      
     
     class
-<h1>NativePooledByteBufferOutputStream.InvalidStreamException</h1>
+<h1>NativeJpegTranscoderFactory</h1>
 
 
 
   
-  
-  
-
+    extends Object<br/>
   
   
   
 
   
   
-  
-
-  
-    extends RuntimeException<br/>
-  
-  
-  
-
-  
+      implements 
+      
+        <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> 
+      
   
   
 
@@ -486,7 +460,7 @@ Summary:
 
     <tr>
          	
-        <td colspan="5" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -494,43 +468,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="4" class="jd-inheritance-class-cell">java.lang.Throwable</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Exception</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.RuntimeException</td>
-    </tr>
-    
-
-    <tr>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;</td>
-        
-            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
-         	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.memory.NativePooledByteBufferOutputStream.InvalidStreamException</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory</td>
     </tr>
     
 
@@ -544,10 +482,6 @@ Summary:
 
 <div class="jd-descr">
 
-
-<h2>Class Overview</h2>
-<p>An exception indicating that this stream is no longer valid
-</p>
 
 
 
@@ -613,7 +547,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/memory/NativePooledByteBufferOutputStream.InvalidStreamException.html#InvalidStreamException()">InvalidStreamException</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoderFactory.html#NativeJpegTranscoderFactory(int, boolean)">NativeJpegTranscoderFactory</a></span>(int maxBitmapSize, boolean useDownSamplingRatio)
         
   </td></tr>
 
@@ -624,6 +558,33 @@ Summary:
 
 
 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoderFactory.html#createImageTranscoder(com.facebook.imageformat.ImageFormat, boolean)">createImageTranscoder</a></span>(<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> imageFormat, boolean isResizingEnabled)
+        
+        <div class="jd-descrdiv">Creates an <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code> that enables or disables resizing depending on <code>isResizingEnabled</code>.</div>
+  
+  </td></tr>
+
+
+
+</table>
 
 
 
@@ -635,244 +596,6 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
-
-
-
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Throwable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Throwable-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  java.lang.Throwable
-
-<div id="inherited-methods-java.lang.Throwable">
-  <div id="inherited-methods-java.lang.Throwable-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Throwable-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            final
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">addSuppressed</span>(Throwable arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            Throwable
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">fillInStackTrace</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            Throwable
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getCause</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getLocalizedMessage</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getMessage</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            StackTraceElement[]
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getStackTrace</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            final
-            
-            
-            Throwable[]
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">getSuppressed</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            synchronized
-            
-            
-            
-            Throwable
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">initCause</span>(Throwable arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">printStackTrace</span>()
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">printStackTrace</span>(PrintWriter arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">printStackTrace</span>(PrintStream arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            void
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">setStackTrace</span>(StackTraceElement[] arg0)
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">
-            
-            
-            
-            
-            
-            String
-        </td>
-        <td class="jd-linkcol" width="100%">
-        <span class="sympad">toString</span>()
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
 
 
 <tr class="api apilevel-" >
@@ -1077,6 +800,48 @@ From class
 
 
 
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoderFactory" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoderFactory-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">com.facebook.imagepipeline.transcoder.ImageTranscoderFactory</a>
+
+<div id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoderFactory">
+  <div id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoderFactory-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoderFactory-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html#createImageTranscoder(com.facebook.imageformat.ImageFormat, boolean)">createImageTranscoder</a></span>(<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> imageFormat, boolean isResizingEnabled)
+        
+        <div class="jd-descrdiv">Creates an <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code> that enables or disables resizing depending on <code>isResizingEnabled</code>.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
 
 </table>
 
@@ -1112,7 +877,7 @@ From class
 
 
 
-<a id="InvalidStreamException()"></a>
+<a id="NativeJpegTranscoderFactory(int, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1124,8 +889,8 @@ From class
          
         
       </span>
-      <span class="sympad">InvalidStreamException</span>
-      <span class="normal">()</span>
+      <span class="sympad">NativeJpegTranscoderFactory</span>
+      <span class="normal">(int maxBitmapSize, boolean useDownSamplingRatio)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1153,6 +918,63 @@ From class
 
 <!-- ========= METHOD DETAIL ======== -->
 <!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<a id="createImageTranscoder(com.facebook.imageformat.ImageFormat, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a>
+      </span>
+      <span class="sympad">createImageTranscoder</span>
+      <span class="normal">(<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> imageFormat, boolean isResizingEnabled)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates an <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code> that enables or disables resizing depending on <code>isResizingEnabled</code>. It can return null if the <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> is not supported by this
+ <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code>.
+
+ <p>Note that if JPEG images are not supported, we will fallback to our native <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code> implementation.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageFormat</th>
+          <td>the <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> of the input images.</td>
+        </tr>
+        <tr>
+          <th>isResizingEnabled</th>
+          <td>true if resizing is allowed.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code> or null if the image format is not supported.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
 
 
 

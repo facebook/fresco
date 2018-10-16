@@ -147,6 +147,12 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/giflite/package-summary.html">com.facebook.animated.giflite</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/giflite/decoder/package-summary.html">com.facebook.animated.giflite.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
@@ -190,6 +196,8 @@
   <a href="../../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/drawee/backends/pipeline/debug/package-summary.html">com.facebook.drawee.backends.pipeline.debug</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
@@ -263,6 +271,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
@@ -280,6 +290,10 @@
   <a href="../../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/transcoder/package-summary.html">com.facebook.imagepipeline.transcoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../com/facebook/imagepipeline/transformation/package-summary.html">com.facebook.imagepipeline.transformation</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -584,6 +598,22 @@ Summary:
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/backends/okhttp3/OkHttpNetworkFetcher.html#OkHttpNetworkFetcher(Call.Factory, java.util.concurrent.Executor)">OkHttpNetworkFetcher</a></span>(Call.Factory callFactory, Executor cancellationExecutor)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/imagepipeline/backends/okhttp3/OkHttpNetworkFetcher.html#OkHttpNetworkFetcher(Call.Factory, java.util.concurrent.Executor, boolean)">OkHttpNetworkFetcher</a></span>(Call.Factory callFactory, Executor cancellationExecutor, boolean disableOkHttpCache)
         
   </td></tr>
 
@@ -1219,6 +1249,56 @@ From interface
           <th>cancellationExecutor</th>
           <td>executor on which fetching cancellation is performed if
  cancellation is requested from the UI Thread
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="OkHttpNetworkFetcher(Call.Factory, java.util.concurrent.Executor, boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">OkHttpNetworkFetcher</span>
+      <span class="normal">(Call.Factory callFactory, Executor cancellationExecutor, boolean disableOkHttpCache)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>callFactory</th>
+          <td>custom Call.Factory for fetching image from the network</td>
+        </tr>
+        <tr>
+          <th>cancellationExecutor</th>
+          <td>executor on which fetching cancellation is performed if
+     cancellation is requested from the UI Thread</td>
+        </tr>
+        <tr>
+          <th>disableOkHttpCache</th>
+          <td>true if network requests should not be cached by OkHttp
 </td>
         </tr>
       </table>

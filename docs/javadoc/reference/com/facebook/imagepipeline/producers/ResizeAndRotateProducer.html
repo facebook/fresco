@@ -147,6 +147,12 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/package-summary.html">com.facebook.animated.giflite</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/decoder/package-summary.html">com.facebook.animated.giflite.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
@@ -190,6 +196,8 @@
   <a href="../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/debug/package-summary.html">com.facebook.drawee.backends.pipeline.debug</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
@@ -263,6 +271,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
@@ -280,6 +290,10 @@
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transcoder/package-summary.html">com.facebook.imagepipeline.transcoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transformation/package-summary.html">com.facebook.imagepipeline.transformation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -428,14 +442,11 @@ Summary:
 
 
 
-  <a href="#constants">Constants</a>
-  
 
 
 
 
-
-  &#124; <a href="#pubctors">Ctors</a>
+  <a href="#pubctors">Ctors</a>
   
 
 
@@ -523,13 +534,11 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Resizes and rotates JPEG image according to the EXIF orientation data or a specified rotation
- angle.
+<p>Resizes and rotates images according to the EXIF orientation data or a specified rotation angle.
 
- <p> If the image is not JPEG, no transformation is applied.
+ <p>If the image is not supported by the <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a></code>, no transformation is applied.
 
- <p> This can be used even if downsampling is enabled as long as resizing is disabled in the
- constructor.
+ <p>This can be used even if downsampling is enabled as long as resizing is disabled.
 </p>
 
 
@@ -570,22 +579,6 @@ Summary:
 
 
 
-<!-- =========== ENUM CONSTANT SUMMARY =========== -->
-<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
-
-
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">String</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/producers/ResizeAndRotateProducer.html#PRODUCER_NAME">PRODUCER_NAME</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-
-</table>
-
-
 
 
 
@@ -612,7 +605,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/ResizeAndRotateProducer.html#ResizeAndRotateProducer(java.util.concurrent.Executor, com.facebook.common.memory.PooledByteBufferFactory, boolean, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>, boolean)">ResizeAndRotateProducer</a></span>(Executor executor, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, boolean resizingEnabled, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer, boolean useDownsamplingRatio)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/producers/ResizeAndRotateProducer.html#ResizeAndRotateProducer(java.util.concurrent.Executor, com.facebook.common.memory.PooledByteBufferFactory, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>, boolean, com.facebook.imagepipeline.transcoder.ImageTranscoderFactory)">ResizeAndRotateProducer</a></span>(Executor executor, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer, boolean isResizingEnabled, <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> imageTranscoderFactory)
         
   </td></tr>
 
@@ -929,52 +922,6 @@ From interface
 <!-- Constants -->
 
 
-<!-- ========= ENUM CONSTANTS DETAIL ======== -->
-<h2>Constants</h2>
-
-
-
-
-<a id="PRODUCER_NAME"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        String
-      </span>
-        PRODUCER_NAME
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                "ResizeAndRotateProducer"
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-
 <!-- Fields -->
 
 
@@ -986,7 +933,7 @@ From interface
 
 
 
-<a id="ResizeAndRotateProducer(java.util.concurrent.Executor, com.facebook.common.memory.PooledByteBufferFactory, boolean, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>, boolean)"></a>
+<a id="ResizeAndRotateProducer(java.util.concurrent.Executor, com.facebook.common.memory.PooledByteBufferFactory, com.facebook.imagepipeline.producers.Producer<com.facebook.imagepipeline.image.EncodedImage>, boolean, com.facebook.imagepipeline.transcoder.ImageTranscoderFactory)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -999,7 +946,7 @@ From interface
         
       </span>
       <span class="sympad">ResizeAndRotateProducer</span>
-      <span class="normal">(Executor executor, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, boolean resizingEnabled, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer, boolean useDownsamplingRatio)</span>
+      <span class="normal">(Executor executor, <a href="../../../../com/facebook/common/memory/PooledByteBufferFactory.html">PooledByteBufferFactory</a> pooledByteBufferFactory, <a href="../../../../com/facebook/imagepipeline/producers/Producer.html">Producer</a>&lt;<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a>&gt; inputProducer, boolean isResizingEnabled, <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoderFactory.html">ImageTranscoderFactory</a> imageTranscoderFactory)</span>
     </h4>
       <div class="api-level">
         <div>

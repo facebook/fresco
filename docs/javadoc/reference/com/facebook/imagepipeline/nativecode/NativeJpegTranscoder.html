@@ -57,7 +57,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico" />
 <title>
 
-  JpegTranscoder - Fresco API
+  NativeJpegTranscoder - Fresco API
 
 
 | Fresco
@@ -147,6 +147,12 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/gif/package-summary.html">com.facebook.animated.gif</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/package-summary.html">com.facebook.animated.giflite</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/decoder/package-summary.html">com.facebook.animated.giflite.decoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
@@ -190,6 +196,8 @@
   <a href="../../../../com/facebook/drawable/base/package-summary.html">com.facebook.drawable.base</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/package-summary.html">com.facebook.drawee.backends.pipeline</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/drawee/backends/pipeline/debug/package-summary.html">com.facebook.drawee.backends.pipeline.debug</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/drawee/backends/pipeline/info/package-summary.html">com.facebook.drawee.backends.pipeline.info</a></li>
     <li class="api apilevel-">
@@ -263,6 +271,8 @@
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/drawable/package-summary.html">com.facebook.imagepipeline.drawable</a></li>
     <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/filter/package-summary.html">com.facebook.imagepipeline.filter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/image/package-summary.html">com.facebook.imagepipeline.image</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/listener/package-summary.html">com.facebook.imagepipeline.listener</a></li>
@@ -280,6 +290,10 @@
   <a href="../../../../com/facebook/imagepipeline/request/package-summary.html">com.facebook.imagepipeline.request</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imagepipeline/systrace/package-summary.html">com.facebook.imagepipeline.systrace</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transcoder/package-summary.html">com.facebook.imagepipeline.transcoder</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../com/facebook/imagepipeline/transformation/package-summary.html">com.facebook.imagepipeline.transformation</a></li>
     <li class="api apilevel-">
   <a href="../../../../com/facebook/imageutils/package-summary.html">com.facebook.imageutils</a></li>
     <li class="api apilevel-">
@@ -301,9 +315,12 @@
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/Bitmaps.html">Bitmaps</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/DalvikPurgeableDecoder.html">DalvikPurgeableDecoder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/ImagePipelineNativeLoader.html">ImagePipelineNativeLoader</a></li>
-          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html">JpegTranscoder</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeBlurFilter.html">NativeBlurFilter</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeFiltersLoader.html">NativeFiltersLoader</a></li>
+          <li class="selected api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html">NativeJpegTranscoder</a></li>
+          <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoderFactory.html">NativeJpegTranscoderFactory</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeRoundingFilter.html">NativeRoundingFilter</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/StaticWebpNativeLoader.html">StaticWebpNativeLoader</a></li>
           <li class="api apilevel-"><a href="../../../../com/facebook/imagepipeline/nativecode/WebpTranscoderFactory.html">WebpTranscoderFactory</a></li>
@@ -350,6 +367,13 @@
 <div id="api-info-block">
 
 
+
+  
+   
+  
+  
+  
+  
 
   
    
@@ -409,7 +433,7 @@ Summary:
      
     
     class
-<h1>JpegTranscoder</h1>
+<h1>NativeJpegTranscoder</h1>
 
 
 
@@ -420,6 +444,11 @@ Summary:
   
 
   
+  
+      implements 
+      
+        <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">ImageTranscoder</a> 
+      
   
   
 
@@ -442,7 +471,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
-        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.nativecode.JpegTranscoder</td>
+        <td colspan="1" class="jd-inheritance-class-cell">com.facebook.imagepipeline.nativecode.NativeJpegTranscoder</td>
     </tr>
     
 
@@ -458,8 +487,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Helper methods for modifying jpeg images.
-</p>
+<p>Transcoder for jpeg images, using native code and libjpeg-turbo library. </p>
 
 
 
@@ -505,36 +533,8 @@ Summary:
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#MAX_QUALITY">MAX_QUALITY</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#MAX_SCALE_NUMERATOR">MAX_SCALE_NUMERATOR</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#MIN_QUALITY">MIN_QUALITY</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#MIN_SCALE_NUMERATOR">MIN_SCALE_NUMERATOR</a></td>
-        <td class="jd-descrcol" width="100%"></td>
-    </tr>
-    
-    
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol">int</td>
-        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#SCALE_DENOMINATOR">SCALE_DENOMINATOR</a></td>
+        <td class="jd-typecol">String</td>
+        <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#TAG">TAG</a></td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
     
@@ -569,7 +569,7 @@ Summary:
             
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#JpegTranscoder()">JpegTranscoder</a></span>()
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#NativeJpegTranscoder(boolean, int, boolean)">NativeJpegTranscoder</a></span>(boolean resizingEnabled, int maxBitmapSize, boolean useDownsamplingRatio)
         
   </td></tr>
 
@@ -593,13 +593,15 @@ Summary:
             
             
             
-            static
+            
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#isExifOrientationAllowed(int)">isExifOrientationAllowed</a></span>(int exifOrientation)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#canResize(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.RotationOptions, com.facebook.imagepipeline.common.ResizeOptions)">canResize</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a> rotationOptions, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions)
         
+        <div class="jd-descrdiv">Whether the input image is resized to make subsequent decodings faster.</div>
+  
   </td></tr>
 
 
@@ -609,13 +611,51 @@ Summary:
             
             
             
-            static
+            
             
             boolean
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#isRotationAngleAllowed(int)">isRotationAngleAllowed</a></span>(int degrees)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#canTranscode(com.facebook.imageformat.ImageFormat)">canTranscode</a></span>(<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> imageFormat)
         
+        <div class="jd-descrdiv">Whether the input <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> can be transcoded by the image transcoder.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#getIdentifier()">getIdentifier</a></span>()
+        
+        <div class="jd-descrdiv">Gets the identifier of the image transcoder.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscodeResult.html">ImageTranscodeResult</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#transcode(com.facebook.imagepipeline.image.EncodedImage, java.io.OutputStream, com.facebook.imagepipeline.common.RotationOptions, com.facebook.imagepipeline.common.ResizeOptions, com.facebook.imageformat.ImageFormat, java.lang.Integer)">transcode</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, OutputStream outputStream, <a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a> rotationOptions, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, <a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> outputFormat, Integer quality)
+        
+        <div class="jd-descrdiv">Transcodes an image to match the specified rotation and resize options.</div>
+  
   </td></tr>
 
 
@@ -630,9 +670,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#transcodeJpeg(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpeg</a></span>(InputStream inputStream, OutputStream outputStream, int rotationAngle, int scaleNumerator, int quality)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#transcodeJpeg(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpeg</a></span>(InputStream inputStream, OutputStream outputStream, int rotationAngle, int scaleNumerator, int quality)
         
-        <div class="jd-descrdiv">Downscales and rotates jpeg image</div>
+        <div class="jd-descrdiv">Transcodes an image to match the specified rotation angle and the scale factor.</div>
   
   </td></tr>
 
@@ -648,9 +688,9 @@ Summary:
             void
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/JpegTranscoder.html#transcodeJpegWithExifOrientation(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpegWithExifOrientation</a></span>(InputStream inputStream, OutputStream outputStream, int exifOrientation, int scaleNumerator, int quality)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/nativecode/NativeJpegTranscoder.html#transcodeJpegWithExifOrientation(java.io.InputStream, java.io.OutputStream, int, int, int)">transcodeJpegWithExifOrientation</a></span>(InputStream inputStream, OutputStream outputStream, int exifOrientation, int scaleNumerator, int quality)
         
-        <div class="jd-descrdiv">Downscales and rotates jpeg image</div>
+        <div class="jd-descrdiv">Transcodes an image to match the specified exif orientation and the scale factor.</div>
   
   </td></tr>
 
@@ -871,6 +911,104 @@ From class
 </td></tr>
 
 
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoder" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoder-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html">com.facebook.imagepipeline.transcoder.ImageTranscoder</a>
+
+<div id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoder">
+  <div id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoder-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.facebook.imagepipeline.transcoder.ImageTranscoder-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html#canResize(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.RotationOptions, com.facebook.imagepipeline.common.ResizeOptions)">canResize</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a> rotationOptions, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions)
+        
+        <div class="jd-descrdiv">Whether the input image is resized to make subsequent decodings faster.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html#canTranscode(com.facebook.imageformat.ImageFormat)">canTranscode</a></span>(<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> imageFormat)
+        
+        <div class="jd-descrdiv">Whether the input <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> can be transcoded by the image transcoder.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html#getIdentifier()">getIdentifier</a></span>()
+        
+        <div class="jd-descrdiv">Gets the identifier of the image transcoder.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            abstract
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscodeResult.html">ImageTranscodeResult</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscoder.html#transcode(com.facebook.imagepipeline.image.EncodedImage, java.io.OutputStream, com.facebook.imagepipeline.common.RotationOptions, com.facebook.imagepipeline.common.ResizeOptions, com.facebook.imageformat.ImageFormat, java.lang.Integer)">transcode</a></span>(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, OutputStream outputStream, <a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a> rotationOptions, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, <a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> outputFormat, Integer quality)
+        
+        <div class="jd-descrdiv">Transcodes an image to match the specified rotation and resize options.</div>
+  
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
 </table>
 
 
@@ -900,7 +1038,7 @@ From class
 
 
 
-<a id="MAX_QUALITY"></a>
+<a id="TAG"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -908,9 +1046,9 @@ From class
         public 
         static 
         final 
-        int
+        String
       </span>
-        MAX_QUALITY
+        TAG
     </h4>
       <div class="api-level">
         
@@ -929,168 +1067,7 @@ From class
         <span class="jd-tagtitle">Constant Value: </span>
         <span>
             
-                100
-                (0x00000064)
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="MAX_SCALE_NUMERATOR"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        int
-      </span>
-        MAX_SCALE_NUMERATOR
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                16
-                (0x00000010)
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="MIN_QUALITY"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        int
-      </span>
-        MIN_QUALITY
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                0
-                (0x00000000)
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="MIN_SCALE_NUMERATOR"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        int
-      </span>
-        MIN_SCALE_NUMERATOR
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                1
-                (0x00000001)
-            
-        </span>
-        </div>
-    
-    </div>
-</div>
-
-
-
-<a id="SCALE_DENOMINATOR"></a>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        int
-      </span>
-        SCALE_DENOMINATOR
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-
-    
-        <div class="jd-tagdata">
-        <span class="jd-tagtitle">Constant Value: </span>
-        <span>
-            
-                8
-                (0x00000008)
+                "NativeJpegTranscoder"
             
         </span>
         </div>
@@ -1112,7 +1089,7 @@ From class
 
 
 
-<a id="JpegTranscoder()"></a>
+<a id="NativeJpegTranscoder(boolean, int, boolean)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1124,8 +1101,8 @@ From class
          
         
       </span>
-      <span class="sympad">JpegTranscoder</span>
-      <span class="normal">()</span>
+      <span class="sympad">NativeJpegTranscoder</span>
+      <span class="normal">(boolean resizingEnabled, int maxBitmapSize, boolean useDownsamplingRatio)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1158,20 +1135,20 @@ From class
 
 
 
-<a id="isExifOrientationAllowed(int)"></a>
+<a id="canResize(com.facebook.imagepipeline.image.EncodedImage, com.facebook.imagepipeline.common.RotationOptions, com.facebook.imagepipeline.common.ResizeOptions)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
+         
          
          
          
         boolean
       </span>
-      <span class="sympad">isExifOrientationAllowed</span>
-      <span class="normal">(int exifOrientation)</span>
+      <span class="sympad">canResize</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, <a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a> rotationOptions, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1183,10 +1160,27 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Whether the input image is resized to make subsequent decodings faster.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>encodedImage</th>
+          <td>The <code><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a></code> that will be transcoded.</td>
+        </tr>
+        <tr>
+          <th>rotationOptions</th>
+          <td>The <code><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a></code> used when transcoding the image.</td>
+        </tr>
+        <tr>
+          <th>resizeOptions</th>
+          <td>The <code><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></code> used when transcoding the image.</td>
+        </tr>
+      </table>
+  </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if and only if given value is a valid EXIF orientation
+      <ul class="nolist"><li>true if the image is resized, else false.
 </li></ul>
   </div>
 
@@ -1194,20 +1188,20 @@ From class
 </div>
 
 
-<a id="isRotationAngleAllowed(int)"></a>
+<a id="canTranscode(com.facebook.imageformat.ImageFormat)"></a>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
+         
          
          
          
         boolean
       </span>
-      <span class="sympad">isRotationAngleAllowed</span>
-      <span class="normal">(int degrees)</span>
+      <span class="sympad">canTranscode</span>
+      <span class="normal">(<a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> imageFormat)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1219,12 +1213,132 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Whether the input <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> can be transcoded by the image transcoder.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>imageFormat</th>
+          <td>The <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> that will be transcoded.</td>
+        </tr>
+      </table>
+  </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>true if and only if given number of degrees is allowed rotation angle, that is
-   it is equal to 0, 90, 180 or 270
+      <ul class="nolist"><li>true if this image format is handled by the image transcoder, else false.
 </li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="getIdentifier()"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getIdentifier</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the identifier of the image transcoder. This is mostly used for logging purposes.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the identifier of the image transcoder.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<a id="transcode(com.facebook.imagepipeline.image.EncodedImage, java.io.OutputStream, com.facebook.imagepipeline.common.RotationOptions, com.facebook.imagepipeline.common.ResizeOptions, com.facebook.imageformat.ImageFormat, java.lang.Integer)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscodeResult.html">ImageTranscodeResult</a>
+      </span>
+      <span class="sympad">transcode</span>
+      <span class="normal">(<a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a> encodedImage, OutputStream outputStream, <a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a> rotationOptions, <a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a> resizeOptions, <a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a> outputFormat, Integer quality)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Transcodes an image to match the specified rotation and resize options. The most common-use
+ case is to create a resized version of an input image to make subsequent decodings faster.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>encodedImage</th>
+          <td>The <code><a href="../../../../com/facebook/imagepipeline/image/EncodedImage.html">EncodedImage</a></code> that will be transcoded.</td>
+        </tr>
+        <tr>
+          <th>outputStream</th>
+          <td>The OutputStream where the newly created image is written to.</td>
+        </tr>
+        <tr>
+          <th>rotationOptions</th>
+          <td>The <code><a href="../../../../com/facebook/imagepipeline/common/RotationOptions.html">RotationOptions</a></code> used when transcoding the image.</td>
+        </tr>
+        <tr>
+          <th>resizeOptions</th>
+          <td>The <code><a href="../../../../com/facebook/imagepipeline/common/ResizeOptions.html">ResizeOptions</a></code> used when transcoding the image.</td>
+        </tr>
+        <tr>
+          <th>outputFormat</th>
+          <td>The desired <code><a href="../../../../com/facebook/imageformat/ImageFormat.html">ImageFormat</a></code> of the newly created image. If this is null
+     the same format as the input image will be used.</td>
+        </tr>
+        <tr>
+          <th>quality</th>
+          <td>The desired quality of the newly created image. If this is null, the default
+     quality of the transcoder will be applied.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The <code><a href="../../../../com/facebook/imagepipeline/transcoder/ImageTranscodeResult.html">ImageTranscodeResult</a></code> generated when encoding the image.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IOException</td>
+            <td></td>
+        </tr>
+      </table>
   </div>
 
     </div>
@@ -1256,10 +1370,18 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Downscales and rotates jpeg image</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Transcodes an image to match the specified rotation angle and the scale factor.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
+        <tr>
+          <th>inputStream</th>
+          <td>The InputStream of the image that will be transcoded.</td>
+        </tr>
+        <tr>
+          <th>outputStream</th>
+          <td>The OutputStream where the newly created image is written to.</td>
+        </tr>
         <tr>
           <th>rotationAngle</th>
           <td>0, 90, 180 or 270</td>
@@ -1314,10 +1436,18 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Downscales and rotates jpeg image</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Transcodes an image to match the specified exif orientation and the scale factor.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
+        <tr>
+          <th>inputStream</th>
+          <td>The InputStream of the image that will be transcoded.</td>
+        </tr>
+        <tr>
+          <th>outputStream</th>
+          <td>The OutputStream where the newly created image is written to.</td>
+        </tr>
         <tr>
           <th>exifOrientation</th>
           <td>0, 90, 180 or 270</td>
