@@ -29,6 +29,7 @@ public class NativeMemoryCacheTrimStrategy implements CountingMemoryCache.CacheT
         // Resources cached on native heap do not consume Dalvik heap, so no trimming here.
         return 0;
       case OnAppBackgrounded:
+      case OnSystemMemoryCriticallyLowWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInBackground:
         return 1;

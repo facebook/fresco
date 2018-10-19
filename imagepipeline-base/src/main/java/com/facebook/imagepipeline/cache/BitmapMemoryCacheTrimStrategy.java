@@ -34,6 +34,7 @@ public class BitmapMemoryCacheTrimStrategy implements CountingMemoryCache.CacheT
           return 0;
         }
       case OnAppBackgrounded:
+      case OnSystemMemoryCriticallyLowWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInForeground:
       case OnSystemLowMemoryWhileAppInBackground:
         return 1;
