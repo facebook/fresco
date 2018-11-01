@@ -95,7 +95,7 @@ public class ImagePipeline {
    *
    * @return unique id
    */
-  private String generateUniqueFutureId() {
+  public String generateUniqueFutureId() {
     return String.valueOf(mIdCounter.getAndIncrement());
   }
 
@@ -700,6 +700,29 @@ public class ImagePipeline {
     }
   }
 
+  public <T> DataSource<CloseableReference<T>> submitFetchRequest(
+      Producer<CloseableReference<T>> producerSequence,
+      SettableProducerContext settableProducerContext,
+      RequestListener requestListener) {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
+    }
+    try {
+      return CloseableProducerToDataSourceAdapter.create(
+          producerSequence, settableProducerContext, requestListener);
+    } catch (Exception exception) {
+      return DataSources.immediateFailedDataSource(exception);
+    } finally {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
+    }
+  }
+
+  public ProducerSequenceFactory getProducerSequenceFactory() {
+    return mProducerSequenceFactory;
+  }
+
   private DataSource<Void> submitPrefetchRequest(
       Producer<Void> producerSequence,
       ImageRequest imageRequest,
@@ -731,7 +754,7 @@ public class ImagePipeline {
     }
   }
 
-  private RequestListener getRequestListenerForRequest(
+  public RequestListener getRequestListenerForRequest(
       ImageRequest imageRequest, @Nullable RequestListener requestListener) {
     if (requestListener == null) {
       if (imageRequest.getRequestListener() == null) {
