@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ColorSpace;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.util.Pools;
 import android.util.Pair;
@@ -78,6 +79,22 @@ public final class BitmapUtil {
   public static @Nullable Pair<Integer, Integer> decodeDimensions(byte[] bytes) {
     // wrapping with ByteArrayInputStream is cheap and we don't have duplicate implementation
     return decodeDimensions(new ByteArrayInputStream(bytes));
+  }
+
+  /**
+   * Decodes the bounds of an image from its Uri and returns a pair of the dimensions
+   *
+   * @param uri the Uri of the image
+   * @return dimensions of the image
+   */
+  public static @Nullable Pair<Integer, Integer> decodeDimensions(Uri uri) {
+    Preconditions.checkNotNull(uri);
+    BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+    BitmapFactory.decodeFile(uri.getPath(), options);
+    return (options.outWidth == -1 || options.outHeight == -1)
+        ? null
+        : new Pair<>(options.outWidth, options.outHeight);
   }
 
   /**
