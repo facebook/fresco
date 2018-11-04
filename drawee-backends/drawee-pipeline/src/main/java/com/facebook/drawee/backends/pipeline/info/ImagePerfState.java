@@ -47,6 +47,8 @@ public class ImagePerfState {
   private long mVisibilityEventTimeMs = UNSET;
   private long mInvisibilityEventTimeMs = UNSET;
 
+  private @Nullable String mComponentTag;
+
   public void reset() {
     mRequestId = null;
     mImageRequest = null;
@@ -72,6 +74,8 @@ public class ImagePerfState {
     mVisibilityState = VisibilityState.UNKNOWN;
     mVisibilityEventTimeMs = UNSET;
     mInvisibilityEventTimeMs = UNSET;
+
+    mComponentTag = null;
   }
 
   public void setImageLoadStatus(@ImageLoadStatus int imageLoadStatus) {
@@ -159,6 +163,10 @@ public class ImagePerfState {
     mVisibilityState = visible ? VisibilityState.VISIBLE : VisibilityState.INVISIBLE;
   }
 
+  public void setComponentTag(@Nullable String componentTag) {
+    mComponentTag = componentTag;
+  }
+
   public ImagePerfData snapshot() {
     return new ImagePerfData(
         mControllerId,
@@ -179,6 +187,7 @@ public class ImagePerfState {
         mOnScreenHeightPx,
         mVisibilityState,
         mVisibilityEventTimeMs,
-        mInvisibilityEventTimeMs);
+        mInvisibilityEventTimeMs,
+        mComponentTag);
   }
 }

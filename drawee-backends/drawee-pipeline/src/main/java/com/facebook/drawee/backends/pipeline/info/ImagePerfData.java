@@ -40,6 +40,8 @@ public class ImagePerfData {
   private final long mVisibilityEventTimeMs;
   private final long mInvisibilityEventTimeMs;
 
+  @Nullable private final String mComponentTag;
+
   public ImagePerfData(
       @Nullable String controllerId,
       @Nullable String requestId,
@@ -59,7 +61,8 @@ public class ImagePerfData {
       int onScreenHeightPx,
       int visibilityState,
       long visibilityEventTimeMs,
-      long invisibilityEventTime) {
+      long invisibilityEventTime,
+      @Nullable String componentTag) {
     mControllerId = controllerId;
     mRequestId = requestId;
     mImageRequest = imageRequest;
@@ -79,6 +82,7 @@ public class ImagePerfData {
     mVisibilityState = visibilityState;
     mVisibilityEventTimeMs = visibilityEventTimeMs;
     mInvisibilityEventTimeMs = invisibilityEventTime;
+    mComponentTag = componentTag;
   }
 
   @Nullable
@@ -174,6 +178,11 @@ public class ImagePerfData {
     return mInvisibilityEventTimeMs;
   }
 
+  @Nullable
+  public String getComponentTag() {
+    return mComponentTag;
+  }
+
   public String createDebugString() {
     return Objects.toStringHelper(this)
         .add("controller ID", mControllerId)
@@ -192,6 +201,7 @@ public class ImagePerfData {
         .add("on-screen width", mOnScreenWidthPx)
         .add("on-screen height", mOnScreenHeightPx)
         .add("visibility state", mVisibilityState)
+        .add("component tag", mComponentTag)
         .toString();
   }
 }
