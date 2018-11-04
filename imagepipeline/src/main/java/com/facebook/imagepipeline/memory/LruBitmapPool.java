@@ -64,12 +64,14 @@ public class LruBitmapPool implements BitmapPool {
   }
 
   @Override
-  public synchronized void release(final Bitmap value) {
+  public void release(final Bitmap value) {
     final int size = mStrategy.getSize(value);
     if (size <= mMaxBitmapSize) {
       mPoolStatsTracker.onValueRelease(size);
       mStrategy.put(value);
-      mCurrentSize += size;
+      synchronized (this) {
+        mCurrentSize += size;
+      }
     }
   }
 }
