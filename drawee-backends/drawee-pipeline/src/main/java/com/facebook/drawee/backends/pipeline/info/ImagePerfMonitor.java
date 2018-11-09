@@ -13,13 +13,12 @@ import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfControllerLi
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfRequestListener;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
-import com.facebook.imagepipeline.listener.BaseRequestListener;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Nullable;
 
-public class ImagePerfMonitor extends BaseRequestListener {
+public class ImagePerfMonitor {
 
   private final PipelineDraweeController mPipelineDraweeController;
   private final MonotonicClock mMonotonicClock;
