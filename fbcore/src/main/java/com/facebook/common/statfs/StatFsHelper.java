@@ -39,6 +39,12 @@ public class StatFsHelper {
     EXTERNAL
   };
 
+  /* See definition here: https://fburl.com/wut/atm6yg8o */
+  public static final int DEFAULT_DISK_YELLOW_LEVEL_IN_MB = 400;
+
+  public static final long DEFAULT_DISK_YELLOW_LEVEL_IN_BYTES =
+      DEFAULT_DISK_YELLOW_LEVEL_IN_MB * 1024 * 1024;
+
   private static StatFsHelper sStatsFsHelper;
 
   // Time interval for updating disk information
