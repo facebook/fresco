@@ -36,6 +36,7 @@ public class PoolConfig {
   private final String mBitmapPoolType;
   private final int mBitmapPoolMaxPoolSize;
   private final int mBitmapPoolMaxBitmapSize;
+  private final boolean mRegisterLruBitmapPoolAsMemoryTrimmable;
 
   private PoolConfig(Builder builder) {
     if (FrescoSystrace.isTracing()) {
@@ -81,6 +82,7 @@ public class PoolConfig {
         builder.mBitmapPoolMaxBitmapSize > 0
             ? builder.mBitmapPoolMaxBitmapSize
             : BITMAP_POOL_MAX_BITMAP_SIZE_DEFAULT;
+    mRegisterLruBitmapPoolAsMemoryTrimmable = builder.mRegisterLruBitmapPoolAsMemoryTrimmable;
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
@@ -130,6 +132,10 @@ public class PoolConfig {
     return mBitmapPoolMaxBitmapSize;
   }
 
+  public boolean isRegisterLruBitmapPoolAsMemoryTrimmable() {
+    return mRegisterLruBitmapPoolAsMemoryTrimmable;
+  }
+
   public static Builder newBuilder() {
     return new Builder();
   }
@@ -147,6 +153,7 @@ public class PoolConfig {
     private String mBitmapPoolType;
     private int mBitmapPoolMaxPoolSize;
     private int mBitmapPoolMaxBitmapSize;
+    private boolean mRegisterLruBitmapPoolAsMemoryTrimmable;
 
     private Builder() {
     }
@@ -212,6 +219,11 @@ public class PoolConfig {
     public Builder setBitmapPoolMaxBitmapSize(int bitmapPoolMaxBitmapSize) {
       mBitmapPoolMaxBitmapSize = bitmapPoolMaxBitmapSize;
       return this;
+    }
+
+    public void setRegisterLruBitmapPoolAsMemoryTrimmable(
+        boolean registerLruBitmapPoolAsMemoryTrimmable) {
+      mRegisterLruBitmapPoolAsMemoryTrimmable = registerLruBitmapPoolAsMemoryTrimmable;
     }
   }
 }

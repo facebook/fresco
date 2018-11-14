@@ -7,8 +7,10 @@
 package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimType;
+import com.facebook.common.memory.MemoryTrimmableRegistry;
 
 public class LruBitmapPool implements BitmapPool {
 
@@ -18,10 +20,17 @@ public class LruBitmapPool implements BitmapPool {
   private final PoolStatsTracker mPoolStatsTracker;
   private int mCurrentSize;
 
-  public LruBitmapPool(int maxPoolSize, int maxBitmapSize, PoolStatsTracker poolStatsTracker) {
+  public LruBitmapPool(
+      int maxPoolSize,
+      int maxBitmapSize,
+      PoolStatsTracker poolStatsTracker,
+      @Nullable MemoryTrimmableRegistry memoryTrimmableRegistry) {
     mMaxPoolSize = maxPoolSize;
     mMaxBitmapSize = maxBitmapSize;
     mPoolStatsTracker = poolStatsTracker;
+    if (memoryTrimmableRegistry != null) {
+      memoryTrimmableRegistry.registerMemoryTrimmable(this);
+    }
   }
 
   @Override
