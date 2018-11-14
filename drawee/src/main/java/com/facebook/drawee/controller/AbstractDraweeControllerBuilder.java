@@ -231,7 +231,8 @@ public abstract class AbstractDraweeControllerBuilder <
   }
 
   /** Sets the controller listener. */
-  public BUILDER setControllerListener(ControllerListener<? super INFO> controllerListener) {
+  public BUILDER setControllerListener(
+      @Nullable ControllerListener<? super INFO> controllerListener) {
     mControllerListener = controllerListener;
     return getThis();
   }
