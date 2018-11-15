@@ -52,6 +52,9 @@ public class FadeDrawable extends ArrayDrawable {
    */
   private final Drawable[] mLayers;
 
+  private final boolean mDefaultLayerIsOn;
+  private final int mDefaultLayerAlpha;
+
   /**
    * The current state.
    */
@@ -79,6 +82,18 @@ public class FadeDrawable extends ArrayDrawable {
    * @param layers layers to fade between
    */
   public FadeDrawable(Drawable[] layers) {
+    this(layers, false);
+  }
+
+  /**
+   * Creates a new fade drawable. The first layer is displayed with full opacity whereas all other
+   * layers are invisible if allLayersVisible is false. Otherwise, all layers will be displayed with
+   * full opacity.
+   *
+   * @param layers layers to fade between
+   * @param allLayersVisible true if all layers should be visible per default
+   */
+  public FadeDrawable(Drawable[] layers, boolean allLayersVisible) {
     super(layers);
     Preconditions.checkState(layers.length >= 1, "At least one layer required!");
     mLayers = layers;
@@ -87,6 +102,8 @@ public class FadeDrawable extends ArrayDrawable {
     mAlpha = 255;
     mIsLayerOn = new boolean[layers.length];
     mPreventInvalidateCount = 0;
+    mDefaultLayerIsOn = allLayersVisible;
+    mDefaultLayerAlpha = mDefaultLayerIsOn ? 255 : 0;
     resetInternal();
   }
 
@@ -136,11 +153,11 @@ public class FadeDrawable extends ArrayDrawable {
    */
   private void resetInternal() {
     mTransitionState = TRANSITION_NONE;
-    Arrays.fill(mStartAlphas, 0);
+    Arrays.fill(mStartAlphas, mDefaultLayerAlpha);
     mStartAlphas[0] = 255;
-    Arrays.fill(mAlphas, 0);
+    Arrays.fill(mAlphas, mDefaultLayerAlpha);
     mAlphas[0] = 255;
-    Arrays.fill(mIsLayerOn, false);
+    Arrays.fill(mIsLayerOn, mDefaultLayerIsOn);
     mIsLayerOn[0] = true;
   }
 
