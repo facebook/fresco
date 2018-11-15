@@ -86,15 +86,15 @@ public class ImageRequest {
   /** Request listener to use for this image request */
   private final @Nullable RequestListener mRequestListener;
 
-  public static ImageRequest fromFile(@Nullable File file) {
+  public static @Nullable ImageRequest fromFile(@Nullable File file) {
     return (file == null) ? null : ImageRequest.fromUri(UriUtil.getUriForFile(file));
   }
 
-  public static ImageRequest fromUri(@Nullable Uri uri) {
+  public static @Nullable ImageRequest fromUri(@Nullable Uri uri) {
     return (uri == null) ? null : ImageRequestBuilder.newBuilderWithSource(uri).build();
   }
 
-  public static ImageRequest fromUri(@Nullable String uriString) {
+  public static @Nullable ImageRequest fromUri(@Nullable String uriString) {
     return (uriString == null || uriString.length() == 0) ? null : fromUri(Uri.parse(uriString));
   }
 

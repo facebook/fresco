@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.request.ImageRequest.CacheChoice;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 
 /**
  * Disk cache read producer.
@@ -136,7 +137,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   }
 
   @VisibleForTesting
-  static Map<String, String> getExtraMap(
+  static @Nullable Map<String, String> getExtraMap(
       final ProducerListener listener,
       final String requestId,
       final boolean valueFound,

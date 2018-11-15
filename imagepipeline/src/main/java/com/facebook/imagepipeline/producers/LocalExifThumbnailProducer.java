@@ -86,14 +86,9 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     final ImageRequest imageRequest = producerContext.getImageRequest();
 
     final StatefulProducerRunnable cancellableProducerRunnable =
-        new StatefulProducerRunnable<EncodedImage>(
-            consumer,
-            listener,
-            PRODUCER_NAME,
-            requestId) {
+        new StatefulProducerRunnable<EncodedImage>(consumer, listener, PRODUCER_NAME, requestId) {
           @Override
-          protected EncodedImage getResult()
-              throws Exception {
+          protected @Nullable EncodedImage getResult() throws Exception {
             final Uri sourceUri = imageRequest.getSourceUri();
 
             final ExifInterface exifInterface = getExifInterface(sourceUri);

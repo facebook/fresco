@@ -242,7 +242,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       }
     }
 
-    private Map<String, String> getExtraMap(
+    private @Nullable Map<String, String> getExtraMap(
         EncodedImage encodedImage,
         @Nullable ResizeOptions resizeOptions,
         @Nullable ImageTranscodeResult transcodeResult,

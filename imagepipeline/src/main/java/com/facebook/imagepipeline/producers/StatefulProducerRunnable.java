@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.common.executors.StatefulRunnable;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
  * {@link StatefulRunnable} intended to be used by producers.
@@ -65,24 +66,18 @@ public abstract class StatefulProducerRunnable<T>
     mConsumer.onCancellation();
   }
 
-  /**
-   * Create extra map for result
-   */
-  protected Map<String, String> getExtraMapOnSuccess(T result) {
+  /** Create extra map for result */
+  protected @Nullable Map<String, String> getExtraMapOnSuccess(T result) {
     return null;
   }
 
-  /**
-   * Create extra map for exception
-   */
-  protected Map<String, String> getExtraMapOnFailure(Exception exception) {
+  /** Create extra map for exception */
+  protected @Nullable Map<String, String> getExtraMapOnFailure(Exception exception) {
     return null;
   }
 
-  /**
-   * Create extra map for cancellation
-   */
-  protected Map<String, String> getExtraMapOnCancellation() {
+  /** Create extra map for cancellation */
+  protected @Nullable Map<String, String> getExtraMapOnCancellation() {
     return null;
   }
 

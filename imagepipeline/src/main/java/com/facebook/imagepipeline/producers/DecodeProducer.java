@@ -321,7 +321,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       }
     }
 
-    private Map<String, String> getExtraMap(
+    private @Nullable Map<String, String> getExtraMap(
         @Nullable CloseableImage image,
         long queueTime,
         QualityInfo quality,

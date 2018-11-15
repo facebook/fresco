@@ -16,6 +16,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Executor;
+import javax.annotation.Nullable;
 
 /**
  * Represents a local fetch producer.
@@ -42,13 +43,10 @@ public abstract class LocalFetchProducer implements Producer<EncodedImage> {
     final ImageRequest imageRequest = producerContext.getImageRequest();
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<EncodedImage>(
-            consumer,
-            listener,
-            getProducerName(),
-            requestId) {
+            consumer, listener, getProducerName(), requestId) {
 
           @Override
-          protected EncodedImage getResult() throws Exception {
+          protected @Nullable EncodedImage getResult() throws Exception {
             EncodedImage encodedImage = getEncodedImage(imageRequest);
             if (encodedImage == null) {
               listener.onUltimateProducerReached(requestId, getProducerName(), false);

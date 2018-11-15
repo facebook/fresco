@@ -229,10 +229,8 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       }
     }
 
-    private Map<String, String> getExtraMap(
-        ProducerListener listener,
-        String requestId,
-        Postprocessor postprocessor) {
+    private @Nullable Map<String, String> getExtraMap(
+        ProducerListener listener, String requestId, Postprocessor postprocessor) {
       if (!listener.requiresExtraMap(requestId)) {
         return null;
       }
