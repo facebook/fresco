@@ -25,16 +25,6 @@ import java.io.InputStream;
 /** A simple Gif decoder that uses Android's {@link Movie} class to decode Gif images. */
 public class GifDecoder implements ImageDecoder {
 
-  private final boolean mUseSimpleDecoder;
-
-  public GifDecoder() {
-    this(true);
-  }
-
-  public GifDecoder(boolean simpleDecoder) {
-    mUseSimpleDecoder = simpleDecoder;
-  }
-
   @Override
   public CloseableImage decode(
       final EncodedImage encodedImage,
@@ -48,7 +38,7 @@ public class GifDecoder implements ImageDecoder {
 
       is.reset();
 
-      GifMetadataDecoder decoder = GifMetadataDecoder.Factory.create(mUseSimpleDecoder, movie, is);
+      GifMetadataDecoder decoder = GifMetadataDecoder.Factory.create(is);
 
       MovieFrame[] frames = new MovieFrame[decoder.getFrameCount()];
       int currTime = 0;

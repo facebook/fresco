@@ -6,7 +6,6 @@
  */
 package com.facebook.animated.giflite.decoder;
 
-import android.graphics.Movie;
 import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,10 +23,9 @@ public interface GifMetadataDecoder {
   int getFrameDurationMs(int frameNumber);
 
   class Factory {
-    public static GifMetadataDecoder create(boolean simple, Movie movie, InputStream is)
+    public static GifMetadataDecoder create(InputStream is)
         throws IOException {
-      GifMetadataDecoder decoder =
-          simple ? new GifMetadataMovieDecoder(movie) : new GifMetadataStreamDecoder(is);
+      GifMetadataDecoder decoder = new GifMetadataStreamDecoder(is);
       decoder.decode();
       return decoder;
     }

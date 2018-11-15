@@ -104,8 +104,7 @@
 
   <string-array name="gif_decoder_options">
     <item>Native Decoder</item>
-    <item>Simple Movie Decoder</item>
-    <item>Full Movie Decoder</item>
+    <item>Movie Decoder</item>
   </string-array>
 
   <string name="format_gif_title">GIF</string>

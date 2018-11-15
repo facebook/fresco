@@ -113,10 +113,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
                 mGifDecoder = null;
                 break;
               case 1:
-                mGifDecoder = new GifDecoder(true /* useSimpleDecoder */);
-                break;
-              case 2:
-                mGifDecoder = new GifDecoder(false /* useSimpleDecoder */);
+                mGifDecoder = new GifDecoder();
                 break;
               default:
                 throw new IllegalArgumentException("Unknown decoder selected");
