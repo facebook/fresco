@@ -12,6 +12,7 @@ import com.facebook.animated.giflite.decoder.GifMetadataDecoder;
 import com.facebook.animated.giflite.draw.MovieAnimatedImage;
 import com.facebook.animated.giflite.draw.MovieDrawer;
 import com.facebook.animated.giflite.draw.MovieFrame;
+import com.facebook.imagepipeline.animated.base.AnimatedDrawableFrameInfo;
 import com.facebook.imagepipeline.animated.base.AnimatedImageResult;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
@@ -38,7 +39,7 @@ public class GifDecoder implements ImageDecoder {
 
       is.reset();
 
-      GifMetadataDecoder decoder = GifMetadataDecoder.Factory.create(is);
+      GifMetadataDecoder decoder = GifMetadataDecoder.create(is);
 
       MovieFrame[] frames = new MovieFrame[decoder.getFrameCount()];
       int currTime = 0;
@@ -52,7 +53,7 @@ public class GifDecoder implements ImageDecoder {
                 frameDuration,
                 movie.width(),
                 movie.height(),
-                decoder.getFrameDisposal(frameNumber));
+                translateFrameDisposal(decoder.getFrameDisposal(frameNumber)));
       }
 
       return new CloseableAnimatedImage(
@@ -66,6 +67,19 @@ public class GifDecoder implements ImageDecoder {
         is.close();
       } catch (IOException ignored) {
       }
+    }
+  }
+
+  private static AnimatedDrawableFrameInfo.DisposalMethod translateFrameDisposal(int raw) {
+    switch (raw) {
+      case 2: // restore to background
+        return AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_TO_BACKGROUND;
+      case 3: // restore to previous
+        return AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_TO_PREVIOUS;
+      case 1: // do not dispose
+        // fallthrough
+      default: // unspecified
+        return AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_DO_NOT;
     }
   }
 }
