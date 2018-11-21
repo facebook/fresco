@@ -630,6 +630,9 @@ public class ImagePipeline {
  */
   @Nullable
   public CacheKey getCacheKey(ImageRequest imageRequest, Object callerContext) {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection("ImagePipeline#getCacheKey");
+    }
     final CacheKeyFactory cacheKeyFactory = mCacheKeyFactory;
     CacheKey cacheKey = null;
     if (cacheKeyFactory != null && imageRequest != null) {
@@ -638,6 +641,9 @@ public class ImagePipeline {
       } else {
         cacheKey = cacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
       }
+    }
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
     }
     return cacheKey;
   }
