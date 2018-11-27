@@ -256,7 +256,7 @@ public class StatFsHelper {
    * directory does not exist or the StatFs restat() or constructor fails (throws), a null StatFs
    * object is returned.
    */
-  private StatFs updateStatsHelper(@Nullable StatFs statfs, @Nullable File dir) {
+  private @Nullable StatFs updateStatsHelper(@Nullable StatFs statfs, @Nullable File dir) {
     if(dir == null || !dir.exists()) {
       // The path does not exist, do not track stats for it.
       return null;

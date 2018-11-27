@@ -721,7 +721,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
         .toString();
   }
 
-  protected T getCachedImage() {
+  protected @Nullable T getCachedImage() {
     return null;
   }
 

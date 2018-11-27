@@ -91,11 +91,11 @@ public class EncodedImage implements Closeable {
    *
    * @param encodedImage the EncodedImage to clone
    */
-  public static EncodedImage cloneOrNull(EncodedImage encodedImage) {
+  public static @Nullable EncodedImage cloneOrNull(EncodedImage encodedImage) {
     return encodedImage != null ? encodedImage.cloneOrNull() : null;
   }
 
-  public EncodedImage cloneOrNull() {
+  public @Nullable EncodedImage cloneOrNull() {
     EncodedImage encodedImage;
     if (mInputStreamSupplier != null) {
         encodedImage = new EncodedImage(mInputStreamSupplier, mStreamSize);
@@ -146,7 +146,7 @@ public class EncodedImage implements Closeable {
    *
    * <p>The caller has to close the InputStream after using it.
    */
-  public InputStream getInputStream() {
+  public @Nullable InputStream getInputStream() {
     if (mInputStreamSupplier != null) {
       return mInputStreamSupplier.get();
     }
@@ -458,7 +458,7 @@ public class EncodedImage implements Closeable {
    * <p><b>DO NOT USE in application code.</b>
    */
   @VisibleForTesting
-  public synchronized SharedReference<PooledByteBuffer> getUnderlyingReferenceTestOnly() {
+  public synchronized @Nullable SharedReference<PooledByteBuffer> getUnderlyingReferenceTestOnly() {
     return (mPooledByteBufferRef != null) ?
         mPooledByteBufferRef.getUnderlyingReferenceTestOnly() : null;
   }

@@ -91,7 +91,8 @@ public class WebpUtil {
    * @return The dimensions if any
    * @throws IOException In case or error reading from the InputStream
    */
-  private static Pair<Integer, Integer> getVP8Dimension(final InputStream is) throws IOException {
+  private static @Nullable Pair<Integer, Integer> getVP8Dimension(final InputStream is)
+      throws IOException {
     // We need to skip 7 bytes
     is.skip(7);
     // And then check the signature
@@ -113,7 +114,8 @@ public class WebpUtil {
    * @return The dimensions if any
    * @throws IOException In case or error reading from the InputStream
    */
-  private static Pair<Integer, Integer> getVP8LDimension(final InputStream is) throws IOException {
+  private static @Nullable Pair<Integer, Integer> getVP8LDimension(final InputStream is)
+      throws IOException {
     // Skip 4 bytes
     getInt(is);
     //We have a check here

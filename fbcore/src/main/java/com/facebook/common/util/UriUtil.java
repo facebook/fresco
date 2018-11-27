@@ -191,7 +191,7 @@ public class UriUtil {
    * @param uriAsString the uri as a string
    * @return the parsed Uri or null if the input was null
    */
-  public static Uri parseUriOrNull(@Nullable String uriAsString) {
+  public static @Nullable Uri parseUriOrNull(@Nullable String uriAsString) {
     return uriAsString != null ? Uri.parse(uriAsString) : null;
   }
 

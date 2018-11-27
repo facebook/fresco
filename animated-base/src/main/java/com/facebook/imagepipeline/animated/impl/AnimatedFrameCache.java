@@ -69,7 +69,7 @@ public class AnimatedFrameCache {
     }
 
     @Override
-    public String getUriString() {
+    public @Nullable String getUriString() {
       return null;
     }
   }

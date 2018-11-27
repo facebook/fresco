@@ -281,9 +281,8 @@ public class PipelineDraweeController
     }
   }
 
-  private Drawable maybeCreateDrawableFromFactories(
-      @Nullable ImmutableList<DrawableFactory> drawableFactories,
-      CloseableImage closeableImage) {
+  private @Nullable Drawable maybeCreateDrawableFromFactories(
+      @Nullable ImmutableList<DrawableFactory> drawableFactories, CloseableImage closeableImage) {
     if (drawableFactories == null) {
       return null;
     }
@@ -377,7 +376,7 @@ public class PipelineDraweeController
   }
 
   @Override
-  protected CloseableReference<CloseableImage> getCachedImage() {
+  protected @Nullable CloseableReference<CloseableImage> getCachedImage() {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("PipelineDraweeController#getCachedImage");
     }

@@ -238,10 +238,8 @@ public class DraweeHolder<DH extends DraweeHierarchy>
     return mHierarchy != null;
   }
 
-  /**
-   * Gets the top-level drawable if hierarchy is set, null otherwise.
-   */
-  public Drawable getTopLevelDrawable() {
+  /** Gets the top-level drawable if hierarchy is set, null otherwise. */
+  public @Nullable Drawable getTopLevelDrawable() {
     return mHierarchy == null ? null : mHierarchy.getTopLevelDrawable();
   }
 

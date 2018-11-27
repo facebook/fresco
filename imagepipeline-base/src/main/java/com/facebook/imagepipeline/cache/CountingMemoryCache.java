@@ -160,15 +160,13 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
   /**
    * Caches the given key-value pair.
    *
-   * <p> Important: the client should use the returned reference instead of the original one.
-   * It is the caller's responsibility to close the returned reference once not needed anymore.
+   * <p>Important: the client should use the returned reference instead of the original one. It is
+   * the caller's responsibility to close the returned reference once not needed anymore.
    *
    * @return the new reference to be used, null if the value cannot be cached
    */
-  public CloseableReference<V> cache(
-      final K key,
-      final CloseableReference<V> valueRef,
-      final EntryStateObserver<K> observer) {
+  public @Nullable CloseableReference<V> cache(
+      final K key, final CloseableReference<V> valueRef, final EntryStateObserver<K> observer) {
     Preconditions.checkNotNull(key);
     Preconditions.checkNotNull(valueRef);
 

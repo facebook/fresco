@@ -82,10 +82,8 @@ public class DraweeTransition extends Transition {
   }
 
   @Override
-  public Animator createAnimator(
-      ViewGroup sceneRoot,
-      TransitionValues startValues,
-      TransitionValues endValues) {
+  public @Nullable Animator createAnimator(
+      ViewGroup sceneRoot, TransitionValues startValues, TransitionValues endValues) {
     if (startValues == null || endValues == null) {
       return null;
     }

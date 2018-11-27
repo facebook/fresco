@@ -379,7 +379,7 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   @Override
-  public BinaryResource getResource(String resourceId, Object debugInfo) {
+  public @Nullable BinaryResource getResource(String resourceId, Object debugInfo) {
     final File file = getContentFileFor(resourceId);
     if (file.exists()) {
       file.setLastModified(mClock.now());
@@ -547,12 +547,13 @@ public class DefaultDiskStorage implements DiskStorage {
   }
 
   /**
-   * Checks that the file is placed in the correct shard according to its
-   * filename (and hence the represented key). If it's correct its FileInfo is returned.
+   * Checks that the file is placed in the correct shard according to its filename (and hence the
+   * represented key). If it's correct its FileInfo is returned.
+   *
    * @param file the file to check
    * @return the corresponding FileInfo object if shard is correct, null otherwise
    */
-  private FileInfo getShardFileInfo(File file) {
+  private @Nullable FileInfo getShardFileInfo(File file) {
     FileInfo info = FileInfo.fromFile(file);
     if (info == null) {
       return null; // file with incorrect name/extension

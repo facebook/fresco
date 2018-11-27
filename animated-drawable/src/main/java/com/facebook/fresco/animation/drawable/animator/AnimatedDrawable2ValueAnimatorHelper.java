@@ -11,6 +11,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import com.facebook.fresco.animation.backend.AnimationInformation;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
+import javax.annotation.Nullable;
 
 /**
  * Helper class to create {@link ValueAnimator}s for {@link AnimatedDrawable2}.
@@ -18,9 +19,8 @@ import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AnimatedDrawable2ValueAnimatorHelper {
 
-  public static ValueAnimator createValueAnimator(
-      AnimatedDrawable2 animatedDrawable,
-      int maxDurationMs) {
+  public static @Nullable ValueAnimator createValueAnimator(
+      AnimatedDrawable2 animatedDrawable, int maxDurationMs) {
     ValueAnimator animator = createValueAnimator(animatedDrawable);
     if (animator == null) {
       return null;

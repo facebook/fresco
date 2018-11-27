@@ -54,7 +54,8 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
     return inputStream;
   }
 
-  private static byte[] getWebpHeader(InputStream inputStream, BitmapFactory.Options opts) {
+  private static @Nullable byte[] getWebpHeader(
+      InputStream inputStream, BitmapFactory.Options opts) {
     inputStream.mark(HEADER_SIZE);
 
     byte[] header;
@@ -240,9 +241,7 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeFile(
-      String pathName,
-      BitmapFactory.Options opts) {
+  public static @Nullable Bitmap hookDecodeFile(String pathName, BitmapFactory.Options opts) {
     Bitmap bitmap = null;
     try (InputStream stream = new FileInputStream(pathName)) {
       bitmap = hookDecodeStream(stream, null, opts);
@@ -295,10 +294,8 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
   }
 
   @DoNotStrip
-  public static Bitmap hookDecodeResource(
-      Resources res,
-      int id,
-      BitmapFactory.Options opts) {
+  public static @Nullable Bitmap hookDecodeResource(
+      Resources res, int id, BitmapFactory.Options opts) {
     Bitmap bm = null;
     TypedValue value = new TypedValue();
 

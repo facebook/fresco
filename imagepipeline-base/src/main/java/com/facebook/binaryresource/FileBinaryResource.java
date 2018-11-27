@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.annotation.Nullable;
 
 /*
  * Implementation of BinaryResource based on a real file. @see BinaryResource for more details.
@@ -58,10 +59,10 @@ public class FileBinaryResource implements BinaryResource {
   }
 
   /*
-     * Factory method to create a wrapping BinaryResource without explicitly taking care of null.
-     * If the supplied file is null, instead of BinaryResource, null is returned.
-     */
-  public static FileBinaryResource createOrNull(File file) {
+   * Factory method to create a wrapping BinaryResource without explicitly taking care of null.
+   * If the supplied file is null, instead of BinaryResource, null is returned.
+   */
+  public static @Nullable FileBinaryResource createOrNull(File file) {
     return (file != null) ? new FileBinaryResource(file) : null;
   }
 }

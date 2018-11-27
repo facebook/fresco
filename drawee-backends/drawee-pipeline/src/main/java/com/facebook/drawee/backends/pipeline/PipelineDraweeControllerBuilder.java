@@ -138,7 +138,7 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
     }
   }
 
-  private CacheKey getCacheKey() {
+  private @Nullable CacheKey getCacheKey() {
     final ImageRequest imageRequest = getImageRequest();
     final CacheKeyFactory cacheKeyFactory = mImagePipeline.getCacheKeyFactory();
     CacheKey cacheKey = null;
