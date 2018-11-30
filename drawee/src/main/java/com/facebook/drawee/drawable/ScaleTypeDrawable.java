@@ -14,6 +14,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -30,7 +31,7 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   @VisibleForTesting Object mScaleTypeState;
 
   // Specified focus point to use with FOCUS_CROP.
-  @VisibleForTesting PointF mFocusPoint = null;
+  @VisibleForTesting @Nullable PointF mFocusPoint = null;
 
   // Last known dimensions of the underlying drawable. Used to avoid computing bounds every time
   // if underlying size hasn't changed.
@@ -51,6 +52,19 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
   public ScaleTypeDrawable(Drawable drawable, ScaleType scaleType) {
     super(Preconditions.checkNotNull(drawable));
     mScaleType = scaleType;
+  }
+
+  /**
+   * Creates a new ScaleType drawable with given underlying drawable, scale type, and focus point.
+   *
+   * @param drawable underlying drawable to apply scale type on
+   * @param scaleType scale type to be applied
+   * @param focusPoint focus point of the image
+   */
+  public ScaleTypeDrawable(Drawable drawable, ScaleType scaleType, @Nullable PointF focusPoint) {
+    super(Preconditions.checkNotNull(drawable));
+    mScaleType = scaleType;
+    mFocusPoint = focusPoint;
   }
 
   @Override
@@ -86,8 +100,10 @@ public class ScaleTypeDrawable extends ForwardingDrawable {
 
   /**
    * Gets the focus point.
+   *
    * @return focus point of the image
    */
+  @Nullable
   public PointF getFocusPoint() {
     return mFocusPoint;
   }
