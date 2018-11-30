@@ -625,11 +625,9 @@ public class ImagePipeline {
             });
     return dataSource;
   }
-/**
- * @return {@link CacheKey} for doing bitmap cache lookups in the pipeline.
- */
+  /** @return {@link CacheKey} for doing bitmap cache lookups in the pipeline. */
   @Nullable
-  public CacheKey getCacheKey(ImageRequest imageRequest, Object callerContext) {
+  public CacheKey getCacheKey(@Nullable ImageRequest imageRequest, Object callerContext) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipeline#getCacheKey");
     }
