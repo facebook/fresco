@@ -20,11 +20,8 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
-import com.facebook.imagepipeline.bitmaps.ArtBitmapFactory;
-import com.facebook.imagepipeline.bitmaps.EmptyJpegGenerator;
-import com.facebook.imagepipeline.bitmaps.GingerbreadBitmapFactory;
-import com.facebook.imagepipeline.bitmaps.HoneycombBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactoryProvider;
 import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.BufferedDiskCache;
@@ -36,7 +33,6 @@ import com.facebook.imagepipeline.decoder.DefaultImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoderFactory;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
@@ -287,32 +283,11 @@ public class ImagePipelineFactory {
     return mImagePipeline;
   }
 
-  /**
-   * Provide the implementation of the PlatformBitmapFactory for the current platform
-   * using the provided PoolFactory
-   *
-   * @param poolFactory The PoolFactory
-   * @param platformDecoder The PlatformDecoder
-   * @return The PlatformBitmapFactory implementation
-   */
-  public static PlatformBitmapFactory buildPlatformBitmapFactory(
-      PoolFactory poolFactory,
-      PlatformDecoder platformDecoder) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return new ArtBitmapFactory(poolFactory.getBitmapPool());
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      return new HoneycombBitmapFactory(
-          new EmptyJpegGenerator(poolFactory.getPooledByteBufferFactory()), platformDecoder);
-    } else {
-      return new GingerbreadBitmapFactory();
-    }
-  }
-
   public PlatformBitmapFactory getPlatformBitmapFactory() {
     if (mPlatformBitmapFactory == null) {
-      mPlatformBitmapFactory = buildPlatformBitmapFactory(
-          mConfig.getPoolFactory(),
-          getPlatformDecoder());
+      mPlatformBitmapFactory =
+          PlatformBitmapFactoryProvider.buildPlatformBitmapFactory(
+              mConfig.getPoolFactory(), getPlatformDecoder());
     }
     return mPlatformBitmapFactory;
   }
