@@ -65,7 +65,7 @@ void jpegSafeThrow(
   JpegErrorHandler* error_handler = (JpegErrorHandler*) cinfo->err;
 
   if (!error_handler->env->ExceptionCheck()) {
-    error_handler->env->ThrowNew(jRuntimeException_class, msg);
+    error_handler->env->ThrowNew(jRuntimeExceptionclass, msg);
   }
   jpegCleanup(error_handler);
 }

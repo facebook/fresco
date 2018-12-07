@@ -24,7 +24,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.producers.DownsampleUtil;
+import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import com.facebook.imagepipeline.transcoder.ImageTranscodeResult;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.JpegTranscoderUtils;
@@ -44,7 +44,7 @@ public class NativeJpegTranscoder implements ImageTranscoder {
   private boolean mUseDownsamplingRatio;
 
   static {
-    ImagePipelineNativeLoader.load();
+    NativeJpegTranscoderSoLoader.ensure();
   }
 
   public NativeJpegTranscoder(
@@ -148,14 +148,14 @@ public class NativeJpegTranscoder implements ImageTranscoder {
       final int scaleNumerator,
       final int quality)
       throws IOException {
+    NativeJpegTranscoderSoLoader.ensure();
     Preconditions.checkArgument(scaleNumerator >= MIN_SCALE_NUMERATOR);
     Preconditions.checkArgument(scaleNumerator <= MAX_SCALE_NUMERATOR);
     Preconditions.checkArgument(quality >= MIN_QUALITY);
     Preconditions.checkArgument(quality <= MAX_QUALITY);
     Preconditions.checkArgument(JpegTranscoderUtils.isRotationAngleAllowed(rotationAngle));
     Preconditions.checkArgument(
-        scaleNumerator != SCALE_DENOMINATOR || rotationAngle != 0,
-        "no transformation requested");
+        scaleNumerator != SCALE_DENOMINATOR || rotationAngle != 0, "no transformation requested");
     nativeTranscodeJpeg(
         Preconditions.checkNotNull(inputStream),
         Preconditions.checkNotNull(outputStream),
@@ -190,6 +190,7 @@ public class NativeJpegTranscoder implements ImageTranscoder {
       final int scaleNumerator,
       final int quality)
       throws IOException {
+    NativeJpegTranscoderSoLoader.ensure();
     Preconditions.checkArgument(scaleNumerator >= MIN_SCALE_NUMERATOR);
     Preconditions.checkArgument(scaleNumerator <= MAX_SCALE_NUMERATOR);
     Preconditions.checkArgument(quality >= MIN_QUALITY);

@@ -11,7 +11,7 @@
 
 #include <jni.h>
 
-#include "exceptions.h"
+#include "exceptions_handler.h"
 #include "jpeg/jpeg_codec.h"
 #include "logging.h"
 #include "transformations.h"

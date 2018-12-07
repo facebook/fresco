@@ -6,8 +6,8 @@
  */
 package com.facebook.imagepipeline.transcoder;
 
-import android.support.annotation.Nullable;
 import com.facebook.imageformat.ImageFormat;
+import javax.annotation.Nullable;
 
 public interface ImageTranscoderFactory {
 

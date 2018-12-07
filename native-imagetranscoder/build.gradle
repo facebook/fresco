@@ -11,16 +11,15 @@ dependencies {
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
-    api project(':imagepipeline-base')
+    implementation project(':imagepipeline-base')
     implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
 
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')
 
+
     testImplementation "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    testImplementation project(':imagepipeline-test')
-    testImplementation project(':imagepipeline-base-test')
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
@@ -37,11 +36,16 @@ dependencies {
 }
 apply from: rootProject.file('release.gradle')
 
+// We download various C++ open-source dependencies from SourceForge into nativedeps/downloads.
+// We then copy both downloaded code and our custom makefiles and headers into nativedeps/merge.
+
+task fetchNativeDeps(dependsOn: [copyLibjpeg]) {
+}
+
 android {
+
     def ndkLibs = [
-        ['bitmaps', []],
-        ['imagepipeline', []],
-        ['memchunk', []]]
+            ['native-imagetranscoder', [copyLibjpeg]]]
 
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -52,17 +56,14 @@ android {
             jniLibs.srcDirs = ndkLibs.collect { "$buildDir/${it[0]}" }
         }
         test {
-            java {
-                exclude '**/LocalVideoThumbnailProducerTest.java'
-                exclude '**/DecodeProducerTest.java'
-                exclude '**/ProgressiveJpegParserTest.java'
-                exclude '**/AnimatedImageFactoryTest.java'
-
-            }
             resources {
                 exclude '**/BUCK'
             }
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
     ndkLibs.each { lib -> makeNdkTasks lib[0], lib[1] }
 }

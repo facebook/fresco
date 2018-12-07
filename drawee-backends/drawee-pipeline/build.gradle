@@ -13,6 +13,7 @@ dependencies {
     api project(':drawee')
     api project(':imagepipeline')
     api project(':native-filters')
+    api project(':native-imagetranscoder')
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

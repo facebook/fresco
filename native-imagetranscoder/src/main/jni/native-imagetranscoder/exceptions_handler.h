@@ -10,21 +10,21 @@
 
 #include <jni.h>
 
-extern jclass jRuntimeException_class;
+#include "java_globals.h"
 
 namespace facebook {
 namespace imagepipeline {
 
-void safeThrowJavaException(JNIEnv*, jclass, const char*);
+void throwJavaException(JNIEnv*, jclass, const char*);
 
 } }
 
 #define THROW_AND_RETURN_IF(condition, message)                         \
   do {                                                                  \
     if (condition) {                                                    \
-      facebook::imagepipeline::safeThrowJavaException(                  \
+      facebook::imagepipeline::throwJavaException(                  \
           env,                                                          \
-          jRuntimeException_class,                                      \
+          jRuntimeExceptionclass,                                      \
           message);                                                     \
       return;                                                           \
     }                                                                   \
@@ -33,9 +33,9 @@ void safeThrowJavaException(JNIEnv*, jclass, const char*);
 #define THROW_AND_RETURNVAL_IF(condition, message, return_value)        \
   do {                                                                  \
   if (condition) {                                                      \
-      facebook::imagepipeline::safeThrowJavaException(                  \
+      facebook::imagepipeline::throwJavaException(                  \
           env,                                                          \
-          jRuntimeException_class,                                      \
+          jRuntimeExceptionclass,                                      \
           message);                                                     \
       return return_value;                                              \
     }                                                                   \

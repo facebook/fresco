@@ -16,14 +16,12 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoder;
-import com.facebook.imagepipeline.producers.DownsampleUtil;
 import java.io.OutputStream;
 import javax.annotation.Nullable;
 
 /**
  * Image transcoder using only the Android API. Clients can use this if they don't want to use the
- * native implementation {@link NativeJpegTranscoder}. This image transcoder requires more memory.
+ * native implementation. This image transcoder requires more memory.
  */
 public class SimpleImageTranscoder implements ImageTranscoder {
   private static final String TAG = "SimpleImageTranscoder";

@@ -8,7 +8,7 @@
 
 #include <jni.h>
 
-#include "exceptions.h"
+#include "exceptions_handler.h"
 #include "java_globals.h"
 #include "transformations.h"
 

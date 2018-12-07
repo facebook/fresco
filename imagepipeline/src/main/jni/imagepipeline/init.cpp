@@ -9,15 +9,8 @@
 
 #include "Bitmaps.h"
 #include "exceptions.h"
-#include "java_globals.h"
 #include "logging.h"
-#include "JpegTranscoder.h"
 #include "NativeMemoryChunk.h"
-
-jmethodID midInputStreamRead;
-jmethodID midInputStreamSkip;
-jmethodID midOutputStreamWrite;
-jmethodID midOutputStreamWriteWithBounds;
 
 jclass jRuntimeException_class;
 
@@ -47,43 +40,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
   jRuntimeException_class =
     reinterpret_cast<jclass>(env->NewGlobalRef(runtimeException));
 
-  jclass isClass = env->FindClass("java/io/InputStream");
-  THROW_AND_RETURNVAL_IF(isClass == nullptr, "could not find InputStream", -1);
-
-  jclass osClass = env->FindClass("java/io/OutputStream");
-  THROW_AND_RETURNVAL_IF(osClass == nullptr, "could not find OutputStream", -1);
-
-  // find java methods
-  midInputStreamRead = env->GetMethodID(isClass, "read", "([B)I");
-  THROW_AND_RETURNVAL_IF(
-      midInputStreamRead == nullptr,
-      "failed to register InputStream.read",
-      -1);
-
-  midInputStreamSkip = env->GetMethodID(isClass, "skip", "(J)J");
-  THROW_AND_RETURNVAL_IF(
-      midInputStreamSkip == nullptr,
-      "failed to register InputStream.skip",
-      -1);
-
-  midOutputStreamWrite = env->GetMethodID(osClass, "write", "([B)V");
-  THROW_AND_RETURNVAL_IF(
-      midOutputStreamWrite == nullptr,
-      "failed to register OutputStream.write",
-      -1);
-
-  midOutputStreamWriteWithBounds = env->GetMethodID(osClass, "write", "([BII)V");
-  THROW_AND_RETURNVAL_IF(
-      midOutputStreamWriteWithBounds == nullptr,
-      "failed to register OutputStream.write",
-      -1);
-
   // register native methods
-  THROW_AND_RETURNVAL_IF(
-      !registerJpegTranscoderMethods(env),
-      "Could not register JpegTranscoder methods",
-      -1);
-
   THROW_AND_RETURNVAL_IF(
       registerBitmapsMethods(env) == JNI_ERR,
       "Could not register Bitmaps methods",

@@ -7,7 +7,7 @@ package com.facebook.imagepipeline.transcoder;
 
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.core.ImageTranscoderType;
-import com.facebook.imagepipeline.nativecode.NativeJpegTranscoderFactory;
+import com.facebook.imagepipeline.nativecode.NativeImageTranscoderFactory;
 import javax.annotation.Nullable;
 
 /**
@@ -65,7 +65,8 @@ public class MultiImageTranscoderFactory implements ImageTranscoderFactory {
   @Nullable
   private ImageTranscoder getNativeImageTranscoder(
       ImageFormat imageFormat, boolean isResizingEnabled) {
-    return new NativeJpegTranscoderFactory(mMaxBitmapSize, mUseDownSamplingRatio)
+    return NativeImageTranscoderFactory.getNativeImageTranscoderFactory(
+            mMaxBitmapSize, mUseDownSamplingRatio)
         .createImageTranscoder(imageFormat, isResizingEnabled);
   }
 

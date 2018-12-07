@@ -4,9 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package com.facebook.imagepipeline.producers;
+package com.facebook.imagepipeline.transcoder;
 
-import android.support.annotation.Nullable;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -14,6 +13,7 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
+import javax.annotation.Nullable;
 
 public class DownsampleUtil {
   public static final int DEFAULT_SAMPLE_SIZE = 1;
@@ -64,7 +64,7 @@ public class DownsampleUtil {
   }
 
   @VisibleForTesting
-  static float determineDownsampleRatio(
+  public static float determineDownsampleRatio(
       final RotationOptions rotationOptions,
       @Nullable final ResizeOptions resizeOptions,
       final EncodedImage encodedImage) {
@@ -99,7 +99,7 @@ public class DownsampleUtil {
   }
 
   @VisibleForTesting
-  static int ratioToSampleSize(final float ratio) {
+  public static int ratioToSampleSize(final float ratio) {
     if (ratio > 0.5f + 0.5f * INTERVAL_ROUNDING) {
       return 1; // should have resized
     }
@@ -115,7 +115,7 @@ public class DownsampleUtil {
   }
 
   @VisibleForTesting
-  static int ratioToSampleSizeJPEG(final float ratio) {
+  public static int ratioToSampleSizeJPEG(final float ratio) {
     if (ratio > 0.5f + 0.5f * INTERVAL_ROUNDING) {
       return 1; // should have resized
     }
@@ -142,7 +142,7 @@ public class DownsampleUtil {
   }
 
   @VisibleForTesting
-  static int roundToPowerOfTwo(final int sampleSize) {
+  public static int roundToPowerOfTwo(final int sampleSize) {
     int compare = 1;
     while (true) {
       if (compare >= sampleSize) {

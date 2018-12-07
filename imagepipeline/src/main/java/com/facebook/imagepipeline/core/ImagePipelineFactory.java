@@ -9,7 +9,6 @@ package com.facebook.imagepipeline.core;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.cache.disk.FileCache;
@@ -46,6 +45,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.MultiImageTranscoderFactory;
 import com.facebook.imagepipeline.transcoder.SimpleImageTranscoderFactory;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**

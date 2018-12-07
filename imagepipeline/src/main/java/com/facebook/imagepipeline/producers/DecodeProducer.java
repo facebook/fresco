@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;

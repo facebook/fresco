@@ -5,15 +5,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := imagepipeline
 LOCAL_SRC_FILES := \
-	decoded_image.cpp \
 	exceptions.cpp \
 	init.cpp \
-	jpeg/jpeg_codec.cpp \
-	jpeg/jpeg_error_handler.cpp \
-	jpeg/jpeg_memory_io.cpp \
-	jpeg/jpeg_stream_wrappers.cpp \
-	transformations.cpp \
-	JpegTranscoder.cpp
 
 CXX11_FLAGS := -std=c++11
 LOCAL_CFLAGS += $(CXX11_FLAGS)
@@ -25,13 +18,10 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_LDFLAGS += $(FRESCO_CPP_LDFLAGS)
 
-LOCAL_STATIC_LIBRARIES += fb_jpegturbo
-
 LOCAL_STATIC_LIBRARIES += bitmaps
 LOCAL_STATIC_LIBRARIES += memchunk
-LOCAL_LDFLAGS += -Wl,--exclude-libs,libfb_jpegturbo.a
+LOCAL_LDFLAGS += -Wl,--exclude-libs
 
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libjpeg-turbo-1.5.3)
 $(call import-module,bitmaps)
 $(call import-module,memchunk)

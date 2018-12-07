@@ -19,6 +19,7 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':imagepipeline-backends:imagepipeline-okhttp3')
+    implementation project(':native-imagetranscoder')
     implementation project(':animated-gif')
     implementation project(':tools:stetho')
 }

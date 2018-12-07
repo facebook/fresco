@@ -18,7 +18,7 @@ extern "C" {
 }
 
 #include "decoded_image.h"
-#include "exceptions.h"
+#include "exceptions_handler.h"
 #include "logging.h"
 #include "jpeg_error_handler.h"
 #include "jpeg_memory_io.h"

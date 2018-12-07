@@ -86,6 +86,7 @@ dependencies {
     implementation project(':animated-webp')
     implementation project(':static-webp')
     implementation project(':native-filters')
+    implementation project(':native-imagetranscoder')
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':drawee-span')

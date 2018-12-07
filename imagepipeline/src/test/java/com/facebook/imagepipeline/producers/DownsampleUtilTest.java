@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.transcoder.DownsampleUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
