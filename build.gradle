@@ -71,7 +71,7 @@ subprojects {
 
     ext.makeNdkTasks = { name, deps ->
         task "ndk_build_${name}"(dependsOn: deps, type: Exec) {
-            inputs.file("src/main/jni/${name}")
+            inputs.files("src/main/jni/${name}")
             outputs.dir("$buildDir/${name}")
             commandLine getNdkBuildFullPath(project),
                     'NDK_PROJECT_PATH=null',

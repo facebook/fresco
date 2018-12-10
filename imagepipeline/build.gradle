@@ -21,6 +21,7 @@ dependencies {
     testImplementation "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')
+    testImplementation project(':native-imagetranscoder')
     testImplementation "junit:junit:${JUNIT_VERSION}"
     testImplementation "org.easytesting:fest-assert-core:${FEST_ASSERT_CORE_VERSION}"
     testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
