@@ -9,8 +9,8 @@ package com.facebook.imageutils;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.logging.FLog;
+import com.facebook.soloader.DoNotOptimize;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,7 +32,7 @@ public class HeifExifUtil {
     }
   }
 
-  @DoNotStrip
+  @DoNotOptimize
   private static class HeifExifUtilAndroidN {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
