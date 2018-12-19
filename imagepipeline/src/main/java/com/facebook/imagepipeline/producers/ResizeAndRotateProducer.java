@@ -6,6 +6,8 @@
  */
 package com.facebook.imagepipeline.producers;
 
+import static com.facebook.imageformat.DefaultImageFormats.HEIF;
+import static com.facebook.imageformat.DefaultImageFormats.JPEG;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS;
 
@@ -18,7 +20,6 @@ import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.common.memory.PooledByteBufferOutputStream;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.TriState;
-import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.common.RotationOptions;
@@ -145,27 +146,20 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
         return;
       }
-
+      ImageFormat imageFormat = newResult.getImageFormat();
       TriState shouldTransform =
           shouldTransform(
               mProducerContext.getImageRequest(),
               newResult,
               Preconditions.checkNotNull(
-                  mImageTranscoderFactory.createImageTranscoder(
-                      newResult.getImageFormat(), mIsResizingEnabled)));
+                  mImageTranscoderFactory.createImageTranscoder(imageFormat, mIsResizingEnabled)));
       // ignore the intermediate result if we don't know what to do with it
       if (!isLast && shouldTransform == TriState.UNSET) {
         return;
       }
       // just forward the result if we know that it shouldn't be transformed
       if (shouldTransform != TriState.YES) {
-        if (!mProducerContext.getImageRequest().getRotationOptions().canDeferUntilRendered() &&
-            newResult.getRotationAngle() != 0 &&
-            newResult.getRotationAngle() != EncodedImage.UNKNOWN_ROTATION_ANGLE) {
-          newResult = moveImage(newResult); // for thread-safety sake
-          newResult.setRotationAngle(0);
-        }
-        getConsumer().onNewResult(newResult, status);
+        forwardNewResult(newResult, status, imageFormat);
         return;
       }
       // we know that the result should be transformed, hence schedule it
@@ -177,10 +171,41 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       }
     }
 
-    private EncodedImage moveImage(EncodedImage newResult) {
-      EncodedImage cloned = EncodedImage.cloneOrNull(newResult);
-      newResult.close();
-      return cloned;
+    private void forwardNewResult(
+        EncodedImage newResult, @Status int status, ImageFormat imageFormat) {
+      if (imageFormat == JPEG || imageFormat == HEIF) {
+        newResult = getNewResultsForJpegOrHeif(newResult);
+      } else {
+        newResult = getNewResultForImagesWithoutExifData(newResult);
+      }
+      getConsumer().onNewResult(newResult, status);
+    }
+
+    private @Nullable EncodedImage getNewResultForImagesWithoutExifData(EncodedImage encodedImage) {
+      RotationOptions options = mProducerContext.getImageRequest().getRotationOptions();
+      if (!options.useImageMetadata() && options.rotationEnabled()) {
+        encodedImage = getCloneWithRotationApplied(encodedImage, options.getForcedAngle());
+      }
+      return encodedImage;
+    }
+
+    private @Nullable EncodedImage getNewResultsForJpegOrHeif(EncodedImage encodedImage) {
+      if (!mProducerContext.getImageRequest().getRotationOptions().canDeferUntilRendered()
+          && encodedImage.getRotationAngle() != 0
+          && encodedImage.getRotationAngle() != EncodedImage.UNKNOWN_ROTATION_ANGLE) {
+        encodedImage = getCloneWithRotationApplied(encodedImage, RotationOptions.NO_ROTATION);
+      }
+      return encodedImage;
+    }
+
+    private @Nullable EncodedImage getCloneWithRotationApplied(
+        EncodedImage encodedImage, int angle) {
+      EncodedImage newResult = EncodedImage.cloneOrNull(encodedImage); // for thread-safety sake
+      encodedImage.close();
+      if (newResult != null) {
+        newResult.setRotationAngle(angle);
+      }
+      return newResult;
     }
 
     private void doTransform(
@@ -215,7 +240,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             CloseableReference.of(outputStream.toByteBuffer());
         try {
           ret = new EncodedImage(ref);
-          ret.setImageFormat(DefaultImageFormats.JPEG);
+          ret.setImageFormat(JPEG);
           try {
             ret.parseMetaData();
             mProducerContext.getListener().

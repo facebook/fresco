@@ -53,6 +53,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -276,7 +277,7 @@ public class ResizeAndRotateProducerTest {
   }
 
   @Test
-  public void testRotateUsingRotationAngleOnly() throws Exception {
+  public void testRotateUsingRotationAngleOnlyForJPEG() throws Exception {
     whenResizingEnabled();
     int rotationAngle = 90;
     whenRequestSpecificRotation(rotationAngle);
@@ -284,6 +285,34 @@ public class ResizeAndRotateProducerTest {
 
     verifyJpegTranscoderInteractions(8, rotationAngle);
     verifyZeroJpegTranscoderExifOrientationInteractions();
+  }
+
+  @Test
+  public void testRotationAngleIsSetForPNG() throws Exception {
+    whenResizingEnabled();
+    testNewResultContainsRotationAngleForImageFormat(DefaultImageFormats.PNG);
+  }
+
+  @Test
+  public void testRotationAngleIsSetForWebp() throws Exception {
+    whenResizingEnabled();
+    testNewResultContainsRotationAngleForImageFormat(DefaultImageFormats.WEBP_SIMPLE);
+  }
+
+  private void testNewResultContainsRotationAngleForImageFormat(ImageFormat imageFormat) {
+    int rotationAngle = 90;
+    whenRequestSpecificRotation(rotationAngle);
+    provideFinalResult(imageFormat, 10, 10, 0, ExifInterface.ORIENTATION_UNDEFINED);
+
+    assertAngleOnNewResult(rotationAngle);
+    verifyZeroJpegTranscoderInteractions();
+    verifyZeroJpegTranscoderExifOrientationInteractions();
+  }
+
+  private void assertAngleOnNewResult(int expectedRotationAngle) {
+    ArgumentCaptor<EncodedImage> captor = ArgumentCaptor.forClass(EncodedImage.class);
+    verify(mConsumer).onNewResult(captor.capture(), eq(Consumer.IS_LAST));
+    assertEquals(expectedRotationAngle, captor.getValue().getRotationAngle());
   }
 
   @Test
