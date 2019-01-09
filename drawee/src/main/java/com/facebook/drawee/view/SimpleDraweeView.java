@@ -81,9 +81,6 @@ public class SimpleDraweeView extends GenericDraweeView {
         FrescoSystrace.beginSection("SimpleDraweeView#init");
       }
       if (isInEditMode()) {
-        // Disable roundingParams due to a bug in Android Studio
-        // https://issuetracker.google.com/issues/113560562
-        getHierarchy().setRoundingParams(null);
         getTopLevelDrawable().setVisible(true, false);
         getTopLevelDrawable().invalidateSelf();
       } else {
