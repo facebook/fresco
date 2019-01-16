@@ -41,8 +41,6 @@ public class DraweeSimpleFragment extends BaseShowcaseFragment {
 
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     simpleDraweeView.setImageURI(uri);
-
-    simpleDraweeView.getHierarchy().setImage();
   }
 
   @Override
