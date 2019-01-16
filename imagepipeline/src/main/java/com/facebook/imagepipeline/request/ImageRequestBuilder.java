@@ -41,6 +41,7 @@ public class ImageRequestBuilder {
   private @Nullable Postprocessor mPostprocessor = null;
   private boolean mDiskCacheEnabled = true;
   private boolean mMemoryCacheEnabled = true;
+  private @Nullable Boolean mDecodePrefetches = null;
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
 
@@ -91,7 +92,8 @@ public class ImageRequestBuilder {
         .setRequestPriority(imageRequest.getPriority())
         .setResizeOptions(imageRequest.getResizeOptions())
         .setRequestListener(imageRequest.getRequestListener())
-        .setRotationOptions(imageRequest.getRotationOptions());
+        .setRotationOptions(imageRequest.getRotationOptions())
+        .setShouldDecodePrefetches(imageRequest.shouldDecodePrefetches());
   }
 
   private ImageRequestBuilder() {
@@ -335,6 +337,15 @@ public class ImageRequestBuilder {
   public ImageRequest build() {
     validate();
     return new ImageRequest(this);
+  }
+
+  public @Nullable Boolean shouldDecodePrefetches() {
+    return mDecodePrefetches;
+  }
+
+  public ImageRequestBuilder setShouldDecodePrefetches(@Nullable Boolean shouldDecodePrefetches) {
+    mDecodePrefetches = shouldDecodePrefetches;
+    return this;
   }
 
   /** An exception class for builder methods. */

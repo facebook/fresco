@@ -106,6 +106,8 @@ public class ImagePipelineTest {
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
+    when(mImageRequest.shouldDecodePrefetches())
+            .thenReturn(null);
   }
 
   @Test

@@ -350,9 +350,16 @@ public class ImagePipeline {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
     try {
-      Producer<Void> producerSequence = mSuppressBitmapPrefetchingSupplier.get()
-          ? mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
-          : mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
+      final Boolean shouldDecodePrefetches = imageRequest.shouldDecodePrefetches();
+      final boolean skipBitmapCache =
+          shouldDecodePrefetches != null
+              ? !shouldDecodePrefetches // use imagerequest param if specified
+              : mSuppressBitmapPrefetchingSupplier
+                  .get(); // otherwise fall back to pipeline's default
+      Producer<Void> producerSequence =
+          skipBitmapCache
+              ? mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(imageRequest)
+              : mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(imageRequest);
       return submitPrefetchRequest(
           producerSequence,
           imageRequest,

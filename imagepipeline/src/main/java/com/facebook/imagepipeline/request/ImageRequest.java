@@ -80,6 +80,14 @@ public class ImageRequest {
   /** Whether the memory cache should be used for this request */
   private final boolean mIsMemoryCacheEnabled;
 
+  /**
+   * Whether to decode prefetched images.
+   * true -> Cache both encoded image and bitmap.
+   * false -> Cache only encoded image and do not decode until image is needed to be shown.
+   * null -> Use pipeline's default
+   */
+  private final @Nullable Boolean mDecodePrefetches;
+
   /** Postprocessor to run on the output bitmap. */
   private final @Nullable Postprocessor mPostprocessor;
 
@@ -117,6 +125,7 @@ public class ImageRequest {
     mLowestPermittedRequestLevel = builder.getLowestPermittedRequestLevel();
     mIsDiskCacheEnabled = builder.isDiskCacheEnabled();
     mIsMemoryCacheEnabled = builder.isMemoryCacheEnabled();
+    mDecodePrefetches = builder.shouldDecodePrefetches();
 
     mPostprocessor = builder.getPostprocessor();
 
@@ -190,6 +199,10 @@ public class ImageRequest {
 
   public boolean isMemoryCacheEnabled() {
     return mIsMemoryCacheEnabled;
+  }
+
+  public @Nullable Boolean shouldDecodePrefetches() {
+    return mDecodePrefetches;
   }
 
   public synchronized File getSourceFile() {
