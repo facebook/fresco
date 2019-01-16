@@ -43,6 +43,13 @@ public abstract class DefaultDecoder implements PlatformDecoder {
 
   private final BitmapPool mBitmapPool;
 
+  private final @Nullable PreverificationHelper mPreverificationHelper;
+
+  {
+    mPreverificationHelper =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? new PreverificationHelper() : null;
+  }
+
   /**
    * ArtPlatformImageDecoder decodes images from InputStream - to do so we need to provide temporary
    * buffer, otherwise framework will allocate one for us for each decode request
@@ -186,11 +193,29 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       targetWidth = regionToDecode.width() / options.inSampleSize;
       targetHeight = regionToDecode.height() / options.inSampleSize;
     }
-    int sizeInBytes = getBitmapSize(targetWidth, targetHeight, options);
-    final Bitmap bitmapToReuse = mBitmapPool.get(sizeInBytes);
-    if (bitmapToReuse == null) {
-      throw new NullPointerException("BitmapPool.get returned null");
+    @Nullable Bitmap bitmapToReuse = null;
+    boolean shouldUseHardwareBitmapConfig = false;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      shouldUseHardwareBitmapConfig =
+          mPreverificationHelper != null
+              && mPreverificationHelper.shouldUseHardwareBitmapConfig(options.inPreferredConfig);
     }
+    if (regionToDecode == null && shouldUseHardwareBitmapConfig) {
+      // Cannot reuse bitmaps with Bitmap.Config.HARDWARE
+      options.inMutable = false;
+    } else {
+      if (regionToDecode != null && shouldUseHardwareBitmapConfig) {
+        // If region decoding was requested we need to fallback to default config
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+      }
+      final int sizeInBytes = getBitmapSize(targetWidth, targetHeight, options);
+      bitmapToReuse = mBitmapPool.get(sizeInBytes);
+      if (bitmapToReuse == null) {
+        throw new NullPointerException("BitmapPool.get returned null");
+      }
+    }
+    // inBitmap can be nullable
+    //noinspection ConstantConditions
     options.inBitmap = bitmapToReuse;
 
     // Performs transformation at load time to sRGB.
@@ -205,7 +230,7 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     }
     try {
       options.inTempStorage = byteBuffer.array();
-      if (regionToDecode != null) {
+      if (regionToDecode != null && bitmapToReuse != null) {
         BitmapRegionDecoder bitmapRegionDecoder = null;
         try {
           bitmapToReuse.reconfigure(targetWidth, targetHeight, options.inPreferredConfig);
@@ -223,7 +248,9 @@ public abstract class DefaultDecoder implements PlatformDecoder {
         decodedBitmap = BitmapFactory.decodeStream(inputStream, null, options);
       }
     } catch (IllegalArgumentException e) {
-      mBitmapPool.release(bitmapToReuse);
+      if (bitmapToReuse != null) {
+        mBitmapPool.release(bitmapToReuse);
+      }
       // This is thrown if the Bitmap options are invalid, so let's just try to decode the bitmap
       // as-is, which might be inefficient - but it works.
       try {
@@ -241,13 +268,17 @@ public abstract class DefaultDecoder implements PlatformDecoder {
         throw e;
       }
     } catch (RuntimeException re) {
-      mBitmapPool.release(bitmapToReuse);
+      if (bitmapToReuse != null) {
+        mBitmapPool.release(bitmapToReuse);
+      }
       throw re;
     } finally {
       mDecodeBuffers.release(byteBuffer);
     }
 
-    if (bitmapToReuse != decodedBitmap) {
+    // If bitmap with Bitmap.Config.HARDWARE was used, `bitmapToReuse` will be null and it's
+    // expected
+    if (bitmapToReuse != null && bitmapToReuse != decodedBitmap) {
       mBitmapPool.release(bitmapToReuse);
       decodedBitmap.recycle();
       throw new IllegalStateException();
