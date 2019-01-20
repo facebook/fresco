@@ -97,7 +97,14 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
       super(consumer);
       mIsCancelled = false;
       mProducerContext = producerContext;
-      mIsResizingEnabled = isResizingEnabled;
+
+      final Boolean resizingAllowedOverride =
+          mProducerContext.getImageRequest().getResizingAllowedOverride();
+      mIsResizingEnabled =
+          resizingAllowedOverride != null
+              ? resizingAllowedOverride // use request settings if available
+              : isResizingEnabled; // fallback to default option supplied
+
       mImageTranscoderFactory = imageTranscoderFactory;
 
       JobScheduler.JobRunnable job =
@@ -132,7 +139,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
             }
           });
     }
-
 
     @Override
     protected void onNewResultImpl(@Nullable EncodedImage newResult, @Status int status) {

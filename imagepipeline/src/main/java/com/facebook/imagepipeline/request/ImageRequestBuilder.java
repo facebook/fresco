@@ -44,6 +44,7 @@ public class ImageRequestBuilder {
   private @Nullable Boolean mDecodePrefetches = null;
   private @Nullable RequestListener mRequestListener;
   private @Nullable BytesRange mBytesRange = null;
+  private @Nullable Boolean mResizingAllowedOverride = null;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -346,6 +347,15 @@ public class ImageRequestBuilder {
   public ImageRequestBuilder setShouldDecodePrefetches(@Nullable Boolean shouldDecodePrefetches) {
     mDecodePrefetches = shouldDecodePrefetches;
     return this;
+  }
+
+  public ImageRequestBuilder setResizingAllowedOverride(@Nullable Boolean resizingAllowedOverride) {
+    mResizingAllowedOverride = resizingAllowedOverride;
+    return this;
+  }
+
+  public @Nullable Boolean getResizingAllowedOverride() {
+    return mResizingAllowedOverride;
   }
 
   /** An exception class for builder methods. */
