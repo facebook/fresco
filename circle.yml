@@ -21,6 +21,8 @@ jobs:
       - image: circleci/android:api-27-alpha
     steps:
       - checkout
+      - run: yes | sdkmanager --licenses || exit 0
+      - run: yes | sdkmanager --update || exit 0
       - run:
           name: Setup NDK
           command: |
