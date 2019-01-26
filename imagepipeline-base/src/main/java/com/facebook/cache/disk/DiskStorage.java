@@ -151,7 +151,7 @@ public interface DiskStorage {
    * This is a builder-like interface returned when calling insert.
    * It holds all the operations carried through an {@link #insert} operation:
    * - writing data
-   * - commiting
+   * - committing
    * - clean up
    */
   interface Inserter {
