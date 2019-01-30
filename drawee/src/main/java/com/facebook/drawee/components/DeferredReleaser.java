@@ -12,6 +12,7 @@ import android.os.Looper;
 import com.facebook.common.internal.Preconditions;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Component that defers {@code release} until after the main Looper has completed its current
@@ -30,7 +31,7 @@ import java.util.Set;
  */
 public class DeferredReleaser {
 
-  private static DeferredReleaser sInstance = null;
+  private static @Nullable DeferredReleaser sInstance = null;
 
   public static synchronized DeferredReleaser getInstance() {
     if (sInstance == null) {
