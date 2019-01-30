@@ -16,6 +16,8 @@
 
 package com.facebook.imagepipeline.systrace;
 
+import javax.annotation.Nullable;
+
 /**
  * This is intended as a hook into {@code android.os.Trace}, but allows you to provide your own
  * functionality. Use it as
@@ -29,7 +31,7 @@ public class FrescoSystrace {
   /** Convenience implementation of ArgsBuilder to use when we aren't tracing. */
   public static final ArgsBuilder NO_OP_ARGS_BUILDER = new NoOpArgsBuilder();
 
-  private static volatile Systrace sInstance = null;
+  private static volatile @Nullable Systrace sInstance = null;
 
   public interface Systrace {
     void beginSection(String name);
