@@ -50,10 +50,10 @@ public class StatFsHelper {
   // Time interval for updating disk information
   private static final long RESTAT_INTERVAL_MS = TimeUnit.MINUTES.toMillis(2);
 
-  private volatile StatFs mInternalStatFs = null;
+  private volatile @Nullable StatFs mInternalStatFs = null;
   private volatile File mInternalPath;
 
-  private volatile StatFs mExternalStatFs = null;
+  private volatile @Nullable StatFs mExternalStatFs = null;
   private volatile File mExternalPath;
 
   @GuardedBy("lock")
