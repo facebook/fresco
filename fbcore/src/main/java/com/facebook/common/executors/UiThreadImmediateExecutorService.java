@@ -10,6 +10,7 @@ package com.facebook.common.executors;
 import android.os.Handler;
 import android.os.Looper;
 import java.util.concurrent.ExecutorService;
+import javax.annotation.Nullable;
 
 /**
  * An {@link ExecutorService} that is backed by the application's main looper.
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutorService;
  * it will be executed synchronously.
  */
 public class UiThreadImmediateExecutorService extends HandlerExecutorServiceImpl {
-  private static UiThreadImmediateExecutorService sInstance = null;
+  private static @Nullable UiThreadImmediateExecutorService sInstance = null;
 
   private UiThreadImmediateExecutorService() {
     super(new Handler(Looper.getMainLooper()));
