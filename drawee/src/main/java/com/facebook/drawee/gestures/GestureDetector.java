@@ -11,6 +11,7 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.facebook.common.internal.VisibleForTesting;
+import javax.annotation.Nullable;
 
 /**
  * Gesture detector based on touch events.
@@ -30,7 +31,7 @@ public class GestureDetector {
     public boolean onClick();
   }
 
-  @VisibleForTesting ClickListener mClickListener;
+  @VisibleForTesting @Nullable ClickListener mClickListener;
 
   @VisibleForTesting final float mSingleTapSlopPx;
   @VisibleForTesting boolean mIsCapturingGesture;
