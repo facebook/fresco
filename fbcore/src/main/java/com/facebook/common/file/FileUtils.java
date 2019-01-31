@@ -11,6 +11,7 @@ import com.facebook.common.internal.Preconditions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import javax.annotation.Nullable;
 
 /**
  * Static operations on {@link File}s
@@ -115,7 +116,7 @@ public class FileUtils {
       super(message);
     }
 
-    public RenameException(String message, Throwable innerException) {
+    public RenameException(String message, @Nullable Throwable innerException) {
       super(message);
       initCause(innerException);
 
