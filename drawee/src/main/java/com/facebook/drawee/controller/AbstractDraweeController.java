@@ -76,8 +76,8 @@ public abstract class AbstractDraweeController<T, INFO> implements
   // Optional components
   private @Nullable RetryManager mRetryManager;
   private @Nullable GestureDetector mGestureDetector;
-  private @Nullable ControllerListener<INFO> mControllerListener;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
+  protected @Nullable ControllerListener<INFO> mControllerListener;
 
   // Hierarchy
   private @Nullable SettableDraweeHierarchy mSettableDraweeHierarchy;
