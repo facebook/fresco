@@ -58,7 +58,7 @@ public class HandlerExecutorServiceImpl extends AbstractExecutorService
   }
 
   @Override
-  protected <T> ScheduledFutureImpl<T> newTaskFor(Runnable runnable, T value) {
+  protected <T> ScheduledFutureImpl<T> newTaskFor(Runnable runnable, @Nullable T value) {
     return new ScheduledFutureImpl<T>(mHandler, runnable, value);
   }
 
