@@ -151,10 +151,12 @@ public class ImagePipelineFactory {
   @Nullable
   private AnimatedFactory getAnimatedFactory() {
     if (mAnimatedFactory == null) {
-      mAnimatedFactory = AnimatedFactoryProvider.getAnimatedFactory(
-          getPlatformBitmapFactory(),
-          mConfig.getExecutorSupplier(),
-          getBitmapCountingMemoryCache());
+      mAnimatedFactory =
+          AnimatedFactoryProvider.getAnimatedFactory(
+              getPlatformBitmapFactory(),
+              mConfig.getExecutorSupplier(),
+              getBitmapCountingMemoryCache(),
+              mConfig.getExperiments().shouldDownscaleFrameToDrawableDimensions());
     }
     return mAnimatedFactory;
   }

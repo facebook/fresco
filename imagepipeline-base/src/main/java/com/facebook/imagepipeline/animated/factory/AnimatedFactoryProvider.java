@@ -22,19 +22,25 @@ public class AnimatedFactoryProvider {
   public static AnimatedFactory getAnimatedFactory(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
-      CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      boolean downscaleFrameToDrawableDimensions) {
     if (!sImplLoaded) {
       try {
         final Class<?> clazz =
             Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl");
-        final Constructor<?> constructor = clazz.getConstructor(
-            PlatformBitmapFactory.class,
-            ExecutorSupplier.class,
-            CountingMemoryCache.class);
-        sImpl = (AnimatedFactory) constructor.newInstance(
-            platformBitmapFactory,
-            executorSupplier,
-            backingCache);
+        final Constructor<?> constructor =
+            clazz.getConstructor(
+                PlatformBitmapFactory.class,
+                ExecutorSupplier.class,
+                CountingMemoryCache.class,
+                Boolean.TYPE);
+        sImpl =
+            (AnimatedFactory)
+                constructor.newInstance(
+                    platformBitmapFactory,
+                    executorSupplier,
+                    backingCache,
+                    downscaleFrameToDrawableDimensions);
       } catch (Throwable e) {
         // Head in the sand
       }

@@ -47,6 +47,7 @@ public class ImagePipelineExperiments {
   private final ProducerFactoryMethod mProducerFactoryMethod;
   private final Supplier<Boolean> mLazyDataSource;
   private final boolean mGingerbreadDecoderEnabled;
+  private final boolean mDownscaleFrameToDrawableDimensions;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -68,6 +69,7 @@ public class ImagePipelineExperiments {
     }
     mLazyDataSource = builder.mLazyDataSource;
     mGingerbreadDecoderEnabled = builder.mGingerbreadDecoderEnabled;
+    mDownscaleFrameToDrawableDimensions = builder.mDownscaleFrameToDrawableDimensions;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -135,6 +137,10 @@ public class ImagePipelineExperiments {
     return mGingerbreadDecoderEnabled;
   }
 
+  public boolean shouldDownscaleFrameToDrawableDimensions() {
+    return mDownscaleFrameToDrawableDimensions;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -153,6 +159,7 @@ public class ImagePipelineExperiments {
     private ProducerFactoryMethod mProducerFactoryMethod;
     public Supplier<Boolean> mLazyDataSource;
     public boolean mGingerbreadDecoderEnabled;
+    public boolean mDownscaleFrameToDrawableDimensions;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -270,6 +277,12 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setGingerbreadDecoderEnabled(
         boolean gingerbreadDecoderEnabled) {
       mGingerbreadDecoderEnabled = gingerbreadDecoderEnabled;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setShouldDownscaleFrameToDrawableDimensions(
+        boolean downscaleFrameToDrawableDimensions) {
+      mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
       return mConfigBuilder;
     }
 

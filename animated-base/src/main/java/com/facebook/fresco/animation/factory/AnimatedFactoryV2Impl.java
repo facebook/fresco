@@ -49,6 +49,7 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   private final PlatformBitmapFactory mPlatformBitmapFactory;
   private final ExecutorSupplier mExecutorSupplier;
   private final CountingMemoryCache<CacheKey, CloseableImage> mBackingCache;
+  private final boolean mDownscaleFrameToDrawableDimensions;
 
   private @Nullable AnimatedImageFactory mAnimatedImageFactory;
   private @Nullable AnimatedDrawableBackendProvider mAnimatedDrawableBackendProvider;
@@ -59,10 +60,12 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
   public AnimatedFactoryV2Impl(
       PlatformBitmapFactory platformBitmapFactory,
       ExecutorSupplier executorSupplier,
-      CountingMemoryCache<CacheKey, CloseableImage> backingCache) {
+      CountingMemoryCache<CacheKey, CloseableImage> backingCache,
+      boolean downscaleFrameToDrawableDimensions) {
     mPlatformBitmapFactory = platformBitmapFactory;
     mExecutorSupplier = executorSupplier;
     mBackingCache = backingCache;
+    mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
   }
 
   @Nullable
@@ -147,15 +150,18 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
 
   private AnimatedDrawableBackendProvider getAnimatedDrawableBackendProvider() {
     if (mAnimatedDrawableBackendProvider == null) {
-      mAnimatedDrawableBackendProvider = new AnimatedDrawableBackendProvider() {
-        @Override
-        public AnimatedDrawableBackend get(AnimatedImageResult animatedImageResult, Rect bounds) {
-          return new AnimatedDrawableBackendImpl(
-              getAnimatedDrawableUtil(),
-              animatedImageResult,
-              bounds);
-        }
-      };
+      mAnimatedDrawableBackendProvider =
+          new AnimatedDrawableBackendProvider() {
+            @Override
+            public AnimatedDrawableBackend get(
+                AnimatedImageResult animatedImageResult, Rect bounds) {
+              return new AnimatedDrawableBackendImpl(
+                  getAnimatedDrawableUtil(),
+                  animatedImageResult,
+                  bounds,
+                  mDownscaleFrameToDrawableDimensions);
+            }
+          };
     }
     return mAnimatedDrawableBackendProvider;
   }
@@ -165,7 +171,11 @@ public class AnimatedFactoryV2Impl implements AnimatedFactory {
         new AnimatedDrawableBackendProvider() {
           @Override
           public AnimatedDrawableBackend get(AnimatedImageResult imageResult, Rect bounds) {
-            return new AnimatedDrawableBackendImpl(getAnimatedDrawableUtil(), imageResult, bounds);
+            return new AnimatedDrawableBackendImpl(
+                getAnimatedDrawableUtil(),
+                imageResult,
+                bounds,
+                mDownscaleFrameToDrawableDimensions);
           }
         };
     return new AnimatedImageFactoryImpl(animatedDrawableBackendProvider, mPlatformBitmapFactory);
