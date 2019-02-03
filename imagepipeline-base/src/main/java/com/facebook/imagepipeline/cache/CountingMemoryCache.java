@@ -347,6 +347,7 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    * @param key returns true if an item with the given key matches
    * @return true is any items matches from the cache
    */
+  @Override
   public synchronized boolean contains(K key) {
     return mCachedEntries.contains(key);
   }

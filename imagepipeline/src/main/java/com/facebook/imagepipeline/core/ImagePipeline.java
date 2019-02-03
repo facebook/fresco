@@ -673,6 +673,14 @@ public class ImagePipeline {
     return closeableImage;
   }
 
+  public boolean hasCachedImage(@Nullable CacheKey cacheKey) {
+    MemoryCache<CacheKey, CloseableImage> memoryCache = mBitmapMemoryCache;
+    if (memoryCache == null || cacheKey == null) {
+      return false;
+    }
+    return memoryCache.contains(cacheKey);
+  }
+
   private <T> DataSource<CloseableReference<T>> submitFetchRequest(
       Producer<CloseableReference<T>> producerSequence,
       ImageRequest imageRequest,

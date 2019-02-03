@@ -58,4 +58,12 @@ public interface MemoryCache<K, V> {
    * @return true if the predicate was found in the cache, false otherwise
    */
   boolean contains(Predicate<K> predicate);
+
+  /**
+   * Check if the cache contains an item for the given key.
+   *
+   * @param key
+   * @return true if the key was found in the cache, false otherwise
+   */
+  boolean contains(K key);
 }
