@@ -2,6 +2,7 @@ com.facebook.animated.gif
 com.facebook.animated.giflite
 com.facebook.animated.giflite.decoder
 com.facebook.animated.giflite.draw
+com.facebook.animated.giflite.drawable
 com.facebook.animated.webp
 com.facebook.binaryresource
 com.facebook.cache.common

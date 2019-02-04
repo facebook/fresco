@@ -153,6 +153,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/giflite/draw/package-summary.html">com.facebook.animated.giflite.draw</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/facebook/animated/giflite/drawable/package-summary.html">com.facebook.animated.giflite.drawable</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/facebook/animated/webp/package-summary.html">com.facebook.animated.webp</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/facebook/binaryresource/package-summary.html">com.facebook.binaryresource</a></li>
@@ -306,15 +308,10 @@
           <div id="classes-nav">
             <ul>
               
-    <li><h2>Interfaces</h2>
-      <ul>
-          <li class="selected api apilevel-"><a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.html">GifMetadataDecoder</a></li>
-      </ul>
-    </li>
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.Factory.html">GifMetadataDecoder.Factory</a></li>
+          <li class="selected api apilevel-"><a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.html">GifMetadataDecoder</a></li>
       </ul>
     </li>
               
@@ -358,9 +355,37 @@
 
 
 
+  
+   
+  
+  
+  
+  
+
 
 <div class="sum-details-links">
 
+
+Summary:
+
+
+
+
+
+
+
+
+
+
+
+  <a href="#pubmethods">Methods</a>
+  
+
+
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
+
+&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
 
 </div><!-- end sum-details-links -->
 <div class="api-level">
@@ -381,10 +406,16 @@
      
      
     
-    interface
+    class
 <h1>GifMetadataDecoder</h1>
 
 
+
+  
+    extends Object<br/>
+  
+  
+  
 
   
   
@@ -400,6 +431,14 @@
 
 
     <tr>
+         	
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
          	
         <td colspan="1" class="jd-inheritance-class-cell">com.facebook.animated.giflite.decoder.GifMetadataDecoder</td>
     </tr>
@@ -444,27 +483,6 @@
 
 
 
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
-
-
-  
-    <tr class="alt-color api apilevel-" >
-      <td class="jd-typecol">
-        
-         
-         
-        
-        class</td>
-      <td class="jd-linkcol"><a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.Factory.html">GifMetadataDecoder.Factory</a></td>
-      <td class="jd-descrcol" width="100%">&nbsp;</td>
-    </tr>
-    
-    
-
-</table>
-
-
 
 
 
@@ -497,7 +515,23 @@
 	 
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
+            
+            
+            
+            static
+            
+            <a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.html">GifMetadataDecoder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.html#create(java.io.InputStream)">create</a></span>(InputStream is)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
             
             
             
@@ -511,9 +545,9 @@
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
+            
             
             
             
@@ -527,14 +561,14 @@
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            abstract
             
             
             
             
-            <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawableFrameInfo.DisposalMethod.html">AnimatedDrawableFrameInfo.DisposalMethod</a>
+            
+            int
         </td>
         <td class="jd-linkcol" width="100%">
         <span class="sympad"><a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.html#getFrameDisposal(int)">getFrameDisposal</a></span>(int frameNumber)
@@ -543,9 +577,9 @@
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
-            abstract
+            
             
             
             
@@ -559,9 +593,9 @@
 
 
 	 
-    <tr class="alt-color api apilevel-" >
+    <tr class=" api apilevel-" >
         <td class="jd-typecol">
-            abstract
+            
             
             
             
@@ -581,6 +615,216 @@
 
 
 
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Object-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  java.lang.Object
+
+<div id="inherited-methods-java.lang.Object">
+  <div id="inherited-methods-java.lang.Object-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            Object
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">clone</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            boolean
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">equals</span>(Object arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">finalize</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            Class&lt;?&gt;
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">getClass</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            int
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">hashCode</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notify</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">notifyAll</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            String
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">toString</span>()
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0, int arg1)
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>(long arg0)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            final
+            
+            
+            void
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad">wait</span>()
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
 
 
 </div><!-- jd-descr (summary) -->
@@ -622,6 +866,46 @@
 
 
 
+<a id="create(java.io.InputStream)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+         
+         
+         
+        <a href="../../../../../com/facebook/animated/giflite/decoder/GifMetadataDecoder.html">GifMetadataDecoder</a>
+      </span>
+      <span class="sympad">create</span>
+      <span class="normal">(InputStream is)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>IOException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <a id="decode()"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -630,7 +914,7 @@
         public 
          
          
-        abstract 
+         
          
         void
       </span>
@@ -670,7 +954,7 @@
         public 
          
          
-        abstract 
+         
          
         int
       </span>
@@ -701,9 +985,9 @@
         public 
          
          
-        abstract 
          
-        <a href="../../../../../com/facebook/imagepipeline/animated/base/AnimatedDrawableFrameInfo.DisposalMethod.html">AnimatedDrawableFrameInfo.DisposalMethod</a>
+         
+        int
       </span>
       <span class="sympad">getFrameDisposal</span>
       <span class="normal">(int frameNumber)</span>
@@ -732,7 +1016,7 @@
         public 
          
          
-        abstract 
+         
          
         int
       </span>
@@ -763,7 +1047,7 @@
         public 
          
          
-        abstract 
+         
          
         int
       </span>
