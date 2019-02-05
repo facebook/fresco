@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  */
 public class DebuggingCacheKey extends SimpleCacheKey {
 
-  private final Object mCallerContext;
+  private final @Nullable Object mCallerContext;
   private final Uri mSourceUri;
 
   public DebuggingCacheKey(String key, @Nullable Object callerContext, Uri sourceUri) {

@@ -7,11 +7,13 @@
 
 package com.facebook.cache.common;
 
+import javax.annotation.Nullable;
+
 /**
  * Implementation of {@link CacheEventListener} that doesn't do anything.
  */
 public class NoOpCacheEventListener implements CacheEventListener {
-  private static NoOpCacheEventListener sInstance = null;
+  private static @Nullable NoOpCacheEventListener sInstance = null;
 
   private NoOpCacheEventListener() {
   }

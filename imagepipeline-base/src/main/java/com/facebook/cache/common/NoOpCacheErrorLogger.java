@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
  * An implementation of {@link CacheErrorLogger} that doesn't do anything.
  */
 public class NoOpCacheErrorLogger implements CacheErrorLogger {
-  private static NoOpCacheErrorLogger sInstance = null;
+  private static @Nullable NoOpCacheErrorLogger sInstance = null;
 
   private NoOpCacheErrorLogger() {
   }
