@@ -110,7 +110,7 @@ public class ScalingUtils {
   }
 
   @Nullable
-  public static ScaleTypeDrawable getActiveScaleTypeDrawable(Drawable drawable) {
+  public static ScaleTypeDrawable getActiveScaleTypeDrawable(@Nullable Drawable drawable) {
     if (drawable == null) {
       return null;
     } else if (drawable instanceof ScaleTypeDrawable) {
