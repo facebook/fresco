@@ -38,6 +38,7 @@ public class AnimatedDrawableBackendImplTest {
   @Mock public AnimatedImage mImage;
   @Mock public AnimatedImageFrame mFrame;
   @Mock public Bitmap mBitmap;
+  @Mock public Rect mRect;
 
   @Before
   public void setUp() throws Exception {
@@ -66,7 +67,7 @@ public class AnimatedDrawableBackendImplTest {
 
     final AnimatedDrawableBackendImpl animatedDrawableBackendImpl =
         new AnimatedDrawableBackendImpl(
-            mAnimatedDrawableUtil, mAnimatedImageResult, new Rect(), true);
+            mAnimatedDrawableUtil, mAnimatedImageResult, mRect, true);
 
     animatedDrawableBackendImpl.renderFrame(0, mCanvas);
 
