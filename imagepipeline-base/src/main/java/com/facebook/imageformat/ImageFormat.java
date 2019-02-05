@@ -36,7 +36,7 @@ public class ImageFormat {
   // Unknown image format
   public static final ImageFormat UNKNOWN = new ImageFormat("UNKNOWN", null);
 
-  private final String mFileExtension;
+  private final @Nullable String mFileExtension;
   private final String mName;
 
   public ImageFormat(String name, @Nullable String fileExtension) {
