@@ -26627,6 +26627,8 @@
 </parameter>
 <parameter name="backingCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
+<parameter name="downscaleFrameToDrawableDimensions" type="boolean">
+</parameter>
 </constructor>
 <method name="getAnimatedDrawableFactory"
  return="com.facebook.imagepipeline.drawable.DrawableFactory"
@@ -28814,6 +28816,8 @@
 </parameter>
 <parameter name="backingCache" type="com.facebook.imagepipeline.cache.CountingMemoryCache&lt;com.facebook.cache.common.CacheKey, com.facebook.imagepipeline.image.CloseableImage&gt;">
 </parameter>
+<parameter name="downscaleFrameToDrawableDimensions" type="boolean">
+</parameter>
 </method>
 </class>
 <interface name="AnimatedImageDecoder"
@@ -28976,6 +28980,8 @@
 <parameter name="animatedImageResult" type="com.facebook.imagepipeline.animated.base.AnimatedImageResult">
 </parameter>
 <parameter name="bounds" type="android.graphics.Rect">
+</parameter>
+<parameter name="downscaleFrameToDrawableDimensions" type="boolean">
 </parameter>
 </constructor>
 <method name="dropCaches"
@@ -31830,6 +31836,19 @@
 <parameter name="predicate" type="com.facebook.common.internal.Predicate&lt;K&gt;">
 </parameter>
 </method>
+<method name="contains"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="K">
+</parameter>
+</method>
 <method name="get"
  return="com.facebook.common.references.CloseableReference&lt;V&gt;"
  abstract="false"
@@ -31890,6 +31909,19 @@
  visibility="public"
 >
 <parameter name="predicate" type="com.facebook.common.internal.Predicate&lt;K&gt;">
+</parameter>
+</method>
+<method name="contains"
+ return="boolean"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="K">
 </parameter>
 </method>
 <method name="get"
@@ -34015,6 +34047,19 @@
 <parameter name="requestListener" type="com.facebook.imagepipeline.listener.RequestListener">
 </parameter>
 </method>
+<method name="hasCachedImage"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="cacheKey" type="com.facebook.cache.common.CacheKey">
+</parameter>
+</method>
 <method name="isInBitmapMemoryCache"
  return="boolean"
  abstract="false"
@@ -35179,6 +35224,17 @@
 <parameter name="configBuilder" type="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder">
 </parameter>
 </method>
+<method name="shouldDownscaleFrameToDrawableDimensions"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
 </class>
 <class name="ImagePipelineExperiments.Builder"
  extends="java.lang.Object"
@@ -35330,6 +35386,19 @@
 <parameter name="producerFactoryMethod" type="com.facebook.imagepipeline.core.ImagePipelineExperiments.ProducerFactoryMethod">
 </parameter>
 </method>
+<method name="setShouldDownscaleFrameToDrawableDimensions"
+ return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="downscaleFrameToDrawableDimensions" type="boolean">
+</parameter>
+</method>
 <method name="setUseDownsampligRatioForResizing"
  return="com.facebook.imagepipeline.core.ImagePipelineConfig.Builder"
  abstract="false"
@@ -35383,6 +35452,16 @@
 </parameter>
 </method>
 <field name="mBitmapPrepareToDrawForPrefetch"
+ type="boolean"
+ transient="false"
+ volatile="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="mDownscaleFrameToDrawableDimensions"
  type="boolean"
  transient="false"
  volatile="false"

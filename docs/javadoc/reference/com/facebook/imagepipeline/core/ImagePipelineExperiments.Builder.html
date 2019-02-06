@@ -553,12 +553,23 @@ Summary:
           
           
           boolean</td>
-          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#mGingerbreadDecoderEnabled">mGingerbreadDecoderEnabled</a></td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#mDownscaleFrameToDrawableDimensions">mDownscaleFrameToDrawableDimensions</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
       <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol">
+          public
+          
+          
+          boolean</td>
+          <td class="jd-linkcol"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#mGingerbreadDecoderEnabled">mGingerbreadDecoderEnabled</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
           <td class="jd-typecol">
           public
           
@@ -799,7 +810,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setUseDownsampligRatioForResizing(boolean)">setUseDownsampligRatioForResizing</a></span>(boolean useDownsamplingRatioForResizing)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setShouldDownscaleFrameToDrawableDimensions(boolean)">setShouldDownscaleFrameToDrawableDimensions</a></span>(boolean downscaleFrameToDrawableDimensions)
         
   </td></tr>
 
@@ -815,7 +826,7 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setWebpBitmapFactory(com.facebook.common.webp.WebpBitmapFactory)">setWebpBitmapFactory</a></span>(<a href="../../../../com/facebook/common/webp/WebpBitmapFactory.html">WebpBitmapFactory</a> webpBitmapFactory)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setUseDownsampligRatioForResizing(boolean)">setUseDownsampligRatioForResizing</a></span>(boolean useDownsamplingRatioForResizing)
         
   </td></tr>
 
@@ -831,13 +842,29 @@ Summary:
             <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
         </td>
         <td class="jd-linkcol" width="100%">
-        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setWebpErrorLogger(com.facebook.common.webp.WebpBitmapFactory.WebpErrorLogger)">setWebpErrorLogger</a></span>(<a href="../../../../com/facebook/common/webp/WebpBitmapFactory.WebpErrorLogger.html">WebpBitmapFactory.WebpErrorLogger</a> webpErrorLogger)
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setWebpBitmapFactory(com.facebook.common.webp.WebpBitmapFactory)">setWebpBitmapFactory</a></span>(<a href="../../../../com/facebook/common/webp/WebpBitmapFactory.html">WebpBitmapFactory</a> webpBitmapFactory)
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol">
+            
+            
+            
+            
+            
+            <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+        </td>
+        <td class="jd-linkcol" width="100%">
+        <span class="sympad"><a href="../../../../com/facebook/imagepipeline/core/ImagePipelineExperiments.Builder.html#setWebpErrorLogger(com.facebook.common.webp.WebpBitmapFactory.WebpErrorLogger)">setWebpErrorLogger</a></span>(<a href="../../../../com/facebook/common/webp/WebpBitmapFactory.WebpErrorLogger.html">WebpBitmapFactory.WebpErrorLogger</a> webpErrorLogger)
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol">
             
             
@@ -1111,6 +1138,36 @@ From class
         boolean
       </span>
         mBitmapPrepareToDrawForPrefetch
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="mDownscaleFrameToDrawableDimensions"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+        boolean
+      </span>
+        mDownscaleFrameToDrawableDimensions
     </h4>
       <div class="api-level">
         
@@ -1614,6 +1671,37 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Stores an alternative method to instantiate the <code><a href="../../../../com/facebook/imagepipeline/core/ProducerFactory.html">ProducerFactory</a></code>. This allows
  experimenting with overridden producers.
 </p></div>
+
+    </div>
+</div>
+
+
+<a id="setShouldDownscaleFrameToDrawableDimensions(boolean)"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        <a href="../../../../com/facebook/imagepipeline/core/ImagePipelineConfig.Builder.html">ImagePipelineConfig.Builder</a>
+      </span>
+      <span class="sympad">setShouldDownscaleFrameToDrawableDimensions</span>
+      <span class="normal">(boolean downscaleFrameToDrawableDimensions)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     </div>
 </div>
