@@ -192,6 +192,9 @@ public class BufferedDiskCache {
 
                   try {
                     final PooledByteBuffer buffer = readFromDiskCache(key);
+                    if (buffer == null) {
+                      return null;
+                    }
                     CloseableReference<PooledByteBuffer> ref = CloseableReference.of(buffer);
                     try {
                       result = new EncodedImage(ref);
