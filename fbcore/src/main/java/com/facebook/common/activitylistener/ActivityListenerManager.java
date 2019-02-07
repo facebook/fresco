@@ -99,7 +99,7 @@ public class ActivityListenerManager {
       }
     }
 
-    private ActivityListener getListenerOrCleanUp(Activity activity) {
+    private @Nullable ActivityListener getListenerOrCleanUp(Activity activity) {
       ActivityListener activityVisibilityListener = mActivityListenerRef.get();
       if (activityVisibilityListener == null) {
         Preconditions.checkArgument(activity instanceof ListenableActivity);
