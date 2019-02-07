@@ -6,7 +6,7 @@ APP_ABI := armeabi-v7a arm64-v8a x86 x86_64
 APP_MK_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 NDK_MODULE_PATH := $(APP_MK_DIR)$(HOST_DIRSEP)$(APP_MK_DIR)../../../nativedeps/merge
 
-APP_STL := gnustl_static
+APP_STL := c++_static
 
 # Make sure every shared lib includes a .note.gnu.build-id header
 APP_LDFLAGS := -Wl,--build-id
@@ -20,4 +20,4 @@ NDK_TOOLCHAIN_VERSION := clang
 # coming from other stl implementations as well
 
 # This hides all symbols exported from libgnustl_static
-FRESCO_CPP_LDFLAGS := -Wl,--gc-sections,--exclude-libs,libgnustl_static.a
+FRESCO_CPP_LDFLAGS := -Wl,--gc-sections,--exclude-libs,libc++_static.a
