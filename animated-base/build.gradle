@@ -7,7 +7,6 @@ version = VERSION_NAME
 
 dependencies {
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
-    compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     api project(':fbcore')
     api project(':imagepipeline-base')
