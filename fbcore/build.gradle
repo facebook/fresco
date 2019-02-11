@@ -35,6 +35,8 @@ android {
 
     defaultConfig {
         consumerProguardFiles 'proguard-fresco.pro'
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
     }
 
     packagingOptions {
