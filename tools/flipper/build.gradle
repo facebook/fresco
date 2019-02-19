@@ -7,6 +7,9 @@ version = VERSION_NAME
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+
+    implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':imagepipeline')
 }
 
 apply from: rootProject.file('release.gradle')
