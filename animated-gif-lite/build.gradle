@@ -6,7 +6,8 @@ version = VERSION_NAME
 
 dependencies {
     implementation project(':animated-base')
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 }
 apply from: rootProject.file('release.gradle')
 

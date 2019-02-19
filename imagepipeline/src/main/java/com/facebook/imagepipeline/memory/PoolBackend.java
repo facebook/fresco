@@ -6,7 +6,7 @@
  */
 package com.facebook.imagepipeline.memory;
 
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Manages pooled objects

@@ -14,10 +14,10 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
+import javax.annotation.Nullable;
 
 /**
  * Drawable that can scale underlying drawable based on specified {@link ScaleType}

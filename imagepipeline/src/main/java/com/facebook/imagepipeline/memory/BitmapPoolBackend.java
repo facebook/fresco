@@ -10,9 +10,9 @@ package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import com.facebook.common.logging.FLog;
 import com.facebook.imageutils.BitmapUtil;
+import javax.annotation.Nullable;
 
 public class BitmapPoolBackend extends LruBucketsPoolBackend<Bitmap> {
 

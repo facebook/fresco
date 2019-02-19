@@ -9,7 +9,7 @@ package com.facebook.animated.giflite.draw;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Movie;
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * Pronounced Draw-er Draws frames of a {@link Movie} to a bitmap. All methods are synchronized, so

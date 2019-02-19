@@ -16,7 +16,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * A forwarding drawable class - the goal is to forward (delegate) drawable functionality to an

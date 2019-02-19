@@ -8,10 +8,10 @@
  */
 package com.facebook.imagepipeline.memory;
 
-import android.support.annotation.Nullable;
 import com.facebook.common.internal.VisibleForTesting;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Relies on {@link BucketMap} to implement pooling Items from the bucket with LRU key will be

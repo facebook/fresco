@@ -7,10 +7,10 @@
 package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import javax.annotation.Nullable;
 
 public class LruBitmapPool implements BitmapPool {
 
