@@ -44,7 +44,7 @@ android {
 
     flavorDimensions "main"
     productFlavors {
-        main {
+        normal {
         }
         instantRunConfig {
             dimension "main"
