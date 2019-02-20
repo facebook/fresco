@@ -103,42 +103,47 @@ public class ImageUriProvider {
   private static final String PREF_KEY_URI_OVERRIDE = "uri_override";
 
   private static final int RANDOM_URI_MAX_IMAGE_ID = 1000;
-  private static final String RANDOM_URI_PATTERN_S = "http://picsum.photos/400/400?image=%d";
-  private static final String RANDOM_URI_PATTERN_M = "http://picsum.photos/800/800?image=%d";
+  private static final String RANDOM_URI_PATTERN_S = "https://picsum.photos/400/400?image=%d";
+  private static final String RANDOM_URI_PATTERN_M = "https://picsum.photos/800/800?image=%d";
 
-  private static final String[] SAMPLE_URIS_LANDSCAPE = new String[]{
-      "http://frescolib.org/static/sample-images/animal_a_%s.jpg",
-      "http://frescolib.org/static/sample-images/animal_b_%s.jpg",
-      "http://frescolib.org/static/sample-images/animal_c_%s.jpg",
-      "http://frescolib.org/static/sample-images/animal_e_%s.jpg",
-      "http://frescolib.org/static/sample-images/animal_f_%s.jpg",
-      "http://frescolib.org/static/sample-images/animal_g_%s.jpg",
-  };
+  private static final String[] SAMPLE_URIS_LANDSCAPE =
+      new String[] {
+        "https://frescolib.org/static/sample-images/animal_a_%s.jpg",
+        "https://frescolib.org/static/sample-images/animal_b_%s.jpg",
+        "https://frescolib.org/static/sample-images/animal_c_%s.jpg",
+        "https://frescolib.org/static/sample-images/animal_e_%s.jpg",
+        "https://frescolib.org/static/sample-images/animal_f_%s.jpg",
+        "https://frescolib.org/static/sample-images/animal_g_%s.jpg",
+      };
 
-  private static final String[] SAMPLE_URIS_PORTRAIT = new String[]{
-      "http://frescolib.org/static/sample-images/animal_d_%s.jpg",
-  };
+  private static final String[] SAMPLE_URIS_PORTRAIT =
+      new String[] {
+        "https://frescolib.org/static/sample-images/animal_d_%s.jpg",
+      };
+
+  private static final String SAMPLE_URI_PJPEG_SLOW =
+      "http://pooyak.com/p/progjpeg/jpegload.cgi?o=1";
 
   private static final String[] SAMPLE_URIS_LANDSCAPE_PNG =
       new String[] {
-        "http://frescolib.org/static/sample-images/animal_a.png",
-        "http://frescolib.org/static/sample-images/animal_b.png",
-        "http://frescolib.org/static/sample-images/animal_c.png",
-        "http://frescolib.org/static/sample-images/animal_e.png",
-        "http://frescolib.org/static/sample-images/animal_f.png",
-        "http://frescolib.org/static/sample-images/animal_g.png",
+        "https://frescolib.org/static/sample-images/animal_a.png",
+        "https://frescolib.org/static/sample-images/animal_b.png",
+        "https://frescolib.org/static/sample-images/animal_c.png",
+        "https://frescolib.org/static/sample-images/animal_e.png",
+        "https://frescolib.org/static/sample-images/animal_f.png",
+        "https://frescolib.org/static/sample-images/animal_g.png",
       };
 
   private static final String[] SAMPLE_URIS_PORTRAIT_PNG =
       new String[] {
-        "http://frescolib.org/static/sample-images/animal_d.png",
+        "https://frescolib.org/static/sample-images/animal_d.png",
       };
 
   private static final String NON_EXISTING_URI =
-      "http://frescolib.org/static/sample-images/does_not_exist.jpg";
+      "https://frescolib.org/static/sample-images/does_not_exist.jpg";
 
   private static final String SAMPLE_URI_WEBP_STATIC =
-      "http://www.gstatic.com/webp/gallery/2.webp";
+      "https://www.gstatic.com/webp/gallery/2.webp";
 
   private static final String SAMPLE_URI_WEBP_TRANSLUCENT =
       "https://www.gstatic.com/webp/gallery3/5_webp_ll.webp";
@@ -146,12 +151,24 @@ public class ImageUriProvider {
   private static final String SAMPLE_URI_WEBP_ANIMATED =
       "https://www.gstatic.com/webp/animated/1.webp";
 
+  private static final String SAMPLE_URI_GIF_PATTERN =
+      "https://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_%s.gif";
+
+  private static final String SAMPLE_URI_GIF_WITH_PAUSE_PATTERN =
+      "https://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_%s.gif";
+
   private static final String[] SAMPLE_URIS_GIFS =
       new String[] {
         "https://media2.giphy.com/media/3oge84qhopFbFFkwec/giphy.gif",
         "https://media3.giphy.com/media/uegrGBitPHtKM/giphy.gif",
         "https://media0.giphy.com/media/SWd9mTHEMIxQ4/giphy.gif"
       };
+
+  private static final String SAMPLE_URI_KEYFRAMES =
+      "https://frescolib.org/static/sample-images/animation.keyframes";
+
+  private static final String SAMPLE_URI_SVG =
+      "https://frescolib.org/static/sample-images/fresco_logo_half_transparent.svg";
 
   private static ImageUriProvider sInstance;
 
@@ -207,6 +224,10 @@ public class ImageUriProvider {
     return applyOverrideSettings(fullUri, urlModification);
   }
 
+  public Uri createPJPEGSlow() {
+    return applyOverrideSettings(SAMPLE_URI_PJPEG_SLOW, UriModification.NONE);
+  }
+
   public Uri createPngUri() {
     return createPngUri(null, UriModification.NONE);
   }
@@ -233,6 +254,26 @@ public class ImageUriProvider {
 
   public Uri createWebpAnimatedUri() {
     return applyOverrideSettings(SAMPLE_URI_WEBP_ANIMATED, UriModification.NONE);
+  }
+
+  public Uri createGifUri(ImageSize imageSize) {
+    return applyOverrideSettings(
+        String.format((Locale) null, SAMPLE_URI_GIF_PATTERN, imageSize.sizeSuffix),
+        UriModification.NONE);
+  }
+
+  public Uri createGifUriWithPause(ImageSize imageSize) {
+    return applyOverrideSettings(
+        String.format((Locale) null, SAMPLE_URI_GIF_WITH_PAUSE_PATTERN, imageSize.sizeSuffix),
+        UriModification.NONE);
+  }
+
+  public Uri createKeyframesUri() {
+    return applyOverrideSettings(SAMPLE_URI_KEYFRAMES, UriModification.NONE);
+  }
+
+  public Uri createSvgUri() {
+    return applyOverrideSettings(SAMPLE_URI_SVG, UriModification.NONE);
   }
 
   public void setUriOverride(String uri) {

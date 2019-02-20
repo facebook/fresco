@@ -33,6 +33,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.LogcatImagePerfDataListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
@@ -48,21 +49,7 @@ import java.util.Locale;
  */
 public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
-  public static final Uri URI_PJPEG_LARGE =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_c_l.jpg");
-  public static final Uri URI_PJPEG_MEDIUM =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_d_m.jpg");
-  public static final Uri URI_PJPEG_SMALL =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_e_s.jpg");
-  public static final Uri URI_PJPEG_SLOW =
-      Uri.parse("http://pooyak.com/p/progjpeg/jpegload.cgi?o=1");
-
-  private static final Entry[] SPINNER_ENTRIES = new Entry[]{
-      new Entry(R.string.format_pjpeg_label_small, URI_PJPEG_SMALL),
-      new Entry(R.string.format_pjpeg_label_medium, URI_PJPEG_MEDIUM),
-      new Entry(R.string.format_pjpeg_label_large, URI_PJPEG_LARGE),
-      new Entry(R.string.format_pjpeg_label_slow, URI_PJPEG_SLOW),
-  };
+  private Entry[] mSpinnerEntries;
 
   private final DateFormat mDateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
   private final ImagePerfDataListener mImagePerfDataListener = new LogcatImagePerfDataListener();
@@ -83,6 +70,20 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+    mSpinnerEntries =
+        new Entry[] {
+          new Entry(
+              R.string.format_pjpeg_label_small,
+              sampleUris().createSampleUri(ImageUriProvider.ImageSize.L)),
+          new Entry(
+              R.string.format_pjpeg_label_medium,
+              sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)),
+          new Entry(
+              R.string.format_pjpeg_label_large,
+              sampleUris().createSampleUri(ImageUriProvider.ImageSize.S)),
+          new Entry(R.string.format_pjpeg_label_slow, sampleUris().createPJPEGSlow()),
+        };
 
     ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
     progressBarDrawable.setColor(getResources().getColor(R.color.progress_bar_color));
@@ -109,17 +110,17 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
     final Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
     spinner.setAdapter(new SimpleUriListAdapter());
-    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        final Entry spinnerEntry = SPINNER_ENTRIES[spinner.getSelectedItemPosition()];
-        setImageUri(spinnerEntry.uri);
-      }
+    spinner.setOnItemSelectedListener(
+        new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            final Entry spinnerEntry = mSpinnerEntries[spinner.getSelectedItemPosition()];
+            setImageUri(spinnerEntry.uri);
+          }
 
-      @Override
-      public void onNothingSelected(AdapterView<?> parent) {
-      }
-    });
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {}
+        });
     spinner.setSelection(0);
   }
 
@@ -196,12 +197,12 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
 
     @Override
     public int getCount() {
-      return SPINNER_ENTRIES.length;
+      return mSpinnerEntries.length;
     }
 
     @Override
     public Entry getItem(int position) {
-      return SPINNER_ENTRIES[position];
+      return mSpinnerEntries[position];
     }
 
     @Override
@@ -218,7 +219,7 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
           : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-      textView.setText(SPINNER_ENTRIES[position].descriptionId);
+      textView.setText(mSpinnerEntries[position].descriptionId);
 
       return view;
     }

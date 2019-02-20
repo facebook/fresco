@@ -11,7 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.imageformat.keyframes;
 
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,9 +32,6 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
  * Fragment using a SimpleDraweeView to display a Keyframes animation
  */
 public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
-
-  public static final Uri URI_KEYFRAMES_ANIMATION =
-      Uri.parse("http://frescolib.org/static/sample-images/animation.keyframes");
 
   private SimpleDraweeView mSimpleDraweeView;
 
@@ -64,11 +60,12 @@ public class ImageFormatKeyframesFragment extends BaseShowcaseFragment {
   private void initAnimation(View view) {
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     mSimpleDraweeView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-    DraweeController controller = Fresco.newDraweeControllerBuilder()
-        .setOldController(mSimpleDraweeView.getController())
-        .setUri(URI_KEYFRAMES_ANIMATION)
-        .setAutoPlayAnimations(true)
-        .build();
+    DraweeController controller =
+        Fresco.newDraweeControllerBuilder()
+            .setOldController(mSimpleDraweeView.getController())
+            .setUri(sampleUris().createKeyframesUri())
+            .setAutoPlayAnimations(true)
+            .build();
     mSimpleDraweeView.setController(controller);
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);

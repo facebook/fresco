@@ -30,6 +30,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
@@ -38,18 +39,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  */
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
-  public static final Uri URI_GIF_S =
-      Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_s.gif");
-  public static final Uri URI_GIF_M =
-      Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_m.gif");
-  public static final Uri URI_GIF_L =
-      Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_l.gif");
-
-  private static final Entry[] SPINNER_ENTRIES = new Entry[]{
-      new Entry(R.string.format_gif_label_small, URI_GIF_S),
-      new Entry(R.string.format_gif_label_medium, URI_GIF_M),
-      new Entry(R.string.format_gif_label_large, URI_GIF_L),
-  };
+  private Entry[] mSpinnerEntries;
 
   private Spinner mSpinner;
   private SimpleDraweeView mSimpleDraweeView;
@@ -66,6 +56,19 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+    mSpinnerEntries =
+        new Entry[] {
+          new Entry(
+              R.string.format_gif_label_small,
+              sampleUris().createGifUri(ImageUriProvider.ImageSize.S)),
+          new Entry(
+              R.string.format_gif_label_medium,
+              sampleUris().createGifUri(ImageUriProvider.ImageSize.M)),
+          new Entry(
+              R.string.format_gif_label_large,
+              sampleUris().createGifUri(ImageUriProvider.ImageSize.L)),
+        };
 
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
 
@@ -128,7 +131,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
   }
 
   private void refreshAnimation() {
-    final Entry spinnerEntry = SPINNER_ENTRIES[mSpinner.getSelectedItemPosition()];
+    final Entry spinnerEntry = mSpinnerEntries[mSpinner.getSelectedItemPosition()];
     setAnimationUri(spinnerEntry.uri);
   }
 
@@ -158,12 +161,12 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
     @Override
     public int getCount() {
-      return SPINNER_ENTRIES.length;
+      return mSpinnerEntries.length;
     }
 
     @Override
     public Entry getItem(int position) {
-      return SPINNER_ENTRIES[position];
+      return mSpinnerEntries[position];
     }
 
     @Override
@@ -180,7 +183,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
           : layoutInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-      textView.setText(SPINNER_ENTRIES[position].descriptionId);
+      textView.setText(mSpinnerEntries[position].descriptionId);
 
       return view;
     }

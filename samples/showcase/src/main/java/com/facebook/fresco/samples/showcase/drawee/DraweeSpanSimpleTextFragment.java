@@ -53,11 +53,8 @@ public class DraweeSpanSimpleTextFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    mInlineImageUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
-    mInlineAnimatedImageUri =
-        Uri.parse(
-            "http://frescolib.org/static/sample-images/fresco_logo_anim_full_frames_with_pause_m.gif");
+    mInlineImageUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
+    mInlineAnimatedImageUri = sampleUris().createGifUriWithPause(ImageUriProvider.ImageSize.M);
 
     mDraweeSpanTextView = (SimpleDraweeSpanTextView) view.findViewById(R.id.drawee_text_view);
     final Spinner scaleType = (Spinner) view.findViewById(R.id.scaleType);

@@ -11,7 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.imagepipeline;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -23,14 +22,12 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.common.BytesRange;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 public class PartialRequestFragment extends BaseShowcaseFragment {
-
-  public static final Uri URI =
-      Uri.parse("http://frescolib.org/static/sample-images/animal_e_l.jpg");
 
   public PartialRequestFragment() {
     // Required empty public constructor
@@ -83,9 +80,11 @@ public class PartialRequestFragment extends BaseShowcaseFragment {
   }
 
   private void loadImageIntoDrawee(SimpleDraweeView draweeView, @Nullable BytesRange bytesRange) {
-    final ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(URI)
-        .setBytesRange(bytesRange)
-        .build();
+    final ImageRequest imageRequest =
+        ImageRequestBuilder.newBuilderWithSource(
+                sampleUris().createSampleUri(ImageUriProvider.ImageSize.L))
+            .setBytesRange(bytesRange)
+            .build();
 
     final DraweeController draweeController = Fresco.newDraweeControllerBuilder()
         .setOldController(draweeView.getController())

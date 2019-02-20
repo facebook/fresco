@@ -13,7 +13,6 @@ package com.facebook.fresco.samples.showcase.imageformat.svg;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -34,9 +33,6 @@ import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
  */
 public class ImageFormatSvgFragment extends BaseShowcaseFragment {
 
-  private static final Uri URI_SVG_HALF_TRANSPARENT =
-      Uri.parse("http://frescolib.org/static/sample-images/fresco_logo_half_transparent.svg");
-
   private SimpleDraweeView mSimpleDraweeView;
   private ShowRestartMessageDialog mShowRestartMessageDialog;
 
@@ -50,7 +46,7 @@ public class ImageFormatSvgFragment extends BaseShowcaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
-    mSimpleDraweeView.setImageURI(URI_SVG_HALF_TRANSPARENT);
+    mSimpleDraweeView.setImageURI(sampleUris().createSvgUri());
 
     final SwitchCompat switchBackground = (SwitchCompat) view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

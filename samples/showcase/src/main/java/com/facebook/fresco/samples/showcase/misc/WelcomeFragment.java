@@ -31,7 +31,7 @@ import com.facebook.fresco.samples.showcase.R;
  */
 public class WelcomeFragment extends BaseShowcaseFragment {
 
-  private static final String URL_DOCUMENTATION = "http://frescolib.org/";
+  private static final String URL_DOCUMENTATION = "https://frescolib.org/";
   private static final String URL_GITHUB = "https://github.com/facebook/fresco";
 
   @Nullable
