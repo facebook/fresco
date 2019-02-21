@@ -38,6 +38,10 @@ subprojects {
         jcenter()
     }
 
+    configurations.all {
+        resolutionStrategy.force "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    }
+
     task allclean {
     }
 
