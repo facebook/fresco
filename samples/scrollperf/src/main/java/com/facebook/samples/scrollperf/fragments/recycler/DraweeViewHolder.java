@@ -12,8 +12,8 @@
 package com.facebook.samples.scrollperf.fragments.recycler;
 
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.imagepipeline.common.ResizeOptions;

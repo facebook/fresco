@@ -13,7 +13,7 @@ package com.facebook.samples.scrollperf.data.impl;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.ArrayRes;
+import androidx.annotation.ArrayRes;
 import com.facebook.samples.scrollperf.data.SimpleAdapter;
 
 /**

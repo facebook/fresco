@@ -11,7 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * This is the abstraction for each Fragment we display into the showcase application

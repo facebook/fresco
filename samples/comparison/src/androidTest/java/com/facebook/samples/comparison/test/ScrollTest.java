@@ -12,10 +12,10 @@
 
 package com.facebook.samples.comparison.test;
 
-import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.Spinner;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.common.logging.FLog;
 import com.facebook.samples.comparison.MainActivity;
 import com.facebook.samples.comparison.R;

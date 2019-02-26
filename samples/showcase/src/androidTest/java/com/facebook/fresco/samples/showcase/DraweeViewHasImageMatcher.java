@@ -11,8 +11,8 @@
  */
 package com.facebook.fresco.samples.showcase;
 
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.view.View;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import com.facebook.drawee.view.SimpleDraweeView;
 import org.hamcrest.Description;
 

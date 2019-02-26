@@ -10,7 +10,7 @@ import static com.facebook.imagepipeline.core.MemoryChunkType.BUFFER_MEMORY;
 import static com.facebook.imagepipeline.core.MemoryChunkType.NATIVE_MEMORY;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 /** Memory type that indicates which kind of memory implementation will be used. */

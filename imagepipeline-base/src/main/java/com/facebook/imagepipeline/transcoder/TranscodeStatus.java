@@ -11,7 +11,7 @@ import static com.facebook.imagepipeline.transcoder.TranscodeStatus.TRANSCODING_
 import static com.facebook.imagepipeline.transcoder.TranscodeStatus.TRANSCODING_SUCCESS;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 /** Status used by {@link ImageTranscodeResult} to supply additional information. */

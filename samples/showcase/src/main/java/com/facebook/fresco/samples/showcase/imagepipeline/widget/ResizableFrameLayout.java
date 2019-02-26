@@ -13,12 +13,12 @@ package com.facebook.fresco.samples.showcase.imagepipeline.widget;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import androidx.annotation.RequiresApi;
 import javax.annotation.Nullable;
 
 public class ResizableFrameLayout extends FrameLayout {

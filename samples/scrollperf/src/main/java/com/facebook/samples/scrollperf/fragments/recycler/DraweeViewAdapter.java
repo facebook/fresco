@@ -13,8 +13,8 @@ package com.facebook.samples.scrollperf.fragments.recycler;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.samples.scrollperf.R;
 import com.facebook.samples.scrollperf.conf.Config;

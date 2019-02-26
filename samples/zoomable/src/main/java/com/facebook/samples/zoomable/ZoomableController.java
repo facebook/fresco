@@ -92,10 +92,9 @@ public interface ZoomableController {
    */
   boolean wasTransformCorrected();
 
-  /**
-   * See {@link android.support.v4.view.ScrollingView}.
-   */
+  /** See {@link androidx.core.view.ScrollingView}. */
   int computeHorizontalScrollRange();
+
   int computeHorizontalScrollOffset();
   int computeHorizontalScrollExtent();
   int computeVerticalScrollRange();

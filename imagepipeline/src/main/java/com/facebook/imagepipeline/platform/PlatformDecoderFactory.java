@@ -10,7 +10,7 @@
 package com.facebook.imagepipeline.platform;
 
 import android.os.Build;
-import android.support.v4.util.Pools;
+import androidx.core.util.Pools;
 import com.facebook.imagepipeline.memory.PoolFactory;
 
 public class PlatformDecoderFactory {

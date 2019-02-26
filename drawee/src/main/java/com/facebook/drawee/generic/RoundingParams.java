@@ -8,7 +8,7 @@
 package com.facebook.drawee.generic;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.drawable.ScalingUtils;
 import java.util.Arrays;

@@ -18,7 +18,7 @@ import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_QUALIF
 import static com.facebook.imagepipeline.common.SourceUriType.SOURCE_TYPE_UNKNOWN;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 /**

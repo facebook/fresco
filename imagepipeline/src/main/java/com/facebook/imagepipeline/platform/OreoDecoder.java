@@ -11,7 +11,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.util.Pools.SynchronizedPool;
+import androidx.core.util.Pools.SynchronizedPool;
 import com.facebook.imagepipeline.memory.BitmapPool;
 import com.facebook.imageutils.BitmapUtil;
 import javax.annotation.concurrent.ThreadSafe;

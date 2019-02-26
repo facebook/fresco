@@ -14,10 +14,10 @@ package com.facebook.samples.zoomableapp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends Activity {
 

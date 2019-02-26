@@ -10,9 +10,7 @@ package com.facebook.webpsupport;
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.os.MemoryFile;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
+import androidx.test.InstrumentationRegistry;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -21,15 +19,14 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * This is the test in order to directly decoding all types of webp images
  */
-@RunWith(AndroidJUnit4.class)
-public class WebpDecodingTest extends InstrumentationTestCase {
+public class WebpDecodingTest extends TestCase {
 
   private static Method sGetFileDescriptorMethod;
 

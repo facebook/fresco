@@ -14,7 +14,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v4.util.Pools.SynchronizedPool;
+import androidx.core.util.Pools.SynchronizedPool;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;

@@ -8,7 +8,7 @@
 package com.facebook.cache.disk;
 
 import android.os.Environment;
-import android.support.annotation.StringDef;
+import androidx.annotation.StringDef;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheErrorLogger;

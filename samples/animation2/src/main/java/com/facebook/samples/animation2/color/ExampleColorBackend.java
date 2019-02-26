@@ -17,8 +17,8 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IntRange;
-import android.support.annotation.Nullable;
+import androidx.annotation.IntRange;
+import androidx.annotation.Nullable;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.samples.animation2.SampleData;
 

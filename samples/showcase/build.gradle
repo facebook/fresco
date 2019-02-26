@@ -17,7 +17,7 @@ android {
         versionName "${VERSION_NAME}"
 
         testApplicationId "com.facebook.fresco.samples.showcase.test"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true // needed for tinting
     }
@@ -71,13 +71,15 @@ android {
 
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+
+    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation "androidx.preference:preference:${versions.androidx.preference}"
+    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+
+    implementation "com.google.android.material:material:1.1.0-alpha03"
     implementation "com.facebook.stetho:stetho-okhttp3:${STETHO_VERSION}"
 
     implementation project(':animated-base')
@@ -100,8 +102,8 @@ dependencies {
     implementation 'com.caverock:androidsvg:1.2.1'
 
     // Testing-only dependencies
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx.espresso}"
+    androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
+    androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
     androidTestImplementation "junit:junit:${JUNIT_VERSION}"
 }

@@ -12,7 +12,7 @@
 package com.facebook.samples.animation2;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Simple standalone activity that holds a Fragment.

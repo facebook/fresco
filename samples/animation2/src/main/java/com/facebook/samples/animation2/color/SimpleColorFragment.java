@@ -12,12 +12,12 @@
 package com.facebook.samples.animation2.color;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.samples.animation2.R;

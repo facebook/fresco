@@ -13,7 +13,7 @@
 package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.samples.comparison.holders.BaseViewHolder;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 import java.util.LinkedList;

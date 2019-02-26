@@ -7,7 +7,7 @@
 
 package com.facebook.imagepipeline.common;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import com.facebook.common.util.HashCodeUtil;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

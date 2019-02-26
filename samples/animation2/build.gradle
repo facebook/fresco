@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
 
     implementation project(':animated-base')
     implementation project(':drawee-backends:drawee-pipeline')

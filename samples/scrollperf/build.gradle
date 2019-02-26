@@ -37,9 +37,9 @@ dependencies {
     implementation project(':static-webp')
     implementation project(':drawee-backends:drawee-pipeline')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-    implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+    implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
+    implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
+    implementation "androidx.preference:preference:${versions.androidx.preference}"
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
 

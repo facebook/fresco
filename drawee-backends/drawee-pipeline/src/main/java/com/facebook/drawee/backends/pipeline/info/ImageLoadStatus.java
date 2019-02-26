@@ -15,7 +15,7 @@ import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.SUCCESS
 import static com.facebook.drawee.backends.pipeline.info.ImageLoadStatus.UNKNOWN;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 
 @Retention(SOURCE)

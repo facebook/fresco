@@ -30,7 +30,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v4.util.Pools;
+import androidx.core.util.Pools;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.common.internal.Throwables;
 import com.facebook.common.memory.PooledByteBuffer;

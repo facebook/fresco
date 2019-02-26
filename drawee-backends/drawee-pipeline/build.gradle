@@ -4,7 +4,7 @@ project.group = GROUP
 version = VERSION_NAME
 
 dependencies {
-    compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 
     implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"

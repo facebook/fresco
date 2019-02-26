@@ -13,8 +13,8 @@ package com.facebook.fresco.samples.showcase.imageformat.color;
 
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
-import android.support.v4.graphics.ColorUtils;
+import androidx.annotation.ColorInt;
+import androidx.core.graphics.ColorUtils;
 import com.facebook.common.internal.ByteStreams;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;

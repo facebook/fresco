@@ -12,7 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 import com.facebook.fresco.animation.backend.AnimationBackend;
 import javax.annotation.Nullable;
 import org.junit.Before;

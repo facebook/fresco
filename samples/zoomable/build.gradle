@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compileOnly "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    compileOnly "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
+    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+    compileOnly "androidx.legacy:legacy-support-core-utils:${versions.androidx.legacy_support_core_utils}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
 
     implementation "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
