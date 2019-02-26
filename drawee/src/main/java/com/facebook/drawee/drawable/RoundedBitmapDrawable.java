@@ -33,7 +33,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
       mPaint.set(paint);
     }
 
-    mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+    mPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     mBorderPaint.setStyle(Paint.Style.STROKE);
   }
 
