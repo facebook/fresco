@@ -93,6 +93,13 @@ public class RoundedBitmapDrawableTest {
   }
 
   @Test
+  public void testSetPaintFilterBitmap() {
+    mRoundedBitmapDrawable.setPaintFilterBitmap(true);
+    verify(mCallback).invalidateDrawable(mRoundedBitmapDrawable);
+    assertTrue(mRoundedBitmapDrawable.getPaintFilterBitmap());
+  }
+
+  @Test
   public void testShouldRoundDefault() {
     assertFalse(mRoundedBitmapDrawable.shouldRound());
     assertFalse(mRoundedBitmapDrawableWithNullBitmap.shouldRound());
