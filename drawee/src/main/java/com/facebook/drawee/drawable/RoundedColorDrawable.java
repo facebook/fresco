@@ -33,6 +33,7 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
   private float mPadding = 0;
   private int mBorderColor = Color.TRANSPARENT;
   private boolean mScaleDownInsideBorders = false;
+  private boolean mPaintFilterBitmap = false;
   @VisibleForTesting final Path mPath = new Path();
   @VisibleForTesting final Path mBorderPath = new Path();
   private int mColor = Color.TRANSPARENT;
@@ -91,6 +92,7 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
   public void draw(Canvas canvas) {
     mPaint.setColor(DrawableUtils.multiplyColorAlpha(mColor, mAlpha));
     mPaint.setStyle(Paint.Style.FILL);
+    mPaint.setFilterBitmap(getPaintFilterBitmap());
     canvas.drawPath(mPath, mPaint);
     if (mBorderWidth != 0) {
       mPaint.setColor(DrawableUtils.multiplyColorAlpha(mBorderColor, mAlpha));
@@ -238,6 +240,29 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
   @Override
   public boolean getScaleDownInsideBorders() {
     return mScaleDownInsideBorders;
+  }
+
+  /**
+   * Sets FILTER_BITMAP_FLAG flag to Paint. {@link android.graphics.Paint#FILTER_BITMAP_FLAG}
+   *
+   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to software
+   * canvas) or preferring pixelation artifacts to blurriness when scaling
+   * significantly.
+   *
+   * @param paintFilterBitmap whether to set FILTER_BITMAP_FLAG flag to Paint.
+   */
+  @Override
+  public void setPaintFilterBitmap(boolean paintFilterBitmap) {
+    if (mPaintFilterBitmap != paintFilterBitmap) {
+      mPaintFilterBitmap = paintFilterBitmap;
+      invalidateSelf();
+    }
+  }
+
+  /** Gets whether to set FILTER_BITMAP_FLAG flag to Paint. */
+  @Override
+  public boolean getPaintFilterBitmap() {
+    return mPaintFilterBitmap;
   }
 
   /**

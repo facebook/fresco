@@ -113,6 +113,13 @@ public class RoundedColorDrawableTest {
   }
 
   @Test
+  public void testSetPaintFilterBitmap() {
+    mRoundedColorDrawable.setPaintFilterBitmap(true);
+    verify(mCallback).invalidateDrawable(mRoundedColorDrawable);
+    assertTrue(mRoundedColorDrawable.getPaintFilterBitmap());
+  }
+
+  @Test
   public void testDrawWithoutBorder() {
     int internalColor = 0xC0223456;
     int alpha = 10;

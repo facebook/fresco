@@ -27,4 +27,7 @@ public interface Rounded {
 
   void setScaleDownInsideBorders(boolean scaleDownInsideBorders);
   boolean getScaleDownInsideBorders();
+
+  void setPaintFilterBitmap(boolean paintFilterBitmap);
+  boolean getPaintFilterBitmap();
 }

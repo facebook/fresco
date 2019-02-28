@@ -101,4 +101,11 @@ public class RoundedCornersDrawableTest {
     verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
     assertTrue(mRoundedCornersDrawable.getScaleDownInsideBorders());
   }
+
+  @Test
+  public void testSetPaintFilterBitmap() {
+    mRoundedCornersDrawable.setPaintFilterBitmap(true);
+    verify(mCallback).invalidateDrawable(mRoundedCornersDrawable);
+    assertTrue(mRoundedCornersDrawable.getPaintFilterBitmap());
+  }
 }

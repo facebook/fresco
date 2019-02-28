@@ -80,6 +80,7 @@ public class RoundedBitmapDrawable extends RoundedDrawable {
       mPaint.getShader().setLocalMatrix(mTransform);
       mIsShaderTransformDirty = false;
     }
+    mPaint.setFilterBitmap(getPaintFilterBitmap());
   }
 
   /**

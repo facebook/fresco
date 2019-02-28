@@ -332,6 +332,7 @@ public class WrappingUtils {
     rounded.setBorder(roundingParams.getBorderColor(), roundingParams.getBorderWidth());
     rounded.setPadding(roundingParams.getPadding());
     rounded.setScaleDownInsideBorders(roundingParams.getScaleDownInsideBorders());
+    rounded.setPaintFilterBitmap(roundingParams.getPaintFilterBitmap());
   }
 
   /**
@@ -343,6 +344,7 @@ public class WrappingUtils {
     rounded.setBorder(Color.TRANSPARENT, 0);
     rounded.setPadding(0);
     rounded.setScaleDownInsideBorders(false);
+    rounded.setPaintFilterBitmap(false);
   }
 
   /**

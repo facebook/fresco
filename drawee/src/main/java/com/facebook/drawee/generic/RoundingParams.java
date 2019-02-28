@@ -51,6 +51,7 @@ public class RoundingParams {
   private int mBorderColor = Color.TRANSPARENT;
   private float mPadding = 0;
   private boolean mScaleDownInsideBorders = false;
+  private boolean mPaintFilterBitmap = false;
 
   /**
    *  Sets whether to round as circle.
@@ -262,6 +263,26 @@ public class RoundingParams {
     return mScaleDownInsideBorders;
   }
 
+  /**
+   * Sets FILTER_BITMAP_FLAG flag to Paint. {@link android.graphics.Paint#FILTER_BITMAP_FLAG}
+   *
+   * <p>This should generally be on when drawing bitmaps, unless performance-bound (rendering to software
+   * canvas) or preferring pixelation artifacts to blurriness when scaling
+   * significantly.
+   *
+   * @param paintFilterBitmap whether to set FILTER_BITMAP_FLAG flag to Paint.
+   * @return modified instance
+   */
+  public RoundingParams setPaintFilterBitmap(boolean paintFilterBitmap) {
+    mPaintFilterBitmap = paintFilterBitmap;
+    return this;
+  }
+
+  /** Gets whether to set FILTER_BITMAP_FLAG flag to Paint. */
+  public boolean getPaintFilterBitmap() {
+    return mPaintFilterBitmap;
+  }
+
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
@@ -301,6 +322,10 @@ public class RoundingParams {
       return false;
     }
 
+    if (mPaintFilterBitmap != that.mPaintFilterBitmap) {
+      return false;
+    }
+
     return Arrays.equals(mCornersRadii, that.mCornersRadii);
   }
 
@@ -314,6 +339,7 @@ public class RoundingParams {
     result = 31 * result + mBorderColor;
     result = 31 * result + (mPadding != +0.0f ? Float.floatToIntBits(mPadding) : 0);
     result = 31 * result + (mScaleDownInsideBorders ? 1 : 0);
+    result = 31 * result + (mPaintFilterBitmap ? 1 : 0);
 
     return result;
   }
