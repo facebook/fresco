@@ -60,7 +60,6 @@ android {
 
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}"
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "com.google.android.material:material:${versions.material}"

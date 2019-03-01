@@ -71,7 +71,6 @@ android {
 
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
 
     implementation "androidx.appcompat:appcompat:${versions.androidx.appcompat}"
     implementation "androidx.preference:preference:${versions.androidx.preference}"
