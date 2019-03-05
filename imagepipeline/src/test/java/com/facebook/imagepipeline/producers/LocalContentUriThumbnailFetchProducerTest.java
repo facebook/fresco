@@ -35,13 +35,11 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.*;
 
-/**
- * Basic tests for LocalContentUriThumbnailFetchProducer
- */
+/** Basic tests for LocalContentUriThumbnailFetchProducer */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@PrepareForTest({ LocalContentUriThumbnailFetchProducer.class, MediaStore.Images.class })
-@Config(manifest= Config.NONE)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
+@PrepareForTest({LocalContentUriThumbnailFetchProducer.class, MediaStore.Images.class})
+@Config(manifest = Config.NONE)
 public class LocalContentUriThumbnailFetchProducerTest {
   private static final String PRODUCER_NAME = LocalContentUriThumbnailFetchProducer.PRODUCER_NAME;
   private static final String THUMBNAIL_FILE_NAME = "////sdcard/thumb.jpg";

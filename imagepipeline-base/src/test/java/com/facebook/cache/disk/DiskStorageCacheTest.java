@@ -64,11 +64,9 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
-/**
- * Test for {@link DiskStorageCache}
- */
+/** Test for {@link DiskStorageCache} */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @PrepareOnlyThisForTest({SystemClock.class})
 public class DiskStorageCacheTest {
 

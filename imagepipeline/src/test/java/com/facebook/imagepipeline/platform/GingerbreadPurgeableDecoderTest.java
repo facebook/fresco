@@ -50,7 +50,7 @@ import org.robolectric.RobolectricTestRunner;
   DalvikPurgeableDecoder.class,
   Bitmaps.class
 })
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class GingerbreadPurgeableDecoderTest {
 
   protected static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;

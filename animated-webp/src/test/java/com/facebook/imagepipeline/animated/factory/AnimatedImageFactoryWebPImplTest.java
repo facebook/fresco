@@ -47,15 +47,14 @@ import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link AnimatedImageFactory}
- */
+/** Tests for {@link AnimatedImageFactory} */
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({
-    WebPImage.class,
-    AnimatedImageFactoryImpl.class,
-    AnimatedImageCompositor.class})
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+  WebPImage.class,
+  AnimatedImageFactoryImpl.class,
+  AnimatedImageCompositor.class
+})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class AnimatedImageFactoryWebPImplTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;

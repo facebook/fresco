@@ -68,7 +68,7 @@ import org.robolectric.annotation.Config;
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({BitmapFactory.class, BitmapRegionDecoder.class})
 @Config(sdk = Build.VERSION_CODES.LOLLIPOP)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class ArtDecoderTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;

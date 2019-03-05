@@ -40,7 +40,7 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
 @PrepareForTest({JfifUtil.class, BitmapUtil.class})
 public class LocalExifThumbnailProducerTest {

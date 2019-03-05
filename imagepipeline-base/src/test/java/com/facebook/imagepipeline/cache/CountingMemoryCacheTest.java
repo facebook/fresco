@@ -44,8 +44,8 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @PrepareForTest({SystemClock.class})
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@Config(manifest=Config.NONE)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
+@Config(manifest = Config.NONE)
 public class CountingMemoryCacheTest {
 
   private static final int CACHE_MAX_SIZE = 1200;
