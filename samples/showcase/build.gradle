@@ -105,4 +105,9 @@ dependencies {
     androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
     androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
     androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+
+    debugImplementation('com.facebook.flipper:flipper:0.17.0'){
+        exclude group: 'com.facebook.fresco'
+    }
+    debugImplementation project(':tools:flipper')
 }

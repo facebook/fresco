@@ -16,6 +16,12 @@ import android.content.Context;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.flipper.android.AndroidFlipperClient;
+import com.facebook.flipper.android.utils.FlipperUtils;
+import com.facebook.flipper.core.FlipperClient;
+import com.facebook.flipper.plugins.fresco.FrescoFlipperPlugin;
+import com.facebook.flipper.plugins.inspector.DescriptorMapping;
+import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -86,5 +92,12 @@ public class ShowcaseApplication extends Application {
                 })
             .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
             .build());
+
+    if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {
+      final FlipperClient client = AndroidFlipperClient.getInstance(this);
+      client.addPlugin(new InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()));
+      client.addPlugin(new FrescoFlipperPlugin());
+      client.start();
+    }
   }
 }
