@@ -493,6 +493,13 @@ public class ImagePipelineTest {
   }
 
   @Test
+  public void testDiskCachesSize() {
+    mImagePipeline.getUsedDiskCacheSize();
+    verify(mMainDiskStorageCache).getSize();
+    verify(mSmallImageDiskStorageCache).getSize();
+  }
+
+  @Test
   public void testLocalRequestListenerIsCalled() {
     RequestListener localRequestListner = mock(RequestListener.class);
     when(mImageRequest.getRequestListener()).thenReturn(localRequestListner);

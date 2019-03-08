@@ -487,6 +487,15 @@ public class ImagePipeline {
   }
 
   /**
+   * Current disk caches size
+   *
+   * @return size in Bytes
+   */
+  public long getUsedDiskCacheSize() {
+    return mMainBufferedDiskCache.getSize() + mSmallImageBufferedDiskCache.getSize();
+  }
+
+  /**
    * Clear all the caches (memory and disk)
    */
   public void clearCaches() {

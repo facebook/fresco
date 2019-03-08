@@ -348,6 +348,10 @@ public class BufferedDiskCache {
     }
   }
 
+  public long getSize() {
+    return mFileCache.getSize();
+  }
+
   private Task<EncodedImage> foundPinnedImage(CacheKey key, EncodedImage pinnedImage) {
     FLog.v(TAG, "Found image for %s in staging area", key.getUriString());
     mImageCacheStatsTracker.onStagingAreaHit(key);
