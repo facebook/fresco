@@ -6,7 +6,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 buildscript {
 
     ext.versions = [
-            'androidx' : [
+            'androidx'  : [
                 'annotation' : '1.0.2',
                 'appcompat'  : '1.0.2',
                 'core'  : '1.0.1',
@@ -17,7 +17,10 @@ buildscript {
                 'recyclerview' : '1.0.0',
                 'test' : '1.1.1',
             ],
-            'material' : '1.0.0',
+            'litho'     : '0.24.0',
+            'material'  : '1.0.0',
+            // Testing
+            assertjCore : '2.9.0',
     ]
 
     repositories {

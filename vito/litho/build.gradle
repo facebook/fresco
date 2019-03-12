@@ -7,6 +7,26 @@ version = VERSION_NAME
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+
+    implementation "androidx.core:core:${versions.androidx.core}"
+    implementation "com.facebook.litho:litho-annotations:${versions.litho}"
+    implementation "com.facebook.litho:litho-core:${versions.litho}"
+    implementation "com.facebook.litho:litho-widget:${versions.litho}"
+
+    annotationProcessor "com.facebook.litho:litho-processor:${versions.litho}"
+
+    implementation project(':drawee')
+    implementation project(':fbcore')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
 }
 
 android {
