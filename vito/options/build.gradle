@@ -7,6 +7,11 @@ version = VERSION_NAME
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+
+    implementation project(':drawee')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
 }
 
 android {
