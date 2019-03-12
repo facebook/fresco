@@ -7,6 +7,15 @@ version = VERSION_NAME
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
+
+    implementation "androidx.core:core:${versions.androidx.core}"
+
+    implementation project(':drawee')
+    implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
+    implementation project(':vito:options')
 }
 
 android {
