@@ -97,6 +97,15 @@ dependencies {
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
+    // Litho
+    implementation "com.facebook.litho:litho-core:${versions.litho}"
+    implementation "com.facebook.litho:litho-widget:${versions.litho}"
+
+    // Experimental Fresco Vito
+    implementation project(':vito:core')
+    implementation project(':vito:litho')
+    implementation project(':vito:options')
+
     // Only used for the custom SVG decoder
     implementation 'com.caverock:androidsvg:1.2.1'
 
