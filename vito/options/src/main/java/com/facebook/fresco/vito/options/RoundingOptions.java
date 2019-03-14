@@ -92,17 +92,18 @@ public class RoundingOptions {
     RoundingOptions that = (RoundingOptions) obj;
     return mIsCircular == that.mIsCircular
         && mCornerRadius == that.mCornerRadius
-        && Objects.equal(mCornerRadii, that.mCornerRadii);
+        && Objects.equal(mCornerRadii, that.mCornerRadii)
+        && mAntiAliasing == that.mAntiAliasing;
   }
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (mIsCircular ? 1 : 0);
+    int result = mIsCircular ? 1 : 0;
     result =
         31 * result
             + (mCornerRadius == CORNER_RADIUS_UNSET ? 0 : Float.floatToIntBits(mCornerRadius));
     result = 31 * result + (mCornerRadii != null ? Arrays.hashCode(mCornerRadii) : 0);
+    result = 31 * result + (mAntiAliasing ? 1 : 0);
     return result;
   }
 }
