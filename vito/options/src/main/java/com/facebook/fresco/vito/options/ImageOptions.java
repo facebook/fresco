@@ -215,9 +215,9 @@ public class ImageOptions extends DecodedImageOptions {
     private @Nullable ScalingUtils.ScaleType mPlaceholderScaleType;
     private @Nullable PointF mPlaceholderFocusPoint;
 
-    public @DrawableRes int mProgressRes;
-    public @Nullable Drawable mProgressDrawable;
-    public @Nullable ScalingUtils.ScaleType mProgressScaleType;
+    private @DrawableRes int mProgressRes;
+    private @Nullable Drawable mProgressDrawable;
+    private @Nullable ScalingUtils.ScaleType mProgressScaleType;
 
     private @DrawableRes int mErrorRes;
     private @Nullable ScalingUtils.ScaleType mErrorScaleType;
