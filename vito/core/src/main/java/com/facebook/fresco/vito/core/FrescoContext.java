@@ -14,6 +14,7 @@ import android.os.Build;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
+import com.facebook.fresco.vito.drawable.VitoDrawableFactoryImpl;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -90,7 +91,7 @@ public class FrescoContext {
   public synchronized VitoDrawableFactory getDrawableFactory(Resources resources) {
     if (mDrawableFactory == null) {
       mDrawableFactory =
-          new VitoDrawableFactory(
+          new VitoDrawableFactoryImpl(
               resources, getImagePipelineFactory().getAnimatedDrawableFactory(null));
     }
     return mDrawableFactory;
