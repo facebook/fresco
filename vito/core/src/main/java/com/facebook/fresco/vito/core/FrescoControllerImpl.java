@@ -303,7 +303,7 @@ public class FrescoControllerImpl implements FrescoController {
     }
   }
 
-  private DataSource<CloseableReference<CloseableImage>> fireOffRequest(FrescoState frescoState) {
+  protected DataSource<CloseableReference<CloseableImage>> fireOffRequest(FrescoState frescoState) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#fireOffRequest");
     }
