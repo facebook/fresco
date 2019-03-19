@@ -98,8 +98,14 @@ dependencies {
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
     // Litho
+    compileOnly "com.facebook.litho:litho-annotations:${versions.litho}"
     implementation "com.facebook.litho:litho-core:${versions.litho}"
     implementation "com.facebook.litho:litho-widget:${versions.litho}"
+    // Litho Sections
+    implementation "com.facebook.litho:litho-sections-core:${versions.litho}"
+    implementation "com.facebook.litho:litho-sections-widget:${versions.litho}"
+    compileOnly "com.facebook.litho:litho-sections-annotations:${versions.litho}"
+    annotationProcessor "com.facebook.litho:litho-sections-processor:${versions.litho}"
 
     // Experimental Fresco Vito
     implementation project(':vito:core')

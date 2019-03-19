@@ -148,6 +148,8 @@
   <string name="vito_litho_simple">Simple Litho example</string>
   <string name="vito_litho_simple_help">Experimental Fresco Vito Litho component.</string>
 
+  <string name="vito_litho_sections">Litho Sections (RecyclerView)</string>
+
   <!-- Preferences -->
 
   <string name="preferences_category_cache">Cache</string>

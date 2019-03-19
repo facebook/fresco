@@ -56,6 +56,7 @@ import com.facebook.fresco.samples.showcase.imagepipeline.PartialRequestFragment
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
+import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoSectionsFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoSimpleFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -234,6 +235,9 @@ public class MainActivity extends AppCompatActivity
         // Experimental Fresco Vito samples
       case R.id.nav_vito_litho_simple:
         fragment = new FrescoVitoLithoSimpleFragment();
+        break;
+      case R.id.nav_vito_litho_sections:
+        fragment = new FrescoVitoLithoSectionsFragment();
         break;
 
       // More
