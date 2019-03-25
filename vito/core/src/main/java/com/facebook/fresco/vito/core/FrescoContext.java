@@ -38,7 +38,7 @@ public class FrescoContext {
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
   private final FrescoExperiments mExperiments;
   private final @Nullable ImageListener mGlobalImageListener;
-  private final FrescoController mController = new FrescoControllerImpl(this);
+  private final FrescoController mController;
   private final Hierarcher mHierarcher;
   private final Executor mUiThreadExecutor;
 
@@ -47,6 +47,20 @@ public class FrescoContext {
   private @Nullable ImageDecodeOptions mCircularImageDecodeOptions;
   private @Nullable ImageDecodeOptions mCircularImageDecodeOptionsAntiAliased;
 
+  public FrescoContext(
+      FrescoController controller,
+      Hierarcher hierarcher,
+      @Nullable CallerContextVerifier callerContextVerifier,
+      FrescoExperiments frescoExperiments,
+      Executor uiThreadExecutor,
+      @Nullable ImageListener globalImageListener) {
+    mController = controller;
+    mHierarcher = hierarcher;
+    mCallerContextVerifier = callerContextVerifier;
+    mExperiments = frescoExperiments;
+    mUiThreadExecutor = uiThreadExecutor;
+    mGlobalImageListener = globalImageListener;
+  }
 
   public FrescoContext(
       Hierarcher hierarcher,
@@ -54,6 +68,7 @@ public class FrescoContext {
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
       @Nullable ImageListener globalImageListener) {
+    mController = new FrescoControllerImpl(this);
     mHierarcher = hierarcher;
     mCallerContextVerifier = callerContextVerifier;
     mExperiments = frescoExperiments;
