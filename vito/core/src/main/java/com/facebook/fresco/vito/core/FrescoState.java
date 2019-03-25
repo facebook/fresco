@@ -31,8 +31,6 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FrescoState
     implements DataSubscriber<CloseableReference<CloseableImage>>,
@@ -46,7 +44,7 @@ public class FrescoState
   private final @Nullable Object mCallerContext;
   private final @Nullable CacheKey mCacheKey;
 
-  private List<ImageListener> mListeners;
+  private @Nullable ImageListener mListener;
   private @Nullable ImageRequest mImageRequest;
   private @Px int mTargetWidthPx;
   private @Px int mTargetHeightPx;
@@ -90,7 +88,7 @@ public class FrescoState
       @Nullable CacheKey cacheKey,
       @Nullable CloseableReference<CloseableImage> cachedImage,
       Resources resources,
-      @Nullable ImageListener imageListener) {
+      @Nullable ImageListener listeners) {
     mId = id;
     mFrescoContext = frescoContext;
     mUri = uri;
@@ -100,17 +98,7 @@ public class FrescoState
     mCacheKey = cacheKey;
     mCachedImage = cachedImage;
     mResources = resources;
-    ImageListener globalListener = mFrescoContext.getGlobalImageListener();
-
-    if (globalListener != null || imageListener != null) {
-      mListeners = new ArrayList<>(2);
-      if (globalListener != null) {
-        mListeners.add(globalListener);
-      }
-      if (imageListener != null) {
-        mListeners.add(imageListener);
-      }
-    }
+    mListener = listeners;
   }
 
   public long getId() {
@@ -282,10 +270,8 @@ public class FrescoState
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoState#onSubmit");
     }
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onSubmit(id, callerContext);
-      }
+    if (mListener != null) {
+      mListener.onSubmit(id, callerContext);
     }
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
@@ -294,10 +280,8 @@ public class FrescoState
 
   @Override
   public void onPlaceholderSet(long id, @Nullable Drawable placeholder) {
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onPlaceholderSet(id, placeholder);
-      }
+    if (mListener != null) {
+      mListener.onPlaceholderSet(id, placeholder);
     }
   }
 
@@ -307,46 +291,36 @@ public class FrescoState
       @ImageOrigin int imageOrigin,
       @Nullable ImageInfo imageInfo,
       @Nullable Drawable drawable) {
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onFinalImageSet(id, imageOrigin, imageInfo, drawable);
-      }
+    if (mListener != null) {
+      mListener.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
     }
   }
 
   @Override
   public void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo) {
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onIntermediateImageSet(id, imageInfo);
-      }
+    if (mListener != null) {
+      mListener.onIntermediateImageSet(id, imageInfo);
     }
   }
 
   @Override
   public void onIntermediateImageFailed(long id, Throwable throwable) {
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onIntermediateImageFailed(id, throwable);
-      }
+    if (mListener != null) {
+      mListener.onIntermediateImageFailed(id, throwable);
     }
   }
 
   @Override
   public void onFailure(long id, @Nullable Drawable error, Throwable throwable) {
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onFailure(id, error, throwable);
-      }
+    if (mListener != null) {
+      mListener.onFailure(id, error, throwable);
     }
   }
 
   @Override
   public void onRelease(long id) {
-    if (mListeners != null) {
-      for (int i = 0, size = mListeners.size(); i < size; i++) {
-        mListeners.get(i).onRelease(id);
-      }
+    if (mListener != null) {
+      mListener.onRelease(id);
     }
   }
 

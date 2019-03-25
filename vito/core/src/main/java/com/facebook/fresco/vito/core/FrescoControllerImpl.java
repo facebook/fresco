@@ -18,6 +18,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.components.DeferredReleaser;
+import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -102,7 +103,8 @@ public class FrescoControllerImpl implements FrescoController {
               cacheKey,
               cachedImage,
               resources,
-              imageListener);
+              ForwardingImageListener.create(
+                  mFrescoContext.getGlobalImageListener(), imageListener));
       if (frescoExperiments.prepareActualImageWrapperInBackground()) {
         prepareActualImageInBackground(frescoState);
       }
