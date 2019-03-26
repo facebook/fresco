@@ -17,7 +17,7 @@ public class FrescoExperiments {
   }
 
   public boolean checkCacheInAttach() {
-    return false;
+    return true;
   }
 
   public int mountContentPoolSize() {
@@ -39,7 +39,7 @@ public class FrescoExperiments {
   }
 
   public boolean prepareActualImageWrapperInBackground() {
-    return false;
+    return true;
   }
 
   public boolean preparePlaceholderDrawableInBackground() {
@@ -47,7 +47,7 @@ public class FrescoExperiments {
   }
 
   public boolean keepRefToMainFetchDatasouce() {
-    return false;
+    return true;
   }
 
   public @Nullable Boolean prefetchToBitmapCache() {
@@ -55,15 +55,15 @@ public class FrescoExperiments {
   }
 
   public boolean closeDatasource() {
-    return false;
+    return true;
   }
 
   public boolean cacheImageInState() {
-    return true;
+    return false;
   }
 
   public boolean shouldDiffCallerContext() {
-    return true;
+    return false;
   }
 
   public void setupPropDiffingExperiment() {}
