@@ -204,104 +204,110 @@ public class FrescoControllerImpl implements FrescoController {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#onAttach");
     }
-    frescoState.setAttached(true);
+    try {
+      frescoState.setAttached(true);
 
-    final FrescoExperiments experiments = mFrescoContext.getExperiments();
+      final FrescoExperiments experiments = mFrescoContext.getExperiments();
 
-    final ImageRequest imageRequest = frescoState.getImageRequest();
-    if (frescoState.getImageOptions().shouldResizeToViewport()
-        && frescoState.getTargetWidthPx() > 0
-        && frescoState.getTargetHeightPx() > 0
-        && imageRequest != null
-        && imageRequest.getResizeOptions() == null) {
-      frescoState.setImageRequest(
-          ImageRequestBuilder.fromRequest(imageRequest)
-              .setResizeOptions(
-                  ResizeOptions.forDimensions(
-                      frescoState.getTargetWidthPx(), frescoState.getTargetHeightPx()))
-              .setResizingAllowedOverride(true)
-              .build());
-    }
-
-    if (experiments.closeDatasource()) {
-      DeferredReleaser.getInstance().cancelDeferredRelease(frescoState);
-    }
-
-    mFrescoContext
-        .getHierarcher()
-        .setupOverlayDrawable(
-            mFrescoContext,
-            frescoState.getFrescoDrawable(),
-            frescoState.getResources(),
-            frescoState.getImageOptions(),
-            frescoState.getOverlayDrawable());
-
-    frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
-
-    // Check if we have a cached image in the state
-    CloseableReference<CloseableImage> cachedImage = frescoState.getCachedImage();
-    if (CloseableReference.isValid(cachedImage)) {
-      frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-      displayResultOrError(frescoState, cachedImage);
-      return;
-    }
-
-    // Check if the image is in cache now
-    if (experiments.checkCacheInAttach()) {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->getCachedImage");
+      final ImageRequest imageRequest = frescoState.getImageRequest();
+      if (frescoState.getImageOptions().shouldResizeToViewport()
+          && frescoState.getTargetWidthPx() > 0
+          && frescoState.getTargetHeightPx() > 0
+          && imageRequest != null
+          && imageRequest.getResizeOptions() == null) {
+        frescoState.setImageRequest(
+            ImageRequestBuilder.fromRequest(imageRequest)
+                .setResizeOptions(
+                    ResizeOptions.forDimensions(
+                        frescoState.getTargetWidthPx(), frescoState.getTargetHeightPx()))
+                .setResizingAllowedOverride(true)
+                .build());
       }
-      try {
-        cachedImage = getCachedImage(frescoState.getCacheKey());
-      } finally {
-        if (FrescoSystrace.isTracing()) {
-          FrescoSystrace.endSection();
-        }
+
+      if (experiments.closeDatasource()) {
+        DeferredReleaser.getInstance().cancelDeferredRelease(frescoState);
       }
+
+      mFrescoContext
+          .getHierarcher()
+          .setupOverlayDrawable(
+              mFrescoContext,
+              frescoState.getFrescoDrawable(),
+              frescoState.getResources(),
+              frescoState.getImageOptions(),
+              frescoState.getOverlayDrawable());
+
+      frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
+
+      // Check if we have a cached image in the state
+      CloseableReference<CloseableImage> cachedImage = frescoState.getCachedImage();
       if (CloseableReference.isValid(cachedImage)) {
-        if (experiments.cacheImageInState()) {
-          frescoState.setCachedImage(cachedImage);
-        }
         frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
         displayResultOrError(frescoState, cachedImage);
         return;
       }
-    }
 
-    // Not in cache, set placeholder and fetch image
-    final Drawable placeholderDrawable;
-    if (frescoState.getPlaceholderDrawable() != null) {
-      placeholderDrawable = frescoState.getPlaceholderDrawable();
-    } else {
-      placeholderDrawable =
+      // Check if the image is in cache now
+      if (experiments.checkCacheInAttach()) {
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->getCachedImage");
+        }
+        try {
+          cachedImage = getCachedImage(frescoState.getCacheKey());
+        } finally {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
+        }
+        if (CloseableReference.isValid(cachedImage)) {
+          if (experiments.cacheImageInState()) {
+            frescoState.setCachedImage(cachedImage);
+          }
+          frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+          displayResultOrError(frescoState, cachedImage);
+          return;
+        }
+      }
+
+      // Not in cache, set placeholder and fetch image
+      final Drawable placeholderDrawable;
+      if (frescoState.getPlaceholderDrawable() != null) {
+        placeholderDrawable = frescoState.getPlaceholderDrawable();
+      } else {
+        placeholderDrawable =
+            mFrescoContext
+                .getHierarcher()
+                .buildPlaceholderDrawable(
+                    frescoState.getResources(), frescoState.getImageOptions());
+      }
+      frescoState.getFrescoDrawable().setImageDrawable(placeholderDrawable);
+
+      final Drawable progressDrawable =
           mFrescoContext
               .getHierarcher()
-              .buildPlaceholderDrawable(frescoState.getResources(), frescoState.getImageOptions());
-    }
-    frescoState.getFrescoDrawable().setImageDrawable(placeholderDrawable);
+              .buildProgressDrawable(frescoState.getResources(), frescoState.getImageOptions());
+      frescoState.getFrescoDrawable().setProgressDrawable(progressDrawable);
 
-    final Drawable progressDrawable =
-        mFrescoContext
-            .getHierarcher()
-            .buildProgressDrawable(frescoState.getResources(), frescoState.getImageOptions());
-    frescoState.getFrescoDrawable().setProgressDrawable(progressDrawable);
-
-    if (frescoState.getImageRequest() != null) {
-      if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->fetch");
+      if (frescoState.getImageRequest() != null) {
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->fetch");
+        }
+        try {
+          DataSource<CloseableReference<CloseableImage>> dataSource = fireOffRequest(frescoState);
+          dataSource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
+          if (experiments.keepRefToMainFetchDatasouce()) {
+            frescoState.setMainFetchDatasource(dataSource);
+          }
+        } finally {
+          if (FrescoSystrace.isTracing()) {
+            FrescoSystrace.endSection();
+          }
+        }
       }
-      DataSource<CloseableReference<CloseableImage>> dataSource = fireOffRequest(frescoState);
-      dataSource.subscribe(frescoState, mFrescoContext.getUiThreadExecutorService());
-      if (experiments.keepRefToMainFetchDatasouce()) {
-        frescoState.setMainFetchDatasource(dataSource);
-      }
+    } finally {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
       }
-    }
-
-    if (FrescoSystrace.isTracing()) {
-      FrescoSystrace.endSection();
     }
   }
 
