@@ -62,11 +62,11 @@ public class ImageOriginUtils {
         return ImageOrigin.NETWORK;
 
       case DataFetchProducer.PRODUCER_NAME:
-      case LocalFileFetchProducer.PRODUCER_NAME:
-      case LocalResourceFetchProducer.PRODUCER_NAME:
       case LocalAssetFetchProducer.PRODUCER_NAME:
       case LocalContentUriFetchProducer.PRODUCER_NAME:
       case LocalContentUriThumbnailFetchProducer.PRODUCER_NAME:
+      case LocalFileFetchProducer.PRODUCER_NAME:
+      case LocalResourceFetchProducer.PRODUCER_NAME:
       case LocalVideoThumbnailProducer.PRODUCER_NAME:
       case QualifiedResourceFetchProducer.PRODUCER_NAME:
         return ImageOrigin.LOCAL;
