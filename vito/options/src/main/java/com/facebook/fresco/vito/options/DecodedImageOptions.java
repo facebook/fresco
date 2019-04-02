@@ -28,6 +28,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
   private final @Nullable Postprocessor mPostprocessor;
   private final @Nullable ImageDecodeOptions mImageDecodeOptions;
   private final @Nullable RoundingOptions mRoundingOptions;
+  private final @Nullable BorderOptions mBorderOptions;
   private final @Nullable ScalingUtils.ScaleType mActualImageScaleType;
   private final @Nullable PointF mActualImageFocusPoint;
   private final boolean mLocalThumbnailPreviewsEnabled;
@@ -40,6 +41,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
     mPostprocessor = builder.mPostprocessor;
     mImageDecodeOptions = builder.mImageDecodeOptions;
     mRoundingOptions = builder.mRoundingOptions;
+    mBorderOptions = builder.mBorderOptions;
     mActualImageScaleType = builder.mActualImageScaleType;
     mActualImageFocusPoint = builder.mActualFocusPoint;
     mLocalThumbnailPreviewsEnabled = builder.mLocalThumbnailPreviewsEnabled;
@@ -64,6 +66,10 @@ public class DecodedImageOptions extends EncodedImageOptions {
 
   public @Nullable RoundingOptions getRoundingOptions() {
     return mRoundingOptions;
+  }
+
+  public @Nullable BorderOptions getBorderOptions() {
+    return mBorderOptions;
   }
 
   public @Nullable ScalingUtils.ScaleType getActualImageScaleType() {
@@ -98,6 +104,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
         || !Objects.equal(mPostprocessor, other.mPostprocessor)
         || !Objects.equal(mImageDecodeOptions, other.mImageDecodeOptions)
         || !Objects.equal(mRoundingOptions, other.mRoundingOptions)
+        || !Objects.equal(mBorderOptions, other.mBorderOptions)
         || !Objects.equal(mActualImageScaleType, other.mActualImageScaleType)
         || !Objects.equal(mActualImageFocusPoint, other.mActualImageFocusPoint)
         || mLocalThumbnailPreviewsEnabled != other.mLocalThumbnailPreviewsEnabled
@@ -115,6 +122,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
     result = 31 * result + (mPostprocessor != null ? mPostprocessor.hashCode() : 0);
     result = 31 * result + (mImageDecodeOptions != null ? mImageDecodeOptions.hashCode() : 0);
     result = 31 * result + (mRoundingOptions != null ? mRoundingOptions.hashCode() : 0);
+    result = 31 * result + (mBorderOptions != null ? mBorderOptions.hashCode() : 0);
     result = 31 * result + (mActualImageScaleType != null ? mActualImageScaleType.hashCode() : 0);
     result = 31 * result + (mActualImageFocusPoint != null ? mActualImageFocusPoint.hashCode() : 0);
     result = 31 * result + (mLocalThumbnailPreviewsEnabled ? 1 : 0);
@@ -135,6 +143,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
         .add("postprocessor", mPostprocessor)
         .add("imageDecodeOptions", mImageDecodeOptions)
         .add("roundingOptions", mRoundingOptions)
+        .add("borderOptions", mBorderOptions)
         .add("actualImageScaleType", mActualImageScaleType)
         .add("actualImageFocusPoint", mActualImageFocusPoint)
         .add("bitmapConfig", mBitmapConfig);
@@ -147,6 +156,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
     private @Nullable Postprocessor mPostprocessor;
     private @Nullable ImageDecodeOptions mImageDecodeOptions;
     private @Nullable RoundingOptions mRoundingOptions;
+    private @Nullable BorderOptions mBorderOptions;
     private @Nullable ScalingUtils.ScaleType mActualImageScaleType;
     private @Nullable PointF mActualFocusPoint;
     private boolean mLocalThumbnailPreviewsEnabled = false;
@@ -163,6 +173,7 @@ public class DecodedImageOptions extends EncodedImageOptions {
       mPostprocessor = defaultOptions.getPostprocessor();
       mImageDecodeOptions = defaultOptions.getImageDecodeOptions();
       mRoundingOptions = defaultOptions.getRoundingOptions();
+      mBorderOptions = defaultOptions.getBorderOptions();
       mActualImageScaleType = defaultOptions.getActualImageScaleType();
       mBitmapConfig = defaultOptions.getBitmapConfig();
     }
@@ -195,6 +206,11 @@ public class DecodedImageOptions extends EncodedImageOptions {
      */
     public T round(@Nullable RoundingOptions roundingOptions) {
       mRoundingOptions = roundingOptions;
+      return getThis();
+    }
+
+    public T borders(@Nullable BorderOptions borderOptions) {
+      mBorderOptions = borderOptions;
       return getThis();
     }
 
