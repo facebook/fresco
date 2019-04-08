@@ -14,18 +14,26 @@ package com.facebook.fresco.samples.showcase;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.common.logging.FLog;
+import com.facebook.common.memory.manager.NoOpDebugMemoryManager;
 import com.facebook.drawee.backends.pipeline.DraweeConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfData;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.flipper.android.AndroidFlipperClient;
 import com.facebook.flipper.android.utils.FlipperUtils;
 import com.facebook.flipper.core.FlipperClient;
+import com.facebook.flipper.perflogger.NoOpFlipperPerfLogger;
 import com.facebook.flipper.plugins.fresco.FrescoFlipperPlugin;
+import com.facebook.flipper.plugins.fresco.FrescoFlipperRequestListener;
 import com.facebook.flipper.plugins.inspector.DescriptorMapping;
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin;
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory;
+import com.facebook.imagepipeline.debug.FlipperImageTracker;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.facebook.imagepipeline.memory.BitmapCounterConfig;
@@ -44,26 +52,36 @@ import okhttp3.OkHttpClient;
  */
 public class ShowcaseApplication extends Application {
 
+  private FrescoFlipperPlugin frescoFlipperPlugin;
+  private static final FlipperImageTracker sFlipperImageTracker = new FlipperImageTracker();
+
   @Override
   public void onCreate() {
     super.onCreate();
     FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-    Set<RequestListener> listeners = new HashSet<>();
-    listeners.add(new RequestLoggingListener());
+    Set<RequestListener> requestListeners = new HashSet<>();
+    final ForwardingRequestListener forwardingRequestListener = new ForwardingRequestListener();
+    requestListeners.add(forwardingRequestListener);
+    requestListeners.add(new RequestLoggingListener());
 
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .addNetworkInterceptor(new StethoInterceptor())
         .build();
 
-    ImagePipelineConfig imagePipelineConfig =
+    ImagePipelineConfig.Builder imagePipelineConfigBuilder =
         OkHttpImagePipelineConfigFactory.newBuilder(this, okHttpClient)
-            .setRequestListeners(listeners)
+            .setRequestListeners(requestListeners)
             .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
             .setImageDecoderConfig(CustomImageFormatConfigurator.createImageDecoderConfig(this))
             .experiment()
-            .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true)
-            .build();
+            .setBitmapPrepareToDraw(true, 0, Integer.MAX_VALUE, true);
 
+    if (shouldEnableFlipper()) {
+      imagePipelineConfigBuilder.setCacheKeyFactory(
+          new FlipperCacheKeyFactory(sFlipperImageTracker));
+    }
+
+    ImagePipelineConfig imagePipelineConfig = imagePipelineConfigBuilder.build();
     ImagePipelineConfig.getDefaultImageRequestConfig().setProgressiveRenderingEnabled(true);
 
     DraweeConfig.Builder draweeConfigBuilder = DraweeConfig.newBuilder();
@@ -71,6 +89,24 @@ public class ShowcaseApplication extends Application {
 
     draweeConfigBuilder.setDebugOverlayEnabledSupplier(
         DebugOverlaySupplierSingleton.getInstance(getApplicationContext()));
+
+    if (shouldEnableFlipper()) {
+      draweeConfigBuilder.setImagePerfDataListener(
+          new ImagePerfDataListener() {
+            @Override
+            public void onImageLoadStatusUpdated(ImagePerfData imagePerfData, int imageLoadStatus) {
+              frescoFlipperPlugin
+                  .getFlipperImageTracker()
+                  .onImageLoadStatusUpdated(imagePerfData, imageLoadStatus);
+              frescoFlipperPlugin.onImageLoadStatusUpdated(imagePerfData, imageLoadStatus);
+            }
+
+            @Override
+            public void onImageVisibilityUpdated(ImagePerfData imagePerfData, int visibilityState) {
+              // nop
+            }
+          });
+    }
 
     BitmapCounterProvider.initialize(
         BitmapCounterConfig.newBuilder()
@@ -93,11 +129,25 @@ public class ShowcaseApplication extends Application {
             .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
             .build());
 
-    if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {
+    if (shouldEnableFlipper()) {
+      frescoFlipperPlugin =
+          new FrescoFlipperPlugin(
+              sFlipperImageTracker,
+              Fresco.getImagePipelineFactory().getPlatformBitmapFactory(),
+              null,
+              new NoOpDebugMemoryManager(),
+              new NoOpFlipperPerfLogger(),
+              null);
+      forwardingRequestListener.addRequestListener(
+          new FrescoFlipperRequestListener(frescoFlipperPlugin.getFlipperImageTracker()));
       final FlipperClient client = AndroidFlipperClient.getInstance(this);
       client.addPlugin(new InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()));
-      client.addPlugin(new FrescoFlipperPlugin());
+      client.addPlugin(frescoFlipperPlugin);
       client.start();
     }
+  }
+
+  private boolean shouldEnableFlipper() {
+    return BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this);
   }
 }
