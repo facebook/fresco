@@ -228,6 +228,10 @@ public class FrescoControllerImpl implements FrescoController {
         DeferredReleaser.getInstance().cancelDeferredRelease(frescoState);
       }
 
+      if (!frescoState.getFrescoDrawable().isDefaultLayerIsOn()) {
+        frescoState.getFrescoDrawable().reset();
+      }
+
       mFrescoContext
           .getHierarcher()
           .setupOverlayDrawable(
@@ -243,7 +247,7 @@ public class FrescoControllerImpl implements FrescoController {
       CloseableReference<CloseableImage> cachedImage = frescoState.getCachedImage();
       if (CloseableReference.isValid(cachedImage)) {
         frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-        displayResultOrError(frescoState, cachedImage);
+        displayResultOrError(frescoState, cachedImage, true);
         return;
       }
 
@@ -264,7 +268,7 @@ public class FrescoControllerImpl implements FrescoController {
             frescoState.setCachedImage(cachedImage);
           }
           frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-          displayResultOrError(frescoState, cachedImage);
+          displayResultOrError(frescoState, cachedImage, true);
           return;
         }
       }
@@ -372,7 +376,7 @@ public class FrescoControllerImpl implements FrescoController {
       try {
         frescoState.setImageFetched(true);
         if (frescoState.isAttached()) {
-          displayResultOrError(frescoState, result);
+          displayResultOrError(frescoState, result, false);
         }
       } finally {
         CloseableReference.closeSafely(result);
@@ -440,7 +444,9 @@ public class FrescoControllerImpl implements FrescoController {
 
   @VisibleForTesting
   void displayResultOrError(
-      FrescoState frescoState, @Nullable CloseableReference<CloseableImage> result) {
+      FrescoState frescoState,
+      @Nullable CloseableReference<CloseableImage> result,
+      boolean wasImmediate) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#displayResultOrError");
     }
@@ -466,7 +472,8 @@ public class FrescoControllerImpl implements FrescoController {
                   frescoState.getResources(),
                   frescoState.getImageOptions(),
                   result,
-                  frescoState.getActualImageWrapper());
+                  frescoState.getActualImageWrapper(),
+                  wasImmediate);
 
       frescoState.onFinalImageSet(
           frescoState.getId(), frescoState.getImageOrigin(), closeableImage, actualDrawable);

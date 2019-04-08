@@ -67,6 +67,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final boolean mResizeToViewport;
 
+  private final int mFadeDurationMs;
+
   public ImageOptions(Builder builder) {
     super(builder);
     mPlaceholderRes = builder.mPlaceholderRes;
@@ -87,6 +89,8 @@ public class ImageOptions extends DecodedImageOptions {
     mActualImageColorFilter = builder.mActualImageColorFilter;
 
     mResizeToViewport = builder.mResizeToViewport;
+
+    mFadeDurationMs = builder.mFadeDurationMs;
   }
 
   public @DrawableRes int getPlaceholderRes() {
@@ -141,6 +145,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mResizeToViewport;
   }
 
+  public int getFadeDurationMs() {
+    return mFadeDurationMs;
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -160,7 +168,8 @@ public class ImageOptions extends DecodedImageOptions {
         || mProgressDrawable != other.mProgressDrawable
         || mProgressScaleType != other.mProgressScaleType
         || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
-        || mResizeToViewport != other.mResizeToViewport) {
+        || mResizeToViewport != other.mResizeToViewport
+        || mFadeDurationMs != other.mFadeDurationMs) {
       return false;
     }
     return equalDecodedOptions(other);
@@ -182,6 +191,7 @@ public class ImageOptions extends DecodedImageOptions {
     result =
         31 * result + (mActualImageColorFilter != null ? mActualImageColorFilter.hashCode() : 0);
     result = 31 * result + (mResizeToViewport ? 1 : 0);
+    result = 31 * result + mFadeDurationMs;
     return result;
   }
 
@@ -229,6 +239,8 @@ public class ImageOptions extends DecodedImageOptions {
 
     private boolean mResizeToViewport;
 
+    private int mFadeDurationMs;
+
     private Builder() {
       super();
     }
@@ -253,6 +265,8 @@ public class ImageOptions extends DecodedImageOptions {
       mOverlayRes = defaultOptions.getOverlayRes();
 
       mResizeToViewport = defaultOptions.shouldResizeToViewport();
+
+      mFadeDurationMs = defaultOptions.getFadeDurationMs();
     }
 
     public Builder placeholder(@Nullable Drawable placeholder) {
@@ -351,6 +365,16 @@ public class ImageOptions extends DecodedImageOptions {
      */
     public Builder resizeToViewport(boolean resizeToViewport) {
       mResizeToViewport = resizeToViewport;
+      return getThis();
+    }
+
+    /**
+     * Sets the fade duration.
+     *
+     * @param fadeInDurationMs
+     */
+    public Builder fadeDurationMs(int fadeInDurationMs) {
+      mFadeDurationMs = fadeInDurationMs;
       return getThis();
     }
 

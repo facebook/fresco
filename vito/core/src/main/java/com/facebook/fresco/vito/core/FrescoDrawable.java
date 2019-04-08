@@ -19,14 +19,19 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
 
   @VisibleForTesting @Nullable CloseableReference<CloseableImage> mImageReference;
 
-  private static final int LAYER_COUNT = 3;
+  private static final int LAYER_COUNT = 4;
 
-  private static final int IMAGE_DRAWABLE_INDEX = 0;
-  private static final int PROGRESS_DRAWABLE_INDEX = 1;
-  private static final int OVERLAY_DRAWABLE_INDEX = 2;
+  private static final int PLACEHOLDER_DRAWABLE_INDEX = 0;
+  private static final int IMAGE_DRAWABLE_INDEX = 1;
+  private static final int PROGRESS_DRAWABLE_INDEX = 2;
+  private static final int OVERLAY_DRAWABLE_INDEX = 3;
 
   public FrescoDrawable() {
     super(new Drawable[LAYER_COUNT], true);
+  }
+
+  public FrescoDrawable(boolean allLayersVisible) {
+    super(new Drawable[LAYER_COUNT], allLayersVisible);
   }
 
   public @Nullable Drawable setImage(
@@ -47,6 +52,28 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
 
   public @Nullable Drawable setProgressDrawable(@Nullable Drawable drawable) {
     return setDrawable(PROGRESS_DRAWABLE_INDEX, drawable);
+  }
+
+  public @Nullable Drawable setPlaceholderDrawable(@Nullable Drawable drawable) {
+    return setDrawable(PLACEHOLDER_DRAWABLE_INDEX, drawable);
+  }
+
+  public void fadeInImage(int durationMs) {
+    setTransitionDuration(durationMs);
+    beginBatchMode();
+    fadeOutLayer(PLACEHOLDER_DRAWABLE_INDEX);
+    fadeOutLayer(PROGRESS_DRAWABLE_INDEX);
+    fadeInLayer(IMAGE_DRAWABLE_INDEX);
+    endBatchMode();
+  }
+
+  public void showImageImmediately() {
+    hideLayerImmediately(PLACEHOLDER_DRAWABLE_INDEX);
+    showLayerImmediately(IMAGE_DRAWABLE_INDEX);
+  }
+
+  public void showOverlayImmediately() {
+    showLayerImmediately(OVERLAY_DRAWABLE_INDEX);
   }
 
   @Override

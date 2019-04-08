@@ -121,7 +121,8 @@ public class HierarcherImpl implements Hierarcher {
       Resources resources,
       ImageOptions imageOptions,
       CloseableReference<CloseableImage> closeableImage,
-      @Nullable ForwardingDrawable actualImageWrapperDrawable) {
+      @Nullable ForwardingDrawable actualImageWrapperDrawable,
+      boolean wasImmediate) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
     }
@@ -136,6 +137,16 @@ public class HierarcherImpl implements Hierarcher {
       }
       actualImageWrapperDrawable.setCurrent(actualDrawable != null ? actualDrawable : NOP_DRAWABLE);
       frescoDrawable.setImage(actualImageWrapperDrawable, closeableImage);
+
+      if (!frescoDrawable.isDefaultLayerIsOn()) {
+        if (wasImmediate || imageOptions.getFadeDurationMs() <= 0) {
+          frescoDrawable.showImageImmediately();
+        } else {
+          frescoDrawable.fadeInImage(imageOptions.getFadeDurationMs());
+        }
+      } else {
+        frescoDrawable.setPlaceholderDrawable(null);
+      }
       return actualDrawable;
     } finally {
       if (FrescoSystrace.isTracing()) {
@@ -155,5 +166,6 @@ public class HierarcherImpl implements Hierarcher {
       overlayDrawable = buildOverlayDrawable(resources, imageOptions);
     }
     frescoDrawable.setOverlayDrawable(overlayDrawable);
+    frescoDrawable.showOverlayImmediately();
   }
 }
