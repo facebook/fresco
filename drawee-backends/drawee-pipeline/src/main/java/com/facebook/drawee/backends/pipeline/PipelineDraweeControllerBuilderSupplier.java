@@ -10,6 +10,7 @@ package com.facebook.drawee.backends.pipeline;
 import android.content.Context;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.drawee.components.DeferredReleaser;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -24,6 +25,7 @@ public class PipelineDraweeControllerBuilderSupplier implements
   private final ImagePipeline mImagePipeline;
   private final PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
   private final Set<ControllerListener> mBoundControllerListeners;
+  private final @Nullable ImagePerfDataListener mDefaultImagePerfDataListener;
 
   public PipelineDraweeControllerBuilderSupplier(Context context) {
     this(context, null);
@@ -68,14 +70,16 @@ public class PipelineDraweeControllerBuilderSupplier implements
             ? draweeConfig.getDebugOverlayEnabledSupplier()
             : null);
     mBoundControllerListeners = boundControllerListeners;
+
+    mDefaultImagePerfDataListener =
+        draweeConfig != null ? draweeConfig.getImagePerfDataListener() : null;
   }
 
   @Override
   public PipelineDraweeControllerBuilder get() {
-    return new PipelineDraweeControllerBuilder(
-        mContext,
-        mPipelineDraweeControllerFactory,
-        mImagePipeline,
-        mBoundControllerListeners);
+    PipelineDraweeControllerBuilder pipelineDraweeControllerBuilder =
+        new PipelineDraweeControllerBuilder(
+            mContext, mPipelineDraweeControllerFactory, mImagePipeline, mBoundControllerListeners);
+    return pipelineDraweeControllerBuilder.setPerfDataListener(mDefaultImagePerfDataListener);
   }
 }
