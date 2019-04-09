@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import com.facebook.cache.disk.DiskCacheConfig;
+import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;
@@ -94,6 +95,7 @@ public class ImagePipelineConfig {
   @Nullable private final ImageDecoderConfig mImageDecoderConfig;
   private final ImagePipelineExperiments mImagePipelineExperiments;
   private final boolean mDiskCacheEnabled;
+  @Nullable private final CallerContextVerifier mCallerContextVerifier;
 
   private static DefaultImageRequestConfig
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
@@ -193,6 +195,7 @@ public class ImagePipelineConfig {
             ? new DefaultExecutorSupplier(numCpuBoundThreads)
             : builder.mExecutorSupplier;
     mDiskCacheEnabled = builder.mDiskCacheEnabled;
+    mCallerContextVerifier = builder.mCallerContextVerifier;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -362,6 +365,11 @@ public class ImagePipelineConfig {
     return mImageDecoderConfig;
   }
 
+  @Nullable
+  public CallerContextVerifier getCallerContextVerifier() {
+    return mCallerContextVerifier;
+  }
+
   public ImagePipelineExperiments getExperiments() {
     return mImagePipelineExperiments;
   }
@@ -445,6 +453,7 @@ public class ImagePipelineConfig {
     private final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
     private boolean mDiskCacheEnabled = true;
+    private CallerContextVerifier mCallerContextVerifier;
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -603,6 +612,11 @@ public class ImagePipelineConfig {
 
     public Builder setImageDecoderConfig(ImageDecoderConfig imageDecoderConfig) {
       mImageDecoderConfig = imageDecoderConfig;
+      return this;
+    }
+
+    public Builder setCallerContextVerifier(CallerContextVerifier callerContextVerifier) {
+      mCallerContextVerifier = callerContextVerifier;
       return this;
     }
 

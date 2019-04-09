@@ -7,8 +7,8 @@
 
 package com.facebook.fresco.vito.provider;
 
+import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
-import com.facebook.fresco.vito.core.CallerContextVerifier;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.HierarcherImpl;

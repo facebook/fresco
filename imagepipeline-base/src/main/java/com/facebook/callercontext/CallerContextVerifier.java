@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.fresco.vito.core;
+package com.facebook.callercontext;
 
-import androidx.annotation.Nullable;
+import javax.annotation.Nullable;
 
 /** Verifies CallerContext */
 public interface CallerContextVerifier {

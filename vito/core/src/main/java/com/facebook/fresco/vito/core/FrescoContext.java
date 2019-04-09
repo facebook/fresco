@@ -11,6 +11,7 @@ import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;

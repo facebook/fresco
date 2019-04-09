@@ -89,18 +89,20 @@ public class ImagePipelineTest {
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
     mThreadHandoffProducerQueue= mock(ThreadHandoffProducerQueue.class);
-    mImagePipeline = new ImagePipeline(
-        mProducerSequenceFactory,
-        Sets.newHashSet(mRequestListener1, mRequestListener2),
-        mPrefetchEnabledSupplier,
-        mBitmapMemoryCache,
-        mEncodedMemoryCache,
-        mMainDiskStorageCache,
-        mSmallImageDiskStorageCache,
-        mCacheKeyFactory,
-        mThreadHandoffProducerQueue,
-        mSuppressBitmapPrefetchingSupplier,
-        mLazyDataSourceSupplier);
+    mImagePipeline =
+        new ImagePipeline(
+            mProducerSequenceFactory,
+            Sets.newHashSet(mRequestListener1, mRequestListener2),
+            mPrefetchEnabledSupplier,
+            mBitmapMemoryCache,
+            mEncodedMemoryCache,
+            mMainDiskStorageCache,
+            mSmallImageDiskStorageCache,
+            mCacheKeyFactory,
+            mThreadHandoffProducerQueue,
+            mSuppressBitmapPrefetchingSupplier,
+            mLazyDataSourceSupplier,
+            null);
 
     when(mImageRequest.getProgressiveRenderingEnabled()).thenReturn(true);
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);
