@@ -141,6 +141,10 @@
             android:title="@string/vito_litho_simple"
             />
         <item
+            android:id="@+id/nav_vito_image_options_config"
+            android:title="@string/vito_litho_image_options_config"
+            />
+        <item
             android:id="@+id/nav_vito_litho_sections"
             android:title="@string/vito_litho_sections"
             />

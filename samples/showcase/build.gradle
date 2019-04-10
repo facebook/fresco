@@ -123,8 +123,10 @@ dependencies {
     androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
     androidTestImplementation "junit:junit:${JUNIT_VERSION}"
 
-    implementation('com.facebook.flipper:flipper:0.17.0'){
+    implementation('com.facebook.flipper:flipper:0.17.0') {
         exclude group: 'com.facebook.fresco'
     }
     implementation project(':tools:flipper')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
 }
