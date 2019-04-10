@@ -11,7 +11,6 @@
  */
 package com.facebook.fresco.samples.showcase.vito
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,9 +21,7 @@ import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.SpinnerUtils.setupWithList
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.litho.FrescoVitoImage
-import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
-import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
 import kotlinx.android.synthetic.main.fragment_vito_image_options_config.*
@@ -37,18 +34,6 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     private var uri: Uri? = null
     private var componentContext: ComponentContext? = null
     private var lithoView: LithoView? = null
-
-    private val roundingOptions = listOf(
-            "no rounding" to null,
-            "as circle" to RoundingOptions.asCircle(),
-            "corner radius" to RoundingOptions.forCornerRadius(20f),
-            "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f))
-
-    private val borderOptions = listOf(
-            "no border" to null,
-            "red border" to BorderOptions.create(Color.RED, 20f),
-            "blue border" to BorderOptions.create(Color.BLUE, 40f)
-    )
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -64,11 +49,14 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build()))
         container.addView(lithoView)
 
-        spinner_rounding.setupWithList(roundingOptions) {
+        spinner_rounding.setupWithList(VitoSpinners.roundingOptions) {
             refresh(imageOptionsBuilder.round(it))
         }
-        spinner_border.setupWithList(borderOptions) {
+        spinner_border.setupWithList(VitoSpinners.borderOptions) {
             refresh(imageOptionsBuilder.borders(it))
+        }
+        spinner_scale_type.setupWithList(VitoSpinners.scaleTypes) {
+            refresh(imageOptionsBuilder.scale(it.first).focusPoint(it.second))
         }
     }
 
