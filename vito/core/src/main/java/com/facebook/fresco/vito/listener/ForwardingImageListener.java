@@ -34,14 +34,18 @@ public class ForwardingImageListener implements ImageListener {
   @Override
   public void onSubmit(long id, Object callerContext) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onSubmit(id, callerContext);
+      if (mListeners[i] != null) {
+        mListeners[i].onSubmit(id, callerContext);
+      }
     }
   }
 
   @Override
   public void onPlaceholderSet(long id, @Nullable Drawable placeholder) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onPlaceholderSet(id, placeholder);
+      if (mListeners[i] != null) {
+        mListeners[i].onPlaceholderSet(id, placeholder);
+      }
     }
   }
 
@@ -52,35 +56,45 @@ public class ForwardingImageListener implements ImageListener {
       @Nullable ImageInfo imageInfo,
       @Nullable Drawable drawable) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onFinalImageSet(id, imageOrigin, imageInfo, drawable);
+      if (mListeners[i] != null) {
+        mListeners[i].onFinalImageSet(id, imageOrigin, imageInfo, drawable);
+      }
     }
   }
 
   @Override
   public void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onIntermediateImageSet(id, imageInfo);
+      if (mListeners[i] != null) {
+        mListeners[i].onIntermediateImageSet(id, imageInfo);
+      }
     }
   }
 
   @Override
   public void onIntermediateImageFailed(long id, Throwable throwable) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onIntermediateImageFailed(id, throwable);
+      if (mListeners[i] != null) {
+        mListeners[i].onIntermediateImageFailed(id, throwable);
+      }
     }
   }
 
   @Override
   public void onFailure(long id, @Nullable Drawable error, Throwable throwable) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onFailure(id, error, throwable);
+      if (mListeners[i] != null) {
+        mListeners[i].onFailure(id, error, throwable);
+      }
     }
   }
 
   @Override
   public void onRelease(long id) {
     for (int i = 0; i < mListeners.length; i++) {
-      mListeners[i].onRelease(id);
+      if (mListeners[i] != null) {
+        mListeners[i].onRelease(id);
+      }
     }
   }
 }

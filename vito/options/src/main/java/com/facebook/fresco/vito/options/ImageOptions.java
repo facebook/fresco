@@ -69,6 +69,8 @@ public class ImageOptions extends DecodedImageOptions {
 
   private final int mFadeDurationMs;
 
+  private final boolean mAutoPlay;
+
   public ImageOptions(Builder builder) {
     super(builder);
     mPlaceholderRes = builder.mPlaceholderRes;
@@ -91,6 +93,8 @@ public class ImageOptions extends DecodedImageOptions {
     mResizeToViewport = builder.mResizeToViewport;
 
     mFadeDurationMs = builder.mFadeDurationMs;
+
+    mAutoPlay = builder.mAutoPlay;
   }
 
   public @DrawableRes int getPlaceholderRes() {
@@ -141,6 +145,10 @@ public class ImageOptions extends DecodedImageOptions {
     return mActualImageColorFilter;
   }
 
+  public boolean shouldAutoPlay() {
+    return mAutoPlay;
+  }
+
   public boolean shouldResizeToViewport() {
     return mResizeToViewport;
   }
@@ -169,7 +177,8 @@ public class ImageOptions extends DecodedImageOptions {
         || mProgressScaleType != other.mProgressScaleType
         || !Objects.equal(mActualImageColorFilter, other.mActualImageColorFilter)
         || mResizeToViewport != other.mResizeToViewport
-        || mFadeDurationMs != other.mFadeDurationMs) {
+        || mFadeDurationMs != other.mFadeDurationMs
+        || mAutoPlay != other.mAutoPlay) {
       return false;
     }
     return equalDecodedOptions(other);
@@ -192,6 +201,7 @@ public class ImageOptions extends DecodedImageOptions {
         31 * result + (mActualImageColorFilter != null ? mActualImageColorFilter.hashCode() : 0);
     result = 31 * result + (mResizeToViewport ? 1 : 0);
     result = 31 * result + mFadeDurationMs;
+    result = 31 * result + (mAutoPlay ? 1 : 0);
     return result;
   }
 
@@ -215,7 +225,8 @@ public class ImageOptions extends DecodedImageOptions {
         .add("errorFocusPoint", mErrorFocusPoint)
         .add("actualImageColorFilter", mActualImageColorFilter)
         .add("overlayRes", mOverlayRes)
-        .add("resizeToViewport", mResizeToViewport);
+        .add("resizeToViewport", mResizeToViewport)
+        .add("autoPlay", mAutoPlay);
   }
 
   public static final class Builder extends DecodedImageOptions.Builder<Builder> {
@@ -238,6 +249,7 @@ public class ImageOptions extends DecodedImageOptions {
     private @DrawableRes int mOverlayRes;
 
     private boolean mResizeToViewport;
+    private boolean mAutoPlay;
 
     private int mFadeDurationMs;
 
@@ -357,10 +369,20 @@ public class ImageOptions extends DecodedImageOptions {
     }
 
     /**
-     * Will resize bitmap to viewport dimensions.
-     * Works only if {@link com.facebook.imagepipeline.common.ResizeOptions} are not set.
-     * Works only with Vito for now.
+     * Turns on autoplay for animated images
+     *
+     * @param autoPlay whether to enable autoplay for animated images
+     */
+    public Builder autoPlay(final boolean autoPlay) {
+      mAutoPlay = autoPlay;
+      return getThis();
+    }
+
+    /**
+     * Will resize bitmap to viewport dimensions. Works only if {@link
+     * com.facebook.imagepipeline.common.ResizeOptions} are not set. Works only with Vito for now.
      * Please do not use unless you messaged me for details: @defhlt
+     *
      * @param resizeToViewport whether to enable this optimization
      */
     public Builder resizeToViewport(boolean resizeToViewport) {
