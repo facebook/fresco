@@ -411,7 +411,8 @@ public class PipelineDraweeController
     super.onImageLoadedFromCacheImmediately(id, cachedImage);
     synchronized (this) {
       if (mImageOriginListener != null) {
-        mImageOriginListener.onImageLoaded(id, ImageOrigin.MEMORY_BITMAP, true);
+        mImageOriginListener.onImageLoaded(
+            id, ImageOrigin.MEMORY_BITMAP, true, "PipelineDraweeController");
       }
     }
   }

@@ -30,6 +30,7 @@ public class ImagePerfData {
   private final long mImageRequestStartTimeMs;
   private final long mImageRequestEndTimeMs;
   private final @ImageOrigin int mImageOrigin;
+  private final @Nullable String mUltimateProducerName;
   private final boolean mIsPrefetch;
 
   private final int mOnScreenWidthPx;
@@ -56,6 +57,7 @@ public class ImagePerfData {
       long imageRequestStartTimeMs,
       long imageRequestEndTimeMs,
       @ImageOrigin int imageOrigin,
+      @Nullable String ultimateProducerName,
       boolean isPrefetch,
       int onScreenWidthPx,
       int onScreenHeightPx,
@@ -76,6 +78,7 @@ public class ImagePerfData {
     mImageRequestStartTimeMs = imageRequestStartTimeMs;
     mImageRequestEndTimeMs = imageRequestEndTimeMs;
     mImageOrigin = imageOrigin;
+    mUltimateProducerName = ultimateProducerName;
     mIsPrefetch = isPrefetch;
     mOnScreenWidthPx = onScreenWidthPx;
     mOnScreenHeightPx = onScreenHeightPx;
@@ -138,6 +141,11 @@ public class ImagePerfData {
     return mImageOrigin;
   }
 
+  @Nullable
+  public String getUltimateProducerName() {
+    return mUltimateProducerName;
+  }
+
   public boolean isPrefetch() {
     return mIsPrefetch;
   }
@@ -194,6 +202,7 @@ public class ImagePerfData {
         .add("start time", mImageRequestStartTimeMs)
         .add("end time", mImageRequestEndTimeMs)
         .add("origin", ImageOriginUtils.toString(mImageOrigin))
+        .add("ultimateProducerName", mUltimateProducerName)
         .add("prefetch", mIsPrefetch)
         .add("caller context", mCallerContext)
         .add("image request", mImageRequest)

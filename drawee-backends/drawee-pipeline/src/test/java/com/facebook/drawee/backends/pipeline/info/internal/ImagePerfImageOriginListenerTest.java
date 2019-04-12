@@ -40,7 +40,7 @@ public class ImagePerfImageOriginListenerTest {
   @Test
   public void testOnImageLoaded() {
 
-    mListener.onImageLoaded(CONTROLLER_ID, ImageOrigin.NETWORK, true);
+    mListener.onImageLoaded(CONTROLLER_ID, ImageOrigin.NETWORK, true, null);
 
     verify(mImagePerfState).setImageOrigin(eq(ImageOrigin.NETWORK));
     verify(mImagePerfMonitor)
