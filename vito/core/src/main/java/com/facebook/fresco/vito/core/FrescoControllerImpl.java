@@ -391,7 +391,12 @@ public class FrescoControllerImpl implements FrescoController {
   @Override
   public void onFailure(
       FrescoState frescoState, DataSource<CloseableReference<CloseableImage>> dataSource) {
-    displayErrorImage(frescoState);
+    Drawable errorDrawable =
+        mFrescoContext
+            .getHierarcher()
+            .buildErrorDrawable(frescoState.getResources(), frescoState.getImageOptions());
+    displayErrorImage(frescoState, errorDrawable);
+    frescoState.onFailure(frescoState.getId(), errorDrawable, dataSource.getFailureCause());
   }
 
   @Override
@@ -422,7 +427,7 @@ public class FrescoControllerImpl implements FrescoController {
   }
 
   @VisibleForTesting
-  void displayErrorImage(FrescoState frescoState) {
+  void displayErrorImage(FrescoState frescoState, @Nullable Drawable errorDrawable) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#displayErrorImage");
     }
@@ -432,10 +437,6 @@ public class FrescoControllerImpl implements FrescoController {
       }
       frescoState.getFrescoDrawable().setProgressDrawable(null);
 
-      Drawable errorDrawable =
-          mFrescoContext
-              .getHierarcher()
-              .buildErrorDrawable(frescoState.getResources(), frescoState.getImageOptions());
       if (errorDrawable != null) {
         frescoState.getFrescoDrawable().setImageDrawable(errorDrawable);
       }
@@ -461,12 +462,17 @@ public class FrescoControllerImpl implements FrescoController {
 
       CloseableImage closeableImage;
       if (result == null || (closeableImage = result.get()) == null) {
-        displayErrorImage(frescoState);
+        Drawable errorDrawable =
+            mFrescoContext
+                .getHierarcher()
+                .buildErrorDrawable(frescoState.getResources(), frescoState.getImageOptions());
+        displayErrorImage(frescoState, errorDrawable);
+        frescoState.onFailure(
+            frescoState.getId(), errorDrawable, new RuntimeException("CloseableImage was null"));
         return;
       }
 
       frescoState.getFrescoDrawable().setProgressDrawable(null);
-
       Drawable actualDrawable =
           mFrescoContext
               .getHierarcher()
