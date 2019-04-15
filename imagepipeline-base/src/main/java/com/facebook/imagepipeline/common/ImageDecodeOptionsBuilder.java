@@ -8,9 +8,11 @@
 package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
+import android.graphics.ColorSpace;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Builder for {@link ImageDecodeOptions}.
@@ -26,6 +28,7 @@ public class ImageDecodeOptionsBuilder {
   private Bitmap.Config mBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
   private @Nullable BitmapTransformation mBitmapTransformation;
+  private @Nullable ColorSpace mColorSpace;
 
   public ImageDecodeOptionsBuilder() {
   }
@@ -43,8 +46,8 @@ public class ImageDecodeOptionsBuilder {
     mForceStaticImage = options.forceStaticImage;
     mBitmapConfig = options.bitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
-    mTransformToSRGB = options.transformToSRGB;
     mBitmapTransformation = options.bitmapTransformation;
+    mColorSpace = options.colorSpace;
     return this;
   }
 
@@ -198,26 +201,6 @@ public class ImageDecodeOptionsBuilder {
   }
 
   /**
-   * Gets whether to allow or not an image color space to be transformed into sRGB.
-   *
-   * @return whether to allow the color space to be transformed into sRGB.
-   */
-  public boolean getTransformToSRGB() {
-    return mTransformToSRGB;
-  }
-
-  /**
-   * Sets whether to allow or not the color space transformation of the image.
-   *
-   * @param transformToSRGB whether to allow the color space to be transformed to sRGB
-   * @return this builder
-   */
-  public ImageDecodeOptionsBuilder setTransformToSRGB(boolean transformToSRGB) {
-    mTransformToSRGB = transformToSRGB;
-    return this;
-  }
-
-  /**
    * Set a custom in-place bitmap transformation that is applied immediately after decoding.
    *
    * @param bitmapTransformation the transformation to use
@@ -233,6 +216,25 @@ public class ImageDecodeOptionsBuilder {
   public BitmapTransformation getBitmapTransformation() {
     return mBitmapTransformation;
   }
+
+  /**
+   * Sets the target color space for decoding. When possible, the color space transformation will
+   * be performed at load time. This requires SDK version >= 26, otherwise it's a no-op.
+   *
+   * @param colorSpace target color space for decoding.
+   */
+  public ImageDecodeOptionsBuilder setColorSpace(@Nonnull ColorSpace colorSpace) {
+    mColorSpace = colorSpace;
+    return this;
+  }
+
+  /**
+   * Gets the target color space for decoding.
+   *
+   * @return the target color space.
+   */
+  @Nullable
+  public ColorSpace getColorSpace() { return mColorSpace; }
 
   /**
    * Builds the immutable {@link ImageDecodeOptions} instance.

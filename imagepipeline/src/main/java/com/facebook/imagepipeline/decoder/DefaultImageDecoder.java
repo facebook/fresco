@@ -147,7 +147,7 @@ public class DefaultImageDecoder implements ImageDecoder {
       ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
         mPlatformDecoder.decodeFromEncodedImageWithColorSpace(
-            encodedImage, options.bitmapConfig, null, options.transformToSRGB);
+            encodedImage, options.bitmapConfig, null, options.colorSpace);
     try {
       maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
       return new CloseableStaticBitmap(
@@ -175,7 +175,7 @@ public class DefaultImageDecoder implements ImageDecoder {
       ImageDecodeOptions options) {
     CloseableReference<Bitmap> bitmapReference =
         mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
-            encodedImage, options.bitmapConfig, null, length, options.transformToSRGB);
+            encodedImage, options.bitmapConfig, null, length, options.colorSpace);
     try {
       maybeApplyTransformation(options.bitmapTransformation, bitmapReference);
       return new CloseableStaticBitmap(

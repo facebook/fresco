@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.nativecode;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import android.os.Build;
 import com.facebook.common.internal.DoNotStrip;
@@ -51,7 +52,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
   @Override
   public CloseableReference<Bitmap> decodeFromEncodedImage(
       EncodedImage encodedImage, Bitmap.Config bitmapConfig, @Nullable Rect regionToDecode) {
-    return decodeFromEncodedImageWithColorSpace(encodedImage, bitmapConfig, regionToDecode, false);
+    return decodeFromEncodedImageWithColorSpace(encodedImage, bitmapConfig, regionToDecode, null);
   }
 
   @Override
@@ -61,7 +62,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
       @Nullable Rect regionToDecode,
       int length) {
     return decodeJPEGFromEncodedImageWithColorSpace(
-        encodedImage, bitmapConfig, regionToDecode, length, false);
+        encodedImage, bitmapConfig, regionToDecode, length, null);
   }
 
   /**
@@ -71,7 +72,9 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
    * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
    *     Bitmap
    * @param regionToDecode optional image region to decode. currently not supported.
-   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
+   * @param colorSpace the target color space of the decoded bitmap, must be one of the named
+   *                   color space in {@link android.graphics.ColorSpace.Named}. If null, then SRGB
+   *                   color space is assumed if the SDK version >= 26.
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -81,10 +84,14 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
       final EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
-      final boolean transformToSRGB) {
+      @Nullable final ColorSpace colorSpace) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
         encodedImage.getSampleSize(),
         bitmapConfig);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      options.inPreferredColorSpace = colorSpace == null
+              ? ColorSpace.get(ColorSpace.Named.SRGB) : colorSpace;
+    }
     CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
@@ -103,7 +110,9 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
    *     Bitmap
    * @param regionToDecode optional image region to decode. currently not supported.
    * @param length the number of encoded bytes in the buffer
-   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
+   * @param colorSpace the target color space of the decoded bitmap, must be one of the named
+   *                   color space in {@link android.graphics.ColorSpace.Named}. If null, then SRGB
+   *                   color space is assumed if the SDK version >= 26.
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -114,10 +123,14 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
       int length,
-      final boolean transformToSRGB) {
+      @Nullable final ColorSpace colorSpace) {
     BitmapFactory.Options options = getBitmapFactoryOptions(
         encodedImage.getSampleSize(),
         bitmapConfig);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      options.inPreferredColorSpace = colorSpace == null
+              ? ColorSpace.get(ColorSpace.Named.SRGB) : colorSpace;
+    }
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
     try {
