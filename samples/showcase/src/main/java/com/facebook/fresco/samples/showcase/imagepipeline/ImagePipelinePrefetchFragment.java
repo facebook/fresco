@@ -56,7 +56,8 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
         public void onImageLoaded(
             final String controllerId,
             final @ImageOrigin int imageOrigin,
-            final boolean successful) {
+            final boolean successful,
+            final @Nullable String ultimateProducerName) {
           mHandler.post(
               new Runnable() {
                 @Override
