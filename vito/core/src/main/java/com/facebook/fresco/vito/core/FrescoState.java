@@ -311,7 +311,7 @@ public class FrescoState
   }
 
   @Override
-  public void onFailure(long id, @Nullable Drawable error, Throwable throwable) {
+  public void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable) {
     if (mListener != null) {
       mListener.onFailure(id, error, throwable);
     }

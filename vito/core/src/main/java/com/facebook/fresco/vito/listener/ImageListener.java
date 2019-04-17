@@ -68,7 +68,7 @@ public interface ImageListener {
    * @param error the displayed error drawable if set
    * @param throwable failure cause
    */
-  void onFailure(long id, @Nullable Drawable error, Throwable throwable);
+  void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable);
 
   /**
    * Called after the controller released the fetched image.

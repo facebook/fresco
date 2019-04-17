@@ -467,8 +467,7 @@ public class FrescoControllerImpl implements FrescoController {
                 .getHierarcher()
                 .buildErrorDrawable(frescoState.getResources(), frescoState.getImageOptions());
         displayErrorImage(frescoState, errorDrawable);
-        frescoState.onFailure(
-            frescoState.getId(), errorDrawable, new RuntimeException("CloseableImage was null"));
+        frescoState.onFailure(frescoState.getId(), errorDrawable, null);
         return;
       }
 
