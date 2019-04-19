@@ -7,6 +7,7 @@
 
 package com.facebook.imagepipeline.nativecode;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ColorSpace;
@@ -25,6 +26,7 @@ import com.facebook.imagepipeline.memory.BitmapCounterProvider;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.soloader.DoNotOptimize;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
@@ -89,8 +91,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
         encodedImage.getSampleSize(),
         bitmapConfig);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      options.inPreferredColorSpace = colorSpace == null
-              ? ColorSpace.get(ColorSpace.Named.SRGB) : colorSpace;
+      OreoUtils.setColorSpace(options, colorSpace);
     }
     CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
@@ -128,8 +129,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
         encodedImage.getSampleSize(),
         bitmapConfig);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      options.inPreferredColorSpace = colorSpace == null
-              ? ColorSpace.get(ColorSpace.Named.SRGB) : colorSpace;
+      OreoUtils.setColorSpace(options, colorSpace);
     }
     final CloseableReference<PooledByteBuffer> bytesRef = encodedImage.getByteBufferRef();
     Preconditions.checkNotNull(bytesRef);
@@ -188,6 +188,15 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
     return length >= 2 &&
         buffer.read(length - 2) == (byte) JfifUtil.MARKER_FIRST_BYTE &&
         buffer.read(length - 1) == (byte) JfifUtil.MARKER_EOI;
+  }
+
+  @DoNotOptimize
+  private static class OreoUtils {
+    @TargetApi(Build.VERSION_CODES.O)
+    static void setColorSpace(BitmapFactory.Options options, ColorSpace colorSpace) {
+      options.inPreferredColorSpace = colorSpace == null
+              ? ColorSpace.get(ColorSpace.Named.SRGB) : colorSpace;
+    }
   }
 
   /**
