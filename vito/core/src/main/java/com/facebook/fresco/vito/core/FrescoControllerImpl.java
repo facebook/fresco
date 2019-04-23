@@ -175,18 +175,12 @@ public class FrescoControllerImpl implements FrescoController {
           ImageRequest.RequestLevel.getMax(
               imageRequest.getLowestPermittedRequestLevel(), ImageRequest.RequestLevel.FULL_FETCH);
 
-      // TODO(T35949558): Add support for external request listeners
-      RequestListener requestListener =
-          mFrescoContext
-              .getImagePipeline()
-              .getRequestListenerForRequest(imageRequest, frescoState.getImageOriginListener());
-      frescoState.setRequestListener(requestListener);
-
+      setupRequestListener(frescoState, imageRequest);
       frescoState.setSettableProducerContext(
           new SettableProducerContext(
               imageRequest,
               mFrescoContext.getImagePipeline().generateUniqueFutureId(),
-              requestListener,
+              frescoState.getRequestListener(),
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ false,
@@ -335,6 +329,7 @@ public class FrescoControllerImpl implements FrescoController {
                   frescoState.getSettableProducerContext(),
                   frescoState.getRequestListener());
     } else {
+      setupRequestListener(frescoState, frescoState.getImageRequest());
       dataSource =
           mFrescoContext
               .getImagePipeline()
@@ -491,5 +486,17 @@ public class FrescoControllerImpl implements FrescoController {
         FrescoSystrace.endSection();
       }
     }
+  }
+
+  private void setupRequestListener(FrescoState frescoState, ImageRequest imageRequest) {
+    // TODO(T35949558): Add support for external request listeners
+    if (imageRequest == null) {
+      return;
+    }
+    final RequestListener requestListener =
+        mFrescoContext
+            .getImagePipeline()
+            .getRequestListenerForRequest(imageRequest, frescoState.getImageOriginListener());
+    frescoState.setRequestListener(requestListener);
   }
 }
