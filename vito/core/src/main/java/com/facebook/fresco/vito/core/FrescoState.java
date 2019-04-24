@@ -151,11 +151,12 @@ public class FrescoState
 
   @Nullable
   public synchronized CloseableReference<CloseableImage> getCachedImage() {
-    return mCachedImage;
+    return CloseableReference.cloneOrNull(mCachedImage);
   }
 
   public synchronized void setCachedImage(CloseableReference<CloseableImage> cachedImage) {
-    mCachedImage = cachedImage;
+    CloseableReference.closeSafely(mCachedImage);
+    mCachedImage = CloseableReference.cloneOrNull(cachedImage);
   }
 
   @Nullable
@@ -396,6 +397,7 @@ public class FrescoState
     if ((dataSource = mPrefetchDatasource) != null) {
       dataSource.close();
     }
+    CloseableReference.closeSafely(mCachedImage);
   }
 
   public void setImageRequest(@Nullable ImageRequest imageRequest) {

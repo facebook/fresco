@@ -243,10 +243,14 @@ public class FrescoControllerImpl implements FrescoController {
 
       // Check if we have a cached image in the state
       CloseableReference<CloseableImage> cachedImage = frescoState.getCachedImage();
-      if (CloseableReference.isValid(cachedImage)) {
-        frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-        displayResultOrError(frescoState, cachedImage, true);
-        return;
+      try {
+        if (CloseableReference.isValid(cachedImage)) {
+          frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+          displayResultOrError(frescoState, cachedImage, true);
+          return;
+        }
+      } finally {
+        CloseableReference.closeSafely(cachedImage);
       }
 
       // Check if the image is in cache now
@@ -255,19 +259,23 @@ public class FrescoControllerImpl implements FrescoController {
           FrescoSystrace.beginSection("FrescoControllerImpl#onAttach->getCachedImage");
         }
         try {
-          cachedImage = getCachedImage(frescoState.getCacheKey());
+          try {
+            cachedImage = getCachedImage(frescoState.getCacheKey());
+          } finally {
+            if (FrescoSystrace.isTracing()) {
+              FrescoSystrace.endSection();
+            }
+          }
+          if (CloseableReference.isValid(cachedImage)) {
+            if (experiments.cacheImageInState()) {
+              frescoState.setCachedImage(cachedImage);
+            }
+            frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
+            displayResultOrError(frescoState, cachedImage, true);
+            return;
+          }
         } finally {
-          if (FrescoSystrace.isTracing()) {
-            FrescoSystrace.endSection();
-          }
-        }
-        if (CloseableReference.isValid(cachedImage)) {
-          if (experiments.cacheImageInState()) {
-            frescoState.setCachedImage(cachedImage);
-          }
-          frescoState.setImageOrigin(ImageOrigin.MEMORY_BITMAP);
-          displayResultOrError(frescoState, cachedImage, true);
-          return;
+          CloseableReference.closeSafely(cachedImage);
         }
       }
 
