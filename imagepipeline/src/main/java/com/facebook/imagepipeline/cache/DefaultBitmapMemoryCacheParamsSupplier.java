@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.os.Build;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Supplies {@link MemoryCacheParams} for the bitmap memory cache.
@@ -20,6 +21,7 @@ public class DefaultBitmapMemoryCacheParamsSupplier implements Supplier<MemoryCa
   private static final int MAX_EVICTION_QUEUE_SIZE = Integer.MAX_VALUE;
   private static final int MAX_EVICTION_QUEUE_ENTRIES = Integer.MAX_VALUE;
   private static final int MAX_CACHE_ENTRY_SIZE = Integer.MAX_VALUE;
+  private static final long PARAMS_CHECK_INTERVAL_MS = TimeUnit.MINUTES.toMillis(5);
 
   private final ActivityManager mActivityManager;
 
@@ -34,7 +36,8 @@ public class DefaultBitmapMemoryCacheParamsSupplier implements Supplier<MemoryCa
         MAX_CACHE_ENTRIES,
         MAX_EVICTION_QUEUE_SIZE,
         MAX_EVICTION_QUEUE_ENTRIES,
-        MAX_CACHE_ENTRY_SIZE);
+        MAX_CACHE_ENTRY_SIZE,
+        PARAMS_CHECK_INTERVAL_MS);
   }
 
   private int getMaxCacheSize() {

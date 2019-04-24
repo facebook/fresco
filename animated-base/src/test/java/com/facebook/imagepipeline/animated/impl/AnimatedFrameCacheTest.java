@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.cache.BitmapCountingMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.image.CloseableImage;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,8 @@ public class AnimatedFrameCacheTest {
         256,
         Integer.MAX_VALUE,
         Integer.MAX_VALUE,
-        Integer.MAX_VALUE);
+        Integer.MAX_VALUE,
+        TimeUnit.MINUTES.toMillis(5));
     when(mMemoryCacheParamsSupplier.get()).thenReturn(params);
     CountingMemoryCache<CacheKey, CloseableImage> countingMemoryCache =
         BitmapCountingMemoryCacheFactory.get(mMemoryCacheParamsSupplier, mMemoryTrimmableRegistry);
