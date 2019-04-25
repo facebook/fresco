@@ -164,7 +164,7 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
         ImageDecodeOptions options) {
       CloseableReference<Bitmap> decodedBitmapReference =
           mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
-              encodedImage, options.bitmapConfig, mRegion, length, options.transformToSRGB);
+              encodedImage, options.bitmapConfig, mRegion, length, options.colorSpace);
       try {
         return new CloseableStaticBitmap(decodedBitmapReference, qualityInfo, 0);
       } finally {
