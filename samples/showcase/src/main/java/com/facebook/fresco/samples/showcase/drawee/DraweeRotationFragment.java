@@ -80,7 +80,7 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
     ImageRequest imageRequest =
         ImageRequestBuilder.newBuilderWithSource(mUri)
             .setRotationOptions(rotationOptions)
-            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().setTransformToSRGB(true).build())
+            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
             .build();
     mSimpleDraweeView.setImageRequest(imageRequest);
   }

@@ -181,7 +181,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
     final ImageRequest imageRequest =
         ImageRequestBuilder.newBuilderWithSource(imageUri)
             .setResizeOptions(resizeOptions)
-            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().setTransformToSRGB(true).build())
+            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
             .build();
 
     final DraweeController draweeController = Fresco.newDraweeControllerBuilder()
