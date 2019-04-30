@@ -47,8 +47,7 @@ public class DraweeRotationFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    mUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
+    mUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
 
     mSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     final Spinner spinner = (Spinner) view.findViewById(R.id.spinner);

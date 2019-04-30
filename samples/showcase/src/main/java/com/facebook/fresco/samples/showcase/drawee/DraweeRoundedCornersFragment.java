@@ -86,7 +86,7 @@ public class DraweeRoundedCornersFragment extends BaseShowcaseFragment {
     findDrawees(view);
     initColors();
 
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    final ImageUriProvider imageUriProvider = sampleUris();
     mDraweeRound.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
     mDraweeRadius.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));
     mDraweeSome.setImageURI(imageUriProvider.createSampleUri(ImageSize.L));

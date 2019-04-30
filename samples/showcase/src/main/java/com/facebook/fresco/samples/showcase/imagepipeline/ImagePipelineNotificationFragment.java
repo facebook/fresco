@@ -88,9 +88,8 @@ public class ImagePipelineNotificationFragment extends BaseShowcaseFragment {
 
   private void createNotification() {
     final ImagePipeline imagePipeline = Fresco.getImagePipeline();
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    final ImageRequest imageRequest = ImageRequest.fromUri(
-        imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.S));
+    final ImageRequest imageRequest =
+        ImageRequest.fromUri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.S));
 
     final DataSource<CloseableReference<CloseableImage>> dataSource =
         imagePipeline.fetchDecodedImage(imageRequest, null);

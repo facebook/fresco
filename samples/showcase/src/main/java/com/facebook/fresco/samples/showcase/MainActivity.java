@@ -53,7 +53,6 @@ import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineQualified
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineRegionDecodingFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.ImagePipelineResizingFragment;
 import com.facebook.fresco.samples.showcase.imagepipeline.PartialRequestFragment;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.WelcomeFragment;
 import com.facebook.fresco.samples.showcase.settings.SettingsFragment;
 import com.facebook.fresco.samples.showcase.vito.FrescoVitoLithoImageOptionsConfigFragment;
@@ -284,7 +283,7 @@ public class MainActivity extends AppCompatActivity
   }
 
   private void maybeShowUriOverrideReminder() {
-    if (ImageUriProvider.getInstance(this).getUriOverride() == null) {
+    if (ShowcaseApplication.Companion.getImageUriProvider().getUriOverride() == null) {
       return;
     }
     final Snackbar snackbar = Snackbar.make(
