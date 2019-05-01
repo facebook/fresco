@@ -58,10 +58,11 @@ class ShowcaseApplication : Application() {
         super.onCreate()
         imageUriProvider = ImageUriProvider(applicationContext)
         FLog.setMinimumLoggingLevel(FLog.VERBOSE)
-        val requestListeners = HashSet<RequestListener>()
         val forwardingRequestListener = ForwardingRequestListener()
-        requestListeners.add(forwardingRequestListener)
-        requestListeners.add(RequestLoggingListener())
+        val requestListeners = HashSet<RequestListener>().apply {
+            add(forwardingRequestListener)
+            add(RequestLoggingListener())
+        }
 
         val okHttpClient = OkHttpClient.Builder()
                 .addNetworkInterceptor(StethoInterceptor())
@@ -128,10 +129,11 @@ class ShowcaseApplication : Application() {
                     NoOpFlipperPerfLogger(), null)
             forwardingRequestListener.addRequestListener(
                     FrescoFlipperRequestListener(frescoFlipperPlugin!!.flipperImageTracker))
-            val client = AndroidFlipperClient.getInstance(this)
-            client.addPlugin(InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()))
-            client.addPlugin(frescoFlipperPlugin)
-            client.start()
+            AndroidFlipperClient.getInstance(context).apply {
+                addPlugin(InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()))
+                addPlugin(frescoFlipperPlugin)
+                start()
+            }
         }
     }
 

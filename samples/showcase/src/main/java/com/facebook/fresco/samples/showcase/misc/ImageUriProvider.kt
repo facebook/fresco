@@ -29,7 +29,7 @@ class ImageUriProvider constructor(context: Context) {
 
     var uriOverride: String?
         get() = sharedPreferences.getString(PREF_KEY_URI_OVERRIDE, null)
-        set(uri) = if (uri == null || uri.isEmpty()) {
+        set(uri) = if (uri.isNullOrEmpty()) {
             sharedPreferences.edit()
                     .remove(PREF_KEY_URI_OVERRIDE)
                     .apply()
@@ -41,7 +41,7 @@ class ImageUriProvider constructor(context: Context) {
                     .apply()
         }
 
-    val sampleGifUris = SAMPLE_URIS_GIFS.asSequence().map { Uri.parse(it) }.toList()
+    val sampleGifUris = SAMPLE_URIS_GIFS.map(Uri::parse)
 
     private val isShouldBreakCacheByDefault: Boolean
         get() = sharedPreferences.getBoolean(PREF_KEY_CACHE_BREAKING_BY_DEFAULT, false)
@@ -179,11 +179,9 @@ class ImageUriProvider constructor(context: Context) {
         }
 
         val random = Random(0) // fix seed for reproducible order
-        val data = ArrayList<Uri>(numImages)
-
-        for (i in 0 until numImages) {
+        val data = List<Uri>(numImages) {
             val imageId = random.nextInt(RANDOM_URI_MAX_IMAGE_ID)
-            data.add(Uri.parse(String.format(uriFormat, imageId)))
+            Uri.parse(String.format(uriFormat, imageId))
         }
         return data
     }
