@@ -71,4 +71,8 @@ public class FrescoExperiments {
   public boolean fadeInImages() {
     return false;
   }
+
+  public boolean useBindCallbacks() {
+    return false;
+  }
 }
