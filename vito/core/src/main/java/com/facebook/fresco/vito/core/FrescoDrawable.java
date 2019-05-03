@@ -26,6 +26,8 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
   private static final int PROGRESS_DRAWABLE_INDEX = 2;
   private static final int OVERLAY_DRAWABLE_INDEX = 3;
 
+  private @Nullable FrescoState mFrescoState;
+
   public FrescoDrawable() {
     super(new Drawable[LAYER_COUNT], true);
   }
@@ -83,5 +85,14 @@ public class FrescoDrawable extends FadeDrawable implements Closeable {
     for (int i = 0; i < LAYER_COUNT; i++) {
       setDrawable(i, null);
     }
+  }
+
+  @Nullable
+  public FrescoState getFrescoState() {
+    return mFrescoState;
+  }
+
+  public void setFrescoState(@Nullable FrescoState frescoState) {
+    mFrescoState = frescoState;
   }
 }

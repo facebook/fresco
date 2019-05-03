@@ -52,7 +52,8 @@ public class FrescoControllerImpl implements FrescoController {
     }
     try {
       final boolean stateHasSameProps =
-          ObjectsCompat.equals(uri, frescoState.getUri())
+          frescoState != null
+              && ObjectsCompat.equals(uri, frescoState.getUri())
               && ObjectsCompat.equals(imageOptions, frescoState.getImageOptions())
               && (mFrescoContext.getExperiments().shouldDiffCallerContext()
                   ? ObjectsCompat.equals(callerContext, frescoState.getCallerContext())

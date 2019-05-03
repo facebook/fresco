@@ -75,4 +75,8 @@ public class FrescoExperiments {
   public boolean useBindCallbacks() {
     return false;
   }
+
+  public boolean useMountContentOverState() {
+    return false;
+  }
 }
