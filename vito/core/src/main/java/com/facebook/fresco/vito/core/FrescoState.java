@@ -44,7 +44,10 @@ public class FrescoState
   private final @Nullable Object mCallerContext;
   private final @Nullable CacheKey mCacheKey;
 
-  private @Nullable ImageListener mListener;
+  // ImageListener passed as @Prop to Litho component
+  private ImageListener mImageListener;
+  // Other global and ad-hoc ImageListener(s)
+  private final @Nullable ImageListener mOtherListeners;
   private @Nullable ImageRequest mImageRequest;
   private @Px int mTargetWidthPx;
   private @Px int mTargetHeightPx;
@@ -88,7 +91,8 @@ public class FrescoState
       @Nullable CacheKey cacheKey,
       @Nullable CloseableReference<CloseableImage> cachedImage,
       Resources resources,
-      @Nullable ImageListener listeners) {
+      @Nullable ImageListener imageListener,
+      @Nullable ImageListener otherListeners) {
     mId = id;
     mFrescoContext = frescoContext;
     mUri = uri;
@@ -98,7 +102,8 @@ public class FrescoState
     mCacheKey = cacheKey;
     mCachedImage = cachedImage;
     mResources = resources;
-    mListener = listeners;
+    mImageListener = imageListener;
+    mOtherListeners = otherListeners;
   }
 
   public long getId() {
@@ -271,8 +276,11 @@ public class FrescoState
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoState#onSubmit");
     }
-    if (mListener != null) {
-      mListener.onSubmit(id, callerContext);
+    if (mImageListener != null) {
+      mImageListener.onSubmit(id, callerContext);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onSubmit(id, callerContext);
     }
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
@@ -281,8 +289,11 @@ public class FrescoState
 
   @Override
   public void onPlaceholderSet(long id, @Nullable Drawable placeholder) {
-    if (mListener != null) {
-      mListener.onPlaceholderSet(id, placeholder);
+    if (mImageListener != null) {
+      mImageListener.onPlaceholderSet(id, placeholder);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onPlaceholderSet(id, placeholder);
     }
   }
 
@@ -292,36 +303,51 @@ public class FrescoState
       @ImageOrigin int imageOrigin,
       @Nullable ImageInfo imageInfo,
       @Nullable Drawable drawable) {
-    if (mListener != null) {
-      mListener.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
+    if (mImageListener != null) {
+      mImageListener.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onFinalImageSet(id, imageOrigin, imageInfo, drawable);
     }
   }
 
   @Override
   public void onIntermediateImageSet(long id, @Nullable ImageInfo imageInfo) {
-    if (mListener != null) {
-      mListener.onIntermediateImageSet(id, imageInfo);
+    if (mImageListener != null) {
+      mImageListener.onIntermediateImageSet(id, imageInfo);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onIntermediateImageSet(id, imageInfo);
     }
   }
 
   @Override
   public void onIntermediateImageFailed(long id, Throwable throwable) {
-    if (mListener != null) {
-      mListener.onIntermediateImageFailed(id, throwable);
+    if (mImageListener != null) {
+      mImageListener.onIntermediateImageFailed(id, throwable);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onIntermediateImageFailed(id, throwable);
     }
   }
 
   @Override
   public void onFailure(long id, @Nullable Drawable error, @Nullable Throwable throwable) {
-    if (mListener != null) {
-      mListener.onFailure(id, error, throwable);
+    if (mImageListener != null) {
+      mImageListener.onFailure(id, error, throwable);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onFailure(id, error, throwable);
     }
   }
 
   @Override
   public void onRelease(long id) {
-    if (mListener != null) {
-      mListener.onRelease(id);
+    if (mImageListener != null) {
+      mImageListener.onRelease(id);
+    }
+    if (mOtherListeners != null) {
+      mOtherListeners.onRelease(id);
     }
   }
 
@@ -339,6 +365,14 @@ public class FrescoState
 
   public void setTargetHeightPx(@Px int targetHeightPx) {
     mTargetHeightPx = targetHeightPx;
+  }
+
+  public ImageListener getImageListener() {
+    return mImageListener;
+  }
+
+  public void setImageListener(ImageListener imageListener) {
+    mImageListener = imageListener;
   }
 
   @Override

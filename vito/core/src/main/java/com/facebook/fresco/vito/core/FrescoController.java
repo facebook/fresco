@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core;
 
 import android.content.res.Resources;
 import android.net.Uri;
+import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -34,7 +35,7 @@ public interface FrescoController {
       Resources resources,
       ImageListener imageListener);
 
-  void onAttach(FrescoState state);
+  void onAttach(FrescoState state, @Nullable ImageListener imageListener);
 
   void onDetach(FrescoState state);
 

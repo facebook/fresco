@@ -104,11 +104,10 @@ public class FrescoControllerImpl implements FrescoController {
               cacheKey,
               cachedImage,
               resources,
+              imageListener,
               new ForwardingImageListener(
                   mFrescoContext.getGlobalImageListener(),
-                  ForwardingImageListener.create(
-                      imageListener,
-                      imageOptions.shouldAutoPlay() ? AutoPlayImageListener.getInstance() : null)));
+                  imageOptions.shouldAutoPlay() ? AutoPlayImageListener.getInstance() : null));
       if (frescoExperiments.prepareActualImageWrapperInBackground()) {
         prepareActualImageInBackground(frescoState);
       }
@@ -198,12 +197,14 @@ public class FrescoControllerImpl implements FrescoController {
   }
 
   @Override
-  public void onAttach(FrescoState frescoState) {
+  public void onAttach(FrescoState frescoState, @Nullable ImageListener imageListener) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#onAttach");
     }
     try {
       frescoState.setAttached(true);
+
+      frescoState.setImageListener(imageListener);
 
       final FrescoExperiments experiments = mFrescoContext.getExperiments();
 

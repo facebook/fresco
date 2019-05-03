@@ -111,9 +111,10 @@ public class FrescoVitoImageSpec {
       ComponentContext context,
       final FrescoDrawable frescoDrawable,
       @Prop(optional = true) final FrescoContext frescoContext,
-      @FromPrepare final FrescoState frescoState) {
+      @FromPrepare final FrescoState frescoState,
+      @Prop(optional = true) final ImageListener imageListener) {
     frescoState.setFrescoDrawable(frescoDrawable);
-    getController(frescoContext).onAttach(frescoState);
+    getController(frescoContext).onAttach(frescoState, imageListener);
   }
 
   @OnUnmount
