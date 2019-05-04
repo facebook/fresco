@@ -72,6 +72,10 @@ public class FrescoExperiments {
     return false;
   }
 
+  public boolean enablePropDiffing() {
+    return true;
+  }
+
   public boolean useBindCallbacks() {
     return false;
   }
