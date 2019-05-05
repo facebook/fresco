@@ -22,7 +22,7 @@ object VitoSpinners {
     val roundingOptions = listOf(
             "no rounding" to null,
             "as circle" to RoundingOptions.asCircle(),
-            "corner radius" to RoundingOptions.forCornerRadius(20f),
+            "corner radius" to RoundingOptions.forCornerRadiusPx(20f),
             "different radii" to RoundingOptions.forCornerRadii(0f, 20f, 30f, 40f))
 
     val borderOptions = listOf(

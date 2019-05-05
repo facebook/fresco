@@ -29,8 +29,8 @@ public class RoundingOptions {
     return antiAliasing ? AS_CIRCLE_ANTI_ALIASING : AS_CIRCLE;
   }
 
-  public static RoundingOptions forCornerRadius(float cornerRadius) {
-    return new RoundingOptions(false, cornerRadius, null, false);
+  public static RoundingOptions forCornerRadiusPx(float cornerRadiusPx) {
+    return new RoundingOptions(false, cornerRadiusPx, null, false);
   }
 
   public static RoundingOptions forCornerRadii(
