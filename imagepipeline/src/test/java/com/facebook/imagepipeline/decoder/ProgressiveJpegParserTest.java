@@ -134,7 +134,7 @@ public class ProgressiveJpegParserTest {
     assertEquals(bestScanEndOffset, mProgressiveJpegParser.getBestScanEndOffset());
   }
 
-  private EncodedImage buildEncodedImage(TrivialPooledByteBuffer byteBuffer) {
+  private static EncodedImage buildEncodedImage(TrivialPooledByteBuffer byteBuffer) {
     return new EncodedImage(CloseableReference.<PooledByteBuffer>of(byteBuffer));
   }
 }
