@@ -15,8 +15,10 @@ import android.graphics.Color
 import android.graphics.PointF
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
+import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
+import com.facebook.imageformat.DefaultImageFormats
 
 object VitoSpinners {
     val roundingOptions = listOf(
@@ -42,4 +44,14 @@ object VitoSpinners {
             "focus_crop (1, 0.5)" to Pair(ScalingUtils.ScaleType.FOCUS_CROP, PointF(1f, 0.5f)),
             "custom: fit_x" to Pair(CustomScaleTypes.FIT_X, null),
             "custom: fit_y" to Pair(CustomScaleTypes.FIT_Y, null))
+
+    val imageFormats = listOf(
+            "JPEG" to DefaultImageFormats.JPEG,
+            "PNG" to DefaultImageFormats.PNG,
+            "Animated GIF" to DefaultImageFormats.GIF,
+            "WebP simple" to DefaultImageFormats.WEBP_SIMPLE,
+            "WebP with alpha" to DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
+            "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
+            "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES
+    )
 }

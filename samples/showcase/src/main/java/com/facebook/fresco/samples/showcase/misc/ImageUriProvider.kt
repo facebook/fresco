@@ -17,6 +17,9 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.preference.PreferenceManager
 import com.facebook.common.internal.Preconditions
+import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
+import com.facebook.imageformat.DefaultImageFormats
+import com.facebook.imageformat.ImageFormat
 import java.util.*
 
 /**
@@ -119,6 +122,19 @@ class ImageUriProvider constructor(context: Context) {
      */
     val nonExistingUri: Uri by lazy { Uri.parse(NON_EXISTING_URI) }
 
+    fun create(imageFormat: ImageFormat = DefaultImageFormats.JPEG): Uri? {
+        return when (imageFormat) {
+            DefaultImageFormats.JPEG -> createSampleUri()
+            DefaultImageFormats.PNG -> createPngUri()
+            DefaultImageFormats.GIF -> createGifUri()
+            DefaultImageFormats.WEBP_SIMPLE -> createWebpStaticUri()
+            DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA -> createWebpTranslucentUri()
+            DefaultImageFormats.WEBP_ANIMATED -> createWebpAnimatedUri()
+            KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES -> createKeyframesUri()
+            else -> null
+        }
+    }
+
     @JvmOverloads
     fun createSampleUri(
             imageSize: ImageSize = ImageSize.M,
@@ -154,7 +170,7 @@ class ImageUriProvider constructor(context: Context) {
 
     fun createWebpAnimatedUri(): Uri = applyOverrideSettings(SAMPLE_URI_WEBP_ANIMATED, UriModification.NONE)
 
-    fun createGifUri(imageSize: ImageSize): Uri {
+    fun createGifUri(imageSize: ImageSize = ImageSize.M): Uri {
         return applyOverrideSettings(
                 String.format(SAMPLE_URI_GIF_PATTERN, imageSize.sizeSuffix),
                 UriModification.NONE)

@@ -29,9 +29,9 @@ import kotlinx.android.synthetic.main.fragment_vito_image_options_config.*
 /** Experimental Fresco Vito fragment that allows to configure ImageOptions via a simple UI.  */
 class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
-    private val imageOptionsBuilder = ImageOptions.create()
-    
-    private var uri: Uri? = null
+    private val imageOptionsBuilder = ImageOptions.create().autoPlay(true)
+
+    private var currentUri: Uri? = null
     private var componentContext: ComponentContext? = null
     private var lithoView: LithoView? = null
 
@@ -43,10 +43,10 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)
+        currentUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)
         componentContext = ComponentContext(context)
 
-        lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build()))
+        lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build(), currentUri))
         container.addView(lithoView)
 
         spinner_rounding.setupWithList(VitoSpinners.roundingOptions) {
@@ -58,15 +58,19 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_scale_type.setupWithList(VitoSpinners.scaleTypes) {
             refresh(imageOptionsBuilder.scale(it.first).focusPoint(it.second))
         }
+        spinner_image_format.setupWithList(VitoSpinners.imageFormats) {
+            refresh(uri = sampleUris().create(it))
+        }
     }
 
     override fun getTitleId() = R.string.vito_litho_image_options_config
 
-    private fun refresh(builder: ImageOptions.Builder) {
-        lithoView?.setComponentAsync(createImage(builder.build()))
+    private fun refresh(builder: ImageOptions.Builder = imageOptionsBuilder, uri: Uri? = currentUri) {
+        currentUri = uri
+        lithoView?.setComponentAsync(createImage(builder.build(), uri))
     }
 
-    private fun createImage(imageOptions: ImageOptions) = FrescoVitoImage.create(componentContext)
+    private fun createImage(imageOptions: ImageOptions, uri: Uri?) = FrescoVitoImage.create(componentContext)
             .uri(uri)
             .imageOptions(imageOptions)
             .build()

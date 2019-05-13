@@ -20,7 +20,7 @@ object SpinnerUtils {
     fun <T> Spinner.setupWithList(data: List<Pair<String, T>>, clickListener: (T) -> Unit) {
         adapter = ArrayAdapter<String>(
                 context,
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_spinner_dropdown_item,
                 data.map { it.first })
         onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
