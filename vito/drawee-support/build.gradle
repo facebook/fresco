@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+project.group = GROUP
+version = VERSION_NAME
+
+dependencies {
+    compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
+    compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
+    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
+
+    implementation project(':drawee')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline')
+
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+}
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task testJar(type: Jar) {
+    from android.sourceSets.test.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts.add('archives', sourcesJar)
