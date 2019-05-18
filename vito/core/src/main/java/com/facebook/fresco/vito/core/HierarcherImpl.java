@@ -14,12 +14,19 @@ import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
+import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 
 public class HierarcherImpl implements Hierarcher {
   private static final Drawable NOP_DRAWABLE = NopDrawable.INSTANCE;
+
+  private final VitoDrawableFactory mDrawableFactory;
+
+  public HierarcherImpl(VitoDrawableFactory drawableFactory) {
+    mDrawableFactory = drawableFactory;
+  }
 
   @Override
   public Drawable buildPlaceholderDrawable(Resources resources, ImageOptions imageOptions) {
@@ -127,10 +134,7 @@ public class HierarcherImpl implements Hierarcher {
       FrescoSystrace.beginSection("HierarcherImpl#setupActualImageDrawable");
     }
     try {
-      Drawable actualDrawable =
-          frescoContext
-              .getDrawableFactory(resources)
-              .createDrawable(closeableImage.get(), imageOptions);
+      Drawable actualDrawable = mDrawableFactory.createDrawable(closeableImage.get(), imageOptions);
 
       if (actualImageWrapperDrawable == null) {
         actualImageWrapperDrawable = buildActualImageWrapper(imageOptions);

@@ -61,7 +61,7 @@ public class FrescoVitoImageSpec {
       @Prop(optional = true) final Object callerContext,
       @Prop(optional = true) final ImageListener imageListener) {
     lastFrescoState.set(
-        getController(frescoContext)
+        getController(context, frescoContext)
             .createState(
                 uri,
                 imageOptions != null ? imageOptions : ImageOptions.defaults(),
@@ -92,7 +92,7 @@ public class FrescoVitoImageSpec {
       @State(canUpdateLazily = true) final FrescoState lastFrescoState,
       Output<FrescoState> frescoState) {
     FrescoState maybeNewFrescoState =
-        getController(frescoContext)
+        getController(context, frescoContext)
             .onPrepare(
                 lastFrescoState,
                 uri,
@@ -114,7 +114,7 @@ public class FrescoVitoImageSpec {
       @FromPrepare final FrescoState frescoState,
       @Prop(optional = true) final ImageListener imageListener) {
     frescoState.setFrescoDrawable(frescoDrawable);
-    getController(frescoContext).onAttach(frescoState, imageListener);
+    getController(context, frescoContext).onAttach(frescoState, imageListener);
   }
 
   @OnUnmount
@@ -124,7 +124,7 @@ public class FrescoVitoImageSpec {
       @Prop(optional = true) final FrescoContext frescoContext,
       @FromPrepare final FrescoState frescoState) {
     frescoState.setFrescoDrawable(frescoDrawable);
-    getController(frescoContext).onDetach(frescoState);
+    getController(context, frescoContext).onDetach(frescoState);
   }
 
   @OnBoundsDefined
@@ -146,14 +146,16 @@ public class FrescoVitoImageSpec {
         || !ObjectsCompat.equals(frescoContext.getPrevious(), frescoContext.getNext());
   }
 
-  static FrescoContext resolveContext(@Nullable FrescoContext contextOverride) {
+  static FrescoContext resolveContext(
+      ComponentContext context, @Nullable FrescoContext contextOverride) {
     if (contextOverride != null) {
       return contextOverride;
     }
-    return DefaultFrescoContext.get();
+    return DefaultFrescoContext.get(context.getResources());
   }
 
-  static FrescoController getController(@Nullable FrescoContext contextOverride) {
-    return resolveContext(contextOverride).getController();
+  static FrescoController getController(
+      ComponentContext context, @Nullable FrescoContext contextOverride) {
+    return resolveContext(context, contextOverride).getController();
   }
 }

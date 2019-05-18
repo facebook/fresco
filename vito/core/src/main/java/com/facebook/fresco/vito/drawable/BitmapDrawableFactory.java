@@ -16,22 +16,18 @@ import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
-import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
-public class VitoDrawableFactoryImpl implements VitoDrawableFactory {
+public class BitmapDrawableFactory implements VitoDrawableFactory {
 
   private final Resources mResources;
-  private final @Nullable DrawableFactory mAnimatedDrawableFactory;
 
-  public VitoDrawableFactoryImpl(
-      Resources resources, @Nullable DrawableFactory animatedDrawableFactory) {
+  public BitmapDrawableFactory(Resources resources) {
     mResources = resources;
-    mAnimatedDrawableFactory = animatedDrawableFactory;
   }
 
   @Override
@@ -39,16 +35,12 @@ public class VitoDrawableFactoryImpl implements VitoDrawableFactory {
   public Drawable createDrawable(CloseableImage closeableImage, ImageOptions imageOptions) {
     try {
       if (FrescoSystrace.isTracing()) {
-        FrescoSystrace.beginSection("VitoDrawableFactoryImpl#createDrawable");
+        FrescoSystrace.beginSection("BitmapDrawableFactory#createDrawable");
       }
       if (closeableImage instanceof CloseableStaticBitmap) {
         return handleCloseableStaticBitmap((CloseableStaticBitmap) closeableImage, imageOptions);
-      } else if (mAnimatedDrawableFactory != null
-          && mAnimatedDrawableFactory.supportsImageType(closeableImage)) {
-        return mAnimatedDrawableFactory.createDrawable(closeableImage);
-      } else {
-        return null;
       }
+      return null;
     } finally {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();

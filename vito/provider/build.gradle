@@ -10,6 +10,7 @@ dependencies {
 
     implementation project(':drawee-backends:drawee-pipeline')
     implementation project(':vito:core')
+    implementation project(':vito:drawee-support')
     implementation project(':vito:options')
 
     testImplementation "junit:junit:${JUNIT_VERSION}"
