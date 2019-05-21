@@ -83,4 +83,8 @@ public class FrescoExperiments {
   public boolean useMountContentOverState() {
     return false;
   }
+
+  public boolean resetState() {
+    return false;
+  }
 }

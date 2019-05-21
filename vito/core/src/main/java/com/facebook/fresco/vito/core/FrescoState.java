@@ -431,10 +431,18 @@ public class FrescoState
     if ((dataSource = mPrefetchDatasource) != null) {
       dataSource.close();
     }
+
     CloseableReference.closeSafely(mCachedImage);
+
+    if (mFrescoContext.getExperiments().resetState()) {
+      mPrefetchDatasource = null;
+      mMainFetchDatasource = null;
+      mActualImageWrapper = null;
+    }
   }
 
   public void setImageRequest(@Nullable ImageRequest imageRequest) {
     mImageRequest = imageRequest;
   }
+
 }

@@ -203,11 +203,13 @@ public class FrescoControllerImpl implements FrescoController {
       FrescoSystrace.beginSection("FrescoControllerImpl#onAttach");
     }
     try {
-      frescoState.setAttached(true);
-
-      frescoState.setImageListener(imageListener);
-
       final FrescoExperiments experiments = mFrescoContext.getExperiments();
+      if (experiments.closeDatasource()) {
+        DeferredReleaser.getInstance().cancelDeferredRelease(frescoState);
+      }
+
+      frescoState.setAttached(true);
+      frescoState.setImageListener(imageListener);
 
       final ImageRequest imageRequest = frescoState.getImageRequest();
       if (frescoState.getImageOptions().shouldResizeToViewport()
@@ -222,10 +224,6 @@ public class FrescoControllerImpl implements FrescoController {
                         frescoState.getTargetWidthPx(), frescoState.getTargetHeightPx()))
                 .setResizingAllowedOverride(true)
                 .build());
-      }
-
-      if (experiments.closeDatasource()) {
-        DeferredReleaser.getInstance().cancelDeferredRelease(frescoState);
       }
 
       if (!frescoState.getFrescoDrawable().isDefaultLayerIsOn()) {
