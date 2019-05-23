@@ -148,6 +148,10 @@
             android:id="@+id/nav_vito_litho_sections"
             android:title="@string/vito_litho_sections"
             />
+        <item
+            android:id="@+id/nav_vito_litho_gallery"
+            android:title="@string/vito_litho_gallery"
+            />
       </group>
     </menu>
   </item>

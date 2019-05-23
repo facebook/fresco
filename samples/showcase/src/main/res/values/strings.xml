@@ -152,6 +152,7 @@
   <string name="vito_litho_image_options_config_help">Configure image options to change the image\'s appearance</string>
 
   <string name="vito_litho_sections">Litho Sections (RecyclerView)</string>
+  <string name="vito_litho_gallery">Litho Gallery</string>
 
   <!-- Preferences -->
 
