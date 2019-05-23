@@ -17,6 +17,14 @@ dependencies {
     implementation project(':fbcore')
     implementation project(':imagepipeline')
     implementation project(':vito:options')
+
+    testImplementation "junit:junit:${JUNIT_VERSION}"
+    testImplementation "org.assertj:assertj-core:${versions.assertjCore}"
+    testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+    testImplementation("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
 }
 
 android {
