@@ -66,6 +66,11 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   @GuardedBy("this")
   private boolean mIsClosed = false;
   private final SharedReference<T> mSharedReference;
+  private final LeakHandler<T> mLeakHandler;
+
+  public interface LeakHandler<T> {
+    void reportLeak(SharedReference<T> reference);
+  }
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
       new ResourceReleaser<Closeable>() {
@@ -79,13 +84,29 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private CloseableReference(SharedReference<T> sharedReference) {
+  private static final LeakHandler<Closeable> DEFAULT_LEAK_HANDLER =
+      new LeakHandler<Closeable>() {
+        @Override
+        public void reportLeak(SharedReference<Closeable> reference) {
+          FLog.w(
+              TAG,
+              "Finalized without closing: %x %x (type = %s)",
+              System.identityHashCode(this),
+              System.identityHashCode(reference),
+              reference.get().getClass().getName());
+        }
+      };
+
+  private CloseableReference(SharedReference<T> sharedReference, LeakHandler<T> leakHandler) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
+    mLeakHandler = leakHandler;
   }
 
-  private CloseableReference(T t, ResourceReleaser<T> resourceReleaser) {
+  private CloseableReference(
+      T t, ResourceReleaser<T> resourceReleaser, LeakHandler<T> leakHandler) {
     mSharedReference = new SharedReference<T>(t, resourceReleaser);
+    mLeakHandler = leakHandler;
   }
 
   /**
@@ -102,15 +123,41 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   }
 
   /**
+   * Constructs a CloseableReference with a custom {@link LeakHandler} that's run if a reference is
+   * not closed when the finalizer is called.
+   *
+   * <p>Returns null if the parameter is null.
+   */
+  public static <T extends Closeable> CloseableReference<T> of(
+      @PropagatesNullable T t, LeakHandler<T> leakHandler) {
+    if (t == null) {
+      return null;
+    } else {
+      return new CloseableReference<>(
+          t, (ResourceReleaser<T>) DEFAULT_CLOSEABLE_RELEASER, leakHandler);
+    }
+  }
+
+  /**
    * Constructs a CloseableReference (wrapping a SharedReference) of T with provided
    * ResourceReleaser<T>. If t is null, this will just return null.
    */
   public static <T> CloseableReference<T> of(
       @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
+    return of(t, resourceReleaser, (LeakHandler<T>) DEFAULT_LEAK_HANDLER);
+  }
+
+  /**
+   * Constructs a CloseableReference (wrapping a SharedReference) of T with provided
+   * ResourceReleaser<T> and a custom handler that's run if a leak is detected in the finalizer. If
+   * t is null, this will just return null.
+   */
+  public static <T> CloseableReference<T> of(
+      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler<T> leakHandler) {
     if (t == null) {
       return null;
     } else {
-      return new CloseableReference<T>(t, resourceReleaser);
+      return new CloseableReference<T>(t, resourceReleaser, leakHandler);
     }
   }
 
@@ -129,7 +176,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    */
   public synchronized CloseableReference<T> clone() {
     Preconditions.checkState(isValid());
-    return new CloseableReference<T>(mSharedReference);
+    return new CloseableReference<T>(mSharedReference, mLeakHandler);
   }
 
   public synchronized @Nullable CloseableReference<T> cloneOrNull() {
@@ -258,12 +305,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       }
 
-      FLog.w(
-          TAG,
-          "Finalized without closing: %x %x (type = %s)",
-          System.identityHashCode(this),
-          System.identityHashCode(mSharedReference),
-          mSharedReference.get().getClass().getName());
+      mLeakHandler.reportLeak(mSharedReference);
 
       close();
     } finally {
