@@ -71,9 +71,14 @@ public class ProducerSequenceFactory {
   // Saved sequences
   @VisibleForTesting Producer<CloseableReference<CloseableImage>> mNetworkFetchSequence;
   @VisibleForTesting Producer<EncodedImage> mBackgroundLocalFileFetchToEncodedMemorySequence;
+  @VisibleForTesting Producer<EncodedImage> mBackgroundLocalContentUriFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<EncodedImage> mBackgroundNetworkFetchToEncodedMemorySequence;
   @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>>
       mLocalFileEncodedImageProducerSequence;
+
+  @VisibleForTesting
+  Producer<CloseableReference<PooledByteBuffer>> mLocalContentUriEncodedImageProducerSequence;
+
   @VisibleForTesting Producer<CloseableReference<PooledByteBuffer>>
       mNetworkEncodedImageProducerSequence;
   @VisibleForTesting Producer<Void> mLocalFileFetchToEncodedMemoryPrefetchSequence;
@@ -147,6 +152,8 @@ public class ProducerSequenceFactory {
         case SOURCE_TYPE_LOCAL_VIDEO_FILE:
         case SOURCE_TYPE_LOCAL_IMAGE_FILE:
           return getLocalFileFetchEncodedImageProducerSequence();
+        case SOURCE_TYPE_LOCAL_CONTENT:
+          return getLocalContentUriFetchEncodedImageProducerSequence();
         default:
           throw new IllegalArgumentException(
               "Unsupported uri scheme for encoded image fetch! Uri is: "
@@ -215,6 +222,36 @@ public class ProducerSequenceFactory {
       }
     }
     return mLocalFileEncodedImageProducerSequence;
+  }
+
+  /**
+   * Returns a sequence that can be used for a request for an encoded image from a local content
+   * uri.
+   */
+  public Producer<CloseableReference<PooledByteBuffer>>
+      getLocalContentUriFetchEncodedImageProducerSequence() {
+    synchronized (this) {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection(
+            "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence");
+      }
+      if (mLocalContentUriEncodedImageProducerSequence == null) {
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.beginSection(
+              "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init");
+        }
+        mLocalContentUriEncodedImageProducerSequence =
+            new RemoveImageTransformMetaDataProducer(
+                getBackgroundLocalContentUriFetchToEncodeMemorySequence());
+        if (FrescoSystrace.isTracing()) {
+          FrescoSystrace.endSection();
+        }
+      }
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
+    }
+    return mLocalContentUriEncodedImageProducerSequence;
   }
 
   /**
@@ -507,6 +544,40 @@ public class ProducerSequenceFactory {
       FrescoSystrace.endSection();
     }
     return mBackgroundLocalFileFetchToEncodedMemorySequence;
+  }
+
+  /**
+   * background-thread hand-off -> multiplex -> encoded cache -> disk cache -> (webp transcode) ->
+   * local content resolver fetch
+   */
+  private synchronized Producer<EncodedImage>
+      getBackgroundLocalContentUriFetchToEncodeMemorySequence() {
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.beginSection(
+          "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence");
+    }
+    if (mBackgroundLocalContentUriFetchToEncodedMemorySequence == null) {
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.beginSection(
+            "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init");
+      }
+      final LocalContentUriFetchProducer localFileFetchProducer =
+          mProducerFactory.newLocalContentUriFetchProducer();
+
+      final Producer<EncodedImage> toEncodedMultiplexProducer =
+          newEncodedCacheMultiplexToTranscodeSequence(localFileFetchProducer);
+
+      mBackgroundLocalContentUriFetchToEncodedMemorySequence =
+          mProducerFactory.newBackgroundThreadHandoffProducer(
+              toEncodedMultiplexProducer, mThreadHandoffProducerQueue);
+      if (FrescoSystrace.isTracing()) {
+        FrescoSystrace.endSection();
+      }
+    }
+    if (FrescoSystrace.isTracing()) {
+      FrescoSystrace.endSection();
+    }
+    return mBackgroundLocalContentUriFetchToEncodedMemorySequence;
   }
 
   /**

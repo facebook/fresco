@@ -87,7 +87,7 @@ public class BitmapCounterTest {
     assertEquals(size, mBitmapCounter.getSize());
   }
 
-  private Bitmap bitmapForSize(int size) {
+  private static Bitmap bitmapForSize(int size) {
     final Bitmap bitmap = mock(Bitmap.class);
     doReturn(1).when(bitmap).getHeight();
     doReturn(size).when(bitmap).getRowBytes();

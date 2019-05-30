@@ -55,9 +55,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @PrepareOnlyThisForTest(StagingArea.class)
-@Config(manifest=Config.NONE)
+@Config(manifest = Config.NONE)
 public class BufferedDiskCacheTest {
   @Mock public FileCache mFileCache;
   @Mock public PooledByteBufferFactory mByteBufferFactory;

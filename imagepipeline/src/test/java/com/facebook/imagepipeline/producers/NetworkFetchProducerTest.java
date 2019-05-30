@@ -39,8 +39,8 @@ import org.robolectric.*;
 import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@Config(manifest= Config.NONE)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
+@Config(manifest = Config.NONE)
 @PrepareForTest({SystemClock.class})
 public class NetworkFetchProducerTest {
 

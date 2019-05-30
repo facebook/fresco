@@ -29,6 +29,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.samples.showcase.R;
+import com.facebook.fresco.samples.showcase.ShowcaseApplication;
 import com.facebook.fresco.samples.showcase.ShowcaseFragment;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    mImageUriProvider = ImageUriProvider.getInstance(getContext());
+    mImageUriProvider = ShowcaseApplication.Companion.getImageUriProvider();
     addPreferencesFromResource(R.xml.preferences);
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     populateUriOverride();
@@ -175,7 +176,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-      mImageUriProvider = ImageUriProvider.getInstance(getContext());
+      mImageUriProvider = ShowcaseApplication.Companion.getImageUriProvider();
       mSharedPreferences  = PreferenceManager.getDefaultSharedPreferences(getContext());
 
       final View view = getActivity().getLayoutInflater().inflate(

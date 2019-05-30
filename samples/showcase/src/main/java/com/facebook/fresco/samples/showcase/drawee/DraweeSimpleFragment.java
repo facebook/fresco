@@ -36,8 +36,7 @@ public class DraweeSimpleFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    final Uri uri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
+    final Uri uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
 
     SimpleDraweeView simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
     simpleDraweeView.setImageURI(uri);

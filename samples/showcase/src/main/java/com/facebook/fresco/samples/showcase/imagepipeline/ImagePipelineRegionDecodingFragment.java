@@ -82,10 +82,9 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
     mUri =
-        imageUriProvider.createSampleUri(
-            ImageUriProvider.ImageSize.L, ImageUriProvider.Orientation.LANDSCAPE);
+        sampleUris()
+            .createSampleUri(ImageUriProvider.ImageSize.L, ImageUriProvider.Orientation.LANDSCAPE);
 
     mFullDraweeView = (SimpleDraweeView) view.findViewById(R.id.drawee_view_full);
     mFullDraweeView.setController(
@@ -164,7 +163,7 @@ public class ImagePipelineRegionDecodingFragment extends BaseShowcaseFragment {
         ImageDecodeOptions options) {
       CloseableReference<Bitmap> decodedBitmapReference =
           mPlatformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
-              encodedImage, options.bitmapConfig, mRegion, length, options.transformToSRGB);
+              encodedImage, options.bitmapConfig, mRegion, length, options.colorSpace);
       try {
         return new CloseableStaticBitmap(decodedBitmapReference, qualityInfo, 0);
       } finally {

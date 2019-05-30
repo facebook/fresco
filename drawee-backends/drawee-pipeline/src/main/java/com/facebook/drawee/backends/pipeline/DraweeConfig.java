@@ -10,6 +10,7 @@ import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.Suppliers;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class DraweeConfig {
   @Nullable
   private final PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
   private final Supplier<Boolean> mDebugOverlayEnabledSupplier;
+  @Nullable private final ImagePerfDataListener mImagePerfDataListener;
 
   private DraweeConfig(Builder builder) {
     mCustomDrawableFactories = builder.mCustomDrawableFactories != null
@@ -34,6 +36,7 @@ public class DraweeConfig {
         ? builder.mDebugOverlayEnabledSupplier
         : Suppliers.of(false);
     mPipelineDraweeControllerFactory = builder.mPipelineDraweeControllerFactory;
+    mImagePerfDataListener = builder.mImagePerfDataListener;
   }
 
   @Nullable
@@ -44,6 +47,11 @@ public class DraweeConfig {
   @Nullable
   public PipelineDraweeControllerFactory getPipelineDraweeControllerFactory() {
     return mPipelineDraweeControllerFactory;
+  }
+
+  @Nullable
+  public ImagePerfDataListener getImagePerfDataListener() {
+    return mImagePerfDataListener;
   }
 
   public static Builder newBuilder() {
@@ -59,6 +67,7 @@ public class DraweeConfig {
     private List<DrawableFactory> mCustomDrawableFactories;
     private Supplier<Boolean> mDebugOverlayEnabledSupplier;
     private PipelineDraweeControllerFactory mPipelineDraweeControllerFactory;
+    private @Nullable ImagePerfDataListener mImagePerfDataListener;
 
     /**
      * Add a custom drawable factory that will be used to create
@@ -108,6 +117,11 @@ public class DraweeConfig {
      */
     public Builder setPipelineDraweeControllerFactory(PipelineDraweeControllerFactory factory) {
       mPipelineDraweeControllerFactory = factory;
+      return this;
+    }
+
+    public Builder setImagePerfDataListener(@Nullable ImagePerfDataListener imagePerfDataListener) {
+      mImagePerfDataListener = imagePerfDataListener;
       return this;
     }
 

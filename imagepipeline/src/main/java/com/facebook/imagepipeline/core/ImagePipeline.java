@@ -11,6 +11,7 @@ import android.net.Uri;
 import bolts.Continuation;
 import bolts.Task;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Predicate;
@@ -63,6 +64,7 @@ public class ImagePipeline {
   private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
   private AtomicLong mIdCounter;
   private final Supplier<Boolean> mLazyDataSource;
+  private final @Nullable CallerContextVerifier mCallerContextVerifier;
 
   public ImagePipeline(
       ProducerSequenceFactory producerSequenceFactory,
@@ -75,7 +77,8 @@ public class ImagePipeline {
       CacheKeyFactory cacheKeyFactory,
       ThreadHandoffProducerQueue threadHandoffProducerQueue,
       Supplier<Boolean> suppressBitmapPrefetchingSupplier,
-      Supplier<Boolean> lazyDataSource) {
+      Supplier<Boolean> lazyDataSource,
+      @Nullable CallerContextVerifier callerContextVerifier) {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
@@ -88,6 +91,7 @@ public class ImagePipeline {
     mThreadHandoffProducerQueue = threadHandoffProducerQueue;
     mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
     mLazyDataSource = lazyDataSource;
+    mCallerContextVerifier = callerContextVerifier;
   }
 
   /**
@@ -487,6 +491,15 @@ public class ImagePipeline {
   }
 
   /**
+   * Current disk caches size
+   *
+   * @return size in Bytes
+   */
+  public long getUsedDiskCacheSize() {
+    return mMainBufferedDiskCache.getSize() + mSmallImageBufferedDiskCache.getSize();
+  }
+
+  /**
    * Clear all the caches (memory and disk)
    */
   public void clearCaches() {
@@ -693,6 +706,10 @@ public class ImagePipeline {
     final RequestListener finalRequestListener =
         getRequestListenerForRequest(imageRequest, requestListener);
 
+    if (mCallerContextVerifier != null) {
+      mCallerContextVerifier.verifyCallerContext(callerContext);
+    }
+
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =
           ImageRequest.RequestLevel.getMax(
@@ -750,6 +767,9 @@ public class ImagePipeline {
       Priority priority) {
     final RequestListener requestListener = getRequestListenerForRequest(imageRequest, null);
 
+    if (mCallerContextVerifier != null) {
+      mCallerContextVerifier.verifyCallerContext(callerContext);
+    }
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =
           ImageRequest.RequestLevel.getMax(

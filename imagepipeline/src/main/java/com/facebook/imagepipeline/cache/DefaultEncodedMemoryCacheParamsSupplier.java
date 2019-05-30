@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.cache;
 
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Supplies {@link MemoryCacheParams} for the encoded image memory cache
@@ -18,6 +19,7 @@ public class DefaultEncodedMemoryCacheParamsSupplier implements Supplier<MemoryC
   // We want memory cache to be bound only by its memory consumption
   private static final int MAX_CACHE_ENTRIES = Integer.MAX_VALUE;
   private static final int MAX_EVICTION_QUEUE_ENTRIES = MAX_CACHE_ENTRIES;
+  private static final long PARAMS_CHECK_INTERVAL_MS = TimeUnit.MINUTES.toMillis(5);
 
   @Override
   public MemoryCacheParams get() {
@@ -28,7 +30,8 @@ public class DefaultEncodedMemoryCacheParamsSupplier implements Supplier<MemoryC
         MAX_CACHE_ENTRIES,
         maxCacheSize,
         MAX_EVICTION_QUEUE_ENTRIES,
-        maxCacheEntrySize);
+        maxCacheEntrySize,
+        PARAMS_CHECK_INTERVAL_MS);
   }
 
   private int getMaxCacheSize() {

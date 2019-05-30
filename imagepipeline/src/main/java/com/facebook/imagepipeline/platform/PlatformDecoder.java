@@ -7,6 +7,7 @@
 package com.facebook.imagepipeline.platform;
 
 import android.graphics.Bitmap;
+import android.graphics.ColorSpace;
 import android.graphics.Rect;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -64,7 +65,9 @@ public interface PlatformDecoder {
    * @param bitmapConfig the {@link android.graphics.Bitmap.Config} used to create the decoded
    *     Bitmap
    * @param regionToDecode optional image region to decode or null to decode the whole image
-   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
+   * @param colorSpace the target color space of the decoded bitmap, must be one of the named color
+   *     space in {@link android.graphics.ColorSpace.Named}. If null, then SRGB color space is
+   *     assumed if the SDK version >= 26.
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -73,7 +76,7 @@ public interface PlatformDecoder {
       final EncodedImage encodedImage,
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
-      final boolean transformToSRGB);
+      @Nullable final ColorSpace colorSpace);
 
   /**
    * Creates a bitmap from encoded JPEG bytes. Supports a partial JPEG image. In addition, a region
@@ -85,7 +88,9 @@ public interface PlatformDecoder {
    *     Bitmap
    * @param regionToDecode optional image region to decode or null to decode the whole image.
    * @param length the number of encoded bytes in the buffer
-   * @param transformToSRGB whether to allow color space transformation to sRGB at load time
+   * @param colorSpace the target color space of the decoded bitmap, must be one of the named color
+   *     space in {@link android.graphics.ColorSpace.Named}. If null, then SRGB color space is
+   *     assumed if the SDK version >= 26.
    * @return the bitmap
    * @throws TooManyBitmapsException if the pool is full
    * @throws java.lang.OutOfMemoryError if the Bitmap cannot be allocated
@@ -95,5 +100,5 @@ public interface PlatformDecoder {
       Bitmap.Config bitmapConfig,
       @Nullable Rect regionToDecode,
       int length,
-      final boolean transformToSRGB);
+      @Nullable final ColorSpace colorSpace);
 }

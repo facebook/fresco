@@ -54,8 +54,10 @@ public class DraweeHierarchyFragment extends BaseShowcaseFragment {
     final Uri uriSuccess =
         sampleUris()
             .createSampleUri(
-                ImageUriProvider.ImageSize.XL, ImageUriProvider.UriModification.CACHE_BREAKER);
-    final Uri uriFailure = sampleUris().createNonExistingUri();
+                ImageUriProvider.ImageSize.XL,
+                ImageUriProvider.Orientation.ANY,
+                ImageUriProvider.UriModification.CACHE_BREAKER);
+    final Uri uriFailure = sampleUris().getNonExistingUri();
 
     final SimpleDraweeView draweeView = view.findViewById(R.id.drawee);
     final SwitchCompat retrySwitch = view.findViewById(R.id.retry_enabled);

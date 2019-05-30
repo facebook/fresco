@@ -28,6 +28,6 @@ public abstract class BaseShowcaseFragment extends Fragment implements ShowcaseF
   }
 
   public ImageUriProvider sampleUris() {
-    return ImageUriProvider.getInstance(getContext());
+    return ShowcaseApplication.Companion.getImageUriProvider();
   }
 }

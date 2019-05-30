@@ -25,7 +25,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 
 /**
  * This fragment displays different WebP images.
@@ -48,14 +47,12 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-
     final SimpleDraweeView draweeWebpStatic = view.findViewById(R.id.drawee_view_webp_static);
-    draweeWebpStatic.setImageURI(imageUriProvider.createWebpStaticUri());
+    draweeWebpStatic.setImageURI(sampleUris().createWebpStaticUri());
 
     final SimpleDraweeView draweeWebpTranslucent =
         view.findViewById(R.id.drawee_view_webp_translucent);
-    draweeWebpTranslucent.setImageURI(imageUriProvider.createWebpTranslucentUri());
+    draweeWebpTranslucent.setImageURI(sampleUris().createWebpTranslucentUri());
 
     final SwitchCompat switchBackground = view.findViewById(R.id.switch_background);
     switchBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -68,11 +65,12 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
     });
 
     final SimpleDraweeView draweeWebpAnimated = view.findViewById(R.id.drawee_view_webp_animated);
-    draweeWebpAnimated.setController(Fresco.newDraweeControllerBuilder()
-        .setAutoPlayAnimations(true)
-        .setOldController(draweeWebpAnimated.getController())
-        .setUri(imageUriProvider.createWebpAnimatedUri())
-        .build());
+    draweeWebpAnimated.setController(
+        Fresco.newDraweeControllerBuilder()
+            .setAutoPlayAnimations(true)
+            .setOldController(draweeWebpAnimated.getController())
+            .setUri(sampleUris().createWebpAnimatedUri())
+            .build());
 
     final TextView supportStatusTextView = view.findViewById(R.id.text_webp_support_status);
     final StringBuilder sb = new StringBuilder();

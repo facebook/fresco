@@ -283,7 +283,8 @@ public class ImagePipelineFactory {
               mConfig.getCacheKeyFactory(),
               mThreadHandoffProducerQueue,
               Suppliers.of(false),
-              mConfig.getExperiments().isLazyDataSource());
+              mConfig.getExperiments().isLazyDataSource(),
+              mConfig.getCallerContextVerifier());
     }
     return mImagePipeline;
   }

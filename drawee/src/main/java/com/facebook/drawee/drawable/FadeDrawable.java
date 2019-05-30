@@ -232,6 +232,28 @@ public class FadeDrawable extends ArrayDrawable {
   }
 
   /**
+   * Makes the specified layer fully opaque
+   *
+   * @param index the index of the layer to be shown
+   */
+  public void showLayerImmediately(int index) {
+    mIsLayerOn[index] = true;
+    mAlphas[index] = 255;
+    invalidateSelf();
+  }
+
+  /**
+   * Makes the specified layer fully transparent
+   *
+   * @param index the index of the layer to be hidden
+   */
+  public void hideLayerImmediately(int index) {
+    mIsLayerOn[index] = false;
+    mAlphas[index] = 0;
+    invalidateSelf();
+  }
+
+  /**
    * Finishes transition immediately.
    */
   public void finishTransitionImmediately() {
@@ -355,4 +377,7 @@ public class FadeDrawable extends ArrayDrawable {
     return mIsLayerOn[index];
   }
 
+  public boolean isDefaultLayerIsOn() {
+    return mDefaultLayerIsOn;
+  }
 }

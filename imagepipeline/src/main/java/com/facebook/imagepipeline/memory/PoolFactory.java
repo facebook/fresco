@@ -45,6 +45,9 @@ public class PoolFactory {
         case BitmapPoolType.DUMMY:
           mBitmapPool = new DummyBitmapPool();
           break;
+        case BitmapPoolType.DUMMY_WITH_TRACKING:
+          mBitmapPool = new DummyTrackingInUseBitmapPool();
+          break;
         case BitmapPoolType.EXPERIMENTAL:
           mBitmapPool =
               new LruBitmapPool(

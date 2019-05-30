@@ -77,9 +77,8 @@ public class ImagePipelinePostProcessorFragment extends BaseShowcaseFragment
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
     mSpinnerEntries = getSpinnerItems();
-    mUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.L);
+    mUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.L);
 
     mButton = (Button) view.findViewById(R.id.button);
     mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);

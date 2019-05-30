@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -97,6 +99,21 @@ dependencies {
 
     implementation 'com.facebook.keyframes:keyframes:1.0'
 
+    // Litho
+    compileOnly "com.facebook.litho:litho-annotations:${versions.litho}"
+    implementation "com.facebook.litho:litho-core:${versions.litho}"
+    implementation "com.facebook.litho:litho-widget:${versions.litho}"
+    // Litho Sections
+    implementation "com.facebook.litho:litho-sections-core:${versions.litho}"
+    implementation "com.facebook.litho:litho-sections-widget:${versions.litho}"
+    compileOnly "com.facebook.litho:litho-sections-annotations:${versions.litho}"
+    annotationProcessor "com.facebook.litho:litho-sections-processor:${versions.litho}"
+
+    // Experimental Fresco Vito
+    implementation project(':vito:core')
+    implementation project(':vito:litho')
+    implementation project(':vito:options')
+
     // Only used for the custom SVG decoder
     implementation 'com.caverock:androidsvg:1.2.1'
 
@@ -105,4 +122,11 @@ dependencies {
     androidTestImplementation "androidx.test:rules:${versions.androidx.test}"
     androidTestImplementation "androidx.test:runner:${versions.androidx.test}"
     androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+
+    implementation('com.facebook.flipper:flipper:0.17.0') {
+        exclude group: 'com.facebook.fresco'
+    }
+    implementation project(':tools:flipper')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
 }
