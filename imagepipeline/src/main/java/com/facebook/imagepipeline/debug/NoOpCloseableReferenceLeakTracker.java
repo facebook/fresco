@@ -8,9 +8,13 @@ package com.facebook.imagepipeline.debug;
 
 import com.facebook.common.references.SharedReference;
 import java.io.Closeable;
+import javax.annotation.Nullable;
 
 public class NoOpCloseableReferenceLeakTracker implements CloseableReferenceLeakTracker {
 
   @Override
   public void trackCloseableReferenceLeak(SharedReference<Closeable> reference) {}
+
+  @Override
+  public void setListener(@Nullable Listener listener) {}
 }
