@@ -15,6 +15,7 @@ import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
+import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import javax.annotation.concurrent.ThreadSafe;
@@ -29,12 +30,16 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
   private static final String TAG = HoneycombBitmapFactory.class.getSimpleName();
   private final EmptyJpegGenerator mJpegGenerator;
   private final PlatformDecoder mPurgeableDecoder;
+  private final CloseableReferenceFactory mCloseableReferenceFactory;
   private boolean mImmutableBitmapFallback;
 
   public HoneycombBitmapFactory(
-      EmptyJpegGenerator jpegGenerator, PlatformDecoder purgeableDecoder) {
+      EmptyJpegGenerator jpegGenerator,
+      PlatformDecoder purgeableDecoder,
+      CloseableReferenceFactory closeableReferenceFactory) {
     mJpegGenerator = jpegGenerator;
     mPurgeableDecoder = purgeableDecoder;
+    mCloseableReferenceFactory = closeableReferenceFactory;
   }
 
   /**
@@ -86,9 +91,9 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
     }
   }
 
-  private static CloseableReference<Bitmap> createFallbackBitmap(
+  private CloseableReference<Bitmap> createFallbackBitmap(
       int width, int height, Bitmap.Config bitmapConfig) {
-    return CloseableReference.of(
+    return mCloseableReferenceFactory.create(
         Bitmap.createBitmap(width, height, bitmapConfig), SimpleBitmapReleaser.getInstance());
   }
 }
