@@ -8,12 +8,18 @@ package com.facebook.imagepipeline.debug;
 
 import com.facebook.common.references.SharedReference;
 import java.io.Closeable;
+import javax.annotation.Nullable;
 
 /**
  * Tracker for leaks that occur when a {@link com.facebook.common.references.CloseableReference} is
  * not closed.
  */
 public interface CloseableReferenceLeakTracker {
+  interface Listener {
+    void onCloseableReferenceLeak(SharedReference<Closeable> reference);
+  }
 
   void trackCloseableReferenceLeak(SharedReference<Closeable> reference);
+
+  void setListener(@Nullable Listener listener);
 }
