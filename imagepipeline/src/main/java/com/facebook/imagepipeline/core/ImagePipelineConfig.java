@@ -30,6 +30,8 @@ import com.facebook.imagepipeline.cache.DefaultEncodedMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.ImageCacheStatsTracker;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker;
+import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
+import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -94,6 +96,7 @@ public class ImagePipelineConfig {
   @Nullable private final ImageDecoderConfig mImageDecoderConfig;
   private final ImagePipelineExperiments mImagePipelineExperiments;
   private final boolean mDiskCacheEnabled;
+  private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
 
   private static DefaultImageRequestConfig
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
@@ -193,6 +196,7 @@ public class ImagePipelineConfig {
             ? new DefaultExecutorSupplier(numCpuBoundThreads)
             : builder.mExecutorSupplier;
     mDiskCacheEnabled = builder.mDiskCacheEnabled;
+    mCloseableReferenceLeakTracker = builder.mCloseableReferenceLeakTracker;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -366,6 +370,10 @@ public class ImagePipelineConfig {
     return mImagePipelineExperiments;
   }
 
+  public CloseableReferenceLeakTracker getCloseableReferenceLeakTracker() {
+    return mCloseableReferenceLeakTracker;
+  }
+
   public static Builder newBuilder(Context context) {
     return new Builder(context);
   }
@@ -445,6 +453,8 @@ public class ImagePipelineConfig {
     private final ImagePipelineExperiments.Builder mExperimentsBuilder
         = new ImagePipelineExperiments.Builder(this);
     private boolean mDiskCacheEnabled = true;
+    private CloseableReferenceLeakTracker mCloseableReferenceLeakTracker =
+        new NoOpCloseableReferenceLeakTracker();
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -603,6 +613,12 @@ public class ImagePipelineConfig {
 
     public Builder setImageDecoderConfig(ImageDecoderConfig imageDecoderConfig) {
       mImageDecoderConfig = imageDecoderConfig;
+      return this;
+    }
+
+    public Builder setCloseableReferenceLeakTracker(
+        CloseableReferenceLeakTracker closeableReferenceLeakTracker) {
+      mCloseableReferenceLeakTracker = closeableReferenceLeakTracker;
       return this;
     }
 

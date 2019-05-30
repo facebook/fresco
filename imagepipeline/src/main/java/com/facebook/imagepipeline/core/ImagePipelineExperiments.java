@@ -312,7 +312,8 @@ public class ImagePipelineExperiments {
         int bitmapPrepareToDrawMinSizeBytes,
         int bitmapPrepareToDrawMaxSizeBytes,
         boolean bitmapPrepareToDrawForPrefetch,
-        int maxBitmapSize);
+        int maxBitmapSize,
+        CloseableReferenceFactory closeableReferenceFactory);
   }
 
   public static class DefaultProducerFactoryMethod implements ProducerFactoryMethod {
@@ -337,7 +338,8 @@ public class ImagePipelineExperiments {
         int bitmapPrepareToDrawMinSizeBytes,
         int bitmapPrepareToDrawMaxSizeBytes,
         boolean bitmapPrepareToDrawForPrefetch,
-        int maxBitmapSize) {
+        int maxBitmapSize,
+        CloseableReferenceFactory closeableReferenceFactory) {
       return new ProducerFactory(
           context,
           byteArrayPool,
@@ -357,7 +359,8 @@ public class ImagePipelineExperiments {
           bitmapPrepareToDrawMinSizeBytes,
           bitmapPrepareToDrawMaxSizeBytes,
           bitmapPrepareToDrawForPrefetch,
-          maxBitmapSize);
+          maxBitmapSize,
+          closeableReferenceFactory);
     }
   }
 }

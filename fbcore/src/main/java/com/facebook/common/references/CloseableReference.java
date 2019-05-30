@@ -115,11 +115,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * <p>Returns null if the parameter is null.
    */
   public static <T extends Closeable> CloseableReference<T> of(@PropagatesNullable T t) {
-    if (t == null) {
-      return null;
-    } else {
-      return new CloseableReference<T>(t, (ResourceReleaser<T>) DEFAULT_CLOSEABLE_RELEASER);
-    }
+    return of(t, (ResourceReleaser<T>) DEFAULT_CLOSEABLE_RELEASER);
   }
 
   /**

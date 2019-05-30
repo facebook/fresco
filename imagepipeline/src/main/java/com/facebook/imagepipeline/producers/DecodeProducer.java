@@ -21,6 +21,7 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.core.CloseableReferenceFactory;
 import com.facebook.imagepipeline.decoder.DecodeException;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -66,6 +67,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
   private final boolean mDownsampleEnabledForNetwork;
   private final boolean mDecodeCancellationEnabled;
   private final int mMaxBitmapSize;
+  private final CloseableReferenceFactory mCloseableReferenceFactory;
 
   public DecodeProducer(
       final ByteArrayPool byteArrayPool,
@@ -76,7 +78,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
       final boolean downsampleEnabledForNetwork,
       final boolean decodeCancellationEnabled,
       final Producer<EncodedImage> inputProducer,
-      final int maxBitmapSize) {
+      final int maxBitmapSize,
+      final CloseableReferenceFactory closeableReferenceFactory) {
     mByteArrayPool = Preconditions.checkNotNull(byteArrayPool);
     mExecutor = Preconditions.checkNotNull(executor);
     mImageDecoder = Preconditions.checkNotNull(imageDecoder);
@@ -86,6 +89,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     mInputProducer = Preconditions.checkNotNull(inputProducer);
     mDecodeCancellationEnabled = decodeCancellationEnabled;
     mMaxBitmapSize = maxBitmapSize;
+    mCloseableReferenceFactory = closeableReferenceFactory;
   }
 
   @Override
@@ -391,7 +395,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
      * Notifies consumer of new result and finishes if the result is final.
      */
     private void handleResult(final CloseableImage decodedImage, final @Status int status) {
-      CloseableReference<CloseableImage> decodedImageRef = CloseableReference.of(decodedImage);
+      CloseableReference<CloseableImage> decodedImageRef =
+          mCloseableReferenceFactory.create(decodedImage);
       try {
         maybeFinish(isLast(status));
         getConsumer().onNewResult(decodedImageRef, status);
