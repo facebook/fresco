@@ -115,6 +115,7 @@ public class ImagePipelineFactory {
   }
 
   private final ImagePipelineConfig mConfig;
+  private final CloseableReferenceFactory mCloseableReferenceFactory;
   private CountingMemoryCache<CacheKey, CloseableImage>
       mBitmapCountingMemoryCache;
   private InstrumentedMemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
@@ -143,6 +144,8 @@ public class ImagePipelineFactory {
     mThreadHandoffProducerQueue =
         new ThreadHandoffProducerQueue(
             config.getExecutorSupplier().forLightweightBackgroundTasks());
+    mCloseableReferenceFactory =
+        new CloseableReferenceFactory(config.getCloseableReferenceLeakTracker());
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
     }
@@ -290,7 +293,7 @@ public class ImagePipelineFactory {
     if (mPlatformBitmapFactory == null) {
       mPlatformBitmapFactory =
           PlatformBitmapFactoryProvider.buildPlatformBitmapFactory(
-              mConfig.getPoolFactory(), getPlatformDecoder());
+              mConfig.getPoolFactory(), getPlatformDecoder(), getCloseableReferenceFactory());
     }
     return mPlatformBitmapFactory;
   }
@@ -329,7 +332,8 @@ public class ImagePipelineFactory {
                   mConfig.getExperiments().getBitmapPrepareToDrawMinSizeBytes(),
                   mConfig.getExperiments().getBitmapPrepareToDrawMaxSizeBytes(),
                   mConfig.getExperiments().getBitmapPrepareToDrawForPrefetch(),
-                  mConfig.getExperiments().getMaxBitmapSize());
+                  mConfig.getExperiments().getMaxBitmapSize(),
+                  getCloseableReferenceFactory());
     }
     return mProducerFactory;
   }
@@ -363,6 +367,10 @@ public class ImagePipelineFactory {
       mSmallImageFileCache = mConfig.getFileCacheFactory().get(diskCacheConfig);
     }
     return mSmallImageFileCache;
+  }
+
+  public CloseableReferenceFactory getCloseableReferenceFactory() {
+    return mCloseableReferenceFactory;
   }
 
   private BufferedDiskCache getSmallImageBufferedDiskCache() {

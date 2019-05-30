@@ -31,6 +31,8 @@ import com.facebook.imagepipeline.cache.DefaultEncodedMemoryCacheParamsSupplier;
 import com.facebook.imagepipeline.cache.ImageCacheStatsTracker;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker;
+import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
+import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
@@ -96,6 +98,7 @@ public class ImagePipelineConfig {
   private final ImagePipelineExperiments mImagePipelineExperiments;
   private final boolean mDiskCacheEnabled;
   @Nullable private final CallerContextVerifier mCallerContextVerifier;
+  private final CloseableReferenceLeakTracker mCloseableReferenceLeakTracker;
 
   private static DefaultImageRequestConfig
       sDefaultImageRequestConfig = new DefaultImageRequestConfig();
@@ -196,6 +199,7 @@ public class ImagePipelineConfig {
             : builder.mExecutorSupplier;
     mDiskCacheEnabled = builder.mDiskCacheEnabled;
     mCallerContextVerifier = builder.mCallerContextVerifier;
+    mCloseableReferenceLeakTracker = builder.mCloseableReferenceLeakTracker;
     // Here we manage the WebpBitmapFactory implementation if any
     WebpBitmapFactory webpBitmapFactory = mImagePipelineExperiments.getWebpBitmapFactory();
     if (webpBitmapFactory != null) {
@@ -374,6 +378,10 @@ public class ImagePipelineConfig {
     return mImagePipelineExperiments;
   }
 
+  public CloseableReferenceLeakTracker getCloseableReferenceLeakTracker() {
+    return mCloseableReferenceLeakTracker;
+  }
+
   public static Builder newBuilder(Context context) {
     return new Builder(context);
   }
@@ -454,6 +462,8 @@ public class ImagePipelineConfig {
         = new ImagePipelineExperiments.Builder(this);
     private boolean mDiskCacheEnabled = true;
     private CallerContextVerifier mCallerContextVerifier;
+    private CloseableReferenceLeakTracker mCloseableReferenceLeakTracker =
+        new NoOpCloseableReferenceLeakTracker();
 
     private Builder(Context context) {
       // Doesn't use a setter as always required.
@@ -617,6 +627,12 @@ public class ImagePipelineConfig {
 
     public Builder setCallerContextVerifier(CallerContextVerifier callerContextVerifier) {
       mCallerContextVerifier = callerContextVerifier;
+      return this;
+    }
+
+    public Builder setCloseableReferenceLeakTracker(
+        CloseableReferenceLeakTracker closeableReferenceLeakTracker) {
+      mCloseableReferenceLeakTracker = closeableReferenceLeakTracker;
       return this;
     }
 

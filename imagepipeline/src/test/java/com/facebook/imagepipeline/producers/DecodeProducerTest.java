@@ -19,6 +19,8 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.core.CloseableReferenceFactory;
+import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
@@ -114,7 +116,8 @@ public class DecodeProducerTest {
             false, /* Set resizeAndRotateForNetwork to false */
             false, /* We don't cancel when the request is cancelled */
             mInputProducer,
-            MAX_BITMAP_SIZE);
+            MAX_BITMAP_SIZE,
+            new CloseableReferenceFactory(new NoOpCloseableReferenceLeakTracker()));
 
     PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
     mByteBufferRef = CloseableReference.of(pooledByteBuffer);
