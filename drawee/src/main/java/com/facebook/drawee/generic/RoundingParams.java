@@ -45,7 +45,7 @@ public class RoundingParams {
 
   private RoundingMethod mRoundingMethod = RoundingMethod.BITMAP_ONLY;
   private boolean mRoundAsCircle = false;
-  private float[] mCornersRadii = null;
+  private @Nullable float[] mCornersRadii = null;
   private int mOverlayColor = 0;
   private float mBorderWidth = 0;
   private int mBorderColor = Color.TRANSPARENT;
@@ -119,10 +119,10 @@ public class RoundingParams {
   /**
    * Gets the rounded corners radii.
    *
-   * <p> For performance reasons the internal array is returned directly. Do not modify it directly,
+   * <p>For performance reasons the internal array is returned directly. Do not modify it directly,
    * but use one of the exposed corner radii setters instead.
    */
-  public float[] getCornersRadii() {
+  public @Nullable float[] getCornersRadii() {
     return mCornersRadii;
   }
 
