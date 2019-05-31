@@ -13,6 +13,7 @@ import android.os.Build;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
+import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -64,8 +65,9 @@ public class FrescoContext {
       @Nullable CallerContextVerifier callerContextVerifier,
       FrescoExperiments frescoExperiments,
       Executor uiThreadExecutor,
-      @Nullable ImageListener globalImageListener) {
-    mController = new FrescoControllerImpl(this);
+      @Nullable ImageListener globalImageListener,
+      DebugOverlayFactory debugOverlayFactory) {
+    mController = new FrescoControllerImpl(this, debugOverlayFactory);
     mHierarcher = hierarcher;
     mCallerContextVerifier = callerContextVerifier;
     mExperiments = frescoExperiments;

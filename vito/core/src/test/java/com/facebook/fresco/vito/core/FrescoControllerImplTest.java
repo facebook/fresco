@@ -24,6 +24,7 @@ import com.facebook.cache.common.CacheKey;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.SimpleDataSource;
+import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ProducerSequenceFactory;
@@ -85,7 +86,7 @@ public class FrescoControllerImplTest {
     when(mFrescoState.getImageOptions()).thenReturn(mImageOptions);
     when(mFrescoState.getOverlayDrawable()).thenReturn(mOverlayDrawable);
 
-    mFrescoController = new FrescoControllerImpl(mFrescoContext);
+    mFrescoController = new FrescoControllerImpl(mFrescoContext, new NoOpDebugOverlayFactory());
   }
 
   @Test
@@ -104,7 +105,8 @@ public class FrescoControllerImplTest {
             eq(mFrescoDrawable),
             eq(mResources),
             eq(mImageOptions),
-            eq(mOverlayDrawable));
+            eq(mOverlayDrawable),
+            isNull(Drawable.class));
     verify(mFrescoContext).getImagePipeline();
     verify(mImagePipeline).getCachedImage(eq(cacheKey));
     assertThat(imageReference.isValid()).isFalse();
@@ -122,7 +124,8 @@ public class FrescoControllerImplTest {
             eq(mFrescoDrawable),
             eq(mResources),
             eq(mImageOptions),
-            eq(mOverlayDrawable));
+            eq(mOverlayDrawable),
+            isNull(Drawable.class));
     verify(mFrescoContext, atLeast(1)).getExperiments();
     verify(mFrescoContext).getImagePipeline();
     verify(mFrescoState).onSubmit(eq(IMAGE_ID), eq(CALLER_CONTEXT));

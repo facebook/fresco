@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core;
 import android.content.res.Resources;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.drawable.ForwardingDrawable;
@@ -165,9 +166,17 @@ public class HierarcherImpl implements Hierarcher {
       FrescoDrawable frescoDrawable,
       Resources resources,
       ImageOptions imageOptions,
-      @Nullable Drawable overlayDrawable) {
+      @Nullable Drawable overlayDrawable,
+      @Nullable Drawable debugOverlayDrawable) {
     if (overlayDrawable == null) {
       overlayDrawable = buildOverlayDrawable(resources, imageOptions);
+    }
+    if (debugOverlayDrawable != null) {
+      if (overlayDrawable == null) {
+        overlayDrawable = debugOverlayDrawable;
+      } else {
+        overlayDrawable = new LayerDrawable(new Drawable[] {overlayDrawable, debugOverlayDrawable});
+      }
     }
     frescoDrawable.setOverlayDrawable(overlayDrawable);
     frescoDrawable.showOverlayImmediately();

@@ -14,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.HierarcherImpl;
+import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory;
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
@@ -48,7 +49,8 @@ public class DefaultFrescoContext {
         new NoOpCallerContextVerifier(),
         new FrescoExperiments(),
         UiThreadImmediateExecutorService.getInstance(),
-        null);
+        null,
+        new NoOpDebugOverlayFactory());
   }
 
   private static VitoDrawableFactory createDefaultDrawableFactory(Resources resources) {
