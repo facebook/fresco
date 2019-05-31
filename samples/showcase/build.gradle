@@ -113,6 +113,7 @@ dependencies {
     implementation project(':vito:core')
     implementation project(':vito:litho')
     implementation project(':vito:options')
+    implementation project(':vito:provider')
 
     // Only used for the custom SVG decoder
     implementation 'com.caverock:androidsvg:1.2.1'
