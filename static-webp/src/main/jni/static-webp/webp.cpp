@@ -86,6 +86,8 @@ struct WebPImageNativeContext {
   /** Reference counter. Instance is deleted when it goes from 1 to 0 */
   size_t refCount;
 
+  bool partial;
+
 #if EXTRA_LOGGING
   ~WebPImageNativeContext() {
     __android_log_write(ANDROID_LOG_DEBUG, WEBP_IMAGE_LOG_TAG, "WebPImageNativeContext destructor");
@@ -180,9 +182,10 @@ jobject WebPImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>&
   webPData.bytes = vBuffer.data();
   webPData.size = vBuffer.size();
 
+  WebPDemuxState state;
   // Create the WebPDemuxer
   auto spDemuxer = std::unique_ptr<WebPDemuxer, decltype(&WebPDemuxDelete)> {
-    WebPDemux(&webPData),
+    WebPDemuxPartial(&webPData, &state),
     WebPDemuxDelete
   };
   if (!spDemuxer) {
@@ -192,7 +195,7 @@ jobject WebPImage_nativeCreateFromByteVector(JNIEnv* pEnv, std::vector<uint8_t>&
     //FBLOGW("unable to get demuxer");
     return 0;
   }
-
+  spNativeContext->partial = state != WEBP_DEMUX_DONE;
   spNativeContext->pixelWidth = WebPDemuxGetI(spDemuxer.get(), WEBP_FF_CANVAS_WIDTH);
   spNativeContext->pixelHeight = WebPDemuxGetI(spDemuxer.get(), WEBP_FF_CANVAS_HEIGHT);
   spNativeContext->numFrames = WebPDemuxGetI(spDemuxer.get(), WEBP_FF_FRAME_COUNT);
@@ -547,6 +550,20 @@ jint WebPImage_nativeGetSizeInBytes(JNIEnv* pEnv, jobject thiz) {
 }
 
 /**
+ * Return whether the image is partial.
+ *
+ * @return whether the image is partial
+ */
+jboolean WebPImage_nativeGetPartial(JNIEnv* pEnv, jobject thiz) {
+  auto spNativeContext = getWebPImageNativeContext(pEnv, thiz);
+  if (!spNativeContext) {
+    throwIllegalStateException(pEnv, "Already disposed");
+    return 0;
+  }
+  return spNativeContext->partial;
+}
+
+/**
  * Disposes the WebImage, freeing native resources.
  */
 void WebImage_nativeDispose(JNIEnv* pEnv, jobject thiz) {
@@ -812,6 +829,9 @@ static JNINativeMethod sWebPImageMethods[] = {
   { "nativeGetSizeInBytes",
     "()I",
     (void*)WebPImage_nativeGetSizeInBytes },
+  { "nativeGetPartial",
+     "()Z",
+     (void*)WebPImage_nativeGetPartial },
   { "nativeDispose",
     "()V",
     (void*)WebImage_nativeDispose },

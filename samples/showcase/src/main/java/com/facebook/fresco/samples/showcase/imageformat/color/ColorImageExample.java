@@ -20,6 +20,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.BaseDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -178,7 +179,7 @@ public class ColorImageExample {
    * Color drawable factory that is able to render a {@link CloseableColorImage} by creating
    * a new {@link ColorDrawable} for the given color.
    */
-  public static class ColorDrawableFactory implements DrawableFactory {
+  public static class ColorDrawableFactory extends BaseDrawableFactory {
 
     @Override
     public boolean supportsImageType(CloseableImage image) {

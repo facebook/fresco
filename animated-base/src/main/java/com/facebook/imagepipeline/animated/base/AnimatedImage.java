@@ -97,4 +97,13 @@ public interface AnimatedImage {
    * @return the frame info
    */
   AnimatedDrawableFrameInfo getFrameInfo(int frameNumber);
+
+  /**
+   * Return whether the image is partial. This may be due to a cancellation or failure while the
+   * file was being downloaded or because only part of the image was requested or only part of image
+   * has been downloaded for the time being.
+   *
+   * @return whether the image is partial
+   */
+  boolean isPartial();
 }

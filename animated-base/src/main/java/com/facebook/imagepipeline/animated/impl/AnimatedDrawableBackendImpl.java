@@ -91,7 +91,7 @@ public class AnimatedDrawableBackendImpl implements AnimatedDrawableBackend {
 
   @Override
   public int getLoopCount() {
-    return mAnimatedImage.getLoopCount();
+    return mAnimatedImage.isPartial() ? 1 : mAnimatedImage.getLoopCount();
   }
 
   @Override

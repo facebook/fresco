@@ -20,6 +20,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.BaseDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -131,7 +132,7 @@ public class SvgDecoderExample {
   /**
    * SVG drawable factory that creates {@link PictureDrawable}s for SVG images.
    */
-  public static class SvgDrawableFactory implements DrawableFactory {
+  public static class SvgDrawableFactory extends BaseDrawableFactory {
 
     @Override
     public boolean supportsImageType(CloseableImage image) {

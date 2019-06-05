@@ -92,5 +92,10 @@ public class MovieAnimatedImage implements AnimatedImage {
         AnimatedDrawableFrameInfo.BlendOperation.BLEND_WITH_PREVIOUS,
         mFrames[frameNumber].getDisposalMode());
   }
+
+  @Override
+  public boolean isPartial() {
+    return false;
+  }
 }
 

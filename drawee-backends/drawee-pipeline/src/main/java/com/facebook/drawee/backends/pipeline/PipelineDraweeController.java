@@ -269,7 +269,9 @@ public class PipelineDraweeController
         return drawable;
       }
 
-      drawable = mDefaultDrawableFactory.createDrawable(closeableImage);
+      drawable = mDefaultDrawableFactory.needPreviousDrawable(mDrawable, closeableImage)
+        ? mDefaultDrawableFactory.createDrawable(mDrawable, closeableImage)
+        : mDefaultDrawableFactory.createDrawable(closeableImage);
       if (drawable != null) {
         return drawable;
       }
@@ -288,7 +290,9 @@ public class PipelineDraweeController
     }
     for (DrawableFactory factory : drawableFactories) {
       if (factory.supportsImageType(closeableImage)) {
-        Drawable drawable = factory.createDrawable(closeableImage);
+        Drawable drawable = factory.needPreviousDrawable(mDrawable, closeableImage)
+          ? factory.createDrawable(mDrawable, closeableImage)
+          : factory.createDrawable(closeableImage);
         if (drawable != null) {
           return drawable;
         }

@@ -9,6 +9,7 @@ package com.facebook.fresco.animation.factory;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
@@ -35,17 +36,22 @@ import com.facebook.imagepipeline.animated.impl.AnimatedDrawableBackendProvider;
 import com.facebook.imagepipeline.animated.impl.AnimatedFrameCache;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
+import com.facebook.imagepipeline.drawable.BaseDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableAnimatedImage;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.image.EncodedImage;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+
+import javax.annotation.Nullable;
 
 /**
  * Animation factory for {@link AnimatedDrawable2}.
  *
  */
-public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFactory {
+public class ExperimentalBitmapAnimationDrawableFactory extends BaseDrawableFactory {
 
   public static final int CACHING_STRATEGY_NO_CACHE = 0;
   public static final int CACHING_STRATEGY_FRESCO_CACHE = 1;
@@ -90,6 +96,22 @@ public class ExperimentalBitmapAnimationDrawableFactory implements DrawableFacto
     return new AnimatedDrawable2(
         createAnimationBackend(
             ((CloseableAnimatedImage) image).getImageResult()));
+  }
+
+  @Nullable
+  @Override
+  public Drawable createDrawable(Drawable previousDrawable, CloseableImage image) {
+    if (previousDrawable instanceof AnimatedDrawable2) {
+      ((AnimatedDrawable2) previousDrawable).updateProgressiveAnimation(
+        createAnimationBackend(((CloseableAnimatedImage) image).getImageResult()));
+      return previousDrawable;
+    }
+    return null;
+  }
+
+  @Override
+  public boolean needPreviousDrawable(Drawable previousDrawable, CloseableImage image) {
+    return previousDrawable instanceof AnimatedDrawable2;
   }
 
   private AnimationBackend createAnimationBackend(AnimatedImageResult animatedImageResult) {

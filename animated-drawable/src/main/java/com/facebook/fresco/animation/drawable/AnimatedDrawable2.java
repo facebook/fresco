@@ -66,6 +66,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
   private long mLastFrameAnimationTimeMs;
   private long mExpectedRenderTimeMs;
   private int mLastDrawnFrameNumber;
+  private int mProgressiveLastFrameNumber = -1;
 
   private long mFrameSchedulingDelayMs = DEFAULT_FRAME_SCHEDULING_DELAY_MS;
   private long mFrameSchedulingOffsetMs = DEFAULT_FRAME_SCHEDULING_OFFSET_MS;
@@ -129,16 +130,27 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
    */
   @Override
   public void start() {
-    if (mIsRunning || mAnimationBackend == null || mAnimationBackend.getFrameCount() <= 1) {
+    boolean progressiveStart = mProgressiveLastFrameNumber >= 0;
+    boolean frameCountValid = 
+      mAnimationBackend.getFrameCount() <= (progressiveStart ? mProgressiveLastFrameNumber : 1);
+    if (mIsRunning || mAnimationBackend == null || frameCountValid) {
       return;
     }
     mIsRunning = true;
-    mStartTimeMs = now();
+    if (progressiveStart) {
+      mLastFrameAnimationTimeMs = 
+        mFrameScheduler.getTargetRenderTimeMs(mProgressiveLastFrameNumber);
+      mLastDrawnFrameNumber = mProgressiveLastFrameNumber;
+      mStartTimeMs = now() - mLastFrameAnimationTimeMs;
+    } else {
+      mLastFrameAnimationTimeMs = -1;
+      mLastDrawnFrameNumber = -1;
+      mStartTimeMs = now();
+    }
     mExpectedRenderTimeMs = mStartTimeMs;
-    mLastFrameAnimationTimeMs = -1;
-    mLastDrawnFrameNumber = -1;
     invalidateSelf();
     mAnimationListener.onAnimationStart(this);
+    mProgressiveLastFrameNumber = -1;
   }
 
   /**
@@ -190,20 +202,21 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     int frameNumberToDraw = mFrameScheduler.getFrameNumberToRender(
         animationTimeMs,
         mLastFrameAnimationTimeMs);
-
     // Check if the animation is finished and draw last frame if so
     if (frameNumberToDraw == FrameScheduler.FRAME_NUMBER_DONE) {
       frameNumberToDraw = mAnimationBackend.getFrameCount() - 1;
       mAnimationListener.onAnimationStop(this);
       mIsRunning = false;
     } else if (frameNumberToDraw == 0) {
-      if (mLastDrawnFrameNumber != -1 && actualRenderTimeStartMs >= mExpectedRenderTimeMs) {
+      if (isInfiniteAnimation() && mLastDrawnFrameNumber != -1 
+        && actualRenderTimeStartMs >= mExpectedRenderTimeMs) {
         mAnimationListener.onAnimationRepeat(this);
       }
     }
 
     // Draw the frame
-    boolean frameDrawn = mAnimationBackend.drawFrame(this, canvas, frameNumberToDraw);
+    boolean frameDrawn =
+      frameNumberToDraw != -1 && mAnimationBackend.drawFrame(this, canvas, frameNumberToDraw);
     if (frameDrawn) {
       // Notify listeners that we draw a new frame and
       // that the animation might be repeated
@@ -212,7 +225,7 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     }
 
     // Log potential dropped frames
-    if (!frameDrawn) {
+    if (frameNumberToDraw != -1 && !frameDrawn) {
       onFrameDropped();
     }
 
@@ -484,5 +497,16 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
     if (mAnimationBackend != null) {
       mAnimationBackend.clear();
     }
+  }
+
+  /**
+   * In order to support progressive animation. When more data is downloaded, the newly generated
+   * AnimationBackend will be set and the last frame number will be recorded.
+   *
+   * @param animationBackend the newly generated AnimationBackend
+   */
+  public void updateProgressiveAnimation(@Nullable AnimationBackend animationBackend) {
+    mProgressiveLastFrameNumber = mLastDrawnFrameNumber;
+    setAnimationBackend(animationBackend);
   }
 }

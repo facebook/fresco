@@ -100,6 +100,7 @@
   <string name="category_format">Image Format</string>
 
   <string name="format_switch_checker_board">Checker board background</string>
+  <string name="format_switch_checker_progressive_animator">Checker progressive animator</string>
   <string name="format_switch_aspect_ratio">Portrait aspect ratio</string>
 
   <string-array name="gif_decoder_options">

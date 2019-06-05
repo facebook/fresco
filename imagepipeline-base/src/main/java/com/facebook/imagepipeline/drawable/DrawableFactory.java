@@ -33,4 +33,26 @@ public interface DrawableFactory {
    */
   @Nullable
   Drawable createDrawable(CloseableImage image);
+
+  /**
+   * Create or update a drawable for the given image and the previous drawable.
+   * It is guaranteed that this method is only called if
+   * {@link #needPreviousDrawable(Drawable, CloseableImage)} returned true.
+   *
+   * @param previousDrawable the previous drawable
+   * @param image the image to create the drawable for
+   * @return the Drawable for the image and previous drawable or null if an error occurred
+   */
+  @Nullable
+  Drawable createDrawable(Drawable previousDrawable, CloseableImage image);
+
+  /**
+   * Returns true if the factory need previous drawable to create or update a Drawable for the given
+   * image.
+   *
+   * @param previousDrawable the previous drawable
+   * @param image the image to check
+   * @return true if previous drawable is needed
+   */
+  boolean needPreviousDrawable(Drawable previousDrawable, CloseableImage image);
 }

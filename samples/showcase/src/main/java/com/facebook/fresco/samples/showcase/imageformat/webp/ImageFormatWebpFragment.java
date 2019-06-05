@@ -25,6 +25,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.CheckerBoardDrawable;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 /**
  * This fragment displays different WebP images.
@@ -65,12 +67,29 @@ public class ImageFormatWebpFragment extends BaseShowcaseFragment {
     });
 
     final SimpleDraweeView draweeWebpAnimated = view.findViewById(R.id.drawee_view_webp_animated);
+    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(sampleUris().createWebpAnimatedUri())
+            .setProgressiveRenderingEnabled(false).build();
     draweeWebpAnimated.setController(
         Fresco.newDraweeControllerBuilder()
             .setAutoPlayAnimations(true)
             .setOldController(draweeWebpAnimated.getController())
-            .setUri(sampleUris().createWebpAnimatedUri())
+            .setImageRequest(request)
             .build());
+
+    final SwitchCompat switchProgressive = view.findViewById(R.id.switch_progressive_animator);
+    switchProgressive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(sampleUris().createWebpAnimatedUri())
+          .setProgressiveRenderingEnabled(isChecked).build();
+        draweeWebpAnimated.setController(
+          Fresco.newDraweeControllerBuilder()
+            .setAutoPlayAnimations(true)
+            .setOldController(draweeWebpAnimated.getController())
+            .setImageRequest(request)
+            .build());
+      }
+    });
 
     final TextView supportStatusTextView = view.findViewById(R.id.text_webp_support_status);
     final StringBuilder sb = new StringBuilder();

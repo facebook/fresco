@@ -188,6 +188,11 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
     }
   }
 
+  @Override
+  public boolean isPartial() {
+    return false;
+  }
+
   private static AnimatedDrawableFrameInfo.DisposalMethod fromGifDisposalMethod(int disposalMode) {
     if (disposalMode == 0 /* DISPOSAL_UNSPECIFIED */) {
       return AnimatedDrawableFrameInfo.DisposalMethod.DISPOSE_DO_NOT;

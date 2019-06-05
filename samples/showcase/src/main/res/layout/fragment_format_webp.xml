@@ -71,6 +71,14 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_progressive_animator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/format_switch_checker_progressive_animator"
+        />
+
     <!-- webp support status -->
 
     <TextView

@@ -18,6 +18,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatCheckerUtils;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
+import com.facebook.imagepipeline.drawable.BaseDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -149,7 +150,7 @@ public class KeyframesDecoderExample {
     }
   }
 
-  private static class KeyframesDrawableFactory implements DrawableFactory {
+  private static class KeyframesDrawableFactory extends BaseDrawableFactory {
 
     @Override
     public boolean supportsImageType(CloseableImage image) {

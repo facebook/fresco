@@ -96,7 +96,7 @@ public abstract class AbstractDraweeController<T, INFO> implements
   private @Nullable String mContentDescription;
   private @Nullable DataSource<T> mDataSource;
   private @Nullable T mFetchedImage;
-  private @Nullable Drawable mDrawable;
+  protected @Nullable Drawable mDrawable;
   private boolean mJustConstructed = true;
 
   public AbstractDraweeController(
