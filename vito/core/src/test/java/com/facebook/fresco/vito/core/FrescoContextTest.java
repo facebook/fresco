@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 
 import android.net.Uri;
 import com.facebook.callercontext.CallerContextVerifier;
+import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -52,7 +53,8 @@ public class FrescoContextTest {
             mCallerContextVerifier,
             mFrescoExperiments,
             mUiThreadExecutor,
-            mImageListener);
+            mImageListener,
+            new NoOpDebugOverlayFactory());
   }
 
   @Test

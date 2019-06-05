@@ -10,10 +10,13 @@ package com.facebook.fresco.vito.provider;
 import android.content.res.Resources;
 import com.facebook.callercontext.CallerContextVerifier;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.internal.Supplier;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.core.HierarcherImpl;
+import com.facebook.fresco.vito.core.debug.DefaultDebugOverlayFactory;
+import com.facebook.fresco.vito.core.debug.NoOpDebugOverlayFactory;
 import com.facebook.fresco.vito.drawable.ArrayVitoDrawableFactory;
 import com.facebook.fresco.vito.drawable.BitmapDrawableFactory;
 import com.facebook.fresco.vito.drawable.VitoDrawableFactory;
@@ -23,6 +26,7 @@ import javax.annotation.Nullable;
 public class DefaultFrescoContext {
 
   private static @Nullable FrescoContext sInstance;
+  private static @Nullable Supplier<Boolean> sDebugOverlayEnabledSupplier;
 
   public static synchronized FrescoContext get(Resources resources) {
     if (sInstance == null) {
@@ -38,6 +42,11 @@ public class DefaultFrescoContext {
     sInstance = context;
   }
 
+  public static synchronized void setDebugOverlayEnabledSupplier(
+      @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
+    sDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
+  }
+
   public static synchronized boolean isInitialized() {
     return sInstance != null;
   }
@@ -48,7 +57,10 @@ public class DefaultFrescoContext {
         new NoOpCallerContextVerifier(),
         new FrescoExperiments(),
         UiThreadImmediateExecutorService.getInstance(),
-        null);
+        null,
+        sDebugOverlayEnabledSupplier == null
+            ? new NoOpDebugOverlayFactory()
+            : new DefaultDebugOverlayFactory(sDebugOverlayEnabledSupplier));
   }
 
   private static VitoDrawableFactory createDefaultDrawableFactory(Resources resources) {

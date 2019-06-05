@@ -29,6 +29,7 @@ import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.fresco.samples.showcase.misc.DebugOverlaySupplierSingleton
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
+import com.facebook.fresco.vito.provider.DefaultFrescoContext
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.debug.FlipperCacheKeyFactory
@@ -88,6 +89,8 @@ class ShowcaseApplication : Application() {
 
         draweeConfigBuilder.setDebugOverlayEnabledSupplier(
                 DebugOverlaySupplierSingleton.getInstance(applicationContext))
+
+        DefaultFrescoContext.setDebugOverlayEnabledSupplier(DebugOverlaySupplierSingleton.getInstance(applicationContext))
 
         if (shouldEnableFlipper()) {
             draweeConfigBuilder.setImagePerfDataListener(

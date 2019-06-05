@@ -84,10 +84,10 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private static final LeakHandler<Closeable> DEFAULT_LEAK_HANDLER =
-      new LeakHandler<Closeable>() {
+  private static final LeakHandler<Object> DEFAULT_LEAK_HANDLER =
+      new LeakHandler<Object>() {
         @Override
-        public void reportLeak(SharedReference<Closeable> reference) {
+        public void reportLeak(SharedReference<Object> reference) {
           FLog.w(
               TAG,
               "Finalized without closing: %x %x (type = %s)",

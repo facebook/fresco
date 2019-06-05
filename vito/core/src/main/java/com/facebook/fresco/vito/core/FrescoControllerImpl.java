@@ -18,6 +18,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.info.ImageOrigin;
 import com.facebook.drawee.components.DeferredReleaser;
+import com.facebook.fresco.vito.core.debug.DebugOverlayFactory;
 import com.facebook.fresco.vito.listener.AutoPlayImageListener;
 import com.facebook.fresco.vito.listener.ForwardingImageListener;
 import com.facebook.fresco.vito.listener.ImageListener;
@@ -34,9 +35,12 @@ import javax.annotation.Nullable;
 public class FrescoControllerImpl implements FrescoController {
 
   private final FrescoContext mFrescoContext;
+  private final DebugOverlayFactory mDebugOverlayFactory;
 
-  public FrescoControllerImpl(FrescoContext frescoContext) {
+  public FrescoControllerImpl(
+      FrescoContext frescoContext, DebugOverlayFactory debugOverlayFactory) {
     mFrescoContext = frescoContext;
+    mDebugOverlayFactory = debugOverlayFactory;
   }
 
   @Override
@@ -237,7 +241,8 @@ public class FrescoControllerImpl implements FrescoController {
               frescoState.getFrescoDrawable(),
               frescoState.getResources(),
               frescoState.getImageOptions(),
-              frescoState.getOverlayDrawable());
+              frescoState.getOverlayDrawable(),
+              mDebugOverlayFactory.create(frescoState));
 
       frescoState.onSubmit(frescoState.getId(), frescoState.getCallerContext());
 
