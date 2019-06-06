@@ -45,7 +45,7 @@ public class FrescoState
   private final @Nullable CacheKey mCacheKey;
 
   // ImageListener passed as @Prop to Litho component
-  private ImageListener mImageListener;
+  private @Nullable ImageListener mImageListener;
   // Other global and ad-hoc ImageListener(s)
   private final @Nullable ImageListener mOtherListeners;
   private @Nullable ImageRequest mImageRequest;
@@ -367,7 +367,7 @@ public class FrescoState
     mTargetHeightPx = targetHeightPx;
   }
 
-  public ImageListener getImageListener() {
+  public @Nullable ImageListener getImageListener() {
     return mImageListener;
   }
 
