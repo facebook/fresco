@@ -8,14 +8,13 @@ package com.facebook.imagepipeline.debug;
 
 import android.util.Log;
 import com.facebook.common.references.SharedReference;
-import java.io.Closeable;
 import javax.annotation.Nullable;
 
 public class FlipperCloseableReferenceLeakTracker implements CloseableReferenceLeakTracker {
   @Nullable private Listener mListener;
 
   @Override
-  public void trackCloseableReferenceLeak(SharedReference<Closeable> reference) {
+  public void trackCloseableReferenceLeak(SharedReference<Object> reference) {
     if (mListener == null) {
       Log.w("FRESCO", "No Flipper listener registered to track CloseableReference leak.");
       return;

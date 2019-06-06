@@ -66,10 +66,10 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   @GuardedBy("this")
   private boolean mIsClosed = false;
   private final SharedReference<T> mSharedReference;
-  private final LeakHandler<T> mLeakHandler;
+  private final LeakHandler mLeakHandler;
 
-  public interface LeakHandler<T> {
-    void reportLeak(SharedReference<T> reference);
+  public interface LeakHandler {
+    void reportLeak(SharedReference<Object> reference);
   }
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
@@ -84,8 +84,8 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private static final LeakHandler<Object> DEFAULT_LEAK_HANDLER =
-      new LeakHandler<Object>() {
+  private static final LeakHandler DEFAULT_LEAK_HANDLER =
+      new LeakHandler() {
         @Override
         public void reportLeak(SharedReference<Object> reference) {
           FLog.w(
@@ -97,14 +97,13 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private CloseableReference(SharedReference<T> sharedReference, LeakHandler<T> leakHandler) {
+  private CloseableReference(SharedReference<T> sharedReference, LeakHandler leakHandler) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
     mLeakHandler = leakHandler;
   }
 
-  private CloseableReference(
-      T t, ResourceReleaser<T> resourceReleaser, LeakHandler<T> leakHandler) {
+  private CloseableReference(T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler) {
     mSharedReference = new SharedReference<T>(t, resourceReleaser);
     mLeakHandler = leakHandler;
   }
@@ -125,7 +124,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * <p>Returns null if the parameter is null.
    */
   public static <T extends Closeable> CloseableReference<T> of(
-      @PropagatesNullable T t, LeakHandler<T> leakHandler) {
+      @PropagatesNullable T t, LeakHandler leakHandler) {
     if (t == null) {
       return null;
     } else {
@@ -140,7 +139,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    */
   public static <T> CloseableReference<T> of(
       @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
-    return of(t, resourceReleaser, (LeakHandler<T>) DEFAULT_LEAK_HANDLER);
+    return of(t, resourceReleaser, DEFAULT_LEAK_HANDLER);
   }
 
   /**
@@ -149,7 +148,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * t is null, this will just return null.
    */
   public static <T> CloseableReference<T> of(
-      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler<T> leakHandler) {
+      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler) {
     if (t == null) {
       return null;
     } else {
@@ -301,7 +300,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       }
 
-      mLeakHandler.reportLeak(mSharedReference);
+      mLeakHandler.reportLeak((SharedReference<Object>) mSharedReference);
 
       close();
     } finally {
