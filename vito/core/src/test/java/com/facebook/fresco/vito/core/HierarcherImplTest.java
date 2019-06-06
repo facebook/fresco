@@ -156,4 +156,36 @@ public class HierarcherImplTest {
 
     assertThat(errorDrawable).isNull();
   }
+
+  @Test
+  public void testBuildProgressDrawable() {
+    final Drawable drawable = new ColorDrawable(0x0);
+    final ImageOptions imageOptions =
+        ImageOptions.create()
+            .progress(drawable)
+            .progressScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+            .build();
+
+    final Drawable actual = mHierarcher.buildProgressDrawable(mResources, imageOptions);
+    assertThat(actual).isInstanceOf(ScaleTypeDrawable.class);
+    final ScaleTypeDrawable scaleTypeActual = (ScaleTypeDrawable) actual;
+    assertThat(scaleTypeActual.getScaleType()).isEqualTo(ScalingUtils.ScaleType.FIT_CENTER);
+    assertThat(scaleTypeActual.getCurrent()).isEqualTo(drawable);
+  }
+
+  @Test
+  public void testBuildActualImageWrapper() {
+    final PointF expectedFocusPoint = new PointF(1, 2);
+    final ImageOptions imageOptions =
+        ImageOptions.create()
+            .scale(ScalingUtils.ScaleType.FIT_CENTER)
+            .focusPoint(expectedFocusPoint)
+            .build();
+
+    final Drawable actual = mHierarcher.buildActualImageWrapper(imageOptions);
+    assertThat(actual).isInstanceOf(ScaleTypeDrawable.class);
+    final ScaleTypeDrawable scaleTypeActual = (ScaleTypeDrawable) actual;
+    assertThat(scaleTypeActual.getScaleType()).isEqualTo(ScalingUtils.ScaleType.FIT_CENTER);
+    assertThat(scaleTypeActual.getFocusPoint()).isEqualTo(expectedFocusPoint);
+  }
 }
