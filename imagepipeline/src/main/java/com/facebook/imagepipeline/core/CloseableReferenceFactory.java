@@ -15,14 +15,14 @@ import java.io.Closeable;
 
 public class CloseableReferenceFactory {
 
-  private final CloseableReference.LeakHandler<Closeable> mLeakHandler;
+  private final CloseableReference.LeakHandler mLeakHandler;
 
   public CloseableReferenceFactory(
       final CloseableReferenceLeakTracker closeableReferenceLeakTracker) {
     mLeakHandler =
-        new CloseableReference.LeakHandler<Closeable>() {
+        new CloseableReference.LeakHandler() {
           @Override
-          public void reportLeak(SharedReference<Closeable> reference) {
+          public void reportLeak(SharedReference<Object> reference) {
             closeableReferenceLeakTracker.trackCloseableReferenceLeak(reference);
             FLog.w(
                 "Fresco",
@@ -35,11 +35,10 @@ public class CloseableReferenceFactory {
   }
 
   public <U extends Closeable> CloseableReference<U> create(U u) {
-    return (CloseableReference<U>) CloseableReference.of(u, mLeakHandler);
+    return CloseableReference.of(u, mLeakHandler);
   }
 
   public <T> CloseableReference<T> create(T t, ResourceReleaser<T> resourceReleaser) {
-    return CloseableReference.of(
-        t, resourceReleaser, (CloseableReference.LeakHandler<T>) mLeakHandler);
+    return CloseableReference.of(t, resourceReleaser, mLeakHandler);
   }
 }
