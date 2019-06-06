@@ -188,4 +188,29 @@ public class HierarcherImplTest {
     assertThat(scaleTypeActual.getScaleType()).isEqualTo(ScalingUtils.ScaleType.FIT_CENTER);
     assertThat(scaleTypeActual.getFocusPoint()).isEqualTo(expectedFocusPoint);
   }
+
+  @Test
+  public void testBuildOverlayRes_whenUnset_thenReturnNull() {
+    ImageOptions options = ImageOptions.create().build();
+
+    Drawable overlayDrawable = mHierarcher.buildOverlayDrawable(mResources, options);
+
+    assertThat(overlayDrawable).isNull();
+  }
+
+  @Test
+  public void testBuildOverlayRes_whenSet_thenReturnDrawable() {
+    ImageOptions options = ImageOptions.create().overlayRes(RES_ID).build();
+
+    Drawable overlayDrawable = mHierarcher.buildOverlayDrawable(mResources, options);
+
+    assertThat(overlayDrawable).isEqualTo(mDrawable);
+  }
+
+  @Test(expected = Resources.NotFoundException.class)
+  public void testBuildOverlayDrawable_whenInvalidResId_thenThrowNotFoundException() {
+    ImageOptions options = ImageOptions.create().overlayRes(INVALID_RES_ID).build();
+
+    mHierarcher.buildOverlayDrawable(mResources, options);
+  }
 }
