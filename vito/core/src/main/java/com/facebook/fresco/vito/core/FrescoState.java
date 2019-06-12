@@ -69,6 +69,8 @@ public class FrescoState
   private @Nullable ForwardingDrawable mActualImageWrapper;
   private @Nullable Drawable mOverlayDrawable;
 
+  private @Nullable Object mExtras;
+
   // Image perf data fields
   private final RequestListener mImageOriginListener =
       new BaseRequestListener() {
@@ -445,4 +447,11 @@ public class FrescoState
     mImageRequest = imageRequest;
   }
 
+  public @Nullable Object getExtras() {
+    return mExtras;
+  }
+
+  public void setExtras(@Nullable Object extras) {
+    mExtras = extras;
+  }
 }

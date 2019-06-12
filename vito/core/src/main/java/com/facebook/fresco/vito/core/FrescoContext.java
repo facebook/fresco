@@ -37,9 +37,10 @@ public class FrescoContext {
   private final @Nullable CallerContextVerifier mCallerContextVerifier;
   private final FrescoExperiments mExperiments;
   private final @Nullable ImageListener mGlobalImageListener;
-  private final FrescoController mController;
   private final Hierarcher mHierarcher;
   private final Executor mUiThreadExecutor;
+
+  private FrescoController mController;
 
   private @Nullable ImagePipelineFactory mImagePipelineFactory;
   private @Nullable ImageDecodeOptions mCircularImageDecodeOptions;
@@ -192,6 +193,10 @@ public class FrescoContext {
 
   public Executor getUiThreadExecutorService() {
     return mUiThreadExecutor;
+  }
+
+  public void setController(FrescoController controller) {
+    mController = controller;
   }
 
   public static long generateIdentifier() {
