@@ -56,10 +56,10 @@ public class FrescoVitoImageSpec {
       ComponentContext context,
       StateValue<FrescoState> lastFrescoState,
       @Prop final Uri uri,
-      @Prop(optional = true) final ImageOptions imageOptions,
-      @Prop(optional = true) final FrescoContext frescoContext,
-      @Prop(optional = true) final Object callerContext,
-      @Prop(optional = true) final ImageListener imageListener) {
+      @Prop(optional = true) final @Nullable ImageOptions imageOptions,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final @Nullable ImageListener imageListener) {
     lastFrescoState.set(
         getController(context, frescoContext)
             .createState(
@@ -86,9 +86,9 @@ public class FrescoVitoImageSpec {
       ComponentContext context,
       @Prop final Uri uri,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
-      @Prop(optional = true) final FrescoContext frescoContext,
-      @Prop(optional = true) final Object callerContext,
-      @Prop(optional = true) final ImageListener imageListener,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @Prop(optional = true) final @Nullable Object callerContext,
+      @Prop(optional = true) final @Nullable ImageListener imageListener,
       @State(canUpdateLazily = true) final FrescoState lastFrescoState,
       Output<FrescoState> frescoState) {
     FrescoState maybeNewFrescoState =
@@ -110,9 +110,9 @@ public class FrescoVitoImageSpec {
   static void onMount(
       ComponentContext context,
       final FrescoDrawable frescoDrawable,
-      @Prop(optional = true) final FrescoContext frescoContext,
-      @FromPrepare final FrescoState frescoState,
-      @Prop(optional = true) final ImageListener imageListener) {
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @Prop(optional = true) final @Nullable ImageListener imageListener,
+      @FromPrepare final FrescoState frescoState) {
     frescoState.setFrescoDrawable(frescoDrawable);
     getController(context, frescoContext).onAttach(frescoState, imageListener);
   }
@@ -121,7 +121,7 @@ public class FrescoVitoImageSpec {
   static void onUnmount(
       ComponentContext context,
       FrescoDrawable frescoDrawable,
-      @Prop(optional = true) final FrescoContext frescoContext,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @FromPrepare final FrescoState frescoState) {
     frescoState.setFrescoDrawable(frescoDrawable);
     getController(context, frescoContext).onDetach(frescoState);

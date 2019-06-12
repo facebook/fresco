@@ -9,13 +9,13 @@ package com.facebook.fresco.vito.core;
 
 import android.content.res.Resources;
 import android.net.Uri;
-import androidx.annotation.Nullable;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.infer.annotation.ThreadSafe;
+import javax.annotation.Nullable;
 
 @ThreadSafe
 public interface FrescoController {
@@ -23,17 +23,17 @@ public interface FrescoController {
   FrescoState createState(
       Uri uri,
       ImageOptions imageOptions,
-      Object callerContext,
+      @Nullable Object callerContext,
       Resources resources,
-      ImageListener imageListener);
+      @Nullable ImageListener imageListener);
 
   FrescoState onPrepare(
       FrescoState frescoState,
       Uri uri,
       ImageOptions imageOptions,
-      Object callerContext,
+      @Nullable Object callerContext,
       Resources resources,
-      ImageListener imageListener);
+      @Nullable ImageListener imageListener);
 
   void onAttach(FrescoState state, @Nullable ImageListener imageListener);
 

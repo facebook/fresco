@@ -48,9 +48,9 @@ public class FrescoControllerImpl implements FrescoController {
       final FrescoState frescoState,
       final Uri uri,
       final ImageOptions imageOptions,
-      final Object callerContext,
+      final @Nullable Object callerContext,
       final Resources resources,
-      final ImageListener imageListener) {
+      final @Nullable ImageListener imageListener) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#onPrepare");
     }
@@ -77,9 +77,9 @@ public class FrescoControllerImpl implements FrescoController {
   public FrescoState createState(
       Uri uri,
       ImageOptions imageOptions,
-      Object callerContext,
+      @Nullable Object callerContext,
       Resources resources,
-      ImageListener imageListener) {
+      @Nullable ImageListener imageListener) {
     mFrescoContext.verifyCallerContext(callerContext);
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#createState");
@@ -164,7 +164,7 @@ public class FrescoControllerImpl implements FrescoController {
   /** Creates imagepipeline components and sets them to frescoState */
   @VisibleForTesting
   void prepareImagePipelineComponents(
-      FrescoState frescoState, ImageRequest imageRequest, Object callerContext) {
+      FrescoState frescoState, ImageRequest imageRequest, @Nullable Object callerContext) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("FrescoControllerImpl#prepareImagePipelineComponents");
     }
