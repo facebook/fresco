@@ -23,4 +23,7 @@ public interface CloseableReferenceLeakTracker {
       SharedReference<Object> reference, @Nullable Throwable stacktrace);
 
   void setListener(@Nullable Listener listener);
+
+  /** Indicate whether or not a listener is set. */
+  boolean isSet();
 }

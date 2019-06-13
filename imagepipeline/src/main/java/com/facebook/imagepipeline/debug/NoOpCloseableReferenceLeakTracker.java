@@ -17,4 +17,9 @@ public class NoOpCloseableReferenceLeakTracker implements CloseableReferenceLeak
 
   @Override
   public void setListener(@Nullable Listener listener) {}
+
+  @Override
+  public boolean isSet() {
+    return false;
+  }
 }

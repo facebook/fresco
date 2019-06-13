@@ -36,6 +36,11 @@ public class CloseableReferenceFactory {
                 reference.get().getClass().getName(),
                 getStackTraceString(stacktrace));
           }
+
+          @Override
+          public boolean requiresStacktrace() {
+            return closeableReferenceLeakTracker.isSet();
+          }
         };
   }
 

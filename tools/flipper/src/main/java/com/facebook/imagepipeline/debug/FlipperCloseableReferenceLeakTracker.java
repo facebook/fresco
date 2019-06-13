@@ -28,4 +28,9 @@ public class FlipperCloseableReferenceLeakTracker implements CloseableReferenceL
   public void setListener(@Nullable Listener listener) {
     mListener = listener;
   }
+
+  @Override
+  public boolean isSet() {
+    return mListener != null;
+  }
 }

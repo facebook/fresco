@@ -23,41 +23,45 @@ import javax.annotation.concurrent.GuardedBy;
 /**
  * A smart pointer-like class for Java.
  *
- * <p>This class allows reference-counting semantics in a Java-friendlier way. A single object
- * can have any number of CloseableReferences pointing to it. When all of these have been closed,
- * the object either has its {@link Closeable#close} method called, if it implements
- * {@link Closeable}, or its designated {@link ResourceReleaser#release},
- * if it does not.
+ * <p>This class allows reference-counting semantics in a Java-friendlier way. A single object can
+ * have any number of CloseableReferences pointing to it. When all of these have been closed, the
+ * object either has its {@link Closeable#close} method called, if it implements {@link Closeable},
+ * or its designated {@link ResourceReleaser#release}, if it does not.
  *
  * <p>Callers can construct a CloseableReference wrapping a {@link Closeable} with:
+ *
  * <pre>
  * Closeable foo;
  * CloseableReference c = CloseableReference.of(foo);
  * </pre>
- * <p>Objects that do not implement Closeable can still use this class, but must supply a
- * {@link ResourceReleaser}:
- * <pre>
- * {@code
+ *
+ * <p>Objects that do not implement Closeable can still use this class, but must supply a {@link
+ * ResourceReleaser}:
+ *
+ * <pre>{@code
  * Object foo;
  * ResourceReleaser<Object> fooReleaser;
  * CloseableReference c = CloseableReference.of(foo, fooReleaser);
- * }
- * </pre>
+ * }</pre>
+ *
  * <p>When making a logical copy, callers should call {@link #clone}:
+ *
  * <pre>
  * CloseableReference copy = c.clone();
  * </pre>
- * <p>
- * When each copy of CloseableReference is no longer needed, close should be called:
+ *
+ * <p>When each copy of CloseableReference is no longer needed, close should be called:
+ *
  * <pre>
  * copy.close();
  * c.close();
  * </pre>
  *
  * <p>As with any Closeable, try-finally semantics may be needed to ensure that close is called.
- * <p>Do not rely upon the finalizer; the purpose of this class is for expensive resources to
- * be released without waiting for the garbage collector. The finalizer will log an error if
- * the close method has not been called.
+ *
+ * <p>Do not rely upon the finalizer; the purpose of this class is for expensive resources to be
+ * released without waiting for the garbage collector. The finalizer will log an error if the close
+ * method has not been called.
  */
 public final class CloseableReference<T> implements Cloneable, Closeable {
 
@@ -65,12 +69,19 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
 
   @GuardedBy("this")
   private boolean mIsClosed = false;
+
   private final SharedReference<T> mSharedReference;
   private final LeakHandler mLeakHandler;
   @Nullable private final Throwable mStacktrace;
 
   public interface LeakHandler {
     void reportLeak(SharedReference<Object> reference, @Nullable Throwable stacktrace);
+
+    /**
+     * Indicate whether the {@link #reportLeak(SharedReference, Throwable)} method expects a
+     * stacktrace. This is expensive and should only be used sparingly.
+     */
+    boolean requiresStacktrace();
   }
 
   private static final ResourceReleaser<Closeable> DEFAULT_CLOSEABLE_RELEASER =
@@ -95,6 +106,11 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
               System.identityHashCode(this),
               System.identityHashCode(reference),
               reference.get().getClass().getName());
+        }
+
+        @Override
+        public boolean requiresStacktrace() {
+          return false;
         }
       };
 
@@ -137,7 +153,10 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
       return null;
     } else {
       return new CloseableReference<>(
-          t, (ResourceReleaser<T>) DEFAULT_CLOSEABLE_RELEASER, leakHandler, new Throwable());
+          t,
+          (ResourceReleaser<T>) DEFAULT_CLOSEABLE_RELEASER,
+          leakHandler,
+          leakHandler.requiresStacktrace() ? new Throwable() : null);
     }
   }
 
@@ -147,11 +166,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    */
   public static <T> CloseableReference<T> of(
       @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
-    if (t == null) {
-      return null;
-    } else {
-      return new CloseableReference<T>(t, resourceReleaser, DEFAULT_LEAK_HANDLER, null);
-    }
+    return of(t, resourceReleaser, DEFAULT_LEAK_HANDLER);
   }
 
   /**
@@ -164,13 +179,17 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     if (t == null) {
       return null;
     } else {
-      return new CloseableReference<T>(t, resourceReleaser, leakHandler, new Throwable());
+      return new CloseableReference<T>(
+          t,
+          resourceReleaser,
+          leakHandler,
+          leakHandler.requiresStacktrace() ? new Throwable() : null);
     }
   }
 
   /**
-   * Returns the underlying Closeable if this reference is not closed yet.
-   * Otherwise IllegalStateException is thrown.
+   * Returns the underlying Closeable if this reference is not closed yet. Otherwise
+   * IllegalStateException is thrown.
    */
   public synchronized T get() {
     Preconditions.checkState(!mIsClosed);
@@ -195,6 +214,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
 
   /**
    * Checks if this closable-reference is valid i.e. is not closed.
+   *
    * @return true if the closeable reference is valid
    */
   public synchronized boolean isValid() {
@@ -212,8 +232,8 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   }
 
   /**
-   * Method used for tracking Closeables pointed by CloseableReference.
-   * Use only for debugging and logging.
+   * Method used for tracking Closeables pointed by CloseableReference. Use only for debugging and
+   * logging.
    */
   public int getValueHash() {
     return isValid() ? System.identityHashCode(mSharedReference.get()) : 0;
@@ -222,8 +242,8 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   /**
    * Closes this CloseableReference.
    *
-   * <p>Decrements the reference count of the underlying object. If it is zero, the object
-   * will be released.
+   * <p>Decrements the reference count of the underlying object. If it is zero, the object will be
+   * released.
    *
    * <p>This method is idempotent. Calling it multiple times on the same instance has no effect.
    */
@@ -241,6 +261,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
 
   /**
    * Checks if the closable-reference is valid i.e. is not null, and is not closed.
+   *
    * @return true if the closeable reference is valid
    */
   public static boolean isValid(@Nullable CloseableReference<?> ref) {
