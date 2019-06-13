@@ -10,9 +10,11 @@ package com.facebook.imagepipeline.producers;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import com.facebook.common.internal.ImmutableMap;
@@ -24,6 +26,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import javax.annotation.Nullable;
@@ -73,12 +76,18 @@ public class LocalVideoThumbnailProducer implements
 
           @Override
           protected @Nullable CloseableReference<CloseableImage> getResult() throws Exception {
-            String path = getLocalFilePath(imageRequest);
-            if (path == null) {
-              return null;
+            String path;
+            try {
+              path = getLocalFilePath(imageRequest);
+            } catch (IllegalArgumentException e) {
+              path = null;
             }
             Bitmap thumbnailBitmap =
-                ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest));
+                path != null
+                    ? ThumbnailUtils.createVideoThumbnail(path, calculateKind(imageRequest))
+                    : createThumbnailFromContentProvider(
+                        mContentResolver, imageRequest.getSourceUri());
+
             if (thumbnailBitmap == null) {
               return null;
             }
@@ -147,5 +156,22 @@ public class LocalVideoThumbnailProducer implements
       }
     }
     return null;
+  }
+
+  @Nullable
+  private static Bitmap createThumbnailFromContentProvider(
+      ContentResolver contentResolver, Uri uri) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
+      try {
+        ParcelFileDescriptor videoFile = contentResolver.openFileDescriptor(uri, "r");
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(videoFile.getFileDescriptor());
+        return mediaMetadataRetriever.getFrameAtTime(-1);
+      } catch (FileNotFoundException e) {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }

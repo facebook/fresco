@@ -68,7 +68,7 @@ import org.robolectric.annotation.Config;
 @RunWith(RobolectricTestRunner.class)
 @PrepareOnlyThisForTest({BitmapFactory.class, BitmapRegionDecoder.class})
 @Config(sdk = Build.VERSION_CODES.LOLLIPOP)
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 public class ArtDecoderTest {
 
   private static final Bitmap.Config DEFAULT_BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
@@ -259,7 +259,7 @@ public class ArtDecoderTest {
     closeAndVerifyClosed(result);
   }
 
-  private byte[] getDecodedBytes() {
+  private static byte[] getDecodedBytes() {
     ArgumentCaptor<InputStream> inputStreamArgumentCaptor =
         ArgumentCaptor.forClass(InputStream.class);
     verifyStatic(times(2));
@@ -287,14 +287,14 @@ public class ArtDecoderTest {
     }
   }
 
-  private OngoingStubbing<Bitmap> whenBitmapFactoryDecodeStream() {
+  private static OngoingStubbing<Bitmap> whenBitmapFactoryDecodeStream() {
     mockStatic(BitmapFactory.class);
     return when(
         BitmapFactory.decodeStream(
             any(InputStream.class), isNull(Rect.class), any(BitmapFactory.Options.class)));
   }
 
-  private OngoingStubbing<BitmapRegionDecoder> whenBitmapRegionDecoderNewInstance()
+  private static OngoingStubbing<BitmapRegionDecoder> whenBitmapRegionDecoderNewInstance()
       throws IOException {
     mockStatic(BitmapRegionDecoder.class);
     return when(BitmapRegionDecoder.newInstance(any(InputStream.class), anyBoolean()));
@@ -316,7 +316,7 @@ public class ArtDecoderTest {
     assertEquals(2, mByteBufferRef.getUnderlyingReferenceTestOnly().getRefCountTestOnly());
   }
 
-  private void verifyDecodedFromStream() {
+  private static void verifyDecodedFromStream() {
     verifyStatic(times(2));
     BitmapFactory.decodeStream(
         any(ByteArrayInputStream.class), any(Rect.class), any(BitmapFactory.Options.class));

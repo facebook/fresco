@@ -28,6 +28,7 @@ import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,8 +45,8 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @PrepareForTest({SystemClock.class})
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@Config(manifest=Config.NONE)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
+@Config(manifest = Config.NONE)
 public class CountingMemoryCacheTest {
 
   private static final int CACHE_MAX_SIZE = 1200;
@@ -53,6 +54,7 @@ public class CountingMemoryCacheTest {
   private static final int CACHE_EVICTION_QUEUE_MAX_SIZE = 1100;
   private static final int CACHE_EVICTION_QUEUE_MAX_COUNT = 3;
   private static final int CACHE_ENTRY_MAX_SIZE = 1000;
+  private static final long PARAMS_CHECK_INTERVAL_MS = TimeUnit.MINUTES.toMillis(5);
 
   @Mock public ResourceReleaser<Integer> mReleaser;
   @Mock public CountingMemoryCache.CacheTrimStrategy mCacheTrimStrategy;
@@ -92,12 +94,14 @@ public class CountingMemoryCacheTest {
             return value;
           }
         };
-    mParams = new MemoryCacheParams(
-        CACHE_MAX_SIZE,
-        CACHE_MAX_COUNT,
-        CACHE_EVICTION_QUEUE_MAX_SIZE,
-        CACHE_EVICTION_QUEUE_MAX_COUNT,
-        CACHE_ENTRY_MAX_SIZE);
+    mParams =
+        new MemoryCacheParams(
+            CACHE_MAX_SIZE,
+            CACHE_MAX_COUNT,
+            CACHE_EVICTION_QUEUE_MAX_SIZE,
+            CACHE_EVICTION_QUEUE_MAX_COUNT,
+            CACHE_ENTRY_MAX_SIZE,
+            PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
     mBitmapReference = CloseableReference.of(mBitmap, FAKE_BITMAP_RESOURCE_RELEASER);
     mCache = new CountingMemoryCache<>(mValueDescriptor, mCacheTrimStrategy, mParamsSupplier);
@@ -481,8 +485,7 @@ public class CountingMemoryCacheTest {
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
-    PowerMockito.when(SystemClock.uptimeMillis())
-        .thenReturn(CountingMemoryCache.PARAMS_INTERCHECK_INTERVAL_MS - 1);
+    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS - 1);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier, never()).get();
     mCache.get(KEY);
@@ -491,16 +494,17 @@ public class CountingMemoryCacheTest {
     assertTotalSize(1, 700);
     assertExclusivelyOwnedSize(1, 700);
 
-    mParams = new MemoryCacheParams(
-        500 /* cache max size */,
-        CACHE_MAX_COUNT,
-        CACHE_EVICTION_QUEUE_MAX_SIZE,
-        CACHE_EVICTION_QUEUE_MAX_COUNT,
-        CACHE_ENTRY_MAX_SIZE);
+    mParams =
+        new MemoryCacheParams(
+            500 /* cache max size */,
+            CACHE_MAX_COUNT,
+            CACHE_EVICTION_QUEUE_MAX_SIZE,
+            CACHE_EVICTION_QUEUE_MAX_COUNT,
+            CACHE_ENTRY_MAX_SIZE,
+            PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
 
-    PowerMockito.when(SystemClock.uptimeMillis())
-        .thenReturn(CountingMemoryCache.PARAMS_INTERCHECK_INTERVAL_MS);
+    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     mCache.get(KEY);
     inOrder.verify(mParamsSupplier).get();
 
@@ -576,10 +580,9 @@ public class CountingMemoryCacheTest {
   @Test
   public void testTrimming() {
     MemoryTrimType memoryTrimType = MemoryTrimType.OnCloseToDalvikHeapLimit;
-    mParams = new MemoryCacheParams(1100, 10, 1100, 10, 110);
+    mParams = new MemoryCacheParams(1100, 10, 1100, 10, 110, PARAMS_CHECK_INTERVAL_MS);
     when(mParamsSupplier.get()).thenReturn(mParams);
-    PowerMockito.when(SystemClock.uptimeMillis())
-        .thenReturn(CountingMemoryCache.PARAMS_INTERCHECK_INTERVAL_MS);
+    PowerMockito.when(SystemClock.uptimeMillis()).thenReturn(PARAMS_CHECK_INTERVAL_MS);
     InOrder inOrder = inOrder(mReleaser);
 
     // create original references

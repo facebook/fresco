@@ -18,6 +18,8 @@ import android.view.Gravity;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.drawee.debug.listener.ImageLoadingTimeListener;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /** Drawee Controller overlay that displays debug information. */
@@ -61,6 +63,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private int mImageSizeBytes;
   private String mImageFormat;
   private ScaleType mScaleType;
+  private HashMap<String, String> mAdditionalData = new HashMap<>();
 
   // Animations
   private int mFrameCount;
@@ -92,6 +95,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     mWidthPx = -1;
     mHeightPx = -1;
     mImageSizeBytes = -1;
+    mAdditionalData = new HashMap<>();
     mFrameCount = -1;
     mLoopCount = -1;
     mImageFormat = null;
@@ -146,6 +150,10 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
    */
   public void setImageSize(int imageSizeBytes) {
     mImageSizeBytes = imageSizeBytes;
+  }
+
+  public void addAdditionalData(String key, String value) {
+    mAdditionalData.put(key, value);
   }
 
   public void setImageFormat(@Nullable String imageFormat) {
@@ -211,6 +219,9 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
     }
     if (mOrigin != null) {
       addDebugText(canvas, "origin: %s", mOrigin);
+    }
+    for (Map.Entry<String, String> entry : mAdditionalData.entrySet()) {
+      addDebugText(canvas, "%s: %s", entry.getKey(), entry.getValue());
     }
   }
 

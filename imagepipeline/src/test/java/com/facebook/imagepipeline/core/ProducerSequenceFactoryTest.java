@@ -48,12 +48,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-/**
- * Tests {@link ProducerSequenceFactory}.
- */
+/** Tests {@link ProducerSequenceFactory}. */
 @RunWith(RobolectricTestRunner.class)
 @PrepareForTest({UriUtil.class, MediaUtils.class})
-@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @Config(manifest = Config.NONE)
 public class ProducerSequenceFactoryTest {
 

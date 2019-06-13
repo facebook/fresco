@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 

@@ -42,8 +42,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@Config(manifest= Config.NONE)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
+@Config(manifest = Config.NONE)
 @PrepareForTest({SystemClock.class, JobScheduler.JobStartExecutorSupplier.class})
 public class JobSchedulerTest {
 

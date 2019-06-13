@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.common;
 
 import android.graphics.Bitmap;
+import android.graphics.ColorSpace;
 import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import java.util.Locale;
@@ -52,12 +53,6 @@ public class ImageDecodeOptions {
   public final boolean forceStaticImage;
 
   /**
-   * Allow color space transformation to sRGB. This flag can affect performance, unless the color
-   * space is unknown or if the color space is already sRGB.
-   */
-  public final boolean transformToSRGB;
-
-  /**
    * StaticImage and JPEG will decode with this config;
    */
   public final Bitmap.Config bitmapConfig;
@@ -70,6 +65,13 @@ public class ImageDecodeOptions {
   /** Bitmap transformation override */
   public final @Nullable BitmapTransformation bitmapTransformation;
 
+  /**
+   * Allow explicit color management, must be one of the named color space in ColorSpace.Named. This
+   * flag might affect performance, if null, then SRGB color space is assumed if the SDK version >=
+   * 26.
+   */
+  public final @Nullable ColorSpace colorSpace;
+
   public ImageDecodeOptions(ImageDecodeOptionsBuilder b) {
     this.minDecodeIntervalMs = b.getMinDecodeIntervalMs();
     this.decodePreviewFrame = b.getDecodePreviewFrame();
@@ -78,8 +80,8 @@ public class ImageDecodeOptions {
     this.forceStaticImage = b.getForceStaticImage();
     this.bitmapConfig = b.getBitmapConfig();
     this.customImageDecoder = b.getCustomImageDecoder();
-    this.transformToSRGB = b.getTransformToSRGB();
     this.bitmapTransformation = b.getBitmapTransformation();
+    this.colorSpace = b.getColorSpace();
   }
 
   /**
@@ -111,10 +113,10 @@ public class ImageDecodeOptions {
     if (useLastFrameForPreview != that.useLastFrameForPreview) return false;
     if (decodeAllFrames != that.decodeAllFrames) return false;
     if (forceStaticImage != that.forceStaticImage) return false;
-    if (transformToSRGB != that.transformToSRGB) return false;
     if (bitmapConfig != that.bitmapConfig) return false;
     if (customImageDecoder != that.customImageDecoder) return false;
     if (bitmapTransformation != that.bitmapTransformation) return false;
+    if (colorSpace != that.colorSpace) return false;
     return true;
   }
 
@@ -125,10 +127,10 @@ public class ImageDecodeOptions {
     result = 31 * result + (useLastFrameForPreview ? 1 : 0);
     result = 31 * result + (decodeAllFrames ? 1 : 0);
     result = 31 * result + (forceStaticImage ? 1 : 0);
-    result = 31 * result + (transformToSRGB ? 1 : 0);
     result = 31 * result + bitmapConfig.ordinal();
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
+    result = 31 * result + (colorSpace != null ? colorSpace.hashCode() : 0);
     return result;
   }
 
@@ -142,9 +144,9 @@ public class ImageDecodeOptions {
         useLastFrameForPreview,
         decodeAllFrames,
         forceStaticImage,
-        transformToSRGB,
         bitmapConfig.name(),
         customImageDecoder,
-        bitmapTransformation);
+        bitmapTransformation,
+        colorSpace);
   }
 }

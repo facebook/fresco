@@ -42,8 +42,7 @@ public class DraweeTransitionFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    final Uri imageUri = imageUriProvider.createSampleUri(ImageUriProvider.ImageSize.M);
+    final Uri imageUri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M);
 
     final SimpleDraweeView simpleDraweeView =
         (SimpleDraweeView) view.findViewById(R.id.drawee_view);

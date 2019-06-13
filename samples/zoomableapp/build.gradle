@@ -48,7 +48,6 @@ configurations {
 }
 
 dependencies {
-    compileOnly "androidx.annotation:annotation:${versions.androidx.annotation}"
     implementation "androidx.legacy:legacy-support-core-ui:${versions.androidx.legacy_support_core_ui}"
 
     internalImplementation project(':drawee-backends:drawee-pipeline')

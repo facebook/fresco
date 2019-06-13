@@ -46,7 +46,7 @@ public class DraweeScaleTypeFragment extends BaseShowcaseFragment {
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_drawee_scale_type, container, false);
 
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
+    final ImageUriProvider imageUriProvider = sampleUris();
     final Uri uri1 = imageUriProvider.createSampleUri(
         ImageUriProvider.ImageSize.M,
         ImageUriProvider.Orientation.LANDSCAPE);

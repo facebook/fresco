@@ -25,6 +25,7 @@ import com.facebook.samples.comparison.configs.ConfigConstants;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
 /**
@@ -78,7 +79,8 @@ public class ImagePipelineConfigFactory {
         Integer.MAX_VALUE,                     // Max entries in the cache
         ConfigConstants.MAX_MEMORY_CACHE_SIZE, // Max total size of elements in eviction queue
         Integer.MAX_VALUE,                     // Max length of eviction queue
-        Integer.MAX_VALUE);                    // Max cache entry size
+        Integer.MAX_VALUE,                     // Max cache entry size
+        TimeUnit.MINUTES.toMillis(5));         // Interval for checking cache parameters
     configBuilder
         .setBitmapMemoryCacheParamsSupplier(
             new Supplier<MemoryCacheParams>() {

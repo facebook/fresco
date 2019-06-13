@@ -31,7 +31,6 @@ import com.facebook.drawee.backends.pipeline.info.ImageOriginUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.Orientation;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -56,7 +55,8 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
         public void onImageLoaded(
             final String controllerId,
             final @ImageOrigin int imageOrigin,
-            final boolean successful) {
+            final boolean successful,
+            final @Nullable String ultimateProducerName) {
           mHandler.post(
               new Runnable() {
                 @Override
@@ -121,11 +121,10 @@ public class ImagePipelinePrefetchFragment extends BaseShowcaseFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
     mUris =
         new Uri[] {
-          imageUriProvider.createSampleUri(ImageSize.L, Orientation.LANDSCAPE),
-          imageUriProvider.createSampleUri(ImageSize.L, Orientation.PORTRAIT),
+          sampleUris().createSampleUri(ImageSize.L, Orientation.LANDSCAPE),
+          sampleUris().createSampleUri(ImageSize.L, Orientation.PORTRAIT),
         };
 
     final Button clearCacheButton = (Button) view.findViewById(R.id.clear_cache);

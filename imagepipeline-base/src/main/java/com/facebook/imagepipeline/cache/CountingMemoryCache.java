@@ -20,7 +20,6 @@ import com.facebook.common.references.ResourceReleaser;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
@@ -92,10 +91,6 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
       return new Entry<>(key, valueRef, observer);
     }
   }
-
-  // How often the cache checks for a new cache configuration.
-  @VisibleForTesting
-  static final long PARAMS_INTERCHECK_INTERVAL_MS = TimeUnit.MINUTES.toMillis(5);
 
   // Contains the items that are not being used by any client and are hence viable for eviction.
   @GuardedBy("this")
@@ -373,7 +368,8 @@ public class CountingMemoryCache<K, V> implements MemoryCache<K, V>, MemoryTrimm
    * Updates the cache params (constraints) if enough time has passed since the last update.
    */
   private synchronized void maybeUpdateCacheParams() {
-    if (mLastCacheParamsCheck + PARAMS_INTERCHECK_INTERVAL_MS > SystemClock.uptimeMillis()) {
+    if (mLastCacheParamsCheck + mMemoryCacheParams.paramsCheckIntervalMs
+        > SystemClock.uptimeMillis()) {
       return;
     }
     mLastCacheParamsCheck = SystemClock.uptimeMillis();

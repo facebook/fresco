@@ -60,6 +60,7 @@ com.facebook.imagepipeline.cache
 com.facebook.imagepipeline.common
 com.facebook.imagepipeline.core
 com.facebook.imagepipeline.datasource
+com.facebook.imagepipeline.debug
 com.facebook.imagepipeline.decoder
 com.facebook.imagepipeline.drawable
 com.facebook.imagepipeline.filter

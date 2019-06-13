@@ -79,8 +79,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
 
   @Override
   public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-    final ImageUriProvider imageUriProvider = ImageUriProvider.getInstance(getContext());
-    setupImageFormatEntries(imageUriProvider);
+    setupImageFormatEntries(sampleUris());
 
     mButton = (Button) view.findViewById(R.id.button);
     mDraweeMain = (SimpleDraweeView) view.findViewById(R.id.drawee_view);
@@ -181,7 +180,7 @@ public class ImagePipelineResizingFragment extends BaseShowcaseFragment {
     final ImageRequest imageRequest =
         ImageRequestBuilder.newBuilderWithSource(imageUri)
             .setResizeOptions(resizeOptions)
-            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().setTransformToSRGB(true).build())
+            .setImageDecodeOptions(new ImageDecodeOptionsBuilder().build())
             .build();
 
     final DraweeController draweeController = Fresco.newDraweeControllerBuilder()

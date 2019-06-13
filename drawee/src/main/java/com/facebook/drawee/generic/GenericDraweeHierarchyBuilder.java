@@ -42,28 +42,28 @@ public class GenericDraweeHierarchyBuilder {
 
   private float mDesiredAspectRatio;
 
-  private Drawable mPlaceholderImage;
+  private @Nullable Drawable mPlaceholderImage;
   private @Nullable ScalingUtils.ScaleType mPlaceholderImageScaleType;
 
-  private Drawable mRetryImage;
-  private ScalingUtils.ScaleType mRetryImageScaleType;
+  private @Nullable Drawable mRetryImage;
+  private @Nullable ScalingUtils.ScaleType mRetryImageScaleType;
 
-  private Drawable mFailureImage;
-  private ScalingUtils.ScaleType mFailureImageScaleType;
+  private @Nullable Drawable mFailureImage;
+  private @Nullable ScalingUtils.ScaleType mFailureImageScaleType;
 
-  private Drawable mProgressBarImage;
-  private ScalingUtils.ScaleType mProgressBarImageScaleType;
+  private @Nullable Drawable mProgressBarImage;
+  private @Nullable ScalingUtils.ScaleType mProgressBarImageScaleType;
 
-  private ScalingUtils.ScaleType mActualImageScaleType;
-  private Matrix mActualImageMatrix;
-  private PointF mActualImageFocusPoint;
-  private ColorFilter mActualImageColorFilter;
+  private @Nullable ScalingUtils.ScaleType mActualImageScaleType;
+  private @Nullable Matrix mActualImageMatrix;
+  private @Nullable PointF mActualImageFocusPoint;
+  private @Nullable ColorFilter mActualImageColorFilter;
 
-  private Drawable mBackground;
-  private List<Drawable> mOverlays;
-  private Drawable mPressedStateOverlay;
+  private @Nullable Drawable mBackground;
+  private @Nullable List<Drawable> mOverlays;
+  private @Nullable Drawable mPressedStateOverlay;
 
-  private RoundingParams mRoundingParams;
+  private @Nullable RoundingParams mRoundingParams;
 
   public GenericDraweeHierarchyBuilder(Resources resources) {
     mResources = resources;

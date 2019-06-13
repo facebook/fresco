@@ -34,10 +34,14 @@ public class ImageOriginRequestListener extends BaseRequestListener {
   }
 
   @Override
-  public void onUltimateProducerReached(String requestId, String producerName, boolean successful) {
+  public void onUltimateProducerReached(
+      String requestId, String ultimateProducerName, boolean successful) {
     if (mImageOriginLister != null) {
       mImageOriginLister.onImageLoaded(
-          mControllerId, ImageOriginUtils.mapProducerNameToImageOrigin(producerName), successful);
+          mControllerId,
+          ImageOriginUtils.mapProducerNameToImageOrigin(ultimateProducerName),
+          successful,
+          ultimateProducerName);
     }
   }
 }

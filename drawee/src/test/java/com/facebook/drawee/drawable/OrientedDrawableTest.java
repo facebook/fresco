@@ -48,16 +48,6 @@ public class OrientedDrawableTest {
   }
 
   @Test
-  public void testCreation_invalidAngle() {
-    try {
-      new OrientedDrawable(mDrawable, 20, ExifInterface.ORIENTATION_NORMAL);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // Do nothing, expected.
-    }
-  }
-
-  @Test
   public void testCreation_zeroDegrees() {
     OrientedDrawable drawable =
         new OrientedDrawable(mDrawable, 0, ExifInterface.ORIENTATION_NORMAL);

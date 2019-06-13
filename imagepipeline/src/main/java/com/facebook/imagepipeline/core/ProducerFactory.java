@@ -97,6 +97,9 @@ public class ProducerFactory {
   private final int mBitmapPrepareToDrawMaxSizeBytes;
   private boolean mBitmapPrepareToDrawForPrefetch;
 
+  // Core factory dependencies
+  private final CloseableReferenceFactory mCloseableReferenceFactory;
+
   private final int mMaxBitmapSize;
 
   public ProducerFactory(
@@ -118,7 +121,8 @@ public class ProducerFactory {
       int bitmapPrepareToDrawMinSizeBytes,
       int bitmapPrepareToDrawMaxSizeBytes,
       boolean bitmapPrepareToDrawForPrefetch,
-      int maxBitmapSize) {
+      int maxBitmapSize,
+      CloseableReferenceFactory closeableReferenceFactory) {
     mContentResolver = context.getApplicationContext().getContentResolver();
     mResources = context.getApplicationContext().getResources();
     mAssetManager = context.getApplicationContext().getAssets();
@@ -145,6 +149,7 @@ public class ProducerFactory {
     mBitmapPrepareToDrawForPrefetch = bitmapPrepareToDrawForPrefetch;
 
     mMaxBitmapSize = maxBitmapSize;
+    mCloseableReferenceFactory = closeableReferenceFactory;
   }
 
   public static AddImageTransformMetaDataProducer newAddImageTransformMetaDataProducer(
@@ -187,7 +192,8 @@ public class ProducerFactory {
         mResizeAndRotateEnabledForNetwork,
         mDecodeCancellationEnabled,
         inputProducer,
-        mMaxBitmapSize);
+        mMaxBitmapSize,
+        mCloseableReferenceFactory);
   }
 
   public DiskCacheReadProducer newDiskCacheReadProducer(

@@ -42,13 +42,11 @@ import org.powermock.modules.junit4.rule.*;
 import org.robolectric.*;
 import org.robolectric.annotation.*;
 
-/**
- * Basic tests for {@link LocalVideoThumbnailProducer}
- */
+/** Basic tests for {@link LocalVideoThumbnailProducer} */
 @RunWith(RobolectricTestRunner.class)
-@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "androidx.*", "android.*"})
 @PrepareForTest(android.media.ThumbnailUtils.class)
-@Config(manifest= Config.NONE)
+@Config(manifest = Config.NONE)
 public class LocalVideoThumbnailProducerTest {
   private static final String PRODUCER_NAME = LocalVideoThumbnailProducer.PRODUCER_NAME;
   private static final String TEST_FILENAME = "dummy.jpg";
@@ -164,6 +162,7 @@ public class LocalVideoThumbnailProducerTest {
 
   @Test
   public void testLocalVideoMicroThumbnailReturnsNull() throws Exception {
+    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
     when(
         android.media.ThumbnailUtils.createVideoThumbnail(

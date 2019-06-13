@@ -26,7 +26,6 @@ import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -53,7 +52,7 @@ public class RetainingDataSourceSupplierFragment extends BaseShowcaseFragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mSampleUris = ImageUriProvider.getInstance(getContext()).getSampleGifUris();
+    mSampleUris = sampleUris().getSampleGifUris();
   }
 
   @Nullable

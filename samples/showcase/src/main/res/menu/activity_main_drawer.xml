@@ -133,6 +133,29 @@
     </menu>
   </item>
 
+  <item android:title="@string/category_vito">
+    <menu>
+      <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_vito_litho_simple"
+            android:title="@string/vito_litho_simple"
+            />
+        <item
+            android:id="@+id/nav_vito_image_options_config"
+            android:title="@string/vito_litho_image_options_config"
+            />
+        <item
+            android:id="@+id/nav_vito_litho_sections"
+            android:title="@string/vito_litho_sections"
+            />
+        <item
+            android:id="@+id/nav_vito_litho_gallery"
+            android:title="@string/vito_litho_gallery"
+            />
+      </group>
+    </menu>
+  </item>
+
   <item android:title="@string/category_more">
     <menu>
       <group android:checkableBehavior="single">
