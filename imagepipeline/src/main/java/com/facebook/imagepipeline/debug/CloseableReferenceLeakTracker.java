@@ -15,10 +15,12 @@ import javax.annotation.Nullable;
  */
 public interface CloseableReferenceLeakTracker {
   interface Listener {
-    void onCloseableReferenceLeak(SharedReference<Object> reference);
+    void onCloseableReferenceLeak(
+        SharedReference<Object> reference, @Nullable Throwable stacktrace);
   }
 
-  void trackCloseableReferenceLeak(SharedReference<Object> reference);
+  void trackCloseableReferenceLeak(
+      SharedReference<Object> reference, @Nullable Throwable stacktrace);
 
   void setListener(@Nullable Listener listener);
 }

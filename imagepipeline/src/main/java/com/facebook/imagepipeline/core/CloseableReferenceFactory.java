@@ -12,6 +12,9 @@ import com.facebook.common.references.ResourceReleaser;
 import com.facebook.common.references.SharedReference;
 import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker;
 import java.io.Closeable;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import javax.annotation.Nullable;
 
 public class CloseableReferenceFactory {
 
@@ -22,14 +25,16 @@ public class CloseableReferenceFactory {
     mLeakHandler =
         new CloseableReference.LeakHandler() {
           @Override
-          public void reportLeak(SharedReference<Object> reference) {
-            closeableReferenceLeakTracker.trackCloseableReferenceLeak(reference);
+          public void reportLeak(
+              SharedReference<Object> reference, @Nullable Throwable stacktrace) {
+            closeableReferenceLeakTracker.trackCloseableReferenceLeak(reference, stacktrace);
             FLog.w(
                 "Fresco",
-                "Finalized without closing: %x %x (type = %s)",
+                "Finalized without closing: %x %x (type = %s).\nStack:\n%s",
                 System.identityHashCode(this),
                 System.identityHashCode(reference),
-                reference.get().getClass().getName());
+                reference.get().getClass().getName(),
+                getStackTraceString(stacktrace));
           }
         };
   }
@@ -40,5 +45,20 @@ public class CloseableReferenceFactory {
 
   public <T> CloseableReference<T> create(T t, ResourceReleaser<T> resourceReleaser) {
     return CloseableReference.of(t, resourceReleaser, mLeakHandler);
+  }
+
+  /**
+   * Get a loggable stack trace from a Throwable
+   *
+   * @param tr An exception to log
+   */
+  private static String getStackTraceString(@Nullable Throwable tr) {
+    if (tr == null) {
+      return "";
+    }
+    final StringWriter sw = new StringWriter();
+    final PrintWriter pw = new PrintWriter(sw);
+    tr.printStackTrace(pw);
+    return sw.toString();
   }
 }

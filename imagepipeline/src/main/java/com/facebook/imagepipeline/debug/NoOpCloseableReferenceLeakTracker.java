@@ -12,7 +12,8 @@ import javax.annotation.Nullable;
 public class NoOpCloseableReferenceLeakTracker implements CloseableReferenceLeakTracker {
 
   @Override
-  public void trackCloseableReferenceLeak(SharedReference<Object> reference) {}
+  public void trackCloseableReferenceLeak(
+      SharedReference<Object> reference, @Nullable Throwable stacktrace) {}
 
   @Override
   public void setListener(@Nullable Listener listener) {}
