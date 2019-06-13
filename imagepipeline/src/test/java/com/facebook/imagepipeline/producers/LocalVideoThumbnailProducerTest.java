@@ -162,6 +162,7 @@ public class LocalVideoThumbnailProducerTest {
 
   @Test
   public void testLocalVideoMicroThumbnailReturnsNull() throws Exception {
+    when(mImageRequest.getSourceUri()).thenReturn(LOCAL_VIDEO_URI);
     when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
     when(
         android.media.ThumbnailUtils.createVideoThumbnail(
