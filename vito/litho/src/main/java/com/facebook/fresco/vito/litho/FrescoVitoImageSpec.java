@@ -30,6 +30,7 @@ import com.facebook.litho.annotations.MountingType;
 import com.facebook.litho.annotations.OnBoundsDefined;
 import com.facebook.litho.annotations.OnCreateInitialState;
 import com.facebook.litho.annotations.OnCreateMountContent;
+import com.facebook.litho.annotations.OnDetached;
 import com.facebook.litho.annotations.OnMeasure;
 import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnPrepare;
@@ -130,6 +131,17 @@ public class FrescoVitoImageSpec {
       @FromPrepare final FrescoState frescoState) {
     frescoState.setFrescoDrawable(frescoDrawable);
     getController(context, frescoContext).onDetach(frescoState);
+  }
+
+  @OnDetached
+  static void onDetached(
+      ComponentContext context,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @State final FrescoState frescoState) {
+    FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().releaseInDetach()) {
+      actualFrescoContext.getController().onDetach(frescoState);
+    }
   }
 
   @OnBoundsDefined

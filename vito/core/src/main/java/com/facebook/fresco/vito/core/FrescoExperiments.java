@@ -80,6 +80,10 @@ public class FrescoExperiments {
     return false;
   }
 
+  public boolean releaseInDetach() {
+    return false;
+  }
+
   public boolean useMountContentOverState() {
     return false;
   }
