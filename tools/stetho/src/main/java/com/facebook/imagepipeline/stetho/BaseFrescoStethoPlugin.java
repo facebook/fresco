@@ -17,6 +17,7 @@ import com.facebook.cache.disk.FileCache;
 import com.facebook.common.time.RealtimeSinceBootClock;
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheKey;
 import com.facebook.imagepipeline.cache.CountingMemoryCacheInspector;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -47,6 +48,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
       mBitmapMemoryCacheInspector;
   private FileCache mMainFileCache;
   private FileCache mSmallFileCache;
+  private ImagePipeline mImagePipeline;
 
   protected BaseFrescoStethoPlugin() {
     mInitialized = false;
@@ -63,6 +65,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
         factory.getBitmapCountingMemoryCache());
     mMainFileCache = factory.getMainFileCache();
     mSmallFileCache = factory.getSmallImageFileCache();
+    mImagePipeline = factory.getImagePipeline();
     mInitialized = true;
   }
 
@@ -90,6 +93,8 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     } else if (cmd != null && cmd.equals("diskcache")) {
       diskcache(mMainFileCache, "Main", writer, rest);
       diskcache(mSmallFileCache, "Small", writer, rest);
+    } else if (cmd != null && cmd.equals("clear")) {
+      mImagePipeline.clearCaches();
     } else {
       usage(writer);
       if (TextUtils.isEmpty(cmd)) {
@@ -388,6 +393,7 @@ public abstract class BaseFrescoStethoPlugin implements DumperPlugin {
     writer.println(cmdName + " diskcache: Show contents of disk storage cache.");
     writer.println(cmdName + " diskcache -s: Show contents of disk storage cache formatted " +
             "for script consumption.");
+    writer.println(cmdName + " clear: Clear all caches.");
     writer.println();
   }
 
