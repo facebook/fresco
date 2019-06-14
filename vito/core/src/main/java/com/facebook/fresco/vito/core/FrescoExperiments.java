@@ -84,6 +84,10 @@ public class FrescoExperiments {
     return false;
   }
 
+  public boolean releaseInUnmount() {
+    return true;
+  }
+
   public boolean useMountContentOverState() {
     return false;
   }

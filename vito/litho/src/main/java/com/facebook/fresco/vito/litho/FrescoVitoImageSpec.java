@@ -129,8 +129,11 @@ public class FrescoVitoImageSpec {
       FrescoDrawable frescoDrawable,
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @FromPrepare final FrescoState frescoState) {
-    frescoState.setFrescoDrawable(frescoDrawable);
-    getController(context, frescoContext).onDetach(frescoState);
+    FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().releaseInUnmount()) {
+      frescoState.setFrescoDrawable(frescoDrawable);
+      getController(context, frescoContext).onDetach(frescoState);
+    }
   }
 
   @OnDetached
