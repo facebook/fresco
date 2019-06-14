@@ -14,6 +14,7 @@ import com.facebook.fresco.vito.core.FrescoContext;
 import com.facebook.fresco.vito.core.FrescoController;
 import com.facebook.fresco.vito.core.FrescoDrawable;
 import com.facebook.fresco.vito.core.FrescoState;
+import com.facebook.fresco.vito.core.MultiUri;
 import com.facebook.fresco.vito.listener.ImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.provider.DefaultFrescoContext;
@@ -55,7 +56,8 @@ public class FrescoVitoImageSpec {
   static void onCreateInitialState(
       ComponentContext context,
       StateValue<FrescoState> lastFrescoState,
-      @Prop final Uri uri,
+      @Prop(optional = true) final @Nullable Uri uri,
+      @Prop(optional = true) final @Nullable MultiUri multiUri,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @Prop(optional = true) final @Nullable Object callerContext,
@@ -64,6 +66,7 @@ public class FrescoVitoImageSpec {
         getController(context, frescoContext)
             .createState(
                 uri,
+                multiUri,
                 imageOptions != null ? imageOptions : ImageOptions.defaults(),
                 callerContext,
                 context.getResources(),
@@ -84,7 +87,8 @@ public class FrescoVitoImageSpec {
   @OnPrepare
   static void onPrepare(
       ComponentContext context,
-      @Prop final Uri uri,
+      @Prop(optional = true) final @Nullable Uri uri,
+      @Prop(optional = true) final @Nullable MultiUri multiUri,
       @Prop(optional = true) final @Nullable ImageOptions imageOptions,
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @Prop(optional = true) final @Nullable Object callerContext,
@@ -96,6 +100,7 @@ public class FrescoVitoImageSpec {
             .onPrepare(
                 lastFrescoState,
                 uri,
+                multiUri,
                 imageOptions != null ? imageOptions : ImageOptions.defaults(),
                 callerContext,
                 context.getResources(),
@@ -136,11 +141,13 @@ public class FrescoVitoImageSpec {
 
   @ShouldUpdate(onMount = true)
   static boolean shouldUpdate(
-      @Prop Diff<Uri> uri,
+      @Prop(optional = true) Diff<Uri> uri,
+      @Prop(optional = true) Diff<MultiUri> multiUri,
       @Prop(optional = true) Diff<ImageOptions> imageOptions,
       @Prop(optional = true) Diff<FrescoContext> frescoContext,
       @Prop(optional = true, resType = ResType.FLOAT) Diff<Float> imageAspectRatio) {
     return !ObjectsCompat.equals(uri.getPrevious(), uri.getNext())
+        || !ObjectsCompat.equals(multiUri.getPrevious(), multiUri.getNext())
         || !ObjectsCompat.equals(imageOptions.getPrevious(), imageOptions.getNext())
         || !ObjectsCompat.equals(imageAspectRatio.getPrevious(), imageAspectRatio.getNext())
         || !ObjectsCompat.equals(frescoContext.getPrevious(), frescoContext.getNext());

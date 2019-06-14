@@ -11,6 +11,7 @@
  */
 package com.facebook.fresco.samples.showcase.vito;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,11 @@ import androidx.annotation.Nullable;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
+import com.facebook.fresco.vito.core.MultiUri;
 import com.facebook.fresco.vito.litho.FrescoVitoImage;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.litho.Component;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.LithoView;
@@ -60,8 +63,19 @@ public class FrescoVitoLithoSimpleFragment extends BaseShowcaseFragment {
   }
 
   public Component createComponent(ComponentContext c) {
+    Uri uri0 = Uri.parse("http://sample.com/invalid");
+    Uri uri1 = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL);
+    Uri uri2 = Uri.parse("http://sample.com/invalid");
+
     return FrescoVitoImage.create(c)
-        .uri(sampleUris().createSampleUri(ImageUriProvider.ImageSize.M))
+        .multiUri(
+            MultiUri.create()
+                .setLowResImageRequest(ImageRequest.fromUri(uri0))
+                .setMultiImageRequests(
+                        ImageRequest.fromUri(uri0),
+                        ImageRequest.fromUri(uri1),
+                        ImageRequest.fromUri(uri2))
+                .build())
         .imageOptions(IMAGE_OPTIONS)
         .build();
   }

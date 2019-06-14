@@ -21,7 +21,8 @@ import javax.annotation.Nullable;
 public interface FrescoController {
   // Lifecycle methods {
   FrescoState createState(
-      Uri uri,
+      @Nullable Uri uri,
+      @Nullable MultiUri multiUri,
       ImageOptions imageOptions,
       @Nullable Object callerContext,
       Resources resources,
@@ -29,7 +30,8 @@ public interface FrescoController {
 
   FrescoState onPrepare(
       FrescoState frescoState,
-      Uri uri,
+      @Nullable Uri uri,
+      @Nullable MultiUri multiUri,
       ImageOptions imageOptions,
       @Nullable Object callerContext,
       Resources resources,

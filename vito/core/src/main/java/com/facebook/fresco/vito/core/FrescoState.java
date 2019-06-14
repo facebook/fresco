@@ -39,7 +39,8 @@ public class FrescoState
 
   private final FrescoContext mFrescoContext;
   private final long mId;
-  private final Uri mUri;
+  private final @Nullable Uri mUri;
+  private final @Nullable MultiUri mMultiUri;
   private final ImageOptions mImageOptions;
   private final @Nullable Object mCallerContext;
   private final @Nullable CacheKey mCacheKey;
@@ -86,7 +87,8 @@ public class FrescoState
   public FrescoState(
       long id,
       FrescoContext frescoContext,
-      Uri uri,
+      @Nullable Uri uri,
+      @Nullable MultiUri multiUri,
       ImageOptions imageOptions,
       Object callerContext,
       @Nullable ImageRequest imageRequest,
@@ -98,6 +100,7 @@ public class FrescoState
     mId = id;
     mFrescoContext = frescoContext;
     mUri = uri;
+    mMultiUri = multiUri;
     mImageOptions = imageOptions;
     mCallerContext = callerContext;
     mImageRequest = imageRequest;
@@ -179,8 +182,14 @@ public class FrescoState
     mResources = resources;
   }
 
+  @Nullable
   public Uri getUri() {
     return mUri;
+  }
+
+  @Nullable
+  public MultiUri getMultiUri() {
+    return mMultiUri;
   }
 
   public void setProducerSequence(
@@ -386,6 +395,8 @@ public class FrescoState
         + mId
         + ", mUri="
         + mUri
+        + ", mMultiUri="
+        + mMultiUri
         + ", mImageOptions="
         + mImageOptions
         + ", mCallerContext="
