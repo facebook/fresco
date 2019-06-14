@@ -227,6 +227,9 @@ public class AnimatedDrawable2 extends Drawable implements Animatable, DrawableW
         scheduledRenderTimeForNextFrameMs =
             targetRenderTimeForNextFrameMs + mFrameSchedulingDelayMs;
         scheduleNextFrame(scheduledRenderTimeForNextFrameMs);
+      } else {
+        mAnimationListener.onAnimationStop(this);
+        mIsRunning = false;
       }
     }
 
