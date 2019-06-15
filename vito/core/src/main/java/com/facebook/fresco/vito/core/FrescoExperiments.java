@@ -95,4 +95,8 @@ public class FrescoExperiments {
   public boolean resetState() {
     return false;
   }
+
+  public boolean closeDatasourceOnNewResult() {
+    return true;
+  }
 }
