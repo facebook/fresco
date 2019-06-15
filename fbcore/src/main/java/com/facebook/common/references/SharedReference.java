@@ -7,6 +7,7 @@
 
 package com.facebook.common.references;
 
+import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -127,6 +128,9 @@ public class SharedReference<T> {
    * @param value the value to add.
    */
   private static void addLiveReference(Object value) {
+    if (CloseableReference.useGc() && (value instanceof Bitmap || value instanceof HasBitmap)) {
+      return;
+    }
     synchronized (sLiveObjects) {
       Integer count = sLiveObjects.get(value);
       if (count == null) {

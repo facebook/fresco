@@ -7,11 +7,15 @@
 
 package com.facebook.common.references;
 
+import androidx.annotation.IntDef;
+import android.graphics.Bitmap;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.PropagatesNullable;
+import com.facebook.infer.annotation.SuppressNullFieldAccess;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,16 +67,35 @@ import javax.annotation.concurrent.GuardedBy;
  * released without waiting for the garbage collector. The finalizer will log an error if the close
  * method has not been called.
  */
-public final class CloseableReference<T> implements Cloneable, Closeable {
+public abstract class CloseableReference<T> implements Cloneable, Closeable {
+
+  @IntDef({REF_TYPE_DEFAULT, REF_TYPE_FINALIZER, REF_TYPE_REF_COUNT, REF_TYPE_NOOP})
+  public @interface CloseableRefType {}
+
+  public static final int REF_TYPE_DEFAULT = 0;
+  public static final int REF_TYPE_FINALIZER = 1;
+  public static final int REF_TYPE_REF_COUNT = 2;
+  public static final int REF_TYPE_NOOP = 3;
 
   private static Class<CloseableReference> TAG = CloseableReference.class;
 
-  @GuardedBy("this")
-  private boolean mIsClosed = false;
+  private static @CloseableRefType int sBitmapCloseableRefType = REF_TYPE_DEFAULT;
 
-  private final SharedReference<T> mSharedReference;
-  private final LeakHandler mLeakHandler;
-  @Nullable private final Throwable mStacktrace;
+  public static boolean useGc() {
+    return sBitmapCloseableRefType == REF_TYPE_NOOP;
+  }
+
+  public static void setDisableCloseableReferencesForBitmaps(
+      @CloseableRefType int bitmapCloseableRefType) {
+    sBitmapCloseableRefType = bitmapCloseableRefType;
+  }
+
+  @GuardedBy("this")
+  protected boolean mIsClosed = false;
+
+  protected final SharedReference<T> mSharedReference;
+  protected final LeakHandler mLeakHandler;
+  @Nullable protected final Throwable mStacktrace;
 
   public interface LeakHandler {
     void reportLeak(SharedReference<Object> reference, @Nullable Throwable stacktrace);
@@ -101,11 +124,11 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         @Override
         public void reportLeak(SharedReference<Object> reference, @Nullable Throwable stacktrace) {
           FLog.w(
-              TAG,
-              "Finalized without closing: %x %x (type = %s)",
-              System.identityHashCode(this),
-              System.identityHashCode(reference),
-              reference.get().getClass().getName());
+                  TAG,
+                  "Finalized without closing: %x %x (type = %s)",
+                  System.identityHashCode(this),
+                  System.identityHashCode(reference),
+                  reference.get().getClass().getName());
         }
 
         @Override
@@ -114,7 +137,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
         }
       };
 
-  private CloseableReference(
+  protected CloseableReference(
       SharedReference<T> sharedReference, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
     mSharedReference = Preconditions.checkNotNull(sharedReference);
     sharedReference.addReference();
@@ -122,7 +145,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     mStacktrace = stacktrace;
   }
 
-  private CloseableReference(
+  protected CloseableReference(
       T t,
       ResourceReleaser<T> resourceReleaser,
       LeakHandler leakHandler,
@@ -142,6 +165,15 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
   }
 
   /**
+   * Constructs a CloseableReference (wrapping a SharedReference) of T with provided
+   * ResourceReleaser<T>. If t is null, this will just return null.
+   */
+  public static <T> CloseableReference<T> of(
+      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
+    return of(t, resourceReleaser, DEFAULT_LEAK_HANDLER);
+  }
+
+  /**
    * Constructs a CloseableReference with a custom {@link LeakHandler} that's run if a reference is
    * not closed when the finalizer is called.
    *
@@ -152,7 +184,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     if (t == null) {
       return null;
     } else {
-      return new CloseableReference<>(
+      return of(
           t,
           (ResourceReleaser<T>) DEFAULT_CLOSEABLE_RELEASER,
           leakHandler,
@@ -160,13 +192,17 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
     }
   }
 
-  /**
-   * Constructs a CloseableReference (wrapping a SharedReference) of T with provided
-   * ResourceReleaser<T>. If t is null, this will just return null.
-   */
   public static <T> CloseableReference<T> of(
-      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser) {
-    return of(t, resourceReleaser, DEFAULT_LEAK_HANDLER);
+      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler) {
+    if (t == null) {
+      return null;
+    } else {
+      return of(
+          t,
+          resourceReleaser,
+          leakHandler,
+          leakHandler.requiresStacktrace() ? new Throwable() : null);
+    }
   }
 
   /**
@@ -175,15 +211,24 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * t is null, this will just return null.
    */
   public static <T> CloseableReference<T> of(
-      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler) {
+      @PropagatesNullable T t, ResourceReleaser<T> resourceReleaser, LeakHandler leakHandler, @Nullable Throwable stacktrace) {
     if (t == null) {
       return null;
     } else {
-      return new CloseableReference<T>(
-          t,
-          resourceReleaser,
-          leakHandler,
-          leakHandler.requiresStacktrace() ? new Throwable() : null);
+      if (t instanceof Bitmap || t instanceof HasBitmap) {
+        switch (sBitmapCloseableRefType) {
+          case REF_TYPE_FINALIZER:
+            return new FinalizerCloseableReference<>(t, resourceReleaser, leakHandler, stacktrace);
+          case REF_TYPE_REF_COUNT:
+            return new RefCountCloseableReference<>(t, resourceReleaser, leakHandler, stacktrace);
+          case REF_TYPE_NOOP:
+            return new NoOpCloseableReference<>(t, resourceReleaser, leakHandler, stacktrace);
+          case REF_TYPE_DEFAULT:
+            // return default
+        }
+      }
+
+      return new DefaultCloseableReference<>(t, resourceReleaser, leakHandler, stacktrace);
     }
   }
 
@@ -200,10 +245,7 @@ public final class CloseableReference<T> implements Cloneable, Closeable {
    * Returns a new CloseableReference to the same underlying SharedReference. The SharedReference
    * ref-count is incremented.
    */
-  public synchronized CloseableReference<T> clone() {
-    Preconditions.checkState(isValid());
-    return new CloseableReference<T>(mSharedReference, mLeakHandler, mStacktrace);
-  }
+  public abstract CloseableReference<T> clone();
 
   public synchronized @Nullable CloseableReference<T> cloneOrNull() {
     if (isValid()) {
