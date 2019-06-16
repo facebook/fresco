@@ -48,6 +48,7 @@ public class ImagePipelineExperiments {
   private final Supplier<Boolean> mLazyDataSource;
   private final boolean mGingerbreadDecoderEnabled;
   private final boolean mDownscaleFrameToDrawableDimensions;
+  private final int mBitmapCloseableRefType;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -70,6 +71,7 @@ public class ImagePipelineExperiments {
     mLazyDataSource = builder.mLazyDataSource;
     mGingerbreadDecoderEnabled = builder.mGingerbreadDecoderEnabled;
     mDownscaleFrameToDrawableDimensions = builder.mDownscaleFrameToDrawableDimensions;
+    mBitmapCloseableRefType = builder.mBitmapCloseableRefType;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -141,6 +143,10 @@ public class ImagePipelineExperiments {
     return mDownscaleFrameToDrawableDimensions;
   }
 
+  public int getBitmapCloseableRefType() {
+    return mBitmapCloseableRefType;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -160,6 +166,7 @@ public class ImagePipelineExperiments {
     public Supplier<Boolean> mLazyDataSource;
     public boolean mGingerbreadDecoderEnabled;
     public boolean mDownscaleFrameToDrawableDimensions;
+    public int mBitmapCloseableRefType;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -283,6 +290,11 @@ public class ImagePipelineExperiments {
     public ImagePipelineConfig.Builder setShouldDownscaleFrameToDrawableDimensions(
         boolean downscaleFrameToDrawableDimensions) {
       mDownscaleFrameToDrawableDimensions = downscaleFrameToDrawableDimensions;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setBitmapCloseableRefType(int bitmapCloseableRefType) {
+      mBitmapCloseableRefType = bitmapCloseableRefType;
       return mConfigBuilder;
     }
 

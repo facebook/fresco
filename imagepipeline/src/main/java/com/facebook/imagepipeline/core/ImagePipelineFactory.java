@@ -17,6 +17,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Suppliers;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.ImageFormatChecker;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
@@ -144,6 +145,7 @@ public class ImagePipelineFactory {
     mThreadHandoffProducerQueue =
         new ThreadHandoffProducerQueue(
             config.getExecutorSupplier().forLightweightBackgroundTasks());
+    CloseableReference.setDisableCloseableReferencesForBitmaps(config.getExperiments().getBitmapCloseableRefType());
     mCloseableReferenceFactory =
         new CloseableReferenceFactory(config.getCloseableReferenceLeakTracker());
     if (FrescoSystrace.isTracing()) {
