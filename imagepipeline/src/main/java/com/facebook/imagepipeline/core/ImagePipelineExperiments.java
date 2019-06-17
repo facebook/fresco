@@ -49,6 +49,7 @@ public class ImagePipelineExperiments {
   private final boolean mGingerbreadDecoderEnabled;
   private final boolean mDownscaleFrameToDrawableDimensions;
   private final int mBitmapCloseableRefType;
+  private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -72,6 +73,7 @@ public class ImagePipelineExperiments {
     mGingerbreadDecoderEnabled = builder.mGingerbreadDecoderEnabled;
     mDownscaleFrameToDrawableDimensions = builder.mDownscaleFrameToDrawableDimensions;
     mBitmapCloseableRefType = builder.mBitmapCloseableRefType;
+    mSuppressBitmapPrefetchingSupplier = builder.mSuppressBitmapPrefetchingSupplier;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -147,6 +149,10 @@ public class ImagePipelineExperiments {
     return mBitmapCloseableRefType;
   }
 
+  public Supplier<Boolean> getSuppressBitmapPrefetchingSupplier() {
+    return mSuppressBitmapPrefetchingSupplier;
+  }
+
   public static class Builder {
 
     private final ImagePipelineConfig.Builder mConfigBuilder;
@@ -167,6 +173,7 @@ public class ImagePipelineExperiments {
     public boolean mGingerbreadDecoderEnabled;
     public boolean mDownscaleFrameToDrawableDimensions;
     public int mBitmapCloseableRefType;
+    public Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -295,6 +302,11 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setBitmapCloseableRefType(int bitmapCloseableRefType) {
       mBitmapCloseableRefType = bitmapCloseableRefType;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setSuppressBitmapPrefetchingSupplier(Supplier<Boolean> suppressBitmapPrefetchingSupplier) {
+      mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
       return mConfigBuilder;
     }
 

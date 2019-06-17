@@ -284,7 +284,7 @@ public class ImagePipelineFactory {
               getSmallImageBufferedDiskCache(),
               mConfig.getCacheKeyFactory(),
               mThreadHandoffProducerQueue,
-              Suppliers.of(false),
+              mConfig.getExperiments().getSuppressBitmapPrefetchingSupplier(),
               mConfig.getExperiments().isLazyDataSource(),
               mConfig.getCallerContextVerifier());
     }
