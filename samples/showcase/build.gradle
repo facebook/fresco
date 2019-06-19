@@ -16,7 +16,6 @@ android {
         minSdkVersion rootProject.ext.samplesMinSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        multiDexEnabled true
         versionName "${VERSION_NAME}"
 
         testApplicationId "com.facebook.fresco.samples.showcase.test"
@@ -48,10 +47,12 @@ android {
     flavorDimensions "main"
     productFlavors {
         normal {
+            multiDexEnabled true
         }
         instantRunConfig {
             dimension "main"
             minSdkVersion 21
+            multiDexEnabled false
         }
         internal {
         }
