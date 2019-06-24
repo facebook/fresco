@@ -27,6 +27,7 @@ import com.facebook.litho.StateValue;
 import com.facebook.litho.annotations.FromPrepare;
 import com.facebook.litho.annotations.MountSpec;
 import com.facebook.litho.annotations.MountingType;
+import com.facebook.litho.annotations.OnBind;
 import com.facebook.litho.annotations.OnBoundsDefined;
 import com.facebook.litho.annotations.OnCreateInitialState;
 import com.facebook.litho.annotations.OnCreateMountContent;
@@ -34,6 +35,7 @@ import com.facebook.litho.annotations.OnDetached;
 import com.facebook.litho.annotations.OnMeasure;
 import com.facebook.litho.annotations.OnMount;
 import com.facebook.litho.annotations.OnPrepare;
+import com.facebook.litho.annotations.OnUnbind;
 import com.facebook.litho.annotations.OnUnmount;
 import com.facebook.litho.annotations.Prop;
 import com.facebook.litho.annotations.PropDefault;
@@ -119,8 +121,11 @@ public class FrescoVitoImageSpec {
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @Prop(optional = true) final @Nullable ImageListener imageListener,
       @FromPrepare final FrescoState frescoState) {
-    frescoState.setFrescoDrawable(frescoDrawable);
-    getController(context, frescoContext).onAttach(frescoState, imageListener);
+    FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (!actualFrescoContext.getExperiments().useBindCallbacks()) {
+      frescoState.setFrescoDrawable(frescoDrawable);
+      actualFrescoContext.getController().onAttach(frescoState, imageListener);
+    }
   }
 
   @OnUnmount
@@ -130,9 +135,37 @@ public class FrescoVitoImageSpec {
       @Prop(optional = true) final @Nullable FrescoContext frescoContext,
       @FromPrepare final FrescoState frescoState) {
     FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
-    if (actualFrescoContext.getExperiments().releaseInUnmount()) {
+    if (!actualFrescoContext.getExperiments().useBindCallbacks()
+        && actualFrescoContext.getExperiments().releaseInUnmount()) {
       frescoState.setFrescoDrawable(frescoDrawable);
-      getController(context, frescoContext).onDetach(frescoState);
+      actualFrescoContext.getController().onDetach(frescoState);
+    }
+  }
+
+  @OnBind
+  static void onBind(
+      ComponentContext context,
+      final FrescoDrawable frescoDrawable,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @Prop(optional = true) final @Nullable ImageListener imageListener,
+      @FromPrepare final FrescoState frescoState) {
+    FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().useBindCallbacks()) {
+      frescoState.setFrescoDrawable(frescoDrawable);
+      actualFrescoContext.getController().onAttach(frescoState, imageListener);
+    }
+  }
+
+  @OnUnbind
+  static void onUnbind(
+      ComponentContext context,
+      FrescoDrawable frescoDrawable,
+      @Prop(optional = true) final @Nullable FrescoContext frescoContext,
+      @FromPrepare final FrescoState frescoState) {
+    FrescoContext actualFrescoContext = resolveContext(context, frescoContext);
+    if (actualFrescoContext.getExperiments().useBindCallbacks()) {
+      frescoState.setFrescoDrawable(frescoDrawable);
+      actualFrescoContext.getController().onDetach(frescoState);
     }
   }
 
