@@ -30,7 +30,7 @@ public class DefaultFrescoContext {
 
   public static synchronized FrescoContext get(Resources resources) {
     if (sInstance == null) {
-      sInstance = createDefaultContext(resources);
+      initialize(resources, null);
     }
     return sInstance;
   }
@@ -42,6 +42,11 @@ public class DefaultFrescoContext {
     sInstance = context;
   }
 
+  public static synchronized void initialize(
+      Resources resources, @Nullable FrescoExperiments frescoExperiments) {
+    set(createDefaultContext(resources, frescoExperiments));
+  }
+
   public static synchronized void setDebugOverlayEnabledSupplier(
       @Nullable Supplier<Boolean> debugOverlayEnabledSupplier) {
     sDebugOverlayEnabledSupplier = debugOverlayEnabledSupplier;
@@ -51,11 +56,12 @@ public class DefaultFrescoContext {
     return sInstance != null;
   }
 
-  private static synchronized FrescoContext createDefaultContext(Resources resources) {
+  private static synchronized FrescoContext createDefaultContext(
+      Resources resources, @Nullable FrescoExperiments frescoExperiments) {
     return new FrescoContext(
         new HierarcherImpl(createDefaultDrawableFactory(resources)),
         new NoOpCallerContextVerifier(),
-        new FrescoExperiments(),
+        frescoExperiments != null ? frescoExperiments : new FrescoExperiments(),
         UiThreadImmediateExecutorService.getInstance(),
         null,
         sDebugOverlayEnabledSupplier == null
