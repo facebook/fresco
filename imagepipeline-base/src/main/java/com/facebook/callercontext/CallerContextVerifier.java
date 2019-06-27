@@ -12,5 +12,5 @@ import javax.annotation.Nullable;
 /** Verifies CallerContext */
 public interface CallerContextVerifier {
 
-  void verifyCallerContext(@Nullable Object callerContext);
+  void verifyCallerContext(@Nullable Object callerContext, boolean isPrefetch);
 }

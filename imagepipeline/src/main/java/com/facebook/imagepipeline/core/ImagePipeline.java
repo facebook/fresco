@@ -707,7 +707,7 @@ public class ImagePipeline {
         getRequestListenerForRequest(imageRequest, requestListener);
 
     if (mCallerContextVerifier != null) {
-      mCallerContextVerifier.verifyCallerContext(callerContext);
+      mCallerContextVerifier.verifyCallerContext(callerContext, false);
     }
 
     try {
@@ -768,7 +768,7 @@ public class ImagePipeline {
     final RequestListener requestListener = getRequestListenerForRequest(imageRequest, null);
 
     if (mCallerContextVerifier != null) {
-      mCallerContextVerifier.verifyCallerContext(callerContext);
+      mCallerContextVerifier.verifyCallerContext(callerContext, true);
     }
     try {
       ImageRequest.RequestLevel lowestPermittedRequestLevel =

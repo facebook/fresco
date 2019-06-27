@@ -79,7 +79,7 @@ public class DefaultFrescoContext {
   private static class NoOpCallerContextVerifier implements CallerContextVerifier {
 
     @Override
-    public void verifyCallerContext(@Nullable Object callerContext) {
+    public void verifyCallerContext(@Nullable Object callerContext, boolean isPrefetch) {
       // No-op
     }
   }
