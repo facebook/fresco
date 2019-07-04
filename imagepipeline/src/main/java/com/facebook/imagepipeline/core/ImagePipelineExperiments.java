@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -173,7 +174,7 @@ public class ImagePipelineExperiments {
     public boolean mGingerbreadDecoderEnabled;
     public boolean mDownscaleFrameToDrawableDimensions;
     public int mBitmapCloseableRefType;
-    public Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
+    public Supplier<Boolean> mSuppressBitmapPrefetchingSupplier = Suppliers.of(false);
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
