@@ -7,11 +7,6 @@
 
 package com.facebook.drawee.components;
 
-import android.os.Handler;
-import android.os.Looper;
-import com.facebook.common.internal.Preconditions;
-import java.util.HashSet;
-import java.util.Set;
 import javax.annotation.Nullable;
 
 /**
@@ -19,23 +14,30 @@ import javax.annotation.Nullable;
  * message. Although we would like for defer {@code release} to happen immediately after the current
  * message is done, this is not guaranteed as there might be other messages after the current one,
  * but before the deferred one, pending in the Looper's queue.
- * <p>
- * onDetach / onAttach events are used for releasing / acquiring resources. However, sometimes we
+ *
+ * <p>onDetach / onAttach events are used for releasing / acquiring resources. However, sometimes we
  * get an onDetach event followed by an onAttach event within the same loop. In order to avoid
- * overaggressive resource releasing / acquiring, we defer releasing. If onAttach happens within
- * the same loop, we will simply cancel corresponding deferred release, avoiding an unnecessary
- * resource release / acquire cycle. If onAttach doesn't happen before the deferred message gets
- * executed, the resources will be released.
- * <p>
- * This class is not thread-safe and should only be used from the main thread (UI thread).
+ * overaggressive resource releasing / acquiring, we defer releasing. If onAttach happens within the
+ * same loop, we will simply cancel corresponding deferred release, avoiding an unnecessary resource
+ * release / acquire cycle. If onAttach doesn't happen before the deferred message gets executed,
+ * the resources will be released.
  */
-public class DeferredReleaser {
+public abstract class DeferredReleaser {
 
   private static @Nullable DeferredReleaser sInstance = null;
 
+  private static boolean useConcurrentImpl = false;
+
+  public static synchronized void setUseConcurrentImpl(boolean useConcurrentImpl) {
+    DeferredReleaser.useConcurrentImpl = useConcurrentImpl;
+  }
+
   public static synchronized DeferredReleaser getInstance() {
     if (sInstance == null) {
-      sInstance = new DeferredReleaser();
+      sInstance =
+          useConcurrentImpl
+              ? new DeferredReleaserConcurrentImpl()
+              : new DeferredReleaserLegacyImpl();
     }
     return sInstance;
   }
@@ -44,59 +46,20 @@ public class DeferredReleaser {
     void release();
   }
 
-  private final Set<Releasable> mPendingReleasables;
-  private final Handler mUiHandler;
-
-  public DeferredReleaser() {
-    mPendingReleasables = new HashSet<>();
-    mUiHandler = new Handler(Looper.getMainLooper());
-  }
-
-  /*
-   * Walks through the set of pending releasables, and calls release on them.
-   * Resets the pending list to an empty list when done.
-   */
-  private final Runnable releaseRunnable = new Runnable() {
-    @Override
-    public void run() {
-      ensureOnUiThread();
-      for (Releasable releasable : mPendingReleasables) {
-        releasable.release();
-      }
-      mPendingReleasables.clear();
-    }
-  };
-
   /**
    * Schedules deferred release.
-   * <p>
-   * The object will be released after the current Looper's loop,
-   * unless {@code cancelDeferredRelease} is called before then.
+   *
+   * <p>The object will be released after the current Looper's loop, unless {@code
+   * cancelDeferredRelease} is called before then.
+   *
    * @param releasable Object to release.
    */
-  public void scheduleDeferredRelease(Releasable releasable) {
-    ensureOnUiThread();
-
-    if (!mPendingReleasables.add(releasable)) {
-      return;
-    }
-    // Posting to the UI queue is an O(n) operation, so we only do it once.
-    // The one runnable does all the releases.
-    if (mPendingReleasables.size() == 1) {
-      mUiHandler.post(releaseRunnable);
-    }
-  }
+  public abstract void scheduleDeferredRelease(Releasable releasable);
 
   /**
    * Cancels a pending release for this object.
+   *
    * @param releasable Object to cancel release of.
    */
-  public void cancelDeferredRelease(Releasable releasable) {
-    ensureOnUiThread();
-    mPendingReleasables.remove(releasable);
-  }
-
-  private static void ensureOnUiThread() {
-    Preconditions.checkState(Looper.getMainLooper().getThread() == Thread.currentThread());
-  }
+  public abstract void cancelDeferredRelease(Releasable releasable);
 }
