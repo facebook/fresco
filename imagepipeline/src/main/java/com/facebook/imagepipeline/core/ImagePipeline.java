@@ -337,7 +337,7 @@ public class ImagePipeline {
       return DataSources.immediateFailedDataSource(exception);
     }
   }
-
+  
   /**
    * Submits a request for prefetching to the bitmap cache.
    *
@@ -350,6 +350,21 @@ public class ImagePipeline {
   public DataSource<Void> prefetchToBitmapCache(
       ImageRequest imageRequest,
       Object callerContext) {
+    return prefetchToBitmapCache(imageRequest, callerContext, Priority.MEDIUM);
+  }
+
+  /** Experimental prefetch method. Do not use as it can be removed in the future */
+  @Deprecated
+  public DataSource<Void> prefetchToBitmapCacheWithHighPriority(
+      ImageRequest imageRequest,
+      Object callerContext) {
+    return prefetchToBitmapCache(imageRequest, callerContext, Priority.HIGH);
+  }
+
+  private DataSource<Void> prefetchToBitmapCache(
+      ImageRequest imageRequest,
+      Object callerContext,
+      Priority priority) {
     if (!mIsPrefetchEnabledSupplier.get()) {
       return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION);
     }
@@ -369,7 +384,7 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          Priority.MEDIUM);
+          priority);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
