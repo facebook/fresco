@@ -19,13 +19,32 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="@string/button_clear_cache"
-        />
+        android:textSize="10sp"
+    />
+
     <Button
-        android:id="@+id/prefetch_now"
+      android:id="@+id/prefetch_disk_now"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:textSize="10sp"
+      android:text="@string/button_prefetch_disk"
+      />
+    <Button
+        android:id="@+id/prefetch_encoded_now"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="@string/button_prefetch"
+        android:textSize="10sp"
+        android:text="@string/button_prefetch_encoded"
+        />
+    <Button
+        android:id="@+id/prefetch_bitmap_now"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textSize="10sp"
+        android:text="@string/button_prefetch_bitmap"
         />
     <Button
         android:id="@+id/toggle_images"
@@ -33,7 +52,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="@string/button_toggle_images"
-        />
+        android:textSize="10sp"
+    />
   </LinearLayout>
 
   <LinearLayout

@@ -51,9 +51,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for ImagePipeline
- */
+/** Tests for ImagePipeline */
 @RunWith(RobolectricTestRunner.class)
 public class ImagePipelineTest {
   @Mock public ImageRequest mImageRequest;
@@ -88,7 +86,7 @@ public class ImagePipelineTest {
     mEncodedMemoryCache = mock(MemoryCache.class);
     mMainDiskStorageCache = mock(BufferedDiskCache.class);
     mSmallImageDiskStorageCache = mock(BufferedDiskCache.class);
-    mThreadHandoffProducerQueue= mock(ThreadHandoffProducerQueue.class);
+    mThreadHandoffProducerQueue = mock(ThreadHandoffProducerQueue.class);
     mImagePipeline =
         new ImagePipeline(
             mProducerSequenceFactory,
@@ -108,14 +106,22 @@ public class ImagePipelineTest {
     when(mImageRequest.getPriority()).thenReturn(Priority.HIGH);
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
-    when(mImageRequest.shouldDecodePrefetches())
-            .thenReturn(null);
+    when(mImageRequest.shouldDecodePrefetches()).thenReturn(null);
   }
 
   @Test
   public void testPrefetchToDiskCacheWithPrefetchDisabled() {
     when(mPrefetchEnabledSupplier.get()).thenReturn(false);
     DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(mImageRequest, mCallerContext);
+    assertTrue(dataSource.hasFailed());
+    verifyNoMoreInteractions(mProducerSequenceFactory, mRequestListener1, mRequestListener2);
+  }
+
+  @Test
+  public void testPrefetchToEncodedCacheWithPrefetchDisabled() {
+    when(mPrefetchEnabledSupplier.get()).thenReturn(false);
+    DataSource<Void> dataSource =
+        mImagePipeline.prefetchToEncodedCache(mImageRequest, mCallerContext);
     assertTrue(dataSource.hasFailed());
     verifyNoMoreInteractions(mProducerSequenceFactory, mRequestListener1, mRequestListener2);
   }
@@ -145,9 +151,7 @@ public class ImagePipelineTest {
     Producer<Void> prefetchProducerSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
         .thenReturn(prefetchProducerSequence);
-    DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(
-        mImageRequest,
-        mCallerContext);
+    DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(mImageRequest, mCallerContext);
     verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.MEDIUM);
   }
 
@@ -156,17 +160,13 @@ public class ImagePipelineTest {
     Producer<Void> prefetchProducerSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
         .thenReturn(prefetchProducerSequence);
-    DataSource<Void> dataSource = mImagePipeline.prefetchToDiskCache(
-        mImageRequest,
-        mCallerContext,
-        Priority.MEDIUM);
+    DataSource<Void> dataSource =
+        mImagePipeline.prefetchToDiskCache(mImageRequest, mCallerContext, Priority.MEDIUM);
     verifyPrefetchToDiskCache(dataSource, prefetchProducerSequence, Priority.MEDIUM);
   }
 
   private void verifyPrefetchToDiskCache(
-      DataSource<Void> dataSource,
-      Producer<Void> prefetchProducerSequence,
-      Priority priority) {
+      DataSource<Void> dataSource, Producer<Void> prefetchProducerSequence, Priority priority) {
     assertFalse(dataSource.isFinished());
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
@@ -179,14 +179,50 @@ public class ImagePipelineTest {
   }
 
   @Test
+  public void testPrefetchToEncodedCacheDefaultPriority() {
+    Producer<Void> prefetchProducerSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
+        .thenReturn(prefetchProducerSequence);
+    DataSource<Void> dataSource =
+        mImagePipeline.prefetchToEncodedCache(mImageRequest, mCallerContext);
+    assertFalse(dataSource.isFinished());
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
+    verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
+    ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
+        ArgumentCaptor.forClass(ProducerContext.class);
+    verify(prefetchProducerSequence)
+        .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
+    assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
+    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.MEDIUM);
+  }
+
+  @Test
+  public void testPrefetchToEncodedCacheCustomPriority() {
+    Producer<Void> prefetchProducerSequence = mock(Producer.class);
+    when(mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest))
+        .thenReturn(prefetchProducerSequence);
+    DataSource<Void> dataSource =
+        mImagePipeline.prefetchToEncodedCache(mImageRequest, mCallerContext, Priority.MEDIUM);
+    assertFalse(dataSource.isFinished());
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
+    verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
+    ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
+        ArgumentCaptor.forClass(ProducerContext.class);
+    verify(prefetchProducerSequence)
+        .produceResults(any(Consumer.class), producerContextArgumentCaptor.capture());
+    assertFalse(producerContextArgumentCaptor.getValue().isIntermediateResultExpected());
+    assertEquals(producerContextArgumentCaptor.getValue().getPriority(), Priority.MEDIUM);
+  }
+
+  @Test
   public void testPrefetchToBitmapCache() {
     Producer<Void> prefetchProducerSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getDecodedImagePrefetchProducerSequence(mImageRequest))
         .thenReturn(prefetchProducerSequence);
     DataSource<Void> dataSource =
         mImagePipeline.prefetchToBitmapCache(mImageRequest, mCallerContext);
-    assertTrue(!dataSource.isFinished());
-    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0",  true);
+    assertFalse(dataSource.isFinished());
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", true);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", true);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
@@ -206,18 +242,12 @@ public class ImagePipelineTest {
         mImagePipeline.fetchEncodedImage(mImageRequest, mCallerContext);
     assertFalse(dataSource.isFinished());
     ArgumentCaptor<ImageRequest> argumentCaptor = ArgumentCaptor.forClass(ImageRequest.class);
-    verify(mRequestListener1).onRequestStart(
-        argumentCaptor.capture(),
-        eq(mCallerContext),
-        eq("0"),
-        eq(false));
+    verify(mRequestListener1)
+        .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     ImageRequest capturedImageRequest = argumentCaptor.getValue();
     assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
-    verify(mRequestListener2).onRequestStart(
-        argumentCaptor.capture(),
-        eq(mCallerContext),
-        eq("0"),
-        eq(false));
+    verify(mRequestListener2)
+        .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     capturedImageRequest = argumentCaptor.getValue();
     assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
@@ -238,18 +268,12 @@ public class ImagePipelineTest {
         mImagePipeline.fetchEncodedImage(mImageRequest, mCallerContext);
     assertFalse(dataSource.isFinished());
     ArgumentCaptor<ImageRequest> argumentCaptor = ArgumentCaptor.forClass(ImageRequest.class);
-    verify(mRequestListener1).onRequestStart(
-        argumentCaptor.capture(),
-        eq(mCallerContext),
-        eq("0"),
-        eq(false));
+    verify(mRequestListener1)
+        .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     ImageRequest capturedImageRequest = argumentCaptor.getValue();
     assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
-    verify(mRequestListener2).onRequestStart(
-        argumentCaptor.capture(),
-        eq(mCallerContext),
-        eq("0"),
-        eq(false));
+    verify(mRequestListener2)
+        .onRequestStart(argumentCaptor.capture(), eq(mCallerContext), eq("0"), eq(false));
     capturedImageRequest = argumentCaptor.getValue();
     assertSame(mImageRequest.getSourceUri(), capturedImageRequest.getSourceUri());
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
@@ -285,9 +309,7 @@ public class ImagePipelineTest {
         .thenReturn(decodedSequence);
     DataSource<CloseableReference<CloseableImage>> dataSource =
         mImagePipeline.fetchDecodedImage(
-            mImageRequest,
-            mCallerContext,
-            ImageRequest.RequestLevel.DISK_CACHE);
+            mImageRequest, mCallerContext, ImageRequest.RequestLevel.DISK_CACHE);
     assertFalse(dataSource.isFinished());
     verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
@@ -320,6 +342,7 @@ public class ImagePipelineTest {
         producerContextArgumentCaptor.getValue().getLowestPermittedRequestLevel(),
         ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
   }
+
   @Test
   public void testFetchFromBitmapCacheDueToImageRequest() {
     Producer<CloseableReference<CloseableImage>> bitmapCacheSequence = mock(Producer.class);
@@ -328,7 +351,7 @@ public class ImagePipelineTest {
     when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
         .thenReturn(bitmapCacheSequence);
     mImagePipeline.fetchDecodedImage(mImageRequest, mCallerContext);
-    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0",  false);
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
@@ -345,14 +368,12 @@ public class ImagePipelineTest {
   public void testGetBitmapCacheGetSupplier() {
     Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier =
         mImagePipeline.getDataSourceSupplier(
-            mImageRequest,
-            mCallerContext,
-            ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
+            mImageRequest, mCallerContext, ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE);
     Producer<CloseableReference<CloseableImage>> bitmapCacheSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
         .thenReturn(bitmapCacheSequence);
     dataSourceSupplier.get();
-    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0",  false);
+    verify(mRequestListener1).onRequestStart(mImageRequest, mCallerContext, "0", false);
     verify(mRequestListener2).onRequestStart(mImageRequest, mCallerContext, "0", false);
     ArgumentCaptor<ProducerContext> producerContextArgumentCaptor =
         ArgumentCaptor.forClass(ProducerContext.class);
@@ -364,8 +385,9 @@ public class ImagePipelineTest {
 
   @Test
   public void testGetFullFetchSupplier() {
-    Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier = mImagePipeline
-        .getDataSourceSupplier(mImageRequest, mCallerContext, ImageRequest.RequestLevel.FULL_FETCH);
+    Supplier<DataSource<CloseableReference<CloseableImage>>> dataSourceSupplier =
+        mImagePipeline.getDataSourceSupplier(
+            mImageRequest, mCallerContext, ImageRequest.RequestLevel.FULL_FETCH);
     Producer<CloseableReference<CloseableImage>> decodedSequence = mock(Producer.class);
     when(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
         .thenReturn(decodedSequence);
@@ -400,11 +422,9 @@ public class ImagePipelineTest {
 
     CacheKey dummyCacheKey = mock(CacheKey.class);
 
-    ArgumentCaptor<Predicate> bitmapCachePredicateCaptor =
-        ArgumentCaptor.forClass(Predicate.class);
+    ArgumentCaptor<Predicate> bitmapCachePredicateCaptor = ArgumentCaptor.forClass(Predicate.class);
     verify(mBitmapMemoryCache).removeAll(bitmapCachePredicateCaptor.capture());
-    Predicate<CacheKey> bitmapMemoryCacheKeyPredicate =
-        bitmapCachePredicateCaptor.getValue();
+    Predicate<CacheKey> bitmapMemoryCacheKeyPredicate = bitmapCachePredicateCaptor.getValue();
     BitmapMemoryCacheKey bitmapMemoryCacheKey1 = mock(BitmapMemoryCacheKey.class);
     BitmapMemoryCacheKey bitmapMemoryCacheKey2 = mock(BitmapMemoryCacheKey.class);
     when(bitmapMemoryCacheKey1.containsUri(uri)).thenReturn(true);
@@ -448,11 +468,9 @@ public class ImagePipelineTest {
 
     mImagePipeline.clearMemoryCaches();
 
-    ArgumentCaptor<Predicate> bitmapCachePredicateCaptor =
-        ArgumentCaptor.forClass(Predicate.class);
+    ArgumentCaptor<Predicate> bitmapCachePredicateCaptor = ArgumentCaptor.forClass(Predicate.class);
     verify(mBitmapMemoryCache).removeAll(bitmapCachePredicateCaptor.capture());
-    Predicate<CacheKey> bitmapMemoryCacheKeyPredicate =
-        bitmapCachePredicateCaptor.getValue();
+    Predicate<CacheKey> bitmapMemoryCacheKeyPredicate = bitmapCachePredicateCaptor.getValue();
     BitmapMemoryCacheKey bitmapMemoryCacheKey1 = mock(BitmapMemoryCacheKey.class);
     BitmapMemoryCacheKey bitmapMemoryCacheKey2 = mock(BitmapMemoryCacheKey.class);
     when(bitmapMemoryCacheKey1.containsUri(uri)).thenReturn(true);

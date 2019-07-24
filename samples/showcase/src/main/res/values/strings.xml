@@ -208,7 +208,9 @@
   <string name="welcome_button_doc">Documentation</string>
 
   <string name="button_clear_cache">Clear Cache</string>
-  <string name="button_prefetch">Prefetch</string>
+  <string name="button_prefetch_disk">Prefetch Disk</string>
+  <string name="button_prefetch_encoded">Prefetch Encoded</string>
+  <string name="button_prefetch_bitmap">Prefetch Bitmap</string>
   <string name="button_toggle_images">Toggle images</string>
   <string name="prefetch_status"><xliff:g id="name1">%d</xliff:g>/<xliff:g id="name2">%d</xliff:g> prefetched, <xliff:g id="name3">%d</xliff:g> failed.</string>
 
