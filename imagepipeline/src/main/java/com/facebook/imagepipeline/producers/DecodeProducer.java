@@ -197,9 +197,14 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
           FrescoSystrace.beginSection("DecodeProducer#onNewResultImpl");
         }
         final boolean isLast = isLast(status);
-        if (isLast && !EncodedImage.isValid(newResult)) {
-          handleError(new ExceptionWithNoStacktrace("Encoded image is not valid."));
-          return;
+        if (isLast) {
+          if (newResult == null) {
+            handleError(new ExceptionWithNoStacktrace("Encoded image is null."));
+            return;
+          } else if (!newResult.isValid()) {
+            handleError(new ExceptionWithNoStacktrace("Encoded image is not valid."));
+            return;
+          }
         }
         if (!updateDecodeJob(newResult, status)) {
           return;
