@@ -207,7 +207,6 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
     private @Nullable EncodedImage getCloneWithRotationApplied(
         EncodedImage encodedImage, int angle) {
       EncodedImage newResult = EncodedImage.cloneOrNull(encodedImage); // for thread-safety sake
-      encodedImage.close();
       if (newResult != null) {
         newResult.setRotationAngle(angle);
       }
