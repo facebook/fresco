@@ -365,7 +365,7 @@ public class EncodedImage implements Closeable {
         && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       mExifOrientation = HeifExifUtil.getOrientation(getInputStream());
       mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(mExifOrientation);
-    } else {
+    } else if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       mRotationAngle = 0;
     }
   }
