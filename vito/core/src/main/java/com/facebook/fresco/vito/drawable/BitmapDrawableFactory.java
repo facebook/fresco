@@ -131,6 +131,7 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
     }
     if (borderOptions != null) {
       roundedBitmapDrawable.setBorder(borderOptions.color, borderOptions.width);
+      roundedBitmapDrawable.setPadding(borderOptions.padding);
     }
     return roundedBitmapDrawable;
   }

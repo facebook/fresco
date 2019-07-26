@@ -14,16 +14,42 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class BorderOptions {
 
+  /**
+   * Create border options without padding
+   *
+   * @param color The color of the border
+   * @param width The width of the border, in pixels
+   * @return BorderOptions
+   */
   public static BorderOptions create(@ColorInt int color, float width) {
     return new BorderOptions(color, width);
   }
 
+  /**
+   * Create border options with padding. Note that currently padding is not supported with
+   * RoundingOptions.asCircle().
+   *
+   * @param color The color of the border
+   * @param width The width of the border, in pixels
+   * @param padding The width around the edge of the image that will get chopped, in pixels
+   * @return BorderOptions
+   */
+  public static BorderOptions create(@ColorInt int color, float width, float padding) {
+    return new BorderOptions(color, width, padding);
+  }
+
   public final @ColorInt int color;
   public final float width;
+  public final float padding;
 
   public BorderOptions(@ColorInt int color, float width) {
+    this(color, width, 0);
+  }
+
+  public BorderOptions(@ColorInt int color, float width, float padding) {
     this.color = color;
     this.width = width;
+    this.padding = padding;
   }
 
   @Override
@@ -36,13 +62,14 @@ public class BorderOptions {
     }
 
     BorderOptions that = (BorderOptions) obj;
-    return color == that.color && width == that.width;
+    return color == that.color && width == that.width && padding == that.padding;
   }
 
   @Override
   public int hashCode() {
     int result = color;
     result = 31 * result + Float.floatToIntBits(width);
+    result = 31 * result + Float.floatToIntBits(padding);
     return result;
   }
 }
