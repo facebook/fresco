@@ -10,6 +10,7 @@ package com.facebook.drawee.components;
 import android.os.Handler;
 import android.os.Looper;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,38 +28,22 @@ import java.util.Set;
  * release / acquire cycle. If onAttach doesn't happen before the deferred message gets executed,
  * the resources will be released.
  *
- * <p>This class is thread-safe.
+ * <p>This class could be called from BG thread, but it has one restriction: releasables scheduled
+ * from BG thread can only be un-schedule from BG thread (Enough for Litho BG binding).
  */
 public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
 
-  private final Object mLock = new Object();
-  private final Set<Releasable> mPendingReleasables;
+  private final PendingSet mPendingSet = new PendingSet();
+  private final PendingSetSync mPendingSetSync = new PendingSetSync();
+
+  private final Runnable releaseRunnable = new ReleaseRunnable(mPendingSet);
+  private final Runnable releaseRunnableSync = new ReleaseRunnable(mPendingSetSync);
+
   private final Handler mUiHandler;
 
   public DeferredReleaserConcurrentImpl() {
-    mPendingReleasables = new HashSet<>();
     mUiHandler = new Handler(Looper.getMainLooper());
   }
-
-  /*
-   * Walks through the set of pending releasables, and calls release on them.
-   * Resets the pending list to an empty list when done.
-   */
-  private final Runnable releaseRunnable =
-      new Runnable() {
-        @Override
-        public void run() {
-          List<Releasable> releasables;
-          synchronized (mLock) {
-            releasables = new ArrayList<>(mPendingReleasables);
-            mPendingReleasables.clear();
-          }
-
-          for (Releasable releasable : releasables) {
-            releasable.release();
-          }
-        }
-      };
 
   /**
    * Schedules deferred release.
@@ -70,20 +55,17 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
    */
   @Override
   public void scheduleDeferredRelease(Releasable releasable) {
-    boolean wasPendingEmpty;
-    synchronized (mLock) {
-      wasPendingEmpty = mPendingReleasables.isEmpty();
+    PendingSet pendingSet;
+    Runnable runnable;
+    if (isOnUiThread()) {
+      pendingSet = mPendingSet;
+      runnable = releaseRunnable;
+    } else {
+      pendingSet = mPendingSetSync;
+      runnable = releaseRunnableSync;
+    }
 
-      if (!mPendingReleasables.add(releasable)) {
-        return;
-      }
-    }
-    // If pending is not empty, there's already something scheduled (it might even already being
-    // run) but we are sure the lock protected section hasn't enter, so this schedule will be
-    // executed.
-    if (wasPendingEmpty) {
-      mUiHandler.post(releaseRunnable);
-    }
+    if (pendingSet.schedule(releasable)) mUiHandler.post(runnable);
   }
 
   /**
@@ -93,10 +75,68 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
    */
   @Override
   public void cancelDeferredRelease(Releasable releasable) {
-    synchronized (mLock) {
+    if (isOnUiThread()) {
+      mPendingSet.cancel(releasable);
+    } else {
+      mPendingSetSync.cancel(releasable);
+    }
+  }
+
+  static class PendingSet {
+    final Set<Releasable> mPendingReleasables = new HashSet<>();
+
+    /** returns if we need to schedule a runnable * */
+    boolean schedule(Releasable releasable) {
+      boolean wasPendingEmpty = mPendingReleasables.isEmpty();
+      return mPendingReleasables.add(releasable) && wasPendingEmpty;
+    }
+
+    void cancel(Releasable releasable) {
       mPendingReleasables.remove(releasable);
     }
-    // there's no way we could un-schedule, don't access handler in locked section and still make
-    // this thread-safe
+
+    List<Releasable> takeAll() {
+      List<Releasable> result;
+      if (mPendingReleasables.isEmpty()) {
+        result = Collections.emptyList();
+      } else {
+        result = new ArrayList<>(mPendingReleasables);
+      }
+      mPendingReleasables.clear();
+      return result;
+    }
+  }
+
+  static class PendingSetSync extends PendingSet {
+
+    @Override
+    synchronized boolean schedule(Releasable releasable) {
+      return super.schedule(releasable);
+    }
+
+    @Override
+    synchronized void cancel(Releasable releasable) {
+      super.cancel(releasable);
+    }
+
+    @Override
+    synchronized List<Releasable> takeAll() {
+      return super.takeAll();
+    }
+  }
+
+  private static class ReleaseRunnable implements Runnable {
+    final PendingSet mPendingSet;
+
+    private ReleaseRunnable(PendingSet pendingSet) {
+      mPendingSet = pendingSet;
+    }
+
+    @Override
+    public void run() {
+      for (Releasable releasable : mPendingSet.takeAll()) {
+        releasable.release();
+      }
+    }
   }
 }

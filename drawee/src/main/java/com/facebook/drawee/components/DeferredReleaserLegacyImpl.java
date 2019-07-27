@@ -88,6 +88,6 @@ public class DeferredReleaserLegacyImpl extends DeferredReleaser {
   }
 
   private static void ensureOnUiThread() {
-    Preconditions.checkState(Looper.getMainLooper().getThread() == Thread.currentThread());
+    Preconditions.checkState(isOnUiThread());
   }
 }

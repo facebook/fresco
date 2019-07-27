@@ -7,6 +7,7 @@
 
 package com.facebook.drawee.components;
 
+import android.os.Looper;
 import javax.annotation.Nullable;
 
 /**
@@ -40,6 +41,10 @@ public abstract class DeferredReleaser {
               : new DeferredReleaserLegacyImpl();
     }
     return sInstance;
+  }
+
+  static boolean isOnUiThread() {
+    return Looper.getMainLooper().getThread() == Thread.currentThread();
   }
 
   public interface Releasable {
