@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.image;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.references.ResourceReleaser;
 import junit.framework.Assert;
 import org.junit.*;
@@ -18,11 +18,9 @@ import org.junit.runner.*;
 import org.mockito.*;
 import org.robolectric.*;
 
-/**
- * Basic tests for closeable bitmap
- */
+/** Basic tests for closeable bitmap */
 @RunWith(RobolectricTestRunner.class)
-public class CloseableBitmapTest  {
+public class CloseableBitmapTest {
 
   @Mock public Bitmap mBitmap;
   @Mock public ResourceReleaser<Bitmap> mResourceReleaser;

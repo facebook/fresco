@@ -14,7 +14,7 @@ import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MIN_QUAL
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.MIN_SCALE_NUMERATOR;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.SCALE_DENOMINATOR;
 
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.DoNotStrip;
 import com.facebook.common.internal.Preconditions;

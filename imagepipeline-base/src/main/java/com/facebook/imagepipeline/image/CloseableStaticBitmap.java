@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.HasBitmap;
@@ -18,9 +18,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
-/**
- * CloseableImage that contains one Bitmap.
- */
+/** CloseableImage that contains one Bitmap. */
 @ThreadSafe
 public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap {
 
@@ -62,9 +60,7 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
       int rotationAngle,
       int exifOrientation) {
     mBitmap = Preconditions.checkNotNull(bitmap);
-    mBitmapReference = CloseableReference.of(
-        mBitmap,
-        Preconditions.checkNotNull(resourceReleaser));
+    mBitmapReference = CloseableReference.of(mBitmap, Preconditions.checkNotNull(resourceReleaser));
     mQualityInfo = qualityInfo;
     mRotationAngle = rotationAngle;
     mExifOrientation = exifOrientation;
@@ -77,9 +73,7 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
    * @param bitmapReference the bitmap reference.
    */
   public CloseableStaticBitmap(
-      CloseableReference<Bitmap> bitmapReference,
-      QualityInfo qualityInfo,
-      int rotationAngle) {
+      CloseableReference<Bitmap> bitmapReference, QualityInfo qualityInfo, int rotationAngle) {
     this(bitmapReference, qualityInfo, rotationAngle, ExifInterface.ORIENTATION_UNDEFINED);
   }
 
@@ -101,9 +95,7 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
     mExifOrientation = exifOrientation;
   }
 
-  /**
-   * Releases the bitmap to the pool.
-   */
+  /** Releases the bitmap to the pool. */
   @Override
   public void close() {
     CloseableReference<Bitmap> reference = detachBitmapReference();
@@ -121,9 +113,12 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
 
   /**
    * Convert this object to a CloseableReference&lt;Bitmap&gt;.
+   *
    * <p>You cannot call this method on an object that has already been closed.
-   * <p>The reference count of the bitmap is preserved. After calling this method, this object
-   * can no longer be used and no longer points to the bitmap.
+   *
+   * <p>The reference count of the bitmap is preserved. After calling this method, this object can
+   * no longer be used and no longer points to the bitmap.
+   *
    * <p>See {@link #cloneUnderlyingBitmapReference()} for an alternative that returns a cloned
    * bitmap reference instead.
    *
@@ -137,9 +132,9 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
 
   /**
    * Get a cloned bitmap reference for the underlying original CloseableReference&lt;Bitmap&gt;.
-   * <p>After calling this method, this object can still be used.
-   * See {@link #convertToBitmapReference()} for an alternative that detaches the original reference
-   * instead.
+   *
+   * <p>After calling this method, this object can still be used. See {@link
+   * #convertToBitmapReference()} for an alternative that detaches the original reference instead.
    *
    * @return the cloned bitmap reference without altering this instance or null if already closed
    */
@@ -148,9 +143,7 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
     return CloseableReference.cloneOrNull(mBitmapReference);
   }
 
-  /**
-   * Returns whether this instance is closed.
-   */
+  /** Returns whether this instance is closed. */
   @Override
   public synchronized boolean isClosed() {
     return mBitmapReference == null;
@@ -166,17 +159,13 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
     return mBitmap;
   }
 
-  /**
-   * @return size in bytes of the underlying bitmap
-   */
+  /** @return size in bytes of the underlying bitmap */
   @Override
   public int getSizeInBytes() {
     return BitmapUtil.getSizeInBytes(mBitmap);
   }
 
-  /**
-   * @return width of the image
-   */
+  /** @return width of the image */
   @Override
   public int getWidth() {
     if (mRotationAngle % 180 != 0
@@ -187,9 +176,7 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
     return getBitmapWidth(mBitmap);
   }
 
-  /**
-   * @return height of the image
-   */
+  /** @return height of the image */
   @Override
   public int getHeight() {
     if (mRotationAngle % 180 != 0
@@ -208,9 +195,7 @@ public class CloseableStaticBitmap extends CloseableBitmap implements HasBitmap 
     return (bitmap == null) ? 0 : bitmap.getHeight();
   }
 
-  /**
-   * @return the rotation angle of the image
-   */
+  /** @return the rotation angle of the image */
   public int getRotationAngle() {
     return mRotationAngle;
   }

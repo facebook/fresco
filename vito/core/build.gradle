@@ -10,6 +10,7 @@ dependencies {
     compileOnly "com.facebook.infer.annotation:infer-annotation:${INFER_ANNOTATION_VERSION}"
 
     implementation "androidx.core:core:${versions.androidx.core}"
+    implementation "androidx.exifinterface:exifinterface:${versions.androidx.exifinterface}"
 
     implementation project(':animated-drawable')
     implementation project(':drawee')

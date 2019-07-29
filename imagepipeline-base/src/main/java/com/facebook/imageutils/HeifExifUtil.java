@@ -6,9 +6,9 @@
  */
 package com.facebook.imageutils;
 
-import android.media.ExifInterface;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.logging.FLog;
 import com.facebook.soloader.DoNotOptimize;
 import java.io.IOException;

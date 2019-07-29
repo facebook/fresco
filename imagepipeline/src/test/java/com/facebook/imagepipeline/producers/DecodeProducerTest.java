@@ -10,8 +10,8 @@ package com.facebook.imagepipeline.producers;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import android.media.ExifInterface;
 import android.net.Uri;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -50,9 +50,8 @@ import org.robolectric.annotation.Config;
 @PrepareForTest({JobScheduler.class, ProgressiveJpegParser.class, DecodeProducer.class})
 public class DecodeProducerTest {
 
-  private static final ImageDecodeOptions IMAGE_DECODE_OPTIONS = ImageDecodeOptions.newBuilder()
-      .setMinDecodeIntervalMs(100)
-      .build();
+  private static final ImageDecodeOptions IMAGE_DECODE_OPTIONS =
+      ImageDecodeOptions.newBuilder().setMinDecodeIntervalMs(100).build();
   private static final int PREVIEW_SCAN = 2;
   private static final int IGNORED_SCAN = 3;
   private static final int GOOD_ENOUGH_SCAN = 5;
@@ -82,29 +81,29 @@ public class DecodeProducerTest {
 
   private DecodeProducer mDecodeProducer;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    mProgressiveJpegConfig = new SimpleProgressiveJpegConfig(
-        new SimpleProgressiveJpegConfig.DynamicValueConfig() {
-          public List<Integer> getScansToDecode() {
-            return Arrays.asList(PREVIEW_SCAN, GOOD_ENOUGH_SCAN);
-          }
+    mProgressiveJpegConfig =
+        new SimpleProgressiveJpegConfig(
+            new SimpleProgressiveJpegConfig.DynamicValueConfig() {
+              public List<Integer> getScansToDecode() {
+                return Arrays.asList(PREVIEW_SCAN, GOOD_ENOUGH_SCAN);
+              }
 
-          public int getGoodEnoughScanNumber() {
-            return GOOD_ENOUGH_SCAN;
-          }
-        });
+              public int getGoodEnoughScanNumber() {
+                return GOOD_ENOUGH_SCAN;
+              }
+            });
 
     PowerMockito.mockStatic(ProgressiveJpegParser.class);
-    PowerMockito.whenNew(ProgressiveJpegParser.class).withAnyArguments()
+    PowerMockito.whenNew(ProgressiveJpegParser.class)
+        .withAnyArguments()
         .thenReturn(mProgressiveJpegParser);
     PowerMockito.mockStatic(JobScheduler.class);
-    PowerMockito.whenNew(JobScheduler.class).withAnyArguments()
-        .thenReturn(mJobScheduler);
+    PowerMockito.whenNew(JobScheduler.class).withAnyArguments().thenReturn(mJobScheduler);
 
     mDecodeProducer =
         new DecodeProducer(
@@ -211,8 +210,7 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mJobScheduler, mProgressiveJpegParser);
 
-    ArgumentCaptor<EncodedImage> argumentCaptor =
-        ArgumentCaptor.forClass(EncodedImage.class);
+    ArgumentCaptor<EncodedImage> argumentCaptor = ArgumentCaptor.forClass(EncodedImage.class);
 
     // preview scan; schedule
     when(mJobScheduler.updateJob(mEncodedImage, Consumer.NO_FLAGS)).thenReturn(true);
@@ -223,8 +221,7 @@ public class DecodeProducerTest {
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler).scheduleJob();
     assertSame(
-        ((EncodedImage) argumentCaptor.getValue())
-            .getUnderlyingReferenceTestOnly(),
+        ((EncodedImage) argumentCaptor.getValue()).getUnderlyingReferenceTestOnly(),
         mByteBufferRef.getUnderlyingReferenceTestOnly());
 
     // no data parsed; ignore
@@ -239,8 +236,7 @@ public class DecodeProducerTest {
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler, never()).scheduleJob();
     assertSame(
-        ((EncodedImage) argumentCaptor.getValue())
-            .getUnderlyingReferenceTestOnly(),
+        ((EncodedImage) argumentCaptor.getValue()).getUnderlyingReferenceTestOnly(),
         ref2.getUnderlyingReferenceTestOnly());
 
     // same scan; ignore
@@ -255,8 +251,7 @@ public class DecodeProducerTest {
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler, never()).scheduleJob();
     assertSame(
-        ((EncodedImage) argumentCaptor.getValue())
-            .getUnderlyingReferenceTestOnly(),
+        ((EncodedImage) argumentCaptor.getValue()).getUnderlyingReferenceTestOnly(),
         ref3.getUnderlyingReferenceTestOnly());
 
     // scan not for decode; ignore
@@ -271,8 +266,7 @@ public class DecodeProducerTest {
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler, never()).scheduleJob();
     assertSame(
-        ((EncodedImage) argumentCaptor.getValue())
-            .getUnderlyingReferenceTestOnly(),
+        ((EncodedImage) argumentCaptor.getValue()).getUnderlyingReferenceTestOnly(),
         ref4.getUnderlyingReferenceTestOnly());
 
     // good-enough scan; schedule
@@ -287,8 +281,7 @@ public class DecodeProducerTest {
     inOrder.verify(mProgressiveJpegParser).parseMoreData(argumentCaptor.capture());
     inOrder.verify(mJobScheduler).scheduleJob();
     assertSame(
-        ((EncodedImage) argumentCaptor.getValue())
-            .getUnderlyingReferenceTestOnly(),
+        ((EncodedImage) argumentCaptor.getValue()).getUnderlyingReferenceTestOnly(),
         ref5.getUnderlyingReferenceTestOnly());
   }
 
@@ -321,15 +314,13 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decode(
-        mEncodedImage,
-        IMAGE_SIZE,
-        ImmutableQualityInfo.FULL_QUALITY,
-        IMAGE_DECODE_OPTIONS);
-    inOrder.verify(mProducerListener).onProducerFinishWithSuccess(
-        eq(mRequestId),
-        eq(DecodeProducer.PRODUCER_NAME),
-        any(Map.class));
+    inOrder
+        .verify(mImageDecoder)
+        .decode(mEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
+    inOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithSuccess(
+            eq(mRequestId), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
     verify(mProducerListener, never())
         .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
@@ -347,15 +338,17 @@ public class DecodeProducerTest {
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decode(
-        mEncodedImage,
-        200,
-        ImmutableQualityInfo.of(PREVIEW_SCAN, false, false),
-        IMAGE_DECODE_OPTIONS);
-    inOrder.verify(mProducerListener).onProducerFinishWithSuccess(
-        eq(mRequestId),
-        eq(DecodeProducer.PRODUCER_NAME),
-        any(Map.class));
+    inOrder
+        .verify(mImageDecoder)
+        .decode(
+            mEncodedImage,
+            200,
+            ImmutableQualityInfo.of(PREVIEW_SCAN, false, false),
+            IMAGE_DECODE_OPTIONS);
+    inOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithSuccess(
+            eq(mRequestId), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -367,25 +360,19 @@ public class DecodeProducerTest {
 
     Exception exception = new RuntimeException();
     when(mImageDecoder.decode(
-        mEncodedImage,
-        IMAGE_SIZE,
-        ImmutableQualityInfo.FULL_QUALITY,
-        IMAGE_DECODE_OPTIONS))
+            mEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS))
         .thenThrow(exception);
     jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
     inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
-    inOrder.verify(mImageDecoder).decode(
-        mEncodedImage,
-        IMAGE_SIZE,
-        ImmutableQualityInfo.FULL_QUALITY,
-        IMAGE_DECODE_OPTIONS);
-    inOrder.verify(mProducerListener).onProducerFinishWithFailure(
-        eq(mRequestId),
-        eq(DecodeProducer.PRODUCER_NAME),
-        eq(exception),
-        any(Map.class));
+    inOrder
+        .verify(mImageDecoder)
+        .decode(mEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
+    inOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithFailure(
+            eq(mRequestId), eq(DecodeProducer.PRODUCER_NAME), eq(exception), any(Map.class));
     verify(mProducerListener, never())
         .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
   }
@@ -425,15 +412,16 @@ public class DecodeProducerTest {
   private void setupImageRequest(String requestId, ImageRequest imageRequest) {
     mImageRequest = imageRequest;
     mRequestId = requestId;
-    mProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mProducerListener,
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        /* isPrefetch */ false,
-        /* isIntermediateResultExpected */ true,
-        Priority.MEDIUM);
+    mProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mProducerListener,
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            /* isPrefetch */ false,
+            /* isIntermediateResultExpected */ true,
+            Priority.MEDIUM);
   }
 
   private void setupNetworkUri() {

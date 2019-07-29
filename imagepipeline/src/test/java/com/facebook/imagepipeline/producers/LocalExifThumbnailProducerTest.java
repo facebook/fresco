@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import android.content.ContentResolver;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -59,8 +59,7 @@ public class LocalExifThumbnailProducerTest {
   @Mock public File mFile;
   @Mock public ContentResolver mContentResolver;
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
+  @Rule public PowerMockRule rule = new PowerMockRule();
 
   private final Uri mUri = Uri.parse("/dummy/path");
   private byte[] mThumbnailBytes;
@@ -74,10 +73,9 @@ public class LocalExifThumbnailProducerTest {
     PowerMockito.mockStatic(JfifUtil.class, BitmapUtil.class);
     mTestExecutorService = new TestExecutorService(new FakeClock());
 
-    mTestLocalExifThumbnailProducer = new TestLocalExifThumbnailProducer(
-        mTestExecutorService,
-        mPooledByteBufferFactory,
-        mContentResolver);
+    mTestLocalExifThumbnailProducer =
+        new TestLocalExifThumbnailProducer(
+            mTestExecutorService, mPooledByteBufferFactory, mContentResolver);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
     when(mImageRequest.getSourceUri()).thenReturn(mUri);
@@ -86,8 +84,7 @@ public class LocalExifThumbnailProducerTest {
     mThumbnailBytes = new byte[100];
     when(mExifInterface.hasThumbnail()).thenReturn(true);
     when(mExifInterface.getThumbnail()).thenReturn(mThumbnailBytes);
-    when(mPooledByteBufferFactory.newByteBuffer(mThumbnailBytes))
-        .thenReturn(mThumbnailByteBuffer);
+    when(mPooledByteBufferFactory.newByteBuffer(mThumbnailBytes)).thenReturn(mThumbnailByteBuffer);
 
     when(mExifInterface.getAttribute(ExifInterface.TAG_ORIENTATION))
         .thenReturn(Integer.toString(ORIENTATION));
@@ -95,14 +92,14 @@ public class LocalExifThumbnailProducerTest {
     when(BitmapUtil.decodeDimensions(any(InputStream.class))).thenReturn(new Pair(WIDTH, HEIGHT));
 
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            mCapturedEncodedImage = EncodedImage.cloneOrNull(
-                (EncodedImage) invocation.getArguments()[0]);
-            return null;
-          }
-        })
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                mCapturedEncodedImage =
+                    EncodedImage.cloneOrNull((EncodedImage) invocation.getArguments()[0]);
+                return null;
+              }
+            })
         .when(mConsumer)
         .onNewResult(notNull(EncodedImage.class), anyInt());
   }
@@ -116,8 +113,10 @@ public class LocalExifThumbnailProducerTest {
     // getByteBufferRef is called on EncodedImage
     assertEquals(
         2,
-        mCapturedEncodedImage.
-            getByteBufferRef().getUnderlyingReferenceTestOnly().getRefCountTestOnly());
+        mCapturedEncodedImage
+            .getByteBufferRef()
+            .getUnderlyingReferenceTestOnly()
+            .getRefCountTestOnly());
     assertSame(mThumbnailByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
     assertEquals(DefaultImageFormats.JPEG, mCapturedEncodedImage.getImageFormat());
     assertEquals(WIDTH, mCapturedEncodedImage.getWidth());

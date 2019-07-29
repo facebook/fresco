@@ -11,7 +11,7 @@ import static com.facebook.imageformat.DefaultImageFormats.JPEG;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS;
 
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;
@@ -72,9 +72,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   @Override
-  public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext context) {
+  public void produceResults(final Consumer<EncodedImage> consumer, final ProducerContext context) {
     mInputProducer.produceResults(
         new TransformingConsumer(consumer, context, mIsResizingEnabled, mImageTranscoderFactory),
         context);
@@ -248,8 +246,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           ret.setImageFormat(JPEG);
           try {
             ret.parseMetaData();
-            mProducerContext.getListener().
-                onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
+            mProducerContext
+                .getListener()
+                .onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
             if (result.getTranscodeStatus() != TranscodeStatus.TRANSCODING_NO_RESIZING) {
               status |= Consumer.IS_RESIZING_DONE;
             }
@@ -261,8 +260,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           CloseableReference.closeSafely(ref);
         }
       } catch (Exception e) {
-        mProducerContext.getListener().
-            onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
+        mProducerContext
+            .getListener()
+            .onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
         if (isLast(status)) {
           getConsumer().onFailure(e);
         }
@@ -301,9 +301,7 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
   }
 
   private static TriState shouldTransform(
-      ImageRequest request,
-      EncodedImage encodedImage,
-      ImageTranscoder imageTranscoder) {
+      ImageRequest request, EncodedImage encodedImage, ImageTranscoder imageTranscoder) {
     if (encodedImage == null || encodedImage.getImageFormat() == ImageFormat.UNKNOWN) {
       return TriState.UNSET;
     }

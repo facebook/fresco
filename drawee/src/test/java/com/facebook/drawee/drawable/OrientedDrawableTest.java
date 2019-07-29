@@ -8,7 +8,6 @@ package com.facebook.drawee.drawable;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -17,15 +16,13 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-/**
- * Tests for {@link OrientedDrawable}
- */
+/** Tests for {@link OrientedDrawable} */
 @RunWith(RobolectricTestRunner.class)
 public class OrientedDrawableTest {
 
@@ -162,11 +159,11 @@ public class OrientedDrawableTest {
     Matrix inverse = new Matrix();
     rotationMatrix.invert(inverse);
     inverse.mapRect(expectedBounds);
-    verify(mDrawable).setBounds(
-        (int) expectedBounds.left,
-        (int) expectedBounds.top,
-        (int) expectedBounds.right,
-        (int) expectedBounds.bottom);
+    verify(mDrawable)
+        .setBounds(
+            (int) expectedBounds.left,
+            (int) expectedBounds.top,
+            (int) expectedBounds.right,
+            (int) expectedBounds.bottom);
   }
-
 }

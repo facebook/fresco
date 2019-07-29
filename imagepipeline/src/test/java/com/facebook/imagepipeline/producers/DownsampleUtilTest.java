@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
@@ -286,9 +286,7 @@ public class DownsampleUtilTest {
   }
 
   private void whenRequestResizeWidthHeightAndForcedRotation(
-      int width,
-      int height,
-      int rotationAngle) {
+      int width, int height, int rotationAngle) {
     when(mImageRequest.getPreferredWidth()).thenReturn(width);
     when(mImageRequest.getPreferredHeight()).thenReturn(height);
     when(mImageRequest.getResizeOptions()).thenReturn(new ResizeOptions(width, height));
@@ -297,13 +295,11 @@ public class DownsampleUtilTest {
   }
 
   private void whenRequestResizeWidthHeightAndMaxBitmapSize(
-      int width,
-      int height,
-      float maxBitmapSize) {
+      int width, int height, float maxBitmapSize) {
     when(mImageRequest.getPreferredWidth()).thenReturn(width);
     when(mImageRequest.getPreferredHeight()).thenReturn(height);
-    when(mImageRequest.getResizeOptions()).thenReturn(
-        new ResizeOptions(width, height, maxBitmapSize));
+    when(mImageRequest.getResizeOptions())
+        .thenReturn(new ResizeOptions(width, height, maxBitmapSize));
     when(mImageRequest.getRotationOptions()).thenReturn(RotationOptions.disableRotation());
   }
 }

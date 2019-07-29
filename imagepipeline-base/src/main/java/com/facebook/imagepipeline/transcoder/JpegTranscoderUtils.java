@@ -9,7 +9,7 @@
 package com.facebook.imagepipeline.transcoder;
 
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.ImmutableList;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.imagepipeline.common.ResizeOptions;

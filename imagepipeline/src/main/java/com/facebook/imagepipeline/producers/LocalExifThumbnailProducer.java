@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
+import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;
@@ -62,24 +62,21 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
    * promise about being able to produce images for a particular source, only generally being able
    * to produce output of the desired resolution.
    *
-   * <p> In this case, assumptions are made about the common size of EXIF thumbnails which is that
+   * <p>In this case, assumptions are made about the common size of EXIF thumbnails which is that
    * they may be up to 512 pixels in each dimension.
    *
    * @param resizeOptions the resize options from the current request
    * @return true if the producer can meet these needs
-  */
+   */
   @Override
   public boolean canProvideImageForSize(ResizeOptions resizeOptions) {
     return ThumbnailSizeChecker.isImageBigEnough(
-        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION,
-        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION,
-        resizeOptions);
+        COMMON_EXIF_THUMBNAIL_MAX_DIMENSION, COMMON_EXIF_THUMBNAIL_MAX_DIMENSION, resizeOptions);
   }
 
   @Override
   public void produceResults(
-      final Consumer<EncodedImage> consumer,
-      final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
 
     final ProducerListener listener = producerContext.getListener();
     final String requestId = producerContext.getId();
@@ -121,7 +118,9 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     mExecutor.execute(cancellableProducerRunnable);
   }
 
-  @VisibleForTesting @Nullable ExifInterface getExifInterface(Uri uri) {
+  @VisibleForTesting
+  @Nullable
+  ExifInterface getExifInterface(Uri uri) {
     final String realPath = UriUtil.getRealPathFromUri(mContentResolver, uri);
     try {
       if (canReadAsFile(realPath)) {
@@ -136,9 +135,7 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     return null;
   }
 
-  private EncodedImage buildEncodedImage(
-      PooledByteBuffer imageBytes,
-      ExifInterface exifInterface) {
+  private EncodedImage buildEncodedImage(PooledByteBuffer imageBytes, ExifInterface exifInterface) {
     Pair<Integer, Integer> dimensions =
         BitmapUtil.decodeDimensions(new PooledByteBufferInputStream(imageBytes));
     int rotationAngle = getRotationAngle(exifInterface);
@@ -164,7 +161,8 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
         Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)));
   }
 
-  @VisibleForTesting boolean canReadAsFile(String realPath) throws IOException {
+  @VisibleForTesting
+  boolean canReadAsFile(String realPath) throws IOException {
     if (realPath == null) {
       return false;
     }
