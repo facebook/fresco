@@ -62,7 +62,7 @@ public class HoneycombBitmapFactory extends PlatformBitmapFactory {
     if (mImmutableBitmapFallback) {
       return createFallbackBitmap(width, height, bitmapConfig);
     }
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
+    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.createJpeg(
         (short) width,
         (short) height);
     try {

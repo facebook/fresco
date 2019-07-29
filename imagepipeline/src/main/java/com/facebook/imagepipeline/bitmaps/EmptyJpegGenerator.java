@@ -162,7 +162,7 @@ public class EmptyJpegGenerator {
     mPooledByteBufferFactory = pooledByteBufferFactory;
   }
 
-  public CloseableReference<PooledByteBuffer> generate(short width, short height) {
+  public CloseableReference<PooledByteBuffer> createJpeg(short width, short height) {
     PooledByteBufferOutputStream os = null;
     try {
       os = mPooledByteBufferFactory.newOutputStream(

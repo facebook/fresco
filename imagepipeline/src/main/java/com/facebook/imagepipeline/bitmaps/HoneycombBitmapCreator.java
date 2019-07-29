@@ -36,7 +36,7 @@ public class HoneycombBitmapCreator implements BitmapCreator {
   @Override
   public Bitmap createNakedBitmap(
       int width, int height, Bitmap.Config bitmapConfig) {
-    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.generate(
+    CloseableReference<PooledByteBuffer> jpgRef = mJpegGenerator.createJpeg(
         (short) width,
         (short) height);
     EncodedImage encodedImage = null;
