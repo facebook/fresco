@@ -283,6 +283,7 @@ public class ImageOptions extends DecodedImageOptions {
 
     public Builder placeholder(@Nullable Drawable placeholder) {
       mPlaceholderDrawable = placeholder;
+      mPlaceholderRes = 0;
       return getThis();
     }
 
@@ -290,11 +291,13 @@ public class ImageOptions extends DecodedImageOptions {
         @Nullable Drawable placeholder, @Nullable ScalingUtils.ScaleType placeholderScaleType) {
       mPlaceholderDrawable = placeholder;
       mPlaceholderScaleType = placeholderScaleType;
+      mPlaceholderRes = 0;
       return getThis();
     }
 
     public Builder placeholderRes(@DrawableRes int placeholderRes) {
       mPlaceholderRes = placeholderRes;
+      mPlaceholderDrawable = null;
       return getThis();
     }
 
@@ -302,6 +305,7 @@ public class ImageOptions extends DecodedImageOptions {
         @DrawableRes int placeholderRes, @Nullable ScalingUtils.ScaleType placeholderScaleType) {
       mPlaceholderRes = placeholderRes;
       mPlaceholderScaleType = placeholderScaleType;
+      mPlaceholderDrawable = null;
       return getThis();
     }
 

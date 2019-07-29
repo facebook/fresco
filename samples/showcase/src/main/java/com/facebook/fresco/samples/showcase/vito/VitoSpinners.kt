@@ -13,10 +13,15 @@ package com.facebook.fresco.samples.showcase.vito
 
 import android.graphics.Color
 import android.graphics.PointF
+import android.graphics.PorterDuffColorFilter
+import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
 import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.fresco.vito.options.BorderOptions
+import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imageformat.DefaultImageFormats
 
@@ -53,5 +58,18 @@ object VitoSpinners {
             "WebP with alpha" to DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
             "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
             "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES
+    )
+
+    val colorFilters = listOf(
+            "none" to PorterDuffColorFilter(Color.TRANSPARENT, PorterDuff.Mode.ADD),
+            "red" to PorterDuffColorFilter(Color.RED, PorterDuff.Mode.DARKEN),
+            "green" to PorterDuffColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN),
+            "blue" to PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.DARKEN)
+    )
+
+    val placeholderOptions = listOf(
+            "none" to {builder: ImageOptions.Builder -> builder.placeholder(null)},
+            "image" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.drawable.logo, ScalingUtils.ScaleType.FIT_CENTER)},
+            "block color" to {builder: ImageOptions.Builder -> builder.placeholder(ColorDrawable(Color.RED))}
     )
 }

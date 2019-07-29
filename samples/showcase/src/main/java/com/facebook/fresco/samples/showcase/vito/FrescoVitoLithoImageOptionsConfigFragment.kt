@@ -61,6 +61,14 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_image_format.setupWithList(VitoSpinners.imageFormats) {
             refresh(uri = sampleUris().create(it))
         }
+
+        spinner_color_filter.setupWithList(VitoSpinners.colorFilters) {
+            refresh(imageOptionsBuilder.colorFilter(it))
+        }
+
+        spinner_placeholder.setupWithList(VitoSpinners.placeholderOptions) {
+            refresh(it(imageOptionsBuilder))
+        }
     }
 
     override fun getTitleId() = R.string.vito_litho_image_options_config
