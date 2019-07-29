@@ -8,16 +8,11 @@
 package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
-import android.os.Build;
+
 import com.facebook.common.internal.Preconditions;
-import com.facebook.common.internal.Throwables;
-import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
-import com.facebook.imagepipeline.common.TooManyBitmapsException;
-import com.facebook.imagepipeline.nativecode.Bitmaps;
 import com.facebook.imageutils.BitmapUtil;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.annotation.concurrent.GuardedBy;
 
 /**
@@ -59,7 +54,7 @@ public class BitmapCounter {
    * @param bitmap to include in the count
    * @return true if and only if bitmap is successfully included in the count
    */
-  public synchronized boolean increase(Bitmap bitmap) {
+  public synchronized boolean isInBitmap(Bitmap bitmap) {
     final int bitmapSize = BitmapUtil.getSizeInBytes(bitmap);
     if (mCount >= mMaxCount || mSize + bitmapSize > mMaxSize) {
       return false;

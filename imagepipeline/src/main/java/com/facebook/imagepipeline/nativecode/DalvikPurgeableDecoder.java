@@ -216,7 +216,7 @@ public abstract class DalvikPurgeableDecoder implements PlatformDecoder {
       bitmap.recycle();
       throw Throwables.propagate(e);
     }
-    if (!mUnpooledBitmapsCounter.increase(bitmap)) {
+    if (!mUnpooledBitmapsCounter.isInBitmap(bitmap)) {
       int bitmapSize = BitmapUtil.getSizeInBytes(bitmap);
       bitmap.recycle();
       String detailMessage = String.format(
