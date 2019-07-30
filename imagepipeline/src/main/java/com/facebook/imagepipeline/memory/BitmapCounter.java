@@ -54,7 +54,7 @@ public class BitmapCounter {
    * @param bitmap to include in the count
    * @return true if and only if bitmap is successfully included in the count
    */
-  public synchronized boolean isInBitmap(Bitmap bitmap) {
+  public synchronized boolean includeBitmap(Bitmap bitmap) {
     final int bitmapSize = BitmapUtil.getSizeInBytes(bitmap);
     if (mCount >= mMaxCount || mSize + bitmapSize > mMaxSize) {
       return false;

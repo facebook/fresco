@@ -32,9 +32,9 @@ public class BitmapCounterTest {
   @Test
   public void testBasic() {
     assertState(0, 0);
-    assertTrue(mBitmapCounter.isInBitmap(bitmapForSize(1)));
+    assertTrue(mBitmapCounter.includeBitmap(bitmapForSize(1)));
     assertState(1, 1);
-    assertTrue(mBitmapCounter.isInBitmap(bitmapForSize(2)));
+    assertTrue(mBitmapCounter.includeBitmap(bitmapForSize(2)));
     assertState(2, 3);
     mBitmapCounter.decrease(bitmapForSize(1));
     assertState(1, 2);
@@ -42,43 +42,43 @@ public class BitmapCounterTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testDecreaseTooMuch() {
-    assertTrue(mBitmapCounter.isInBitmap(bitmapForSize(1)));
+    assertTrue(mBitmapCounter.includeBitmap(bitmapForSize(1)));
     mBitmapCounter.decrease(bitmapForSize(2));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testDecreaseTooMany() {
-    assertTrue(mBitmapCounter.isInBitmap(bitmapForSize(2)));
+    assertTrue(mBitmapCounter.includeBitmap(bitmapForSize(2)));
     mBitmapCounter.decrease(bitmapForSize(1));
     mBitmapCounter.decrease(bitmapForSize(1));
   }
 
   @Test
   public void testMaxSize() {
-    assertTrue(mBitmapCounter.isInBitmap(bitmapForSize(MAX_SIZE)));
+    assertTrue(mBitmapCounter.includeBitmap(bitmapForSize(MAX_SIZE)));
     assertState(1, MAX_SIZE);
   }
 
   @Test
   public void testMaxCount() {
     for (int i = 0; i < MAX_COUNT; ++i) {
-      mBitmapCounter.isInBitmap(bitmapForSize(1));
+      mBitmapCounter.includeBitmap(bitmapForSize(1));
     }
     assertState(MAX_COUNT, MAX_COUNT);
   }
 
   @Test()
   public void increaseTooBigObject() {
-    assertFalse(mBitmapCounter.isInBitmap(bitmapForSize(MAX_SIZE + 1)));
+    assertFalse(mBitmapCounter.includeBitmap(bitmapForSize(MAX_SIZE + 1)));
     assertState(0, 0);
   }
 
   @Test()
   public void increaseTooManyObjects() {
     for (int i = 0; i < MAX_COUNT; ++i) {
-      mBitmapCounter.isInBitmap(bitmapForSize(1));
+      mBitmapCounter.includeBitmap(bitmapForSize(1));
     }
-    assertFalse(mBitmapCounter.isInBitmap(bitmapForSize(1)));
+    assertFalse(mBitmapCounter.includeBitmap(bitmapForSize(1)));
     assertState(MAX_COUNT, MAX_COUNT);
   }
 

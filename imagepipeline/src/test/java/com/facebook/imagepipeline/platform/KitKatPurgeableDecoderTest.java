@@ -169,7 +169,7 @@ public class KitKatPurgeableDecoderTest {
   @Test(expected = TooManyBitmapsException.class)
   public void testHitBitmapLimit_static() {
     assumeNotNull(mKitKatPurgeableDecoder);
-    mBitmapCounter.isInBitmap(
+    mBitmapCounter.includeBitmap(
         MockBitmapFactory.createForSize(MAX_BITMAP_SIZE, DEFAULT_BITMAP_CONFIG));
     try {
       mKitKatPurgeableDecoder.decodeFromEncodedImage(mEncodedImage, DEFAULT_BITMAP_CONFIG, null);
