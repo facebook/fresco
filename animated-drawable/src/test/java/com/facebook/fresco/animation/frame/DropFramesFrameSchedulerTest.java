@@ -29,7 +29,7 @@ public class DropFramesFrameSchedulerTest {
 
   @Before
   public void setUp() throws Exception {
-    mDummyAnimationBackend = new DummyAnimationBackend();
+    mDummyAnimationBackend = new DummyAnimationBackend(5);
     mFrameScheduler = new DropFramesFrameScheduler(mDummyAnimationBackend);
   }
 
@@ -124,7 +124,23 @@ public class DropFramesFrameSchedulerTest {
     assertThat(mFrameScheduler.getFrameNumberWithinLoop(499)).isEqualTo(4);
   }
 
+  @Test
+  public void testGetFrameNumberToRender_whenNoFrames_thenReturnFirstFrame() {
+
+    AnimationBackend backend = new DummyAnimationBackend(0);
+    DropFramesFrameScheduler frameScheduler = new DropFramesFrameScheduler(backend);
+
+    assertThat(frameScheduler.getLoopDurationMs()).isEqualTo(0);
+    assertThat(frameScheduler.getFrameNumberToRender(0, 0)).isEqualTo(0);
+  }
+
   private static class DummyAnimationBackend implements AnimationBackend {
+
+    private final int mFrameCount;
+
+    private DummyAnimationBackend(int frameCount) {
+      mFrameCount = frameCount;
+    }
 
     public long getLoopDurationMs() {
       long loopDuration = 0;
@@ -140,7 +156,7 @@ public class DropFramesFrameSchedulerTest {
 
     @Override
     public int getFrameCount() {
-      return 5;
+      return mFrameCount;
     }
 
     @Override
