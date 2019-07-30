@@ -411,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
           ImageSize.ORIGINAL_IMAGE);
     }
     ImageUrlsFetcher.getImageUrls(
-        builder.build(),
+        builder.getImageRequest(),
         new ImageUrlsFetcher.Callback() {
           @Override
           public void onFinish(List<String> result) {

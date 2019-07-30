@@ -39,7 +39,7 @@ public class ImageUrlsRequestBuilder {
     return this;
   }
 
-  public ImageUrlsRequest build() {
+  public ImageUrlsRequest getImageRequest() {
     ImageUrlsRequest request = new ImageUrlsRequest(mEndpointUrl, mRequestedImageFormats);
     mRequestedImageFormats = null;
     return request;
