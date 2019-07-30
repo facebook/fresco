@@ -36,7 +36,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
   @DoNotStrip
   private long mNativeContext;
 
-  private static synchronized void ensure() {
+  private static synchronized void loadLibrary() {
     if (!sInitialized) {
       sInitialized = true;
       SoLoader.loadLibrary("gifimage");
@@ -50,7 +50,7 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    * @param source the data to the image (a copy will be made)
    */
   public static GifImage create(byte[] source) {
-    ensure();
+    loadLibrary();
     Preconditions.checkNotNull(source);
 
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(source.length);
@@ -67,14 +67,14 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
    * @param byteBuffer the ByteBuffer containing the image (a copy will be made)
    */
   public static GifImage create(ByteBuffer byteBuffer) {
-    ensure();
+    loadLibrary();
     byteBuffer.rewind();
 
     return nativeCreateFromDirectByteBuffer(byteBuffer);
   }
 
   public static GifImage create(long nativePtr, int sizeInBytes) {
-    ensure();
+    loadLibrary();
     Preconditions.checkArgument(nativePtr != 0);
     return nativeCreateFromNativeMemory(nativePtr, sizeInBytes);
   }
