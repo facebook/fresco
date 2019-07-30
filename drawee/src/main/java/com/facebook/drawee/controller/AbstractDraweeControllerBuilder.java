@@ -37,6 +37,24 @@ public abstract class AbstractDraweeControllerBuilder <
     INFO>
     implements SimpleDraweeControllerBuilder {
 
+  private static class ProgressiveAnimationsListener extends BaseControllerListener<Object> {
+    private AbstractDraweeController mAbstractDraweeController;
+
+    void setAbstractDraweeController(AbstractDraweeController abstractDraweeController) {
+      mAbstractDraweeController = abstractDraweeController;
+    }
+
+    @Override
+    public void onIntermediateImageSet(String id, @Nullable Object imageInfo) {
+      if (mAbstractDraweeController != null && mAbstractDraweeController.getAnimatable() != null) {
+        mAbstractDraweeController.getAnimatable().start();
+      }
+    }
+  }
+
+  private static final ProgressiveAnimationsListener sProgressiveAnimationsListener
+    = new ProgressiveAnimationsListener();
+
   private static final ControllerListener<Object> sAutoPlayAnimationsListener =
       new BaseControllerListener<Object>() {
         @Override
@@ -423,6 +441,8 @@ public abstract class AbstractDraweeControllerBuilder <
     if (mAutoPlayAnimations) {
       controller.addControllerListener(sAutoPlayAnimationsListener);
     }
+    sProgressiveAnimationsListener.setAbstractDraweeController(controller);
+    controller.addControllerListener(sProgressiveAnimationsListener);
   }
 
   /** Installs a retry manager (if specified) to the given controller. */

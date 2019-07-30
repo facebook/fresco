@@ -242,8 +242,10 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     /** Performs the decode synchronously. */
     private void doDecode(EncodedImage encodedImage, @Status int status) {
-      // do not run for partial results of anything except JPEG
-      if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG && isNotLast(status)) {
+      // do not run for partial results of anything except JPEG and WEBP_ANIMATED
+      if (encodedImage.getImageFormat() != DefaultImageFormats.JPEG
+        && encodedImage.getImageFormat() != DefaultImageFormats.WEBP_ANIMATED
+        && isNotLast(status)) {
         return;
       }
 
@@ -277,7 +279,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             : getIntermediateImageEndOffset(encodedImage);
         QualityInfo quality = isLastAndComplete || isPlaceholder
             ? ImmutableQualityInfo.FULL_QUALITY
-            : getQualityInfo();
+            : getQualityInfo(encodedImage);
 
         mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
         CloseableImage image = null;
@@ -428,7 +430,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     protected abstract int getIntermediateImageEndOffset(EncodedImage encodedImage);
 
-    protected abstract QualityInfo getQualityInfo();
+    protected abstract QualityInfo getQualityInfo(EncodedImage encodedImage);
   }
 
   private class LocalImagesProgressiveDecoder extends ProgressiveDecoder {
@@ -455,7 +457,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     }
 
     @Override
-    protected QualityInfo getQualityInfo() {
+    protected QualityInfo getQualityInfo(EncodedImage encodedImag) {
       return ImmutableQualityInfo.of(0, false, false);
     }
   }
@@ -507,12 +509,20 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
 
     @Override
     protected int getIntermediateImageEndOffset(EncodedImage encodedImage) {
-      return mProgressiveJpegParser.getBestScanEndOffset();
+      if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
+        return mProgressiveJpegParser.getBestScanEndOffset();
+      } else {
+        return encodedImage.getSize();
+      }
     }
 
     @Override
-    protected QualityInfo getQualityInfo() {
-      return mProgressiveJpegConfig.getQualityInfo(mProgressiveJpegParser.getBestScanNumber());
+    protected QualityInfo getQualityInfo(EncodedImage encodedImage) {
+      if (encodedImage.getImageFormat() == DefaultImageFormats.JPEG) {
+        return mProgressiveJpegConfig.getQualityInfo(mProgressiveJpegParser.getBestScanNumber());
+      } else {
+        return ImmutableQualityInfo.FULL_QUALITY;
+      }
     }
   }
 }

@@ -169,6 +169,11 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
     }
   }
 
+  @Override
+  public boolean isPartial() {
+    return nativeGetPartial();
+  }
+
   private static native WebPImage nativeCreateFromDirectByteBuffer(ByteBuffer buffer);
   private static native WebPImage nativeCreateFromNativeMemory(long nativePtr, int sizeInBytes);
   private native int nativeGetWidth();
@@ -179,6 +184,7 @@ public class WebPImage implements AnimatedImage, AnimatedImageDecoder {
   private native int nativeGetLoopCount();
   private native WebPFrame nativeGetFrame(int frameNumber);
   private native int nativeGetSizeInBytes();
+  private native boolean nativeGetPartial();
   private native void nativeDispose();
   private native void nativeFinalize();
 }

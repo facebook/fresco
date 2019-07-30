@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import androidx.exifinterface.media.ExifInterface;
 import com.facebook.drawee.drawable.OrientedDrawable;
+import com.facebook.imagepipeline.drawable.BaseDrawableFactory;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
@@ -19,7 +20,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import javax.annotation.Nullable;
 
-public class DefaultDrawableFactory implements DrawableFactory {
+public class DefaultDrawableFactory extends BaseDrawableFactory {
 
   private final Resources mResources;
   private final @Nullable DrawableFactory mAnimatedDrawableFactory;
@@ -65,6 +66,21 @@ public class DefaultDrawableFactory implements DrawableFactory {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.endSection();
       }
+    }
+  }
+
+  @Nullable
+  @Override
+  public Drawable createDrawable(Drawable previousDrawable, CloseableImage image) {
+    return mAnimatedDrawableFactory.createDrawable(previousDrawable, image);
+  }
+
+  @Override
+  public boolean needPreviousDrawable(Drawable previousDrawable, CloseableImage image) {
+    if (mAnimatedDrawableFactory != null && mAnimatedDrawableFactory.supportsImageType(image)) {
+      return mAnimatedDrawableFactory.needPreviousDrawable(previousDrawable, image);
+    } else {
+      return false;
     }
   }
 
