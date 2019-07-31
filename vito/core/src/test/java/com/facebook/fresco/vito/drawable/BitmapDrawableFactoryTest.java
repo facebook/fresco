@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
+import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
@@ -31,6 +32,7 @@ public class BitmapDrawableFactoryTest {
 
   private Resources mResources;
   private DisplayMetrics mDisplayMetrics;
+  private FrescoExperiments mExperiments;
 
   private VitoDrawableFactory mDrawableFactory;
 
@@ -40,7 +42,9 @@ public class BitmapDrawableFactoryTest {
     mDisplayMetrics = new DisplayMetrics();
     when(mResources.getDisplayMetrics()).thenReturn(mDisplayMetrics);
 
-    mDrawableFactory = new BitmapDrawableFactory(mResources);
+    mExperiments = mock(FrescoExperiments.class);
+
+    mDrawableFactory = new BitmapDrawableFactory(mResources, mExperiments);
   }
 
   @Test
@@ -74,7 +78,15 @@ public class BitmapDrawableFactoryTest {
     final ImageOptions options = mock(ImageOptions.class);
     when(options.getRoundingOptions()).thenReturn(RoundingOptions.asCircle());
 
+    when(mExperiments.useNativeRounding()).thenReturn(false);
+
     Drawable drawable = mDrawableFactory.createDrawable(closeableImage, options);
+    assertThat(drawable).isNotNull();
+    assertThat(drawable).isInstanceOf(RoundedBitmapDrawable.class);
+
+    when(mExperiments.useNativeRounding()).thenReturn(true);
+
+    drawable = mDrawableFactory.createDrawable(closeableImage, options);
     assertThat(drawable).isNotNull();
     assertThat(drawable).isInstanceOf(BitmapDrawable.class);
   }

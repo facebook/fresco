@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import android.net.Uri;
 import com.facebook.callercontext.CallerContextVerifier;
@@ -85,6 +86,8 @@ public class FrescoContextTest {
 
   @Test
   public void testBuildImageRequest_whenRoundAsCircle_thenApplyRoundingParameters() {
+    when(mFrescoExperiments.useNativeRounding()).thenReturn(true);
+
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle()).build();
 
@@ -106,6 +109,8 @@ public class FrescoContextTest {
   @Test
   public void
       testBuildImageRequest_whenRoundAsCircleWithAntiAliasing_thenApplyRoundingParameters() {
+    when(mFrescoExperiments.useNativeRounding()).thenReturn(true);
+
     final ImageOptions imageOptions =
         ImageOptions.create().round(RoundingOptions.asCircle(true)).build();
 

@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import androidx.exifinterface.media.ExifInterface;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
+import com.facebook.fresco.vito.core.FrescoExperiments;
 import com.facebook.fresco.vito.options.BorderOptions;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.options.RoundingOptions;
@@ -25,9 +26,11 @@ import javax.annotation.Nullable;
 public class BitmapDrawableFactory implements VitoDrawableFactory {
 
   private final Resources mResources;
+  private final FrescoExperiments mExperiments;
 
-  public BitmapDrawableFactory(Resources resources) {
+  public BitmapDrawableFactory(Resources resources, FrescoExperiments frescoExperiments) {
     mResources = resources;
+    mExperiments = frescoExperiments;
   }
 
   @Override
@@ -87,6 +90,11 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
     if (roundingOptions != null && !roundingOptions.isCircular()) {
       return roundedCornerDrawableWithBorder(closeableStaticBitmap, null, roundingOptions);
     }
+    if (!mExperiments.useNativeRounding()
+        && roundingOptions != null
+        && roundingOptions.isCircular()) {
+      return circularAtRenderTimeDrawable(closeableStaticBitmap, null);
+    }
     return new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
   }
 
@@ -96,8 +104,11 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
       @Nullable RoundingOptions roundingOptions) {
     if (roundingOptions != null) {
       if (roundingOptions.isCircular()) {
-        // Circular rounding is performed on the bitmap, so we only need to draw a circular border
-        return circularDrawableWithBorder(closeableStaticBitmap, borderOptions);
+        if (mExperiments.useNativeRounding()) {
+          // Circular rounding is performed on the bitmap, so we only need to draw a circular border
+          return circularNativeDrawableWithBorder(closeableStaticBitmap, borderOptions);
+        }
+        return circularAtRenderTimeDrawable(closeableStaticBitmap, borderOptions);
       } else {
         return roundedCornerDrawableWithBorder(
             closeableStaticBitmap, borderOptions, roundingOptions);
@@ -107,12 +118,25 @@ public class BitmapDrawableFactory implements VitoDrawableFactory {
     }
   }
 
-  protected Drawable circularDrawableWithBorder(
+  protected Drawable circularNativeDrawableWithBorder(
       CloseableStaticBitmap closeableStaticBitmap, BorderOptions borderOptions) {
     CircularBorderBitmapDrawable drawable =
         new CircularBorderBitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
     drawable.setBorder(borderOptions);
     return drawable;
+  }
+
+  protected Drawable circularAtRenderTimeDrawable(
+      CloseableStaticBitmap closeableStaticBitmap, @Nullable BorderOptions borderOptions) {
+    RoundedBitmapDrawable roundedBitmapDrawable =
+        new RoundedBitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+
+    roundedBitmapDrawable.setCircle(true);
+
+    if (borderOptions != null) {
+      roundedBitmapDrawable.setBorder(borderOptions.color, borderOptions.width);
+    }
+    return roundedBitmapDrawable;
   }
 
   protected Drawable roundedCornerDrawableWithBorder(

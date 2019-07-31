@@ -99,4 +99,8 @@ public class FrescoExperiments {
   public boolean closeDatasourceOnNewResult() {
     return true;
   }
+
+  public boolean useNativeRounding() {
+    return false;
+  }
 }

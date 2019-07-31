@@ -129,7 +129,9 @@ public class FrescoContext {
     }
     final ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource(uri);
 
-    setupRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
+    if (mExperiments.useNativeRounding()) {
+      setupNativeRounding(imageRequestBuilder, imageOptions.getRoundingOptions());
+    }
 
     ResizeOptions resizeOptions = imageOptions.getResizeOptions();
     if (resizeOptions != null) {
@@ -160,7 +162,7 @@ public class FrescoContext {
   }
 
   @VisibleForTesting
-  protected void setupRounding(
+  protected void setupNativeRounding(
       final ImageRequestBuilder imageRequestBuilder, @Nullable RoundingOptions roundingOptions) {
     if (roundingOptions == null) {
       return;

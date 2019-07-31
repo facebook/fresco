@@ -58,10 +58,12 @@ public class DefaultFrescoContext {
 
   private static synchronized FrescoContext createDefaultContext(
       Resources resources, @Nullable FrescoExperiments frescoExperiments) {
+    FrescoExperiments actualFrescoExperiments =
+        frescoExperiments != null ? frescoExperiments : new FrescoExperiments();
     return new FrescoContext(
-        new HierarcherImpl(createDefaultDrawableFactory(resources)),
+        new HierarcherImpl(createDefaultDrawableFactory(resources, actualFrescoExperiments)),
         new NoOpCallerContextVerifier(),
-        frescoExperiments != null ? frescoExperiments : new FrescoExperiments(),
+        actualFrescoExperiments,
         UiThreadImmediateExecutorService.getInstance(),
         null,
         sDebugOverlayEnabledSupplier == null
@@ -69,9 +71,10 @@ public class DefaultFrescoContext {
             : new DefaultDebugOverlayFactory(sDebugOverlayEnabledSupplier));
   }
 
-  private static VitoDrawableFactory createDefaultDrawableFactory(Resources resources) {
+  private static VitoDrawableFactory createDefaultDrawableFactory(
+      Resources resources, FrescoExperiments frescoExperiments) {
     return new ArrayVitoDrawableFactory(
-        new BitmapDrawableFactory(resources),
+        new BitmapDrawableFactory(resources, frescoExperiments),
         new DrawableFactoryWrapper(
             Fresco.getImagePipelineFactory().getAnimatedDrawableFactory(null)));
   }
