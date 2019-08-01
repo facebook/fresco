@@ -206,7 +206,7 @@ public class FrescoVitoImageSpec {
     if (contextOverride != null) {
       return contextOverride;
     }
-    return DefaultFrescoContext.get(context.getResources());
+    return DefaultFrescoContext.createContext(context.getResources());
   }
 
   static FrescoController getController(

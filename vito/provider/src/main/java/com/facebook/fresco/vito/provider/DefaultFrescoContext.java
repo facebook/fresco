@@ -28,7 +28,7 @@ public class DefaultFrescoContext {
   private static @Nullable FrescoContext sInstance;
   private static @Nullable Supplier<Boolean> sDebugOverlayEnabledSupplier;
 
-  public static synchronized FrescoContext get(Resources resources) {
+  public static synchronized FrescoContext createContext(Resources resources) {
     if (sInstance == null) {
       initialize(resources, null);
     }
