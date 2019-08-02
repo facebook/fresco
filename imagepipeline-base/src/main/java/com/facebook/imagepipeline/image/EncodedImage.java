@@ -8,8 +8,8 @@
 package com.facebook.imagepipeline.image;
 
 import android.graphics.ColorSpace;
+import android.media.ExifInterface;
 import android.util.Pair;
-import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.internal.VisibleForTesting;

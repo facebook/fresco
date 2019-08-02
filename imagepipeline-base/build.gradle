@@ -11,7 +11,6 @@ dependencies {
     compileOnly "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
     compileOnly "javax.annotation:javax.annotation-api:${ANNOTATION_API_VERSION}"
 
-    implementation "androidx.exifinterface:exifinterface:${versions.androidx.exifinterface}"
     implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
     implementation "com.parse.bolts:bolts-tasks:${BOLTS_ANDROID_VERSION}"
     implementation project(':fbcore')

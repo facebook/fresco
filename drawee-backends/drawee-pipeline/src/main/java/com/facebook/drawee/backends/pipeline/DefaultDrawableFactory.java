@@ -10,7 +10,7 @@ package com.facebook.drawee.backends.pipeline;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import androidx.exifinterface.media.ExifInterface;
+import android.media.ExifInterface;
 import com.facebook.drawee.drawable.OrientedDrawable;
 import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;

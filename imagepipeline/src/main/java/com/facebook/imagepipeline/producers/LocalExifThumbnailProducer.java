@@ -8,9 +8,9 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
-import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
 import com.facebook.common.logging.FLog;

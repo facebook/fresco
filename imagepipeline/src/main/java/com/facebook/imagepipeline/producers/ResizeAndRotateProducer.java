@@ -11,7 +11,7 @@ import static com.facebook.imageformat.DefaultImageFormats.JPEG;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.DEFAULT_JPEG_QUALITY;
 import static com.facebook.imagepipeline.transcoder.JpegTranscoderUtils.INVERTED_EXIF_ORIENTATIONS;
 
-import androidx.exifinterface.media.ExifInterface;
+import android.media.ExifInterface;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.VisibleForTesting;

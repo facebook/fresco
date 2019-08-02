@@ -23,9 +23,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.SystemClock;
-import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;

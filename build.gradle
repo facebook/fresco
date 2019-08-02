@@ -11,7 +11,6 @@ buildscript {
                 'appcompat'  : '1.0.2',
                 'core'  : '1.0.1',
                 'espresso' : '3.1.1',
-                'exifinterface'  : '1.1.0-beta01',
                 'legacy_support_core_ui' : '1.0.0',
                 'legacy_support_core_utils' : '1.0.0',
                 'preference' : '1.0.0',

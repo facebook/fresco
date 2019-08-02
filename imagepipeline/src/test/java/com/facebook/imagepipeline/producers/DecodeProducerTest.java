@@ -10,8 +10,8 @@ package com.facebook.imagepipeline.producers;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import android.media.ExifInterface;
 import android.net.Uri;
-import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;

@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import android.content.ContentResolver;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
-import androidx.exifinterface.media.ExifInterface;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferFactory;
 import com.facebook.imageformat.DefaultImageFormats;

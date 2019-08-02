@@ -9,8 +9,6 @@ dependencies {
 
     implementation "com.facebook.soloader:soloader:${SOLOADER_VERSION}"
 
-    implementation "androidx.exifinterface:exifinterface:${versions.androidx.exifinterface}"
-
     api project(':fbcore')
     api project(':drawee')
     api project(':imagepipeline')

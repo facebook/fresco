@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.image;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Bitmap;
-import androidx.exifinterface.media.ExifInterface;
+import android.media.ExifInterface;
 import com.facebook.common.references.ResourceReleaser;
 import junit.framework.Assert;
 import org.junit.*;

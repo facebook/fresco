@@ -7,7 +7,7 @@
 
 package com.facebook.imageutils;
 
-import androidx.exifinterface.media.ExifInterface;
+import android.media.ExifInterface;
 import com.facebook.common.logging.FLog;
 import java.io.IOException;
 import java.io.InputStream;

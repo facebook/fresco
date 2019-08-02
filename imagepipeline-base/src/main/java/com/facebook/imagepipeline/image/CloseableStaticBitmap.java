@@ -8,7 +8,7 @@
 package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
-import androidx.exifinterface.media.ExifInterface;
+import android.media.ExifInterface;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.HasBitmap;
