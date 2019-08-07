@@ -247,4 +247,5 @@
   <string name="switch_big_images">Big Images</string>
   <string name="drawee_hierarchy_switch_rounded">Round corners</string>
   <string name="drawee_hierarchy_switch_ninepatch">Use ninepatch</string>
+  <string name="load_random_uri">Load Random URI</string>
 </resources>

@@ -22,4 +22,11 @@
       android:text="@string/drawee_simple_help"
       android:textAppearance="?android:attr/textAppearanceSmall"
       />
+
+  <Button
+      android:id="@+id/btn_random_uri"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/load_random_uri"
+      />
 </LinearLayout>
