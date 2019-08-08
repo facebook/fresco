@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import com.facebook.common.memory.PooledByteBufferFactory;
@@ -18,6 +19,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,16 +34,16 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
   public static final String PRODUCER_NAME = "LocalContentUriFetchProducer";
 
   private static final String[] PROJECTION = new String[] {
-      MediaStore.Images.Media._ID,
-      MediaStore.Images.ImageColumns.DATA
+          MediaStore.Images.Media._ID,
+          MediaStore.Images.ImageColumns.DATA
   };
 
   private final ContentResolver mContentResolver;
 
   public LocalContentUriFetchProducer(
-      Executor executor,
-      PooledByteBufferFactory pooledByteBufferFactory,
-      ContentResolver contentResolver) {
+          Executor executor,
+          PooledByteBufferFactory pooledByteBufferFactory,
+          ContentResolver contentResolver) {
     super(executor, pooledByteBufferFactory);
     mContentResolver = contentResolver;
   }
@@ -68,8 +70,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
       // If a Contact URI is provided, use the special helper to open that contact's photo.
       return getEncodedImage(
-          inputStream,
-          EncodedImage.UNKNOWN_STREAM_SIZE);
+              inputStream,
+              EncodedImage.UNKNOWN_STREAM_SIZE);
     }
 
     if (UriUtil.isLocalCameraUri(uri)) {
@@ -80,8 +82,8 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
     }
 
     return getEncodedImage(
-        mContentResolver.openInputStream(uri),
-        EncodedImage.UNKNOWN_STREAM_SIZE);
+            mContentResolver.openInputStream(uri),
+            EncodedImage.UNKNOWN_STREAM_SIZE);
   }
 
   private @Nullable EncodedImage getCameraImage(Uri uri) throws IOException {
@@ -95,9 +97,11 @@ public class LocalContentUriFetchProducer extends LocalFetchProducer {
       }
       cursor.moveToFirst();
       final String pathname =
-          cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+              cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
       if (pathname != null) {
-        return getEncodedImage(new FileInputStream(pathname), getLength(pathname));
+        ParcelFileDescriptor parcelFileDescriptor = mContentResolver.openFileDescriptor(uri, "r");
+        FileDescriptor fd = parcelFileDescriptor.getFileDescriptor();
+        return getEncodedImage(new FileInputStream(fd), getLength(pathname));
       }
     } finally {
       cursor.close();
