@@ -7,10 +7,6 @@
 
 package com.facebook.drawee.generic;
 
-import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -18,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+
 import com.facebook.drawee.drawable.AndroidGraphicsTestUtils;
 import com.facebook.drawee.drawable.DrawableTestUtils;
 import com.facebook.drawee.drawable.FadeDrawable;
@@ -26,11 +23,25 @@ import com.facebook.drawee.drawable.Rounded;
 import com.facebook.drawee.drawable.RoundedBitmapDrawable;
 import com.facebook.drawee.drawable.RoundedCornersDrawable;
 import com.facebook.drawee.drawable.ScaleTypeDrawable;
-import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+
+import java.util.Arrays;
+
+import static com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 public class GenericDraweeHierarchyTest {
@@ -713,17 +724,17 @@ public class GenericDraweeHierarchyTest {
   }
 
   @Test
-  public void testDrawVisibleDrawableOnly() {
+  public void testDrawDrawableWhetherVisible() {
     GenericDraweeHierarchy dh = mBuilder
         .setPlaceholderImage(mPlaceholderImage)
         .build();
     Canvas mockCanvas = mock(Canvas.class);
     dh.getTopLevelDrawable().setVisible(false, true);
     dh.getTopLevelDrawable().draw(mockCanvas);
-    verify(mPlaceholderImage, never()).draw(mockCanvas);
+    verify(mPlaceholderImage, times(1)).draw(mockCanvas);
     dh.getTopLevelDrawable().setVisible(true, true);
     dh.getTopLevelDrawable().draw(mockCanvas);
-    verify(mPlaceholderImage).draw(mockCanvas);
+    verify(mPlaceholderImage,times(2)).draw(mockCanvas);
   }
 
   @Test

@@ -72,9 +72,6 @@ public class RootDrawable extends ForwardingDrawable implements VisibilityAwareD
   @SuppressLint("WrongCall")
   @Override
   public void draw(Canvas canvas) {
-    if (!isVisible()) {
-      return;
-    }
     if (mVisibilityCallback != null) {
       mVisibilityCallback.onDraw();
     }
