@@ -17,31 +17,28 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.misc.ImageUriProvider.ImageSize;
+import com.facebook.fresco.samples.showcase.misc.ImageSourceSpinner;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Simple drawee recycler view fragment that displays a grid of images.
  */
 public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
-
-  /** How many images to display */
-  private static final int NUM_ENTRIES = 256;
 
   /**
    * Number of recycler view spans
@@ -84,17 +81,18 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
 
-    final List<Uri> smallDummyData = sampleUris().getRandomSampleUris(ImageSize.S, NUM_ENTRIES);
-    final List<Uri> bigDummyData = sampleUris().getRandomSampleUris(ImageSize.M, NUM_ENTRIES);
-    final SimpleAdapter adapter = new SimpleAdapter(smallDummyData);
+    final SimpleAdapter adapter = new SimpleAdapter(new ArrayList<Uri>());
     recyclerView.setAdapter(adapter);
 
-    final Switch bigImagesSwitch = view.findViewById(R.id.switch_big_images);
-    bigImagesSwitch.setOnCheckedChangeListener(
-        new CompoundButton.OnCheckedChangeListener() {
+    final Spinner imageSource = view.findViewById(R.id.spinner_image_source);
+    ImageSourceSpinner.INSTANCE.setup(
+        imageSource,
+        sampleUris(),
+        new Function1<List<Uri>, Unit>() {
           @Override
-          public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
-            adapter.setData(enabled ? bigDummyData : smallDummyData);
+          public Unit invoke(List<Uri> uris) {
+            adapter.setData(uris);
+            return null;
           }
         });
   }
@@ -106,8 +104,6 @@ public class DraweeRecyclerViewFragment extends BaseShowcaseFragment {
 
   public class SimpleAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
 
-    private final PipelineDraweeControllerBuilder mControllerBuilder =
-        Fresco.newDraweeControllerBuilder();
     private List<Uri> mUris;
 
     SimpleAdapter(List<Uri> uris) {

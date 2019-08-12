@@ -18,15 +18,31 @@ import android.widget.Spinner
 
 object SpinnerUtils {
     fun <T> Spinner.setupWithList(data: List<Pair<String, T>>, clickListener: (T) -> Unit) {
-        adapter = ArrayAdapter<String>(
+        adapter = ArrayAdapter(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
                 data.map { it.first })
         onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 clickListener(data[position].second)
+            }
+        }
+    }
+
+    fun Spinner.setupWithCallbacks(data: List<Pair<String, () -> Unit>>) {
+        adapter = ArrayAdapter(
+                context,
+                android.R.layout.simple_spinner_dropdown_item,
+                data.map { it.first })
+        onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                data[position].second()
             }
         }
     }
