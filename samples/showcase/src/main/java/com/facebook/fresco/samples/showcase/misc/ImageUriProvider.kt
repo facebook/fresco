@@ -12,9 +12,11 @@
 
 package com.facebook.fresco.samples.showcase.misc
 
+import android.content.ContentUris
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.preference.PreferenceManager
 import com.facebook.common.internal.Preconditions
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
@@ -200,6 +202,25 @@ class ImageUriProvider constructor(context: Context) {
             Uri.parse(String.format(uriFormat, imageId))
         }
         return data
+    }
+
+    fun getMediaStoreUris(context: Context): List<Uri> {
+        val uris = mutableListOf<Uri>()
+        context.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Images.Media._ID),
+                null,
+                null,
+                null)?.use {
+            val dataIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            while (it.moveToNext()) {
+                uris.add(
+                        ContentUris.withAppendedId(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                it.getLong(dataIndex)))
+            }
+        }
+        return uris
     }
 
     private fun applyOverrideSettings(
