@@ -8,44 +8,37 @@
 package com.facebook.common.util;
 
 import android.content.ContentResolver;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import javax.annotation.Nullable;
 
 public class UriUtil {
 
-  /**
-   * http scheme for URIs
-   */
+  /** http scheme for URIs */
   public static final String HTTP_SCHEME = "http";
+
   public static final String HTTPS_SCHEME = "https";
 
-  /**
-   * File scheme for URIs
-   */
+  /** File scheme for URIs */
   public static final String LOCAL_FILE_SCHEME = "file";
 
-  /**
-   * Content URI scheme for URIs
-   */
+  /** Content URI scheme for URIs */
   public static final String LOCAL_CONTENT_SCHEME = "content";
 
   /** URI prefix (including scheme) for contact photos */
   private static final Uri LOCAL_CONTACT_IMAGE_URI =
       Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "display_photo");
 
-  /**
-   * Asset scheme for URIs
-   */
+  /** Asset scheme for URIs */
   public static final String LOCAL_ASSET_SCHEME = "asset";
 
-  /**
-   * Resource scheme for URIs
-   */
+  /** Resource scheme for URIs */
   public static final String LOCAL_RESOURCE_SCHEME = "res";
 
   /**
@@ -54,9 +47,7 @@ public class UriUtil {
    */
   public static final String QUALIFIED_RESOURCE_SCHEME = ContentResolver.SCHEME_ANDROID_RESOURCE;
 
-  /**
-   * Data scheme for URIs
-   */
+  /** Data scheme for URIs */
   public static final String DATA_SCHEME = "data";
 
   /**
@@ -169,9 +160,7 @@ public class UriUtil {
     return QUALIFIED_RESOURCE_SCHEME.equals(scheme);
   }
 
-  /**
-   * Check if the uri is a data uri
-   */
+  /** Check if the uri is a data uri */
   public static boolean isDataUri(@Nullable Uri uri) {
     return DATA_SCHEME.equals(getSchemeOrNull(uri));
   }
@@ -227,6 +216,27 @@ public class UriUtil {
   }
 
   /**
+   * Gets the AssetFileDescriptor for a local file. This offers an alternative solution for opening
+   * content:// scheme files
+   *
+   * @param contentResolver the content resolver which will query for the source file
+   * @param srcUri The source uri
+   * @return The AssetFileDescriptor for the file or null if it doesn't exist
+   */
+  @Nullable
+  public static AssetFileDescriptor getAssetFileDescriptor(
+      ContentResolver contentResolver, final Uri srcUri) {
+    if (isLocalContentUri(srcUri)) {
+      try {
+        return contentResolver.openAssetFileDescriptor(srcUri, "r");
+      } catch (FileNotFoundException e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Returns a URI for a given file using {@link Uri#fromFile(File)}.
    *
    * @param file a file with a valid path
@@ -237,18 +247,14 @@ public class UriUtil {
   }
 
   /**
-   * Return a URI for the given resource ID.
-   * The returned URI consists of a {@link #LOCAL_RESOURCE_SCHEME} scheme and
-   * the resource ID as path.
+   * Return a URI for the given resource ID. The returned URI consists of a {@link
+   * #LOCAL_RESOURCE_SCHEME} scheme and the resource ID as path.
    *
    * @param resourceId the resource ID to use
    * @return the URI
    */
   public static Uri getUriForResourceId(int resourceId) {
-    return new Uri.Builder()
-        .scheme(LOCAL_RESOURCE_SCHEME)
-        .path(String.valueOf(resourceId))
-        .build();
+    return new Uri.Builder().scheme(LOCAL_RESOURCE_SCHEME).path(String.valueOf(resourceId)).build();
   }
 
   /**

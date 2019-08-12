@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.producers;
 
 import android.content.ContentResolver;
+import android.content.res.AssetFileDescriptor;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Pair;
@@ -125,6 +126,12 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     try {
       if (canReadAsFile(realPath)) {
         return new ExifInterface(realPath);
+      } else {
+        AssetFileDescriptor assetFileDescriptor =
+            UriUtil.getAssetFileDescriptor(mContentResolver, uri);
+        if (assetFileDescriptor != null) {
+          return new ExifInterface(assetFileDescriptor.getFileDescriptor());
+        }
       }
     } catch (IOException e) {
       // If we cannot get the exif interface, return null as there is no thumbnail available
