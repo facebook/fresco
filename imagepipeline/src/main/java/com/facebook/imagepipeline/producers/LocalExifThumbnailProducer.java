@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Pair;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.VisibleForTesting;
@@ -26,7 +27,9 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.soloader.DoNotOptimize;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -129,8 +132,8 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
       } else {
         AssetFileDescriptor assetFileDescriptor =
             UriUtil.getAssetFileDescriptor(mContentResolver, uri);
-        if (assetFileDescriptor != null) {
-          return new ExifInterface(assetFileDescriptor.getFileDescriptor());
+        if (assetFileDescriptor != null && Build.VERSION.SDK_INT >= 24) {
+          return (new Api24Utils()).getExifInterface(assetFileDescriptor.getFileDescriptor());
         }
       }
     } catch (IOException e) {
@@ -175,5 +178,12 @@ public class LocalExifThumbnailProducer implements ThumbnailProducer<EncodedImag
     }
     final File file = new File(realPath);
     return file.exists() && file.canRead();
+  }
+
+  @DoNotOptimize
+  private class Api24Utils {
+    ExifInterface getExifInterface(FileDescriptor fileDescriptor) throws IOException {
+      return Build.VERSION.SDK_INT >= 24 ? new ExifInterface(fileDescriptor) : null;
+    }
   }
 }
