@@ -13,19 +13,28 @@ package com.facebook.fresco.samples.showcase.vito
 
 import android.graphics.Color
 import android.graphics.PointF
-import android.graphics.PorterDuffColorFilter
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.CustomScaleTypes
 import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
+import com.facebook.fresco.samples.showcase.postprocessor.CachedWatermarkPostprocessor
+import com.facebook.fresco.samples.showcase.postprocessor.FasterGreyScalePostprocessor
+import com.facebook.fresco.samples.showcase.postprocessor.ScalingBlurPostprocessor
+import com.facebook.fresco.samples.showcase.postprocessor.SlowGreyScalePostprocessor
+import com.facebook.fresco.samples.showcase.postprocessor.WatermarkPostprocessor
 import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imageformat.DefaultImageFormats
+import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
+import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor
+import com.facebook.imagepipeline.postprocessors.RoundPostprocessor
 
 object VitoSpinners {
+
     val roundingOptions = listOf(
             "no rounding" to null,
             "as circle" to RoundingOptions.asCircle(),
@@ -71,5 +80,17 @@ object VitoSpinners {
             "none" to {builder: ImageOptions.Builder -> builder.placeholder(null)},
             "image" to {builder: ImageOptions.Builder -> builder.placeholderRes(R.drawable.logo, ScalingUtils.ScaleType.FIT_CENTER)},
             "block color" to {builder: ImageOptions.Builder -> builder.placeholder(ColorDrawable(Color.RED))}
+    )
+
+    val postprocessorOptions = listOf(
+            "Grey Scale Post-Processor(Slow)" to {builder: ImageOptions.Builder -> builder.postprocess(SlowGreyScalePostprocessor())},
+            "Grey Scale Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(FasterGreyScalePostprocessor())},
+            "Watermark Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(WatermarkPostprocessor(10, "FRESCO"))},
+            "Watermark Post-Processor(Cached)" to {builder: ImageOptions.Builder -> builder.postprocess(CachedWatermarkPostprocessor(10, "FRESCO"))},
+            "Native Blur Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(IterativeBoxBlurPostProcessor(25, 3))},
+            "Scaling Blur Post-Processor" to {builder: ImageOptions.Builder -> builder.postprocess(ScalingBlurPostprocessor(25, 3, 4))},
+            "Native Round As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundAsCirclePostprocessor(false))},
+            "Antialiased As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundAsCirclePostprocessor(true))},
+            "Round As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundPostprocessor())}
     )
 }

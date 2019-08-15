@@ -36,9 +36,10 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
     private var lithoView: LithoView? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_vito_image_options_config, container, false)
     }
 
@@ -67,6 +68,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         }
 
         spinner_placeholder.setupWithList(VitoSpinners.placeholderOptions) {
+            refresh(it(imageOptionsBuilder))
+        }
+        spinner_postprocessor.setupWithList(VitoSpinners.postprocessorOptions) {
             refresh(it(imageOptionsBuilder))
         }
     }
