@@ -73,6 +73,9 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
         spinner_postprocessor.setupWithList(VitoSpinners.postprocessorOptions) {
             refresh(it(imageOptionsBuilder))
         }
+        spinner_rotation.setupWithList(VitoSpinners.rotationOptions) {
+            refresh(imageOptionsBuilder.rotate(it))
+        }
     }
 
     override fun getTitleId() = R.string.vito_litho_image_options_config

@@ -20,6 +20,7 @@ import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -136,6 +137,11 @@ public class FrescoContext {
     ResizeOptions resizeOptions = imageOptions.getResizeOptions();
     if (resizeOptions != null) {
       imageRequestBuilder.setResizeOptions(resizeOptions);
+    }
+
+    RotationOptions rotationOptions = imageOptions.getRotationOptions();
+    if (rotationOptions != null) {
+      imageRequestBuilder.setRotationOptions(rotationOptions);
     }
 
     imageRequestBuilder.setRequestPriority(imageOptions.getPriority());

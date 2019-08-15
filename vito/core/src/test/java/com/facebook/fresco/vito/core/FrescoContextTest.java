@@ -20,6 +20,7 @@ import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.fresco.vito.transformation.CircularBitmapTransformation;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import java.util.concurrent.Executor;
 import org.junit.Before;
@@ -139,5 +140,17 @@ public class FrescoContextTest {
     assertThat(imageRequest).isNotNull();
     assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
     assertThat(imageRequest.getResizeOptions()).isEqualTo(resizeOptions);
+  }
+
+  @Test
+  public void testBuildImageRequest_whenRotatingEnabled_thenSetRotateOptions() {
+    RotationOptions rotationOptions = RotationOptions.forceRotation(RotationOptions.ROTATE_270);
+    final ImageOptions imageOptions = ImageOptions.create().rotate(rotationOptions).build();
+
+    ImageRequest imageRequest = mFrescoContext.buildImageRequest(URI, imageOptions);
+
+    assertThat(imageRequest).isNotNull();
+    assertThat(imageRequest.getSourceUri()).isEqualTo(URI);
+    assertThat(imageRequest.getRotationOptions()).isEqualTo(rotationOptions);
   }
 }

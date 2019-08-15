@@ -29,6 +29,7 @@ import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.imageformat.DefaultImageFormats
+import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.postprocessors.RoundAsCirclePostprocessor
 import com.facebook.imagepipeline.postprocessors.RoundPostprocessor
@@ -92,5 +93,15 @@ object VitoSpinners {
             "Native Round As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundAsCirclePostprocessor(false))},
             "Antialiased As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundAsCirclePostprocessor(true))},
             "Round As Circle Postprocessor" to {builder: ImageOptions.Builder -> builder.postprocess(RoundPostprocessor())}
+    )
+
+    val rotationOptions = listOf(
+      "disable rotation" to RotationOptions.disableRotation(),
+      "auto rotate" to RotationOptions.autoRotate(),
+      "auto rotate at render time" to RotationOptions.autoRotateAtRenderTime(),
+      "no rotation" to RotationOptions.forceRotation(RotationOptions.NO_ROTATION),
+      "rotate 90" to RotationOptions.forceRotation(RotationOptions.ROTATE_90),
+      "rotate 180" to RotationOptions.forceRotation(RotationOptions.ROTATE_180),
+      "rotate 270" to RotationOptions.forceRotation(RotationOptions.ROTATE_270)
     )
 }
