@@ -20,7 +20,7 @@ import javax.annotation.concurrent.GuardedBy;
 public class BaseProducerContext implements ProducerContext {
   private final ImageRequest mImageRequest;
   private final String mId;
-  private final ProducerListener mProducerListener;
+  private final InternalProducerListener mInternalProducerListener;
   private final Object mCallerContext;
   private final ImageRequest.RequestLevel mLowestPermittedRequestLevel;
 
@@ -46,7 +46,7 @@ public class BaseProducerContext implements ProducerContext {
       Priority priority) {
     mImageRequest = imageRequest;
     mId = id;
-    mProducerListener = producerListener;
+    mInternalProducerListener = new InternalProducerListener(producerListener, null);
     mCallerContext = callerContext;
     mLowestPermittedRequestLevel = lowestPermittedRequestLevel;
 
@@ -70,7 +70,12 @@ public class BaseProducerContext implements ProducerContext {
 
   @Override
   public ProducerListener getListener() {
-    return mProducerListener;
+    return mInternalProducerListener.getProducerListener();
+  }
+
+  @Override
+  public InternalProducerListener getProducerListener2() {
+    return mInternalProducerListener;
   }
 
   @Override

@@ -38,6 +38,9 @@ public interface ProducerContext {
    */
   ProducerListener getListener();
 
+  /** @return ProducerListener2 for producer's events */
+  ProducerListener2 getProducerListener2();
+
   /**
    * @return the {@link Object} that indicates the caller's context
    */
