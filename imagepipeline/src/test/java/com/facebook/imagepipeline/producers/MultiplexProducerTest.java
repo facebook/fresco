@@ -55,7 +55,7 @@ public class MultiplexProducerTest {
   @Mock public CacheKeyFactory mCacheKeyFactory;
   @Mock public Producer mInputProducer;
   @Mock public Exception mException;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Object mCallerContext;
   private SettableProducerContext mProducerContext1;
   private SettableProducerContext mProducerContext2;

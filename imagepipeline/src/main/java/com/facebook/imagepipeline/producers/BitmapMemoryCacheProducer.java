@@ -46,9 +46,8 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("BitmapMemoryCacheProducer#produceResults");
       }
-      final ProducerListener listener = producerContext.getListener();
-      final String requestId = producerContext.getId();
-      listener.onProducerStart(requestId, getProducerName());
+      final ProducerListener2 listener = producerContext.getProducerListener();
+      listener.onProducerStart(producerContext, getProducerName());
       final ImageRequest imageRequest = producerContext.getImageRequest();
       final Object callerContext = producerContext.getCallerContext();
       final CacheKey cacheKey = mCacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext);
@@ -59,12 +58,12 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
         boolean isFinal = cachedReference.get().getQualityInfo().isOfFullQuality();
         if (isFinal) {
           listener.onProducerFinishWithSuccess(
-              requestId,
+              producerContext,
               getProducerName(),
-              listener.requiresExtraMap(requestId)
+              listener.requiresExtraMap(producerContext, getProducerName())
                   ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "true")
                   : null);
-          listener.onUltimateProducerReached(requestId, getProducerName(), true);
+          listener.onUltimateProducerReached(producerContext, getProducerName(), true);
           consumer.onProgressUpdate(1f);
         }
         consumer.onNewResult(cachedReference, BaseConsumer.simpleStatusForIsLast(isFinal));
@@ -77,12 +76,12 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
       if (producerContext.getLowestPermittedRequestLevel().getValue()
           >= ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE.getValue()) {
         listener.onProducerFinishWithSuccess(
-            requestId,
+            producerContext,
             getProducerName(),
-            listener.requiresExtraMap(requestId)
+            listener.requiresExtraMap(producerContext, getProducerName())
                 ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
                 : null);
-        listener.onUltimateProducerReached(requestId, getProducerName(), false);
+        listener.onUltimateProducerReached(producerContext, getProducerName(), false);
         consumer.onNewResult(null, Consumer.IS_LAST);
         return;
       }
@@ -91,9 +90,9 @@ public class BitmapMemoryCacheProducer implements Producer<CloseableReference<Cl
           wrapConsumer(
               consumer, cacheKey, producerContext.getImageRequest().isMemoryCacheEnabled());
       listener.onProducerFinishWithSuccess(
-          requestId,
+          producerContext,
           getProducerName(),
-          listener.requiresExtraMap(requestId)
+          listener.requiresExtraMap(producerContext, getProducerName())
               ? ImmutableMap.of(EXTRA_CACHED_VALUE_FOUND, "false")
               : null);
       if (FrescoSystrace.isTracing()) {

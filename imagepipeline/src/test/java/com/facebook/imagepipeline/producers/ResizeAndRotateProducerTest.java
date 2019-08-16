@@ -81,7 +81,7 @@ public class ResizeAndRotateProducerTest {
 
   @Mock public Producer mInputProducer;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ProducerContext mProducerContext;
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
@@ -148,8 +148,8 @@ public class ResizeAndRotateProducerTest {
     mTestExecutorService = new TestExecutorService(mFakeClockForWorker);
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
-    when(mProducerContext.getListener()).thenReturn(mProducerListener);
-    when(mProducerListener.requiresExtraMap(anyString())).thenReturn(true);
+    when(mProducerContext.getProducerListener()).thenReturn(mProducerListener);
+    when(mProducerListener.requiresExtraMap(eq(mProducerContext), anyString())).thenReturn(true);
     mIntermediateResult = CloseableReference.of(mock(PooledByteBuffer.class));
     mFinalResult = CloseableReference.of(mock(PooledByteBuffer.class));
 

@@ -61,7 +61,7 @@ public class DiskCacheWriteProducerTest {
   @Mock public Consumer mConsumer;
   @Mock public ImageRequest mImageRequest;
   @Mock public Object mCallerContext;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
   private final BufferedDiskCache mDefaultBufferedDiskCache = mock(BufferedDiskCache.class);
   private final BufferedDiskCache mSmallImageBufferedDiskCache =
@@ -121,7 +121,7 @@ public class DiskCacheWriteProducerTest {
         false,
         true,
         Priority.MEDIUM);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(mCacheKeyFactory.getEncodedCacheKey(mImageRequest, mCallerContext)).thenReturn(mCacheKey);
     when(mImageRequest.getCacheChoice()).thenReturn(ImageRequest.CacheChoice.DEFAULT);
     when(mImageRequest.isDiskCacheEnabled()).thenReturn(true);
@@ -236,7 +236,7 @@ public class DiskCacheWriteProducerTest {
 
   @Test
   public void testLowestLevelReached() {
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(false);
+    when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(false);
     mDiskCacheWriteProducer.produceResults(mConsumer, mLowestLevelProducerContext);
     verify(mConsumer).onNewResult(null, Consumer.IS_LAST);
     verifyZeroInteractions(

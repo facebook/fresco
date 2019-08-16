@@ -328,15 +328,16 @@ public abstract class MultiplexProducer<K, T extends Closeable> implements Produ
         }
 
         ProducerContext producerContext = mConsumerContextPairs.iterator().next().second;
-        mMultiplexProducerContext = new BaseProducerContext(
-            producerContext.getImageRequest(),
-            producerContext.getId(),
-            producerContext.getListener(),
-            producerContext.getCallerContext(),
-            producerContext.getLowestPermittedRequestLevel(),
-            computeIsPrefetch(),
-            computeIsIntermediateResultExpected(),
-            computePriority());
+        mMultiplexProducerContext =
+            new BaseProducerContext(
+                producerContext.getImageRequest(),
+                producerContext.getId(),
+                producerContext.getProducerListener(),
+                producerContext.getCallerContext(),
+                producerContext.getLowestPermittedRequestLevel(),
+                computeIsPrefetch(),
+                computeIsIntermediateResultExpected(),
+                computePriority());
 
         mForwardingConsumer = new ForwardingConsumer();
         multiplexProducerContext = mMultiplexProducerContext;

@@ -79,7 +79,7 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       return;
     }
 
-    producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
+    producerContext.getProducerListener().onProducerStart(producerContext, PRODUCER_NAME);
 
     final Uri uriForPartialCacheKey = createUriForPartialCacheKey(imageRequest);
     final CacheKey partialImageCacheKey = mCacheKeyFactory.getEncodedCacheKey(
@@ -101,25 +101,24 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext,
       final CacheKey partialImageCacheKey) {
-    final String requestId = producerContext.getId();
-    final ProducerListener listener = producerContext.getListener();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     return new Continuation<EncodedImage, Void>() {
       @Override
-      public Void then(Task<EncodedImage> task)
-          throws Exception {
+      public Void then(Task<EncodedImage> task) throws Exception {
         if (isTaskCancelled(task)) {
-          listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
+          listener.onProducerFinishWithCancellation(producerContext, PRODUCER_NAME, null);
           consumer.onCancellation();
         } else if (task.isFaulted()) {
-          listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
+          listener.onProducerFinishWithFailure(
+              producerContext, PRODUCER_NAME, task.getError(), null);
           startInputProducer(consumer, producerContext, partialImageCacheKey, null);
         } else {
           EncodedImage cachedReference = task.getResult();
           if (cachedReference != null) {
             listener.onProducerFinishWithSuccess(
-                requestId,
+                producerContext,
                 PRODUCER_NAME,
-                getExtraMap(listener, requestId, true, cachedReference.getSize()));
+                getExtraMap(listener, producerContext, true, cachedReference.getSize()));
             final BytesRange cachedRange = BytesRange.toMax(cachedReference.getSize() - 1);
             cachedReference.setBytesRange(cachedRange);
 
@@ -128,29 +127,25 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
             final ImageRequest originalRequest = producerContext.getImageRequest();
 
             if (cachedRange.contains(originalRequest.getBytesRange())) {
-              listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
+              listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
               consumer.onNewResult(cachedReference, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
             } else {
               consumer.onNewResult(cachedReference, Consumer.IS_PARTIAL_RESULT);
 
               // Pass the request on, but only for the remaining bytes
-              final ImageRequest remainingRequest = ImageRequestBuilder.fromRequest(originalRequest)
-                  .setBytesRange(BytesRange.from(cachedLength - 1))
-                  .build();
+              final ImageRequest remainingRequest =
+                  ImageRequestBuilder.fromRequest(originalRequest)
+                      .setBytesRange(BytesRange.from(cachedLength - 1))
+                      .build();
               final SettableProducerContext contextForRemainingRequest =
                   new SettableProducerContext(remainingRequest, producerContext);
 
               startInputProducer(
-                  consumer,
-                  contextForRemainingRequest,
-                  partialImageCacheKey,
-                  cachedReference);
+                  consumer, contextForRemainingRequest, partialImageCacheKey, cachedReference);
             }
           } else {
             listener.onProducerFinishWithSuccess(
-                requestId,
-                PRODUCER_NAME,
-                getExtraMap(listener, requestId, false, 0));
+                producerContext, PRODUCER_NAME, getExtraMap(listener, producerContext, false, 0));
             startInputProducer(consumer, producerContext, partialImageCacheKey, cachedReference);
           }
         }
@@ -183,11 +178,11 @@ public class PartialDiskCacheProducer implements Producer<EncodedImage> {
   @Nullable
   @VisibleForTesting
   static Map<String, String> getExtraMap(
-      final ProducerListener listener,
-      final String requestId,
+      final ProducerListener2 listener,
+      final ProducerContext producerContext,
       final boolean valueFound,
       final int sizeInBytes) {
-    if (!listener.requiresExtraMap(requestId)) {
+    if (!listener.requiresExtraMap(producerContext, PRODUCER_NAME)) {
       return null;
     }
     if (valueFound) {

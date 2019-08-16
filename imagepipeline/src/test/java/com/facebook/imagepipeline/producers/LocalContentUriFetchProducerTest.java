@@ -41,7 +41,7 @@ public class LocalContentUriFetchProducerTest {
   @Mock public ContentResolver mContentResolver;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
   private TestExecutorService mExecutor;
   private SettableProducerContext mProducerContext;
@@ -88,8 +88,9 @@ public class LocalContentUriFetchProducerTest {
   public void testLocalContentUriFetchCancelled() {
     mLocalContentUriFetchProducer.produceResults(mConsumer, mProducerContext);
     mProducerContext.cancel();
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithCancellation(mRequestId, PRODUCER_NAME, null);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithCancellation(mProducerContext, PRODUCER_NAME, null);
     verify(mConsumer).onCancellation();
     mExecutor.runUntilIdle();
     verifyZeroInteractions(mPooledByteBufferFactory);
@@ -111,17 +112,17 @@ public class LocalContentUriFetchProducerTest {
         mCapturedEncodedImage.getByteBufferRef()
             .getUnderlyingReferenceTestOnly().getRefCountTestOnly());
     assertSame(pooledByteBuffer, mCapturedEncodedImage.getByteBufferRef().get());
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
   }
 
   @Test(expected = RuntimeException.class)
   public void testFetchLocalContentUriFailsByThrowing() throws Exception {
     when(mPooledByteBufferFactory.newByteBuffer(any(InputStream.class))).thenThrow(mException);
     verify(mConsumer).onFailure(mException);
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithFailure(
-        mRequestId, PRODUCER_NAME, mException, null);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, false);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, mException, null);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
   }
 }

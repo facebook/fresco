@@ -21,7 +21,7 @@ public class SettableProducerContext extends BaseProducerContext {
     this(
         context.getImageRequest(),
         context.getId(),
-        context.getListener(),
+        context.getProducerListener(),
         context.getCallerContext(),
         context.getLowestPermittedRequestLevel(),
         context.isPrefetch(),
@@ -33,7 +33,7 @@ public class SettableProducerContext extends BaseProducerContext {
     this(
         overrideRequest,
         context.getId(),
-        context.getListener(),
+        context.getProducerListener(),
         context.getCallerContext(),
         context.getLowestPermittedRequestLevel(),
         context.isPrefetch(),
@@ -44,7 +44,7 @@ public class SettableProducerContext extends BaseProducerContext {
   public SettableProducerContext(
       ImageRequest imageRequest,
       String id,
-      ProducerListener producerListener,
+      ProducerListener2 producerListener,
       Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevel,
       boolean isPrefetch,

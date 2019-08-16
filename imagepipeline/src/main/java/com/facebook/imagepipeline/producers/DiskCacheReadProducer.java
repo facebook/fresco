@@ -65,7 +65,7 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       return;
     }
 
-    producerContext.getListener().onProducerStart(producerContext.getId(), PRODUCER_NAME);
+    producerContext.getProducerListener().onProducerStart(producerContext, PRODUCER_NAME);
 
     final CacheKey cacheKey =
         mCacheKeyFactory.getEncodedCacheKey(imageRequest, producerContext.getCallerContext());
@@ -83,34 +83,31 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   private Continuation<EncodedImage, Void> onFinishDiskReads(
       final Consumer<EncodedImage> consumer,
       final ProducerContext producerContext) {
-    final String requestId = producerContext.getId();
-    final ProducerListener listener = producerContext.getListener();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     return new Continuation<EncodedImage, Void>() {
       @Override
-      public Void then(Task<EncodedImage> task)
-          throws Exception {
+      public Void then(Task<EncodedImage> task) throws Exception {
         if (isTaskCancelled(task)) {
-          listener.onProducerFinishWithCancellation(requestId, PRODUCER_NAME, null);
+          listener.onProducerFinishWithCancellation(producerContext, PRODUCER_NAME, null);
           consumer.onCancellation();
         } else if (task.isFaulted()) {
-          listener.onProducerFinishWithFailure(requestId, PRODUCER_NAME, task.getError(), null);
+          listener.onProducerFinishWithFailure(
+              producerContext, PRODUCER_NAME, task.getError(), null);
           mInputProducer.produceResults(consumer, producerContext);
         } else {
           EncodedImage cachedReference = task.getResult();
           if (cachedReference != null) {
             listener.onProducerFinishWithSuccess(
-                requestId,
+                producerContext,
                 PRODUCER_NAME,
-                getExtraMap(listener, requestId, true, cachedReference.getSize()));
-            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
+                getExtraMap(listener, producerContext, true, cachedReference.getSize()));
+            listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
             consumer.onProgressUpdate(1);
             consumer.onNewResult(cachedReference, Consumer.IS_LAST);
             cachedReference.close();
           } else {
             listener.onProducerFinishWithSuccess(
-                requestId,
-                PRODUCER_NAME,
-                getExtraMap(listener, requestId, false, 0));
+                producerContext, PRODUCER_NAME, getExtraMap(listener, producerContext, false, 0));
             mInputProducer.produceResults(consumer, producerContext);
           }
         }
@@ -138,11 +135,11 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
 
   @VisibleForTesting
   static @Nullable Map<String, String> getExtraMap(
-      final ProducerListener listener,
-      final String requestId,
+      final ProducerListener2 listener,
+      final ProducerContext producerContext,
       final boolean valueFound,
       final int sizeInBytes) {
-    if (!listener.requiresExtraMap(requestId)) {
+    if (!listener.requiresExtraMap(producerContext, PRODUCER_NAME)) {
       return null;
     }
     if (valueFound) {

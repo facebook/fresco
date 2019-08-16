@@ -51,10 +51,10 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
   public void produceResults(
       final Consumer<CloseableReference<CloseableImage>> consumer,
       ProducerContext context) {
-    final ProducerListener listener = context.getListener();
+    final ProducerListener2 listener = context.getProducerListener();
     final Postprocessor postprocessor = context.getImageRequest().getPostprocessor();
     final PostprocessorConsumer basePostprocessorConsumer =
-        new PostprocessorConsumer(consumer, listener, context.getId(), postprocessor, context);
+        new PostprocessorConsumer(consumer, listener, postprocessor, context);
     final Consumer<CloseableReference<CloseableImage>> postprocessorConsumer;
     if (postprocessor instanceof RepeatedPostprocessor) {
       postprocessorConsumer = new RepeatedPostprocessorConsumer(
@@ -74,8 +74,8 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
       CloseableReference<CloseableImage>,
       CloseableReference<CloseableImage>> {
 
-    private final ProducerListener mListener;
-    private final String mRequestId;
+    private final ProducerListener2 mListener;
+    private final ProducerContext mProducerContext;
     private final Postprocessor mPostprocessor;
 
     @GuardedBy("PostprocessorConsumer.this")
@@ -92,14 +92,13 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
 
     public PostprocessorConsumer(
         Consumer<CloseableReference<CloseableImage>> consumer,
-        ProducerListener listener,
-        String requestId,
+        ProducerListener2 listener,
         Postprocessor postprocessor,
         ProducerContext producerContext) {
       super(consumer);
       mListener = listener;
-      mRequestId = requestId;
       mPostprocessor = postprocessor;
+      mProducerContext = producerContext;
       producerContext.addCallbacks(
           new BaseProducerContextCallbacks() {
             @Override
@@ -210,19 +209,19 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
         maybeNotifyOnNewResult(sourceImageRef, status);
         return;
       }
-      mListener.onProducerStart(mRequestId, NAME);
+      mListener.onProducerStart(mProducerContext, NAME);
       CloseableReference<CloseableImage> destImageRef = null;
       try {
         try {
           destImageRef = postprocessInternal(sourceImageRef.get());
         } catch (Exception e) {
           mListener.onProducerFinishWithFailure(
-              mRequestId, NAME, e, getExtraMap(mListener, mRequestId, mPostprocessor));
+              mProducerContext, NAME, e, getExtraMap(mListener, mProducerContext, mPostprocessor));
           maybeNotifyOnFailure(e);
           return;
         }
         mListener.onProducerFinishWithSuccess(
-            mRequestId, NAME, getExtraMap(mListener, mRequestId, mPostprocessor));
+            mProducerContext, NAME, getExtraMap(mListener, mProducerContext, mPostprocessor));
         maybeNotifyOnNewResult(destImageRef, status);
       } finally {
         CloseableReference.closeSafely(destImageRef);
@@ -230,8 +229,10 @@ public class PostprocessorProducer implements Producer<CloseableReference<Closea
     }
 
     private @Nullable Map<String, String> getExtraMap(
-        ProducerListener listener, String requestId, Postprocessor postprocessor) {
-      if (!listener.requiresExtraMap(requestId)) {
+        ProducerListener2 listener,
+        ProducerContext producerContext,
+        Postprocessor postprocessor) {
+      if (!listener.requiresExtraMap(producerContext, NAME)) {
         return null;
       }
       return ImmutableMap.of(POSTPROCESSOR, postprocessor.getName());

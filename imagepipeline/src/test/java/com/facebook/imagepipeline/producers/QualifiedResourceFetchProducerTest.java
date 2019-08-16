@@ -51,7 +51,7 @@ public class QualifiedResourceFetchProducerTest {
   @Mock public ContentResolver mContentResolver;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
 
   private TestExecutorService mExecutor;
@@ -96,7 +96,7 @@ public class QualifiedResourceFetchProducerTest {
     verify(mPooledByteBufferFactory, times(1)).newByteBuffer(any(InputStream.class));
     verify(mContentResolver, times(1)).openInputStream(mContentUri);
 
-    verify(mProducerListener).onProducerStart(REQUEST_ID, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(REQUEST_ID, PRODUCER_NAME, null);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener).onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, null);
   }
 }

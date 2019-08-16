@@ -51,7 +51,7 @@ public class LocalExifThumbnailProducerTest {
   private static final int ANGLE = 270;
   @Mock public ExifInterface mExifInterface;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Consumer<EncodedImage> mConsumer;
   @Mock public ProducerContext mProducerContext;
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
@@ -79,7 +79,7 @@ public class LocalExifThumbnailProducerTest {
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
     when(mImageRequest.getSourceUri()).thenReturn(mUri);
-    when(mProducerContext.getListener()).thenReturn(mProducerListener);
+    when(mProducerContext.getProducerListener()).thenReturn(mProducerListener);
 
     mThumbnailBytes = new byte[100];
     when(mExifInterface.hasThumbnail()).thenReturn(true);

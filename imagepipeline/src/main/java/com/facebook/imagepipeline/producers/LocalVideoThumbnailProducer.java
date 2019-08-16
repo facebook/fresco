@@ -56,22 +56,21 @@ public class LocalVideoThumbnailProducer implements
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final ProducerContext producerContext) {
 
-    final ProducerListener listener = producerContext.getListener();
-    final String requestId = producerContext.getId();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     final StatefulProducerRunnable cancellableProducerRunnable =
         new StatefulProducerRunnable<CloseableReference<CloseableImage>>(
-            consumer, listener, PRODUCER_NAME, requestId) {
+            consumer, listener, producerContext, PRODUCER_NAME) {
           @Override
           protected void onSuccess(CloseableReference<CloseableImage> result) {
             super.onSuccess(result);
-            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, result != null);
+            listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, result != null);
           }
 
           @Override
           protected void onFailure(Exception e) {
             super.onFailure(e);
-            listener.onUltimateProducerReached(requestId, PRODUCER_NAME, false);
+            listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, false);
           }
 
           @Override

@@ -31,6 +31,8 @@ import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.producers.ProducerListener2;
+import com.facebook.imagepipeline.producers.InternalProducerListener;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
@@ -733,6 +735,9 @@ public class ImagePipeline {
     final RequestListener finalRequestListener =
         getRequestListenerForRequest(imageRequest, requestListener);
 
+    final ProducerListener2 producerListener2 =
+        new InternalProducerListener(finalRequestListener, null);
+
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, false);
     }
@@ -745,7 +750,7 @@ public class ImagePipeline {
           new SettableProducerContext(
               imageRequest,
               generateUniqueFutureId(),
-              finalRequestListener,
+              producerListener2,
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ false,
@@ -805,7 +810,7 @@ public class ImagePipeline {
           new SettableProducerContext(
               imageRequest,
               generateUniqueFutureId(),
-              requestListener,
+              new InternalProducerListener(requestListener, null),
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ true,

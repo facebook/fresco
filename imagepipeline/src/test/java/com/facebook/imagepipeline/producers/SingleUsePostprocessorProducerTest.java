@@ -37,13 +37,14 @@ import org.robolectric.annotation.*;
 @Config(manifest= Config.NONE)
 public class SingleUsePostprocessorProducerTest {
 
+  private static final String PRODUCER_NAME = PostprocessorProducer.NAME;
   private static final String POSTPROCESSOR_NAME = "postprocessor_name";
   private static final Map<String, String> mExtraMap =
       ImmutableMap.of(PostprocessorProducer.POSTPROCESSOR, POSTPROCESSOR_NAME);
 
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
   @Mock public ProducerContext mProducerContext;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public Postprocessor mPostprocessor;
@@ -75,12 +76,12 @@ public class SingleUsePostprocessorProducerTest {
 
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     when(mProducerContext.getId()).thenReturn(mRequestId);
-    when(mProducerContext.getListener()).thenReturn(mProducerListener);
+    when(mProducerContext.getProducerListener()).thenReturn(mProducerListener);
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
 
     mResults = new ArrayList<>();
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     doAnswer(
         new Answer<Object>() {
           @Override
@@ -126,11 +127,16 @@ public class SingleUsePostprocessorProducerTest {
     mSourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, PostprocessorProducer.NAME);
     mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener)
-        .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
+    mInOrder
+        .verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PostprocessorProducer.NAME, mExtraMap);
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     mInOrder.verifyNoMoreInteractions();
 
@@ -153,14 +159,20 @@ public class SingleUsePostprocessorProducerTest {
     mSourceCloseableImageRef.close();
     mTestExecutorService.runUntilIdle();
 
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, PostprocessorProducer.NAME);
     mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener).onProducerFinishWithFailure(
-        eq(mRequestId),
-        eq(PostprocessorProducer.NAME),
-        any(RuntimeException.class),
-        eq(mExtraMap));
+    mInOrder
+        .verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithFailure(
+            eq(mProducerContext),
+            eq(PostprocessorProducer.NAME),
+            any(RuntimeException.class),
+            eq(mExtraMap));
     mInOrder.verify(mConsumer).onFailure(any(IllegalStateException.class));
     mInOrder.verifyNoMoreInteractions();
     assertEquals(0, mResults.size());

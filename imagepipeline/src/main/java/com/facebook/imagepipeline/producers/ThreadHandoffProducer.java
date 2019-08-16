@@ -28,13 +28,12 @@ public class ThreadHandoffProducer<T> implements Producer<T> {
 
   @Override
   public void produceResults(final Consumer<T> consumer, final ProducerContext context) {
-    final ProducerListener producerListener = context.getListener();
-    final String requestId = context.getId();
+    final ProducerListener2 producerListener = context.getProducerListener();
     final StatefulProducerRunnable<T> statefulRunnable =
-        new StatefulProducerRunnable<T>(consumer, producerListener, PRODUCER_NAME, requestId) {
+        new StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
           @Override
           protected void onSuccess(T ignored) {
-            producerListener.onProducerFinishWithSuccess(requestId, PRODUCER_NAME, null);
+            producerListener.onProducerFinishWithSuccess(context, PRODUCER_NAME, null);
             mInputProducer.produceResults(consumer, context);
           }
 

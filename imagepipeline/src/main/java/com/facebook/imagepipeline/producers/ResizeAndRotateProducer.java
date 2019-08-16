@@ -213,7 +213,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
 
     private void doTransform(
         EncodedImage encodedImage, @Status int status, ImageTranscoder imageTranscoder) {
-      mProducerContext.getListener().onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
+      mProducerContext
+          .getProducerListener()
+          .onProducerStart(mProducerContext, PRODUCER_NAME);
       ImageRequest imageRequest = mProducerContext.getImageRequest();
       PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();
       Map<String, String> extraMap = null;
@@ -247,8 +249,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
           try {
             ret.parseMetaData();
             mProducerContext
-                .getListener()
-                .onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
+                .getProducerListener()
+                .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
             if (result.getTranscodeStatus() != TranscodeStatus.TRANSCODING_NO_RESIZING) {
               status |= Consumer.IS_RESIZING_DONE;
             }
@@ -261,8 +263,8 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         }
       } catch (Exception e) {
         mProducerContext
-            .getListener()
-            .onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
+            .getProducerListener()
+            .onProducerFinishWithFailure(mProducerContext, PRODUCER_NAME, e, extraMap);
         if (isLast(status)) {
           getConsumer().onFailure(e);
         }
@@ -277,7 +279,9 @@ public class ResizeAndRotateProducer implements Producer<EncodedImage> {
         @Nullable ResizeOptions resizeOptions,
         @Nullable ImageTranscodeResult transcodeResult,
         @Nullable String transcoderId) {
-      if (!mProducerContext.getListener().requiresExtraMap(mProducerContext.getId())) {
+      if (!mProducerContext
+          .getProducerListener()
+          .requiresExtraMap(mProducerContext, PRODUCER_NAME)) {
         return null;
       }
       String originalSize = encodedImage.getWidth() + "x" + encodedImage.getHeight();

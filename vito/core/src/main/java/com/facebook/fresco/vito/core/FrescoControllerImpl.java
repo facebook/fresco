@@ -27,6 +27,7 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.producers.InternalProducerListener;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -195,7 +196,7 @@ public class FrescoControllerImpl implements FrescoController {
           new SettableProducerContext(
               imageRequest,
               mFrescoContext.getImagePipeline().generateUniqueFutureId(),
-              frescoState.getRequestListener(),
+              new InternalProducerListener(frescoState.getRequestListener(), null),
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ false,

@@ -34,12 +34,9 @@ public interface ProducerContext {
   String getId();
 
   /**
-   * @return ProducerListener for producer's events
+   * @return ProducerListener2 for producer's events
    */
-  ProducerListener getListener();
-
-  /** @return ProducerListener2 for producer's events */
-  ProducerListener2 getProducerListener2();
+  ProducerListener2 getProducerListener();
 
   /**
    * @return the {@link Object} that indicates the caller's context

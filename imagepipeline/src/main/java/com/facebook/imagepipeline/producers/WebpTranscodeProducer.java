@@ -98,9 +98,9 @@ public class WebpTranscodeProducer implements Producer<EncodedImage> {
     final StatefulProducerRunnable<EncodedImage> runnable =
         new StatefulProducerRunnable<EncodedImage>(
             consumer,
-            producerContext.getListener(),
-            PRODUCER_NAME,
-            producerContext.getId()) {
+            producerContext.getProducerListener(),
+            producerContext,
+            PRODUCER_NAME) {
           @Override
           protected EncodedImage getResult() throws Exception {
             PooledByteBufferOutputStream outputStream = mPooledByteBufferFactory.newOutputStream();

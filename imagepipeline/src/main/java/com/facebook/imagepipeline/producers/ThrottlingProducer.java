@@ -43,8 +43,8 @@ public class ThrottlingProducer<T> implements Producer<T> {
 
   @Override
   public void produceResults(final Consumer<T> consumer, final ProducerContext producerContext) {
-    final ProducerListener producerListener = producerContext.getListener();
-    producerListener.onProducerStart(producerContext.getId(), PRODUCER_NAME);
+    final ProducerListener2 producerListener = producerContext.getProducerListener();
+    producerListener.onProducerStart(producerContext, PRODUCER_NAME);
 
     boolean delayRequest;
     synchronized (this) {
@@ -63,8 +63,8 @@ public class ThrottlingProducer<T> implements Producer<T> {
   }
 
   void produceResultsInternal(Consumer<T> consumer, ProducerContext producerContext) {
-    ProducerListener producerListener = producerContext.getListener();
-    producerListener.onProducerFinishWithSuccess(producerContext.getId(), PRODUCER_NAME, null);
+    ProducerListener2 producerListener = producerContext.getProducerListener();
+    producerListener.onProducerFinishWithSuccess(producerContext, PRODUCER_NAME, null);
     mInputProducer.produceResults(new ThrottlerConsumer(consumer), producerContext);
   }
 

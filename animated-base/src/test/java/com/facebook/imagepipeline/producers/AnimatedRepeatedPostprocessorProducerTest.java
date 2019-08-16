@@ -47,7 +47,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
       ImmutableMap.of(PostprocessorProducer.POSTPROCESSOR, POSTPROCESSOR_NAME);
 
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public RepeatedPostprocessor mPostprocessor;
@@ -90,7 +90,7 @@ public class AnimatedRepeatedPostprocessorProducerTest {
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     mResults = new ArrayList<>();
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(mProducerContext, POSTPROCESSOR_NAME)).thenReturn(true);
     doAnswer(
         new Answer<Object>() {
           @Override
@@ -220,11 +220,16 @@ public class AnimatedRepeatedPostprocessorProducerTest {
   }
 
   private void verifyNewResultProcessed(int index, Bitmap destBitmap) {
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, PostprocessorProducer.NAME);
     mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener)
-        .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
+    mInOrder
+        .verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PostprocessorProducer.NAME, mExtraMap);
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 

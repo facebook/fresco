@@ -44,7 +44,7 @@ public class AnimatedSingleUsePostprocessorProducerTest {
 
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
   @Mock public ProducerContext mProducerContext;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public Postprocessor mPostprocessor;
@@ -76,12 +76,13 @@ public class AnimatedSingleUsePostprocessorProducerTest {
 
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     when(mProducerContext.getId()).thenReturn(mRequestId);
-    when(mProducerContext.getListener()).thenReturn(mProducerListener);
+    when(mProducerContext.getProducerListener()).thenReturn(mProducerListener);
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
 
     mResults = new ArrayList<>();
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(eq(mProducerContext), eq(POSTPROCESSOR_NAME)))
+        .thenReturn(true);
     doAnswer(
         new Answer<Object>() {
           @Override

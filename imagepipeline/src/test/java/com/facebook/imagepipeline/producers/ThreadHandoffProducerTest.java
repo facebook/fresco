@@ -25,7 +25,7 @@ public class ThreadHandoffProducerTest {
   @Mock public Producer mInputProducer;
   @Mock public Consumer mConsumer;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
 
   private final String mRequestId = "mRequestId";
   private SettableProducerContext mProducerContext;
@@ -55,11 +55,10 @@ public class ThreadHandoffProducerTest {
     mThreadHandoffProducer.produceResults(mConsumer, mProducerContext);
     mTestExecutorService.runUntilIdle();
     verify(mInputProducer).produceResults(mConsumer, mProducerContext);
-    verify(mProducerListener).onProducerStart(mRequestId, ThreadHandoffProducer.PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(
-        mRequestId,
-        ThreadHandoffProducer.PRODUCER_NAME,
-        null);
+    verify(mProducerListener)
+        .onProducerStart(mProducerContext, ThreadHandoffProducer.PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, ThreadHandoffProducer.PRODUCER_NAME, null);
     verifyNoMoreInteractions(mProducerListener);
   }
 
@@ -70,12 +69,13 @@ public class ThreadHandoffProducerTest {
     mTestExecutorService.runUntilIdle();
     verify(mInputProducer, never()).produceResults(mConsumer, mProducerContext);
     verify(mConsumer).onCancellation();
-    verify(mProducerListener).onProducerStart(mRequestId, ThreadHandoffProducer.PRODUCER_NAME);
-    verify(mProducerListener).requiresExtraMap(mRequestId);
-    verify(mProducerListener).onProducerFinishWithCancellation(
-        mRequestId,
-        ThreadHandoffProducer.PRODUCER_NAME,
-        null);
+    verify(mProducerListener)
+        .onProducerStart(mProducerContext, ThreadHandoffProducer.PRODUCER_NAME);
+    verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, ThreadHandoffProducer.PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithCancellation(
+            mProducerContext, ThreadHandoffProducer.PRODUCER_NAME, null);
     verifyNoMoreInteractions(mProducerListener);
   }
 }

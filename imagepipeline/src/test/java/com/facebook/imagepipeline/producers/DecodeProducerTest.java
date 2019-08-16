@@ -72,7 +72,7 @@ public class DecodeProducerTest {
   private String mRequestId;
   private CloseableReference<PooledByteBuffer> mByteBufferRef;
   private EncodedImage mEncodedImage;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   private SettableProducerContext mProducerContext;
   @Mock public Consumer mConsumer;
 
@@ -313,16 +313,18 @@ public class DecodeProducerTest {
     jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
-    inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
+    inOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, DecodeProducer.PRODUCER_NAME);
     inOrder
         .verify(mImageDecoder)
         .decode(mEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
     inOrder
         .verify(mProducerListener)
         .onProducerFinishWithSuccess(
-            eq(mRequestId), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
+            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
 
   @Test
@@ -337,7 +339,9 @@ public class DecodeProducerTest {
     jobRunnable.run(mEncodedImage, Consumer.NO_FLAGS);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
-    inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
+    inOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, DecodeProducer.PRODUCER_NAME);
     inOrder
         .verify(mImageDecoder)
         .decode(
@@ -348,7 +352,7 @@ public class DecodeProducerTest {
     inOrder
         .verify(mProducerListener)
         .onProducerFinishWithSuccess(
-            eq(mRequestId), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
+            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), any(Map.class));
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -365,16 +369,18 @@ public class DecodeProducerTest {
     jobRunnable.run(mEncodedImage, Consumer.IS_LAST);
 
     InOrder inOrder = inOrder(mProducerListener, mImageDecoder);
-    inOrder.verify(mProducerListener).onProducerStart(mRequestId, DecodeProducer.PRODUCER_NAME);
+    inOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, DecodeProducer.PRODUCER_NAME);
     inOrder
         .verify(mImageDecoder)
         .decode(mEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
     inOrder
         .verify(mProducerListener)
         .onProducerFinishWithFailure(
-            eq(mRequestId), eq(DecodeProducer.PRODUCER_NAME), eq(exception), any(Map.class));
+            eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), eq(exception), any(Map.class));
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
   }
 
   @Test

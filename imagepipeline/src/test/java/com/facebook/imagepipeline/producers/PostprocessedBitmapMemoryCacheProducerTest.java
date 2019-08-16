@@ -47,7 +47,7 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
   @Mock public ImageRequest mImageRequest;
   @Mock public Postprocessor mPostprocessor;
   @Mock public RepeatedPostprocessor mRepeatedPostprocessor;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Exception mException;
   @Mock public CloseableImage mImage1;
   @Mock public CloseableImage mImage2;
@@ -77,8 +77,8 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
     mImageRef1Clone = mImageRef1.clone();
 
     when(mProducerContext.getImageRequest()).thenReturn(mImageRequest);
-    when(mProducerContext.getListener()).thenReturn(mProducerListener);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerContext.getProducerListener()).thenReturn(mProducerListener);
+    when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     when(mProducerContext.getId()).thenReturn(mRequestId);
     when(mProducerContext.getCallerContext()).thenReturn(PRODUCER_NAME);
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
@@ -123,9 +123,10 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
     mMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
 
     verify(mInputProducer, never()).produceResults(any(Consumer.class), any(ProducerContext.class));
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, mExtraOnHit);
-    verify(mProducerListener).onUltimateProducerReached(mRequestId, PRODUCER_NAME, true);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, mExtraOnHit);
+    verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, true);
     verify(mConsumer).onNewResult(mImageRef2Clone, Consumer.IS_LAST);
     // reference must be closed after `consumer.onNewResult` returns
     Assert.assertFalse(mImageRef2Clone.isValid());
@@ -199,12 +200,13 @@ public class PostprocessedBitmapMemoryCacheProducerTest {
 
     mMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
 
-    verify(mProducerListener).onProducerStart(mRequestId, PRODUCER_NAME);
+    verify(mProducerListener).onProducerStart(mProducerContext, PRODUCER_NAME);
     ArgumentCaptor<Consumer> captor = ArgumentCaptor.forClass(Consumer.class);
     verify(mInputProducer).produceResults(captor.capture(), eq(mProducerContext));
-    verify(mProducerListener).onProducerFinishWithSuccess(mRequestId, PRODUCER_NAME, mExtraOnMiss);
+    verify(mProducerListener)
+        .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, mExtraOnMiss);
     verify(mProducerListener, never())
-        .onUltimateProducerReached(anyString(), anyString(), anyBoolean());
+        .onUltimateProducerReached(eq(mProducerContext), anyString(), anyBoolean());
     return captor.getValue();
   }
 }

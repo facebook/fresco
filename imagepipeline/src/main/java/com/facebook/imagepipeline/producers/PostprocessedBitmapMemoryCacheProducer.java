@@ -45,8 +45,7 @@ public class PostprocessedBitmapMemoryCacheProducer
       final Consumer<CloseableReference<CloseableImage>> consumer,
       final ProducerContext producerContext) {
 
-    final ProducerListener listener = producerContext.getListener();
-    final String requestId = producerContext.getId();
+    final ProducerListener2 listener = producerContext.getProducerListener();
     final ImageRequest imageRequest = producerContext.getImageRequest();
     final Object callerContext = producerContext.getCallerContext();
 
@@ -56,16 +55,18 @@ public class PostprocessedBitmapMemoryCacheProducer
       mInputProducer.produceResults(consumer, producerContext);
       return;
     }
-    listener.onProducerStart(requestId, getProducerName());
+    listener.onProducerStart(producerContext, getProducerName());
     final CacheKey cacheKey =
         mCacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext);
     CloseableReference<CloseableImage> cachedReference = mMemoryCache.get(cacheKey);
     if (cachedReference != null) {
       listener.onProducerFinishWithSuccess(
-          requestId,
+          producerContext,
           getProducerName(),
-          listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "true") : null);
-      listener.onUltimateProducerReached(requestId, PRODUCER_NAME, true);
+          listener.requiresExtraMap(producerContext, getProducerName())
+              ? ImmutableMap.of(VALUE_FOUND, "true")
+              : null);
+      listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
       consumer.onProgressUpdate(1.0f);
       consumer.onNewResult(cachedReference, Consumer.IS_LAST);
       cachedReference.close();
@@ -77,9 +78,11 @@ public class PostprocessedBitmapMemoryCacheProducer
           new CachedPostprocessorConsumer(
               consumer, cacheKey, isRepeatedProcessor, mMemoryCache, isMemoryCachedEnabled);
       listener.onProducerFinishWithSuccess(
-          requestId,
+          producerContext,
           getProducerName(),
-          listener.requiresExtraMap(requestId) ? ImmutableMap.of(VALUE_FOUND, "false") : null);
+          listener.requiresExtraMap(producerContext, getProducerName())
+              ? ImmutableMap.of(VALUE_FOUND, "false")
+              : null);
       mInputProducer.produceResults(cachedConsumer, producerContext);
     }
   }

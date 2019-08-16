@@ -49,7 +49,7 @@ public class NetworkFetchProducerTest {
   @Mock public PooledByteBufferOutputStream mPooledByteBufferOutputStream;
   @Mock public PooledByteBufferFactory mPooledByteBufferFactory;
   @Mock public ImageRequest mImageRequest;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Consumer mConsumer;
   @Mock public NetworkFetcher mNetworkFetcher;
   @Mock public Map<String, String> mExtrasMap;
@@ -89,7 +89,8 @@ public class NetworkFetchProducerTest {
     when(mPooledByteBufferFactory.newOutputStream())
         .thenReturn(mPooledByteBufferOutputStream);
     when(mPooledByteBufferOutputStream.toByteBuffer()).thenReturn(mPooledByteBuffer);
-    when(mProducerListener.requiresExtraMap(anyString())).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(mProducerContext, NetworkFetchProducer.PRODUCER_NAME))
+        .thenReturn(true);
     when(mNetworkFetcher.getExtraMap(any(FetchState.class), anyInt())).thenReturn(mExtrasMap);
     when(mNetworkFetcher.createFetchState(eq(mConsumer), eq(mProducerContext)))
         .thenReturn(mFetchState);
@@ -106,13 +107,14 @@ public class NetworkFetchProducerTest {
     NetworkFetcher.Callback callback = performFetch();
 
     callback.onFailure(new RuntimeException());
-    verify(mProducerListener).onProducerFinishWithFailure(
-        eq(mRequestId),
-        eq(NetworkFetchProducer.PRODUCER_NAME),
-        any(RuntimeException.class),
-        isNull(Map.class));
     verify(mProducerListener)
-        .onUltimateProducerReached(mRequestId, NetworkFetchProducer.PRODUCER_NAME, false);
+        .onProducerFinishWithFailure(
+            eq(mProducerContext),
+            eq(NetworkFetchProducer.PRODUCER_NAME),
+            any(RuntimeException.class),
+            isNull(Map.class));
+    verify(mProducerListener)
+        .onUltimateProducerReached(mProducerContext, NetworkFetchProducer.PRODUCER_NAME, false);
   }
 
   @Test(timeout = 5000)
@@ -142,10 +144,11 @@ public class NetworkFetchProducerTest {
     inputStream.signalEof();
     requestHandlerFuture.get();
     // Check no intermediate results were propagated
-    verify(mProducerListener, times(0)).onProducerEvent(
-        mRequestId,
-        NetworkFetchProducer.PRODUCER_NAME,
-        NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
+    verify(mProducerListener, times(0))
+        .onProducerEvent(
+            mProducerContext,
+            NetworkFetchProducer.PRODUCER_NAME,
+            NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
     // Test final result
     verify(mConsumer, times(1)).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     verifyPooledByteBufferUsed(1);
@@ -172,20 +175,22 @@ public class NetworkFetchProducerTest {
     // Allow NetworkFetchProducer to read 1024 bytes and check that consumer is notified once
     inputStream.increaseBytesToRead(1024);
     inputStream.waitUntilReadingThreadBlocked();
-    verify(mProducerListener, times(1)).onProducerEvent(
-        mRequestId,
-        NetworkFetchProducer.PRODUCER_NAME,
-        NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
+    verify(mProducerListener, times(1))
+        .onProducerEvent(
+            mProducerContext,
+            NetworkFetchProducer.PRODUCER_NAME,
+            NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
     verify(mConsumer, times(1)).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     verifyPooledByteBufferUsed(1);
 
     // Read another 1024 bytes, but do not bump timer - consumer should not be notified
     inputStream.increaseBytesToRead(1024);
     inputStream.waitUntilReadingThreadBlocked();
-    verify(mProducerListener, times(1)).onProducerEvent(
-        mRequestId,
-        NetworkFetchProducer.PRODUCER_NAME,
-        NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
+    verify(mProducerListener, times(1))
+        .onProducerEvent(
+            mProducerContext,
+            NetworkFetchProducer.PRODUCER_NAME,
+            NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
     verify(mConsumer, times(1)).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     verifyPooledByteBufferUsed(1);
 
@@ -194,10 +199,11 @@ public class NetworkFetchProducerTest {
     when(SystemClock.uptimeMillis()).thenReturn(currentTime);
     inputStream.increaseBytesToRead(1024);
     inputStream.waitUntilReadingThreadBlocked();
-    verify(mProducerListener, times(2)).onProducerEvent(
-        mRequestId,
-        NetworkFetchProducer.PRODUCER_NAME,
-        NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
+    verify(mProducerListener, times(2))
+        .onProducerEvent(
+            mProducerContext,
+            NetworkFetchProducer.PRODUCER_NAME,
+            NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
     verify(mConsumer, times(2)).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     verifyPooledByteBufferUsed(2);
 
@@ -205,14 +211,16 @@ public class NetworkFetchProducerTest {
     verify(mConsumer, times(0)).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     inputStream.signalEof();
     requestHandlerFuture.get();
-    verify(mProducerListener, times(2)).onProducerEvent(
-        mRequestId,
-        NetworkFetchProducer.PRODUCER_NAME,
-        NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
-    verify(mProducerListener).onProducerFinishWithSuccess(
-        eq(mRequestId), eq(NetworkFetchProducer.PRODUCER_NAME), eq(mExtrasMap));
+    verify(mProducerListener, times(2))
+        .onProducerEvent(
+            mProducerContext,
+            NetworkFetchProducer.PRODUCER_NAME,
+            NetworkFetchProducer.INTERMEDIATE_RESULT_PRODUCER_EVENT);
     verify(mProducerListener)
-        .onUltimateProducerReached(mRequestId, NetworkFetchProducer.PRODUCER_NAME, true);
+        .onProducerFinishWithSuccess(
+            eq(mProducerContext), eq(NetworkFetchProducer.PRODUCER_NAME), eq(mExtrasMap));
+    verify(mProducerListener)
+        .onUltimateProducerReached(mProducerContext, NetworkFetchProducer.PRODUCER_NAME, true);
     verify(mConsumer, times(1)).onNewResult(any(CloseableReference.class), eq(Consumer.IS_LAST));
     verifyPooledByteBufferUsed(3);
 
@@ -233,7 +241,7 @@ public class NetworkFetchProducerTest {
       verify(mPooledByteBufferFactory).newOutputStream(100);
       verify(mPooledByteBufferOutputStream).close();
       verify(mProducerListener, never())
-          .onProducerEvent(eq(mRequestId), any(String.class), any(String.class));
+          .onProducerEvent(eq(mProducerContext), any(String.class), any(String.class));
     }
   }
 

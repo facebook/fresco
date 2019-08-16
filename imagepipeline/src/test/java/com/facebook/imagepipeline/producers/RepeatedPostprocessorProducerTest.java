@@ -41,12 +41,13 @@ import org.robolectric.annotation.*;
 @Config(manifest= Config.NONE)
 public class RepeatedPostprocessorProducerTest {
 
+  private static final String PRODUCER_NAME = PostprocessorProducer.NAME;
   private static final String POSTPROCESSOR_NAME = "postprocessor_name";
   private static final Map<String, String> mExtraMap =
       ImmutableMap.of(PostprocessorProducer.POSTPROCESSOR, POSTPROCESSOR_NAME);
 
   @Mock public PlatformBitmapFactory mPlatformBitmapFactory;
-  @Mock public ProducerListener mProducerListener;
+  @Mock public ProducerListener2 mProducerListener;
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<CloseableReference<CloseableImage>> mConsumer;
   @Mock public RepeatedPostprocessor mPostprocessor;
@@ -89,7 +90,7 @@ public class RepeatedPostprocessorProducerTest {
     when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
     mResults = new ArrayList<>();
     when(mPostprocessor.getName()).thenReturn(POSTPROCESSOR_NAME);
-    when(mProducerListener.requiresExtraMap(mRequestId)).thenReturn(true);
+    when(mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)).thenReturn(true);
     doAnswer(
         new Answer<Object>() {
           @Override
@@ -172,14 +173,20 @@ public class RepeatedPostprocessorProducerTest {
 
     performFailure(repeatedPostprocessorRunner);
 
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, PostprocessorProducer.NAME);
     mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener).onProducerFinishWithFailure(
-        eq(mRequestId),
-        eq(PostprocessorProducer.NAME),
-        any(RuntimeException.class),
-        eq(mExtraMap));
+    mInOrder
+        .verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithFailure(
+            eq(mProducerContext),
+            eq(PostprocessorProducer.NAME),
+            any(RuntimeException.class),
+            eq(mExtraMap));
     mInOrder.verify(mConsumer).onFailure(any(RuntimeException.class));
     mInOrder.verifyNoMoreInteractions();
 
@@ -317,11 +324,17 @@ public class RepeatedPostprocessorProducerTest {
   }
 
   private void verifyNewResultProcessed(int index, Bitmap destBitmap) {
-    mInOrder.verify(mProducerListener).onProducerStart(mRequestId, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerStart(mProducerContext, PostprocessorProducer.NAME);
     mInOrder.verify(mPostprocessor).process(mSourceBitmap, mPlatformBitmapFactory);
-    mInOrder.verify(mProducerListener).requiresExtraMap(mRequestId);
-    mInOrder.verify(mProducerListener)
-        .onProducerFinishWithSuccess(mRequestId, PostprocessorProducer.NAME, mExtraMap);
+    mInOrder
+        .verify(mProducerListener)
+        .requiresExtraMap(mProducerContext, PostprocessorProducer.NAME);
+    mInOrder
+        .verify(mProducerListener)
+        .onProducerFinishWithSuccess(
+            eq(mProducerContext), eq(PostprocessorProducer.NAME), eq(mExtraMap));
     mInOrder.verify(mConsumer).onNewResult(any(CloseableReference.class), eq(Consumer.NO_FLAGS));
     mInOrder.verifyNoMoreInteractions();
 

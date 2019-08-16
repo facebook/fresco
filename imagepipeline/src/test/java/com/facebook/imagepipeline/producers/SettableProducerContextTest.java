@@ -32,15 +32,16 @@ public class SettableProducerContextTest {
 
   @Before
   public void setUp() {
-    mSettableProducerContext = new SettableProducerContext(
-        mImageRequest,
-        mRequestId,
-        mock(ProducerListener.class),
-        mock(Object.class),
-        ImageRequest.RequestLevel.FULL_FETCH,
-        false,
-        true,
-        Priority.MEDIUM);
+    mSettableProducerContext =
+        new SettableProducerContext(
+            mImageRequest,
+            mRequestId,
+            mock(ProducerListener2.class),
+            mock(Object.class),
+            ImageRequest.RequestLevel.FULL_FETCH,
+            false,
+            true,
+            Priority.MEDIUM);
     mCallbacks1 = mock(ProducerContextCallbacks.class);
     mCallbacks2 = mock(ProducerContextCallbacks.class);
   }

@@ -132,7 +132,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
     private static final int DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES = 10;
 
     private final ProducerContext mProducerContext;
-    private final ProducerListener mProducerListener;
+    private final ProducerListener2 mProducerListener;
     private final ImageDecodeOptions mImageDecodeOptions;
 
     @GuardedBy("this")
@@ -147,7 +147,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         final int maxBitmapSize) {
       super(consumer);
       mProducerContext = producerContext;
-      mProducerListener = producerContext.getListener();
+      mProducerListener = producerContext.getProducerListener();
       mImageDecodeOptions = producerContext.getImageRequest().getImageDecodeOptions();
       mIsFinished = false;
       JobRunnable job =
@@ -279,7 +279,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             ? ImmutableQualityInfo.FULL_QUALITY
             : getQualityInfo();
 
-        mProducerListener.onProducerStart(mProducerContext.getId(), PRODUCER_NAME);
+        mProducerListener.onProducerStart(mProducerContext, PRODUCER_NAME);
         CloseableImage image = null;
         try {
           try {
@@ -309,8 +309,8 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
               encodedImageSize,
               requestedSizeStr,
               sampleSize);
-          mProducerListener.
-              onProducerFinishWithFailure(mProducerContext.getId(), PRODUCER_NAME, e, extraMap);
+          mProducerListener.onProducerFinishWithFailure(
+              mProducerContext, PRODUCER_NAME, e, extraMap);
           handleError(e);
           return;
         }
@@ -323,8 +323,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
             encodedImageSize,
             requestedSizeStr,
             sampleSize);
-        mProducerListener.
-            onProducerFinishWithSuccess(mProducerContext.getId(), PRODUCER_NAME, extraMap);
+        mProducerListener.onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
         handleResult(image, status);
       } finally {
         EncodedImage.closeSafely(encodedImage);
@@ -340,7 +339,7 @@ public class DecodeProducer implements Producer<CloseableReference<CloseableImag
         String encodedImageSize,
         String requestImageSize,
         String sampleSize) {
-      if (!mProducerListener.requiresExtraMap(mProducerContext.getId())) {
+      if (!mProducerListener.requiresExtraMap(mProducerContext, PRODUCER_NAME)) {
         return null;
       }
       String queueStr = String.valueOf(queueTime);

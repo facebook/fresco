@@ -45,8 +45,8 @@ public class FetchState {
     return mContext.getId();
   }
 
-  public ProducerListener getListener() {
-    return mContext.getListener();
+  public ProducerListener2 getListener() {
+    return mContext.getProducerListener();
   }
 
   public Uri getUri() {
