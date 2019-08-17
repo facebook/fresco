@@ -167,7 +167,8 @@ public class PipelineDraweeControllerBuilder extends AbstractDraweeControllerBui
         imageRequest,
         callerContext,
         convertCacheLevelToRequestLevel(cacheLevel),
-        getRequestListener(controller));
+        getRequestListener(controller),
+        controllerId);
   }
 
   @Nullable
