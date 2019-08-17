@@ -29,6 +29,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.datasource.CloseableProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.listener.ForwardingRequestListener2;
 import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
@@ -54,6 +55,7 @@ public class ImagePipeline {
 
   private final ProducerSequenceFactory mProducerSequenceFactory;
   private final RequestListener mRequestListener;
+  private final RequestListener2 mRequestListener2;
   private final Supplier<Boolean> mIsPrefetchEnabledSupplier;
   private final MemoryCache<CacheKey, CloseableImage> mBitmapMemoryCache;
   private final MemoryCache<CacheKey, PooledByteBuffer> mEncodedMemoryCache;
@@ -69,6 +71,7 @@ public class ImagePipeline {
   public ImagePipeline(
       ProducerSequenceFactory producerSequenceFactory,
       Set<RequestListener> requestListeners,
+      Set<RequestListener2> requestListener2s,
       Supplier<Boolean> isPrefetchEnabledSupplier,
       MemoryCache<CacheKey, CloseableImage> bitmapMemoryCache,
       MemoryCache<CacheKey, PooledByteBuffer> encodedMemoryCache,
@@ -82,6 +85,7 @@ public class ImagePipeline {
     mIdCounter = new AtomicLong();
     mProducerSequenceFactory = producerSequenceFactory;
     mRequestListener = new ForwardingRequestListener(requestListeners);
+    mRequestListener2 = new ForwardingRequestListener2(requestListener2s);
     mIsPrefetchEnabledSupplier = isPrefetchEnabledSupplier;
     mBitmapMemoryCache = bitmapMemoryCache;
     mEncodedMemoryCache = encodedMemoryCache;
@@ -735,7 +739,7 @@ public class ImagePipeline {
     final RequestListener2 requestListener2 =
         new InternalRequestListener(
             getRequestListenerForRequest(imageRequest, requestListener),
-            null);
+            mRequestListener2);
 
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, false);
@@ -776,7 +780,7 @@ public class ImagePipeline {
     }
     try {
       final RequestListener2 requestListener2 =
-          new InternalRequestListener(requestListener, null);
+          new InternalRequestListener(requestListener, mRequestListener2);
 
       return CloseableProducerToDataSourceAdapter.create(
           producerSequence, settableProducerContext, requestListener2);

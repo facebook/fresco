@@ -36,6 +36,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ProducerContext;
@@ -91,6 +92,7 @@ public class ImagePipelineTest {
         new ImagePipeline(
             mProducerSequenceFactory,
             Sets.newHashSet(mRequestListener1, mRequestListener2),
+            Sets.newHashSet(mock(RequestListener2.class)),
             mPrefetchEnabledSupplier,
             mBitmapMemoryCache,
             mEncodedMemoryCache,

@@ -38,6 +38,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoderConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.memory.PoolConfig;
 import com.facebook.imagepipeline.memory.PoolFactory;
 import com.facebook.imagepipeline.producers.HttpUrlConnectionNetworkFetcher;
@@ -92,6 +93,7 @@ public class ImagePipelineConfig {
   private final PoolFactory mPoolFactory;
   private final ProgressiveJpegConfig mProgressiveJpegConfig;
   private final Set<RequestListener> mRequestListeners;
+  private final Set<RequestListener2> mRequestListener2s;
   private final boolean mResizeAndRotateEnabledForNetwork;
   private final DiskCacheConfig mSmallImageDiskCacheConfig;
   @Nullable private final ImageDecoderConfig mImageDecoderConfig;
@@ -185,6 +187,10 @@ public class ImagePipelineConfig {
         builder.mRequestListeners == null
             ? new HashSet<RequestListener>()
             : builder.mRequestListeners;
+    mRequestListener2s =
+        builder.mRequestListener2s == null
+            ? new HashSet<RequestListener2>()
+            : builder.mRequestListener2s;
     mResizeAndRotateEnabledForNetwork = builder.mResizeAndRotateEnabledForNetwork;
     mSmallImageDiskCacheConfig =
         builder.mSmallImageDiskCacheConfig == null
@@ -356,6 +362,10 @@ public class ImagePipelineConfig {
     return Collections.unmodifiableSet(mRequestListeners);
   }
 
+  public Set<RequestListener2> getRequestListener2s() {
+    return Collections.unmodifiableSet(mRequestListener2s);
+  }
+
   public boolean isResizeAndRotateEnabledForNetwork() {
     return mResizeAndRotateEnabledForNetwork;
   }
@@ -453,6 +463,7 @@ public class ImagePipelineConfig {
     private PoolFactory mPoolFactory;
     private ProgressiveJpegConfig mProgressiveJpegConfig;
     private Set<RequestListener> mRequestListeners;
+    private Set<RequestListener2> mRequestListener2s;
     private boolean mResizeAndRotateEnabledForNetwork = true;
     private DiskCacheConfig mSmallImageDiskCacheConfig;
     private FileCacheFactory mFileCacheFactory;
@@ -607,6 +618,11 @@ public class ImagePipelineConfig {
 
     public Builder setRequestListeners(Set<RequestListener> requestListeners) {
       mRequestListeners = requestListeners;
+      return this;
+    }
+
+    public Builder setRequestListener2s(Set<RequestListener2> requestListeners) {
+      mRequestListener2s = requestListeners;
       return this;
     }
 

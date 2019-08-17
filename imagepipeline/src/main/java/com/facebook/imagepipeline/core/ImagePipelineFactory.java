@@ -277,6 +277,7 @@ public class ImagePipelineFactory {
           new ImagePipeline(
               getProducerSequenceFactory(),
               mConfig.getRequestListeners(),
+              mConfig.getRequestListener2s(),
               mConfig.getIsPrefetchEnabledSupplier(),
               getBitmapMemoryCache(),
               getEncodedMemoryCache(),
