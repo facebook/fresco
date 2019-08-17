@@ -71,6 +71,13 @@ public class GifMetadataDecoder {
     if (!mDecoded) {
       throw new IllegalStateException("getFrameDurationMs called before decode");
     }
+
+    // For frame number higher than frame count, returning 1 ms ensures that animation backend can
+    // fetch loop duration of a frame correctly in case when some frames do not have correct delay.
+    if (frameNumber >= getFrameCount()) {
+      return 1;
+    }
+
     return mFrameControls.get(frameNumber)[CONTROL_INDEX_DELAY];
   }
 

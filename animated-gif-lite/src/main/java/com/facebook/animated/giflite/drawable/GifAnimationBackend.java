@@ -115,7 +115,7 @@ public class GifAnimationBackend implements AnimationBackend {
   }
 
   private int getFrameStartTime(int frameNumber) {
-    if (frameNumber == 0) {
+    if (frameNumber == 0 || frameNumber >= mFrameStartTimes.length) {
       return 0;
     }
     if (mFrameStartTimes[frameNumber] != 0) {
