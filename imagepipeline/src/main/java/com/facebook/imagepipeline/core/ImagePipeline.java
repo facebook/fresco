@@ -29,10 +29,10 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.datasource.CloseableProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.listener.ForwardingRequestListener;
 import com.facebook.imagepipeline.listener.RequestListener;
-import com.facebook.imagepipeline.producers.ProducerListener2;
-import com.facebook.imagepipeline.producers.InternalProducerListener;
+import com.facebook.imagepipeline.producers.InternalRequestListener;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
@@ -732,11 +732,10 @@ public class ImagePipeline {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
     }
-    final RequestListener finalRequestListener =
-        getRequestListenerForRequest(imageRequest, requestListener);
-
-    final ProducerListener2 producerListener2 =
-        new InternalProducerListener(finalRequestListener, null);
+    final RequestListener2 requestListener2 =
+        new InternalRequestListener(
+            getRequestListenerForRequest(imageRequest, requestListener),
+            null);
 
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, false);
@@ -750,7 +749,7 @@ public class ImagePipeline {
           new SettableProducerContext(
               imageRequest,
               generateUniqueFutureId(),
-              producerListener2,
+              requestListener2,
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ false,
@@ -758,7 +757,7 @@ public class ImagePipeline {
                   || !UriUtil.isNetworkUri(imageRequest.getSourceUri()),
               imageRequest.getPriority());
       return CloseableProducerToDataSourceAdapter.create(
-          producerSequence, settableProducerContext, finalRequestListener);
+          producerSequence, settableProducerContext, requestListener2);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     } finally {
@@ -776,8 +775,11 @@ public class ImagePipeline {
       FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
     }
     try {
+      final RequestListener2 requestListener2 =
+          new InternalRequestListener(requestListener, null);
+
       return CloseableProducerToDataSourceAdapter.create(
-          producerSequence, settableProducerContext, requestListener);
+          producerSequence, settableProducerContext, requestListener2);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     } finally {
@@ -797,7 +799,8 @@ public class ImagePipeline {
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext,
       Priority priority) {
-    final RequestListener requestListener = getRequestListenerForRequest(imageRequest, null);
+    final RequestListener2 requestListener =
+        new InternalRequestListener(getRequestListenerForRequest(imageRequest, null), null);
 
     if (mCallerContextVerifier != null) {
       mCallerContextVerifier.verifyCallerContext(callerContext, true);
@@ -810,7 +813,7 @@ public class ImagePipeline {
           new SettableProducerContext(
               imageRequest,
               generateUniqueFutureId(),
-              new InternalProducerListener(requestListener, null),
+              requestListener,
               callerContext,
               lowestPermittedRequestLevel,
               /* isPrefetch */ true,

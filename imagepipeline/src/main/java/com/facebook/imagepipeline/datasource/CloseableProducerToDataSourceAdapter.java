@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.datasource;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
-import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestListener2;
 import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.SettableProducerContext;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -28,7 +28,7 @@ public class CloseableProducerToDataSourceAdapter<T>
   public static <T> DataSource<CloseableReference<T>> create(
       Producer<CloseableReference<T>> producer,
       SettableProducerContext settableProducerContext,
-      RequestListener listener) {
+      RequestListener2 listener) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("CloseableProducerToDataSourceAdapter#create");
     }
@@ -43,7 +43,7 @@ public class CloseableProducerToDataSourceAdapter<T>
   private CloseableProducerToDataSourceAdapter(
       Producer<CloseableReference<T>> producer,
       SettableProducerContext settableProducerContext,
-      RequestListener listener) {
+      RequestListener2 listener) {
     super(producer, settableProducerContext, listener);
   }
 
