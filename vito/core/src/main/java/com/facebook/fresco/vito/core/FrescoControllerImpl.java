@@ -196,6 +196,7 @@ public class FrescoControllerImpl implements FrescoController {
           new SettableProducerContext(
               imageRequest,
               mFrescoContext.getImagePipeline().generateUniqueFutureId(),
+              frescoState.getStringId(),
               new InternalProducerListener(frescoState.getRequestListener(), null),
               callerContext,
               lowestPermittedRequestLevel,
@@ -369,7 +370,8 @@ public class FrescoControllerImpl implements FrescoController {
               mFrescoContext.getImagePipeline(),
               frescoState.getImageRequest(),
               frescoState.getCallerContext(),
-              frescoState.getRequestListener());
+              frescoState.getRequestListener(),
+              frescoState.getStringId());
     }
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();

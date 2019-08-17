@@ -87,7 +87,11 @@ public class MultiUri {
     if (imageRequest != null) {
       supplier =
           getImageRequestDataSourceSupplier(
-              imagePipeline, imageRequest, callerContext, requestListener);
+              imagePipeline,
+              imageRequest,
+              callerContext,
+              requestListener,
+              frescoState.getStringId());
     } else if (multiUri.getMultiImageRequests() != null) {
       supplier =
           getFirstAvailableDataSourceSupplier(
@@ -95,7 +99,8 @@ public class MultiUri {
               callerContext,
               requestListener,
               multiUri.getMultiImageRequests(),
-              true);
+              true,
+              frescoState.getStringId());
     }
 
     // increasing-quality supplier; highest-quality supplier goes first
@@ -107,7 +112,8 @@ public class MultiUri {
               imagePipeline,
               multiUri.getLowResImageRequest(),
               callerContext,
-              requestListener));
+              requestListener,
+              frescoState.getStringId()));
       supplier = IncreasingQualityDataSourceSupplier.create(suppliers, false);
     }
 
@@ -123,8 +129,13 @@ public class MultiUri {
       ImagePipeline imagePipeline,
       ImageRequest imageRequest,
       Object callerContext,
-      @Nullable RequestListener requestListener) {
-    return imagePipeline.fetchDecodedImage(imageRequest, callerContext, requestListener);
+      @Nullable RequestListener requestListener,
+      @Nullable String uiComponentId) {
+    return imagePipeline.fetchDecodedImage(imageRequest,
+        callerContext,
+        ImageRequest.RequestLevel.FULL_FETCH,
+        requestListener,
+        uiComponentId);
   }
 
   private static Supplier<DataSource<CloseableReference<CloseableImage>>>
@@ -133,7 +144,8 @@ public class MultiUri {
           final Object callerContext,
           final RequestListener requestListener,
           ImageRequest[] imageRequests,
-          boolean tryBitmapCacheOnlyFirst) {
+          boolean tryBitmapCacheOnlyFirst,
+          final @Nullable String uiComponentId) {
     List<Supplier<DataSource<CloseableReference<CloseableImage>>>> suppliers =
         new ArrayList<>(imageRequests.length * 2);
     if (tryBitmapCacheOnlyFirst) {
@@ -145,13 +157,14 @@ public class MultiUri {
                 imageRequests[i],
                 callerContext,
                 ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE,
-                requestListener));
+                requestListener,
+                uiComponentId));
       }
     }
     for (int i = 0; i < imageRequests.length; i++) {
       suppliers.add(
           getImageRequestDataSourceSupplier(
-              imagePipeline, imageRequests[i], callerContext, requestListener));
+              imagePipeline, imageRequests[i], callerContext, requestListener, uiComponentId));
     }
     return FirstAvailableDataSourceSupplier.create(suppliers);
   }
@@ -162,12 +175,13 @@ public class MultiUri {
           final ImageRequest imageRequest,
           final Object callerContext,
           final ImageRequest.RequestLevel requestLevel,
-          final RequestListener requestListener) {
+          final RequestListener requestListener,
+          final @Nullable String uiComponentId) {
     return new Supplier<DataSource<CloseableReference<CloseableImage>>>() {
       @Override
       public DataSource<CloseableReference<CloseableImage>> get() {
         return getImageRequestDataSource(
-            imagePipeline, imageRequest, callerContext, requestListener);
+            imagePipeline, imageRequest, callerContext, requestListener, uiComponentId);
       }
     };
   }
@@ -177,12 +191,14 @@ public class MultiUri {
           final ImagePipeline imagePipeline,
           final ImageRequest imageRequest,
           final Object callerContext,
-          final RequestListener requestListener) {
+          final RequestListener requestListener,
+          final @Nullable String uiComponentId) {
     return getImageRequestDataSourceSupplier(
         imagePipeline,
         imageRequest,
         callerContext,
         ImageRequest.RequestLevel.FULL_FETCH,
-        requestListener);
+        requestListener,
+        uiComponentId);
   }
 }

@@ -465,4 +465,14 @@ public class FrescoState
   public void setExtras(@Nullable Object extras) {
     mExtras = extras;
   }
+
+
+  public String getStringId() {
+    return getStringId(getId());
+  }
+
+  public static String getStringId(long id) {
+    // Vito IDs and Drawee IDs overlap. We add a prefix to distinguish between them.
+    return "v" + id;
+  }
 }

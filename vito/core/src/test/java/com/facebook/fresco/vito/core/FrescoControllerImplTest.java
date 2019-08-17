@@ -45,6 +45,7 @@ import org.robolectric.RobolectricTestRunner;
 public class FrescoControllerImplTest {
 
   private static final long IMAGE_ID = 123L;
+  private static final String IMAGE_ID_STRING = "v" + IMAGE_ID;
   private static final String CALLER_CONTEXT = "abc";
 
   private static final int PLACEHOLDER_RES_ID = 234;
@@ -80,6 +81,7 @@ public class FrescoControllerImplTest {
     when(mFrescoContext.getImagePipeline()).thenReturn(mImagePipeline);
 
     when(mFrescoState.getId()).thenReturn(IMAGE_ID);
+    when(mFrescoState.getStringId()).thenReturn(IMAGE_ID_STRING);
     when(mFrescoState.getCallerContext()).thenReturn(CALLER_CONTEXT);
     when(mFrescoState.getFrescoDrawable()).thenReturn(mFrescoDrawable);
     when(mFrescoState.getResources()).thenReturn(mResources);
@@ -244,7 +246,12 @@ public class FrescoControllerImplTest {
   public void testListeners() {
     RequestListener requestListener = baseTestListeners();
     verify(mImagePipeline)
-        .fetchDecodedImage(any(ImageRequest.class), any(Object.class), eq(requestListener));
+        .fetchDecodedImage(
+            any(ImageRequest.class),
+            any(Object.class),
+            any(ImageRequest.RequestLevel.class),
+            eq(requestListener),
+            eq(IMAGE_ID_STRING));
   }
 
   @Test
@@ -282,6 +289,7 @@ public class FrescoControllerImplTest {
 
     when(mFrescoState.getImageOptions()).thenReturn(imageOptions);
     when(mFrescoState.getRequestListener()).thenReturn(requestListener);
+
     when(mFrescoState.getUri()).thenReturn(uri);
 
     SimpleDataSource dataSource = SimpleDataSource.create();
@@ -292,7 +300,11 @@ public class FrescoControllerImplTest {
             eq(requestListener)))
         .thenReturn(dataSource);
     when(mImagePipeline.fetchDecodedImage(
-            any(ImageRequest.class), any(Object.class), eq(requestListener)))
+            any(ImageRequest.class),
+            any(Object.class),
+            any(ImageRequest.RequestLevel.class),
+            eq(requestListener),
+            eq(IMAGE_ID_STRING)))
         .thenReturn(dataSource);
 
     mFrescoController.onAttach(mFrescoState, null);
