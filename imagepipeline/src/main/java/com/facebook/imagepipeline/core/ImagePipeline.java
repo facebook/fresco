@@ -166,6 +166,37 @@ public class ImagePipeline {
    * DataSource representing the pending results of the task.
    *
    * @param imageRequest the request to submit (what to execute).
+   * @param callerContext the caller context of the caller of data source supplier
+   * @param requestLevel which level to look down until for the image
+   * @param requestListener additional image request listener independent of ImageRequest listeners
+   * @param uiComponentId optional UI component ID requesting the image
+   * @return a DataSource representing pending results and completion of the request
+   */
+  public Supplier<DataSource<CloseableReference<CloseableImage>>> getDataSourceSupplier(
+      final ImageRequest imageRequest,
+      final Object callerContext,
+      final ImageRequest.RequestLevel requestLevel,
+      final @Nullable RequestListener requestListener,
+      final @Nullable String uiComponentId) {
+    return new Supplier<DataSource<CloseableReference<CloseableImage>>>() {
+      @Override
+      public DataSource<CloseableReference<CloseableImage>> get() {
+        return fetchDecodedImage(
+            imageRequest, callerContext, requestLevel, requestListener, uiComponentId);
+      }
+
+      @Override
+      public String toString() {
+        return Objects.toStringHelper(this).add("uri", imageRequest.getSourceUri()).toString();
+      }
+    };
+  }
+
+  /**
+   * Returns a DataSource supplier that will on get submit the request for execution and return a
+   * DataSource representing the pending results of the task.
+   *
+   * @param imageRequest the request to submit (what to execute).
    * @return a DataSource representing pending results and completion of the request
    */
   public Supplier<DataSource<CloseableReference<PooledByteBuffer>>>
@@ -265,6 +296,29 @@ public class ImagePipeline {
       Object callerContext,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       @Nullable RequestListener requestListener) {
+    return fetchDecodedImage(
+        imageRequest, callerContext, lowestPermittedRequestLevelOnSubmit, requestListener, null);
+  }
+
+  /**
+   * Submits a request for execution and returns a DataSource representing the pending decoded
+   * image(s).
+   *
+   * <p>The returned DataSource must be closed once the client has finished with it.
+   *
+   * @param imageRequest the request to submit
+   * @param callerContext the caller context for image request
+   * @param lowestPermittedRequestLevelOnSubmit the lowest request level permitted for image reques
+   * @param requestListener additional image request listener independent of ImageRequest listeners
+   * @param uiComponentId optional UI component ID that is requesting the image
+   * @return a DataSource representing the pending decoded image(s)
+   */
+  public DataSource<CloseableReference<CloseableImage>> fetchDecodedImage(
+      ImageRequest imageRequest,
+      Object callerContext,
+      ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
+      @Nullable RequestListener requestListener,
+      @Nullable String uiComponentId) {
     try {
       Producer<CloseableReference<CloseableImage>> producerSequence =
           mProducerSequenceFactory.getDecodedImageProducerSequence(imageRequest);
@@ -273,7 +327,8 @@ public class ImagePipeline {
           imageRequest,
           lowestPermittedRequestLevelOnSubmit,
           callerContext,
-          requestListener);
+          requestListener,
+          uiComponentId);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -326,7 +381,8 @@ public class ImagePipeline {
           imageRequest,
           ImageRequest.RequestLevel.FULL_FETCH,
           callerContext,
-          requestListener);
+          requestListener,
+          null);
     } catch (Exception exception) {
       return DataSources.immediateFailedDataSource(exception);
     }
@@ -732,7 +788,8 @@ public class ImagePipeline {
       ImageRequest imageRequest,
       ImageRequest.RequestLevel lowestPermittedRequestLevelOnSubmit,
       Object callerContext,
-      @Nullable RequestListener requestListener) {
+      @Nullable RequestListener requestListener,
+      @Nullable String uiComponentId) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("ImagePipeline#submitFetchRequest");
     }
@@ -753,6 +810,7 @@ public class ImagePipeline {
           new SettableProducerContext(
               imageRequest,
               generateUniqueFutureId(),
+              uiComponentId,
               requestListener2,
               callerContext,
               lowestPermittedRequestLevel,

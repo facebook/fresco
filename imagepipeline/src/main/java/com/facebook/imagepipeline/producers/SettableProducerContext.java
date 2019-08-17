@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -21,6 +22,7 @@ public class SettableProducerContext extends BaseProducerContext {
     this(
         context.getImageRequest(),
         context.getId(),
+        context.getUiComponentId(),
         context.getProducerListener(),
         context.getCallerContext(),
         context.getLowestPermittedRequestLevel(),
@@ -33,6 +35,7 @@ public class SettableProducerContext extends BaseProducerContext {
     this(
         overrideRequest,
         context.getId(),
+        context.getUiComponentId(),
         context.getProducerListener(),
         context.getCallerContext(),
         context.getLowestPermittedRequestLevel(),
@@ -53,6 +56,28 @@ public class SettableProducerContext extends BaseProducerContext {
     super(
         imageRequest,
         id,
+        producerListener,
+        callerContext,
+        lowestPermittedRequestLevel,
+        isPrefetch,
+        isIntermediateResultExpected,
+        priority);
+  }
+
+  public SettableProducerContext(
+      ImageRequest imageRequest,
+      String id,
+      @Nullable String uiComponentId,
+      ProducerListener2 producerListener,
+      Object callerContext,
+      ImageRequest.RequestLevel lowestPermittedRequestLevel,
+      boolean isPrefetch,
+      boolean isIntermediateResultExpected,
+      Priority priority) {
+    super(
+        imageRequest,
+        id,
+        uiComponentId,
         producerListener,
         callerContext,
         lowestPermittedRequestLevel,

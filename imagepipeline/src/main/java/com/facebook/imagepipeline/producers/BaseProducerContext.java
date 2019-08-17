@@ -20,6 +20,7 @@ import javax.annotation.concurrent.GuardedBy;
 public class BaseProducerContext implements ProducerContext {
   private final ImageRequest mImageRequest;
   private final String mId;
+  private final @Nullable String mUiComponentId;
   private final ProducerListener2 mProducerListener;
   private final Object mCallerContext;
   private final ImageRequest.RequestLevel mLowestPermittedRequestLevel;
@@ -44,8 +45,31 @@ public class BaseProducerContext implements ProducerContext {
       boolean isPrefetch,
       boolean isIntermediateResultExpected,
       Priority priority) {
+    this(
+        imageRequest,
+        id,
+        null,
+        producerListener,
+        callerContext,
+        lowestPermittedRequestLevel,
+        isPrefetch,
+        isIntermediateResultExpected,
+        priority);
+  }
+
+  public BaseProducerContext(
+      ImageRequest imageRequest,
+      String id,
+      @Nullable String uiComponentId,
+      ProducerListener2 producerListener,
+      Object callerContext,
+      ImageRequest.RequestLevel lowestPermittedRequestLevel,
+      boolean isPrefetch,
+      boolean isIntermediateResultExpected,
+      Priority priority) {
     mImageRequest = imageRequest;
     mId = id;
+    mUiComponentId = uiComponentId;
     mProducerListener = producerListener;
     mCallerContext = callerContext;
     mLowestPermittedRequestLevel = lowestPermittedRequestLevel;
@@ -66,6 +90,11 @@ public class BaseProducerContext implements ProducerContext {
   @Override
   public String getId() {
     return mId;
+  }
+
+  @Nullable
+  public String getUiComponentId() {
+    return mUiComponentId;
   }
 
   @Override

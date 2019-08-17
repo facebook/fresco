@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.request.ImageRequest;
+import javax.annotation.Nullable;
 
 /**
  * Used to pass context information to producers.
@@ -32,6 +33,12 @@ public interface ProducerContext {
    * @return id of this request
    */
   String getId();
+
+  /**
+   * @return optional id of the UI component requesting the image
+   */
+  @Nullable
+  String getUiComponentId();
 
   /**
    * @return ProducerListener2 for producer's events
