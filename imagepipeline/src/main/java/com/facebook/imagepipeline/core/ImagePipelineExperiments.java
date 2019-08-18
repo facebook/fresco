@@ -51,6 +51,7 @@ public class ImagePipelineExperiments {
   private final boolean mDownscaleFrameToDrawableDimensions;
   private final int mBitmapCloseableRefType;
   private final Supplier<Boolean> mSuppressBitmapPrefetchingSupplier;
+  private final boolean mExperimentalThreadHandoffQueueEnabled;
 
   private ImagePipelineExperiments(Builder builder) {
     mWebpSupportEnabled = builder.mWebpSupportEnabled;
@@ -75,6 +76,7 @@ public class ImagePipelineExperiments {
     mDownscaleFrameToDrawableDimensions = builder.mDownscaleFrameToDrawableDimensions;
     mBitmapCloseableRefType = builder.mBitmapCloseableRefType;
     mSuppressBitmapPrefetchingSupplier = builder.mSuppressBitmapPrefetchingSupplier;
+    mExperimentalThreadHandoffQueueEnabled = builder.mExperimentalThreadHandoffQueueEnabled;
   }
 
   public boolean getUseDownsamplingRatioForResizing() {
@@ -119,6 +121,10 @@ public class ImagePipelineExperiments {
 
   public ProducerFactoryMethod getProducerFactoryMethod() {
     return mProducerFactoryMethod;
+  }
+
+  public boolean isExperimentalThreadHandoffQueueEnabled() {
+    return mExperimentalThreadHandoffQueueEnabled;
   }
 
   public static ImagePipelineExperiments.Builder newBuilder(
@@ -175,6 +181,7 @@ public class ImagePipelineExperiments {
     public boolean mDownscaleFrameToDrawableDimensions;
     public int mBitmapCloseableRefType;
     public Supplier<Boolean> mSuppressBitmapPrefetchingSupplier = Suppliers.of(false);
+    public boolean mExperimentalThreadHandoffQueueEnabled;
 
     public Builder(ImagePipelineConfig.Builder configBuilder) {
       mConfigBuilder = configBuilder;
@@ -308,6 +315,12 @@ public class ImagePipelineExperiments {
 
     public ImagePipelineConfig.Builder setSuppressBitmapPrefetchingSupplier(Supplier<Boolean> suppressBitmapPrefetchingSupplier) {
       mSuppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier;
+      return mConfigBuilder;
+    }
+
+    public ImagePipelineConfig.Builder setExperimentalThreadHandoffQueueEnabled(
+        boolean experimentalThreadHandoffQueueEnabled) {
+      mExperimentalThreadHandoffQueueEnabled = experimentalThreadHandoffQueueEnabled;
       return mConfigBuilder;
     }
 

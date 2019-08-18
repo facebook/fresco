@@ -47,7 +47,7 @@ public class ThreadHandoffProducerTest {
     mTestExecutorService = new TestExecutorService(new FakeClock());
     mThreadHandoffProducer = new ThreadHandoffProducer(
         mInputProducer,
-        new ThreadHandoffProducerQueue(mTestExecutorService));
+        new ThreadHandoffProducerQueueImpl(mTestExecutorService));
   }
 
   @Test

@@ -7,50 +7,16 @@
 
 package com.facebook.imagepipeline.producers;
 
-import com.facebook.common.internal.Preconditions;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.concurrent.Executor;
 
-public class ThreadHandoffProducerQueue {
-  private boolean mQueueing = false;
-  private final Deque<Runnable> mRunnableList;
-  private final Executor mExecutor;
+public interface ThreadHandoffProducerQueue {
 
-  public ThreadHandoffProducerQueue(Executor executor) {
-    mExecutor = Preconditions.checkNotNull(executor);
-    mRunnableList = new ArrayDeque<>();
-  }
+  void addToQueueOrExecute(Runnable runnable);
 
-  public synchronized void addToQueueOrExecute(Runnable runnable) {
-    if (mQueueing) {
-      mRunnableList.add(runnable);
-    } else {
-      mExecutor.execute(runnable);
-    }
-  }
+  void startQueueing();
 
-  public synchronized void startQueueing() {
-    mQueueing = true;
-  }
+  void stopQueuing();
 
-  public synchronized void stopQueuing() {
-    mQueueing = false;
-    execInQueue();
-  }
+  void remove(Runnable runnable);
 
-  private void execInQueue() {
-    while (!mRunnableList.isEmpty()) {
-      mExecutor.execute(mRunnableList.pop());
-    }
-    mRunnableList.clear();
-  }
-
-  public synchronized void remove(Runnable runnable) {
-    mRunnableList.remove(runnable);
-  }
-
-  public synchronized boolean isQueueing() {
-    return mQueueing;
-  }
+  boolean isQueueing();
 }

@@ -36,7 +36,9 @@ import com.facebook.imagepipeline.drawable.DrawableFactory;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
 import com.facebook.imagepipeline.platform.PlatformDecoderFactory;
+import com.facebook.imagepipeline.producers.ExperimentalThreadHandoffProducerQueueImpl;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
+import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueueImpl;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
@@ -143,8 +145,11 @@ public class ImagePipelineFactory {
     }
     mConfig = Preconditions.checkNotNull(config);
     mThreadHandoffProducerQueue =
-        new ThreadHandoffProducerQueue(
-            config.getExecutorSupplier().forLightweightBackgroundTasks());
+        mConfig.getExperiments().isExperimentalThreadHandoffQueueEnabled()
+            ? new ExperimentalThreadHandoffProducerQueueImpl(
+                config.getExecutorSupplier().forLightweightBackgroundTasks())
+            : new ThreadHandoffProducerQueueImpl(
+                config.getExecutorSupplier().forLightweightBackgroundTasks());
     CloseableReference.setDisableCloseableReferencesForBitmaps(config.getExperiments().getBitmapCloseableRefType());
     mCloseableReferenceFactory =
         new CloseableReferenceFactory(config.getCloseableReferenceLeakTracker());
