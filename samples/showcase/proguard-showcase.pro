@@ -18,6 +18,5 @@
 -dontwarn com.facebook.fbui.**
 -dontwarn com.facebook.litho.**
 
--keep class org.mozilla.** { *; }
 -dontwarn org.mozilla.javascript.**
 -dontwarn org.mozilla.classfile.**
