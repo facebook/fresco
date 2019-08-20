@@ -9,6 +9,7 @@ package com.facebook.drawee.components;
 
 import android.os.Handler;
 import android.os.Looper;
+import com.facebook.common.internal.Preconditions;
 import java.util.ArrayList;
 
 /**
@@ -24,48 +25,19 @@ import java.util.ArrayList;
  * release / acquire cycle. If onAttach doesn't happen before the deferred message gets executed,
  * the resources will be released.
  *
- * <p>This class could be called from BG thread, but it has one restriction: releasables scheduled
- * from BG thread can only be un-schedule from BG thread (Enough for Litho BG binding).
+ * <p>This class is thread-safe. For releasables sent from threads without a looper, it's
+ * immediately released
  */
 public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
 
-  private final Object mLock = new Object();
-  private final ArrayList<Releasable> mPendingReleasables;
-  private final Handler mUiHandler;
-
-  public DeferredReleaserConcurrentImpl() {
-    mPendingReleasables = new ArrayList<>();
-    mUiHandler = new Handler(Looper.getMainLooper());
-  }
-
-  /*
-   * Walks through the set of pending releasables, and calls release on them.
-   * Resets the pending list to an empty list when done.
-   */
-  private final Runnable releaseRunnable =
-      new Runnable() {
-        Releasable[] mTempReleasables; // cache to avoid re-allocation
-
+  private static final IReleaser IMMEDIATE = new ImmediateImpl();
+  private static final ThreadLocal<IReleaser> mReleaserThreadLocal =
+      new ThreadLocal<IReleaser>() {
         @Override
-        public void run() {
-          int pendingSize;
-          synchronized (mLock) {
-            pendingSize = mPendingReleasables.size();
-            if (mTempReleasables == null || mTempReleasables.length < pendingSize) {
-              mTempReleasables = new Releasable[Math.max(pendingSize, 8)];
-            }
-
-            int i = 0;
-            for (Releasable pendingReleasable : mPendingReleasables) {
-              mTempReleasables[i++] = pendingReleasable;
-            }
-            mPendingReleasables.clear();
-          }
-
-          for (int i = 0; i < pendingSize; i++) {
-            mTempReleasables[i].release();
-            mTempReleasables[i] = null;
-          }
+        protected IReleaser initialValue() {
+          Looper looper = Looper.myLooper();
+          if (looper == null) return IMMEDIATE;
+          else return new DeferredImpl(looper);
         }
       };
 
@@ -79,21 +51,7 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
    */
   @Override
   public void scheduleDeferredRelease(Releasable releasable) {
-    boolean shouldSchedule;
-    synchronized (mLock) {
-      if (mPendingReleasables.contains(releasable)) {
-        return;
-      }
-      mPendingReleasables.add(releasable);
-      shouldSchedule = mPendingReleasables.size() == 1;
-    }
-
-    // If pending is not empty, there's already something scheduled (it might even already being
-    // run) but we are sure the lock protected section hasn't enter, so this schedule will be
-    // executed.
-    if (shouldSchedule) {
-      mUiHandler.post(releaseRunnable);
-    }
+    Preconditions.checkNotNull(mReleaserThreadLocal.get()).release(releasable);
   }
 
   /**
@@ -103,8 +61,67 @@ public class DeferredReleaserConcurrentImpl extends DeferredReleaser {
    */
   @Override
   public void cancelDeferredRelease(Releasable releasable) {
-    synchronized (mLock) {
-      mPendingReleasables.remove(releasable);
+    Preconditions.checkNotNull(mReleaserThreadLocal.get()).cancel(releasable);
+  }
+
+  interface IReleaser {
+    void release(Releasable releasable);
+
+    void cancel(Releasable releasable);
+  }
+
+  static class DeferredImpl implements IReleaser {
+
+    private final ArrayList<Releasable> mPendingReleasables;
+    private final Handler mHandler;
+
+    private final Runnable releaseRunnable =
+        new Runnable() {
+          @Override
+          public void run() {
+            //noinspection ForLoopReplaceableByForEach avoid allocation of the iterator
+            for (int i = 0, size = mPendingReleasables.size(); i < size; i++) {
+              mPendingReleasables.get(i).release();
+            }
+            mPendingReleasables.clear();
+          }
+        };
+
+    public DeferredImpl(Looper looper) {
+      mPendingReleasables = new ArrayList<>();
+      mHandler = new Handler(looper);
     }
+
+    @Override
+    public void release(Releasable releasable) {
+      if (mPendingReleasables.contains(releasable)) {
+        return;
+      }
+      mPendingReleasables.add(releasable);
+      if (mPendingReleasables.size() == 1) {
+        mHandler.post(releaseRunnable);
+      }
+    }
+
+    @Override
+    public void cancel(Releasable releasable) {
+      int index = mPendingReleasables.indexOf(releasable);
+      if (index >= 0) {
+        int lastIndex = mPendingReleasables.size() - 1;
+        mPendingReleasables.set(index, mPendingReleasables.get(lastIndex));
+        mPendingReleasables.remove(lastIndex);
+      }
+    }
+  }
+
+  static class ImmediateImpl implements IReleaser {
+
+    @Override
+    public void release(Releasable releasable) {
+      releasable.release();
+    }
+
+    @Override
+    public void cancel(Releasable releasable) {}
   }
 }
