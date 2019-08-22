@@ -202,6 +202,7 @@ public class ImageOptions extends DecodedImageOptions {
     result = 31 * result + (mResizeToViewport ? 1 : 0);
     result = 31 * result + mFadeDurationMs;
     result = 31 * result + (mAutoPlay ? 1 : 0);
+    result = 31 * result + mProgressRes;
     return result;
   }
 
